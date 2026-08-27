@@ -8,8 +8,11 @@
     960,
     540
   ],
-  "hero_duration_seconds": 4.208333,
-  "film_duration_cap_seconds": 3.2,
+  "hero_duration_seconds": 4.458333,
+  "hero_source_duration_seconds": 4.44444465637207,
+  "eat_loop_duration_seconds": 8.0,
+  "film_duration_cap_seconds_non_loop": 3.2,
+  "loop_duration_policy": "full manifest duration at 24 fps",
   "priority_still_count": 21,
   "film_count": 7,
   "source_vertex_face_counts": {

@@ -10,7 +10,15 @@
     "width": 960,
     "height": 540,
     "fps": 24,
-    "duration_seconds": 4.208333
+    "duration_seconds": 4.458333,
+    "frames": 107
+  },
+  "eat_loop_ffprobe": {
+    "width": 480,
+    "height": 270,
+    "fps": 24,
+    "duration_seconds": 8.0,
+    "frames": 192
   },
   "films_ffprobe": "passed",
   "immutable_toolkit_hash": {
@@ -19,6 +27,9 @@
     "post_hash": "c4f4905f2974aa751a7fe0485a44d194898ead71280992c34d0129dc81362119",
     "hash_unchanged": true,
     "git_diff_clean": true,
-    "note": "Tracked entries under procedural-animation-toolkit(v5) were read only."
+    "unstaged_clean": true,
+    "staged_clean": true,
+    "head_clean": true,
+    "note": "Tracked entries under procedural-animation-toolkit(v5) were read only; all three Git tree boundaries are clean."
   }
 }

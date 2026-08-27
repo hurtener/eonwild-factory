@@ -13,9 +13,11 @@
   "remote_urls": [],
   "required": {
     "hero_heading": true,
+    "hero_playback_control": true,
     "skip_link": true,
     "reduced_motion": true,
     "behavior_controls": true,
+    "behavior_accessible_label_sync": true,
     "local_only": true
   }
 }

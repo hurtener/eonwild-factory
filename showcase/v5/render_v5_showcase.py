@@ -241,9 +241,23 @@ def render_still(scene: bpy.types.Scene, camera: bpy.types.Camera, action: bpy.t
     bpy.ops.render.render(write_still=True)
 
 
-def render_film(scene: bpy.types.Scene, action: bpy.types.Action, armature: bpy.types.Object, path: Path, fps: int, max_seconds: float) -> None:
+def render_film(
+    scene: bpy.types.Scene,
+    action: bpy.types.Action,
+    clip_info: dict,
+    armature: bpy.types.Object,
+    path: Path,
+    fps: int,
+    max_seconds: float,
+) -> None:
     start, end = set_action(armature, action)
-    frame_count = min(end - start + 1, max(2, math.ceil(max_seconds * fps)))
+    # Looping clips are rendered for their complete manifest duration.  A
+    # frame cap is retained for one-shot films so the showcase remains
+    # pragmatic without truncating an authored loop at an arbitrary phase.
+    if clip_info.get("loop"):
+        frame_count = max(2, round(float(clip_info["durationSeconds"]) * fps))
+    else:
+        frame_count = min(end - start + 1, max(2, math.ceil(max_seconds * fps)))
     # This Blender build has no FFMPEG image-format enum, so render a numbered
     # PNG sequence and encode it with the host ffmpeg executable.
     frame_dir = path.parent / f".{path.stem}.frames"
@@ -290,6 +304,7 @@ def main() -> None:
     actions = action_map()
     manifest = json.loads(cfg.manifest.read_text())
     priority = [c for c in manifest["clips"] if not c.get("transition") and set(c.get("tags", [])) & PRIORITY_TAGS]
+    clip_by_name = {clip["name"]: clip for clip in priority}
     missing = [c["name"] for c in priority if c["name"] not in actions]
     if missing:
         raise RuntimeError(f"manifest actions missing after glTF import: {missing}")
@@ -319,7 +334,7 @@ def main() -> None:
     if not cfg.still_only:
         for name in film_names:
             if name in actions:
-                render_film(scene, actions[name], armature, film_dir / f"{safe_slug(name)}.mp4", cfg.fps, cfg.film_max_seconds)
+                render_film(scene, actions[name], clip_by_name[name], armature, film_dir / f"{safe_slug(name)}.mp4", cfg.fps, cfg.film_max_seconds)
 
     report = {
         "renderer": "Blender",
@@ -331,7 +346,8 @@ def main() -> None:
         "priority_clip_count": len(priority),
         "priority_clips": [c["name"] for c in priority],
         "film_clips": [name for name in film_names if name in actions] if not cfg.still_only else [],
-        "film_duration_policy_seconds": cfg.film_max_seconds,
+        "film_duration_policy_seconds_non_loop": cfg.film_max_seconds,
+        "loop_duration_policy": "manifest durationSeconds rendered at the requested FPS",
         "imported_actions": len(actions),
         "bounds_m": {"min": list(bounds[0]), "max": list(bounds[1])},
         "animation_data_policy": "source GLB imported read-only; action selection only; no animation channels edited",

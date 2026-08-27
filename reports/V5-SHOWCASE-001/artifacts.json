@@ -14,8 +14,8 @@
     },
     {
       "path": "showcase/v5/site/media/films/eat-loop.mp4",
-      "sha256": "f69f6d6d7371bac5d78acb06f3cbd0d1c655136109cfa227abe22149b17f25d8",
-      "bytes": 16406,
+      "sha256": "7b5616ab8e8ea5d19f2f0438ba31d0a927ce423af92129d1f9f4f06e41b42f07",
+      "bytes": 29230,
       "kind": "mp4"
     },
     {
@@ -44,8 +44,8 @@
     },
     {
       "path": "showcase/v5/site/media/films/walk-relaxed-inplace.mp4",
-      "sha256": "5a430c665203a39c3a8966655dc55b6691aaab23b909a83ad5b08b3539219b30",
-      "bytes": 217116,
+      "sha256": "b7c24b9f9ac295eca27e7adc9cdfc14d1b624ca35e6f9dd64b8846795196b32d",
+      "bytes": 228647,
       "kind": "mp4"
     },
     {

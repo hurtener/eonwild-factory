@@ -11,6 +11,7 @@ This lane delivers an offline editorial showcase for the validated Tarbosaurus V
 - `site-check.json` passes offline/local-only asset, accessibility anchor, reduced-motion, and behavior-control checks.
 - `tests.json` records Python compilation, MP4 ffprobe checks, and immutable-toolkit proof.
 - `provenance.json` records the source hash, tool versions, 37-clip source scope, stale-report hash mismatch, and toolkit boundary hash.
+- The final hero loop is 107 frames at 24 fps (4.458333s encoded; 4.44444465637207s source manifest duration) and the eat loop is the complete 192-frame, 8.000000s clip; no authored loop is truncated.
 
 ## Acceptance result
 
@@ -21,3 +22,4 @@ PASS for the requested showcase milestone, with perceptual review still required
 - The page ships stills for all 21 priority clips and films for seven representative clips; authored transitions remain documented in `site/asset-manifest.json` but are not each standalone films.
 - MP4s are silent, locally encoded H.264 previews. No external or copyrighted media was added.
 - Blender's current build lacks an FFMPEG image-format enum, so the renderer intentionally encodes temporary PNG frames with host ffmpeg and removes those temporary frame directories after each film.
+- Non-loop representative films retain the documented 3.2s pragmatic cap; loop clips use their manifest duration at the requested FPS.

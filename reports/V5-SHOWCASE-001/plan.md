@@ -35,4 +35,3 @@ The source GLB is read from `procedural-animation-toolkit(v5)/validated_result/v
 
 - Tracked toolkit entries: 501
 - Pre-work tracked-entry hash: `c4f4905f2974aa751a7fe0485a44d194898ead71280992c34d0129dc81362119`
-

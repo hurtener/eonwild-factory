@@ -1,7 +1,7 @@
 {
   "schema": "eonwild.showcase-provenance.v1",
   "task_id": "V5-SHOWCASE-001",
-  "date_utc": "2026-08-27T05:41:34.087858+00:00",
+  "date_utc": "2026-08-27T05:49:15.600905+00:00",
   "asset": "Tarbosaurus V5 animation showcase",
   "source": {
     "path": "procedural-animation-toolkit(v5)/validated_result/v5/tarbosaurus_procedural_v5_animation_pack.glb",
@@ -34,7 +34,10 @@
     "post_hash": "c4f4905f2974aa751a7fe0485a44d194898ead71280992c34d0129dc81362119",
     "hash_unchanged": true,
     "git_diff_clean": true,
-    "note": "Tracked entries under procedural-animation-toolkit(v5) were read only."
+    "unstaged_clean": true,
+    "staged_clean": true,
+    "head_clean": true,
+    "note": "Tracked entries under procedural-animation-toolkit(v5) were read only; all three Git tree boundaries are clean."
   },
   "known_record_mismatch": {
     "key_sha256": "66cf116a2191311cf00f4571e71e5a38753fd71ad42a8381185156a3af1bacd0",
