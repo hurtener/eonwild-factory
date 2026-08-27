@@ -719,8 +719,8 @@
   "rendered_assets": [
     {
       "path": "showcase/v5/site/index.html",
-      "sha256": "ac1848b92e7dfc791c3116714e77e21e4633b5d985b60a5ad1b43d59a7e2de43",
-      "bytes": 15222,
+      "sha256": "ceb6a027e4715ac720b5d8466f7a211c718a1bad3a489801ea2373673b03425a",
+      "bytes": 16476,
       "kind": "html"
     },
     {

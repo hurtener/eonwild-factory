@@ -31,6 +31,8 @@
     .watch { display:inline-flex; align-items:center; gap:.75rem; margin-top:1.5rem; padding:.9rem 1.15rem; background:var(--acid); color:#10130e; border:0; border-radius:999px; font-weight:700; text-decoration:none; cursor:pointer; }
     .watch::after { content:"↘"; font-size:1.1rem; }
     .watch:hover, .watch:focus-visible { background:#f0d18e; transform:translateY(-2px); }
+    .hero-toggle { display:inline-flex; margin:1rem 0 0 .4rem; padding:.55rem .8rem; color:var(--ink); background:rgba(5,13,12,.45); border:1px solid rgba(232,233,220,.4); border-radius:999px; font:inherit; font-size:.76rem; cursor:pointer; }
+    .hero-toggle:hover, .hero-toggle:focus-visible { color:var(--acid); border-color:var(--acid); }
     main { overflow:hidden; }
     .chapter { width:min(88rem,100%); margin:0 auto; padding:clamp(5rem,12vw,11rem) clamp(1.25rem,5vw,5rem); }
     .chapter-intro { display:grid; grid-template-columns:minmax(10rem,.45fr) minmax(0,1.2fr); gap:3rem; align-items:start; margin-bottom:3.5rem; }
@@ -94,7 +96,7 @@
   </header>
 
   <section class="hero" id="top" aria-labelledby="hero-title">
-    <video class="hero-media" autoplay muted loop playsinline preload="metadata" poster="media/stills/walk-relaxed-inplace.png" aria-label="Tarbosaurus walking in profile">
+    <video class="hero-media" id="hero-video" muted loop playsinline preload="metadata" poster="media/stills/walk-relaxed-inplace.png" aria-label="Tarbosaurus walking in profile">
       <source src="media/films/walk-relaxed-inplace.mp4" type="video/mp4">
     </video>
     <div class="hero-shade"></div>
@@ -103,6 +105,7 @@
       <h1 id="hero-title">Weight, held.</h1>
       <p class="lede">Our journey creating Eonwild begins with a living-neutral body. We watched what happens when it starts to walk, notices a threat, and opens its jaw.</p>
       <a class="watch" href="#motion">Watch the movement</a>
+      <button class="hero-toggle" id="hero-toggle" type="button" aria-controls="hero-video" aria-pressed="false">Play motion</button>
     </div>
   </section>
 
@@ -155,13 +158,17 @@
   <script>
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const hero = document.querySelector('.hero-media');
-    if (reduce && hero) hero.pause();
+    const heroToggle = document.getElementById('hero-toggle');
+    const syncHeroControl = () => { const playing = hero && !hero.paused; if (heroToggle) { heroToggle.textContent = playing ? 'Pause motion' : 'Play motion'; heroToggle.setAttribute('aria-pressed', String(playing)); } };
+    if (hero) { hero.addEventListener('play', syncHeroControl); hero.addEventListener('pause', syncHeroControl); if (!reduce) hero.play().catch(() => {}); }
+    if (heroToggle) heroToggle.addEventListener('click', () => { if (!hero) return; if (hero.paused) hero.play().catch(() => {}); else hero.pause(); syncHeroControl(); });
+    syncHeroControl();
     const io = reduce ? null : new IntersectionObserver(entries => entries.forEach(e => e.isIntersecting && e.target.classList.add('visible')), { threshold:.12 });
     document.querySelectorAll('.reveal').forEach(el => io ? io.observe(el) : el.classList.add('visible'));
-    const labels = { 'idle-breath':['Breathing: a closed neutral with a small respiratory cue.','media/stills/idle-breath.png'], 'eat-loop':['Eating: a repeated reach and chew cycle, held inside the same calibrated jaw range.','media/stills/eat-loop.png'], 'bite-attack':['Bite: an intentional gape, contact, then a closed recovery. The sequence is authored behavior for the study.','media/stills/bite-attack.png'], 'roar':['Roar: a display moment, then a return to living neutral.','media/stills/roar.png'] };
+    const labels = { 'idle-breath':['Breathing: a closed neutral with a small respiratory cue.','media/stills/idle-breath.png','Tarbosaurus breathing clip'], 'eat-loop':['Eating: a repeated reach and chew cycle, held inside the same calibrated jaw range.','media/stills/eat-loop.png','Tarbosaurus eating clip'], 'bite-attack':['Bite: an intentional gape, contact, then a closed recovery. The sequence is authored behavior for the study.','media/stills/bite-attack.png','Tarbosaurus bite action'], 'roar':['Roar: a display moment, then a return to living neutral.','media/stills/roar.png','Tarbosaurus roar display clip'] };
     const behaviorVideo = document.getElementById('behavior-video');
     const behaviorCopy = document.getElementById('behavior-copy');
-    document.querySelectorAll('[data-film]').forEach(button => button.addEventListener('click', () => { const key=button.dataset.film; document.querySelectorAll('[data-film]').forEach(b=>b.setAttribute('aria-pressed', String(b===button))); behaviorVideo.pause(); behaviorVideo.src='media/films/'+key+'.mp4'; behaviorVideo.poster=labels[key][1]; behaviorVideo.load(); behaviorCopy.textContent=labels[key][0]; if (!reduce) behaviorVideo.play().catch(()=>{}); }));
+    document.querySelectorAll('[data-film]').forEach(button => button.addEventListener('click', () => { const key=button.dataset.film; document.querySelectorAll('[data-film]').forEach(b=>b.setAttribute('aria-pressed', String(b===button))); behaviorVideo.pause(); behaviorVideo.src='media/films/'+key+'.mp4'; behaviorVideo.poster=labels[key][1]; behaviorVideo.setAttribute('aria-label', labels[key][2]); behaviorVideo.load(); behaviorCopy.textContent=labels[key][0]; if (!reduce) behaviorVideo.play().catch(()=>{}); }));
   </script>
 </body>
 </html>

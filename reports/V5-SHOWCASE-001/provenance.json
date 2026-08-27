@@ -1,7 +1,7 @@
 {
   "schema": "eonwild.showcase-provenance.v1",
   "task_id": "V5-SHOWCASE-001",
-  "date_utc": "2026-08-27T05:34:08.579903+00:00",
+  "date_utc": "2026-08-27T05:41:34.087858+00:00",
   "asset": "Tarbosaurus V5 animation showcase",
   "source": {
     "path": "procedural-animation-toolkit(v5)/validated_result/v5/tarbosaurus_procedural_v5_animation_pack.glb",

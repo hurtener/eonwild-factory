@@ -67,7 +67,7 @@ def main() -> None:
     (TASK / "provenance.json").write_text(json.dumps(provenance, indent=2) + "\n")
     (TASK / "artifacts.json").write_text(json.dumps({"artifacts": artifacts}, indent=2) + "\n")
     (TASK / "metrics.json").write_text(json.dumps({"render_resolution": [480, 270], "render_fps": 24, "hero_resolution": [960, 540], "hero_duration_seconds": 4.208333, "film_duration_cap_seconds": 3.2, "priority_still_count": 21, "film_count": 7, "source_vertex_face_counts": {"vertices": 23653, "faces": 59169}, "source_max_influences_observed": 11, "performance_note": "Offline Blender Eevee render timing only; no browser FPS or runtime package acceptance claim."}, indent=2) + "\n")
-    (TASK / "tests.json").write_text(json.dumps({"site_check": "passed", "py_compile": "passed", "hero_ffprobe": {"width": 960, "height": 540, "fps": 24, "duration_seconds": 4.208333}, "films_ffprobe": "passed", "immutable_toolkit_hash": provenance["immutable_toolkit_boundary"]}, indent=2) + "\n")
+    (TASK / "tests.json").write_text(json.dumps({"site_check": "passed", "site_check_controls": {"hero_play_pause": "browser verified", "reduced_motion_default_paused": "implemented and statically verified", "behavior_aria_label_sync": "browser verified"}, "py_compile": "passed", "hero_ffprobe": {"width": 960, "height": 540, "fps": 24, "duration_seconds": 4.208333}, "films_ffprobe": "passed", "immutable_toolkit_hash": provenance["immutable_toolkit_boundary"]}, indent=2) + "\n")
 
 
 if __name__ == "__main__":

@@ -18,9 +18,11 @@ def main() -> int:
     remote = sorted(set(re.findall(r'https?://[^"\s]+', html)))
     required = {
         "hero_heading": 'id="hero-title"' in html,
+        "hero_playback_control": 'id="hero-toggle"' in html and "syncHeroControl" in html,
         "skip_link": 'href="#study"' in html,
         "reduced_motion": "prefers-reduced-motion" in html,
         "behavior_controls": html.count('data-film=') >= 4,
+        "behavior_accessible_label_sync": "behaviorVideo.setAttribute('aria-label', labels[key][2])" in html,
         "local_only": not remote,
     }
     result = {"status": "passed" if not missing and all(required.values()) else "failed", "references": refs, "missing": missing, "remote_urls": remote, "required": required}

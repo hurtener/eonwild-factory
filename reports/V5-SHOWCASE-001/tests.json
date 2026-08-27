@@ -1,5 +1,10 @@
 {
   "site_check": "passed",
+  "site_check_controls": {
+    "hero_play_pause": "browser verified",
+    "reduced_motion_default_paused": "implemented and statically verified",
+    "behavior_aria_label_sync": "browser verified"
+  },
   "py_compile": "passed",
   "hero_ffprobe": {
     "width": 960,

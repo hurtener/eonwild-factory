@@ -12,3 +12,6 @@ python3 showcase/v5/write_evidence.py
 python3 -m py_compile showcase/v5/render_v5_showcase.py showcase/v5/check_site.py showcase/v5/write_evidence.py
 git diff --quiet -- 'procedural-animation-toolkit(v5)'
 post tracked-entry hash: c4f4905f2974aa751a7fe0485a44d194898ead71280992c34d0129dc81362119 (unchanged)
+python3 showcase/v5/check_site.py (round-2: hero playback control + behavior aria-label sync) — passed
+browser acceptance: hero toggle Pause motion → Play motion; eating selector aria-label → Tarbosaurus eating clip — passed
+responsive captures: desktop-1440x900-r2.png, mobile-375x812-r2.png
