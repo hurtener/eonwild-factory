@@ -2,10 +2,10 @@
   "schema": "eonwild.browser-acceptance.v1",
   "status": "PASS",
   "reviewer": "coordinator",
-  "date_utc": "2026-08-27T16:18:17Z",
-  "url": "http://127.0.0.1:8767/showcase/v5.5/site/index.html",
-  "release_glb_sha256": "4020d6d3db42231d5fb414c3d42ab0d702c5bfe08aeae8e919deefaacde7d287",
-  "site_index_sha256": "825f66fb4b6bf205b42d4d92909bf830da2de581f5781bf2c18ca7619806eb7b",
+  "date_utc": "2026-08-27T18:19:57Z",
+  "url": "http://127.0.0.1:8877/showcase/v5.5/site/index.html",
+  "release_glb_sha256": "4e6e85dc82e941a3fc10109ca781dd3dcbb084699dc19834bf8683c04b22fe65",
+  "site_index_sha256": "e9a074dd975061abfa45a047ae564d785dca5a569448e64224166108e75d6a6a",
   "desktop": {
     "viewport": [1440, 900],
     "title": "Tarbosaurus — V5.5 balance study",
@@ -23,6 +23,7 @@
     "decoded_resolution": [960, 540],
     "hero_duration_seconds": 4.458333,
     "feeding_duration_seconds": 8,
+    "attack_duration_seconds": 3.458333,
     "ready_state": 4
   },
   "controls": {

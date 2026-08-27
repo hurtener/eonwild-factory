@@ -18,7 +18,9 @@ from eonproc_v3.gltf_io import GlbAsset, sha256_file, quaternion_continuity
 from eonproc_v3.rig import SemanticMap, AnatomicalBasis
 from eonproc_v4.animation_reader import AnimationPackReader
 from eonproc_v4.clip import AnimationClip
+from eonproc_v4.profile import BipedV4Profile
 from eonproc_v5_5.jaw import JawClosureModel
+from eonproc_v5_5.pivots import lower_foot_pivots
 from eonproc_v5_5.polish import smooth_quaternions
 from eonproc_v5_5.transitions import pose_transition, phase_matched_loop_transition
 
@@ -122,9 +124,11 @@ def apply_detail(asset,sem,basis,clip):
     return clip
 
 def main():
-    ap=argparse.ArgumentParser(); ap.add_argument('--source-glb',required=True); ap.add_argument('--bone-map',required=True); ap.add_argument('--v4-report'); ap.add_argument('--output-dir',required=True); args=ap.parse_args()
+    ap=argparse.ArgumentParser(); ap.add_argument('--source-glb',required=True); ap.add_argument('--bone-map',required=True); ap.add_argument('--profile',required=True); ap.add_argument('--v4-report'); ap.add_argument('--output-dir',required=True); args=ap.parse_args()
     out=Path(args.output_dir); out.mkdir(parents=True,exist_ok=True)
+    profile=BipedV4Profile.from_json(args.profile)
     asset=GlbAsset(args.source_glb); sem=SemanticMap.load(args.bone_map); basis=AnatomicalBasis.gltf_y_up(asset,sem)
+    pivot_adjustment=lower_foot_pivots(asset,sem,basis,profile.foot_pivot_gap_fraction)
     primitive=asset.primitive(); ground=float(primitive.positions[:,1].min()); hip=float(asset.rest_world[asset.name_to_node[sem.bone('pelvis')]][1,3]-ground)
     jaw_model=JawClosureModel(asset,sem,basis,hip); jaw=jaw_model.calibrate(target_minimum_gap_m=hip*.0015); neutral=jaw.close_degrees
     v4_report=json.load(open(args.v4_report)) if args.v4_report and Path(args.v4_report).exists() else None
@@ -177,8 +181,8 @@ def main():
       'actionSequences':sequence_names,
     }
     (out/'animation-manifest.v5.5.json').write_text(json.dumps(manifest,indent=2))
-    report={'status':'PASS_WITH_PERCEPTUAL_REVIEW_REQUIRED','version':'5.5.0','buildMode':'full constrained V4.5 body-balance regeneration followed by V5 jaw and secondary polish','jawCalibration':jaw.to_dict(),'clipCount':len(clips),'baseClipCount':len(base),'transitionClipCount':len(transitions),'preserved':{'skinJointCount':len(asset.skin_data()[0]),'vertexSoleAndTerrainTracks':True,'anatomicalLegConstraintTracks':True,'rootMotionTracks':True},'fixes':{'neutralJawCalibrated':True,'biteReopenBugRemoved':True,'secondaryQuaternionPolish':True,'allTransitionsRebuilt':True,'playerExactHandoffContract':True,'pelvisTranslationExported':True,'bodyBalancePass':True},'input':{'sourceGlb':str(Path(args.source_glb).resolve()),'sourceSha256':sha256_file(args.source_glb),'boneMap':str(Path(args.bone_map).resolve()),'boneMapSha256':sha256_file(args.bone_map)},'output':{'glb':str(glb.resolve()),'glbSha256':sha256_file(glb)},'sourceV4QualityGates':None if v4_report is None else v4_report.get('quality_gate_summary')}
+    report={'status':'PASS_WITH_PERCEPTUAL_REVIEW_REQUIRED','version':'5.5.0','buildMode':'full constrained V4.5 body-balance regeneration, profile-driven lower-foot pivot placement, then V5 jaw and secondary polish','jawCalibration':jaw.to_dict(),'footPivotAdjustment':pivot_adjustment,'clipCount':len(clips),'baseClipCount':len(base),'transitionClipCount':len(transitions),'preserved':{'skinJointCount':len(asset.skin_data()[0]),'vertexSoleAndTerrainTracks':True,'anatomicalLegConstraintTracks':True,'rootMotionTracks':True,'restSkinnedMesh':True},'fixes':{'neutralJawCalibrated':True,'biteReopenBugRemoved':True,'secondaryQuaternionPolish':True,'allTransitionsRebuilt':True,'playerExactHandoffContract':True,'pelvisTranslationExported':True,'bodyBalancePass':True,'lowerFootPivotPlacement':True},'input':{'sourceGlb':str(Path(args.source_glb).resolve()),'sourceSha256':sha256_file(args.source_glb),'boneMap':str(Path(args.bone_map).resolve()),'boneMapSha256':sha256_file(args.bone_map),'profile':str(Path(args.profile).resolve()),'profileSha256':sha256_file(args.profile)},'output':{'glb':str(glb.resolve()),'glbSha256':sha256_file(glb)},'sourceV4QualityGates':None if v4_report is None else v4_report.get('quality_gate_summary')}
     (out/'procedural-v5.5-report.json').write_text(json.dumps(report,indent=2))
-    (out/'resolved-profile-v5.5.json').write_text(json.dumps({'name':'tarbosaurus_v5_5_body_balance','sampleHz':60,'neutralJawCloseDegrees':neutral,'jawBreathDegrees':.36,'polishWindowFrames':7,'transitionSystem':'RotationSpline + Hermite exact handoff'},indent=2))
+    (out/'resolved-profile-v5.5.json').write_text(json.dumps({'name':'tarbosaurus_v5_5_body_balance','sampleHz':60,'neutralJawCloseDegrees':neutral,'jawBreathDegrees':.36,'polishWindowFrames':7,'transitionSystem':'RotationSpline + Hermite exact handoff','footPivotGapFraction':profile.foot_pivot_gap_fraction,'footPivotAdjustment':pivot_adjustment},indent=2))
     print(json.dumps({'glb':str(glb),'report':str(out/'procedural-v5.5-report.json'),'manifest':str(out/'animation-manifest.v5.5.json'),'jaw':jaw.to_dict(),'clips':len(clips)},indent=2))
 if __name__=='__main__': raise SystemExit(main())

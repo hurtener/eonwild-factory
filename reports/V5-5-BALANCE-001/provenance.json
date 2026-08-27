@@ -1,11 +1,11 @@
 {
   "schema": "eonwild.showcase-provenance.v1",
   "task_id": "V5-5-BALANCE-001",
-  "date_utc": "2026-08-27T16:21:22.230943+00:00",
+  "date_utc": "2026-08-27T18:20:35.101192+00:00",
   "asset": "Tarbosaurus procedural animation V5.5 balance study",
   "source": {
     "path": "procedural-animation-toolkit(v5.5)/validated_result/v5.5/tarbosaurus_procedural_v5_5_animation_pack.glb",
-    "sha256": "4020d6d3db42231d5fb414c3d42ab0d702c5bfe08aeae8e919deefaacde7d287",
+    "sha256": "4e6e85dc82e941a3fc10109ca781dd3dcbb084699dc19834bf8683c04b22fe65",
     "source_model_sha256": "fbb42c2edad4eadebbcf808d32028d7c73b3fbfd6172610eddd5df84990a65c7",
     "material_policy": "GLB-embedded materials and textures preserved for Blender rendering",
     "license_status": "internal project fixture and user-supplied reference media"
@@ -29,7 +29,7 @@
   "tools": {
     "blender": "Blender 5.2.0 LTS",
     "ffmpeg": "ffmpeg version 9.0.1 Copyright (c) 2000-2026 the FFmpeg developers",
-    "python": "Python 3.14.6",
+    "python": "Python 3.12.10",
     "numpy": "2.5.2",
     "scipy": "1.18.1"
   },
@@ -40,20 +40,44 @@
     "transitionCount": 16,
     "skinJointCount": 75,
     "skinOrderPreserved": true,
-    "inverseBindMatricesExact": true,
+    "inverseBindMatricesExact": false,
+    "intentionalChangedInverseBindSlots": [
+      43,
+      56
+    ],
+    "restSkinnedMeshPreserved": true,
+    "maximumRestSkinnedVertexErrorM": 2.241232429242919e-08,
+    "footPivotAdjustment": [
+      {
+        "side": "l",
+        "gapFraction": 0.9,
+        "movementDownM": 0.10444290308447345,
+        "remainingGapM": 0.011604767009385938,
+        "toeOriginErrorM": 1.716587549445839e-16
+      },
+      {
+        "side": "r",
+        "gapFraction": 0.9,
+        "movementDownM": 0.10444294943446683,
+        "remainingGapM": 0.011604772159385199,
+        "toeOriginErrorM": 1.249000902703301e-16
+      }
+    ],
     "constrainedQualityGatesPass": true,
     "idle": {
       "v5": {
         "torsoPitchMedianDegrees": -12.004597245738548,
         "headPitchMedianDegrees": 15.307440166253128,
         "foreAftFootSpreadMedianHipFraction": 0.025587768868590377,
-        "maximumRearReachHipFraction": -0.14702220818276593
+        "maximumRearReachHipFraction": -0.14702220818276593,
+        "maximumRearAnkleReachHipFraction": -0.19222293112535171
       },
       "v5_5": {
         "torsoPitchMedianDegrees": -11.812379774187914,
         "headPitchMedianDegrees": 14.09490250676957,
-        "foreAftFootSpreadMedianHipFraction": 0.3733736075379464,
-        "maximumRearReachHipFraction": -0.1767192117208793
+        "foreAftFootSpreadMedianHipFraction": 0.40886291752068804,
+        "maximumRearReachHipFraction": -0.1770484624424781,
+        "maximumRearAnkleReachHipFraction": -0.21113119950528142
       }
     },
     "walk": {
@@ -61,13 +85,15 @@
         "torsoPitchMedianDegrees": -12.049859412041958,
         "headPitchMedianDegrees": 14.904016970496773,
         "foreAftFootSpreadMedianHipFraction": 0.34506664930923353,
-        "maximumRearReachHipFraction": -0.43252532720770986
+        "maximumRearReachHipFraction": -0.43252532720770986,
+        "maximumRearAnkleReachHipFraction": -0.37906982193747923
       },
       "v5_5": {
         "torsoPitchMedianDegrees": -11.854449232320533,
         "headPitchMedianDegrees": 13.690817803760948,
-        "foreAftFootSpreadMedianHipFraction": 0.31808401195807207,
-        "maximumRearReachHipFraction": -0.37453545223614565
+        "foreAftFootSpreadMedianHipFraction": 0.34681810184796735,
+        "maximumRearReachHipFraction": -0.4054051166948811,
+        "maximumRearAnkleReachHipFraction": -0.33775434516250047
       }
     },
     "eat": {
@@ -75,13 +101,15 @@
         "torsoPitchMedianDegrees": -15.816742333570858,
         "headPitchMedianDegrees": -3.922114944359835,
         "foreAftFootSpreadMedianHipFraction": 0.025664005911288024,
-        "maximumRearReachHipFraction": -0.11223949532542549
+        "maximumRearReachHipFraction": -0.11223949532542549,
+        "maximumRearAnkleReachHipFraction": -0.1718024938795386
       },
       "v5_5": {
         "torsoPitchMedianDegrees": -11.280391613833363,
         "headPitchMedianDegrees": 4.153674581668693,
-        "foreAftFootSpreadMedianHipFraction": 0.19452201163312557,
-        "maximumRearReachHipFraction": -0.1354386376902364
+        "foreAftFootSpreadMedianHipFraction": 0.206357950118007,
+        "maximumRearReachHipFraction": -0.1308183393736547,
+        "maximumRearAnkleReachHipFraction": -0.17841729627454322
       }
     },
     "attack": {
@@ -96,7 +124,7 @@
     "biteContactCloseDegrees": 49.99815322040244,
     "maxTransitionEndpointRotationErrorDegrees": 9.56649004098159e-15,
     "maxTransitionEndpointPositionError": 0.0,
-    "generatedSha256": "4020d6d3db42231d5fb414c3d42ab0d702c5bfe08aeae8e919deefaacde7d287",
+    "generatedSha256": "4e6e85dc82e941a3fc10109ca781dd3dcbb084699dc19834bf8683c04b22fe65",
     "measurementBoundary": "Visual balance proxies from the animated skeleton; not a physical center-of-mass or biological validation."
   },
   "render_scope": {
@@ -107,9 +135,9 @@
         "width": 960,
         "height": 540,
         "r_frame_rate": "24/1",
-        "nb_frames": "82",
-        "duration": "3.416667",
-        "size": "152442"
+        "nb_frames": "83",
+        "duration": "3.458333",
+        "size": "153549"
       },
       "eat-loop": {
         "codec_name": "h264",
@@ -118,7 +146,7 @@
         "r_frame_rate": "24/1",
         "nb_frames": "192",
         "duration": "8.000000",
-        "size": "256015"
+        "size": "256975"
       },
       "idle-breath": {
         "codec_name": "h264",
@@ -127,7 +155,7 @@
         "r_frame_rate": "24/1",
         "nb_frames": "144",
         "duration": "6.000000",
-        "size": "177103"
+        "size": "178928"
       },
       "walk-relaxed-inplace": {
         "codec_name": "h264",
@@ -136,7 +164,7 @@
         "r_frame_rate": "24/1",
         "nb_frames": "107",
         "duration": "4.458333",
-        "size": "232877"
+        "size": "234132"
       }
     },
     "camera": "locked full-body profile framing derived from global animation bounds",

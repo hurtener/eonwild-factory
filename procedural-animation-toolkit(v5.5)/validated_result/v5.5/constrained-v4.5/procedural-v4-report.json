@@ -2875,13 +2875,13 @@
     "runtime_event_markers": true
   },
   "input": {
-    "asset": "/Volumes/m2-extended-disk/Repos/eonwild-factory-v5-5/procedural-animation-toolkit(v5.5)/inputs/tarbosaurus_source.glb",
+    "asset": "/Volumes/m2-extended-disk/Repos/eonwild-factory/procedural-animation-toolkit(v5.5)/inputs/tarbosaurus_source.glb",
     "asset_sha256": "fbb42c2edad4eadebbcf808d32028d7c73b3fbfd6172610eddd5df84990a65c7",
-    "bone_map": "/Volumes/m2-extended-disk/Repos/eonwild-factory-v5-5/procedural-animation-toolkit(v5.5)/inputs/tarbosaurus_bone_map.edited.yml",
+    "bone_map": "/Volumes/m2-extended-disk/Repos/eonwild-factory/procedural-animation-toolkit(v5.5)/inputs/tarbosaurus_bone_map.edited.yml",
     "bone_map_sha256": "8f795733d8157d6a2c745acbf572ca4db90b34b83d8c539e711dca1809044782"
   },
   "output": {
-    "animated_glb": "/Volumes/m2-extended-disk/Repos/eonwild-factory-v5-5/procedural-animation-toolkit(v5.5)/validated_result/v5.5/constrained-v4.5/tarbosaurus_procedural_v4_animation_pack.glb",
+    "animated_glb": "/Volumes/m2-extended-disk/Repos/eonwild-factory/procedural-animation-toolkit(v5.5)/validated_result/v5.5/constrained-v4.5/tarbosaurus_procedural_v4_animation_pack.glb",
     "animated_glb_sha256": "ecbe50c039ab6dde320dfd595514276684c0a4e171bf5ec2daf91c4523f5de28",
     "clip_count": 37
   }

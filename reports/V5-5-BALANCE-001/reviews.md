@@ -18,5 +18,6 @@ After fixes, the final diff-only re-pin result is **P0=0, P1=0**.
 
 - V5.5 tests exercise the V5.5 showcase and release manifest.
 - The evidence writer runs the static checker and requires a coordinator browser record.
-- Browser acceptance is pinned to GLB SHA `4020d6d3db42231d5fb414c3d42ab0d702c5bfe08aeae8e919deefaacde7d287` and HTML SHA `825f66fb4b6bf205b42d4d92909bf830da2de581f5781bf2c18ca7619806eb7b`.
+- The accepted Test 2 promotion received a bounded structural re-review: exactly two foot inverse-bind slots change, toe roots remain fixed, the undeformed skinned mesh remains invariant within `2.24e-8 m`, and the canonical GLB exactly matches the reviewed candidate SHA `4e6e85dc82e941a3fc10109ca781dd3dcbb084699dc19834bf8683c04b22fe65`.
+- Browser acceptance is pinned to the current GLB and HTML hashes in `browser-acceptance.json`.
 - Package verification, inventory, key checksums, copy manifest, and bytecode hygiene pass.

@@ -153,7 +153,7 @@ def main() -> None:
         "tools": {
             "blender": version(["blender", "--version"]),
             "ffmpeg": version(["ffmpeg", "-version"]),
-            "python": version([str(ROOT / ".venv/bin/python"), "--version"]),
+            "python": version([sys.executable, "--version"]),
             "numpy": "2.5.2",
             "scipy": "1.18.1",
         },

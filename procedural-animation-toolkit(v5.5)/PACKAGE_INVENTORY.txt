@@ -3,6 +3,7 @@
 1000	./scripts/refresh_v5_5_package_records.sh
 1019	./toolkit/v5.5/docs/JAW_CALIBRATION_V5.md
 1019	./toolkit/v5/docs/JAW_CALIBRATION_V5.md
+10204	./validated_result/v5.5/procedural-v5.5-report.json
 1110	./toolkit/v2/runtime/README.md
 1113	./toolkit/v5.5/scripts/eonproc_v5/polish.py
 1113	./toolkit/v5.5/scripts/eonproc_v5_5/polish.py
@@ -13,7 +14,6 @@
 1124	./toolkit/v5.5/docs/AGENT_PROMPTS_V5.md
 1124	./toolkit/v5/docs/AGENT_PROMPTS_V5.md
 1164	./toolkit/v2/CHANGELOG.md
-11705	./toolkit/v5.5/tests/validate_v5_5_release.py
 1178	./scripts/verify_package.sh
 1179	./toolkit/v5.5/docs/TRANSITIONS_AND_PLAYER_V5.md
 1179	./toolkit/v5/docs/TRANSITIONS_AND_PLAYER_V5.md
@@ -38,7 +38,6 @@
 1395	./toolkit/v5.5/tests/test_quality_v5.py
 1395	./toolkit/v5/tests/test_quality_v5.py
 1436	./toolkit/v2/examples/profiles/large-theropod-v2.json
-14542	./toolkit/v5.5/scripts/build_v5_5.py
 1456	./toolkit/v3/MIGRATION_V2_TO_V3.md
 1494	./toolkit/v2/VIDEO_TO_PIPELINE_NOTES.md
 1502	./toolkit/v4/runtime/phase-clock.ts
@@ -46,8 +45,10 @@
 1502	./toolkit/v5/runtime/phase-clock.ts
 1513	./toolkit/v2/runtime/contact-events.ts
 1513	./toolkit/v3/runtime/contact-events.ts
+15131	./toolkit/v5.5/scripts/build_v5_5.py
 1531	./toolkit/v3/CHANGELOG.md
 1537	./toolkit/v5/tests/test_browser_contract_v5.py
+15414	./toolkit/v5.5/tests/validate_v5_5_release.py
 1711	./toolkit/v4/docs/ACTIONS_AND_TRANSITIONS.md
 1744	./validated_result/v5/v5-final-test-run.txt
 1747	./toolkit/v2/runtime/phase-clock.ts
@@ -65,7 +66,6 @@
 19482	./toolkit/v2/scripts/eonproc_v2/gltf_io.py
 19482	./toolkit/v3/scripts/eonproc_v3/gltf_io.py
 19482	./toolkit/v4/scripts/eonproc_v3/gltf_io.py
-19482	./toolkit/v5.5/scripts/eonproc_v3/gltf_io.py
 19482	./toolkit/v5/scripts/eonproc_v3/gltf_io.py
 19643	./toolkit/v4/scripts/eonproc_v4/actions.py
 19643	./toolkit/v5/scripts/eonproc_v4/actions.py
@@ -78,7 +78,6 @@
 2101	./toolkit/v5/runtime/types.ts
 2137	./toolkit/v2/ARCHITECTURE.md
 2150	./toolkit/v5.5/tests/test_browser_contract_v5.py
-216	./validated_result/v5.5/resolved-profile-v5.5.json
 21615	./toolkit/v4/scripts/eonproc_v4/generator.py
 21615	./toolkit/v5.5/scripts/eonproc_v4/generator.py
 21615	./toolkit/v5/scripts/eonproc_v4/generator.py
@@ -363,7 +362,6 @@
 25189	./validated_result/v5/showcase/_frames/walk_threeq/frame_0015.jpg
 25209	./validated_result/v5/showcase/_frames/walk_threeq/frame_0022.jpg
 25241	./validated_result/v5/showcase/_frames/walk_threeq/frame_0012.jpg
-2525	./validated_result/v5.5/v5.5-release-validation.json
 25252	./validated_result/v5/showcase/_frames/walk_threeq/frame_0016.jpg
 25262	./validated_result/v5.5/constrained-v4.5/animation-manifest.v4.json
 25262	./validated_result/v5/showcase/_frames/walk_threeq/frame_0027.jpg
@@ -390,6 +388,7 @@
 2634	./toolkit/v5.5/runtime/terrain-contact-adapter.ts
 2634	./toolkit/v5/runtime/terrain-contact-adapter.ts
 2676	./toolkit/v3/AGENT_PROMPTS.md
+26898	./toolkit/v5.5/scripts/eonproc_v3/gltf_io.py
 26911	./toolkit/v4/browser_demo/v4-viewer.js
 26911	./toolkit/v5.5/browser_demo/v4-viewer.js
 26911	./toolkit/v5/browser_demo/v4-viewer.js
@@ -397,6 +396,7 @@
 270	./toolkit/v5.5/examples/terrain/showcase-terrain.json
 270	./toolkit/v5/examples/terrain/showcase-terrain.json
 2749	./toolkit/v4/docs/REFERENCE_FITTING.md
+2756	./validated_result/v5.5/resolved-profile-v5.5.json
 276	./validated_result/v5/browser/serve.py
 2821	./toolkit/v2/tests/run_fixture_validation.py
 2897	./toolkit/v2/tests/test_core.py
@@ -425,16 +425,19 @@
 33996	./toolkit/v5.5/scripts/render_v4_validation.py
 33996	./toolkit/v5/scripts/render_v4_validation.py
 3454	./toolkit/v4/docs/BROWSER_PERFORMANCE_AND_FIDELITY.md
+3483	./validated_result/v5.5/v5.5-release-validation.json
 3553	./toolkit/v5.5/learning-skill/PROCEDURAL_ANIMATION_SKILL_V5.md
 3553	./toolkit/v5/learning-skill/PROCEDURAL_ANIMATION_SKILL_V5.md
 3581	./toolkit/v3/README.md
 3713	./toolkit/v4/browser_demo/test_browser_contract.py
 3713	./toolkit/v5.5/browser_demo/test_browser_contract.py
 3713	./toolkit/v5/browser_demo/test_browser_contract.py
+3787	./toolkit/v5.5/scripts/adjust_v5_5_foot_pivots.py
 38134	./validated_result/v5/showcase/v5_roar_keyframes.jpg
 3914	./README_FIRST.md
 3940	./toolkit/v5.5/scripts/eonproc_v5/transitions.py
 3940	./toolkit/v5/scripts/eonproc_v5/transitions.py
+3965	./toolkit/v5.5/scripts/eonproc_v5_5/pivots.py
 4014	./toolkit/v3/tests/test_core.py
 4019	./toolkit/v5.5/scripts/render_v5_stills.py
 4019	./toolkit/v5/scripts/render_v5_stills.py
@@ -505,7 +508,7 @@
 5396	./toolkit/v5.5/examples/profiles/tarbosaurus-v4-ultra-offline.json
 5396	./toolkit/v5/examples/profiles/tarbosaurus-v4-ultra-offline.json
 5430	./validated_result/v5.5/constrained-v4.5/resolved-profile-v4.json
-5434	./toolkit/v5.5/examples/profiles/tarbosaurus-v5.5.json
+5469	./toolkit/v5.5/examples/profiles/tarbosaurus-v5.5.json
 554	./toolkit/v4/browser_demo/README.md
 554	./toolkit/v5.5/browser_demo/README.md
 554	./toolkit/v5/browser_demo/README.md
@@ -518,7 +521,6 @@
 569	./toolkit/v5/scripts/run_core_tests.sh
 5690	./toolkit/v4/scripts/eonproc_v4/profile.py
 5690	./toolkit/v5/scripts/eonproc_v4/profile.py
-5734	./toolkit/v5.5/scripts/eonproc_v4/profile.py
 5781	./toolkit/v5.5/runtime/animation-controller-v5.ts
 5781	./toolkit/v5/runtime/animation-controller-v5.ts
 58	./environment/requirements-v5.txt
@@ -526,9 +528,10 @@
 5837	./toolkit/v4/tests/validate_generated_pack.py
 5837	./toolkit/v5.5/tests/validate_generated_pack.py
 5837	./toolkit/v5/tests/validate_generated_pack.py
+5927	./toolkit/v5.5/scripts/eonproc_v4/profile.py
 62405976	./validated_result/v5/browser/tarbosaurus_procedural_v5_animation_pack.glb
 62405976	./validated_result/v5/tarbosaurus_procedural_v5_animation_pack.glb
-62601260	./validated_result/v5.5/tarbosaurus_procedural_v5_5_animation_pack.glb
+62601276	./validated_result/v5.5/tarbosaurus_procedural_v5_5_animation_pack.glb
 6434	./toolkit/v3/PROCEDURAL_ANIMATION_GUIDE_V3.md
 6740	./scripts/build_v5_validation_html.py
 68	./toolkit/v2/scripts/eonproc_v2/__init__.py
@@ -544,7 +547,6 @@
 7099	./toolkit/v1/scripts/eonproc_v1/generator.py
 720	./scripts/check_v5_immutable.sh
 7208	./validated_result/v5/procedural-v5-report.json
-7364	./validated_result/v5.5/procedural-v5.5-report.json
 743	./scripts/run_v5_tests.sh
 751	./toolkit/v5.5/docs/QUALITY_GATES_V5.md
 751	./toolkit/v5/docs/QUALITY_GATES_V5.md
@@ -579,12 +581,12 @@
 9081	./toolkit/v4/scripts/eonproc_v4/sole.py
 9081	./toolkit/v5.5/scripts/eonproc_v4/sole.py
 9081	./toolkit/v5/scripts/eonproc_v4/sole.py
-920	./scripts/reproduce_v5_5.sh
 93066	./validated_result/v4/procedural-v4-report.json
-93397	./validated_result/v5.5/constrained-solve-report.json
-93397	./validated_result/v5.5/constrained-v4.5/procedural-v4-report.json
+93382	./validated_result/v5.5/constrained-solve-report.json
+93382	./validated_result/v5.5/constrained-v4.5/procedural-v4-report.json
 93884	./validated_result/v5/procedural-v5-render-report.json
 964	./scripts/run_v5_5_tests.sh
 968	./toolkit/v5.5/docs/ANIMATION_POLISH_V5.md
 968	./toolkit/v5/docs/ANIMATION_POLISH_V5.md
+984	./scripts/reproduce_v5_5.sh
 987	./validated_result/v5/v5-generation-output.json

@@ -40,6 +40,7 @@ def args() -> argparse.Namespace:
     p.add_argument("--height", type=int, default=360)
     p.add_argument("--fps", type=int, default=20)
     p.add_argument("--film-max-seconds", type=float, default=3.2)
+    p.add_argument("--film-duration-seconds", type=float, help="Render an exact film duration; looping clips repeat seamlessly")
     p.add_argument("--still-only", action="store_true")
     p.add_argument("--film-name", help="Render only this action as a film and skip stills")
     p.add_argument("--inspect-only", action="store_true")
@@ -249,13 +250,17 @@ def render_film(
     path: Path,
     fps: int,
     max_seconds: float,
+    duration_seconds: float | None,
 ) -> None:
     start, end = set_action(armature, action)
     # Looping clips are rendered for their complete manifest duration.  A
     # frame cap is retained for one-shot films so the showcase remains
     # pragmatic without truncating an authored loop at an arbitrary phase.
-    if clip_info.get("loop"):
-        frame_count = max(2, round(float(clip_info["durationSeconds"]) * fps))
+    source_loop_frames = max(2, round(float(clip_info["durationSeconds"]) * fps))
+    if duration_seconds is not None:
+        frame_count = max(2, round(duration_seconds * fps))
+    elif clip_info.get("loop"):
+        frame_count = source_loop_frames
     else:
         frame_count = min(end - start + 1, max(2, math.ceil(max_seconds * fps)))
     # This Blender build has no FFMPEG image-format enum, so render a numbered
@@ -263,17 +268,35 @@ def render_film(
     frame_dir = path.parent / f".{path.stem}.frames"
     frame_dir.mkdir(parents=True, exist_ok=True)
     scene.render.image_settings.file_format = "PNG"
-    scene.render.filepath = str(frame_dir / "frame_")
     scene.render.fps = fps
-    scene.frame_start = start
-    scene.frame_end = start + frame_count - 1
-    bpy.ops.render.render(animation=True)
+    if duration_seconds is not None and clip_info.get("loop"):
+        # Sample the imported action cyclically instead of extending its last key.
+        # Excluding the duplicate endpoint keeps each join phase-continuous. Render
+        # one unique cycle, then copy identical PNGs for additional repetitions.
+        unique_frame_count = min(frame_count, source_loop_frames)
+        for output_index in range(unique_frame_count):
+            scene.frame_set(start + output_index)
+            scene.render.filepath = str(frame_dir / f"frame_{output_index + 1:04d}.png")
+            bpy.ops.render.render(write_still=True)
+        for output_index in range(unique_frame_count, frame_count):
+            source_index = output_index % source_loop_frames
+            shutil.copyfile(
+                frame_dir / f"frame_{source_index + 1:04d}.png",
+                frame_dir / f"frame_{output_index + 1:04d}.png",
+            )
+        encode_start = 1
+    else:
+        scene.render.filepath = str(frame_dir / "frame_")
+        scene.frame_start = start
+        scene.frame_end = start + frame_count - 1
+        bpy.ops.render.render(animation=True)
+        encode_start = start
     ffmpeg = shutil.which("ffmpeg")
     if not ffmpeg:
         raise RuntimeError("ffmpeg is required to encode showcase MP4 films")
     subprocess.run([
         ffmpeg, "-y", "-hide_banner", "-loglevel", "error",
-        "-framerate", str(fps), "-start_number", str(start),
+        "-framerate", str(fps), "-start_number", str(encode_start),
         "-i", str(frame_dir / "frame_%04d.png"), "-frames:v", str(frame_count),
         "-c:v", "libx264", "-pix_fmt", "yuv420p", "-movflags", "+faststart", str(path),
     ], check=True)
@@ -334,7 +357,7 @@ def main() -> None:
     if not cfg.still_only:
         for name in film_names:
             if name in actions:
-                render_film(scene, actions[name], clip_by_name[name], armature, film_dir / f"{safe_slug(name)}.mp4", cfg.fps, cfg.film_max_seconds)
+                render_film(scene, actions[name], clip_by_name[name], armature, film_dir / f"{safe_slug(name)}.mp4", cfg.fps, cfg.film_max_seconds, cfg.film_duration_seconds)
 
     report = {
         "renderer": "Blender",
@@ -347,6 +370,7 @@ def main() -> None:
         "priority_clips": [c["name"] for c in priority],
         "film_clips": [name for name in film_names if name in actions] if not cfg.still_only else [],
         "film_duration_policy_seconds_non_loop": cfg.film_max_seconds,
+        "requested_film_duration_seconds": cfg.film_duration_seconds,
         "loop_duration_policy": "manifest durationSeconds rendered at the requested FPS",
         "imported_actions": len(actions),
         "bounds_m": {"min": list(bounds[0]), "max": list(bounds[1])},

@@ -132,6 +132,10 @@ class BipedV4Profile(BipedV3Profile):
     transition_long_seconds: float = 1.8
     transition_match_velocity: bool = True
 
+    # V5.5 rig calibration. The V4 solver ignores this value; the V5.5
+    # packaging stage measures each foot-to-toe gap and applies this fraction.
+    foot_pivot_gap_fraction: float = 0.90
+
     # V4 quality gates.
     # V4 solver continuity is stronger than V3 because root curvature and
     # terrain-normal changes otherwise expose small IK branch jumps.

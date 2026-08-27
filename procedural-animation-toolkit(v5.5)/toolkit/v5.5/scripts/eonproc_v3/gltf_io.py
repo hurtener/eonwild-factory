@@ -338,6 +338,142 @@ class GlbAsset:
             chain.append(self.nodes[current].get("name", f"node_{current}"))
         return chain
 
+    def _replace_accessor_values(self, accessor_index: int, values: np.ndarray) -> None:
+        """Replace a dense accessor in place without changing GLB layout."""
+        accessor = self.json["accessors"][accessor_index]
+        if "bufferView" not in accessor or accessor.get("sparse"):
+            raise NotImplementedError("Only dense buffer-view accessors can be replaced")
+        view = self.json["bufferViews"][accessor["bufferView"]]
+        dtype = _COMPONENT_DTYPES[accessor["componentType"]]
+        width = _TYPE_WIDTH[accessor["type"]]
+        count = int(accessor["count"])
+        array = np.asarray(values)
+        expected = (count, width)
+        if accessor["type"].startswith("MAT"):
+            side = int(math.sqrt(width))
+            if array.shape != (count, side, side):
+                raise ValueError(f"Accessor {accessor_index} expected {(count, side, side)}, got {array.shape}")
+            # glTF stores matrices column-major; accessor() exposes row-major matrices.
+            storage = array.transpose(0, 2, 1).reshape(expected)
+        else:
+            if array.shape != expected:
+                raise ValueError(f"Accessor {accessor_index} expected {expected}, got {array.shape}")
+            storage = array
+        storage = np.asarray(storage, dtype=dtype)
+        stride = int(view.get("byteStride", dtype.itemsize * width))
+        row_bytes = dtype.itemsize * width
+        base = int(view.get("byteOffset", 0)) + int(accessor.get("byteOffset", 0))
+        binary = bytearray(self.binary)
+        for row_index, row in enumerate(storage):
+            start = base + row_index * stride
+            binary[start : start + row_bytes] = row.tobytes(order="C")
+        self.binary = bytes(binary)
+
+    def _refresh_rest_pose(self) -> None:
+        """Rebuild cached rest transforms after a controlled node edit."""
+        self.rest_translation = []
+        self.rest_rotation = []
+        self.rest_scale = []
+        self.rest_local = []
+        for node in self.nodes:
+            if "matrix" in node:
+                matrix = np.asarray(node["matrix"], dtype=np.float64).reshape(4, 4).T
+                translation = matrix[:3, 3].copy()
+                basis = matrix[:3, :3]
+                scale = np.linalg.norm(basis, axis=0)
+                rotation = Rotation.from_matrix(basis @ np.diag(1.0 / scale))
+            else:
+                translation = np.asarray(node.get("translation", [0.0, 0.0, 0.0]), dtype=np.float64)
+                rotation = Rotation.from_quat(node.get("rotation", [0.0, 0.0, 0.0, 1.0]))
+                scale = np.asarray(node.get("scale", [1.0, 1.0, 1.0]), dtype=np.float64)
+                matrix = matrix_from_trs(translation, rotation, scale)
+            self.rest_translation.append(translation)
+            self.rest_rotation.append(rotation)
+            self.rest_scale.append(scale)
+            self.rest_local.append(matrix)
+        self.rest_world = self.world_matrices(self.rest_local)
+        self.rest_world_rotation = self.world_rotations(self.rest_rotation)
+
+    def move_joint_world_position_preserve_rest_skin(
+        self,
+        joint_name: str,
+        target_world_position: np.ndarray,
+        skin_index: int = 0,
+    ) -> dict[str, Any]:
+        """Move one joint origin while preserving child origins and rest skin shape.
+
+        The method updates the joint's local translation, counter-translates its direct
+        children so their world origins do not move, and replaces the joint's inverse
+        bind matrix so the undeformed mesh remains identical. Rotations, animation
+        channels, hierarchy, skin order, and all other inverse binds are untouched.
+        """
+        if joint_name not in self.name_to_node:
+            raise KeyError(f"Unknown joint {joint_name}")
+        joint_index = self.name_to_node[joint_name]
+        if "matrix" in self.nodes[joint_index]:
+            raise NotImplementedError("Joint matrix nodes are not supported for pivot relocation")
+        child_indices = list(self.nodes[joint_index].get("children", []))
+        if any("matrix" in self.nodes[index] for index in child_indices):
+            raise NotImplementedError("Child matrix nodes are not supported for pivot relocation")
+
+        old_world = [matrix.copy() for matrix in self.rest_world]
+        old_position = old_world[joint_index][:3, 3].copy()
+        target = np.asarray(target_world_position, dtype=np.float64).reshape(3)
+        parent_index = self.parents[joint_index]
+        parent_world = np.eye(4, dtype=np.float64) if parent_index is None else old_world[parent_index]
+        target_h = np.append(target, 1.0)
+        new_local_position = (np.linalg.inv(parent_world) @ target_h)[:3]
+        self.nodes[joint_index]["translation"] = new_local_position.astype(float).tolist()
+
+        joint_local = matrix_from_trs(new_local_position, self.rest_rotation[joint_index], self.rest_scale[joint_index])
+        new_joint_world = parent_world @ joint_local
+        inverse_new_joint_world = np.linalg.inv(new_joint_world)
+        old_child_positions: dict[str, list[float]] = {}
+        for child_index in child_indices:
+            child_name = self.nodes[child_index].get("name", f"node_{child_index}")
+            old_child_world = old_world[child_index][:3, 3].copy()
+            child_local = (inverse_new_joint_world @ np.append(old_child_world, 1.0))[:3]
+            self.nodes[child_index]["translation"] = child_local.astype(float).tolist()
+            old_child_positions[child_name] = old_child_world.astype(float).tolist()
+
+        skin = self.json["skins"][skin_index]
+        skin_joints = list(map(int, skin["joints"]))
+        if joint_index not in skin_joints:
+            raise ValueError(f"Node {joint_name} is not a joint in skin {skin_index}")
+        joint_slot = skin_joints.index(joint_index)
+        inverse_bind = self.accessor(skin["inverseBindMatrices"]).astype(np.float64)
+        inverse_bind[joint_slot] = inverse_new_joint_world @ old_world[joint_index] @ inverse_bind[joint_slot]
+        self._replace_accessor_values(skin["inverseBindMatrices"], inverse_bind)
+        self._refresh_rest_pose()
+        return {
+            "joint": joint_name,
+            "oldWorldPosition": old_position.astype(float).tolist(),
+            "newWorldPosition": self.rest_world[joint_index][:3, 3].astype(float).tolist(),
+            "preservedChildWorldPositions": old_child_positions,
+            "skinJointSlot": joint_slot,
+        }
+
+    def write(self, destination: str | Path) -> Path:
+        """Write the current JSON and binary payload as a GLB."""
+        gltf = copy.deepcopy(self.json)
+        binary = bytearray(self.binary)
+        while len(binary) % 4:
+            binary.append(0)
+        gltf["buffers"][0]["byteLength"] = len(binary)
+        json_bytes = json.dumps(gltf, separators=(",", ":")).encode("utf-8")
+        while len(json_bytes) % 4:
+            json_bytes += b" "
+        total_length = 12 + 8 + len(json_bytes) + 8 + len(binary)
+        output = Path(destination)
+        output.parent.mkdir(parents=True, exist_ok=True)
+        with output.open("wb") as fh:
+            fh.write(struct.pack("<4sII", b"glTF", 2, total_length))
+            fh.write(struct.pack("<II", len(json_bytes), 0x4E4F534A))
+            fh.write(json_bytes)
+            fh.write(struct.pack("<II", len(binary), 0x004E4942))
+            fh.write(binary)
+        return output
+
     def write_animations(
         self,
         destination: str | Path,

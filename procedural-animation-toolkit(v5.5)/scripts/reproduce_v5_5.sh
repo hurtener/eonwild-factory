@@ -18,6 +18,7 @@ cp "$WORK/procedural-v4-report.json" "$OUT/constrained-solve-report.json"
 PYTHONPATH="$ENGINE/scripts" "$PYTHON_BIN" "$ENGINE/scripts/build_v5_5.py" \
   --source-glb "$WORK/tarbosaurus_procedural_v4_animation_pack.glb" \
   --bone-map "$ROOT/inputs/tarbosaurus_bone_map.edited.yml" \
+  --profile "$ENGINE/examples/profiles/tarbosaurus-v5.5.json" \
   --v4-report "$WORK/procedural-v4-report.json" \
   --output-dir "$OUT"
 
