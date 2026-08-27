@@ -1,0 +1,903 @@
+{
+  "schema": "eonwild.v5-showcase-manifest.v1",
+  "source": {
+    "path": "procedural-animation-toolkit(v5)/validated_result/v5/tarbosaurus_procedural_v5_animation_pack.glb",
+    "sha256": "66cf116a2191311cf00f4571e71e5a38753fd71ad42a8381185156a3af1bacd0",
+    "license_status": "internal validated fixture; no external media ingested",
+    "material_policy": "GLB-embedded materials/textures preserved for Blender rendering"
+  },
+  "clips": [
+    {
+      "name": "PROC_WALK_RELAXED_V5_ROOTMOTION",
+      "durationSeconds": 4.44444465637207,
+      "loop": true,
+      "rootMotion": true,
+      "tags": [
+        "walk",
+        "relaxed",
+        "reference_fitted"
+      ],
+      "terrain": "flat",
+      "path": "StraightPath",
+      "transition": false,
+      "sourceClip": null,
+      "targetClip": null,
+      "sourcePhase": null,
+      "targetPhase": null,
+      "exactRuntimeHandoff": false
+    },
+    {
+      "name": "PROC_WALK_RELAXED_V5_INPLACE",
+      "durationSeconds": 4.44444465637207,
+      "loop": true,
+      "rootMotion": false,
+      "tags": [
+        "walk",
+        "relaxed",
+        "reference_fitted"
+      ],
+      "terrain": "flat",
+      "path": "StraightPath",
+      "transition": false,
+      "sourceClip": null,
+      "targetClip": null,
+      "sourcePhase": null,
+      "targetPhase": null,
+      "exactRuntimeHandoff": false
+    },
+    {
+      "name": "PROC_WALK_UNEVEN_TERRAIN_V5_ROOTMOTION",
+      "durationSeconds": 4.728132247924805,
+      "loop": false,
+      "rootMotion": true,
+      "tags": [
+        "walk",
+        "terrain",
+        "uneven",
+        "sole_collision"
+      ],
+      "terrain": "uneven",
+      "path": "StraightPath",
+      "transition": false,
+      "sourceClip": null,
+      "targetClip": null,
+      "sourcePhase": null,
+      "targetPhase": null,
+      "exactRuntimeHandoff": false
+    },
+    {
+      "name": "PROC_WALK_UNEVEN_TERRAIN_V5_INPLACE",
+      "durationSeconds": 4.728132247924805,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "walk",
+        "terrain",
+        "uneven",
+        "sole_collision"
+      ],
+      "terrain": "uneven",
+      "path": "StraightPath",
+      "transition": false,
+      "sourceClip": null,
+      "targetClip": null,
+      "sourcePhase": null,
+      "targetPhase": null,
+      "exactRuntimeHandoff": false
+    },
+    {
+      "name": "PROC_WALK_UPSLOPE_V5_ROOTMOTION",
+      "durationSeconds": 4.830917835235596,
+      "loop": false,
+      "rootMotion": true,
+      "tags": [
+        "walk",
+        "terrain",
+        "upslope"
+      ],
+      "terrain": "slope",
+      "path": "StraightPath",
+      "transition": false,
+      "sourceClip": null,
+      "targetClip": null,
+      "sourcePhase": null,
+      "targetPhase": null,
+      "exactRuntimeHandoff": false
+    },
+    {
+      "name": "PROC_WALK_UPSLOPE_V5_INPLACE",
+      "durationSeconds": 4.830917835235596,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "walk",
+        "terrain",
+        "upslope"
+      ],
+      "terrain": "slope",
+      "path": "StraightPath",
+      "transition": false,
+      "sourceClip": null,
+      "targetClip": null,
+      "sourcePhase": null,
+      "targetPhase": null,
+      "exactRuntimeHandoff": false
+    },
+    {
+      "name": "PROC_TURN_LEFT_35_V5_ROOTMOTION",
+      "durationSeconds": 5.4200544357299805,
+      "loop": false,
+      "rootMotion": true,
+      "tags": [
+        "turn",
+        "left",
+        "locomotion"
+      ],
+      "terrain": "flat",
+      "path": "EasedArcPath",
+      "transition": false,
+      "sourceClip": null,
+      "targetClip": null,
+      "sourcePhase": null,
+      "targetPhase": null,
+      "exactRuntimeHandoff": false
+    },
+    {
+      "name": "PROC_TURN_LEFT_35_V5_INPLACE",
+      "durationSeconds": 5.4200544357299805,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "turn",
+        "left",
+        "locomotion"
+      ],
+      "terrain": "flat",
+      "path": "EasedArcPath",
+      "transition": false,
+      "sourceClip": null,
+      "targetClip": null,
+      "sourcePhase": null,
+      "targetPhase": null,
+      "exactRuntimeHandoff": false
+    },
+    {
+      "name": "PROC_TURN_RIGHT_35_V5_ROOTMOTION",
+      "durationSeconds": 5.4200544357299805,
+      "loop": false,
+      "rootMotion": true,
+      "tags": [
+        "turn",
+        "right",
+        "locomotion"
+      ],
+      "terrain": "flat",
+      "path": "EasedArcPath",
+      "transition": false,
+      "sourceClip": null,
+      "targetClip": null,
+      "sourcePhase": null,
+      "targetPhase": null,
+      "exactRuntimeHandoff": false
+    },
+    {
+      "name": "PROC_TURN_RIGHT_35_V5_INPLACE",
+      "durationSeconds": 5.4200544357299805,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "turn",
+        "right",
+        "locomotion"
+      ],
+      "terrain": "flat",
+      "path": "EasedArcPath",
+      "transition": false,
+      "sourceClip": null,
+      "targetClip": null,
+      "sourcePhase": null,
+      "targetPhase": null,
+      "exactRuntimeHandoff": false
+    },
+    {
+      "name": "PROC_START_WALK_V5_ROOTMOTION",
+      "durationSeconds": 4.0,
+      "loop": false,
+      "rootMotion": true,
+      "tags": [
+        "start",
+        "acceleration",
+        "locomotion"
+      ],
+      "terrain": "flat",
+      "path": "StraightPath",
+      "transition": false,
+      "sourceClip": null,
+      "targetClip": null,
+      "sourcePhase": null,
+      "targetPhase": null,
+      "exactRuntimeHandoff": false
+    },
+    {
+      "name": "PROC_START_WALK_V5_INPLACE",
+      "durationSeconds": 4.0,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "start",
+        "acceleration",
+        "locomotion"
+      ],
+      "terrain": "flat",
+      "path": "StraightPath",
+      "transition": false,
+      "sourceClip": null,
+      "targetClip": null,
+      "sourcePhase": null,
+      "targetPhase": null,
+      "exactRuntimeHandoff": false
+    },
+    {
+      "name": "PROC_BRAKE_TO_IDLE_V5_ROOTMOTION",
+      "durationSeconds": 3.5999999046325684,
+      "loop": false,
+      "rootMotion": true,
+      "tags": [
+        "stop",
+        "braking",
+        "locomotion"
+      ],
+      "terrain": "flat",
+      "path": "StraightPath",
+      "transition": false,
+      "sourceClip": null,
+      "targetClip": null,
+      "sourcePhase": null,
+      "targetPhase": null,
+      "exactRuntimeHandoff": false
+    },
+    {
+      "name": "PROC_BRAKE_TO_IDLE_V5_INPLACE",
+      "durationSeconds": 3.5999999046325684,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "stop",
+        "braking",
+        "locomotion"
+      ],
+      "terrain": "flat",
+      "path": "StraightPath",
+      "transition": false,
+      "sourceClip": null,
+      "targetClip": null,
+      "sourcePhase": null,
+      "targetPhase": null,
+      "exactRuntimeHandoff": false
+    },
+    {
+      "name": "PROC_ALERT_WALK_V5_ROOTMOTION",
+      "durationSeconds": 3.846153736114502,
+      "loop": true,
+      "rootMotion": true,
+      "tags": [
+        "walk",
+        "alert",
+        "attention"
+      ],
+      "terrain": "flat",
+      "path": "StraightPath",
+      "transition": false,
+      "sourceClip": null,
+      "targetClip": null,
+      "sourcePhase": null,
+      "targetPhase": null,
+      "exactRuntimeHandoff": false
+    },
+    {
+      "name": "PROC_ALERT_WALK_V5_INPLACE",
+      "durationSeconds": 3.846153736114502,
+      "loop": true,
+      "rootMotion": false,
+      "tags": [
+        "walk",
+        "alert",
+        "attention"
+      ],
+      "terrain": "flat",
+      "path": "StraightPath",
+      "transition": false,
+      "sourceClip": null,
+      "targetClip": null,
+      "sourcePhase": null,
+      "targetPhase": null,
+      "exactRuntimeHandoff": false
+    },
+    {
+      "name": "PROC_IDLE_BREATH_V5",
+      "durationSeconds": 6.0,
+      "loop": true,
+      "rootMotion": false,
+      "tags": [
+        "idle",
+        "breathing"
+      ],
+      "terrain": null,
+      "path": null,
+      "transition": false,
+      "sourceClip": null,
+      "targetClip": null,
+      "sourcePhase": null,
+      "targetPhase": null,
+      "exactRuntimeHandoff": false
+    },
+    {
+      "name": "PROC_ALERT_IDLE_V5",
+      "durationSeconds": 6.0,
+      "loop": true,
+      "rootMotion": false,
+      "tags": [
+        "alert",
+        "idle"
+      ],
+      "terrain": null,
+      "path": null,
+      "transition": false,
+      "sourceClip": null,
+      "targetClip": null,
+      "sourcePhase": null,
+      "targetPhase": null,
+      "exactRuntimeHandoff": false
+    },
+    {
+      "name": "PROC_EAT_LOOP_V5",
+      "durationSeconds": 8.0,
+      "loop": true,
+      "rootMotion": false,
+      "tags": [
+        "eat",
+        "feeding",
+        "loop"
+      ],
+      "terrain": null,
+      "path": null,
+      "transition": false,
+      "sourceClip": null,
+      "targetClip": null,
+      "sourcePhase": null,
+      "targetPhase": null,
+      "exactRuntimeHandoff": false
+    },
+    {
+      "name": "PROC_BITE_ATTACK_V5",
+      "durationSeconds": 3.4000000953674316,
+      "loop": false,
+      "rootMotion": true,
+      "tags": [
+        "attack",
+        "bite",
+        "one_shot"
+      ],
+      "terrain": null,
+      "path": null,
+      "transition": false,
+      "sourceClip": null,
+      "targetClip": null,
+      "sourcePhase": null,
+      "targetPhase": null,
+      "exactRuntimeHandoff": false
+    },
+    {
+      "name": "PROC_ROAR_V5",
+      "durationSeconds": 5.400000095367432,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "roar",
+        "display",
+        "one_shot"
+      ],
+      "terrain": null,
+      "path": null,
+      "transition": false,
+      "sourceClip": null,
+      "targetClip": null,
+      "sourcePhase": null,
+      "targetPhase": null,
+      "exactRuntimeHandoff": false
+    },
+    {
+      "name": "PROC_IDLE_TO_WALK_V5",
+      "durationSeconds": 1.95,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "idle",
+        "walk"
+      ],
+      "terrain": null,
+      "path": null,
+      "transition": true,
+      "sourceClip": "PROC_IDLE_BREATH_V5",
+      "targetClip": "PROC_WALK_RELAXED_V5_INPLACE",
+      "sourcePhase": 0.0,
+      "targetPhase": 0.0,
+      "exactRuntimeHandoff": true
+    },
+    {
+      "name": "PROC_WALK_TO_IDLE_V5",
+      "durationSeconds": 1.95,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "walk",
+        "idle"
+      ],
+      "terrain": null,
+      "path": null,
+      "transition": true,
+      "sourceClip": "PROC_WALK_RELAXED_V5_INPLACE",
+      "targetClip": "PROC_IDLE_BREATH_V5",
+      "sourcePhase": 0.50187265917603,
+      "targetPhase": 0.0,
+      "exactRuntimeHandoff": true
+    },
+    {
+      "name": "PROC_WALK_TO_ALERT_WALK_V5",
+      "durationSeconds": 2.2222222,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "walk",
+        "alert"
+      ],
+      "terrain": null,
+      "path": null,
+      "transition": true,
+      "sourceClip": "PROC_WALK_RELAXED_V5_INPLACE",
+      "targetClip": "PROC_ALERT_WALK_V5_INPLACE",
+      "sourcePhase": 0.0,
+      "targetPhase": 1.0,
+      "exactRuntimeHandoff": true
+    },
+    {
+      "name": "PROC_ALERT_WALK_TO_WALK_V5",
+      "durationSeconds": 2.2222222,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "alert",
+        "walk"
+      ],
+      "terrain": null,
+      "path": null,
+      "transition": true,
+      "sourceClip": "PROC_ALERT_WALK_V5_INPLACE",
+      "targetClip": "PROC_WALK_RELAXED_V5_INPLACE",
+      "sourcePhase": 0.0,
+      "targetPhase": 1.0,
+      "exactRuntimeHandoff": true
+    },
+    {
+      "name": "PROC_IDLE_TO_ALERT_IDLE_V5",
+      "durationSeconds": 1.4,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "idle",
+        "alert"
+      ],
+      "terrain": null,
+      "path": null,
+      "transition": true,
+      "sourceClip": "PROC_IDLE_BREATH_V5",
+      "targetClip": "PROC_ALERT_IDLE_V5",
+      "sourcePhase": 0.0,
+      "targetPhase": 0.0,
+      "exactRuntimeHandoff": true
+    },
+    {
+      "name": "PROC_ALERT_IDLE_TO_IDLE_V5",
+      "durationSeconds": 1.4,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "alert",
+        "idle"
+      ],
+      "terrain": null,
+      "path": null,
+      "transition": true,
+      "sourceClip": "PROC_ALERT_IDLE_V5",
+      "targetClip": "PROC_IDLE_BREATH_V5",
+      "sourcePhase": 0.0,
+      "targetPhase": 0.0,
+      "exactRuntimeHandoff": true
+    },
+    {
+      "name": "PROC_IDLE_TO_EAT_V5",
+      "durationSeconds": 2.05,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "idle",
+        "eat"
+      ],
+      "terrain": null,
+      "path": null,
+      "transition": true,
+      "sourceClip": "PROC_IDLE_BREATH_V5",
+      "targetClip": "PROC_EAT_LOOP_V5",
+      "sourcePhase": 0.0,
+      "targetPhase": 0.0,
+      "exactRuntimeHandoff": true
+    },
+    {
+      "name": "PROC_EAT_TO_IDLE_V5",
+      "durationSeconds": 2.05,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "eat",
+        "idle"
+      ],
+      "terrain": null,
+      "path": null,
+      "transition": true,
+      "sourceClip": "PROC_EAT_LOOP_V5",
+      "targetClip": "PROC_IDLE_BREATH_V5",
+      "sourcePhase": 0.0,
+      "targetPhase": 0.0,
+      "exactRuntimeHandoff": true
+    },
+    {
+      "name": "PROC_IDLE_TO_ROAR_READY_V5",
+      "durationSeconds": 0.95,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "idle",
+        "roar"
+      ],
+      "terrain": null,
+      "path": null,
+      "transition": true,
+      "sourceClip": "PROC_IDLE_BREATH_V5",
+      "targetClip": "PROC_ROAR_V5",
+      "sourcePhase": 0.0,
+      "targetPhase": 0.0,
+      "exactRuntimeHandoff": true
+    },
+    {
+      "name": "PROC_ROAR_TO_IDLE_V5",
+      "durationSeconds": 1.55,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "roar",
+        "idle"
+      ],
+      "terrain": null,
+      "path": null,
+      "transition": true,
+      "sourceClip": "PROC_ROAR_V5",
+      "targetClip": "PROC_IDLE_BREATH_V5",
+      "sourcePhase": 1.0,
+      "targetPhase": 0.0,
+      "exactRuntimeHandoff": true
+    },
+    {
+      "name": "PROC_WALK_TO_BITE_READY_V5",
+      "durationSeconds": 0.95,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "walk",
+        "bite",
+        "urgent"
+      ],
+      "terrain": null,
+      "path": null,
+      "transition": true,
+      "sourceClip": "PROC_WALK_RELAXED_V5_INPLACE",
+      "targetClip": "PROC_BITE_ATTACK_V5",
+      "sourcePhase": 0.50187265917603,
+      "targetPhase": 0.0,
+      "exactRuntimeHandoff": true
+    },
+    {
+      "name": "PROC_BITE_TO_WALK_V5",
+      "durationSeconds": 1.55,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "bite",
+        "walk",
+        "recovery"
+      ],
+      "terrain": null,
+      "path": null,
+      "transition": true,
+      "sourceClip": "PROC_BITE_ATTACK_V5",
+      "targetClip": "PROC_WALK_RELAXED_V5_INPLACE",
+      "sourcePhase": 1.0,
+      "targetPhase": 0.0,
+      "exactRuntimeHandoff": true
+    },
+    {
+      "name": "PROC_WALK_TO_ROAR_READY_V5",
+      "durationSeconds": 1.45,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "walk",
+        "roar"
+      ],
+      "terrain": null,
+      "path": null,
+      "transition": true,
+      "sourceClip": "PROC_WALK_RELAXED_V5_INPLACE",
+      "targetClip": "PROC_ROAR_V5",
+      "sourcePhase": 0.50187265917603,
+      "targetPhase": 0.0,
+      "exactRuntimeHandoff": true
+    },
+    {
+      "name": "PROC_ROAR_TO_WALK_V5",
+      "durationSeconds": 2.0,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "roar",
+        "walk",
+        "recovery"
+      ],
+      "terrain": null,
+      "path": null,
+      "transition": true,
+      "sourceClip": "PROC_ROAR_V5",
+      "targetClip": "PROC_WALK_RELAXED_V5_INPLACE",
+      "sourcePhase": 1.0,
+      "targetPhase": 0.0,
+      "exactRuntimeHandoff": true
+    },
+    {
+      "name": "PROC_WALK_TO_EAT_V5",
+      "durationSeconds": 2.1,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "walk",
+        "eat",
+        "settle"
+      ],
+      "terrain": null,
+      "path": null,
+      "transition": true,
+      "sourceClip": "PROC_WALK_RELAXED_V5_INPLACE",
+      "targetClip": "PROC_EAT_LOOP_V5",
+      "sourcePhase": 0.50187265917603,
+      "targetPhase": 0.0,
+      "exactRuntimeHandoff": true
+    },
+    {
+      "name": "PROC_EAT_TO_WALK_V5",
+      "durationSeconds": 2.1,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "eat",
+        "walk",
+        "rise"
+      ],
+      "terrain": null,
+      "path": null,
+      "transition": true,
+      "sourceClip": "PROC_EAT_LOOP_V5",
+      "targetClip": "PROC_WALK_RELAXED_V5_INPLACE",
+      "sourcePhase": 0.0,
+      "targetPhase": 0.0,
+      "exactRuntimeHandoff": true
+    }
+  ],
+  "rendered_assets": [
+    {
+      "path": "showcase/v5/site/index.html",
+      "sha256": "ac1848b92e7dfc791c3116714e77e21e4633b5d985b60a5ad1b43d59a7e2de43",
+      "bytes": 15222,
+      "kind": "html"
+    },
+    {
+      "path": "showcase/v5/site/media/films/bite-attack.mp4",
+      "sha256": "e9fe9cfbb8f360585f744cc1a7bd60f8c1c619b55eb134b9d1637796984e0cf1",
+      "bytes": 33524,
+      "kind": "mp4"
+    },
+    {
+      "path": "showcase/v5/site/media/films/eat-loop.mp4",
+      "sha256": "f69f6d6d7371bac5d78acb06f3cbd0d1c655136109cfa227abe22149b17f25d8",
+      "bytes": 16406,
+      "kind": "mp4"
+    },
+    {
+      "path": "showcase/v5/site/media/films/idle-breath.mp4",
+      "sha256": "c19e492c85cbc3c3558c993c6ef6f870c75362b8f9364287191b6828be29b334",
+      "bytes": 17907,
+      "kind": "mp4"
+    },
+    {
+      "path": "showcase/v5/site/media/films/roar.mp4",
+      "sha256": "84e18126c67a312d40a41b25d4fa936ba7772a559fa14cdb75f651bf0a3af5df",
+      "bytes": 20669,
+      "kind": "mp4"
+    },
+    {
+      "path": "showcase/v5/site/media/films/start-walk-inplace.mp4",
+      "sha256": "1adf4968f0d1ad512533937896ff88144f8ab20fdcbd55a9721e6f9de2f73757",
+      "bytes": 33081,
+      "kind": "mp4"
+    },
+    {
+      "path": "showcase/v5/site/media/films/turn-left-35-inplace.mp4",
+      "sha256": "d4cf6d7beaf0f74c202ccbb36fd37a7d21ae0c19feb59f1ace011f7b95ce5d8f",
+      "bytes": 38594,
+      "kind": "mp4"
+    },
+    {
+      "path": "showcase/v5/site/media/films/walk-relaxed-inplace.mp4",
+      "sha256": "5a430c665203a39c3a8966655dc55b6691aaab23b909a83ad5b08b3539219b30",
+      "bytes": 217116,
+      "kind": "mp4"
+    },
+    {
+      "path": "showcase/v5/site/media/stills/alert-idle.png",
+      "sha256": "574b6be5ca59c438d2ea30f360f7a1ca5bba5e2cb4562dbd09fe97458c5f3e3f",
+      "bytes": 125653,
+      "kind": "png"
+    },
+    {
+      "path": "showcase/v5/site/media/stills/alert-walk-inplace.png",
+      "sha256": "f2632a9f8ab03d089ba5612837649556f81fdf2dc3a15384006527e020fd0a9f",
+      "bytes": 127041,
+      "kind": "png"
+    },
+    {
+      "path": "showcase/v5/site/media/stills/alert-walk-rootmotion.png",
+      "sha256": "035368d4898cce86ae6ad9cf63330cde9483dfc172b778b5c2105357915f77e7",
+      "bytes": 130921,
+      "kind": "png"
+    },
+    {
+      "path": "showcase/v5/site/media/stills/bite-attack.png",
+      "sha256": "8953618ff7ad430c54b68fa8c417cf20489003fcd8efc3f1ef7303e54ee99ca4",
+      "bytes": 126417,
+      "kind": "png"
+    },
+    {
+      "path": "showcase/v5/site/media/stills/brake-to-idle-inplace.png",
+      "sha256": "6f50ef80a0fe615865fc3d1a01913b9764a04c613c8e0830093b54ef80a5dcb7",
+      "bytes": 125807,
+      "kind": "png"
+    },
+    {
+      "path": "showcase/v5/site/media/stills/brake-to-idle-rootmotion.png",
+      "sha256": "0dd0fd8efb73745c1e50a75ed13f1a85413409bd4c08e2631c0ad84874508c4c",
+      "bytes": 128152,
+      "kind": "png"
+    },
+    {
+      "path": "showcase/v5/site/media/stills/eat-loop.png",
+      "sha256": "c58ec5c2e75f86bce0fba9b4f77082464a09894fefcadea6b22c1b08752922ce",
+      "bytes": 126489,
+      "kind": "png"
+    },
+    {
+      "path": "showcase/v5/site/media/stills/idle-breath.png",
+      "sha256": "6ca362163dda9c041d9261efe908fbd67e55373a4b451429841d3c75db429f14",
+      "bytes": 125181,
+      "kind": "png"
+    },
+    {
+      "path": "showcase/v5/site/media/stills/roar.png",
+      "sha256": "bccf6105b94f38663ab3495a9e363909d5ade7e5453e158674c25c4e5b4b9957",
+      "bytes": 126073,
+      "kind": "png"
+    },
+    {
+      "path": "showcase/v5/site/media/stills/start-walk-inplace.png",
+      "sha256": "765b43c6565bc8091670c16a6bb628132de5e88cafcc4c474dd174078cef9152",
+      "bytes": 126246,
+      "kind": "png"
+    },
+    {
+      "path": "showcase/v5/site/media/stills/start-walk-rootmotion.png",
+      "sha256": "93a24cdeafaa807085a330eb72a05f0cdf5b2e75396af30938e1a5ce7471f58f",
+      "bytes": 125759,
+      "kind": "png"
+    },
+    {
+      "path": "showcase/v5/site/media/stills/turn-left-35-inplace.png",
+      "sha256": "2766b7a42c547cde8ca5bdc99b2a1607b8525db1d0fa2381915332c6a2811068",
+      "bytes": 126594,
+      "kind": "png"
+    },
+    {
+      "path": "showcase/v5/site/media/stills/turn-left-35-rootmotion.png",
+      "sha256": "acd063071b82b5d95918aca92932c99f8973d2088cf118e11cf32eeda06951ab",
+      "bytes": 126856,
+      "kind": "png"
+    },
+    {
+      "path": "showcase/v5/site/media/stills/turn-right-35-inplace.png",
+      "sha256": "3745a4eec57bf98e664ed3398ec9000c8e964cd17478dc0877451b225530a729",
+      "bytes": 126919,
+      "kind": "png"
+    },
+    {
+      "path": "showcase/v5/site/media/stills/turn-right-35-rootmotion.png",
+      "sha256": "317cfce975d2a15c021a48b4718d0e6d4b624c29f581b1b01d09c014936be70e",
+      "bytes": 132160,
+      "kind": "png"
+    },
+    {
+      "path": "showcase/v5/site/media/stills/walk-relaxed-inplace.png",
+      "sha256": "438906ce7d6667252e15dbf7841ced870855cbdb474085d3942040385a52e8f5",
+      "bytes": 125778,
+      "kind": "png"
+    },
+    {
+      "path": "showcase/v5/site/media/stills/walk-relaxed-rootmotion.png",
+      "sha256": "819fae2c2aecdd043f2ea1db377118bded9c2322005dc292256208a2e90f9729",
+      "bytes": 130577,
+      "kind": "png"
+    },
+    {
+      "path": "showcase/v5/site/media/stills/walk-uneven-terrain-inplace.png",
+      "sha256": "5edd50d542db623a757733c9f7fdbca120bcdd2ada03354c915332d4f9396db3",
+      "bytes": 126123,
+      "kind": "png"
+    },
+    {
+      "path": "showcase/v5/site/media/stills/walk-uneven-terrain-rootmotion.png",
+      "sha256": "06e3045a0a4e2ed8156f55d7311d7177ecda4a86c607bfa7b4c56be6bfdb5ae5",
+      "bytes": 130057,
+      "kind": "png"
+    },
+    {
+      "path": "showcase/v5/site/media/stills/walk-upslope-inplace.png",
+      "sha256": "3498d53f6064c59f8be08af447ed753dd0481f727707918fc27ea2a88be00341",
+      "bytes": 125152,
+      "kind": "png"
+    },
+    {
+      "path": "showcase/v5/site/media/stills/walk-upslope-rootmotion.png",
+      "sha256": "d1a75e69f1de7d8658d068e527c25e31ff58a1bbd777297c5c731ce9cd283dc3",
+      "bytes": 128705,
+      "kind": "png"
+    }
+  ],
+  "offline": true,
+  "hero": "media/films/walk-relaxed-inplace.mp4",
+  "hero_resolution": [
+    960,
+    540
+  ],
+  "hero_fps": 24,
+  "hero_duration_seconds": 4.208333
+}

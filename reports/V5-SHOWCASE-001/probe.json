@@ -1,0 +1,288 @@
+02:08:06 | INFO: Data are loaded, start creating Blender stuff
+02:08:06 | INFO: Blender create Mesh node Mesh_0
+02:08:08 | INFO: glTF import finished in 1.50s
+/Volumes/m2-extended-disk/Repos/eonwild-factory-v5showcase/showcase/v5/render_v5_showcase.py:59: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  m.use_nodes = True
+/Volumes/m2-extended-disk/Repos/eonwild-factory-v5showcase/showcase/v5/render_v5_showcase.py:126: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world.use_nodes = True
+{
+  "actions": [
+    "PROC_ALERT_IDLE_TO_IDLE_V5",
+    "PROC_ALERT_IDLE_V5",
+    "PROC_ALERT_WALK_TO_WALK_V5",
+    "PROC_ALERT_WALK_V5_INPLACE",
+    "PROC_ALERT_WALK_V5_ROOTMOTION",
+    "PROC_BITE_ATTACK_V5",
+    "PROC_BITE_TO_WALK_V5",
+    "PROC_BRAKE_TO_IDLE_V5_INPLACE",
+    "PROC_BRAKE_TO_IDLE_V5_ROOTMOTION",
+    "PROC_EAT_LOOP_V5",
+    "PROC_EAT_TO_IDLE_V5",
+    "PROC_EAT_TO_WALK_V5",
+    "PROC_IDLE_BREATH_V5",
+    "PROC_IDLE_TO_ALERT_IDLE_V5",
+    "PROC_IDLE_TO_EAT_V5",
+    "PROC_IDLE_TO_ROAR_READY_V5",
+    "PROC_IDLE_TO_WALK_V5",
+    "PROC_ROAR_TO_IDLE_V5",
+    "PROC_ROAR_TO_WALK_V5",
+    "PROC_ROAR_V5",
+    "PROC_START_WALK_V5_INPLACE",
+    "PROC_START_WALK_V5_ROOTMOTION",
+    "PROC_TURN_LEFT_35_V5_INPLACE",
+    "PROC_TURN_LEFT_35_V5_ROOTMOTION",
+    "PROC_TURN_RIGHT_35_V5_INPLACE",
+    "PROC_TURN_RIGHT_35_V5_ROOTMOTION",
+    "PROC_WALK_RELAXED_V5_INPLACE",
+    "PROC_WALK_RELAXED_V5_ROOTMOTION",
+    "PROC_WALK_TO_ALERT_WALK_V5",
+    "PROC_WALK_TO_BITE_READY_V5",
+    "PROC_WALK_TO_EAT_V5",
+    "PROC_WALK_TO_IDLE_V5",
+    "PROC_WALK_TO_ROAR_READY_V5",
+    "PROC_WALK_UNEVEN_TERRAIN_V5_INPLACE",
+    "PROC_WALK_UNEVEN_TERRAIN_V5_ROOTMOTION",
+    "PROC_WALK_UPSLOPE_V5_INPLACE",
+    "PROC_WALK_UPSLOPE_V5_ROOTMOTION"
+  ],
+  "bounds": [
+    [
+      -0.9510578513145447,
+      -2.9889426231384277,
+      -1.0
+    ],
+    [
+      0.9510578513145447,
+      2.985447883605957,
+      1.6998668909072876
+    ]
+  ],
+  "priority": [
+    "PROC_WALK_RELAXED_V5_ROOTMOTION",
+    "PROC_WALK_RELAXED_V5_INPLACE",
+    "PROC_WALK_UNEVEN_TERRAIN_V5_ROOTMOTION",
+    "PROC_WALK_UNEVEN_TERRAIN_V5_INPLACE",
+    "PROC_WALK_UPSLOPE_V5_ROOTMOTION",
+    "PROC_WALK_UPSLOPE_V5_INPLACE",
+    "PROC_TURN_LEFT_35_V5_ROOTMOTION",
+    "PROC_TURN_LEFT_35_V5_INPLACE",
+    "PROC_TURN_RIGHT_35_V5_ROOTMOTION",
+    "PROC_TURN_RIGHT_35_V5_INPLACE",
+    "PROC_START_WALK_V5_ROOTMOTION",
+    "PROC_START_WALK_V5_INPLACE",
+    "PROC_BRAKE_TO_IDLE_V5_ROOTMOTION",
+    "PROC_BRAKE_TO_IDLE_V5_INPLACE",
+    "PROC_ALERT_WALK_V5_ROOTMOTION",
+    "PROC_ALERT_WALK_V5_INPLACE",
+    "PROC_IDLE_BREATH_V5",
+    "PROC_ALERT_IDLE_V5",
+    "PROC_EAT_LOOP_V5",
+    "PROC_BITE_ATTACK_V5",
+    "PROC_ROAR_V5"
+  ],
+  "objects": [
+    {
+      "name": "UniRigArmature",
+      "type": "ARMATURE",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.536850094795227,
+        5.670778274536133,
+        1.5805011987686157
+      ],
+      "matrix_world": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "name": "Mesh_0",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.4853382110595703,
+        5.974390506744385,
+        1.6701542139053345
+      ],
+      "matrix_world": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "name": "SHOWCASE_GROUND",
+      "type": "MESH",
+      "location": [
+        0.0,
+        -3.023942708969116,
+        0.3499334454536438
+      ],
+      "dimensions": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "matrix_world": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -3.023942708969116
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.3499334454536438
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "name": "SHOWCASE_BACKDROP",
+      "type": "MESH",
+      "location": [
+        0.0,
+        -0.0017473697662353516,
+        13.648648262023926
+      ],
+      "dimensions": [
+        45.0,
+        45.0,
+        0.0
+      ],
+      "matrix_world": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          -4.371138828673793e-08,
+          -1.0,
+          -0.0017473697662353516
+        ],
+        [
+          0.0,
+          1.0,
+          -4.371138828673793e-08,
+          13.648648262023926
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "name": "Icosphere",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.9021157026290894,
+        1.9999998807907104,
+        2.0
+      ],
+      "matrix_world": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    }
+  ]
+}
+Blender 5.2.0 LTS (hash fbe6228777e7 built 2026-07-14 01:31:22)
+
+Blender quit

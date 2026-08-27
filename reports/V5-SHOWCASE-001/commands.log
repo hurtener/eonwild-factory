@@ -1,0 +1,14 @@
+git status --short --branch
+git ls-files -s -- 'procedural-animation-toolkit(v5)' | shasum -a 256
+sha256sum 'procedural-animation-toolkit(v5)/validated_result/v5/tarbosaurus_procedural_v5_animation_pack.glb'
+blender --version
+blender -b --python showcase/v5/render_v5_showcase.py -- --input 'procedural-animation-toolkit(v5)/validated_result/v5/tarbosaurus_procedural_v5_animation_pack.glb' --manifest 'procedural-animation-toolkit(v5)/validated_result/v5/animation-manifest.v5.json' --output reports/V5-SHOWCASE-001/film-proof --film-name PROC_WALK_RELAXED_V5_INPLACE --width 320 --height 180 --fps 24 --film-max-seconds 1.2
+ffprobe -v error -show_entries format=duration:stream=width,height,r_frame_rate -of default=noprint_wrappers=1 reports/V5-SHOWCASE-001/film-proof/films/walk-relaxed-inplace.mp4
+blender -b --python showcase/v5/render_v5_showcase.py -- --input 'procedural-animation-toolkit(v5)/validated_result/v5/tarbosaurus_procedural_v5_animation_pack.glb' --manifest 'procedural-animation-toolkit(v5)/validated_result/v5/animation-manifest.v5.json' --output showcase/v5/site/media --width 480 --height 270 --fps 24 --film-max-seconds 3.2
+blender -b --python showcase/v5/render_v5_showcase.py -- --input 'procedural-animation-toolkit(v5)/validated_result/v5/tarbosaurus_procedural_v5_animation_pack.glb' --manifest 'procedural-animation-toolkit(v5)/validated_result/v5/animation-manifest.v5.json' --output reports/V5-SHOWCASE-001/film-eat --film-name PROC_EAT_LOOP_V5 --width 480 --height 270 --fps 24 --film-max-seconds 3.2
+blender -b --python showcase/v5/render_v5_showcase.py -- --input 'procedural-animation-toolkit(v5)/validated_result/v5/tarbosaurus_procedural_v5_animation_pack.glb' --manifest 'procedural-animation-toolkit(v5)/validated_result/v5/animation-manifest.v5.json' --output reports/V5-SHOWCASE-001/hero-pass --film-name PROC_WALK_RELAXED_V5_INPLACE --width 960 --height 540 --fps 24 --film-max-seconds 4.2
+python3 showcase/v5/check_site.py
+python3 showcase/v5/write_evidence.py
+python3 -m py_compile showcase/v5/render_v5_showcase.py showcase/v5/check_site.py showcase/v5/write_evidence.py
+git diff --quiet -- 'procedural-animation-toolkit(v5)'
+post tracked-entry hash: c4f4905f2974aa751a7fe0485a44d194898ead71280992c34d0129dc81362119 (unchanged)

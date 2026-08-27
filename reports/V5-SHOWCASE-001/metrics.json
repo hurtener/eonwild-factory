@@ -1,0 +1,21 @@
+{
+  "render_resolution": [
+    480,
+    270
+  ],
+  "render_fps": 24,
+  "hero_resolution": [
+    960,
+    540
+  ],
+  "hero_duration_seconds": 4.208333,
+  "film_duration_cap_seconds": 3.2,
+  "priority_still_count": 21,
+  "film_count": 7,
+  "source_vertex_face_counts": {
+    "vertices": 23653,
+    "faces": 59169
+  },
+  "source_max_influences_observed": 11,
+  "performance_note": "Offline Blender Eevee render timing only; no browser FPS or runtime package acceptance claim."
+}

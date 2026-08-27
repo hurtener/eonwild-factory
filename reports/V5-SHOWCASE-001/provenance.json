@@ -1,0 +1,46 @@
+{
+  "schema": "eonwild.showcase-provenance.v1",
+  "task_id": "V5-SHOWCASE-001",
+  "date_utc": "2026-08-27T05:34:08.579903+00:00",
+  "asset": "Tarbosaurus V5 animation showcase",
+  "source": {
+    "path": "procedural-animation-toolkit(v5)/validated_result/v5/tarbosaurus_procedural_v5_animation_pack.glb",
+    "sha256": "66cf116a2191311cf00f4571e71e5a38753fd71ad42a8381185156a3af1bacd0",
+    "license_status": "internal validated fixture; no external media ingested",
+    "material_policy": "GLB-embedded materials/textures preserved for Blender rendering"
+  },
+  "tool": {
+    "blender": "Blender 5.2.0 LTS",
+    "ffmpeg": "ffmpeg version 9.0.1 Copyright (c) 2000-2026 the FFmpeg developers"
+  },
+  "animation_scope": {
+    "total_source_clips": 37,
+    "priority_non_transition_clips": 21,
+    "authored_transitions": 16,
+    "rendered_priority_stills": 21,
+    "rendered_films": [
+      "idle-breath",
+      "walk-relaxed-inplace",
+      "turn-left-35-inplace",
+      "start-walk-inplace",
+      "eat-loop",
+      "bite-attack",
+      "roar"
+    ]
+  },
+  "immutable_toolkit_boundary": {
+    "tracked_entries": 501,
+    "pre_hash": "c4f4905f2974aa751a7fe0485a44d194898ead71280992c34d0129dc81362119",
+    "post_hash": "c4f4905f2974aa751a7fe0485a44d194898ead71280992c34d0129dc81362119",
+    "hash_unchanged": true,
+    "git_diff_clean": true,
+    "note": "Tracked entries under procedural-animation-toolkit(v5) were read only."
+  },
+  "known_record_mismatch": {
+    "key_sha256": "66cf116a2191311cf00f4571e71e5a38753fd71ad42a8381185156a3af1bacd0",
+    "stale_render_report_sha256": "caa303d196ff3f5cb605fee59db5879c4c70d78c89ee5ce1a454159f21ae35ec",
+    "current_file_sha256": "66cf116a2191311cf00f4571e71e5a38753fd71ad42a8381185156a3af1bacd0",
+    "resolution": "Current file and KEY_SHA256SUMS agree; stale render report is retained and disclosed."
+  },
+  "review_status": "PASS_WITH_PERCEPTUAL_REVIEW_REQUIRED"
+}
