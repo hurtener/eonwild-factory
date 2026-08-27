@@ -1,0 +1,166 @@
+{
+  "schema": "eonwild.showcase-provenance.v1",
+  "task_id": "V5-5-BALANCE-001",
+  "date_utc": "2026-08-27T16:21:22.230943+00:00",
+  "asset": "Tarbosaurus procedural animation V5.5 balance study",
+  "source": {
+    "path": "procedural-animation-toolkit(v5.5)/validated_result/v5.5/tarbosaurus_procedural_v5_5_animation_pack.glb",
+    "sha256": "4020d6d3db42231d5fb414c3d42ab0d702c5bfe08aeae8e919deefaacde7d287",
+    "source_model_sha256": "fbb42c2edad4eadebbcf808d32028d7c73b3fbfd6172610eddd5df84990a65c7",
+    "material_policy": "GLB-embedded materials and textures preserved for Blender rendering",
+    "license_status": "internal project fixture and user-supplied reference media"
+  },
+  "references": {
+    "side_walk": {
+      "path": "procedural-animation-toolkit(v5.5)/inputs/tarbosaurus_reference_walk_side_v02.mp4",
+      "sha256": "7f981e34a38955b44df799069693c57a5b5c881083ae4cbd62419e5cdc7d3ea5",
+      "use": "qualitative phase timing and joint-chain observations"
+    },
+    "attack_eat": {
+      "path": "assets/examples/tarbosaurus/attack-eat.mp4",
+      "sha256": "4103fb155c44d880494c7a3cfb7c113238a45b107ed93e44189db9348ea58781",
+      "use": "qualitative rear-load, drive, and feeding-descent observations; camera changes limit measurement"
+    },
+    "user_stance_image": {
+      "description": "same-model side stance with one support leg and the opposite foot forward",
+      "use": "qualitative neutral support-foot arrangement"
+    }
+  },
+  "tools": {
+    "blender": "Blender 5.2.0 LTS",
+    "ffmpeg": "ffmpeg version 9.0.1 Copyright (c) 2000-2026 the FFmpeg developers",
+    "python": "Python 3.14.6",
+    "numpy": "2.5.2",
+    "scipy": "1.18.1"
+  },
+  "release": {
+    "status": "PASS",
+    "version": "5.5.0",
+    "clipCount": 37,
+    "transitionCount": 16,
+    "skinJointCount": 75,
+    "skinOrderPreserved": true,
+    "inverseBindMatricesExact": true,
+    "constrainedQualityGatesPass": true,
+    "idle": {
+      "v5": {
+        "torsoPitchMedianDegrees": -12.004597245738548,
+        "headPitchMedianDegrees": 15.307440166253128,
+        "foreAftFootSpreadMedianHipFraction": 0.025587768868590377,
+        "maximumRearReachHipFraction": -0.14702220818276593
+      },
+      "v5_5": {
+        "torsoPitchMedianDegrees": -11.812379774187914,
+        "headPitchMedianDegrees": 14.09490250676957,
+        "foreAftFootSpreadMedianHipFraction": 0.3733736075379464,
+        "maximumRearReachHipFraction": -0.1767192117208793
+      }
+    },
+    "walk": {
+      "v5": {
+        "torsoPitchMedianDegrees": -12.049859412041958,
+        "headPitchMedianDegrees": 14.904016970496773,
+        "foreAftFootSpreadMedianHipFraction": 0.34506664930923353,
+        "maximumRearReachHipFraction": -0.43252532720770986
+      },
+      "v5_5": {
+        "torsoPitchMedianDegrees": -11.854449232320533,
+        "headPitchMedianDegrees": 13.690817803760948,
+        "foreAftFootSpreadMedianHipFraction": 0.31808401195807207,
+        "maximumRearReachHipFraction": -0.37453545223614565
+      }
+    },
+    "eat": {
+      "v5": {
+        "torsoPitchMedianDegrees": -15.816742333570858,
+        "headPitchMedianDegrees": -3.922114944359835,
+        "foreAftFootSpreadMedianHipFraction": 0.025664005911288024,
+        "maximumRearReachHipFraction": -0.11223949532542549
+      },
+      "v5_5": {
+        "torsoPitchMedianDegrees": -11.280391613833363,
+        "headPitchMedianDegrees": 4.153674581668693,
+        "foreAftFootSpreadMedianHipFraction": 0.19452201163312557,
+        "maximumRearReachHipFraction": -0.1354386376902364
+      }
+    },
+    "attack": {
+      "preloadForwardHipFraction": -0.09999978596127815,
+      "driveForwardHipFraction": 0.20000000659560968,
+      "preloadBeforeDrive": true,
+      "maximumPelvisDropHipFraction": -0.08199982280777726
+    },
+    "eatPelvisVerticalExcursionHipFraction": 0.04949999683386281,
+    "neutralJawMinimumCloseDegrees": 49.639999031629635,
+    "biteEarlyLoadCloseDegrees": 50.00000054209703,
+    "biteContactCloseDegrees": 49.99815322040244,
+    "maxTransitionEndpointRotationErrorDegrees": 9.56649004098159e-15,
+    "maxTransitionEndpointPositionError": 0.0,
+    "generatedSha256": "4020d6d3db42231d5fb414c3d42ab0d702c5bfe08aeae8e919deefaacde7d287",
+    "measurementBoundary": "Visual balance proxies from the animated skeleton; not a physical center-of-mass or biological validation."
+  },
+  "render_scope": {
+    "stills": 21,
+    "films": {
+      "bite-attack": {
+        "codec_name": "h264",
+        "width": 960,
+        "height": 540,
+        "r_frame_rate": "24/1",
+        "nb_frames": "82",
+        "duration": "3.416667",
+        "size": "152442"
+      },
+      "eat-loop": {
+        "codec_name": "h264",
+        "width": 960,
+        "height": 540,
+        "r_frame_rate": "24/1",
+        "nb_frames": "192",
+        "duration": "8.000000",
+        "size": "256015"
+      },
+      "idle-breath": {
+        "codec_name": "h264",
+        "width": 960,
+        "height": 540,
+        "r_frame_rate": "24/1",
+        "nb_frames": "144",
+        "duration": "6.000000",
+        "size": "177103"
+      },
+      "walk-relaxed-inplace": {
+        "codec_name": "h264",
+        "width": 960,
+        "height": 540,
+        "r_frame_rate": "24/1",
+        "nb_frames": "107",
+        "duration": "4.458333",
+        "size": "232877"
+      }
+    },
+    "camera": "locked full-body profile framing derived from global animation bounds",
+    "animation_data_policy": "source V5.5 GLB imported read-only; no animation channels edited in Blender"
+  },
+  "immutable_v5_boundary": {
+    "expected_tracked_entry_hash": "c4f4905f2974aa751a7fe0485a44d194898ead71280992c34d0129dc81362119",
+    "actual_tracked_entry_hash": "c4f4905f2974aa751a7fe0485a44d194898ead71280992c34d0129dc81362119",
+    "status_clean": true,
+    "unchanged": true
+  },
+  "complete_duplicate": {
+    "original_tracked_file_count": 501,
+    "all_original_paths_present": true,
+    "missing_paths": [],
+    "byte_identical_copy_count": 497,
+    "intentionally_versioned_copy_paths": [
+      "KEY_SHA256SUMS.txt",
+      "PACKAGE_INVENTORY.txt",
+      "README_FIRST.md",
+      "scripts/verify_package.sh"
+    ],
+    "note": "Every tracked V5 path is present in the V5.5 package; version-specific files may differ only inside the independent copy."
+  },
+  "measurement_boundary": "Visual balance proxies from the animated skeleton; not a physical center-of-mass or biological validation.",
+  "review_status": "PASS_INDEPENDENT_TECHNICAL_AND_PERCEPTUAL_REVIEW"
+}

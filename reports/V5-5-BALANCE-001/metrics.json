@@ -1,0 +1,106 @@
+{
+  "release": {
+    "status": "PASS",
+    "version": "5.5.0",
+    "clipCount": 37,
+    "transitionCount": 16,
+    "skinJointCount": 75,
+    "skinOrderPreserved": true,
+    "inverseBindMatricesExact": true,
+    "constrainedQualityGatesPass": true,
+    "idle": {
+      "v5": {
+        "torsoPitchMedianDegrees": -12.004597245738548,
+        "headPitchMedianDegrees": 15.307440166253128,
+        "foreAftFootSpreadMedianHipFraction": 0.025587768868590377,
+        "maximumRearReachHipFraction": -0.14702220818276593
+      },
+      "v5_5": {
+        "torsoPitchMedianDegrees": -11.812379774187914,
+        "headPitchMedianDegrees": 14.09490250676957,
+        "foreAftFootSpreadMedianHipFraction": 0.3733736075379464,
+        "maximumRearReachHipFraction": -0.1767192117208793
+      }
+    },
+    "walk": {
+      "v5": {
+        "torsoPitchMedianDegrees": -12.049859412041958,
+        "headPitchMedianDegrees": 14.904016970496773,
+        "foreAftFootSpreadMedianHipFraction": 0.34506664930923353,
+        "maximumRearReachHipFraction": -0.43252532720770986
+      },
+      "v5_5": {
+        "torsoPitchMedianDegrees": -11.854449232320533,
+        "headPitchMedianDegrees": 13.690817803760948,
+        "foreAftFootSpreadMedianHipFraction": 0.31808401195807207,
+        "maximumRearReachHipFraction": -0.37453545223614565
+      }
+    },
+    "eat": {
+      "v5": {
+        "torsoPitchMedianDegrees": -15.816742333570858,
+        "headPitchMedianDegrees": -3.922114944359835,
+        "foreAftFootSpreadMedianHipFraction": 0.025664005911288024,
+        "maximumRearReachHipFraction": -0.11223949532542549
+      },
+      "v5_5": {
+        "torsoPitchMedianDegrees": -11.280391613833363,
+        "headPitchMedianDegrees": 4.153674581668693,
+        "foreAftFootSpreadMedianHipFraction": 0.19452201163312557,
+        "maximumRearReachHipFraction": -0.1354386376902364
+      }
+    },
+    "attack": {
+      "preloadForwardHipFraction": -0.09999978596127815,
+      "driveForwardHipFraction": 0.20000000659560968,
+      "preloadBeforeDrive": true,
+      "maximumPelvisDropHipFraction": -0.08199982280777726
+    },
+    "eatPelvisVerticalExcursionHipFraction": 0.04949999683386281,
+    "neutralJawMinimumCloseDegrees": 49.639999031629635,
+    "biteEarlyLoadCloseDegrees": 50.00000054209703,
+    "biteContactCloseDegrees": 49.99815322040244,
+    "maxTransitionEndpointRotationErrorDegrees": 9.56649004098159e-15,
+    "maxTransitionEndpointPositionError": 0.0,
+    "generatedSha256": "4020d6d3db42231d5fb414c3d42ab0d702c5bfe08aeae8e919deefaacde7d287",
+    "measurementBoundary": "Visual balance proxies from the animated skeleton; not a physical center-of-mass or biological validation."
+  },
+  "films": {
+    "bite-attack": {
+      "codec_name": "h264",
+      "width": 960,
+      "height": 540,
+      "r_frame_rate": "24/1",
+      "nb_frames": "82",
+      "duration": "3.416667",
+      "size": "152442"
+    },
+    "eat-loop": {
+      "codec_name": "h264",
+      "width": 960,
+      "height": 540,
+      "r_frame_rate": "24/1",
+      "nb_frames": "192",
+      "duration": "8.000000",
+      "size": "256015"
+    },
+    "idle-breath": {
+      "codec_name": "h264",
+      "width": 960,
+      "height": 540,
+      "r_frame_rate": "24/1",
+      "nb_frames": "144",
+      "duration": "6.000000",
+      "size": "177103"
+    },
+    "walk-relaxed-inplace": {
+      "codec_name": "h264",
+      "width": 960,
+      "height": 540,
+      "r_frame_rate": "24/1",
+      "nb_frames": "107",
+      "duration": "4.458333",
+      "size": "232877"
+    }
+  }
+}

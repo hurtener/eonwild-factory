@@ -1,0 +1,34 @@
+{
+  "schema": "eonwild.browser-acceptance.v1",
+  "status": "PASS",
+  "reviewer": "coordinator",
+  "date_utc": "2026-08-27T16:18:17Z",
+  "url": "http://127.0.0.1:8767/showcase/v5.5/site/index.html",
+  "release_glb_sha256": "4020d6d3db42231d5fb414c3d42ab0d702c5bfe08aeae8e919deefaacde7d287",
+  "site_index_sha256": "825f66fb4b6bf205b42d4d92909bf830da2de581f5781bf2c18ca7619806eb7b",
+  "desktop": {
+    "viewport": [1440, 900],
+    "title": "Tarbosaurus — V5.5 balance study",
+    "hero_heading": "Weight, carried.",
+    "horizontal_overflow": false,
+    "remote_media": [],
+    "console_warnings_or_errors": []
+  },
+  "mobile": {
+    "viewport": [390, 844],
+    "horizontal_overflow": false,
+    "hero_fills_viewport_height": true
+  },
+  "media": {
+    "decoded_resolution": [960, 540],
+    "hero_duration_seconds": 4.458333,
+    "feeding_duration_seconds": 8,
+    "ready_state": 4
+  },
+  "controls": {
+    "hero_pause_label_synced": true,
+    "hero_aria_pressed_synced": true,
+    "feeding_switch_source_synced": true,
+    "feeding_accessible_label_synced": true
+  }
+}

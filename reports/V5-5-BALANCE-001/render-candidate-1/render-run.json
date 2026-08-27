@@ -1,0 +1,52 @@
+{
+  "renderer": "Blender",
+  "blender_version": "5.2.0 LTS",
+  "source_glb": "procedural-animation-toolkit(v5.5)/validated_result/v5.5/tarbosaurus_procedural_v5_5_animation_pack.glb",
+  "manifest": "procedural-animation-toolkit(v5.5)/validated_result/v5.5/animation-manifest.v5.5.json",
+  "resolution": [
+    512,
+    288
+  ],
+  "fps": 20,
+  "priority_clip_count": 21,
+  "priority_clips": [
+    "PROC_WALK_RELAXED_V5_5_ROOTMOTION",
+    "PROC_WALK_RELAXED_V5_5_INPLACE",
+    "PROC_WALK_UNEVEN_TERRAIN_V5_5_ROOTMOTION",
+    "PROC_WALK_UNEVEN_TERRAIN_V5_5_INPLACE",
+    "PROC_WALK_UPSLOPE_V5_5_ROOTMOTION",
+    "PROC_WALK_UPSLOPE_V5_5_INPLACE",
+    "PROC_TURN_LEFT_35_V5_5_ROOTMOTION",
+    "PROC_TURN_LEFT_35_V5_5_INPLACE",
+    "PROC_TURN_RIGHT_35_V5_5_ROOTMOTION",
+    "PROC_TURN_RIGHT_35_V5_5_INPLACE",
+    "PROC_START_WALK_V5_5_ROOTMOTION",
+    "PROC_START_WALK_V5_5_INPLACE",
+    "PROC_BRAKE_TO_IDLE_V5_5_ROOTMOTION",
+    "PROC_BRAKE_TO_IDLE_V5_5_INPLACE",
+    "PROC_ALERT_WALK_V5_5_ROOTMOTION",
+    "PROC_ALERT_WALK_V5_5_INPLACE",
+    "PROC_IDLE_BREATH_V5_5",
+    "PROC_ALERT_IDLE_V5_5",
+    "PROC_EAT_LOOP_V5_5",
+    "PROC_BITE_ATTACK_V5_5",
+    "PROC_ROAR_V5_5"
+  ],
+  "film_clips": [],
+  "film_duration_policy_seconds_non_loop": 3.2,
+  "loop_duration_policy": "manifest durationSeconds rendered at the requested FPS",
+  "imported_actions": 37,
+  "bounds_m": {
+    "min": [
+      -1.923492193222046,
+      -4.8620758056640625,
+      -1.0
+    ],
+    "max": [
+      2.611203193664551,
+      3.1222267150878906,
+      1.8464385271072388
+    ]
+  },
+  "animation_data_policy": "source GLB imported read-only; action selection only; no animation channels edited"
+}

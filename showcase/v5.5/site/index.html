@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07100f">
+  <title>Tarbosaurus — V5.5 balance study</title>
+  <style>
+    :root { --ink:#e8e9dc; --muted:#9ba99d; --line:rgba(232,233,220,.18); --paper:#0a1412; --acid:#d8b56d; --soft:#879f8c; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; background:var(--paper); }
+    body { margin:0; background:var(--paper); color:var(--ink); font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height:1.55; }
+    a { color:inherit; }
+    .skip { position:absolute; left:1rem; top:-4rem; z-index:20; padding:.7rem 1rem; background:var(--acid); color:#111; }
+    .skip:focus { top:1rem; }
+    header { position:absolute; z-index:10; width:100%; display:flex; justify-content:space-between; align-items:center; padding:1.4rem clamp(1.25rem,4vw,4.5rem); font-size:.7rem; letter-spacing:.15em; text-transform:uppercase; }
+    header a { text-decoration:none; }
+    .mark { color:var(--acid); font-weight:700; }
+    nav { display:flex; gap:1.5rem; color:#d4dbd0; }
+    nav a { opacity:.82; }
+    nav a:hover, nav a:focus-visible { opacity:1; color:var(--acid); }
+    .hero { min-height:100svh; position:relative; display:grid; align-items:end; overflow:hidden; isolation:isolate; }
+    .hero-media, .hero-shade { position:absolute; inset:0; }
+    .hero-media { width:100%; height:100%; object-fit:contain; object-position:center; background:#050908; z-index:-3; filter:saturate(.9) contrast(1.02); }
+    .hero-shade { z-index:-2; background:linear-gradient(90deg,rgba(5,13,12,.92) 0%,rgba(5,13,12,.57) 38%,rgba(5,13,12,.05) 74%),linear-gradient(0deg,rgba(5,13,12,.84),transparent 57%); }
+    .hero-inner { width:min(56rem,100%); padding:clamp(7rem,18vh,11rem) clamp(1.25rem,8vw,9rem) clamp(3rem,11vh,8rem); }
+    .eyebrow { color:var(--acid); font-size:.71rem; letter-spacing:.17em; text-transform:uppercase; }
+    h1,h2,h3,p { margin-top:0; }
+    h1 { max-width:9ch; margin:.8rem 0 1rem; font:500 clamp(3.5rem,9.5vw,8.5rem)/.86 Georgia, serif; letter-spacing:-.07em; }
+    .lede { max-width:34rem; color:#dae0d5; font-size:clamp(1rem,1.5vw,1.25rem); }
+    .watch { display:inline-flex; align-items:center; gap:.75rem; margin-top:1.5rem; padding:.9rem 1.15rem; background:var(--acid); color:#10130e; border:0; border-radius:999px; font-weight:700; text-decoration:none; cursor:pointer; }
+    .watch::after { content:"↘"; font-size:1.1rem; }
+    .watch:hover, .watch:focus-visible { background:#f0d18e; transform:translateY(-2px); }
+    .hero-toggle { display:inline-flex; margin:1rem 0 0 .4rem; padding:.55rem .8rem; color:var(--ink); background:rgba(5,13,12,.45); border:1px solid rgba(232,233,220,.4); border-radius:999px; font:inherit; font-size:.76rem; cursor:pointer; }
+    .hero-toggle:hover, .hero-toggle:focus-visible { color:var(--acid); border-color:var(--acid); }
+    main { overflow:hidden; }
+    .chapter { width:min(88rem,100%); margin:0 auto; padding:clamp(5rem,12vw,11rem) clamp(1.25rem,5vw,5rem); }
+    .chapter-intro { display:grid; grid-template-columns:minmax(10rem,.45fr) minmax(0,1.2fr); gap:3rem; align-items:start; margin-bottom:3.5rem; }
+    .chapter-no { color:var(--acid); font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; }
+    h2 { max-width:11ch; margin-bottom:1rem; font:500 clamp(2.6rem,6vw,6.3rem)/.9 Georgia, serif; letter-spacing:-.06em; }
+    .intro-copy { max-width:32rem; color:var(--muted); font-size:1.08rem; }
+    .film-frame { margin:0; background:#050908; border:1px solid var(--line); }
+    .film-frame video, .film-frame img { display:block; width:100%; aspect-ratio:16/9; object-fit:cover; }
+    figcaption { display:flex; justify-content:space-between; gap:1rem; padding:.8rem 1rem; color:var(--muted); font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; }
+    .split { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(16rem,.7fr); gap:clamp(2rem,7vw,8rem); align-items:center; }
+    .split .film-frame { transform:translateY(3rem); }
+    .note { border-top:1px solid var(--line); padding-top:1rem; color:var(--muted); font-size:.94rem; }
+    .note strong { color:var(--ink); font-weight:500; }
+    .observation { background:#0d1b17; }
+    .observation-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    .observation-grid figure { margin:0; }
+    .observation-grid figure:first-child { grid-row:span 2; }
+    .observation-grid img { display:block; width:100%; height:100%; min-height:14rem; object-fit:cover; filter:saturate(.9); }
+    .behavior { background:#111711; }
+    .behavior-layout { display:grid; grid-template-columns:.7fr 1.3fr; gap:clamp(2rem,7vw,7rem); align-items:start; }
+    .behavior-list { border-top:1px solid var(--line); }
+    .behavior-list button { display:flex; width:100%; align-items:baseline; justify-content:space-between; padding:1.1rem 0; color:var(--muted); background:transparent; border:0; border-bottom:1px solid var(--line); text-align:left; cursor:pointer; font:inherit; }
+    .behavior-list button:hover, .behavior-list button:focus-visible, .behavior-list button[aria-pressed="true"] { color:var(--acid); }
+    .behavior-list span:first-child { color:inherit; font:500 1.4rem Georgia,serif; }
+    .behavior-list span:last-child { font-size:.68rem; letter-spacing:.15em; text-transform:uppercase; }
+    .behavior-view video { display:block; width:100%; aspect-ratio:16/9; background:#050908; object-fit:cover; }
+    .behavior-copy { margin-top:1rem; color:var(--muted); }
+    .capabilities { display:grid; grid-template-columns:.7fr 1.3fr; gap:clamp(2rem,8vw,8rem); }
+    .capabilities h2 { max-width:8ch; }
+    .cap-list { border-top:1px solid var(--line); }
+    .cap { display:grid; grid-template-columns:1fr 1.6fr; gap:1rem; padding:1.2rem 0; border-bottom:1px solid var(--line); }
+    .cap h3 { margin:0; font:500 1.2rem Georgia,serif; }
+    .cap p { margin:0; color:var(--muted); font-size:.93rem; }
+    .closing { padding-top:clamp(6rem,14vw,13rem); padding-bottom:clamp(6rem,14vw,13rem); background:#070d0c; }
+    .closing-inner { max-width:45rem; }
+    .closing h2 { max-width:10ch; }
+    .closing p { max-width:36rem; color:var(--muted); font-size:1.08rem; }
+    footer { display:flex; justify-content:space-between; gap:1rem; padding:1.5rem clamp(1.25rem,5vw,5rem); color:#718078; font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; border-top:1px solid var(--line); }
+    .reveal { opacity:0; transform:translateY(1.5rem); transition:opacity .8s ease, transform .8s ease; }
+    .reveal.visible { opacity:1; transform:none; }
+    :focus-visible { outline:2px solid var(--acid); outline-offset:4px; }
+    @media (max-width:700px) {
+      header { padding:1.1rem 1.25rem; } nav { gap:.8rem; } nav a:last-child { display:none; }
+      .hero-inner { padding:8rem 1.25rem 3.25rem; } h1 { font-size:clamp(4rem,19vw,6.6rem); }
+      .hero-media { object-fit:contain; object-position:center 36%; background:#050908; }
+      .chapter-intro, .split, .behavior-layout, .capabilities { grid-template-columns:1fr; gap:1.5rem; }
+      .chapter-intro { margin-bottom:2.2rem; } .split .film-frame { transform:none; order:2; }
+      .observation-grid { gap:.55rem; } .observation-grid img { min-height:8rem; }
+      .cap { grid-template-columns:1fr; gap:.35rem; } footer { flex-direction:column; }
+    }
+    @media (prefers-reduced-motion:reduce) {
+      html { scroll-behavior:auto; } .reveal { opacity:1; transform:none; transition:none; } .watch:hover { transform:none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#study">Skip to study</a>
+  <header>
+    <a class="mark" href="#top">Eonwild / V5.5</a>
+    <nav aria-label="Primary"><a href="#motion">Motion</a><a href="#behavior">Behavior</a><a href="#closing">Notes</a></nav>
+  </header>
+
+  <section class="hero" id="top" aria-labelledby="hero-title">
+    <video class="hero-media" id="hero-video" muted loop playsinline preload="metadata" poster="media/stills/walk-relaxed-inplace.png" aria-label="Tarbosaurus walking in profile">
+      <source src="media/films/walk-relaxed-inplace.mp4" type="video/mp4">
+    </video>
+    <div class="hero-shade"></div>
+    <div class="hero-inner">
+      <div class="eyebrow">Balance study · Tarbosaurus V5.5</div>
+      <h1 id="hero-title">Weight, carried.</h1>
+      <p class="lede">This pass gives the animal a calmer chest, a horizon-facing head, and a support system that begins in the pelvis and continues through every joint of the hind leg.</p>
+      <a class="watch" href="#motion">Watch the movement</a>
+      <button class="hero-toggle" id="hero-toggle" type="button" aria-controls="hero-video" aria-pressed="false">Play motion</button>
+    </div>
+  </section>
+
+  <main id="study">
+    <section class="chapter" id="motion">
+      <div class="chapter-intro reveal"><div class="chapter-no">01 / Relaxed locomotion</div><div><h2>The hips carry the step.</h2><p class="intro-copy">V5.5 moves contact forward and ends rear stance sooner. The hip initiates recovery; knee, ankle, foot, and toes follow as one delayed chain instead of folding at the same instant.</p></div></div>
+      <div class="split reveal">
+        <figure class="film-frame"><video controls preload="metadata" poster="media/stills/walk-relaxed-inplace.png" aria-label="Tarbosaurus relaxed walk"><source src="media/films/walk-relaxed-inplace.mp4" type="video/mp4"></video><figcaption><span>Relaxed walk / in place</span><span>24 fps · Blender 5.2</span></figcaption></figure>
+        <div><p class="note"><strong>Measured.</strong> Maximum rear reach is 13.4% shorter than V5 while the existing sole, joint-direction, velocity, and acceleration gates remain intact. The full two-cycle loop is shown.</p><p class="note"><strong>Read as.</strong> A calm locomotion hypothesis derived from the supplied side reference. It is animation evidence, not a physical center-of-mass measurement.</p></div>
+      </div>
+    </section>
+
+    <section class="chapter observation" id="observation">
+      <div class="chapter-intro reveal"><div class="chapter-no">02 / Neutral support</div><div><h2>Two legs, different jobs.</h2><p class="intro-copy">One hind leg supports beneath the pelvis while the other rests forward to widen the stance. The load bias stays quiet and stable instead of swapping sides every half-cycle.</p></div></div>
+      <div class="observation-grid reveal">
+        <figure><img src="media/stills/idle-breath.png" alt="Tarbosaurus in a closed-mouth breathing pose"><figcaption><span>Idle / breathing</span><span>Living neutral</span></figcaption></figure>
+        <figure><img src="media/stills/alert-idle.png" alt="Tarbosaurus holding an alert idle pose"><figcaption><span>Alert idle</span><span>Attention</span></figcaption></figure>
+        <figure><img src="media/stills/turn-left-35-inplace.png" alt="Tarbosaurus turning left"><figcaption><span>Turn / 35 degrees</span><span>Locomotion</span></figcaption></figure>
+      </div>
+    </section>
+
+    <section class="chapter behavior" id="behavior">
+      <div class="chapter-intro reveal"><div class="chapter-no">03 / Force and feeding</div><div><h2>The body moves before the head.</h2><p class="intro-copy">Attack now loads back into the stance before driving forward. Feeding settles the pelvis and flexes the legs so the whole animal goes down to eat.</p></div></div>
+      <div class="behavior-layout reveal">
+        <div class="behavior-list" role="group" aria-label="Behavior clips">
+          <button type="button" data-film="idle-breath" aria-pressed="false"><span>Breathing</span><span>supported</span></button>
+          <button type="button" data-film="eat-loop" aria-pressed="false"><span>Eating</span><span>loop</span></button>
+          <button type="button" data-film="bite-attack" aria-pressed="true"><span>Power bite</span><span>load · drive</span></button>
+        </div>
+        <div class="behavior-view"><video id="behavior-video" controls preload="metadata" poster="media/stills/bite-attack.png" aria-label="Tarbosaurus power bite action"><source src="media/films/bite-attack.mp4" type="video/mp4"></video><p class="behavior-copy" id="behavior-copy">Power bite: rear load and brace, leg-driven delivery, jaw contact, then balanced recoil.</p></div>
+      </div>
+    </section>
+
+    <section class="chapter capabilities" id="capabilities">
+      <div class="reveal"><div class="chapter-no">04 / What carries forward</div><h2>Built to be read.</h2></div>
+      <div class="cap-list reveal">
+        <div class="cap"><h3>Constraint-first legs</h3><p>V5.5 regenerates the full contact solve from the source GLB. It does not rotate baked leg tracks after the fact.</p></div>
+        <div class="cap"><h3>Exported balance</h3><p>Pelvis translation is now present in root-motion, in-place, idle, and action clips, so browser playback receives the pose the solver actually evaluated.</p></div>
+        <div class="cap"><h3>Exact handoffs</h3><p>All 16 transitions end on the exact rotation and translation pose of their next clip, including the new pelvis channel.</p></div>
+        <div class="cap"><h3>V5 stays frozen</h3><p>The complete V5 package remains byte-for-byte unchanged. V5.5 is an independent engine, output, evidence, and iteration lane.</p></div>
+      </div>
+    </section>
+
+    <section class="chapter closing" id="closing">
+      <div class="closing-inner reveal"><div class="eyebrow">A note on the work</div><h2>A better foundation, still a hypothesis.</h2><p>V5.5 is a measured game-animation iteration built from the same Tarbosaurus mesh, rig, materials, and supplied references. The body-balance proxies and phase observations make the work auditable; they do not claim a scientifically measured living gait.</p><p class="note"><strong>Source.</strong> Tarbosaurus V5.5 animation pack · 37 clips · 75-joint skin · Blender 5.2 render · local assets only.</p></div>
+    </section>
+  </main>
+  <footer><span>Eonwild / balance study V5.5</span><span>Offline showcase · no remote assets</span></footer>
+  <script>
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const hero = document.querySelector('.hero-media');
+    const heroToggle = document.getElementById('hero-toggle');
+    const syncHeroControl = () => { const playing = hero && !hero.paused; if (heroToggle) { heroToggle.textContent = playing ? 'Pause motion' : 'Play motion'; heroToggle.setAttribute('aria-pressed', String(playing)); } };
+    if (hero) { hero.addEventListener('play', syncHeroControl); hero.addEventListener('pause', syncHeroControl); if (!reduce) hero.play().catch(() => {}); }
+    if (heroToggle) heroToggle.addEventListener('click', () => { if (!hero) return; if (hero.paused) hero.play().catch(() => {}); else hero.pause(); syncHeroControl(); });
+    syncHeroControl();
+    const io = reduce ? null : new IntersectionObserver(entries => entries.forEach(e => e.isIntersecting && e.target.classList.add('visible')), { threshold:.12 });
+    document.querySelectorAll('.reveal').forEach(el => io ? io.observe(el) : el.classList.add('visible'));
+    const labels = { 'idle-breath':['Breathing: a stable support leg beneath the pelvis and a second foot resting forward.','media/stills/idle-breath.png','Tarbosaurus supported breathing stance'], 'eat-loop':['Eating: pelvis settles back, both legs compress, then the neck and jaw complete the feeding reach.','media/stills/eat-loop.png','Tarbosaurus whole-body feeding clip'], 'bite-attack':['Power bite: rear load and brace, leg-driven delivery, jaw contact, then balanced recoil.','media/stills/bite-attack.png','Tarbosaurus power bite action'] };
+    const behaviorVideo = document.getElementById('behavior-video');
+    const behaviorCopy = document.getElementById('behavior-copy');
+    document.querySelectorAll('[data-film]').forEach(button => button.addEventListener('click', () => { const key=button.dataset.film; document.querySelectorAll('[data-film]').forEach(b=>b.setAttribute('aria-pressed', String(b===button))); behaviorVideo.pause(); behaviorVideo.src='media/films/'+key+'.mp4'; behaviorVideo.poster=labels[key][1]; behaviorVideo.setAttribute('aria-label', labels[key][2]); behaviorVideo.load(); behaviorCopy.textContent=labels[key][0]; if (!reduce) behaviorVideo.play().catch(()=>{}); }));
+  </script>
+</body>
+</html>

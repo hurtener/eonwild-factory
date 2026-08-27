@@ -1,0 +1,109 @@
+{
+  "release_validation": "PASS",
+  "constrained_quality_gates": "PASS",
+  "v5_immutable": "PASS",
+  "site_static_check": {
+    "status": "passed",
+    "references": [
+      "media/films/bite-attack.mp4",
+      "media/films/walk-relaxed-inplace.mp4",
+      "media/stills/alert-idle.png",
+      "media/stills/bite-attack.png",
+      "media/stills/idle-breath.png",
+      "media/stills/turn-left-35-inplace.png",
+      "media/stills/walk-relaxed-inplace.png"
+    ],
+    "missing": [],
+    "remote_urls": [],
+    "required": {
+      "hero_heading": true,
+      "hero_playback_control": true,
+      "skip_link": true,
+      "reduced_motion": true,
+      "behavior_controls": true,
+      "behavior_accessible_label_sync": true,
+      "local_only": true
+    }
+  },
+  "film_probe": {
+    "bite-attack": {
+      "codec_name": "h264",
+      "width": 960,
+      "height": 540,
+      "r_frame_rate": "24/1",
+      "nb_frames": "82",
+      "duration": "3.416667",
+      "size": "152442"
+    },
+    "eat-loop": {
+      "codec_name": "h264",
+      "width": 960,
+      "height": 540,
+      "r_frame_rate": "24/1",
+      "nb_frames": "192",
+      "duration": "8.000000",
+      "size": "256015"
+    },
+    "idle-breath": {
+      "codec_name": "h264",
+      "width": 960,
+      "height": 540,
+      "r_frame_rate": "24/1",
+      "nb_frames": "144",
+      "duration": "6.000000",
+      "size": "177103"
+    },
+    "walk-relaxed-inplace": {
+      "codec_name": "h264",
+      "width": 960,
+      "height": 540,
+      "r_frame_rate": "24/1",
+      "nb_frames": "107",
+      "duration": "4.458333",
+      "size": "232877"
+    }
+  },
+  "browser_acceptance": {
+    "schema": "eonwild.browser-acceptance.v1",
+    "status": "PASS",
+    "reviewer": "coordinator",
+    "date_utc": "2026-08-27T16:18:17Z",
+    "url": "http://127.0.0.1:8767/showcase/v5.5/site/index.html",
+    "release_glb_sha256": "4020d6d3db42231d5fb414c3d42ab0d702c5bfe08aeae8e919deefaacde7d287",
+    "site_index_sha256": "825f66fb4b6bf205b42d4d92909bf830da2de581f5781bf2c18ca7619806eb7b",
+    "desktop": {
+      "viewport": [
+        1440,
+        900
+      ],
+      "title": "Tarbosaurus \u2014 V5.5 balance study",
+      "hero_heading": "Weight, carried.",
+      "horizontal_overflow": false,
+      "remote_media": [],
+      "console_warnings_or_errors": []
+    },
+    "mobile": {
+      "viewport": [
+        390,
+        844
+      ],
+      "horizontal_overflow": false,
+      "hero_fills_viewport_height": true
+    },
+    "media": {
+      "decoded_resolution": [
+        960,
+        540
+      ],
+      "hero_duration_seconds": 4.458333,
+      "feeding_duration_seconds": 8,
+      "ready_state": 4
+    },
+    "controls": {
+      "hero_pause_label_synced": true,
+      "hero_aria_pressed_synced": true,
+      "feeding_switch_source_synced": true,
+      "feeding_accessible_label_synced": true
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "original_tracked_file_count": 501,
+  "all_original_paths_present": true,
+  "missing_paths": [],
+  "byte_identical_copy_count": 497,
+  "intentionally_versioned_copy_paths": [
+    "KEY_SHA256SUMS.txt",
+    "PACKAGE_INVENTORY.txt",
+    "README_FIRST.md",
+    "scripts/verify_package.sh"
+  ],
+  "note": "Every tracked V5 path is present in the V5.5 package; version-specific files may differ only inside the independent copy."
+}
