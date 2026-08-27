@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "clipCount": 37,
+  "transitionCount": 16,
+  "skinJointCount": 75,
+  "skinOrderPreserved": true,
+  "inverseBindMatricesExact": true,
+  "neutralJawMinimumCloseDegrees": 49.63999903162964,
+  "biteContactCloseDegrees": 49.99815322040244,
+  "biteEndCloseDegrees": 50.00000054209703,
+  "roarMaximumGapeCloseDegrees": -0.5000022561696833,
+  "roarEndCloseDegrees": 50.00000054209703,
+  "maxTransitionEndpointRotationErrorDegrees": 8.995967132789887e-15,
+  "maxTransitionEndpointPositionError": 0.0,
+  "playerContract": {
+    "activeButtons": true,
+    "exactHandoff": true,
+    "noLegacyDoubleFade": true,
+    "rootContinuity": true,
+    "playState": true
+  },
+  "generatedSha256": "66cf116a2191311cf00f4571e71e5a38753fd71ad42a8381185156a3af1bacd0"
+}

@@ -1,0 +1,225 @@
+version: 1.0.0
+status: proposed_canonicalization
+identity:
+  name: Eonwild
+  working_tagline: Live the age. Follow the wild.
+  one_sentence_pitch: Live one dangerous season as a dinosaur in a changing prehistoric ecosystem, reading the world to migrate, feed, hunt, evade, cooperate, and leave a Lineage.
+  genre:
+    - ecological_dinosaur_survival
+    - run_based_life_simulation
+    - roguelite_structure
+  fiction:
+    fictional_paleo_continent: true
+    animals_scientifically_grounded: true
+    cross_era_or_region_assemblage_disclosed: true
+    human_protagonist_required: false
+
+product:
+  solo_complete: true
+  browser_first: true
+  player_is_the_animal: true
+  ecology_generates_pressure: true
+  conventional_survival_crafting: false
+  persistent_mmo_required: false
+  runtime_llm_required: false
+
+pillars:
+  - id: convincing_animal_embodiment
+    canonical: true
+  - id: ecology_generates_pressure
+    canonical: true
+  - id: continuous_roaming_and_route_choice
+    canonical: true
+  - id: species_are_roles_not_power_tiers
+    canonical: true
+  - id: solo_is_complete
+    canonical: true
+  - id: meaningful_lives_respect_player_time
+    canonical: true
+  - id: scientific_honesty
+    canonical: true
+  - id: systemic_stories_over_chore_lists
+    canonical: true
+
+moment_to_moment_loop:
+  - sense
+  - interpret
+  - choose
+  - move
+  - encounter
+  - recover
+  - learn
+  - continue
+
+session_formats:
+  diagnostic_proof:
+    minutes: [10, 15]
+    status: milestone_specific
+  quick_expedition:
+    minutes: [12, 20]
+    status: working_direction
+  full_season:
+    minutes: [30, 50]
+    status: working_direction
+  extended_ecology:
+    status: future_option
+
+world:
+  continuous_coordinate_space: true
+  streamed_cells_are_invisible_implementation_detail: true
+  hard_zone_order_forbidden: true
+  migration_is_attractor_not_command: true
+  backtracking_required: true
+  route_loops_required: true
+  biome_model: overlapping_environmental_fields
+  fictional_continent_expandable: true
+  example_environmental_characters:
+    - upland_forest_and_ridges
+    - floodplain_and_braided_river
+    - fern_woodland_and_wetlands
+    - dry_basin_and_open_country
+    - seasonal_refuge
+
+ecology:
+  far_mid_near_fidelity: true
+  conventional_bounded_ai: true
+  population_conservation_required: true
+  pressures:
+    - water
+    - food_quality_and_biomass
+    - temperature
+    - weather
+    - shelter
+    - predators
+    - competition
+    - herd_movement
+    - injury
+  no_runtime_generative_ai: true
+
+creatures:
+  composition_required:
+    - taxonomy
+    - morphology
+    - biomechanical_family
+    - locomotion
+    - ecology
+    - capabilities
+    - presentation
+    - runtime_state
+  literal_species_runtime_branches_forbidden: true
+  species_are_sidegrades: true
+  early_roster_direction:
+    first_role: fast_non_apex_herbivore_or_omnivore
+    second_role: small_or_medium_predator
+    third_family: defensive_quadruped
+    apex_predator: later_after_food_web_and_contact_mature
+
+survival:
+  no_crafting_inventory_loop: true
+  needs_create_decisions_not_chores: true
+  combat_simple_positional_and_high_risk: true
+  injury_changes_movement_and_route: true
+  herbivore_play_must_work_without_combat: true
+  death_awards_completed_progress_but_loses_survival_bonus: true
+
+progression:
+  currency_name: Lineage
+  earned_from_meaningful_behavior: true
+  repetitive_safe_action_diminishing_returns: true
+  unlocks:
+    - playable_species
+    - natural_appearance_variants
+    - field_guide_knowledge
+    - species_mastery
+    - alternate_starts_or_challenges
+  prohibited:
+    - paid_lineage
+    - universal_permanent_combat_power
+    - paid_revive
+    - loot_boxes
+    - statistically_dominant_paid_species
+
+multiplayer:
+  status: later_working_direction
+  initial_private_players: [1, 2]
+  later_private_target_max: 4
+  same_species_or_compatible_role_first: true
+  host_authoritative_browser_direction: true
+  public_matchmaking_initially_required: false
+  ranked_pvp_required: false
+  global_economy_required: false
+
+visual:
+  direction: naturalistic_paleo_documentary_realism
+  webgl2_baseline: true
+  webgpu_enhancement: true
+  hero_creature_priority: highest
+  staged_reference_parity_percent_working_estimate: [88, 93]
+  normal_high_quality_gameplay_percent_working_estimate: [80, 88]
+  percentage_is_release_promise: false
+
+audio:
+  direction: plausible_bioacoustic_reconstruction
+  movie_monster_roar_default: false
+  environmental_audio_is_gameplay_information: true
+  sparse_music_direction: true
+
+ui_accessibility:
+  world_communicates_before_hud: true
+  restrained_species_specific_instinct: true
+  permanent_gps_migration_line: false
+  field_guide_separates_science_and_gameplay: true
+  keyboard_mouse_and_controller: true
+  mobile_controls_committed: false
+  multiple_information_channels: true
+
+science:
+  statuses:
+    - supported
+    - plausible
+    - disputed
+    - speculative
+    - gameplay_only
+  evidence_and_gameplay_values_separate: true
+  fantastic_dinosaurs_role: discovery_and_human_quality_reference_only
+  protected_reference_asset_ingestion_forbidden: true
+
+platform_business:
+  browser_validation_target: canonical
+  pwa: working_direction
+  wails_desktop: later_working_direction
+  mobile: not_committed
+  free_browser_plus_premium_desktop: working_direction
+  ads_only_at_natural_boundaries: true
+  advertising_required: false
+  paid_power_forbidden: true
+  backend_required_for_initial_solo: false
+
+initial_product_non_goals:
+  - human_factions
+  - crafting
+  - base_building
+  - flying_playable_animals
+  - fully_aquatic_playable_animals
+  - nesting_and_genetics_as_launch_requirements
+  - public_ranked_pvp
+  - hundred_player_promise
+  - voice_chat
+  - seamless_host_migration
+  - persistent_mmo_world
+  - mobile_release_commitment
+  - photorealism_at_any_cost
+
+open_decisions:
+  - first_polished_playable_taxon
+  - exact_session_lengths
+  - growth_and_life_stage_model
+  - first_ecosystem_assemblage
+  - injury_severity_and_recovery
+  - navigation_assistance_strength
+  - exact_lineage_economy
+  - free_and_premium_content_split
+  - advertising_adoption
+  - public_multiplayer_timing
+  - exact_pricing
+  - long_term_persistence

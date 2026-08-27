@@ -1,0 +1,946 @@
+{
+  "status": "PASS",
+  "sourceSha256": "fbb42c2edad4eadebbcf808d32028d7c73b3fbfd6172610eddd5df84990a65c7",
+  "generatedSha256": "1373f4c81b10b5b9cf8ae140d7b368b8475571a869662e7b3492f3e0818ab284",
+  "sourceNodeCount": 77,
+  "generatedNodeCount": 77,
+  "skinJointCount": 75,
+  "skinJointOrderPreserved": true,
+  "inverseBindMatricesPreservedExactly": true,
+  "animationCount": 37,
+  "animationNames": [
+    "PROC_WALK_RELAXED_V4_ROOTMOTION",
+    "PROC_WALK_RELAXED_V4_INPLACE",
+    "PROC_WALK_UNEVEN_TERRAIN_V4_ROOTMOTION",
+    "PROC_WALK_UNEVEN_TERRAIN_V4_INPLACE",
+    "PROC_WALK_UPSLOPE_V4_ROOTMOTION",
+    "PROC_WALK_UPSLOPE_V4_INPLACE",
+    "PROC_TURN_LEFT_35_V4_ROOTMOTION",
+    "PROC_TURN_LEFT_35_V4_INPLACE",
+    "PROC_TURN_RIGHT_35_V4_ROOTMOTION",
+    "PROC_TURN_RIGHT_35_V4_INPLACE",
+    "PROC_START_WALK_V4_ROOTMOTION",
+    "PROC_START_WALK_V4_INPLACE",
+    "PROC_BRAKE_TO_IDLE_V4_ROOTMOTION",
+    "PROC_BRAKE_TO_IDLE_V4_INPLACE",
+    "PROC_ALERT_WALK_V4_ROOTMOTION",
+    "PROC_ALERT_WALK_V4_INPLACE",
+    "PROC_IDLE_BREATH_V4",
+    "PROC_ALERT_IDLE_V4",
+    "PROC_EAT_LOOP_V4",
+    "PROC_BITE_ATTACK_V4",
+    "PROC_ROAR_V4",
+    "PROC_IDLE_TO_WALK_V4",
+    "PROC_WALK_TO_IDLE_V4",
+    "PROC_WALK_TO_ALERT_WALK_V4",
+    "PROC_ALERT_WALK_TO_WALK_V4",
+    "PROC_IDLE_TO_ALERT_IDLE_V4",
+    "PROC_ALERT_IDLE_TO_IDLE_V4",
+    "PROC_IDLE_TO_EAT_V4",
+    "PROC_EAT_TO_IDLE_V4",
+    "PROC_IDLE_TO_ROAR_READY_V4",
+    "PROC_ROAR_TO_IDLE_V4",
+    "PROC_WALK_TO_BITE_READY_V4",
+    "PROC_BITE_TO_WALK_V4",
+    "PROC_WALK_TO_ROAR_READY_V4",
+    "PROC_ROAR_TO_WALK_V4",
+    "PROC_WALK_TO_EAT_V4",
+    "PROC_EAT_TO_WALK_V4"
+  ],
+  "missingRequiredClips": [],
+  "clips": [
+    {
+      "name": "PROC_WALK_RELAXED_V4_ROOTMOTION",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": true,
+        "rootMotion": true,
+        "sampleHz": 60,
+        "internalSampleHz": 60,
+        "referenceFitted": true,
+        "vertexSoleCollision": true,
+        "terrainAware": false,
+        "terrain": "flat",
+        "path": "StraightPath",
+        "alertAmount": 0.0,
+        "tags": [
+          "walk",
+          "relaxed",
+          "reference_fitted"
+        ]
+      }
+    },
+    {
+      "name": "PROC_WALK_RELAXED_V4_INPLACE",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": true,
+        "rootMotion": false,
+        "sampleHz": 60,
+        "internalSampleHz": 60,
+        "referenceFitted": true,
+        "vertexSoleCollision": true,
+        "terrainAware": false,
+        "terrain": "flat",
+        "path": "StraightPath",
+        "alertAmount": 0.0,
+        "tags": [
+          "walk",
+          "relaxed",
+          "reference_fitted"
+        ],
+        "recommendedRuntimeSpeedMps": 0.4603156640561728
+      }
+    },
+    {
+      "name": "PROC_WALK_UNEVEN_TERRAIN_V4_ROOTMOTION",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": true,
+        "sampleHz": 60,
+        "internalSampleHz": 60,
+        "referenceFitted": true,
+        "vertexSoleCollision": true,
+        "terrainAware": true,
+        "terrain": "uneven",
+        "path": "StraightPath",
+        "alertAmount": 0.0,
+        "tags": [
+          "walk",
+          "terrain",
+          "uneven",
+          "sole_collision"
+        ]
+      }
+    },
+    {
+      "name": "PROC_WALK_UNEVEN_TERRAIN_V4_INPLACE",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": false,
+        "sampleHz": 60,
+        "internalSampleHz": 60,
+        "referenceFitted": true,
+        "vertexSoleCollision": true,
+        "terrainAware": true,
+        "terrain": "uneven",
+        "path": "StraightPath",
+        "alertAmount": 0.0,
+        "tags": [
+          "walk",
+          "terrain",
+          "uneven",
+          "sole_collision"
+        ],
+        "recommendedRuntimeSpeedMps": 0.3894270517915222
+      }
+    },
+    {
+      "name": "PROC_WALK_UPSLOPE_V4_ROOTMOTION",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": true,
+        "sampleHz": 60,
+        "internalSampleHz": 60,
+        "referenceFitted": true,
+        "vertexSoleCollision": true,
+        "terrainAware": true,
+        "terrain": "slope",
+        "path": "StraightPath",
+        "alertAmount": 0.0,
+        "tags": [
+          "walk",
+          "terrain",
+          "upslope"
+        ]
+      }
+    },
+    {
+      "name": "PROC_WALK_UPSLOPE_V4_INPLACE",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": false,
+        "sampleHz": 60,
+        "internalSampleHz": 60,
+        "referenceFitted": true,
+        "vertexSoleCollision": true,
+        "terrainAware": true,
+        "terrain": "slope",
+        "path": "StraightPath",
+        "alertAmount": 0.0,
+        "tags": [
+          "walk",
+          "terrain",
+          "upslope"
+        ],
+        "recommendedRuntimeSpeedMps": 0.3642017534012439
+      }
+    },
+    {
+      "name": "PROC_TURN_LEFT_35_V4_ROOTMOTION",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": true,
+        "sampleHz": 60,
+        "internalSampleHz": 60,
+        "referenceFitted": true,
+        "vertexSoleCollision": true,
+        "terrainAware": false,
+        "terrain": "flat",
+        "path": "EasedArcPath",
+        "alertAmount": 0.0,
+        "tags": [
+          "turn",
+          "left",
+          "locomotion"
+        ]
+      }
+    },
+    {
+      "name": "PROC_TURN_LEFT_35_V4_INPLACE",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": false,
+        "sampleHz": 60,
+        "internalSampleHz": 60,
+        "referenceFitted": true,
+        "vertexSoleCollision": true,
+        "terrainAware": false,
+        "terrain": "flat",
+        "path": "EasedArcPath",
+        "alertAmount": 0.0,
+        "tags": [
+          "turn",
+          "left",
+          "locomotion"
+        ],
+        "recommendedRuntimeSpeedMps": 0.324614606292413
+      }
+    },
+    {
+      "name": "PROC_TURN_RIGHT_35_V4_ROOTMOTION",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": true,
+        "sampleHz": 60,
+        "internalSampleHz": 60,
+        "referenceFitted": true,
+        "vertexSoleCollision": true,
+        "terrainAware": false,
+        "terrain": "flat",
+        "path": "EasedArcPath",
+        "alertAmount": 0.0,
+        "tags": [
+          "turn",
+          "right",
+          "locomotion"
+        ]
+      }
+    },
+    {
+      "name": "PROC_TURN_RIGHT_35_V4_INPLACE",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": false,
+        "sampleHz": 60,
+        "internalSampleHz": 60,
+        "referenceFitted": true,
+        "vertexSoleCollision": true,
+        "terrainAware": false,
+        "terrain": "flat",
+        "path": "EasedArcPath",
+        "alertAmount": 0.0,
+        "tags": [
+          "turn",
+          "right",
+          "locomotion"
+        ],
+        "recommendedRuntimeSpeedMps": 0.324614606292413
+      }
+    },
+    {
+      "name": "PROC_START_WALK_V4_ROOTMOTION",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": true,
+        "sampleHz": 60,
+        "internalSampleHz": 60,
+        "referenceFitted": true,
+        "vertexSoleCollision": true,
+        "terrainAware": false,
+        "terrain": "flat",
+        "path": "StraightPath",
+        "alertAmount": 0.0,
+        "tags": [
+          "start",
+          "acceleration",
+          "locomotion"
+        ]
+      }
+    },
+    {
+      "name": "PROC_START_WALK_V4_INPLACE",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": false,
+        "sampleHz": 60,
+        "internalSampleHz": 60,
+        "referenceFitted": true,
+        "vertexSoleCollision": true,
+        "terrainAware": false,
+        "terrain": "flat",
+        "path": "StraightPath",
+        "alertAmount": 0.0,
+        "tags": [
+          "start",
+          "acceleration",
+          "locomotion"
+        ],
+        "recommendedRuntimeSpeedMps": 0.4603156640561728
+      }
+    },
+    {
+      "name": "PROC_BRAKE_TO_IDLE_V4_ROOTMOTION",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": true,
+        "sampleHz": 60,
+        "internalSampleHz": 60,
+        "referenceFitted": true,
+        "vertexSoleCollision": true,
+        "terrainAware": false,
+        "terrain": "flat",
+        "path": "StraightPath",
+        "alertAmount": 0.0,
+        "tags": [
+          "stop",
+          "braking",
+          "locomotion"
+        ]
+      }
+    },
+    {
+      "name": "PROC_BRAKE_TO_IDLE_V4_INPLACE",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": false,
+        "sampleHz": 60,
+        "internalSampleHz": 60,
+        "referenceFitted": true,
+        "vertexSoleCollision": true,
+        "terrainAware": false,
+        "terrain": "flat",
+        "path": "StraightPath",
+        "alertAmount": 0.0,
+        "tags": [
+          "stop",
+          "braking",
+          "locomotion"
+        ],
+        "recommendedRuntimeSpeedMps": 0.4603156640561728
+      }
+    },
+    {
+      "name": "PROC_ALERT_WALK_V4_ROOTMOTION",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": true,
+        "rootMotion": true,
+        "sampleHz": 60,
+        "internalSampleHz": 60,
+        "referenceFitted": true,
+        "vertexSoleCollision": true,
+        "terrainAware": false,
+        "terrain": "flat",
+        "path": "StraightPath",
+        "alertAmount": 1.0,
+        "tags": [
+          "walk",
+          "alert",
+          "attention"
+        ]
+      }
+    },
+    {
+      "name": "PROC_ALERT_WALK_V4_INPLACE",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": true,
+        "rootMotion": false,
+        "sampleHz": 60,
+        "internalSampleHz": 60,
+        "referenceFitted": true,
+        "vertexSoleCollision": true,
+        "terrainAware": false,
+        "terrain": "flat",
+        "path": "StraightPath",
+        "alertAmount": 1.0,
+        "tags": [
+          "walk",
+          "alert",
+          "attention"
+        ],
+        "recommendedRuntimeSpeedMps": 0.4574514777020455
+      }
+    },
+    {
+      "name": "PROC_IDLE_BREATH_V4",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": true,
+        "rootMotion": false,
+        "sampleHz": 60,
+        "internalSampleHz": 60,
+        "action": true,
+        "tags": [
+          "idle",
+          "breathing"
+        ],
+        "neutralJaw": true,
+        "anatomicalLegConstraints": true,
+        "vertexSoleCollision": true
+      }
+    },
+    {
+      "name": "PROC_ALERT_IDLE_V4",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": true,
+        "rootMotion": false,
+        "sampleHz": 60,
+        "internalSampleHz": 60,
+        "action": true,
+        "tags": [
+          "alert",
+          "idle"
+        ],
+        "neutralJaw": true,
+        "anatomicalLegConstraints": true,
+        "vertexSoleCollision": true
+      }
+    },
+    {
+      "name": "PROC_EAT_LOOP_V4",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": true,
+        "rootMotion": false,
+        "sampleHz": 60,
+        "internalSampleHz": 60,
+        "action": true,
+        "tags": [
+          "eat",
+          "feeding",
+          "loop"
+        ],
+        "neutralJaw": true,
+        "anatomicalLegConstraints": true,
+        "vertexSoleCollision": true
+      }
+    },
+    {
+      "name": "PROC_BITE_ATTACK_V4",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": true,
+        "sampleHz": 60,
+        "internalSampleHz": 60,
+        "action": true,
+        "tags": [
+          "attack",
+          "bite",
+          "one_shot"
+        ],
+        "neutralJaw": true,
+        "anatomicalLegConstraints": true,
+        "vertexSoleCollision": true
+      }
+    },
+    {
+      "name": "PROC_ROAR_V4",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": false,
+        "sampleHz": 60,
+        "internalSampleHz": 60,
+        "action": true,
+        "tags": [
+          "roar",
+          "display",
+          "one_shot"
+        ],
+        "neutralJaw": true,
+        "anatomicalLegConstraints": true,
+        "vertexSoleCollision": true
+      }
+    },
+    {
+      "name": "PROC_IDLE_TO_WALK_V4",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": false,
+        "transition": true,
+        "transitionType": "C2 minimum-jerk pose match",
+        "sourceClip": "PROC_IDLE_BREATH_V4",
+        "targetClip": "PROC_WALK_RELAXED_V4_INPLACE",
+        "sourcePhase": 0.0,
+        "targetPhase": 0.0,
+        "tags": [
+          "transition",
+          "idle",
+          "walk"
+        ]
+      }
+    },
+    {
+      "name": "PROC_WALK_TO_IDLE_V4",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": false,
+        "transition": true,
+        "transitionType": "C2 minimum-jerk pose match",
+        "sourceClip": "PROC_WALK_RELAXED_V4_INPLACE",
+        "targetClip": "PROC_IDLE_BREATH_V4",
+        "sourcePhase": 0.5,
+        "targetPhase": 0.0,
+        "tags": [
+          "transition",
+          "walk",
+          "idle"
+        ]
+      }
+    },
+    {
+      "name": "PROC_WALK_TO_ALERT_WALK_V4",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": false,
+        "transition": true,
+        "transitionType": "phase-matched moving-loop blend",
+        "sourceClip": "PROC_WALK_RELAXED_V4_INPLACE",
+        "targetClip": "PROC_ALERT_WALK_V4_INPLACE",
+        "tags": [
+          "transition",
+          "walk",
+          "alert"
+        ]
+      }
+    },
+    {
+      "name": "PROC_ALERT_WALK_TO_WALK_V4",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": false,
+        "transition": true,
+        "transitionType": "phase-matched moving-loop blend",
+        "sourceClip": "PROC_ALERT_WALK_V4_INPLACE",
+        "targetClip": "PROC_WALK_RELAXED_V4_INPLACE",
+        "tags": [
+          "transition",
+          "alert",
+          "walk"
+        ]
+      }
+    },
+    {
+      "name": "PROC_IDLE_TO_ALERT_IDLE_V4",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": false,
+        "transition": true,
+        "transitionType": "C2 minimum-jerk pose match",
+        "sourceClip": "PROC_IDLE_BREATH_V4",
+        "targetClip": "PROC_ALERT_IDLE_V4",
+        "sourcePhase": 0.0,
+        "targetPhase": 0.0,
+        "tags": [
+          "transition",
+          "idle",
+          "alert"
+        ]
+      }
+    },
+    {
+      "name": "PROC_ALERT_IDLE_TO_IDLE_V4",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": false,
+        "transition": true,
+        "transitionType": "C2 minimum-jerk pose match",
+        "sourceClip": "PROC_ALERT_IDLE_V4",
+        "targetClip": "PROC_IDLE_BREATH_V4",
+        "sourcePhase": 0.0,
+        "targetPhase": 0.0,
+        "tags": [
+          "transition",
+          "alert",
+          "idle"
+        ]
+      }
+    },
+    {
+      "name": "PROC_IDLE_TO_EAT_V4",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": false,
+        "transition": true,
+        "transitionType": "C2 minimum-jerk pose match",
+        "sourceClip": "PROC_IDLE_BREATH_V4",
+        "targetClip": "PROC_EAT_LOOP_V4",
+        "sourcePhase": 0.0,
+        "targetPhase": 0.0,
+        "tags": [
+          "transition",
+          "idle",
+          "eat"
+        ]
+      }
+    },
+    {
+      "name": "PROC_EAT_TO_IDLE_V4",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": false,
+        "transition": true,
+        "transitionType": "C2 minimum-jerk pose match",
+        "sourceClip": "PROC_EAT_LOOP_V4",
+        "targetClip": "PROC_IDLE_BREATH_V4",
+        "sourcePhase": 0.0,
+        "targetPhase": 0.0,
+        "tags": [
+          "transition",
+          "eat",
+          "idle"
+        ]
+      }
+    },
+    {
+      "name": "PROC_IDLE_TO_ROAR_READY_V4",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": false,
+        "transition": true,
+        "transitionType": "C2 minimum-jerk pose match",
+        "sourceClip": "PROC_IDLE_BREATH_V4",
+        "targetClip": "PROC_ROAR_V4",
+        "sourcePhase": 0.0,
+        "targetPhase": 0.0,
+        "tags": [
+          "transition",
+          "idle",
+          "roar"
+        ]
+      }
+    },
+    {
+      "name": "PROC_ROAR_TO_IDLE_V4",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": false,
+        "transition": true,
+        "transitionType": "C2 minimum-jerk pose match",
+        "sourceClip": "PROC_ROAR_V4",
+        "targetClip": "PROC_IDLE_BREATH_V4",
+        "sourcePhase": 1.0,
+        "targetPhase": 0.0,
+        "tags": [
+          "transition",
+          "roar",
+          "idle"
+        ]
+      }
+    },
+    {
+      "name": "PROC_WALK_TO_BITE_READY_V4",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": false,
+        "transition": true,
+        "transitionType": "C2 minimum-jerk pose match",
+        "sourceClip": "PROC_WALK_RELAXED_V4_INPLACE",
+        "targetClip": "PROC_BITE_ATTACK_V4",
+        "sourcePhase": 0.5,
+        "targetPhase": 0.0,
+        "tags": [
+          "transition",
+          "walk",
+          "bite",
+          "urgent"
+        ]
+      }
+    },
+    {
+      "name": "PROC_BITE_TO_WALK_V4",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": false,
+        "transition": true,
+        "transitionType": "C2 minimum-jerk pose match",
+        "sourceClip": "PROC_BITE_ATTACK_V4",
+        "targetClip": "PROC_WALK_RELAXED_V4_INPLACE",
+        "sourcePhase": 1.0,
+        "targetPhase": 0.0,
+        "tags": [
+          "transition",
+          "bite",
+          "walk",
+          "recovery"
+        ]
+      }
+    },
+    {
+      "name": "PROC_WALK_TO_ROAR_READY_V4",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": false,
+        "transition": true,
+        "transitionType": "C2 minimum-jerk pose match",
+        "sourceClip": "PROC_WALK_RELAXED_V4_INPLACE",
+        "targetClip": "PROC_ROAR_V4",
+        "sourcePhase": 0.5,
+        "targetPhase": 0.0,
+        "tags": [
+          "transition",
+          "walk",
+          "roar"
+        ]
+      }
+    },
+    {
+      "name": "PROC_ROAR_TO_WALK_V4",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": false,
+        "transition": true,
+        "transitionType": "C2 minimum-jerk pose match",
+        "sourceClip": "PROC_ROAR_V4",
+        "targetClip": "PROC_WALK_RELAXED_V4_INPLACE",
+        "sourcePhase": 1.0,
+        "targetPhase": 0.0,
+        "tags": [
+          "transition",
+          "roar",
+          "walk",
+          "recovery"
+        ]
+      }
+    },
+    {
+      "name": "PROC_WALK_TO_EAT_V4",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": false,
+        "transition": true,
+        "transitionType": "C2 minimum-jerk pose match",
+        "sourceClip": "PROC_WALK_RELAXED_V4_INPLACE",
+        "targetClip": "PROC_EAT_LOOP_V4",
+        "sourcePhase": 0.5,
+        "targetPhase": 0.0,
+        "tags": [
+          "transition",
+          "walk",
+          "eat",
+          "settle"
+        ]
+      }
+    },
+    {
+      "name": "PROC_EAT_TO_WALK_V4",
+      "channelCount": 68,
+      "samplerCount": 68,
+      "errors": [],
+      "extras": {
+        "generator": "Eonwild procedural animation toolkit v4",
+        "version": "4.0.0",
+        "loop": false,
+        "rootMotion": false,
+        "transition": true,
+        "transitionType": "C2 minimum-jerk pose match",
+        "sourceClip": "PROC_EAT_LOOP_V4",
+        "targetClip": "PROC_WALK_RELAXED_V4_INPLACE",
+        "sourcePhase": 0.0,
+        "targetPhase": 0.0,
+        "tags": [
+          "transition",
+          "eat",
+          "walk",
+          "rise"
+        ]
+      }
+    }
+  ],
+  "errors": []
+}

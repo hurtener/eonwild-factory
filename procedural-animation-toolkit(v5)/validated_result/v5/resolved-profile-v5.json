@@ -1,0 +1,8 @@
+{
+  "name": "tarbosaurus_v5_contact_preserving_polish",
+  "sampleHz": 60,
+  "neutralJawCloseDegrees": 50.0,
+  "jawBreathDegrees": 0.36,
+  "polishWindowFrames": 7,
+  "transitionSystem": "RotationSpline + Hermite exact handoff"
+}

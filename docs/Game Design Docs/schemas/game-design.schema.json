@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eonwild.dev/schemas/game-design.schema.json",
+  "title": "Eonwild Game Design Summary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "status",
+    "identity",
+    "product",
+    "pillars",
+    "moment_to_moment_loop",
+    "session_formats",
+    "world",
+    "ecology",
+    "creatures",
+    "survival",
+    "progression",
+    "multiplayer",
+    "visual",
+    "audio",
+    "ui_accessibility",
+    "science",
+    "platform_business",
+    "initial_product_non_goals",
+    "open_decisions"
+  ],
+  "properties": {
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "status": { "enum": ["draft", "proposed_canonicalization", "canonical", "deprecated"] },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "working_tagline", "one_sentence_pitch", "genre", "fiction"],
+      "properties": {
+        "name": { "const": "Eonwild" },
+        "working_tagline": { "type": "string", "minLength": 1 },
+        "one_sentence_pitch": { "type": "string", "minLength": 20 },
+        "genre": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string" } },
+        "fiction": { "$ref": "#/$defs/freeformObject" }
+      }
+    },
+    "product": { "$ref": "#/$defs/freeformObject" },
+    "pillars": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "canonical"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+          "canonical": { "type": "boolean" }
+        }
+      }
+    },
+    "moment_to_moment_loop": {
+      "type": "array",
+      "minItems": 5,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9_]+$" }
+    },
+    "session_formats": { "$ref": "#/$defs/freeformObject" },
+    "world": { "$ref": "#/$defs/freeformObject" },
+    "ecology": { "$ref": "#/$defs/freeformObject" },
+    "creatures": { "$ref": "#/$defs/freeformObject" },
+    "survival": { "$ref": "#/$defs/freeformObject" },
+    "progression": { "$ref": "#/$defs/freeformObject" },
+    "multiplayer": { "$ref": "#/$defs/freeformObject" },
+    "visual": { "$ref": "#/$defs/freeformObject" },
+    "audio": { "$ref": "#/$defs/freeformObject" },
+    "ui_accessibility": { "$ref": "#/$defs/freeformObject" },
+    "science": { "$ref": "#/$defs/freeformObject" },
+    "platform_business": { "$ref": "#/$defs/freeformObject" },
+    "initial_product_non_goals": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9_]+$" }
+    },
+    "open_decisions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9_]+$" }
+    }
+  },
+  "$defs": {
+    "freeformObject": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true
+    }
+  }
+}

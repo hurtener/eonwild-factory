@@ -1,0 +1,35 @@
+test_all_html_clip_references_exist (test_browser_contract_v5.BrowserContractTests.test_all_html_clip_references_exist) ... ok
+test_all_manifest_action_queues_exist (test_browser_contract_v5.BrowserContractTests.test_all_manifest_action_queues_exist) ... ok
+test_exact_handoff_and_root_continuity (test_browser_contract_v5.BrowserContractTests.test_exact_handoff_and_root_continuity) ... ok
+test_single_file_browser_is_embedded (test_browser_contract_v5.BrowserContractTests.test_single_file_browser_is_embedded) ... ok
+test_ui_state_is_visible_and_accessible (test_browser_contract_v5.BrowserContractTests.test_ui_state_is_visible_and_accessible) ... ok
+test_jaw_calibrates_to_safe_closed_pose (test_quality_v5.V5QualityTests.test_jaw_calibrates_to_safe_closed_pose) ... ok
+test_loop_polish_closes_exactly (test_quality_v5.V5QualityTests.test_loop_polish_closes_exactly) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.833s
+
+OK
+{
+  "status": "PASS",
+  "clipCount": 37,
+  "transitionCount": 16,
+  "skinJointCount": 75,
+  "skinOrderPreserved": true,
+  "inverseBindMatricesExact": true,
+  "neutralJawMinimumCloseDegrees": 49.63999903162964,
+  "biteContactCloseDegrees": 49.99815322040244,
+  "biteEndCloseDegrees": 50.00000054209703,
+  "roarMaximumGapeCloseDegrees": -0.5000022561696833,
+  "roarEndCloseDegrees": 50.00000054209703,
+  "maxTransitionEndpointRotationErrorDegrees": 8.995967132789887e-15,
+  "maxTransitionEndpointPositionError": 0.0,
+  "playerContract": {
+    "activeButtons": true,
+    "exactHandoff": true,
+    "noLegacyDoubleFade": true,
+    "rootContinuity": true,
+    "playState": true
+  },
+  "generatedSha256": "66cf116a2191311cf00f4571e71e5a38753fd71ad42a8381185156a3af1bacd0"
+}

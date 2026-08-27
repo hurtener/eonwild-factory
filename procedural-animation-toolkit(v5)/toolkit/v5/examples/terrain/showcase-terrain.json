@@ -1,0 +1,8 @@
+{
+  "type": "procedural",
+  "amplitude_hip_fraction": 0.035,
+  "wavelength_m": 1.65,
+  "secondary_amplitude_ratio": 0.36,
+  "secondary_wavelength_ratio": 0.48,
+  "notes": "Smooth deterministic validation terrain; replace with the browser terrain provider at runtime."
+}

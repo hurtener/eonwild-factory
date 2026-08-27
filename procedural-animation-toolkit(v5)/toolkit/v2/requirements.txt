@@ -1,0 +1,7 @@
+numpy>=2.0
+scipy>=1.13
+PyYAML>=6.0
+
+# Optional validation renderer
+Pillow>=10.0
+vtk>=9.3

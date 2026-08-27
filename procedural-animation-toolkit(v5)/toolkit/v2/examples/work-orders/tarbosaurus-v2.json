@@ -1,0 +1,19 @@
+{
+  "schema": "eonwild.procedural-animation-work-order.v2",
+  "input_asset": "/absolute/path/to/tarbosaurus.glb",
+  "bone_map": "/absolute/path/to/tarbosaurus.bone-map.yml",
+  "profile": "../profiles/large-theropod-v2.json",
+  "family": "biped",
+  "clips": [
+    "walk_in_place",
+    "walk_root_motion"
+  ],
+  "quality": {
+    "internal_sample_hz": 120,
+    "export_sample_hz": 60,
+    "require_contact_validation": true,
+    "require_loop_velocity_validation": true,
+    "require_three_camera_review": true
+  },
+  "output_directory": "/absolute/path/to/output"
+}

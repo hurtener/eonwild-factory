@@ -1,0 +1,29 @@
+{
+  "glb": "/mnt/data/eonwild-v5-final-build/eonwild-procedural-animation-v5-full-toolkit/validated_result/v5/tarbosaurus_procedural_v5_animation_pack.glb",
+  "report": "/mnt/data/eonwild-v5-final-build/eonwild-procedural-animation-v5-full-toolkit/validated_result/v5/procedural-v5-report.json",
+  "manifest": "/mnt/data/eonwild-v5-final-build/eonwild-procedural-animation-v5-full-toolkit/validated_result/v5/animation-manifest.v5.json",
+  "jaw": {
+    "close_degrees": 50.0,
+    "minimum_gap_m": 0.002044549991459199,
+    "median_gap_m": 0.012028303064747892,
+    "maximum_gap_m": 0.02035841463060417,
+    "target_minimum_gap_m": 0.0020583220750479275,
+    "candidate_count": 41,
+    "witness_bin_count": 6,
+    "jaw_vertex_count": 4515,
+    "upper_vertex_count": 3036,
+    "jaw_chain": [
+      "Bone_074",
+      "Bone_073",
+      "Bone_072",
+      "Bone_071",
+      "Bone_070"
+    ],
+    "upper_chain": [
+      "Bone_035",
+      "Bone_069",
+      "Bone_068"
+    ]
+  },
+  "clips": 37
+}

@@ -1,0 +1,1164 @@
+{
+  "schema": "eonwild.animation-manifest.v4",
+  "version": "4.0.0",
+  "asset": "tarbosaurus_procedural_v4_animation_pack.glb",
+  "family": "large_theropod_biped",
+  "speciesProfile": "tarbosaurus_reference_fitted_v4",
+  "sampleHz": 60,
+  "clips": [
+    {
+      "name": "PROC_WALK_RELAXED_V4_ROOTMOTION",
+      "durationSeconds": 4.444444444444445,
+      "loop": true,
+      "rootMotion": true,
+      "tags": [
+        "walk",
+        "relaxed",
+        "reference_fitted"
+      ],
+      "terrain": "flat",
+      "path": "StraightPath",
+      "events": [
+        {
+          "timeSeconds": 0.0,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 0.0
+        },
+        {
+          "timeSeconds": 1.1111111111111112,
+          "type": "foot_contact",
+          "side": "right",
+          "phase": 0.5
+        },
+        {
+          "timeSeconds": 2.2222222222222223,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 1.0
+        },
+        {
+          "timeSeconds": 3.3333333333333335,
+          "type": "foot_contact",
+          "side": "right",
+          "phase": 1.5
+        }
+      ]
+    },
+    {
+      "name": "PROC_WALK_RELAXED_V4_INPLACE",
+      "durationSeconds": 4.444444444444445,
+      "loop": true,
+      "rootMotion": false,
+      "tags": [
+        "walk",
+        "relaxed",
+        "reference_fitted"
+      ],
+      "terrain": "flat",
+      "path": "StraightPath",
+      "events": [
+        {
+          "timeSeconds": 0.0,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 0.0
+        },
+        {
+          "timeSeconds": 1.1111111111111112,
+          "type": "foot_contact",
+          "side": "right",
+          "phase": 0.5
+        },
+        {
+          "timeSeconds": 2.2222222222222223,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 1.0
+        },
+        {
+          "timeSeconds": 3.3333333333333335,
+          "type": "foot_contact",
+          "side": "right",
+          "phase": 1.5
+        }
+      ]
+    },
+    {
+      "name": "PROC_WALK_UNEVEN_TERRAIN_V4_ROOTMOTION",
+      "durationSeconds": 4.7281323877068555,
+      "loop": false,
+      "rootMotion": true,
+      "tags": [
+        "walk",
+        "terrain",
+        "uneven",
+        "sole_collision"
+      ],
+      "terrain": "uneven",
+      "path": "StraightPath",
+      "events": [
+        {
+          "timeSeconds": 0.0,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 0.0
+        },
+        {
+          "timeSeconds": 1.1820330969267139,
+          "type": "foot_contact",
+          "side": "right",
+          "phase": 0.5
+        },
+        {
+          "timeSeconds": 2.3640661938534278,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 1.0
+        },
+        {
+          "timeSeconds": 3.5460992907801416,
+          "type": "foot_contact",
+          "side": "right",
+          "phase": 1.5
+        },
+        {
+          "timeSeconds": 4.7281323877068555,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 2.0
+        }
+      ]
+    },
+    {
+      "name": "PROC_WALK_UNEVEN_TERRAIN_V4_INPLACE",
+      "durationSeconds": 4.7281323877068555,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "walk",
+        "terrain",
+        "uneven",
+        "sole_collision"
+      ],
+      "terrain": "uneven",
+      "path": "StraightPath",
+      "events": [
+        {
+          "timeSeconds": 0.0,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 0.0
+        },
+        {
+          "timeSeconds": 1.1820330969267139,
+          "type": "foot_contact",
+          "side": "right",
+          "phase": 0.5
+        },
+        {
+          "timeSeconds": 2.3640661938534278,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 1.0
+        },
+        {
+          "timeSeconds": 3.5460992907801416,
+          "type": "foot_contact",
+          "side": "right",
+          "phase": 1.5
+        },
+        {
+          "timeSeconds": 4.7281323877068555,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 2.0
+        }
+      ]
+    },
+    {
+      "name": "PROC_WALK_UPSLOPE_V4_ROOTMOTION",
+      "durationSeconds": 4.8309178743961345,
+      "loop": false,
+      "rootMotion": true,
+      "tags": [
+        "walk",
+        "terrain",
+        "upslope"
+      ],
+      "terrain": "slope",
+      "path": "StraightPath",
+      "events": [
+        {
+          "timeSeconds": 0.0,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 0.0
+        },
+        {
+          "timeSeconds": 1.2077294685990336,
+          "type": "foot_contact",
+          "side": "right",
+          "phase": 0.5
+        },
+        {
+          "timeSeconds": 2.4154589371980673,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 1.0
+        },
+        {
+          "timeSeconds": 3.6231884057971007,
+          "type": "foot_contact",
+          "side": "right",
+          "phase": 1.5
+        },
+        {
+          "timeSeconds": 4.8309178743961345,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 2.0
+        }
+      ]
+    },
+    {
+      "name": "PROC_WALK_UPSLOPE_V4_INPLACE",
+      "durationSeconds": 4.8309178743961345,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "walk",
+        "terrain",
+        "upslope"
+      ],
+      "terrain": "slope",
+      "path": "StraightPath",
+      "events": [
+        {
+          "timeSeconds": 0.0,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 0.0
+        },
+        {
+          "timeSeconds": 1.2077294685990336,
+          "type": "foot_contact",
+          "side": "right",
+          "phase": 0.5
+        },
+        {
+          "timeSeconds": 2.4154589371980673,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 1.0
+        },
+        {
+          "timeSeconds": 3.6231884057971007,
+          "type": "foot_contact",
+          "side": "right",
+          "phase": 1.5
+        },
+        {
+          "timeSeconds": 4.8309178743961345,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 2.0
+        }
+      ]
+    },
+    {
+      "name": "PROC_TURN_LEFT_35_V4_ROOTMOTION",
+      "durationSeconds": 5.420054200542006,
+      "loop": false,
+      "rootMotion": true,
+      "tags": [
+        "turn",
+        "left",
+        "locomotion"
+      ],
+      "terrain": "flat",
+      "path": "EasedArcPath",
+      "events": [
+        {
+          "timeSeconds": 0.0,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 0.0
+        },
+        {
+          "timeSeconds": 1.3550135501355014,
+          "type": "foot_contact",
+          "side": "right",
+          "phase": 0.5
+        },
+        {
+          "timeSeconds": 2.710027100271003,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 1.0
+        },
+        {
+          "timeSeconds": 4.065040650406504,
+          "type": "foot_contact",
+          "side": "right",
+          "phase": 1.5
+        },
+        {
+          "timeSeconds": 5.420054200542006,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 2.0
+        }
+      ]
+    },
+    {
+      "name": "PROC_TURN_LEFT_35_V4_INPLACE",
+      "durationSeconds": 5.420054200542006,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "turn",
+        "left",
+        "locomotion"
+      ],
+      "terrain": "flat",
+      "path": "EasedArcPath",
+      "events": [
+        {
+          "timeSeconds": 0.0,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 0.0
+        },
+        {
+          "timeSeconds": 1.3550135501355014,
+          "type": "foot_contact",
+          "side": "right",
+          "phase": 0.5
+        },
+        {
+          "timeSeconds": 2.710027100271003,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 1.0
+        },
+        {
+          "timeSeconds": 4.065040650406504,
+          "type": "foot_contact",
+          "side": "right",
+          "phase": 1.5
+        },
+        {
+          "timeSeconds": 5.420054200542006,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 2.0
+        }
+      ]
+    },
+    {
+      "name": "PROC_TURN_RIGHT_35_V4_ROOTMOTION",
+      "durationSeconds": 5.420054200542006,
+      "loop": false,
+      "rootMotion": true,
+      "tags": [
+        "turn",
+        "right",
+        "locomotion"
+      ],
+      "terrain": "flat",
+      "path": "EasedArcPath",
+      "events": [
+        {
+          "timeSeconds": 0.0,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 0.0
+        },
+        {
+          "timeSeconds": 1.3550135501355014,
+          "type": "foot_contact",
+          "side": "right",
+          "phase": 0.5
+        },
+        {
+          "timeSeconds": 2.710027100271003,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 1.0
+        },
+        {
+          "timeSeconds": 4.065040650406504,
+          "type": "foot_contact",
+          "side": "right",
+          "phase": 1.5
+        },
+        {
+          "timeSeconds": 5.420054200542006,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 2.0
+        }
+      ]
+    },
+    {
+      "name": "PROC_TURN_RIGHT_35_V4_INPLACE",
+      "durationSeconds": 5.420054200542006,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "turn",
+        "right",
+        "locomotion"
+      ],
+      "terrain": "flat",
+      "path": "EasedArcPath",
+      "events": [
+        {
+          "timeSeconds": 0.0,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 0.0
+        },
+        {
+          "timeSeconds": 1.3550135501355014,
+          "type": "foot_contact",
+          "side": "right",
+          "phase": 0.5
+        },
+        {
+          "timeSeconds": 2.710027100271003,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 1.0
+        },
+        {
+          "timeSeconds": 4.065040650406504,
+          "type": "foot_contact",
+          "side": "right",
+          "phase": 1.5
+        },
+        {
+          "timeSeconds": 5.420054200542006,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 2.0
+        }
+      ]
+    },
+    {
+      "name": "PROC_START_WALK_V4_ROOTMOTION",
+      "durationSeconds": 4.0,
+      "loop": false,
+      "rootMotion": true,
+      "tags": [
+        "start",
+        "acceleration",
+        "locomotion"
+      ],
+      "terrain": "flat",
+      "path": "StraightPath",
+      "events": [
+        {
+          "timeSeconds": 0.0,
+          "type": "locomotion_start"
+        },
+        {
+          "timeSeconds": 2.48,
+          "type": "locomotion_committed"
+        }
+      ]
+    },
+    {
+      "name": "PROC_START_WALK_V4_INPLACE",
+      "durationSeconds": 4.0,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "start",
+        "acceleration",
+        "locomotion"
+      ],
+      "terrain": "flat",
+      "path": "StraightPath",
+      "events": [
+        {
+          "timeSeconds": 0.0,
+          "type": "locomotion_start"
+        },
+        {
+          "timeSeconds": 2.48,
+          "type": "locomotion_committed"
+        }
+      ]
+    },
+    {
+      "name": "PROC_BRAKE_TO_IDLE_V4_ROOTMOTION",
+      "durationSeconds": 3.6,
+      "loop": false,
+      "rootMotion": true,
+      "tags": [
+        "stop",
+        "braking",
+        "locomotion"
+      ],
+      "terrain": "flat",
+      "path": "StraightPath",
+      "events": [
+        {
+          "timeSeconds": 0.0,
+          "type": "brake_start"
+        },
+        {
+          "timeSeconds": 3.6,
+          "type": "idle_settled"
+        },
+        {
+          "timeSeconds": 3.6,
+          "type": "transition_commit"
+        }
+      ]
+    },
+    {
+      "name": "PROC_BRAKE_TO_IDLE_V4_INPLACE",
+      "durationSeconds": 3.6,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "stop",
+        "braking",
+        "locomotion"
+      ],
+      "terrain": "flat",
+      "path": "StraightPath",
+      "events": [
+        {
+          "timeSeconds": 0.0,
+          "type": "brake_start"
+        },
+        {
+          "timeSeconds": 3.6,
+          "type": "idle_settled"
+        },
+        {
+          "timeSeconds": 3.6,
+          "type": "transition_commit"
+        }
+      ]
+    },
+    {
+      "name": "PROC_ALERT_WALK_V4_ROOTMOTION",
+      "durationSeconds": 3.846153846153846,
+      "loop": true,
+      "rootMotion": true,
+      "tags": [
+        "walk",
+        "alert",
+        "attention"
+      ],
+      "terrain": "flat",
+      "path": "StraightPath",
+      "events": [
+        {
+          "timeSeconds": 0.0,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 0.0
+        },
+        {
+          "timeSeconds": 0.9615384615384615,
+          "type": "foot_contact",
+          "side": "right",
+          "phase": 0.5
+        },
+        {
+          "timeSeconds": 1.923076923076923,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 1.0
+        },
+        {
+          "timeSeconds": 2.884615384615384,
+          "type": "foot_contact",
+          "side": "right",
+          "phase": 1.5
+        }
+      ]
+    },
+    {
+      "name": "PROC_ALERT_WALK_V4_INPLACE",
+      "durationSeconds": 3.846153846153846,
+      "loop": true,
+      "rootMotion": false,
+      "tags": [
+        "walk",
+        "alert",
+        "attention"
+      ],
+      "terrain": "flat",
+      "path": "StraightPath",
+      "events": [
+        {
+          "timeSeconds": 0.0,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 0.0
+        },
+        {
+          "timeSeconds": 0.9615384615384615,
+          "type": "foot_contact",
+          "side": "right",
+          "phase": 0.5
+        },
+        {
+          "timeSeconds": 1.923076923076923,
+          "type": "foot_contact",
+          "side": "left",
+          "phase": 1.0
+        },
+        {
+          "timeSeconds": 2.884615384615384,
+          "type": "foot_contact",
+          "side": "right",
+          "phase": 1.5
+        }
+      ]
+    },
+    {
+      "name": "PROC_IDLE_BREATH_V4",
+      "durationSeconds": 6.0,
+      "loop": true,
+      "rootMotion": false,
+      "tags": [
+        "idle",
+        "breathing"
+      ],
+      "terrain": null,
+      "path": null,
+      "events": []
+    },
+    {
+      "name": "PROC_ALERT_IDLE_V4",
+      "durationSeconds": 6.0,
+      "loop": true,
+      "rootMotion": false,
+      "tags": [
+        "alert",
+        "idle"
+      ],
+      "terrain": null,
+      "path": null,
+      "events": []
+    },
+    {
+      "name": "PROC_EAT_LOOP_V4",
+      "durationSeconds": 8.0,
+      "loop": true,
+      "rootMotion": false,
+      "tags": [
+        "eat",
+        "feeding",
+        "loop"
+      ],
+      "terrain": null,
+      "path": null,
+      "events": [
+        {
+          "timeSeconds": 1.16,
+          "type": "feeding_bite",
+          "index": 0
+        },
+        {
+          "timeSeconds": 3.16,
+          "type": "feeding_bite",
+          "index": 1
+        },
+        {
+          "timeSeconds": 5.16,
+          "type": "feeding_bite",
+          "index": 2
+        },
+        {
+          "timeSeconds": 7.16,
+          "type": "feeding_bite",
+          "index": 3
+        }
+      ]
+    },
+    {
+      "name": "PROC_BITE_ATTACK_V4",
+      "durationSeconds": 3.4,
+      "loop": false,
+      "rootMotion": true,
+      "tags": [
+        "attack",
+        "bite",
+        "one_shot"
+      ],
+      "terrain": null,
+      "path": null,
+      "events": [
+        {
+          "timeSeconds": 0.9520000000000001,
+          "type": "attack_release"
+        },
+        {
+          "timeSeconds": 1.9040000000000001,
+          "type": "bite_contact",
+          "windowSeconds": 0.1
+        },
+        {
+          "timeSeconds": 2.72,
+          "type": "recovery_start"
+        }
+      ]
+    },
+    {
+      "name": "PROC_ROAR_V4",
+      "durationSeconds": 5.4,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "roar",
+        "display",
+        "one_shot"
+      ],
+      "terrain": null,
+      "path": null,
+      "events": [
+        {
+          "timeSeconds": 1.296,
+          "type": "inhale_complete"
+        },
+        {
+          "timeSeconds": 2.9160000000000004,
+          "type": "roar_peak"
+        },
+        {
+          "timeSeconds": 4.428,
+          "type": "roar_release"
+        }
+      ]
+    },
+    {
+      "name": "PROC_IDLE_TO_WALK_V4",
+      "durationSeconds": 1.8,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "idle",
+        "walk"
+      ],
+      "terrain": null,
+      "path": null,
+      "events": [
+        {
+          "timeSeconds": 1.8,
+          "type": "transition_commit"
+        }
+      ]
+    },
+    {
+      "name": "PROC_WALK_TO_IDLE_V4",
+      "durationSeconds": 1.8,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "walk",
+        "idle"
+      ],
+      "terrain": null,
+      "path": null,
+      "events": [
+        {
+          "timeSeconds": 1.8,
+          "type": "transition_commit"
+        }
+      ]
+    },
+    {
+      "name": "PROC_WALK_TO_ALERT_WALK_V4",
+      "durationSeconds": 2.2222222222222223,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "walk",
+        "alert"
+      ],
+      "terrain": null,
+      "path": null,
+      "events": [
+        {
+          "timeSeconds": 2.2222222222222223,
+          "type": "transition_commit"
+        }
+      ]
+    },
+    {
+      "name": "PROC_ALERT_WALK_TO_WALK_V4",
+      "durationSeconds": 2.2222222222222223,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "alert",
+        "walk"
+      ],
+      "terrain": null,
+      "path": null,
+      "events": [
+        {
+          "timeSeconds": 2.2222222222222223,
+          "type": "transition_commit"
+        }
+      ]
+    },
+    {
+      "name": "PROC_IDLE_TO_ALERT_IDLE_V4",
+      "durationSeconds": 1.25,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "idle",
+        "alert"
+      ],
+      "terrain": null,
+      "path": null,
+      "events": [
+        {
+          "timeSeconds": 1.25,
+          "type": "transition_commit"
+        }
+      ]
+    },
+    {
+      "name": "PROC_ALERT_IDLE_TO_IDLE_V4",
+      "durationSeconds": 1.25,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "alert",
+        "idle"
+      ],
+      "terrain": null,
+      "path": null,
+      "events": [
+        {
+          "timeSeconds": 1.25,
+          "type": "transition_commit"
+        }
+      ]
+    },
+    {
+      "name": "PROC_IDLE_TO_EAT_V4",
+      "durationSeconds": 1.8,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "idle",
+        "eat"
+      ],
+      "terrain": null,
+      "path": null,
+      "events": [
+        {
+          "timeSeconds": 1.8,
+          "type": "transition_commit"
+        }
+      ]
+    },
+    {
+      "name": "PROC_EAT_TO_IDLE_V4",
+      "durationSeconds": 1.8,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "eat",
+        "idle"
+      ],
+      "terrain": null,
+      "path": null,
+      "events": [
+        {
+          "timeSeconds": 1.8,
+          "type": "transition_commit"
+        }
+      ]
+    },
+    {
+      "name": "PROC_IDLE_TO_ROAR_READY_V4",
+      "durationSeconds": 0.75,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "idle",
+        "roar"
+      ],
+      "terrain": null,
+      "path": null,
+      "events": [
+        {
+          "timeSeconds": 0.75,
+          "type": "transition_commit"
+        }
+      ]
+    },
+    {
+      "name": "PROC_ROAR_TO_IDLE_V4",
+      "durationSeconds": 1.25,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "roar",
+        "idle"
+      ],
+      "terrain": null,
+      "path": null,
+      "events": [
+        {
+          "timeSeconds": 1.25,
+          "type": "transition_commit"
+        }
+      ]
+    },
+    {
+      "name": "PROC_WALK_TO_BITE_READY_V4",
+      "durationSeconds": 0.75,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "walk",
+        "bite",
+        "urgent"
+      ],
+      "terrain": null,
+      "path": null,
+      "events": [
+        {
+          "timeSeconds": 0.75,
+          "type": "transition_commit"
+        }
+      ]
+    },
+    {
+      "name": "PROC_BITE_TO_WALK_V4",
+      "durationSeconds": 1.25,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "bite",
+        "walk",
+        "recovery"
+      ],
+      "terrain": null,
+      "path": null,
+      "events": [
+        {
+          "timeSeconds": 1.25,
+          "type": "transition_commit"
+        }
+      ]
+    },
+    {
+      "name": "PROC_WALK_TO_ROAR_READY_V4",
+      "durationSeconds": 1.25,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "walk",
+        "roar"
+      ],
+      "terrain": null,
+      "path": null,
+      "events": [
+        {
+          "timeSeconds": 1.25,
+          "type": "transition_commit"
+        }
+      ]
+    },
+    {
+      "name": "PROC_ROAR_TO_WALK_V4",
+      "durationSeconds": 1.8,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "roar",
+        "walk",
+        "recovery"
+      ],
+      "terrain": null,
+      "path": null,
+      "events": [
+        {
+          "timeSeconds": 1.8,
+          "type": "transition_commit"
+        }
+      ]
+    },
+    {
+      "name": "PROC_WALK_TO_EAT_V4",
+      "durationSeconds": 1.8,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "walk",
+        "eat",
+        "settle"
+      ],
+      "terrain": null,
+      "path": null,
+      "events": [
+        {
+          "timeSeconds": 1.8,
+          "type": "transition_commit"
+        }
+      ]
+    },
+    {
+      "name": "PROC_EAT_TO_WALK_V4",
+      "durationSeconds": 1.8,
+      "loop": false,
+      "rootMotion": false,
+      "tags": [
+        "transition",
+        "eat",
+        "walk",
+        "rise"
+      ],
+      "terrain": null,
+      "path": null,
+      "events": [
+        {
+          "timeSeconds": 1.8,
+          "type": "transition_commit"
+        }
+      ]
+    }
+  ],
+  "stateGraph": {
+    "initial": "idle",
+    "states": {
+      "idle": {
+        "clip": "PROC_IDLE_BREATH_V4"
+      },
+      "walk": {
+        "clip": "PROC_WALK_RELAXED_V4_INPLACE",
+        "speedMps": 0.4603156640561728
+      },
+      "alert_idle": {
+        "clip": "PROC_ALERT_IDLE_V4"
+      },
+      "alert_walk": {
+        "clip": "PROC_ALERT_WALK_V4_INPLACE"
+      },
+      "eat": {
+        "clip": "PROC_EAT_LOOP_V4"
+      }
+    },
+    "oneShots": {
+      "bite": {
+        "clip": "PROC_BITE_ATTACK_V4",
+        "return": "previous_locomotion_or_idle",
+        "priority": 70
+      },
+      "roar": {
+        "clip": "PROC_ROAR_V4",
+        "return": "previous_locomotion_or_idle",
+        "priority": 60
+      }
+    },
+    "transitions": [
+      {
+        "from": "idle",
+        "to": "walk",
+        "clip": "PROC_IDLE_TO_WALK_V4"
+      },
+      {
+        "from": "walk",
+        "to": "idle",
+        "clip": "PROC_WALK_TO_IDLE_V4"
+      },
+      {
+        "from": "walk",
+        "to": "alert_walk",
+        "clip": "PROC_WALK_TO_ALERT_WALK_V4",
+        "phaseMatched": true
+      },
+      {
+        "from": "alert_walk",
+        "to": "walk",
+        "clip": "PROC_ALERT_WALK_TO_WALK_V4",
+        "phaseMatched": true
+      },
+      {
+        "from": "idle",
+        "to": "eat",
+        "clip": "PROC_IDLE_TO_EAT_V4"
+      },
+      {
+        "from": "eat",
+        "to": "idle",
+        "clip": "PROC_EAT_TO_IDLE_V4"
+      },
+      {
+        "from": "walk",
+        "to": "bite",
+        "clip": "PROC_WALK_TO_BITE_READY_V4"
+      },
+      {
+        "from": "bite",
+        "to": "walk",
+        "clip": "PROC_BITE_TO_WALK_V4"
+      },
+      {
+        "from": "walk",
+        "to": "roar",
+        "clip": "PROC_WALK_TO_ROAR_READY_V4"
+      },
+      {
+        "from": "roar",
+        "to": "walk",
+        "clip": "PROC_ROAR_TO_WALK_V4"
+      },
+      {
+        "from": "walk",
+        "to": "eat",
+        "clip": "PROC_WALK_TO_EAT_V4"
+      },
+      {
+        "from": "eat",
+        "to": "walk",
+        "clip": "PROC_EAT_TO_WALK_V4"
+      }
+    ]
+  },
+  "runtimeContracts": {
+    "terrainQuery": "heightNormal(x,z)->{height,normal}",
+    "inPlaceLocomotion": "advance actor using recommended speed and preserve gait phase",
+    "turning": "prefer curved-path root clips for authored turns; use runtime foot-IK overlay for arbitrary curvature",
+    "actionPriority": [
+      "bite",
+      "roar",
+      "eat",
+      "alert",
+      "locomotion",
+      "idle"
+    ],
+    "eventMarkers": "consume manifest clip.events for footstep audio, hit windows, vocal peaks and transition commits"
+  }
+}

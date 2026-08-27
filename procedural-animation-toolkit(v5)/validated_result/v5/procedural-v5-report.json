@@ -1,0 +1,209 @@
+{
+  "status": "PASS_WITH_PERCEPTUAL_REVIEW_REQUIRED",
+  "version": "5.0.0",
+  "buildMode": "contact-preserving refinement of validated V4 tracks",
+  "jawCalibration": {
+    "close_degrees": 50.0,
+    "minimum_gap_m": 0.002044549991459199,
+    "median_gap_m": 0.012028303064747892,
+    "maximum_gap_m": 0.02035841463060417,
+    "target_minimum_gap_m": 0.0020583220750479275,
+    "candidate_count": 41,
+    "witness_bin_count": 6,
+    "jaw_vertex_count": 4515,
+    "upper_vertex_count": 3036,
+    "jaw_chain": [
+      "Bone_074",
+      "Bone_073",
+      "Bone_072",
+      "Bone_071",
+      "Bone_070"
+    ],
+    "upper_chain": [
+      "Bone_035",
+      "Bone_069",
+      "Bone_068"
+    ]
+  },
+  "clipCount": 37,
+  "baseClipCount": 21,
+  "transitionClipCount": 16,
+  "preserved": {
+    "skinJointCount": 75,
+    "vertexSoleAndTerrainTracks": true,
+    "anatomicalLegConstraintTracks": true,
+    "rootMotionTracks": true
+  },
+  "fixes": {
+    "neutralJawCalibrated": true,
+    "biteReopenBugRemoved": true,
+    "secondaryQuaternionPolish": true,
+    "allTransitionsRebuilt": true,
+    "playerExactHandoffContract": true
+  },
+  "input": {
+    "sourceGlb": "/mnt/data/eonwild-v5-final-build/eonwild-procedural-animation-v5-full-toolkit/validated_result/v4/tarbosaurus_procedural_v4_animation_pack.glb",
+    "sourceSha256": "1373f4c81b10b5b9cf8ae140d7b368b8475571a869662e7b3492f3e0818ab284",
+    "boneMap": "/mnt/data/eonwild-v5-final-build/eonwild-procedural-animation-v5-full-toolkit/inputs/tarbosaurus_bone_map.edited.yml",
+    "boneMapSha256": "8f795733d8157d6a2c745acbf572ca4db90b34b83d8c539e711dca1809044782"
+  },
+  "output": {
+    "glb": "/mnt/data/eonwild-v5-final-build/eonwild-procedural-animation-v5-full-toolkit/validated_result/v5/tarbosaurus_procedural_v5_animation_pack.glb",
+    "glbSha256": "66cf116a2191311cf00f4571e71e5a38753fd71ad42a8381185156a3af1bacd0"
+  },
+  "sourceV4QualityGates": {
+    "PROC_WALK_RELAXED_V4_ROOTMOTION": {
+      "zero_anatomical_reversals": true,
+      "vertex_penetration_within_gate": true,
+      "loaded_sole_gap_within_gate": true,
+      "velocity_within_gate": true,
+      "acceleration_within_gate": true
+    },
+    "PROC_WALK_RELAXED_V4_INPLACE": {
+      "zero_anatomical_reversals": true,
+      "vertex_penetration_within_gate": true,
+      "loaded_sole_gap_within_gate": true,
+      "velocity_within_gate": true,
+      "acceleration_within_gate": true
+    },
+    "PROC_WALK_UNEVEN_TERRAIN_V4_ROOTMOTION": {
+      "zero_anatomical_reversals": true,
+      "vertex_penetration_within_gate": true,
+      "loaded_sole_gap_within_gate": true,
+      "velocity_within_gate": true,
+      "acceleration_within_gate": true
+    },
+    "PROC_WALK_UNEVEN_TERRAIN_V4_INPLACE": {
+      "zero_anatomical_reversals": true,
+      "vertex_penetration_within_gate": true,
+      "loaded_sole_gap_within_gate": true,
+      "velocity_within_gate": true,
+      "acceleration_within_gate": true
+    },
+    "PROC_WALK_UPSLOPE_V4_ROOTMOTION": {
+      "zero_anatomical_reversals": true,
+      "vertex_penetration_within_gate": true,
+      "loaded_sole_gap_within_gate": true,
+      "velocity_within_gate": true,
+      "acceleration_within_gate": true
+    },
+    "PROC_WALK_UPSLOPE_V4_INPLACE": {
+      "zero_anatomical_reversals": true,
+      "vertex_penetration_within_gate": true,
+      "loaded_sole_gap_within_gate": true,
+      "velocity_within_gate": true,
+      "acceleration_within_gate": true
+    },
+    "PROC_TURN_LEFT_35_V4_ROOTMOTION": {
+      "zero_anatomical_reversals": true,
+      "vertex_penetration_within_gate": true,
+      "loaded_sole_gap_within_gate": true,
+      "velocity_within_gate": true,
+      "acceleration_within_gate": true
+    },
+    "PROC_TURN_LEFT_35_V4_INPLACE": {
+      "zero_anatomical_reversals": true,
+      "vertex_penetration_within_gate": true,
+      "loaded_sole_gap_within_gate": true,
+      "velocity_within_gate": true,
+      "acceleration_within_gate": true
+    },
+    "PROC_TURN_RIGHT_35_V4_ROOTMOTION": {
+      "zero_anatomical_reversals": true,
+      "vertex_penetration_within_gate": true,
+      "loaded_sole_gap_within_gate": true,
+      "velocity_within_gate": true,
+      "acceleration_within_gate": true
+    },
+    "PROC_TURN_RIGHT_35_V4_INPLACE": {
+      "zero_anatomical_reversals": true,
+      "vertex_penetration_within_gate": true,
+      "loaded_sole_gap_within_gate": true,
+      "velocity_within_gate": true,
+      "acceleration_within_gate": true
+    },
+    "PROC_START_WALK_V4_ROOTMOTION": {
+      "zero_anatomical_reversals": true,
+      "vertex_penetration_within_gate": true,
+      "loaded_sole_gap_within_gate": true,
+      "velocity_within_gate": true,
+      "acceleration_within_gate": true
+    },
+    "PROC_START_WALK_V4_INPLACE": {
+      "zero_anatomical_reversals": true,
+      "vertex_penetration_within_gate": true,
+      "loaded_sole_gap_within_gate": true,
+      "velocity_within_gate": true,
+      "acceleration_within_gate": true
+    },
+    "PROC_BRAKE_TO_IDLE_V4_ROOTMOTION": {
+      "zero_anatomical_reversals": true,
+      "vertex_penetration_within_gate": true,
+      "loaded_sole_gap_within_gate": true,
+      "velocity_within_gate": true,
+      "acceleration_within_gate": true
+    },
+    "PROC_BRAKE_TO_IDLE_V4_INPLACE": {
+      "zero_anatomical_reversals": true,
+      "vertex_penetration_within_gate": true,
+      "loaded_sole_gap_within_gate": true,
+      "velocity_within_gate": true,
+      "acceleration_within_gate": true
+    },
+    "PROC_ALERT_WALK_V4_ROOTMOTION": {
+      "zero_anatomical_reversals": true,
+      "vertex_penetration_within_gate": true,
+      "loaded_sole_gap_within_gate": true,
+      "velocity_within_gate": true,
+      "acceleration_within_gate": true
+    },
+    "PROC_ALERT_WALK_V4_INPLACE": {
+      "zero_anatomical_reversals": true,
+      "vertex_penetration_within_gate": true,
+      "loaded_sole_gap_within_gate": true,
+      "velocity_within_gate": true,
+      "acceleration_within_gate": true
+    },
+    "PROC_IDLE_BREATH_V4": {
+      "zero_anatomical_reversals": true,
+      "sole_penetration_within_gate": true,
+      "exact_loop": true
+    },
+    "PROC_ALERT_IDLE_V4": {
+      "zero_anatomical_reversals": true,
+      "sole_penetration_within_gate": true,
+      "exact_loop": true
+    },
+    "PROC_EAT_LOOP_V4": {
+      "zero_anatomical_reversals": true,
+      "sole_penetration_within_gate": true,
+      "exact_loop": true
+    },
+    "PROC_BITE_ATTACK_V4": {
+      "zero_anatomical_reversals": true,
+      "sole_penetration_within_gate": true,
+      "exact_loop": true
+    },
+    "PROC_ROAR_V4": {
+      "zero_anatomical_reversals": true,
+      "sole_penetration_within_gate": true,
+      "exact_loop": true
+    },
+    "PROC_IDLE_TO_WALK_V4": {},
+    "PROC_WALK_TO_IDLE_V4": {},
+    "PROC_WALK_TO_ALERT_WALK_V4": {},
+    "PROC_ALERT_WALK_TO_WALK_V4": {},
+    "PROC_IDLE_TO_ALERT_IDLE_V4": {},
+    "PROC_ALERT_IDLE_TO_IDLE_V4": {},
+    "PROC_IDLE_TO_EAT_V4": {},
+    "PROC_EAT_TO_IDLE_V4": {},
+    "PROC_IDLE_TO_ROAR_READY_V4": {},
+    "PROC_ROAR_TO_IDLE_V4": {},
+    "PROC_WALK_TO_BITE_READY_V4": {},
+    "PROC_BITE_TO_WALK_V4": {},
+    "PROC_WALK_TO_ROAR_READY_V4": {},
+    "PROC_ROAR_TO_WALK_V4": {},
+    "PROC_WALK_TO_EAT_V4": {},
+    "PROC_EAT_TO_WALK_V4": {}
+  }
+}
