@@ -1,0 +1,39 @@
+{
+  "schema": "eonwild.motion.channel-p1-fix-evidence.v1",
+  "status": "PASS",
+  "reviewFindingsClosed": [
+    "stable-points-to-promoted-release",
+    "state-history-transaction-rollback"
+  ],
+  "tests": {
+    "fullSuite": 27,
+    "focusedChannel": 6,
+    "controlledIntegration": 2,
+    "failures": 0,
+    "skipped": 0,
+    "fullSuiteSeconds": 44.272
+  },
+  "failureInjectionBoundaries": [
+    "history-staged",
+    "state-staged",
+    "history-installed",
+    "state-installed"
+  ],
+  "checks": {
+    "distinctPromotedDestinationBecomesStable": true,
+    "promotedManifestAndArtifactHashesBound": true,
+    "stableResolvesPromotedArtifact": true,
+    "priorStateBytesRestoredOnFailure": true,
+    "noOrphanHistory": true,
+    "promotionDestinationRolledBack": true,
+    "identicalRetrySucceeds": true,
+    "noReleaseTestResidue": true,
+    "v8_2AndLegacyUnchanged": true
+  },
+  "unchangedHashes": {
+    "channelState": "d895da0d02cea27805153677d9bff34d2372c6066076024887772a05d9b9ac67",
+    "v8_2Profile": "37a26e006700350bc42d40eeb50f93bb4fa63dae98c98db2423a8eb3c9157c9b",
+    "v8_2Artifact": "a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5",
+    "v8_2ReleaseManifest": "51f493aaae13fe46d8b6d3600ec1a8de117c2ee39beb6e05159398cacb21fada"
+  }
+}

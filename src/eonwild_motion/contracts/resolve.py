@@ -248,16 +248,39 @@ def resolve_profile(
         artifact_path, artifact_sha = _verify_reference(
             repository, entry["release"]["artifact"], label="stable artifact"
         )
-        if (
-            manifest_path != resolved.source_manifest_path
-            or manifest_sha != resolved.source_manifest_sha256
-        ):
-            raise ContractError("stable release manifest does not match profile")
-        if (
-            artifact_path != resolved.approved_output_path
-            or artifact_sha != resolved.approved_output_sha256
-        ):
-            raise ContractError("stable artifact does not match profile")
+        if manifest_path == resolved.source_manifest_path:
+            if (
+                manifest_sha != resolved.source_manifest_sha256
+                or artifact_path != resolved.approved_output_path
+                or artifact_sha != resolved.approved_output_sha256
+            ):
+                raise ContractError("initial stable release does not match profile")
+        else:
+            release_root = repository / "releases"
+            if release_root not in manifest_path.parents:
+                raise ContractError("stable release manifest is outside releases")
+            manifest = load_and_validate(manifest_path, repository=repository)
+            manifest_artifact = (manifest_path.parent / manifest["artifact"]["path"]).resolve()
+            if manifest["release"] != resolved.profile["id"]:
+                raise ContractError("stable release ID does not match profile")
+            if manifest["engine"] != __version__:
+                raise ContractError("stable release engine version mismatch")
+            if manifest["profile"] != {
+                "path": str(resolved.profile_path.relative_to(repository)),
+                "sha256": resolved.profile_sha256,
+            }:
+                raise ContractError("stable release profile does not match channel")
+            if manifest_artifact != artifact_path or manifest_path.parent not in artifact_path.parents:
+                raise ContractError("stable artifact path does not match release manifest")
+            if manifest["artifact"]["sha256"] != artifact_sha:
+                raise ContractError("stable artifact hash does not match release manifest")
+            if artifact_sha != resolved.approved_output_sha256:
+                raise ContractError("stable artifact does not match approved profile output")
+            resolved = replace(
+                resolved,
+                approved_output_path=artifact_path,
+                approved_output_sha256=artifact_sha,
+            )
     elif entry["basedOnStable"] != state["stable"]["historyId"]:
         raise ContractError("working channel base does not match stable history")
     state_sha = sha256_file(state_path)

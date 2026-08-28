@@ -8,12 +8,14 @@ import sys
 import tempfile
 import unittest
 from unittest.mock import patch
+import uuid
 from contextlib import contextmanager
 import shutil
 
 from eonwild_motion.contracts.resolve import resolve_profile
 from eonwild_motion.errors import ValidationFailure
 from eonwild_motion.hashing import sha256_file
+from eonwild_motion.pipeline.channels import update_stable_channel
 from eonwild_motion.pipeline.promote import promote_run
 from jsonschema import Draft202012Validator
 
@@ -266,13 +268,17 @@ class VerticalSliceTests(unittest.TestCase):
         runtime_path = run / "resolved-profile.json"
         runtime = json.loads(runtime_path.read_text())
         runtime["channelStatePath"] = str(channel_state)
-        with replaced(
-            runtime_path,
-            (json.dumps(runtime, indent=2, sort_keys=True) + "\n").encode(),
-        ):
+        release_root = ROOT / "releases"
+        release_root_existed = release_root.exists()
+        release_root.mkdir(exist_ok=True)
+        if not release_root_existed:
+            self.addCleanup(release_root.rmdir)
+        stable_destination = release_root / f"test-{uuid.uuid4().hex}"
+        self.addCleanup(shutil.rmtree, stable_destination, True)
+        with replaced(runtime_path, (json.dumps(runtime, indent=2, sort_keys=True) + "\n").encode()):
             channel_promotion = promote_run(
                 run_dir=run,
-                destination=self.root / "promoted-and-stable",
+                destination=stable_destination,
                 approvals_path=approvals,
                 source_state=state,
                 update_stable=True,
@@ -281,21 +287,69 @@ class VerticalSliceTests(unittest.TestCase):
         self.assertEqual(channel_promotion["channelUpdate"]["generation"], 2)
         self.assertEqual(json.loads(channel_state.read_text())["generation"], 2)
         self.assertTrue(Path(channel_promotion["channelUpdate"]["historyPath"]).is_file())
+        updated_state = json.loads(channel_state.read_text())
+        self.assertEqual(
+            ROOT / updated_state["stable"]["release"]["manifest"]["path"],
+            stable_destination / "manifest.json",
+        )
+        self.assertEqual(
+            ROOT / updated_state["stable"]["release"]["artifact"]["path"],
+            Path(channel_promotion["channelUpdate"]["artifactPath"]),
+        )
+        stable = resolve_profile("stable", repository=ROOT, channel_state_path=channel_state)
+        self.assertEqual(stable.approved_output_path, Path(channel_promotion["channelUpdate"]["artifactPath"]))
 
-        rollback_destination = self.root / "rolled-back-stable-update"
+        rollback_root = channel_root / "rollback"
+        rollback_root.mkdir()
+        rollback_state = rollback_root / "state.json"
+        shutil.copyfile(ROOT / "profiles/channels/state.json", rollback_state)
+        rollback_original = rollback_state.read_bytes()
+        rollback_runtime = json.loads(runtime_path.read_text())
+        rollback_runtime["channelStatePath"] = str(rollback_state)
+        rollback_destination = release_root / f"test-rollback-{uuid.uuid4().hex}"
+        self.addCleanup(shutil.rmtree, rollback_destination, True)
+
+        def inject_after_history(**kwargs):
+            def fail(operation):
+                if operation == "history-installed":
+                    raise OSError("injected failure after history install")
+
+            return update_stable_channel(**kwargs, operation_hook=fail)
+
         with patch(
             "eonwild_motion.pipeline.promote.update_stable_channel",
-            side_effect=ValidationFailure("injected channel update failure"),
+            side_effect=inject_after_history,
         ):
-            with self.assertRaises(ValidationFailure):
-                promote_run(
-                    run_dir=run,
-                    destination=rollback_destination,
-                    approvals_path=approvals,
-                    source_state=state,
-                    update_stable=True,
-                )
+            with replaced(
+                runtime_path,
+                (json.dumps(rollback_runtime, indent=2, sort_keys=True) + "\n").encode(),
+            ):
+                with self.assertRaises(OSError):
+                    promote_run(
+                        run_dir=run,
+                        destination=rollback_destination,
+                        approvals_path=approvals,
+                        source_state=state,
+                        update_stable=True,
+                        channel_state_path=rollback_state,
+                    )
         self.assertFalse(rollback_destination.exists())
+        self.assertEqual(rollback_state.read_bytes(), rollback_original)
+        self.assertFalse((rollback_state.parent / "history").exists())
+        with replaced(
+            runtime_path,
+            (json.dumps(rollback_runtime, indent=2, sort_keys=True) + "\n").encode(),
+        ):
+            retry = promote_run(
+                run_dir=run,
+                destination=rollback_destination,
+                approvals_path=approvals,
+                source_state=state,
+                update_stable=True,
+                channel_state_path=rollback_state,
+            )
+        self.assertEqual(retry["channelUpdate"]["generation"], 2)
+        self.assertTrue(rollback_destination.is_dir())
 
     def test_promotion_rejects_untrusted_evidence(self):
         run, report = self.builds[1]

@@ -11,7 +11,7 @@ from ..contracts.resolve import resolve_profile
 from ..errors import ValidationFailure
 from ..hashing import sha256_file, write_json
 from .context import git_source_state
-from .channels import update_stable_channel
+from .channels import ensure_release_destination, update_stable_channel
 from .validate import validate_candidate
 
 
@@ -199,6 +199,8 @@ def promote_run(
         raise ValidationFailure("build output review binding mismatch")
     if resolved.species["provenance"].get("status") != "complete":
         raise ValidationFailure("species provenance is incomplete")
+    if update_stable:
+        ensure_release_destination(repository, destination)
     destination.parent.mkdir(parents=True, exist_ok=True)
     temporary = Path(
         tempfile.mkdtemp(prefix=destination.name + ".", dir=destination.parent)
