@@ -92,3 +92,40 @@ two-render equality test for the chosen identity.
 No P2 was opened. A multi-frame/video comparison and browsable editorial page
 are documented deferred scope, not a defect in this first technical slice; a
 future release must not describe a single fixed frame as locomotion approval.
+
+## Round-2 narrow re-pin — `8f9fc4538454492d695059172b96e8bd6e192eb6`
+
+**P0: 0. P1: 0. P2: 0. PASS.** The sole prior P1 is closed.
+
+I reproduced two independent build-and-render runs under one new external
+temporary work root. Both generated candidate render files were byte-identical
+to each other and to the now-committed
+`reports/PROCEDURAL-ENGINE-001/media/v8-2-fixed-camera-canonical.png`:
+
+- canonical PNG file SHA-256:
+  `0b1494dd526f4eeb8312fa28ab61310163f9a508f229c26e98c8db8a479b9202`;
+- decoded-pixel SHA-256:
+  `5ca028e49545863349b16961b53bf18ca11bfcaa1d34fc4d1a19f185ad98e576`;
+- 640x360 RGBA; canonicalization
+  `decoded-scanlines-filter0-zlib9@1`.
+
+The regenerated file contains only the canonical `IHDR`, `IDAT`, and `IEND`
+PNG chunks: no date, render-duration, EXIF, or other volatile metadata remains.
+The committed media hash, byte count (120,133), and pixel hash match
+`evidence.json`. The reviewed image remains full-body and usable: head, body,
+both feet, and tail are entirely in frame at the declared orthographic camera.
+
+The fresh `compare` command generated `review/index.html` plus relative
+`media/baseline.png` and `media/candidate.png`. Its fixed-camera evidence is
+browsable at one responsive static page; both images use the same render set,
+and the page visibly and structurally states: “Technical evidence only. This
+page does not grant visual approval.” It does not claim that this static
+comparison is a motion/visual approval.
+
+No P0/P1 command-path regression was found in the narrow scope: the new build
+continues to require approved artifact parity, writes its canonical render and
+comparison evidence outside the repository, and the compare report preserves
+the structural/accessor/contact gates while binding its media and HTML review
+to the run. The retained 21-test suite reports no failures or skips; the
+independent command reproduction above additionally verifies the specific
+prior hash failure directly.
