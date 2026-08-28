@@ -6,7 +6,7 @@ The following are intentionally deferred rather than represented as complete:
 
 - hip-balance implementation;
 - V5/V5.5 behavior migration;
-- browser/editorial HTML and video comparison output;
+- multi-frame/video comparison output (the static browsable technical page is complete);
 - a reduced browser-delivery GLB;
 - promotion of the real committed V8.2 release.
 

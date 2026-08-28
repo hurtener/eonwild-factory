@@ -3,7 +3,10 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+import platform
 
+from . import __version__
+from .contracts.load import validate_document
 from .hashing import write_json
 
 
@@ -24,6 +27,9 @@ def emit_report(
     errors: list[str] | None = None,
     warnings: list[str] | None = None,
     source: dict[str, Any] | None = None,
+    profile: dict[str, Any] | None = None,
+    tool_versions: dict[str, Any] | None = None,
+    repository: Path | None = None,
     started_at: str | None = None,
 ) -> dict[str, Any]:
     report = {
@@ -38,8 +44,21 @@ def emit_report(
         "warnings": warnings or [],
         "errors": errors or [],
         "source": source or {},
+        "profile": profile or {
+            "id": None,
+            "sha256": None,
+            "lockSha256": None,
+        },
+        "toolVersions": tool_versions or {
+            "engine": __version__,
+            "python": platform.python_version(),
+            "blender": None,
+            "gltfValidator": None,
+        },
         "startedAt": started_at or now_utc(),
         "finishedAt": now_utc(),
     }
+    if repository is not None:
+        validate_document(report, repository=repository, label="run report")
     write_json(path, report)
     return report

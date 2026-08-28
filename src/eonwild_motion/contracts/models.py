@@ -28,6 +28,8 @@ class ResolvedProfile:
     source_release_root: Path
     source_manifest_path: Path
     source_manifest_sha256: str
+    contact_evidence_path: Path
+    contact_evidence_sha256: str
     lock: dict[str, Any]
     lock_sha256: str
 
@@ -66,6 +68,8 @@ class ResolvedProfile:
             "sourceReleaseRoot": str(self.source_release_root),
             "sourceManifestPath": str(self.source_manifest_path),
             "sourceManifestSha256": self.source_manifest_sha256,
+            "contactEvidencePath": str(self.contact_evidence_path),
+            "contactEvidenceSha256": self.contact_evidence_sha256,
             "lock": self.lock,
             "lockSha256": self.lock_sha256,
         }

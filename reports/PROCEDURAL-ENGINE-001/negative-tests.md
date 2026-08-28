@@ -21,3 +21,12 @@ stage, so the unittest itself passed.
 | Existing promotion destination | no-overwrite gate | PASS |
 | Dirty current source | source-lock gate | PASS |
 | Mutated candidate byte | approved artifact hash gate | PASS |
+| Empty validation evidence `{}` | evidence schema | PASS |
+| Malformed validation JSON | evidence parser | PASS |
+| Failing evidence status | evidence schema/status | PASS |
+| Cross-run comparison evidence | run binding | PASS |
+| Wrong-artifact render evidence | artifact binding | PASS |
+| Missing required render evidence | required profile media | PASS |
+| Stripped contact facts with forged `PASS` | recomputed evidence equality | PASS |
+| Missing profile before normal run context | common failure envelope | PASS |
+| Missing promotion run before normal context | common failure envelope | PASS |

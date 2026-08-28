@@ -2,10 +2,10 @@
   "schema": "eonwild.motion.procedural-engine-evidence.v1",
   "status": "PASS",
   "tests": {
-    "count": 19,
+    "count": 21,
     "failures": 0,
     "skipped": 0,
-    "seconds": 18.747
+    "seconds": 72.674
   },
   "artifacts": {
     "input": {
@@ -17,19 +17,24 @@
       "sha256": "a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5"
     },
     "profile": {
-      "sha256": "6915d41b62055c874a1479eb76f7f9783ab87f71a63d681179a7228db3c4179b"
+      "sha256": "37a26e006700350bc42d40eeb50f93bb4fa63dae98c98db2423a8eb3c9157c9b"
     },
     "profileLockFile": {
-      "sha256": "1244dbd76c45584161aadf45fc31b5ca534d0122103214fa39c70d461719f363"
+      "sha256": "6e4a740605d8b06feb33d318bafc65bbd75f64a8df19210f00031f5fbeffa228"
     },
     "resolvedLock": {
-      "sha256": "d73e46ce80d4357e93b27e1dd008bb331fbbd5ac354d28ef4cdeba393862411d"
+      "sha256": "eba6d05608e5b34c408dfeed5f9440ac85444b441d380c9279688e76d5c280ec"
     },
     "render": {
-      "bytes": 192975,
+      "path": "reports/PROCEDURAL-ENGINE-001/media/v8-2-fixed-camera-canonical.png",
+      "bytes": 120133,
       "width": 640,
       "height": 360,
-      "sha256": "e6ed5469d8a095b12c3ec073ecac2d710593861305ca91fb0d8f15f517089ebd"
+      "sha256": "0b1494dd526f4eeb8312fa28ab61310163f9a508f229c26e98c8db8a479b9202",
+      "pixelContentSha256": "5ca028e49545863349b16961b53bf18ca11bfcaa1d34fc4d1a19f185ad98e576",
+      "canonicalization": "decoded-scanlines-filter0-zlib9@1",
+      "independentRenderCount": 2,
+      "byteIdentical": true
     }
   },
   "validation": {
@@ -46,5 +51,24 @@
     "nonPromotionSourceUnchanged": true,
     "legacyToolkitDiffFiles": 0,
     "realReleasePromoted": false
+  },
+  "comparison": {
+    "structural": "PASS",
+    "accessor": "PASS",
+    "declaredContact": "PASS",
+    "staticMedia": "PASS",
+    "browsableHtml": true,
+    "visualApprovalClaimed": false
+  },
+  "promotionEvidence": {
+    "schemaValidated": true,
+    "runProfileArtifactSourceBound": true,
+    "requiredRender": true,
+    "emptyMalformedFailingCrossRunWrongArtifactMissingRenderRejected": true
+  },
+  "runReports": {
+    "fullSchema": true,
+    "allCommands": true,
+    "preContextFailures": true
   }
 }

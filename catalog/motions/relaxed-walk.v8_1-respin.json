@@ -23,7 +23,23 @@
       "NODE_SKINNED_MESH_NON_ROOT"
     ],
     "jsonByteEquivalent": true,
-    "undeclaredBinaryChanges": 0
+    "undeclaredBinaryChanges": 0,
+    "contactContract": {
+      "proof": "protected-channel-byte-equivalence",
+      "requiredTruePaths": [
+        "checks.exactLowerBodyWorldMatrices",
+        "checks.exactLowerBodySkinnedWitnesses",
+        "checks.iteration38AuthoritativeGatesInherited",
+        "iteration38Authority.sourceChecks.all_exported_keys_ground_support_and_joint_continuity",
+        "iteration38Authority.sourceChecks.physical_stride_and_speed",
+        "iteration38Authority.sourceChecks.front_reach_derived_from_2_60m_stride",
+        "iteration38Authority.sourceChecks.bilateral_phase_causal_rocker",
+        "iteration38Authority.sourceChecks.dense_distal_toe_contact_lock"
+      ],
+      "requiredZeroPaths": [
+        "lowerBody.maxWorldOriginDriftM"
+      ]
+    }
   },
   "provenance": {
     "status": "complete",

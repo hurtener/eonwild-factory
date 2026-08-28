@@ -3,7 +3,7 @@
   "$id": "eonwild.motion.artifact-manifest.v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema", "release", "engine", "gitHead", "lockSha256", "artifact", "input", "profile", "provenance", "validation", "approvals"],
+  "required": ["schema", "release", "engine", "gitHead", "lockSha256", "artifact", "input", "profile", "provenance", "validation", "evidence", "media", "approvals"],
   "properties": {
     "schema": {"const": "eonwild.motion.artifact-manifest.v1"},
     "release": {"type": "string", "minLength": 1},
@@ -19,12 +19,15 @@
       "properties": {"status": {"const": "complete"}}
     },
     "validation": {"type": "object"},
+    "evidence": {"type": "object", "minProperties": 4, "additionalProperties": {"type": "object", "required": ["sha256"], "properties": {"sha256": {"$ref": "#/$defs/sha"}}}},
+    "media": {"type": "object", "required": ["candidate", "baseline", "review"]},
     "approvals": {
       "type": "object",
       "required": ["schema", "technical", "visual"]
     }
   },
   "$defs": {
+    "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "pathHash": {
       "type": "object",
       "additionalProperties": false,

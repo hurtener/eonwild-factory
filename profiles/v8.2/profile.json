@@ -16,7 +16,7 @@
   },
   "motion": {
     "path": "catalog/motions/relaxed-walk.v8_1-respin.json",
-    "sha256": "f161b33eda48c6c0b1404dc1ad3c505acd1e3c96843826395860068b6a7a364b"
+    "sha256": "552240b4e77452d543f3f61b83aac8f4fe847b6fef0aac4520fc9727db751fa6"
   },
   "layers": [
     {
@@ -42,6 +42,10 @@
       "path": "procedural-animation-toolkit(v8.2)/RELEASE_MANIFEST.json",
       "sha256": "51f493aaae13fe46d8b6d3600ec1a8de117c2ee39beb6e05159398cacb21fada"
     }
+  },
+  "contactEvidence": {
+    "path": "procedural-animation-toolkit(v8.2)/evidence/structural-mechanical.json",
+    "sha256": "b5a0e161e819311b79038130a4ce5a30927938237b0d8a06713d67d6bb1239ed"
   },
   "validators": [
     "schema",

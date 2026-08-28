@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "eonwild.motion.validation-report.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "status", "runId", "profile", "source", "artifact", "package", "animationContract", "difference", "staticFacts", "contactFacts", "gltfValidator"],
+  "properties": {
+    "schema": {"const": "eonwild.motion.validation-report.v1"},
+    "status": {"const": "PASS"},
+    "runId": {"type": "string", "minLength": 1},
+    "profile": {"$ref": "#/$defs/profile"},
+    "source": {"$ref": "#/$defs/source"},
+    "artifact": {"$ref": "#/$defs/artifact"},
+    "package": {"type": "object", "required": ["checks", "inventoryCount"]},
+    "animationContract": {"type": "object", "minProperties": 1},
+    "difference": {"type": "object", "required": ["jsonEquivalent", "outsideDeclaredByteChanges"]},
+    "staticFacts": {"$ref": "#/$defs/passFacts"},
+    "contactFacts": {"$ref": "#/$defs/passFacts"},
+    "gltfValidator": {"type": "object", "required": ["version", "errors", "warnings", "warningCodes"]}
+  },
+  "$defs": {
+    "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "profile": {"type": "object", "additionalProperties": false, "required": ["id", "sha256", "lockSha256"], "properties": {"id": {"type": "string"}, "sha256": {"$ref": "#/$defs/sha"}, "lockSha256": {"$ref": "#/$defs/sha"}}},
+    "source": {"type": "object", "required": ["gitHead"], "properties": {"gitHead": {"type": "string", "pattern": "^[0-9a-f]{40}$"}}},
+    "artifact": {"type": "object", "additionalProperties": false, "required": ["path", "sha256"], "properties": {"path": {"type": "string"}, "sha256": {"$ref": "#/$defs/sha"}}},
+    "passFacts": {"type": "object", "required": ["status"], "properties": {"status": {"const": "PASS"}}}
+  }
+}

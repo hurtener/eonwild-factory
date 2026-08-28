@@ -14,7 +14,7 @@
   },
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema", "id", "version", "rig", "family", "species", "motion", "layers", "renderSet", "input", "approvedOutput", "sourceRelease", "validators", "provenance"],
+  "required": ["schema", "id", "version", "rig", "family", "species", "motion", "layers", "renderSet", "input", "approvedOutput", "sourceRelease", "contactEvidence", "validators", "provenance"],
   "properties": {
     "schema": {"const": "eonwild.motion.release-profile.v1"},
     "id": {"type": "string", "minLength": 1},
@@ -27,6 +27,7 @@
     "renderSet": {"$ref": "#/$defs/reference"},
     "input": {"$ref": "#/$defs/reference"},
     "approvedOutput": {"$ref": "#/$defs/reference"},
+    "contactEvidence": {"$ref": "#/$defs/reference"},
     "sourceRelease": {
       "type": "object",
       "additionalProperties": false,

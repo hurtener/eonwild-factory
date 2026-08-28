@@ -5,14 +5,15 @@ All commands ran from
 
 | Check | Command | Exit | Result |
 |---|---|---:|---|
-| Full suite | `PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -m unittest discover -s tests -v` | 0 | 19 passed, 0 skipped |
+| Full suite | `PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -m unittest discover -s tests -v` | 0 | 21 passed in 72.674 seconds, 0 skipped |
 | Install | `python3 -m venv --system-site-packages <tmp>/venv && <tmp>/venv/bin/pip install --no-deps .` | 0 | wheel installed |
 | Console entry | `<tmp>/venv/bin/eonwild-motion --help` | 0 | five commands listed |
 | Build A | `python3 -m eonwild_motion build --profile profiles/v8.2/profile.json --work-root <tmp>/build-a` | 0 | PASS, exact approved SHA |
-| Build B | same with `<tmp>/build-b` | 0 | PASS, byte-identical to A |
+| Build B | same with `<tmp>/build-b` | 0 | PASS, GLB and canonical render byte-identical to A |
 | Validate | `python3 -m eonwild_motion validate --profile profiles/v8.2/profile.json --artifact <build-a.glb> --work-root <tmp>/validate` | 0 | PASS |
-| Compare | `python3 -m eonwild_motion compare --profile profiles/v8.2/profile.json --baseline 'procedural-animation-toolkit(v8.2)/input/tarbosaurus_v8_2_iteration_b_base.glb' --candidate <build-a.glb> --work-root <tmp>/compare` | 0 | PASS |
-| Render | `python3 -m eonwild_motion render --profile profiles/v8.2/profile.json --artifact <build-a.glb> --work-root <tmp>/render` | 0 | PASS, real Blender PNG |
+| Compare | `python3 -m eonwild_motion compare --profile profiles/v8.2/profile.json --baseline 'procedural-animation-toolkit(v8.2)/input/tarbosaurus_v8_2_iteration_b_base.glb' --candidate <build-a.glb> --work-root <tmp>/compare` | 0 | PASS, JSON plus browsable HTML and two canonical renders |
+| Render | `python3 -m eonwild_motion render --profile profiles/v8.2/profile.json --artifact <build-a.glb> --work-root <tmp>/render` | 0 | PASS, canonical Blender PNG |
+| Media parity | `cmp <build-a-candidate.png> <independent-render.png>` | 0 | identical file and decoded-pixel hashes |
 | Byte parity | `cmp <build-a.glb> <build-b.glb>` | 0 | identical |
 | Engine neutrality | `rg -n -i 'Bone_|PROC_|Tarbosaurus|a2cf73|v8\\.2|v8_2|iteration|procedural-animation-toolkit' src/eonwild_motion` | 1 | no matches, expected |
 | Diff hygiene | `git diff --check` | 0 | clean |

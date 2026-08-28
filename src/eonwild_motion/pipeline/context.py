@@ -26,6 +26,16 @@ def create_run_context(repository: Path, work_root: Path, command: str) -> RunCo
     return RunContext(run_id, repository, root, run_dir)
 
 
+def create_orphan_run_context(work_root: Path, command: str) -> RunContext:
+    root = work_root.expanduser().resolve()
+    root.mkdir(parents=True, exist_ok=True)
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    run_id = f"{stamp}-{command}-{uuid.uuid4().hex[:10]}"
+    run_dir = root / "runs" / run_id
+    run_dir.mkdir(parents=True, exist_ok=False)
+    return RunContext(run_id, Path.cwd().resolve(), root, run_dir)
+
+
 def git_source_state(repository: Path) -> dict[str, object]:
     head = subprocess.check_output(
         ["git", "rev-parse", "HEAD"], cwd=repository, text=True

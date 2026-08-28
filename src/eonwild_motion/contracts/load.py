@@ -20,6 +20,9 @@ SCHEMA_FILES = {
     "eonwild.motion.run-report.v1": "run-report.v1.schema.json",
     "eonwild.motion.promotion.v1": "promotion.v1.schema.json",
     "eonwild.motion.artifact-manifest.v1": "artifact-manifest.v1.schema.json",
+    "eonwild.motion.validation-report.v1": "validation-report.v1.schema.json",
+    "eonwild.motion.comparison-report.v1": "comparison-report.v1.schema.json",
+    "eonwild.motion.render-report.v1": "render-report.v1.schema.json",
 }
 
 

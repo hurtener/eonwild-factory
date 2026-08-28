@@ -7,11 +7,13 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from contextlib import contextmanager
 
 from eonwild_motion.contracts.resolve import resolve_profile
 from eonwild_motion.errors import ValidationFailure
 from eonwild_motion.hashing import sha256_file
 from eonwild_motion.pipeline.promote import promote_run
+from jsonschema import Draft202012Validator
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -37,6 +39,27 @@ def one_run(work_root: Path, command: str) -> Path:
     if len(runs) != 1:
         raise AssertionError(f"expected one {command} run, got {runs}")
     return runs[0]
+
+
+def assert_run_report(test: unittest.TestCase, report: dict) -> None:
+    schema = json.loads(
+        (ROOT / "schemas/motion/run-report.v1.schema.json").read_text()
+    )
+    errors = list(Draft202012Validator(schema).iter_errors(report))
+    test.assertEqual(errors, [], [error.message for error in errors])
+
+
+@contextmanager
+def replaced(path: Path, content: bytes | None):
+    original = path.read_bytes()
+    try:
+        if content is None:
+            path.unlink()
+        else:
+            path.write_bytes(content)
+        yield
+    finally:
+        path.write_bytes(original)
 
 
 class VerticalSliceTests(unittest.TestCase):
@@ -77,6 +100,19 @@ class VerticalSliceTests(unittest.TestCase):
         first = Path(self.builds[0][1]["outputs"][0]["path"])
         second = Path(self.builds[1][1]["outputs"][0]["path"])
         self.assertEqual(first.read_bytes(), second.read_bytes())
+        render_reports = [json.loads((run / "render.json").read_text()) for run, _ in self.builds]
+        self.assertEqual(
+            render_reports[0]["media"]["fileSha256"],
+            render_reports[1]["media"]["fileSha256"],
+        )
+        self.assertEqual(
+            render_reports[0]["media"]["pixelContentSha256"],
+            render_reports[1]["media"]["pixelContentSha256"],
+        )
+        self.assertEqual(
+            Path(render_reports[0]["media"]["path"]).read_bytes(),
+            Path(render_reports[1]["media"]["path"]).read_bytes(),
+        )
 
     def test_validate_and_compare_commands(self):
         artifact = self.builds[0][1]["outputs"][0]["path"]
@@ -110,8 +146,12 @@ class VerticalSliceTests(unittest.TestCase):
         )
         self.assertEqual(comparison["status"], "PASS")
         self.assertEqual(
-            comparison["difference"]["outsideDeclaredByteChanges"], 0
+            comparison["structural"]["outsideDeclaredByteChanges"], 0
         )
+        self.assertEqual(comparison["contactFacts"]["status"], "PASS")
+        self.assertEqual(comparison["media"]["status"], "PASS")
+        review = Path(comparison["review"]["path"])
+        self.assertIn("does not grant visual approval", review.read_text())
 
     def test_real_blender_render(self):
         artifact = self.builds[0][1]["outputs"][0]["path"]
@@ -132,6 +172,8 @@ class VerticalSliceTests(unittest.TestCase):
         image = Path(report["outputs"][0]["path"])
         self.assertEqual(image.read_bytes()[:8], b"\x89PNG\r\n\x1a\n")
         self.assertEqual(report["metrics"]["blenderVersion"], "5.2.0 LTS")
+        self.assertEqual(report["metrics"]["media"]["fileSha256"], sha256_file(image))
+        assert_run_report(self, report)
 
     def test_nonpromotion_commands_leave_source_status_unchanged(self):
         after = subprocess.check_output(
@@ -174,6 +216,7 @@ class VerticalSliceTests(unittest.TestCase):
         )
         self.assertEqual(promoted["artifactSha256"], APPROVED_SHA)
         self.assertTrue((destination / "manifest.json").is_file())
+        self.assertTrue((destination / "evidence/media/candidate.png").is_file())
         with self.assertRaises(ValidationFailure):
             promote_run(
                 run_dir=run,
@@ -204,6 +247,92 @@ class VerticalSliceTests(unittest.TestCase):
                 )
         finally:
             artifact.write_bytes(original)
+
+    def test_promotion_rejects_untrusted_evidence(self):
+        run, report = self.builds[1]
+        report["source"]["dirty"] = False
+        (run / "run-report.json").write_text(json.dumps(report))
+        approvals = self.root / "evidence-approvals.json"
+        approvals.write_text(json.dumps({
+            "schema": "eonwild.motion.promotion.v1",
+            "technical": {"status": "APPROVED", "reviewer": "reviewer-a"},
+            "visual": {"status": "APPROVED", "reviewer": "reviewer-b"},
+        }))
+        state = lambda _: {"dirty": False, "gitHead": report["source"]["gitHead"]}
+        validation = run / "validation.json"
+        comparison = run / "comparison.json"
+        render = run / "render.json"
+        stripped_validation = json.loads(validation.read_text())
+        stripped_validation["contactFacts"] = {"status": "PASS"}
+        cases = [
+            ("empty", validation, b"{}\n"),
+            ("malformed", validation, b"{not json"),
+            ("failing", validation, validation.read_bytes().replace(b'"PASS"', b'"FAIL"', 1)),
+            ("cross-run", comparison, comparison.read_bytes().replace(report["runId"].encode(), b"another-run")),
+            ("wrong-artifact", render, render.read_bytes().replace(APPROVED_SHA.encode(), ("0" * 64).encode())),
+            ("missing-render", render, None),
+            ("stripped-contact-facts", validation, json.dumps(stripped_validation).encode()),
+        ]
+        for name, path, content in cases:
+            with self.subTest(name=name), replaced(path, content):
+                with self.assertRaises((ValidationFailure, Exception)):
+                    promote_run(
+                        run_dir=run,
+                        destination=self.root / f"rejected-{name}",
+                        approvals_path=approvals,
+                        source_state=state,
+                    )
+
+    def test_all_success_and_precontext_failure_reports_validate(self):
+        for run, report in self.builds:
+            assert_run_report(self, report)
+        work = self.root / "missing-profile"
+        process = cli(
+            "build",
+            "--profile",
+            str(self.root / "does-not-exist/profile.json"),
+            "--work-root",
+            str(work),
+        )
+        self.assertNotEqual(process.returncode, 0)
+        failure = json.loads(process.stdout)
+        self.assertEqual(failure["status"], "FAIL")
+        assert_run_report(self, failure)
+        promotion_work = self.root / "missing-promotion"
+        missing = cli(
+            "promote",
+            "--run",
+            str(self.root / "missing-run"),
+            "--destination",
+            str(self.root / "never-created"),
+            "--approvals",
+            str(self.root / "missing-approvals.json"),
+            "--work-root",
+            str(promotion_work),
+        )
+        self.assertNotEqual(missing.returncode, 0)
+        assert_run_report(self, json.loads(missing.stdout))
+        environment = dict(os.environ)
+        environment["PYTHONDONTWRITEBYTECODE"] = "1"
+        environment["PYTHONPATH"] = str(ROOT / "src")
+        outside = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "eonwild_motion",
+                "build",
+                "--profile",
+                str(self.root / "also-missing.json"),
+                "--work-root",
+                str(self.root / "outside-cwd-work"),
+            ],
+            cwd=self.root,
+            env=environment,
+            capture_output=True,
+            text=True,
+        )
+        self.assertNotEqual(outside.returncode, 0)
+        assert_run_report(self, json.loads(outside.stdout))
 
 
 if __name__ == "__main__":

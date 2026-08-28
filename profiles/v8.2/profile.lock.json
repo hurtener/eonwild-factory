@@ -3,6 +3,10 @@
     "path": "procedural-animation-toolkit(v8.2)/asset/tarbosaurus_v8_2_approved.glb",
     "sha256": "a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5"
   },
+  "contactEvidence": {
+    "path": "procedural-animation-toolkit(v8.2)/evidence/structural-mechanical.json",
+    "sha256": "b5a0e161e819311b79038130a4ce5a30927938237b0d8a06713d67d6bb1239ed"
+  },
   "documents": {
     "family": {
       "id": "heavy-predatory-biped",
@@ -12,7 +16,7 @@
     "motion": {
       "id": "relaxed-walk",
       "path": "catalog/motions/relaxed-walk.v8_1-respin.json",
-      "sha256": "f161b33eda48c6c0b1404dc1ad3c505acd1e3c96843826395860068b6a7a364b"
+      "sha256": "552240b4e77452d543f3f61b83aac8f4fe847b6fef0aac4520fc9727db751fa6"
     },
     "renderSet": {
       "id": "locomotion-review",
@@ -41,11 +45,11 @@
       "sha256": "e2bd2e21b99f7e17527a4a5eade909c9a67935b06b71d3e8a96756ab2c2300b8"
     }
   ],
-  "lockSha256": "d73e46ce80d4357e93b27e1dd008bb331fbbd5ac354d28ef4cdeba393862411d",
+  "lockSha256": "eba6d05608e5b34c408dfeed5f9440ac85444b441d380c9279688e76d5c280ec",
   "profile": {
     "id": "v8.2",
     "path": "profiles/v8.2/profile.json",
-    "sha256": "6915d41b62055c874a1479eb76f7f9783ab87f71a63d681179a7228db3c4179b",
+    "sha256": "37a26e006700350bc42d40eeb50f93bb4fa63dae98c98db2423a8eb3c9157c9b",
     "version": 1
   },
   "schema": "eonwild.motion.resolved-profile.v1",

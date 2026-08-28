@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import hashlib
 import json
 from pathlib import Path
 from typing import Any
@@ -8,9 +7,7 @@ from typing import Any
 import bpy
 from mathutils import Vector
 
-
-def _sha(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+from eonwild_motion.media.png import canonicalize_png
 
 
 def _world_bounds() -> tuple[Vector, Vector]:
@@ -75,15 +72,27 @@ def execute_render_request(request_path: Path) -> dict[str, Any]:
     output.parent.mkdir(parents=True, exist_ok=True)
     scene.render.filepath = str(output)
     bpy.ops.render.render(write_still=True)
+    media = canonicalize_png(output)
     result = {
-        "schema": "eonwild.motion.render-stage.v1",
+        "schema": "eonwild.motion.render-report.v1",
         "status": "PASS",
-        "output": str(output),
-        "sha256": _sha(output),
-        "width": scene.render.resolution_x,
-        "height": scene.render.resolution_y,
+        "runId": request["runId"],
+        "profile": request["profile"],
+        "source": request["source"],
+        "artifact": {
+            "path": request["artifactPath"],
+            "sha256": request["artifactSha256"],
+        },
+        "renderSet": request["renderSetBinding"],
+        "media": {"path": str(output), **media},
         "frame": int(render_set["frame"]),
         "clipSemanticId": request["clipSemanticId"],
+        "camera": {
+            "type": "ORTHO",
+            "viewDirection": render_set["viewDirection"],
+            "margin": render_set["margin"],
+            "fullBodyBoundsDerived": True,
+        },
         "blenderVersion": bpy.app.version_string,
     }
     report_path = Path(request["stageReportPath"])

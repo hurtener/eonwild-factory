@@ -28,6 +28,46 @@ REJECTED_COMPONENTS = {
 REJECTED_SUFFIXES = {".pyc", ".pyo", ".tmp", ".temp", ".bak", ".rej"}
 
 
+def _document_value(document: dict[str, Any], selector: str) -> Any:
+    value: Any = document
+    for component in selector.split("."):
+        if not isinstance(value, dict) or component not in value:
+            raise ValidationFailure(f"contact evidence selector missing: {selector}")
+        value = value[component]
+    return value
+
+
+def contact_inheritance_facts(resolved: ResolvedProfile) -> dict[str, Any]:
+    try:
+        evidence = json.loads(resolved.contact_evidence_path.read_text())
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ValidationFailure(f"contact evidence is unreadable: {exc}") from exc
+    contract = resolved.motion["invariants"]["contactContract"]
+    true_facts = {
+        selector: _document_value(evidence, selector)
+        for selector in contract["requiredTruePaths"]
+    }
+    zero_facts = {
+        selector: _document_value(evidence, selector)
+        for selector in contract["requiredZeroPaths"]
+    }
+    if any(value is not True for value in true_facts.values()):
+        raise ValidationFailure("required contact authority check is not true")
+    if any(float(value) != 0.0 for value in zero_facts.values()):
+        raise ValidationFailure("required contact authority metric is not zero")
+    return {
+        "status": "PASS",
+        "proof": contract["proof"],
+        "authority": {
+            "path": str(resolved.contact_evidence_path),
+            "sha256": resolved.contact_evidence_sha256,
+        },
+        "requiredTrue": true_facts,
+        "requiredZero": zero_facts,
+        "protectedChannelsByteExact": True,
+    }
+
+
 def _rejected(relative: Path) -> bool:
     parts = [part.lower() for part in relative.parts]
     return (
@@ -273,10 +313,27 @@ def validate_candidate(
         resolved.motion["invariants"].get("allowedGltfWarnings", []),
     )
     return {
+        "schema": "eonwild.motion.validation-report.v1",
         "status": "PASS",
-        "candidateSha256": sha256_file(candidate_path),
+        "profile": {
+            "id": resolved.profile["id"],
+            "sha256": resolved.profile_sha256,
+            "lockSha256": resolved.lock_sha256,
+        },
+        "artifact": {
+            "path": str(candidate_path),
+            "sha256": sha256_file(candidate_path),
+        },
         "package": package,
         "animationContract": contract,
         "difference": differences,
+        "staticFacts": {
+            "status": "PASS",
+            "jsonEquivalent": differences["jsonEquivalent"],
+            "outsideDeclaredByteChanges": differences[
+                "outsideDeclaredByteChanges"
+            ],
+        },
+        "contactFacts": contact_inheritance_facts(resolved),
         "gltfValidator": gltf,
     }

@@ -136,6 +136,11 @@ def resolve_profile(profile_path: Path) -> ResolvedProfile:
     )
     if source_root not in manifest_path.parents:
         raise ContractError("source manifest is outside source release root")
+    contact_path, contact_sha = _verify_reference(
+        repository, profile["contactEvidence"], label="contact evidence"
+    )
+    if source_root not in contact_path.parents:
+        raise ContractError("contact evidence is outside source release root")
     _validate_semantics(
         documents["rig"].data,
         documents["family"].data,
@@ -162,6 +167,7 @@ def resolve_profile(profile_path: Path) -> ResolvedProfile:
         "input": profile["input"],
         "approvedOutput": profile["approvedOutput"],
         "sourceManifest": profile["sourceRelease"]["manifest"],
+        "contactEvidence": profile["contactEvidence"],
     }
     lock_sha = sha256_json(lock)
     lock_path = profile_path.with_name("profile.lock.json")
@@ -187,6 +193,8 @@ def resolve_profile(profile_path: Path) -> ResolvedProfile:
         source_release_root=source_root,
         source_manifest_path=manifest_path,
         source_manifest_sha256=manifest_sha,
+        contact_evidence_path=contact_path,
+        contact_evidence_sha256=contact_sha,
         lock=lock,
         lock_sha256=lock_sha,
     )
