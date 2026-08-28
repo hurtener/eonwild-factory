@@ -46,3 +46,24 @@ its inventory; the verifier schema-checks that documented convention and the
 signed commit binds the manifest bytes. The generator now validates configured
 semantic roles, hierarchy, timeline/layout and basis axis, enforces measured
 local-delta bounds, and avoids zero-angle NumPy division warnings.
+
+## Final P1 closure
+
+The v3 verifier inventories every package file except the manifest itself and
+independently rejects cache, bytecode, temporary/rejected paths, and files over
+100 MB even when they are not in the manifest. The shipped GLB helper now
+contains only the quaternion, GLB-accessor, and hierarchy utilities used by the
+generator/verifier; it has no model-name literals or legacy overlay solver.
+
+The generator now resolves `expectedParents` through semantic role selectors
+and enforces all five accessor-contract fields: component type, value type,
+byte stride, common rotation timeline, and interpolation. Eleven negative
+tests fail closed with exit code 1: bad parent; STEP and CUBICSPLINE; false and
+mismatched common timelines; bad component type, value type, and stride; zero
+local-delta bounds; a small pycache; and an oversized pyc. Exact diagnostics
+are recorded in `p1-negative-tests.json` and the rerunnable harness is
+`run_p1_negative_tests.py`.
+
+With `PYTHONDONTWRITEBYTECODE=1`, Blender 5.2.0 LTS rebuilt and verified
+SHA-256 `a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5`.
+The approved GLB and both approved MP4 hashes remain unchanged.

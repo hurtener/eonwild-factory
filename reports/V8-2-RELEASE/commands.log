@@ -17,3 +17,20 @@ Blender 5.2.0 LTS
 
 5. Inventory
    No file exceeds 100 MB. No render frame/cache directories or rejected candidates are included.
+
+6. Final P1 clean-output reproduction (bytecode disabled)
+   PYTHONDONTWRITEBYTECODE=1 blender --background --python-exit-code 1 --python 'procedural-animation-toolkit(v8.2)/scripts/release_generate.py' -- --config 'procedural-animation-toolkit(v8.2)/config/release.json' --output /tmp/v8_2_p1_final.glb
+   Result: PASS, SHA-256 a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5.
+
+7. Final P1 rebuilt and packaged verification (bytecode disabled)
+   PYTHONDONTWRITEBYTECODE=1 blender --background --python-exit-code 1 --python 'procedural-animation-toolkit(v8.2)/scripts/verify_release.py' -- --config 'procedural-animation-toolkit(v8.2)/config/release.json' --candidate /tmp/v8_2_p1_final.glb --output reports/V8-2-RELEASE/reproduction/verify-rebuilt.json
+   PYTHONDONTWRITEBYTECODE=1 blender --background --python-exit-code 1 --python 'procedural-animation-toolkit(v8.2)/scripts/verify_release.py' -- --config 'procedural-animation-toolkit(v8.2)/config/release.json' --output 'procedural-animation-toolkit(v8.2)/evidence/reproduction-verify.json'
+   Result: PASS for both; manifest exact, no forbidden/oversized paths, approved SHA exact.
+
+8. Final P1 negative matrix
+   PYTHONDONTWRITEBYTECODE=1 python3 reports/V8-2-RELEASE/run_p1_negative_tests.py --output reports/V8-2-RELEASE/p1-negative-tests.json
+   Result: PASS; all 11 mutations exited 1. See p1-negative-tests.json for exact diagnostics.
+
+9. Legacy model-literal scan
+   rg 'Bone_[0-9]|"Bone"\s*\+' 'procedural-animation-toolkit(v8.2)/scripts'
+   Result: PASS; no matches.

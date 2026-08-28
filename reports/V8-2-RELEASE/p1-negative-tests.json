@@ -1,0 +1,95 @@
+{
+  "schema": "eonwild.v8_2.p1_negative_tests.v1",
+  "status": "PASS",
+  "cases": [
+    {
+      "case": "bad expected parent",
+      "expected": "nonzero",
+      "exitCode": 1,
+      "result": "PASS",
+      "diagnostic": "RuntimeError: hierarchy contract mismatch for Bone_001: expected Bone_002, got Bone_000"
+    },
+    {
+      "case": "STEP interpolation",
+      "expected": "nonzero",
+      "exitCode": 1,
+      "result": "PASS",
+      "diagnostic": "RuntimeError: interpolation contract mismatch for Bone_061: LINEAR"
+    },
+    {
+      "case": "CUBICSPLINE interpolation",
+      "expected": "nonzero",
+      "exitCode": 1,
+      "result": "PASS",
+      "diagnostic": "RuntimeError: interpolation contract mismatch for Bone_061: LINEAR"
+    },
+    {
+      "case": "commonTimeline false",
+      "expected": "nonzero",
+      "exitCode": 1,
+      "result": "PASS",
+      "diagnostic": "RuntimeError: accessor contract requires commonTimeline=true"
+    },
+    {
+      "case": "bad componentType",
+      "expected": "nonzero",
+      "exitCode": 1,
+      "result": "PASS",
+      "diagnostic": "RuntimeError: accessor contract mismatch for Bone_061"
+    },
+    {
+      "case": "bad type",
+      "expected": "nonzero",
+      "exitCode": 1,
+      "result": "PASS",
+      "diagnostic": "RuntimeError: accessor contract mismatch for Bone_061"
+    },
+    {
+      "case": "bad byteStride",
+      "expected": "nonzero",
+      "exitCode": 1,
+      "result": "PASS",
+      "diagnostic": "RuntimeError: accessor contract mismatch for Bone_061"
+    },
+    {
+      "case": "zero local-delta bounds",
+      "expected": "nonzero",
+      "exitCode": 1,
+      "result": "PASS",
+      "diagnostic": "RuntimeError: local delta bound exceeded Bone_002: 0.965347702150647"
+    },
+    {
+      "case": "mismatched common timeline",
+      "expected": "nonzero",
+      "exitCode": 1,
+      "result": "PASS",
+      "diagnostic": "RuntimeError: common timeline contract mismatch for PROC_WALK_RELAXED_V8_1_RESPIN_ROOTMOTION"
+    },
+    {
+      "case": "small pycache",
+      "expected": "nonzero",
+      "exitCode": 1,
+      "result": "PASS",
+      "diagnostic": {
+        "forbiddenPaths": [
+          "scripts/__pycache__/probe.pyc"
+        ],
+        "oversizedFiles": []
+      }
+    },
+    {
+      "case": ">100MB pyc",
+      "expected": "nonzero",
+      "exitCode": 1,
+      "result": "PASS",
+      "diagnostic": {
+        "forbiddenPaths": [
+          "scripts/__pycache__/oversized.pyc"
+        ],
+        "oversizedFiles": [
+          "scripts/__pycache__/oversized.pyc"
+        ]
+      }
+    }
+  ]
+}
