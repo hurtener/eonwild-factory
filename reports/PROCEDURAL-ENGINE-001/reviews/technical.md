@@ -177,3 +177,109 @@ The resolved V8.2 lock SHA was
 No implementation or media was modified. Because P1 is nonzero, this review
 report is intentionally left uncommitted for the implementation owner and
 integration gatekeeper to consume.
+
+---
+
+## Round-2 exact-head re-pin — 2026-08-28
+
+### Verdict
+
+- Fix commit reviewed: `8f9fc4538454492d695059172b96e8bd6e192eb6`
+- Diff reviewed: `a0e88479f16a6b72d66eb9e435a35f2e49439191..8f9fc4538454492d695059172b96e8bd6e192eb6`
+- P0: **0**
+- P1: **0**
+- P2: **1 retained** (the previously recorded ambient toolchain pinning debt;
+  it did not reopen this narrow P1 remediation review)
+- Release recommendation for the remediated P1 scope: **PASS**
+
+This section supersedes the first-round release disposition for the three P1
+findings. The remediation commit is the direct signed child of the reviewed
+implementation commit. It does not alter any legacy toolkit tree.
+
+### P1-1 closure: evidence-bound promotion now fails closed
+
+`src/eonwild_motion/pipeline/promote.py:30-80` requires, parses, and
+schema-validates validation, comparison, candidate-render, and baseline-render
+evidence, then binds each document to the exact build run, profile lock, and
+source commit. Lines 88-188 additionally bind the artifact, baseline, render
+set, clip, frame, dimensions, camera, contact/static/media PASS facts, media
+files, review HTML, and declared build outputs. Lines 196-265 copy the verified
+bytes and record evidence/media hashes in the schema-validated manifest.
+
+Independent controlled attempts against a clean exact-head build all exited 1
+without creating their requested release destination:
+
+- `validation.json = {}`: rejected as an unknown evidence schema;
+- missing `render.json`: rejected as missing required evidence;
+- comparison from another run ID: rejected by run binding;
+- validation carrying a stale source SHA: rejected by source binding;
+- render carrying a different artifact SHA: rejected by artifact binding.
+
+The committed suite additionally covers malformed evidence, an evidence
+document whose status is changed to FAIL, and stripped contact facts. All were
+rejected. Conversely, a valid temporary promotion exited 0 and produced the
+approved artifact plus all four evidence JSON files, both PNGs, and relative,
+browsable `evidence/review.html`. The manifest's four evidence SHA-256 values
+matched the copied files byte-for-byte; its candidate/baseline/review media
+hashes and dimensions matched the copied media.
+
+### P1-2 closure: comparison contract is executable and bound
+
+The clean build and standalone compare command produced schema-valid
+`eonwild.motion.comparison-report.v1` evidence with:
+
+- structural and accessor PASS facts;
+- contact PASS facts inherited through byte-exact protected-channel evidence;
+- canonical fixed-camera 640x360 baseline and candidate PNGs;
+- file and decoded-pixel SHA-256 values for both images;
+- a responsive static review page using relative `media/baseline.png` and
+  `media/candidate.png` references;
+- explicit `visualApproval: false` and page text stating that technical
+  evidence does not grant visual approval;
+- exact run ID, profile SHA, profile-lock SHA, source commit, baseline SHA, and
+  candidate SHA bindings.
+
+The candidate PNG reproduced SHA-256
+`0b1494dd526f4eeb8312fa28ab61310163f9a508f229c26e98c8db8a479b9202`;
+decoded pixels reproduced
+`5ca028e49545863349b16961b53bf18ca11bfcaa1d34fc4d1a19f185ad98e576`.
+
+### P1-3 closure: all command reports use the constrained envelope
+
+`schemas/motion/run-report.v1.schema.json` now closes additional properties and
+constrains command, status, inputs, outputs, checks, source, profile,
+tool-version, and timestamp fields. `src/eonwild_motion/reports.py:14-64`
+validates reports before writing whenever a repository is known, while the
+pre-context fallback emits the same complete shape. All five command success
+reports, promotion rejection reports, missing-profile failures, missing-run
+promotion failures, and the outer failure path were exercised.
+
+An independent Draft 2020-12 validation pass accepted all 15 material reports
+from the manual build/validate/compare/render/promote and five tamper cases.
+The separate pre-context missing-run invocation also emitted a complete
+schema-conforming `promote`/`FAIL` envelope with nullable unknown source and
+profile fields rather than the former bare two-field object.
+
+### Exact-head reproduction and invariance
+
+From detached clean worktree `/tmp/eonwild-round2.ncuFze`, the documented
+command completed with **21 passed, 0 skipped in 55.893 seconds**:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -m unittest discover -s tests -v
+```
+
+An additional clean manual build reproduced approved V8.2 GLB SHA-256
+`a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5`
+and resolved lock SHA-256
+`eba6d05608e5b34c408dfeed5f9440ac85444b441d380c9279688e76d5c280ec`.
+The V5, V5.5, and V8.2 legacy toolkit tree IDs remained respectively:
+
+- `dedabea120c3e2e7c82758eb351521fee8417e75`
+- `aff45b0dc8da9dbf28343c0cc9715c9a6a0e255a`
+- `0ef600321dfef270b5d29aa501b0a2674c9ce5f2`
+
+The fix commit has a valid SSH signature for
+`117486687+hurtener@users.noreply.github.com` using RSA fingerprint
+`SHA256:89wMdoHCHjswAf5f4ZX8L0jk8lgxaiI0/c1NHbdJN7U`. `git diff --check` passed.
+No implementation or media was modified by this reviewer.
