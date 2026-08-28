@@ -1,0 +1,33 @@
+{
+  "schema": "eonwild.motion.motion-layer.v1",
+  "id": "chest-balance-world-relative",
+  "version": 1,
+  "implementation": "chest_balance_world_relative@1",
+  "stage": "stabilization",
+  "reads": [
+    "pelvis.rotation",
+    "chest.rotation",
+    "neck.*.rotation",
+    "head.rotation"
+  ],
+  "writes": [
+    "chest.rotation",
+    "neck.*.rotation",
+    "head.rotation"
+  ],
+  "parameters": {
+    "worldRelative": "R_chest * inverse(R_pelvis)",
+    "pelvisPhase": "R_pelvis(t) * inverse(R_pelvis(0))",
+    "rotationVectorAxis": 2,
+    "gain": 0.3984375,
+    "neckResidualFractions": [0.89, 0.74, 0.55, 0.31, 0.0, 0.0]
+  },
+  "bounds": {
+    "chestLocalDeltaDegrees": 1.0,
+    "neckLocalDeltaDegrees": 0.75
+  },
+  "provenance": {
+    "status": "complete",
+    "source": "approved V8.2 official-world-relative-chest-roll-v1 solve"
+  }
+}

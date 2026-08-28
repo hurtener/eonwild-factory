@@ -1,0 +1,20 @@
+{
+  "schema": "eonwild.motion.legacy-catalog.v1",
+  "entries": [
+    {
+      "path": "procedural-animation-toolkit(v5)",
+      "status": "frozen",
+      "migration": "not-started"
+    },
+    {
+      "path": "procedural-animation-toolkit(v5.5)",
+      "status": "frozen",
+      "migration": "not-started"
+    },
+    {
+      "path": "procedural-animation-toolkit(v8.2)",
+      "status": "frozen",
+      "migration": "vertical-slice-source"
+    }
+  ]
+}

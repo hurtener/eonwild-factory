@@ -1,0 +1,11 @@
+{
+  "schema": "eonwild.motion.render-set.v1",
+  "id": "locomotion-review",
+  "version": 1,
+  "width": 640,
+  "height": 360,
+  "frame": 1,
+  "viewDirection": [1.0, 0.0, 0.12],
+  "margin": 1.18,
+  "background": [0.055, 0.065, 0.075, 1.0]
+}

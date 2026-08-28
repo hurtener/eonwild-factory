@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "eonwild.motion.release-profile.v1",
+  "$defs": {
+    "reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "id", "version", "rig", "family", "species", "motion", "layers", "renderSet", "input", "approvedOutput", "sourceRelease", "validators", "provenance"],
+  "properties": {
+    "schema": {"const": "eonwild.motion.release-profile.v1"},
+    "id": {"type": "string", "minLength": 1},
+    "version": {"type": "integer", "minimum": 1},
+    "rig": {"$ref": "#/$defs/reference"},
+    "family": {"$ref": "#/$defs/reference"},
+    "species": {"$ref": "#/$defs/reference"},
+    "motion": {"$ref": "#/$defs/reference"},
+    "layers": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/reference"}},
+    "renderSet": {"$ref": "#/$defs/reference"},
+    "input": {"$ref": "#/$defs/reference"},
+    "approvedOutput": {"$ref": "#/$defs/reference"},
+    "sourceRelease": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["root", "manifest"],
+      "properties": {
+        "root": {"type": "string"},
+        "manifest": {"$ref": "#/$defs/reference"}
+      }
+    },
+    "validators": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true},
+    "provenance": {"type": "object", "required": ["status", "source"], "additionalProperties": true}
+  }
+}

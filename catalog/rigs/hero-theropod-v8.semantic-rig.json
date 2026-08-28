@@ -1,0 +1,37 @@
+{
+  "schema": "eonwild.motion.semantic-rig.v1",
+  "id": "hero-theropod-v8",
+  "version": 1,
+  "coordinate": {
+    "units": "metres",
+    "handedness": "right",
+    "upAxis": "Y",
+    "forwardAxis": "X"
+  },
+  "roles": {
+    "root": "Bone_000",
+    "pelvis": "Bone_001",
+    "chest": "Bone_002",
+    "neck": ["Bone_041", "Bone_040", "Bone_039", "Bone_038", "Bone_037"],
+    "head": "Bone_036"
+  },
+  "expectedParents": {
+    "pelvis": "root",
+    "chest": "spine_parent",
+    "neck": ["chest", "neck:0", "neck:1", "neck:2", "neck:3"],
+    "head": "neck:4"
+  },
+  "spineParent": "Bone_003",
+  "accessorContract": {
+    "componentType": 5126,
+    "type": "VEC4",
+    "byteStride": 16,
+    "commonTimeline": true,
+    "interpolation": "LINEAR"
+  },
+  "provenance": {
+    "source": "procedural-animation-toolkit(v8.2)/config/release.json",
+    "status": "complete",
+    "purpose": "engineering semantic map; no anatomical claim"
+  }
+}

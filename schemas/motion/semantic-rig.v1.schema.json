@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "eonwild.motion.semantic-rig.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "id", "version", "coordinate", "roles", "expectedParents", "spineParent", "accessorContract", "provenance"],
+  "properties": {
+    "schema": {"const": "eonwild.motion.semantic-rig.v1"},
+    "id": {"type": "string", "minLength": 1},
+    "version": {"type": "integer", "minimum": 1},
+    "coordinate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["units", "handedness", "upAxis", "forwardAxis"],
+      "properties": {
+        "units": {"const": "metres"},
+        "handedness": {"enum": ["right", "left"]},
+        "upAxis": {"enum": ["X", "Y", "Z"]},
+        "forwardAxis": {"enum": ["X", "-X", "Y", "-Y", "Z", "-Z"]}
+      }
+    },
+    "roles": {"type": "object", "minProperties": 4, "additionalProperties": true},
+    "expectedParents": {"type": "object", "minProperties": 4, "additionalProperties": true},
+    "spineParent": {"type": "string", "minLength": 1},
+    "accessorContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["componentType", "type", "byteStride", "commonTimeline", "interpolation"],
+      "properties": {
+        "componentType": {"type": "integer"},
+        "type": {"type": "string"},
+        "byteStride": {"type": "integer", "minimum": 1},
+        "commonTimeline": {"type": "boolean"},
+        "interpolation": {"type": "string"}
+      }
+    },
+    "provenance": {"type": "object", "required": ["source", "status"], "additionalProperties": true}
+  }
+}

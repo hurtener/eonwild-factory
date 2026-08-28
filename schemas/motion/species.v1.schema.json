@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "eonwild.motion.species.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "id", "version", "family", "rig", "morphology", "provenance"],
+  "properties": {
+    "schema": {"const": "eonwild.motion.species.v1"},
+    "id": {"type": "string", "minLength": 1},
+    "version": {"type": "integer", "minimum": 1},
+    "family": {"type": "string", "minLength": 1},
+    "rig": {"type": "string", "minLength": 1},
+    "morphology": {"type": "object", "minProperties": 1, "additionalProperties": true},
+    "provenance": {
+      "type": "object",
+      "required": ["status", "commercialUse", "source"],
+      "additionalProperties": true
+    }
+  }
+}

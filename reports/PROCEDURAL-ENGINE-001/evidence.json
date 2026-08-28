@@ -1,0 +1,50 @@
+{
+  "schema": "eonwild.motion.procedural-engine-evidence.v1",
+  "status": "PASS",
+  "tests": {
+    "count": 19,
+    "failures": 0,
+    "skipped": 0,
+    "seconds": 18.747
+  },
+  "artifacts": {
+    "input": {
+      "bytes": 45331840,
+      "sha256": "bfe8e833721f1dc0b8b4a1df72a6ea933debb1c6d76ac6d7970ae3ed6c8f4bc2"
+    },
+    "approvedAndBuilt": {
+      "bytes": 45331840,
+      "sha256": "a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5"
+    },
+    "profile": {
+      "sha256": "6915d41b62055c874a1479eb76f7f9783ab87f71a63d681179a7228db3c4179b"
+    },
+    "profileLockFile": {
+      "sha256": "1244dbd76c45584161aadf45fc31b5ca534d0122103214fa39c70d461719f363"
+    },
+    "resolvedLock": {
+      "sha256": "d73e46ce80d4357e93b27e1dd008bb331fbbd5ac354d28ef4cdeba393862411d"
+    },
+    "render": {
+      "bytes": 192975,
+      "width": 640,
+      "height": 360,
+      "sha256": "e6ed5469d8a095b12c3ec073ecac2d710593861305ca91fb0d8f15f517089ebd"
+    }
+  },
+  "validation": {
+    "gltfErrors": 0,
+    "gltfWarnings": 2,
+    "sourceInventoryFiles": 12,
+    "outsideDeclaredByteChanges": 0,
+    "jsonEquivalent": true,
+    "rotationChannelsPerClip": 67,
+    "samplesPerClip": 245
+  },
+  "immutability": {
+    "doubleBuildByteIdentical": true,
+    "nonPromotionSourceUnchanged": true,
+    "legacyToolkitDiffFiles": 0,
+    "realReleasePromoted": false
+  }
+}

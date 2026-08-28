@@ -1,0 +1,17 @@
+{
+  "schema": "eonwild.motion.species.v1",
+  "id": "hero-theropod",
+  "version": 8,
+  "family": "heavy-predatory-biped",
+  "rig": "hero-theropod-v8",
+  "morphology": {
+    "scope": "engineering-release-compatibility",
+    "scientificClaims": false
+  },
+  "provenance": {
+    "status": "complete",
+    "commercialUse": "project-owned-input",
+    "source": "committed immutable V8.2 release capsule",
+    "scientificInterpretation": "not asserted by this engineering profile"
+  }
+}

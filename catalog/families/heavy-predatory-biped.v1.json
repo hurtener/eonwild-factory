@@ -1,0 +1,13 @@
+{
+  "schema": "eonwild.motion.family.v1",
+  "id": "heavy-predatory-biped",
+  "version": 1,
+  "status": "provisional",
+  "requiredRoles": ["root", "pelvis", "chest", "head"],
+  "supportedMotions": ["relaxed-walk"],
+  "layerStages": ["source", "pre-ik", "ik-contact", "post-ik", "stabilization", "export"],
+  "provenance": {
+    "status": "provisional",
+    "note": "One release proves the engine slice; a second morphology is required for family acceptance."
+  }
+}

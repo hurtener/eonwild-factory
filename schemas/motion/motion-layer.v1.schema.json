@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "eonwild.motion.motion-layer.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "id", "version", "implementation", "stage", "reads", "writes", "parameters", "bounds", "provenance"],
+  "properties": {
+    "schema": {"const": "eonwild.motion.motion-layer.v1"},
+    "id": {"type": "string", "minLength": 1},
+    "version": {"type": "integer", "minimum": 1},
+    "implementation": {"type": "string", "pattern": "^[a-z0-9_]+@[1-9][0-9]*$"},
+    "stage": {"enum": ["source", "pre-ik", "ik-contact", "post-ik", "stabilization", "export"]},
+    "reads": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true},
+    "writes": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true},
+    "parameters": {"type": "object", "additionalProperties": true},
+    "bounds": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0}},
+    "provenance": {"type": "object", "required": ["status", "source"], "additionalProperties": true}
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "eonwild.motion.render-set.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "id", "version", "width", "height", "frame", "viewDirection", "margin", "background"],
+  "properties": {
+    "schema": {"const": "eonwild.motion.render-set.v1"},
+    "id": {"type": "string"},
+    "version": {"type": "integer", "minimum": 1},
+    "width": {"type": "integer", "minimum": 64},
+    "height": {"type": "integer", "minimum": 64},
+    "frame": {"type": "integer", "minimum": 0},
+    "viewDirection": {"type": "array", "prefixItems": [{"type": "number"}, {"type": "number"}, {"type": "number"}], "items": false},
+    "margin": {"type": "number", "exclusiveMinimum": 1},
+    "background": {"type": "array", "prefixItems": [{"type": "number"}, {"type": "number"}, {"type": "number"}, {"type": "number"}], "items": false}
+  }
+}

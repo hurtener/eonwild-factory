@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "eonwild.motion.promotion.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "technical", "visual"],
+  "properties": {
+    "schema": {"const": "eonwild.motion.promotion.v1"},
+    "technical": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reviewer"],
+      "properties": {"status": {"const": "APPROVED"}, "reviewer": {"type": "string", "minLength": 1}}
+    },
+    "visual": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reviewer"],
+      "properties": {"status": {"const": "APPROVED"}, "reviewer": {"type": "string", "minLength": 1}}
+    }
+  }
+}

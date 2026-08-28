@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "eonwild.motion.run-report.v1",
+  "type": "object",
+  "required": ["schema", "runId", "command", "status", "inputs", "outputs", "metrics", "checks", "warnings", "errors", "source", "startedAt", "finishedAt"],
+  "properties": {
+    "schema": {"const": "eonwild.motion.run-report.v1"},
+    "status": {"enum": ["PASS", "FAIL", "BLOCKED"]}
+  }
+}

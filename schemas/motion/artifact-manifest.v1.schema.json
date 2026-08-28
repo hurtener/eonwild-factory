@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "eonwild.motion.artifact-manifest.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "release", "engine", "gitHead", "lockSha256", "artifact", "input", "profile", "provenance", "validation", "approvals"],
+  "properties": {
+    "schema": {"const": "eonwild.motion.artifact-manifest.v1"},
+    "release": {"type": "string", "minLength": 1},
+    "engine": {"type": "string", "minLength": 1},
+    "gitHead": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "lockSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "artifact": {"$ref": "#/$defs/pathHash"},
+    "input": {"$ref": "#/$defs/pathHash"},
+    "profile": {"$ref": "#/$defs/pathHash"},
+    "provenance": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {"status": {"const": "complete"}}
+    },
+    "validation": {"type": "object"},
+    "approvals": {
+      "type": "object",
+      "required": ["schema", "technical", "visual"]
+    }
+  },
+  "$defs": {
+    "pathHash": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  }
+}
