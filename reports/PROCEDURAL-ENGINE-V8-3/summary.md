@@ -2,51 +2,48 @@
 
 ## Result
 
-The repository now has a permanent schema-validated stable/working channel
-model on the single `eonwild-motion` engine. Stable and working initially point
-to the exact approved V8.2 profile; working is iteration `0`, revision `1`.
-No motion layer, GLB, release capsule, or reviewed report changed.
+The permanent `eonwild-motion` engine now builds an executable V8.3 working
+candidate from the immutable approved V8.2 input. The declared order is
+`pelvis_balance_pre_ik@1`, `leg_contact_resolve@1`, then
+`chest_tail_head_stabilization@1`. Engine code resolves semantic rig roles; all
+concrete rig and motion values remain in catalog/profile documents.
 
-CLI examples:
+The complete amplitude sweep selected `0.5`, the strongest candidate that
+passes every revised hard gate. Scales `0.625`, `0.75`, `0.875`, and `1.0`
+fail one or more declared bounds and were not selected.
 
-```sh
-eonwild-motion build --profile stable --work-root /external/work
-eonwild-motion build --profile working --work-root /external/work
-eonwild-motion build --profile profiles/v8.2/profile.json --work-root /external/work
-```
+Stable remains exact approved V8.2. Working points to V8.3 iteration 1,
+revision 2. The top-level channel generation remains 1 because a working-only
+change does not advance stable or stable history.
 
-Every resolved lock and run/evidence profile binding now records channel,
-channel-state SHA, generation, iteration, revision, and history identity.
+## Selected measurements
 
-Stable changes only through an explicitly approved promotion with
-`--update-stable`. The tested temporary transition retained prior state in a
-non-overwritable history record and advanced generation/revision. Ordinary
-commands left canonical state byte-identical and created no history directory.
-An injected stable-update failure also proved that the newly-created release
-destination is rolled back.
+- V8.3 artifact SHA-256: `b5fc582e3bae3b2708735e7ae68cc31da65599f6d155d3b6d089a44ed5517d03`
+- Stable V8.2 artifact SHA-256: `a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5`
+- Pelvis lateral/vertical range: `0.030924 H` / `0.019733 H`
+- Pelvis pitch/yaw/roll: `1.124906°` / `3.148266°` / `4.094129°`
+- Chest relative pitch/yaw/roll: `5.791259°` / `2.752822°` / `5.558301°`
+- Tail yaw base/mid/tip: `7.435105°` / `20.664978°` / `28.882205°`
+- Head world pitch/yaw/roll: `2.580073°` / `1.528813°` / `0.966135°`
+- Chest/pelvis roll correlation: `-0.942674`
+- Maximum solved foot world error: `2.5823e-15 m`
+- Final-skinned worst axis/Euclidean regression: `0.000103951 m` / `0.000119310 m`
+- Stride/speed: `2.59999997 m` / `4.59999986 km/h`
 
-The full suite passed 26 tests in 43.218 seconds, including two exact builds,
-two byte-identical canonical renders, the retained P1 negatives, stale channel
-and stable-artifact rejection, immutable history, and installed CLI discovery.
+## Visual evidence
 
-## Exact identities
+Three synchronized, fixed-camera 10-second comparisons at 24 fps and 240
+frames show V8.2 on the left and V8.3 on the right: side, front, and fixed
+front-three-quarter. Nine full-body and nine foot-detail phase crops cover
+contact through receiving. The static review page labels visual approval as
+pending; this implementation does not self-approve.
 
-- Engine: `0.1.0`
-- Channel state SHA-256:
-  `d895da0d02cea27805153677d9bff34d2372c6066076024887772a05d9b9ac67`
-- Stable resolved lock:
-  `ebd3305dad6064f359d5a2ffd2a351169f6df092da3ee75f293cc9a39256d419`
-- Working resolved lock:
-  `4198300a8a34e93f56f2235f1555b4024f42fc1b10cee5cb5cf01009f83a3bb3`
-- Explicit V8.2 resolved lock:
-  `eba6d05608e5b34c408dfeed5f9440ac85444b441d380c9279688e76d5c280ec`
-- Approved artifact remains:
-  `a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5`
+Representative frames were inspected locally. Direct `file://` navigation in
+the in-app browser was blocked by its security policy, and no alternate-server
+workaround was attempted.
 
-## Deferred
+## Status
 
-- No V8.3 profile or motion exists yet.
-- No hip-balance channel or layer was added.
-- Working-channel mutation is intentionally not exposed as a casual build
-  side effect; a future bounded profile-management command must preserve the
-  same schema/hash discipline.
+Machine validation is PASS. Visual approval and stable promotion remain pending
+independent review. No stable channel state, stable history, or approved V8.2
+bytes were changed.

@@ -22,7 +22,7 @@ from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parents[1]
 PROFILE = ROOT / "profiles/v8.2/profile.json"
-APPROVED_SHA = "a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5"
+APPROVED_SHA = "b5fc582e3bae3b2708735e7ae68cc31da65599f6d155d3b6d089a44ed5517d03"
 
 
 def cli(*arguments: str) -> subprocess.CompletedProcess:
@@ -107,8 +107,8 @@ class VerticalSliceTests(unittest.TestCase):
         self.assertEqual(first.read_bytes(), second.read_bytes())
         for _, report in self.builds:
             self.assertEqual(report["profile"]["channel"], "working")
-            self.assertEqual(report["profile"]["iteration"], 0)
-            self.assertEqual(report["profile"]["revision"], 1)
+            self.assertEqual(report["profile"]["iteration"], 1)
+            self.assertEqual(report["profile"]["revision"], 2)
         render_reports = [json.loads((run / "render.json").read_text()) for run, _ in self.builds]
         self.assertEqual(
             render_reports[0]["media"]["fileSha256"],
@@ -129,7 +129,7 @@ class VerticalSliceTests(unittest.TestCase):
         validate = cli(
             "validate",
             "--profile",
-            "stable",
+            "working",
             "--artifact",
             artifact,
             "--work-root",

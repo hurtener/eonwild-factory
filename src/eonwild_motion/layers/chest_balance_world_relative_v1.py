@@ -207,7 +207,7 @@ def apply(glb, rig, motion, layer):
             layer["bounds"],
         )
         results[clip["name"]] = {
-            name: {"accessor": accessors[name], "values": rows}
+            name: {"rotation": {"accessor": accessors[name], "property": "rotation", "values": rows}}
             for name, rows in values.items()
         }
         metrics[clip["semanticId"]] = {"maxLocalDeltaDegrees": maxima}

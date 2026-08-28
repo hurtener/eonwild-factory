@@ -1,0 +1,39 @@
+{
+  "schema": "eonwild.motion.v8_3_evaluation.v1",
+  "status": "PASS",
+  "selectedScale": 0.5,
+  "artifactSha256": "b5fc582e3bae3b2708735e7ae68cc31da65599f6d155d3b6d089a44ed5517d03",
+  "checks": {
+    "allHardGates": true,
+    "finalSkinnedContact": true,
+    "iteration38RockerPassiveReceiving": true,
+    "frozenRootTimelineStrideSpeed": true,
+    "declaredUpperCounterbalance": true,
+    "antiArbitraryContinuity": true,
+    "headStabilization": true,
+    "amplitudeSweepComplete": true
+  },
+  "counts": {"undeclaredChanges": 0},
+  "metrics": {
+    "pelvisP2PByHipHeight": {"lateral": 0.03092367164795869, "vertical": 0.019733401094410605, "sagittal": 0.004134591122804903},
+    "pelvisRotationP2PDegrees": {"pitch": 1.124906020908296, "yaw": 3.1482656117387458, "roll": 4.0941292542162575},
+    "chestRelativeP2PDegrees": {"pitch": 5.791259213806512, "yaw": 2.7528216444119096, "roll": 5.558301443239106},
+    "tailYawP2PDegrees": {"base": 7.435105413142239, "mid": 20.66497817742858, "tip": 28.88220543102979},
+    "headWorldP2PDegrees": {"pitch": 2.5800731965976214, "yaw": 1.5288128314377731, "roll": 0.9661348898334642},
+    "chestPelvisRollPearson": -0.9426737695875088,
+    "maxFootWorldErrorMetres": 2.5823128856601336e-15,
+    "finalSkinnedDenseSamples": 977,
+    "finalSkinnedMaxAxisRegressionMetres": 0.00010395050048828125,
+    "finalSkinnedMaxEuclideanRegressionMetres": 0.00011930971920265128,
+    "maxUpperAdjacentDeltaDegrees": 0.057931670669116295,
+    "maxUpperSecondDifferenceDegrees": 0.043447677864515845,
+    "strideMetres": 2.59999997,
+    "speedKilometresPerHour": 4.59999986
+  },
+  "evidence": {
+    "sweep": "reports/PROCEDURAL-ENGINE-V8-3/evidence/amplitude-sweep.json",
+    "layerMetrics": "reports/PROCEDURAL-ENGINE-V8-3/evidence/layer-metrics.json",
+    "finalSkinnedWitnesses": "reports/PROCEDURAL-ENGINE-V8-3/evidence/final-skinned-witnesses.json",
+    "thresholds": "reports/PROCEDURAL-ENGINE-V8-3/evaluation/thresholds.json"
+  }
+}

@@ -1,0 +1,190 @@
+{
+  "schema": "eonwild.motion.v8_3_hip_balance_thresholds.v1",
+  "status": "DRAFT_ACCEPTANCE_CONTRACT",
+  "basis": {
+    "sourceStableArtifactSha256": "a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5",
+    "coordinateBasis": {"x": "lateral", "y": "vertical", "z": "sagittal"},
+    "phaseSamples": 120,
+    "translationNormalization": "median_sampled_pelvis_to_lowest_distal_foot_height",
+    "authority": "final_exported_float32_glb_and_final_skinned_witnesses"
+  },
+  "layers": {
+    "requiredOrder": ["pelvis_balance_pre_ik@1", "leg_contact_resolve@1", "chest_tail_head_stabilization@1"],
+    "semanticRoleOnly": true,
+    "rejectImplicitOrder": true,
+    "rejectUndeclaredWrite": true,
+    "ownership": {
+      "pelvis_balance_pre_ik@1": {
+        "reads": ["declared_support_phase", "declared_load_state", "pelvis", "root"],
+        "writes": ["pelvis.translation.lateral", "pelvis.translation.vertical_load", "pelvis.rotation.roll"],
+        "forbiddenWrites": ["root.*", "pelvis.translation.sagittal", "pelvis.rotation.pitch", "pelvis.rotation.yaw", "legs.*", "feet.*", "toes.*"]
+      },
+      "leg_contact_resolve@1": {
+        "reads": ["pelvis.balance_targets", "frozen_contact_schedule", "semantic_leg_chains"],
+        "writes": ["leftLeg.*.rotation", "rightLeg.*.rotation", "leftFoot.translation", "rightFoot.translation"],
+        "forbiddenWrites": ["root.*", "pelvis.*", "spine.*", "chest.*", "tail.*", "neck.*", "head.*", "toes.*"]
+      },
+      "chest_tail_head_stabilization@1": {
+        "reads": ["pelvis.rotation", "spine.*.rotation", "chest.rotation", "tail.*.rotation", "neck.*.rotation", "head.rotation", "declared_balance_phase"],
+        "writes": ["spine.*.rotation", "chest.rotation", "tail.*.rotation", "neck.*.rotation", "head.rotation"],
+        "forbiddenWrites": ["all_semantic_roles.translation", "root.*", "pelvis.*", "leftLeg.*", "rightLeg.*", "leftFoot.*", "rightFoot.*", "toe_chains.*", "timelines.*", "nonWalkAnimations.*"]
+      }
+    }
+  },
+  "v8_2Baseline": {
+    "pelvisP2PByHipHeight": {"lateral": 0.014856915972896519, "vertical": 0.012369209119135844, "sagittal": 0.004125041073517263},
+    "pelvisRotationP2PDegrees": {"pitch": 1.1384197113107173, "yaw": 3.139441418166644, "roll": 2.6957625838620447},
+    "chestRelativeP2PDegrees": {"pitch": 4.0816448900811935, "yaw": 2.6479633860853653, "roll": 5.617932748884961},
+    "headWorldP2PDegrees": {"pitch": 2.580076144284219, "yaw": 1.5288220576108507, "roll": 0.9661369943508731},
+    "tailYawP2PDegrees": {"base": 5.587139999796207, "mid": 18.7181856297902, "tip": 22.991999383345856},
+    "tailYawPeakPhase": {"base": 0.3416666666666667, "mid": 0.8416666666666667, "tip": 0.85},
+    "chestRollPelvisRollPearson": -0.9014861618364692,
+    "strideMetres": 2.59999997,
+    "speedKilometresPerHour": 4.59999986
+  },
+  "v5_5Reference": {
+    "pelvisP2PByHipHeight": {"lateral": 0.101657, "vertical": 0.038808, "sagittal": 0.019595},
+    "pelvisRotationP2PDegrees": {"pitch": 2.8879, "yaw": 6.6281, "roll": 7.3621},
+    "chestRelativeP2PDegrees": {"pitch": 9.21943, "yaw": 6.531839, "roll": 9.800129},
+    "tailRelativeYawP2PDegrees": {"base": 12.071827, "mid": 32.337633, "tip": 42.480735},
+    "use": "directional_target_only_not_retarget_input_or_curve_source"
+  },
+  "pelvisProgression": {
+    "lateralP2PByHipHeight": {"min": 0.03, "max": 0.04},
+    "verticalP2PByHipHeight": {"min": 0.016, "max": 0.02},
+    "rollP2PDegrees": {"min": 3.5, "max": 4.1},
+    "sagittalP2PByHipHeightDeltaFromV8_2AbsMax": 0.0002,
+    "pitchP2PDegreesDeltaFromV8_2AbsMax": 0.15,
+    "yawP2PDegreesDeltaFromV8_2AbsMax": 0.15,
+    "addedLateralMeanByHipHeightAbsMax": 0.0001,
+    "addedRollMeanDegreesAbsMax": 0.01,
+    "loadedSupportPearsonAbsMin": 0.85,
+    "halfCycleAsymmetryPercentMax": 5.0,
+    "maxAdjacentTranslationStepByHipHeight": 0.0025,
+    "maxAdjacentRollStepDegrees": 0.35
+  },
+  "boundedAmplitudeSweep": {
+    "amplitudeScaleAscending": [0.5, 0.625, 0.75, 0.875, 1.0],
+    "controlsAtScaleOne": {
+      "pelvisSupportShiftGain": {"min": 0.04, "max": 0.06},
+      "pelvisVerticalBobByHipHeight": {"min": 0.006, "max": 0.008},
+      "pelvisLoadingDropByHipHeight": {"min": 0.0045, "max": 0.0065},
+      "pelvisRollDegrees": {"min": 1.7, "max": 2.05}
+    },
+    "signals": {
+      "zeroMeanLateralAndRoll": true,
+      "halfCycleLateralRollAntisymmetry": true,
+      "halfCycleVerticalRepeat": true,
+      "rootSagittalPitchYawAndEventTimingFrozen": true,
+      "trunkChestTailCounterbalanceUsesSameDeclaredScale": true,
+      "neckHeadResidualIsDerivedFromTheScaledCounterbalance": true,
+      "phaseOffsetsAreFixedAcrossSweep": true
+    },
+    "selection": "maximum_scale_with_all_hard_gates_passing"
+  },
+  "rootTimelineAndStructure": {
+    "rootTranslationRotationArraysExact": true,
+    "walkTimeAccessorsExact": true,
+    "walkSampleCountExact": 245,
+    "durationSecondsExact": 4.069565296173096,
+    "interpolationExact": true,
+    "channelMembershipExact": true,
+    "strideMetresAbsTolerance": 0.000001,
+    "speedKilometresPerHourAbsTolerance": 0.000001,
+    "rootMotionExactAndAllRolesOutsideDeclaredLayerWriteSetsExact": true,
+    "nonWalkAnimationsExact": true,
+    "meshSkinRestAndInverseBindExact": true,
+    "undeclaredBinaryChanges": 0
+  },
+  "finalSkinnedContactAndTrajectory": {
+    "originalContactTargetsScheduleAndTerrainExact": true,
+    "maxFootTargetErrorByHipHeight": 0.00035,
+    "denseLoadedDistalWitnessAbsMotionByHipHeight": {"lateral": 0.005, "vertical": 0.003, "sagittal": 0.003},
+    "phaseMatchedV8_2TrajectoryEuclideanRegressionMetresMax": 0.002,
+    "phaseMatchedV8_2TrajectoryWorstAxisRegressionMetresMax": 0.0005,
+    "selectedSolePenetrationRegressionMetresMax": 0.0005,
+    "stableContactQuantileRegressionMetresMax": 0.0005,
+    "localSolveDeltaDegreesMax": {"thigh": 3.0, "shin": 3.0, "ankle": 4.0, "foot": 4.0, "toeRoot": 3.0},
+    "footPivotTranslationDeltaMetresMax": 0.015
+  },
+  "rockerPassiveReceiving": {
+    "rockerOnsetToRearExtensionLeadCycle": {"min": 0.04, "max": 0.1},
+    "rockerTimingDeltaFromV8_2CycleMax": 0.0082,
+    "releaseAfterPeakCycleMin": 0.02,
+    "loadedBakedKeysPerSide": {"expected": 15, "tolerance": 1},
+    "toeOnlyDwellCycleBaseline": 0.11475,
+    "toeOnlyDwellDeltaFromV8_2CycleMax": 0.0082,
+    "passiveIntervalCycle": {"start": 0.78, "end": 0.85},
+    "passiveConsecutiveBakedKeysMin": {"left": 8, "right": 7},
+    "passiveTargetMustBeNull": true,
+    "passiveEnergyAndSpeedMonotonicDecrease": true,
+    "receivingPreparationCycle": 0.85,
+    "flattenCycle": 0.88,
+    "metatarsalReversalsAboveMetresMax": 0,
+    "metatarsalReversalThresholdMetres": 0.001,
+    "maxAdjacentDenseWitnessMovementMetres": 0.001,
+    "jointVelocityDegreesPerSecondMax": 390.0,
+    "jointAccelerationDegreesPerSecondSquaredMax": 9000.0
+  },
+  "upperBodyCounterbalanceAndSeam": {
+    "amendment": "declared_rotation_only_counterbalance_replaces_impossible_exact_chest_tail_local_requirement",
+    "deltaManifestRequired": true,
+    "deltaManifestFieldsRequired": ["semantic_role", "baseline_accessor_identity", "rotation_delta_only", "shared_sweep_scale", "phase_offset_cycles", "p2p_degrees", "mean_degrees", "max_adjacent_delta_degrees", "loop_seam"],
+    "allowedSemanticRoles": ["spine.*", "chest", "tail.*", "neck.*", "head"],
+    "allRolesOutsideDeclaredLayerWriteSetsLocalArraysExact": true,
+    "counterbalanceLayerCannotModifyContactOwnedArrays": true,
+    "allCounterbalanceTranslationsExact": true,
+    "counterbalanceKeyTimesAndInterpolationExact": true,
+    "counterbalanceDeltaMustBeAdditiveToV8_2": true,
+    "zeroMeanLocalDeltaDegreesAbsMax": 0.01,
+    "maxAdjacentLocalDeltaDegrees": {"spine": 0.16, "chest": 0.18, "tail": 0.42, "neck": 0.16, "head": 0.16},
+    "maxSecondDifferenceLocalDeltaDegrees": {"spine": 0.05, "chest": 0.06, "tail": 0.13, "neck": 0.05, "head": 0.05},
+    "dominantFundamentalEnergyFractionMin": 0.85,
+    "newCounterbalanceReversalsPerCycleMax": {"spine": 2, "chest": 2, "tail": 2, "neck": 2, "head": 2},
+    "scaleOneCounterbalanceDeltaP2PDegrees": {
+      "spine": {"pitchMax": 1.2, "yawMax": 1.0, "rollMax": 1.4},
+      "chest": {"pitchMax": 1.75, "yawMax": 1.5, "rollMax": 1.75},
+      "tailYaw": {"base": {"min": 0.5, "max": 3.0}, "mid": {"min": 1.4, "max": 6.0}, "tip": {"min": 1.6, "max": 7.5}},
+      "neck": {"pitchMax": 0.75, "yawMax": 0.75, "rollMax": 0.75},
+      "head": {"pitchMax": 1.0, "yawMax": 1.0, "rollMax": 1.0}
+    },
+    "counterbalancePhase": {
+      "chestRollPelvisRollPearson": {"min": -0.95, "max": -0.7},
+      "tailBaseYawLagAfterPelvisCycles": {"min": 0.0, "max": 0.125},
+      "tailMidYawLagAfterBaseCycles": {"min": 0.02, "max": 0.17},
+      "tailTipYawLagAfterMidCycles": {"min": 0.02, "max": 0.17},
+      "cyclicPhaseComparisonRequired": true
+    },
+    "totalOutputEnvelopeP2PDegrees": {
+      "chestRelativeToPelvis": {"pitch": {"min": 4.2, "max": 5.8}, "yaw": {"min": 2.6, "max": 4.2}, "roll": {"min": 5.4, "max": 6.8}},
+      "tailRelativeToPelvisYaw": {"base": {"min": 6.25, "max": 8.5}, "mid": {"min": 20.5, "max": 25.0}, "tip": {"min": 25.0, "max": 30.0}}
+    },
+    "headWorldP2PDegreesMax": {"pitch": 2.9, "yaw": 2.1, "roll": 1.2},
+    "headWorldP2PDegreesDeltaFromV8_2AbsMax": 0.1,
+    "headWorldPerKeyDeltaDegreesMax": 0.05,
+    "neckLocalDeltaDegreesMax": 0.75,
+    "headLocalDeltaDegreesMax": 1.0,
+    "loopSeam": {"localTranslationMetresMax": 0.0, "localRotationDegreesMax": 0.00001}
+  },
+  "determinismAndSelection": {
+    "twoIndependentBuildsRequired": true,
+    "artifactBytesExact": true,
+    "machineEvidenceExactExceptDeclaredRunPathsAndTimestamps": true,
+    "amplitudeSweepDeclaredAndSerialized": true,
+    "selectionRule": "maximum_passing_amplitude_scale",
+    "tieBreakers": ["lowest_worst_axis_trajectory_regression", "lowest_max_head_world_delta", "lowest_pelvis_step_discontinuity", "lexical_candidate_id"]
+  },
+  "visualReview": {
+    "machinePassBeforeRender": true,
+    "synchronizedViews": ["side", "front", "front_three_quarter"],
+    "comparisonLayout": "v8_2_left_v8_3_right",
+    "frames": 240,
+    "fps": 24,
+    "durationSeconds": 10.0,
+    "lockedGlobalFullBodyBounds": true,
+    "normalSpeedPrimary": true,
+    "phaseDiagnostics": ["contact", "load_acceptance", "midstance", "rocker_onset", "rear_extension_peak", "release", "passive_lag", "receiving", "swing_pass"],
+    "approvalRequires": ["independent_technical_review", "independent_three_view_visual_review", "explicit_user_approval"]
+  },
+  "failClosed": true
+}

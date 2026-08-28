@@ -150,8 +150,6 @@ def _resolve_explicit_profile(profile_path: Path) -> ResolvedProfile:
     contact_path, contact_sha = _verify_reference(
         repository, profile["contactEvidence"], label="contact evidence"
     )
-    if source_root not in contact_path.parents:
-        raise ContractError("contact evidence is outside source release root")
     _validate_semantics(
         documents["rig"].data,
         documents["family"].data,

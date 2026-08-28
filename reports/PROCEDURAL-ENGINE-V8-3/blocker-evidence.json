@@ -1,0 +1,37 @@
+{
+  "schema": "eonwild.motion.v8_3_blocker_evidence.v1",
+  "status": "BLOCKED_BY_CONTRACT_CONFLICT",
+  "source": {
+    "stableArtifactSha256": "a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5",
+    "evaluator": "/Volumes/m2-extended-disk/Repos/eonwild-factory/reports/V8-2-BALANCE-TRANSFER/evaluation/tools/evaluate_balance.py",
+    "phaseSamples": 120
+  },
+  "hardBounds": {
+    "pelvisRollP2PDegrees": [3.5, 4.1],
+    "chestRelativePitchBaselineDegrees": 4.0816448900811935,
+    "chestRelativePitchDeltaMaxDegrees": 0.2,
+    "tailRelativeYawDeltaMaxDegrees": 0.25
+  },
+  "frontier": [
+    {"id": "phase-minus-60-low-roll", "scale": 0.5, "scaleOneRollDegrees": 1.7, "pelvisRollP2PDegrees": 3.298272166317126, "chestRelativePitchP2PDegrees": 4.25711311307964, "status": "FAIL_PELVIS_ROLL"},
+    {"id": "phase-minus-58-pulse", "scale": 0.5, "scaleOneRollDegrees": 2.05, "pulseWeight": 0.3, "pelvisRollP2PDegrees": 3.5908834191992436, "chestRelativePitchP2PDegrees": 4.490589215005123, "chestRollPelvisRollPearson": -0.7107257608855327, "status": "FAIL_UPPER_RELATIVE"},
+    {"id": "phase-120", "scale": 0.5, "scaleOneRollDegrees": 1.7, "pelvisRollP2PDegrees": 3.8993994115917374, "chestRelativePitchP2PDegrees": 5.433420971489447, "chestRollPelvisRollPearson": -0.9511031383300008, "status": "FAIL_UPPER_RELATIVE"},
+    {"id": "chest-axis-preserving", "scale": 0.5, "pelvisRollP2PDegrees": 5.003111288245655, "pelvisPitchP2PDegrees": 8.260936406351886, "pelvisYawP2PDegrees": 8.839782087425197, "chestRelativePitchP2PDegrees": 4.0816437447468985, "status": "FAIL_PELVIS_PITCH_YAW"}
+  ],
+  "executableContactSolve": {
+    "maxFootWorldPositionErrorM": 2.288783399261119e-15,
+    "maxFootWorldOrientationErrorDegrees": 5.4574595546750025e-06,
+    "maxHeadWorldErrorDegrees": 3.1806095840382657e-15,
+    "maxNeckLocalDeltaDegrees": 0.38162902494864853
+  },
+  "checks": {
+    "stableUnchanged": true,
+    "v8_2ArtifactUnchanged": true,
+    "contactSolveExecutable": true,
+    "allHardGates": false,
+    "selectedCandidate": false,
+    "renderAuthorized": false,
+    "promotionAuthorized": false
+  },
+  "requiredDecision": "permit bounded coordinated upper-spine/chest/tail/head counterbalance or revise conjugation-sensitive envelope"
+}

@@ -14,27 +14,20 @@ from ..hashing import sha256_file, write_json
 from ..layers.registry import apply_registered_layer
 
 
-def execute_build_request(request_path: Path) -> dict[str, Any]:
-    request = json.loads(request_path.read_text())
-    resolved = request["resolved"]
-    input_path = Path(resolved["inputPath"])
-    output_path = Path(request["outputPath"])
-    if sha256_file(input_path) != resolved["inputSha256"]:
-        raise ValidationFailure("build input hash mismatch")
-    glb = Glb(input_path)
+def build_layered_bytes(base_glb: Glb, rig: dict, motion: dict, layers: list[dict]):
+    glb = base_glb
     raw = bytearray(glb.raw)
-    rig = resolved["documents"]["rig"]
-    motion = resolved["documents"]["motion"]
     metrics = {}
-    for layer in resolved["layers"]:
+    for layer in layers:
         patches, layer_metrics = apply_registered_layer(
-            layer["implementation"], glb, rig, motion, layer
+            layer["implementation"], glb, base_glb, rig, motion, layer
         )
         allowed = expanded_channels(rig["roles"], layer["writes"])
         actual = {
-            (node, "rotation")
+            (node, property_name)
             for clip_patches in patches.values()
-            for node in clip_patches
+            for node, properties in clip_patches.items()
+            for property_name in properties
         }
         if actual - allowed:
             raise ValidationFailure(
@@ -44,20 +37,38 @@ def execute_build_request(request_path: Path) -> dict[str, Any]:
         if set(patches) != declared_clips:
             raise ValidationFailure("layer patch clip set differs from motion contract")
         for clip_name, clip_patches in patches.items():
-            expected_accessors = glb.rotation_accessors(clip_name)
-            for node, patch in clip_patches.items():
+            for node, properties in clip_patches.items():
+              for property_name, patch in properties.items():
+                expected_accessors = glb.animation_accessors(clip_name, property_name)
                 accessor = int(patch["accessor"])
-                if expected_accessors.get(node) != accessor:
+                if patch.get("property") != property_name or expected_accessors.get(node) != accessor:
                     raise ValidationFailure(
-                        f"layer accessor does not own {clip_name}/{node}"
+                        f"layer accessor does not own {clip_name}/{node}.{property_name}"
                     )
                 offset, count, stride = glb.accessor_region(accessor)
                 rows = patch["values"]
-                if stride != 16 or rows.shape != (count, 4):
-                    raise ValidationFailure("patch accessor is not packed float VEC4")
+                width = 4 if property_name == "rotation" else 3
+                row_bytes = width * 4
+                if stride != row_bytes or rows.shape != (count, width):
+                    raise ValidationFailure("patch accessor is not packed float animation data")
                 start = glb.bin_start + offset
-                raw[start:start + count * 16] = rows.astype("<f4").tobytes()
+                raw[start:start + count * row_bytes] = rows.astype("<f4").tobytes()
         metrics[layer["implementation"]] = layer_metrics
+        glb = Glb.from_bytes(bytes(raw))
+    return bytes(raw), metrics
+
+
+def execute_build_request(request_path: Path) -> dict[str, Any]:
+    request = json.loads(request_path.read_text())
+    resolved = request["resolved"]
+    input_path = Path(resolved["inputPath"])
+    output_path = Path(request["outputPath"])
+    if sha256_file(input_path) != resolved["inputSha256"]:
+        raise ValidationFailure("build input hash mismatch")
+    glb = Glb(input_path)
+    rig = resolved["documents"]["rig"]
+    motion = resolved["documents"]["motion"]
+    raw, metrics = build_layered_bytes(glb, rig, motion, resolved["layers"])
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_bytes(raw)
     actual_hash = sha256_file(output_path)

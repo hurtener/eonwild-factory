@@ -1,0 +1,9 @@
+{
+  "schema": "eonwild.motion.motion-layer.v1", "id": "pelvis-balance-pre-ik", "version": 1,
+  "implementation": "pelvis_balance_pre_ik@1", "stage": "pre-ik",
+  "reads": ["pelvis.rotation", "pelvis.translation", "root.rotation", "root.translation"],
+  "writes": ["pelvis.rotation", "pelvis.translation"],
+  "parameters": {"amplitudeScale": 0.5, "cyclesPerClip": 2.0, "lateralAmplitudeM": 0.021, "verticalAmplitudeM": 0.010, "rollAmplitudeDegrees": 1.7, "rollPhaseShiftDegrees": 114.0, "rollPulseWeight": 0.0, "rollPulseExponent": 7, "rollPitchCoupling": 0.0, "rollYawCoupling": 0.0, "axes": {"lateral": 0, "vertical": 1, "pitchRotationVector": 0, "yawRotationVector": 1, "rollRotationVector": 2}},
+  "bounds": {"lateralP2PHeightMinimum": 0.030, "lateralP2PHeightMaximum": 0.040, "verticalP2PHeightMinimum": 0.016, "verticalP2PHeightMaximum": 0.020, "rollP2PDegreesMinimum": 3.5, "rollP2PDegreesMaximum": 4.1},
+  "provenance": {"status": "candidate", "source": "PROCEDURAL-ENGINE-V8-3 evaluator contract; scale-one controls are sweep inputs"}
+}

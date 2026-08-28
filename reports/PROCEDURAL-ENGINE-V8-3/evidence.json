@@ -1,32 +1,53 @@
 {
-  "schema": "eonwild.motion.channel-model-evidence.v1",
+  "schema": "eonwild.motion.v8_3_evidence_bundle.v1",
   "status": "PASS",
+  "approvalStatus": "PENDING_INDEPENDENT_REVIEW",
   "engineVersion": "0.1.0",
-  "channelStateSha256": "d895da0d02cea27805153677d9bff34d2372c6066076024887772a05d9b9ac67",
-  "resolvedLocks": {
-    "stable": "ebd3305dad6064f359d5a2ffd2a351169f6df092da3ee75f293cc9a39256d419",
-    "working": "4198300a8a34e93f56f2235f1555b4024f42fc1b10cee5cb5cf01009f83a3bb3",
-    "explicit": "eba6d05608e5b34c408dfeed5f9440ac85444b441d380c9279688e76d5c280ec"
+  "channel": {
+    "stateSha256": "a44153a9ef45d9a1e5c734c9f9423945746333987e81ccce824bea256cc6e3a8",
+    "generation": 1,
+    "stable": {
+      "revision": 1,
+      "historyId": "stable-0001",
+      "resolvedLockSha256": "af645bb995c1f4683371a999a35b74622e80c253b5fc74f3a47963d86f100c7a",
+      "artifactSha256": "a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5"
+    },
+    "working": {
+      "iteration": 1,
+      "revision": 2,
+      "basedOnStable": "stable-0001",
+      "resolvedLockSha256": "cf14adffb26d6607d8dceb62d5c48bb82dc44b218e096c1fbd041f69a108f393",
+      "profileLockSha256": "d99195ef6f2939c25535ef18e4549da05e0bf72b0e4633415e4f077913ece57b",
+      "artifactSha256": "b5fc582e3bae3b2708735e7ae68cc31da65599f6d155d3b6d089a44ed5517d03"
+    }
   },
-  "approvedArtifactSha256": "a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5",
-  "tests": {
-    "count": 26,
-    "failures": 0,
-    "skipped": 0,
-    "seconds": 43.218
+  "selection": {
+    "scalesEvaluated": [0.5, 0.625, 0.75, 0.875, 1.0],
+    "selectedStrongestPassingScale": 0.5,
+    "allHardGates": true,
+    "stableAdvanced": false
+  },
+  "evidence": {
+    "machineEvaluation": "reports/PROCEDURAL-ENGINE-V8-3/evidence/machine-evaluation.json",
+    "amplitudeSweep": "reports/PROCEDURAL-ENGINE-V8-3/evidence/amplitude-sweep.json",
+    "layerMetrics": "reports/PROCEDURAL-ENGINE-V8-3/evidence/layer-metrics.json",
+    "finalSkinnedWitnesses": "reports/PROCEDURAL-ENGINE-V8-3/evidence/final-skinned-witnesses.json",
+    "mediaManifest": "reports/PROCEDURAL-ENGINE-V8-3/evidence/media-manifest.json",
+    "reviewPage": "reports/PROCEDURAL-ENGINE-V8-3/review/index.html"
   },
   "checks": {
-    "stableWorkingExplicitResolve": true,
-    "missingInvalidStaleEngineMismatchRejected": true,
-    "iterationRevisionChangesLock": true,
-    "ordinaryCommandsDoNotMutateChannels": true,
-    "approvedPromotionUpdatesStable": true,
-    "priorStableHistoryRetained": true,
-    "historyOverwriteRejected": true,
-    "stableArtifactStalenessRejected": true,
-    "failedStableUpdateRollsBackNewDestination": true,
-    "noBranchOrFutureVersionAssumptions": true,
-    "approvedArtifactUnchanged": true,
-    "legacyTreesUnchanged": true
+    "declaredLayerOrder": true,
+    "semanticRoleOnlyEngine": true,
+    "rootTimelineStrideSpeedFrozen": true,
+    "finalSkinnedBilateralContact": true,
+    "rockerPassiveReceivingPreserved": true,
+    "declaredUpperCounterbalance": true,
+    "antiArbitraryContinuity": true,
+    "headStabilization": true,
+    "amplitudeSweepComplete": true,
+    "doubleBuildDeterministic": true,
+    "workingOnlyUpdateKeepsStableGeneration": true,
+    "stableArtifactUnchanged": true,
+    "visualApprovalNotClaimed": true
   }
 }

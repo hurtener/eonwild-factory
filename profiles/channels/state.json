@@ -23,13 +23,13 @@
     }
   },
   "working": {
-    "iteration": 0,
-    "revision": 1,
+    "iteration": 1,
+    "revision": 2,
     "basedOnStable": "stable-0001",
     "profile": {
-      "path": "profiles/v8.2/profile.json",
-      "sha256": "37a26e006700350bc42d40eeb50f93bb4fa63dae98c98db2423a8eb3c9157c9b"
+      "path": "profiles/v8.3/profile.json",
+      "sha256": "9127773c65d7c28e2c79ddc4cb8d261cc25bd862e0a1b47a1e07a170af11ff7d"
     },
-    "profileLockSha256": "eba6d05608e5b34c408dfeed5f9440ac85444b441d380c9279688e76d5c280ec"
+    "profileLockSha256": "d99195ef6f2939c25535ef18e4549da05e0bf72b0e4633415e4f077913ece57b"
   }
 }

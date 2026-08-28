@@ -1,0 +1,13 @@
+{
+  "schema": "eonwild.motion.motion-spec.v1", "id": "relaxed-walk", "version": 2, "family": "heavy-predatory-biped",
+  "clips": [
+    {"semanticId": "relaxed-walk-root-motion", "name": "PROC_WALK_RELAXED_V8_1_RESPIN_ROOTMOTION", "rootMotion": true, "loop": true},
+    {"semanticId": "relaxed-walk-in-place", "name": "PROC_WALK_RELAXED_V8_1_RESPIN_INPLACE", "rootMotion": false, "loop": true}
+  ],
+  "invariants": {
+    "allowedGltfWarnings": ["MESH_PRIMITIVE_GENERATED_TANGENT_SPACE", "NODE_SKINNED_MESH_NON_ROOT"],
+    "jsonByteEquivalent": true, "undeclaredBinaryChanges": 0,
+    "contactContract": {"proof": "independent-final-export-balance-evaluation", "requiredTruePaths": ["checks.allHardGates", "checks.finalSkinnedContact", "checks.iteration38RockerPassiveReceiving", "checks.frozenRootTimelineStrideSpeed", "checks.declaredUpperCounterbalance", "checks.antiArbitraryContinuity", "checks.headStabilization", "checks.amplitudeSweepComplete"], "requiredZeroPaths": ["counts.undeclaredChanges"]}
+  },
+  "provenance": {"status": "candidate", "source": "approved V8.2 walk plus declared V8.3 semantic balance layers"}
+}

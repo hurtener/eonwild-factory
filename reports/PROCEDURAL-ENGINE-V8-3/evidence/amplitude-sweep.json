@@ -1,0 +1,255 @@
+{
+  "scales": [
+    {
+      "scale": 0.5,
+      "status": "PASS",
+      "checks": {
+        "pelvisLateral": true,
+        "pelvisVertical": true,
+        "pelvisRoll": true,
+        "pelvisSagittal": true,
+        "pelvisPitch": true,
+        "pelvisYaw": true,
+        "chest": true,
+        "tail": true,
+        "head": true,
+        "corr": true,
+        "contact": true,
+        "upperContinuity": true
+      },
+      "sha256": "b5fc582e3bae3b2708735e7ae68cc31da65599f6d155d3b6d089a44ed5517d03",
+      "metrics": {
+        "pelvisTranslation": {
+          "lateral_x": 0.03092367164795869,
+          "vertical_y": 0.019733401094410605,
+          "sagittal_z": 0.004134591122804903
+        },
+        "pelvisRotation": {
+          "pitch_x": 1.124906020908296,
+          "yaw_y": 3.1482656117387458,
+          "roll_z": 4.0941292542162575
+        },
+        "chest": {
+          "pitch_x": 5.791259213806512,
+          "yaw_y": 2.7528216444119096,
+          "roll_z": 5.558301443239106
+        },
+        "tailYaw": {
+          "base": 7.435105413142239,
+          "mid": 20.66497817742858,
+          "tip": 28.88220543102979
+        },
+        "head": {
+          "pitch_x": 2.5800731965976214,
+          "yaw_y": 1.5288128314377731,
+          "roll_z": 0.9661348898334642
+        },
+        "corr": -0.9426737695875088,
+        "worstSecond": 0.043447677864515845,
+        "worstAdjacent": 0.057931670669116295,
+        "maxFootWorldErrorM": 2.5823128856601336e-15
+      }
+    },
+    {
+      "scale": 0.625,
+      "status": "FAIL",
+      "checks": {
+        "pelvisLateral": true,
+        "pelvisVertical": false,
+        "pelvisRoll": false,
+        "pelvisSagittal": true,
+        "pelvisPitch": true,
+        "pelvisYaw": true,
+        "chest": false,
+        "tail": false,
+        "head": true,
+        "corr": true,
+        "contact": true,
+        "upperContinuity": false
+      },
+      "sha256": "e1394f73b76286dc80f40777a39da611df175bb4db43ee856daac62a40f884a8",
+      "metrics": {
+        "pelvisTranslation": {
+          "lateral_x": 0.034933817711302745,
+          "vertical_y": 0.02162113126342078,
+          "sagittal_z": 0.0041348335056326894
+        },
+        "pelvisRotation": {
+          "pitch_x": 1.1215198114235412,
+          "yaw_y": 3.1504636169531337,
+          "roll_z": 4.463625679645458
+        },
+        "chest": {
+          "pitch_x": 6.285599744700917,
+          "yaw_y": 3.3062302561205783,
+          "roll_z": 5.545700132519812
+        },
+        "tailYaw": {
+          "base": 7.881674051219662,
+          "mid": 20.99759713897049,
+          "tip": 30.06625164882672
+        },
+        "head": {
+          "pitch_x": 2.5800724226058853,
+          "yaw_y": 1.5288132314729355,
+          "roll_z": 0.9661311253111851
+        },
+        "corr": -0.925899724114542,
+        "worstSecond": 0.05431395715388352,
+        "worstAdjacent": 0.07240347711359348,
+        "maxFootWorldErrorM": 1.9279638981753174e-15
+      }
+    },
+    {
+      "scale": 0.75,
+      "status": "FAIL",
+      "checks": {
+        "pelvisLateral": true,
+        "pelvisVertical": false,
+        "pelvisRoll": false,
+        "pelvisSagittal": true,
+        "pelvisPitch": true,
+        "pelvisYaw": true,
+        "chest": false,
+        "tail": false,
+        "head": true,
+        "corr": true,
+        "contact": true,
+        "upperContinuity": false
+      },
+      "sha256": "7366d681001ef5a6ffed38b199d6b91a66dd48fc8383e877e35a78014731b948",
+      "metrics": {
+        "pelvisTranslation": {
+          "lateral_x": 0.03894052195666935,
+          "vertical_y": 0.02350672290051113,
+          "sagittal_z": 0.004134661831843258
+        },
+        "pelvisRotation": {
+          "pitch_x": 1.118117769633617,
+          "yaw_y": 3.1526493139481655,
+          "roll_z": 4.847118851882959
+        },
+        "chest": {
+          "pitch_x": 6.787902592888116,
+          "yaw_y": 3.864781565887462,
+          "roll_z": 5.534521781385802
+        },
+        "tailYaw": {
+          "base": 8.324781612181852,
+          "mid": 21.27135488611428,
+          "tip": 31.12895535051409
+        },
+        "head": {
+          "pitch_x": 2.5800738993008263,
+          "yaw_y": 1.528810402425866,
+          "roll_z": 0.9661400531994492
+        },
+        "corr": -0.9024347303722604,
+        "worstSecond": 0.06518212528363876,
+        "worstAdjacent": 0.08687175447186024,
+        "maxFootWorldErrorM": 2.094764613337708e-15
+      }
+    },
+    {
+      "scale": 0.875,
+      "status": "FAIL",
+      "checks": {
+        "pelvisLateral": false,
+        "pelvisVertical": false,
+        "pelvisRoll": false,
+        "pelvisSagittal": true,
+        "pelvisPitch": true,
+        "pelvisYaw": true,
+        "chest": false,
+        "tail": false,
+        "head": true,
+        "corr": true,
+        "contact": true,
+        "upperContinuity": false
+      },
+      "sha256": "bb755f19b0ed4e01236c3812ddf0705722953f2c4f5cedbe223e7525ecd74bc9",
+      "metrics": {
+        "pelvisTranslation": {
+          "lateral_x": 0.04294821131875782,
+          "vertical_y": 0.025392936250518083,
+          "sagittal_z": 0.004134616373808514
+        },
+        "pelvisRotation": {
+          "pitch_x": 1.1147192990936308,
+          "yaw_y": 3.154835469098218,
+          "roll_z": 5.2494837448005605
+        },
+        "chest": {
+          "pitch_x": 7.290646172818825,
+          "yaw_y": 4.424959925646867,
+          "roll_z": 5.524766124374718
+        },
+        "tailYaw": {
+          "base": 8.765586339749603,
+          "mid": 21.495672678469802,
+          "tip": 32.041917619765144
+        },
+        "head": {
+          "pitch_x": 2.5800751051577038,
+          "yaw_y": 1.5288076673485054,
+          "roll_z": 0.9661328809911318
+        },
+        "corr": -0.8746077419936293,
+        "worstSecond": 0.07605117790449663,
+        "worstAdjacent": 0.10137906547476591,
+        "maxFootWorldErrorM": 2.2650998591337196e-15
+      }
+    },
+    {
+      "scale": 1.0,
+      "status": "FAIL",
+      "checks": {
+        "pelvisLateral": false,
+        "pelvisVertical": false,
+        "pelvisRoll": false,
+        "pelvisSagittal": true,
+        "pelvisPitch": true,
+        "pelvisYaw": true,
+        "chest": false,
+        "tail": false,
+        "head": true,
+        "corr": true,
+        "contact": true,
+        "upperContinuity": false
+      },
+      "sha256": "9a6868b0e232ed961721f304508d172347365ca3cb35fffed60181ed444102ec",
+      "metrics": {
+        "pelvisTranslation": {
+          "lateral_x": 0.04695347567237946,
+          "vertical_y": 0.02727775380535584,
+          "sagittal_z": 0.0041343644414331355
+        },
+        "pelvisRotation": {
+          "pitch_x": 1.1113145583686879,
+          "yaw_y": 3.157013943177343,
+          "roll_z": 5.651847820837367
+        },
+        "chest": {
+          "pitch_x": 7.792961763895903,
+          "yaw_y": 4.983881911742941,
+          "roll_z": 5.51634262929584
+        },
+        "tailYaw": {
+          "base": 9.205098971436215,
+          "mid": 21.682208135692576,
+          "tip": 32.875838706897966
+        },
+        "head": {
+          "pitch_x": 2.5800752628487094,
+          "yaw_y": 1.5288088873966847,
+          "roll_z": 0.9661410244753671
+        },
+        "corr": -0.8443564825850649,
+        "worstSecond": 0.08697050017977719,
+        "worstAdjacent": 0.11584336250637024,
+        "maxFootWorldErrorM": 1.9005983804298843e-15
+      }
+    }
+  ],
+  "selectedScale": 0.5
+}

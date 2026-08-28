@@ -28,9 +28,11 @@ _WIDTHS = {
 
 
 class Glb:
-    def __init__(self, path: Path):
+    def __init__(self, path: Path | None = None, *, raw: bytes | None = None):
+        if (path is None) == (raw is None):
+            raise ValueError("provide exactly one of path or raw")
         self.path = path
-        self.raw = path.read_bytes()
+        self.raw = path.read_bytes() if path is not None else bytes(raw)
         if len(self.raw) < 20:
             raise ValidationFailure("GLB is truncated")
         magic, version, total = struct.unpack_from("<4sII", self.raw, 0)
@@ -70,6 +72,18 @@ class Glb:
             tuple(float(value) for value in node.get("rotation", [0, 0, 0, 1]))
             for node in self.nodes
         ]
+        self.rest_translation = [
+            tuple(float(value) for value in node.get("translation", [0, 0, 0]))
+            for node in self.nodes
+        ]
+        self.rest_scale = [
+            tuple(float(value) for value in node.get("scale", [1, 1, 1]))
+            for node in self.nodes
+        ]
+
+    @classmethod
+    def from_bytes(cls, raw: bytes) -> "Glb":
+        return cls(raw=raw)
 
     def accessor_layout(self, index: int) -> tuple[dict, dict, int, int, str]:
         item = self.document["accessors"][index]
@@ -122,21 +136,38 @@ class Glb:
         raise ValidationFailure(f"animation not found: {name}")
 
     def rotation_channels(self, name: str) -> list[tuple[str, dict[str, Any]]]:
+        return self.animation_channels(name, "rotation")
+
+    def animation_channels(
+        self, name: str, property_name: str | None = None
+    ) -> list[tuple[str, str, dict[str, Any]] | tuple[str, dict[str, Any]]]:
         animation = self.animation(name)
         output = []
         for channel in animation["channels"]:
-            if channel["target"]["path"] != "rotation":
+            path = channel["target"]["path"]
+            if property_name is not None and path != property_name:
                 continue
             node_name = self.nodes[channel["target"]["node"]].get("name")
             if not isinstance(node_name, str):
-                raise ValidationFailure("rotation target node has no name")
-            output.append((node_name, animation["samplers"][channel["sampler"]]))
+                raise ValidationFailure("animation target node has no name")
+            sampler = animation["samplers"][channel["sampler"]]
+            output.append(
+                (node_name, sampler)
+                if property_name is not None
+                else (node_name, path, sampler)
+            )
         return output
 
     def rotation_accessors(self, name: str) -> dict[str, int]:
         return {
             node: int(sampler["output"])
             for node, sampler in self.rotation_channels(name)
+        }
+
+    def animation_accessors(self, name: str, property_name: str) -> dict[str, int]:
+        return {
+            node: int(sampler["output"])
+            for node, sampler in self.animation_channels(name, property_name)
         }
 
     def node_parent_name(self, name: str) -> str | None:

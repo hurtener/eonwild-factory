@@ -1,0 +1,9 @@
+{
+  "schema": "eonwild.motion.motion-layer.v1", "id": "chest-tail-head-stabilization", "version": 1,
+  "implementation": "chest_tail_head_stabilization@1", "stage": "stabilization",
+  "reads": ["pelvis.rotation", "spine.*.rotation", "chest.rotation", "tail.*.rotation", "neck.*.rotation", "head.rotation"],
+  "writes": ["spine.*.rotation", "chest.rotation", "tail.*.rotation", "neck.*.rotation", "head.rotation"],
+  "parameters": {"amplitudeScale": 0.5, "cyclesPerClip": 2.0, "spineRollP2PDegreesScaleOne": [0.15, 0.18, 0.22, 0.27, 0.32], "chestPitchP2PDegreesScaleOne": -1.7, "chestRollP2PDegreesScaleOne": 0.4, "chestYawP2PDegreesScaleOne": 0.0, "chestYawPhaseLagCycles": 0.0, "tailYawP2PDegreesScaleOne": [0.5, 0.65, 0.8, 1.0, 3.0, 2.7, 3.45, 4.05, 4.5], "tailYawSign": 1.0, "tailPhaseLagsCycles": [0.0625, 0.078125, 0.09375, 0.109375, 0.23, 0.296, 0.329, 0.362, 0.395], "headResidualFractions": [0.11, 0.26, 0.45, 0.69, 1.0, 1.0]},
+  "bounds": {"neckLocalDeltaDegrees": 0.75, "headLocalDeltaDegrees": 1.0, "headWorldDeltaDegrees": 0.1},
+  "provenance": {"status": "candidate", "source": "declared additive rotation-only counterbalance with bounded cumulative world-head compensation"}
+}

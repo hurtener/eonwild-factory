@@ -83,10 +83,11 @@ class ChannelContractTests(unittest.TestCase):
         working = resolve_profile("working")
         explicit = resolve_profile(ROOT / "profiles/v8.2/profile.json")
         self.assertEqual(stable.approved_output_sha256, explicit.approved_output_sha256)
-        self.assertEqual(working.approved_output_sha256, explicit.approved_output_sha256)
+        self.assertNotEqual(working.approved_output_sha256, explicit.approved_output_sha256)
+        self.assertEqual(working.profile["id"], "v8.3")
         self.assertEqual(stable.channel["name"], "stable")
         self.assertEqual(working.channel["name"], "working")
-        self.assertEqual(working.channel["iteration"], 0)
+        self.assertEqual(working.channel["iteration"], 1)
         self.assertNotEqual(stable.lock_sha256, working.lock_sha256)
         self.assertNotEqual(working.lock_sha256, explicit.lock_sha256)
 
@@ -127,13 +128,15 @@ class ChannelContractTests(unittest.TestCase):
             first_path = self.fixture(directory / "first")
             second_path = self.fixture(
                 directory / "second",
-                lambda state: state["working"].update({"iteration": 1, "revision": 2}),
+                lambda state: state["working"].update({"iteration": 2, "revision": 3}),
             )
             first = resolve_profile("working", repository=ROOT, channel_state_path=first_path)
             second = resolve_profile("working", repository=ROOT, channel_state_path=second_path)
             self.assertNotEqual(first.lock_sha256, second.lock_sha256)
-            self.assertEqual(second.profile_binding()["iteration"], 1)
-            self.assertEqual(second.profile_binding()["revision"], 2)
+            self.assertEqual(first.channel["generation"], second.channel["generation"])
+            self.assertEqual(second.channel["generation"], 1)
+            self.assertEqual(second.profile_binding()["iteration"], 2)
+            self.assertEqual(second.profile_binding()["revision"], 3)
 
     def test_stable_update_retains_history_and_refuses_overwrite(self):
         with tempfile.TemporaryDirectory() as directory_name:

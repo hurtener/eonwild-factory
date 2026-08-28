@@ -1,0 +1,906 @@
+{
+  "pelvis_balance_pre_ik@1": {
+    "relaxed-walk-root-motion": {
+      "amplitudeScale": 0.5,
+      "supportMean": -5.800348863347757e-17,
+      "lateralAddedP2PM": 0.021,
+      "verticalAddedP2PM": 0.009993370713473285,
+      "rollAddedP2PDegrees": 1.7
+    },
+    "relaxed-walk-in-place": {
+      "amplitudeScale": 0.5,
+      "supportMean": 6.0903663065151445e-16,
+      "lateralAddedP2PM": 0.020999999999999998,
+      "verticalAddedP2PM": 0.009993370713473285,
+      "rollAddedP2PDegrees": 1.7
+    }
+  },
+  "leg_contact_resolve@1": {
+    "relaxed-walk-root-motion": {
+      "maxFootWorldPositionErrorM": 2.5823128856601336e-15,
+      "maxFootWorldOrientationErrorDegrees": 5.454337916859027e-06,
+      "maxFootPivotTranslationM": 4.867755750919621e-08,
+      "maxJointLocalDeltaDegrees": 2.1284536214200096
+    },
+    "relaxed-walk-in-place": {
+      "maxFootWorldPositionErrorM": 9.019494489765868e-16,
+      "maxFootWorldOrientationErrorDegrees": 5.454203027630727e-06,
+      "maxFootPivotTranslationM": 4.976054252038489e-08,
+      "maxJointLocalDeltaDegrees": 2.029901383041815
+    }
+  },
+  "chest_tail_head_stabilization@1": {
+    "relaxed-walk-root-motion": {
+      "deltaManifest": [
+        {
+          "semantic_role": "spine.0",
+          "baseline_accessor_identity": 41,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.0,
+          "p2p_degrees": [
+            0.006593109912727954,
+            0.12413232468032037,
+            0.11364094339226868
+          ],
+          "mean_degrees": [
+            0.00011137653799345508,
+            0.0002498225003471023,
+            -0.0001350970270735023
+          ],
+          "max_adjacent_delta_degrees": 0.04352233512632053,
+          "max_second_difference_degrees": 0.0433490541612404,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "spine.1",
+          "baseline_accessor_identity": 40,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.0,
+          "p2p_degrees": [
+            0.006479505071511753,
+            0.12762931822759543,
+            0.12532074797089865
+          ],
+          "mean_degrees": [
+            0.00012062626443447214,
+            0.0002622980744317021,
+            -0.00010424997971261339
+          ],
+          "max_adjacent_delta_degrees": 0.043784337056222686,
+          "max_second_difference_degrees": 0.043359893078086076,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "spine.2",
+          "baseline_accessor_identity": 39,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.0,
+          "p2p_degrees": [
+            0.006340402079639889,
+            0.1279389939183866,
+            0.14490998894389626
+          ],
+          "mean_degrees": [
+            0.00013159364612691136,
+            0.0002654194620990473,
+            -0.00011042310131382216
+          ],
+          "max_adjacent_delta_degrees": 0.043827876219866564,
+          "max_second_difference_degrees": 0.043368318088213384,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "spine.3",
+          "baseline_accessor_identity": 38,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.0,
+          "p2p_degrees": [
+            0.006175804808994091,
+            0.12812640887093646,
+            0.16958493714733858
+          ],
+          "mean_degrees": [
+            0.00014525005868250315,
+            0.0002686250092007636,
+            -0.0001210604286734098
+          ],
+          "max_adjacent_delta_degrees": 0.04388971226711446,
+          "max_second_difference_degrees": 0.04337945933370824,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "spine.4",
+          "baseline_accessor_identity": 37,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.0,
+          "p2p_degrees": [
+            0.03807453399480294,
+            0.12509143471093465,
+            0.1678264199081858
+          ],
+          "mean_degrees": [
+            -4.8640251619843236e-05,
+            0.0002261591617437,
+            -0.00030699242347611693
+          ],
+          "max_adjacent_delta_degrees": 0.043496612747100774,
+          "max_second_difference_degrees": 0.04338623153943587,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "chest",
+          "baseline_accessor_identity": 36,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.0,
+          "p2p_degrees": [
+            0.8217505288541307,
+            0.11473501172745756,
+            0.20510635644399525
+          ],
+          "mean_degrees": [
+            -0.000554428886657199,
+            0.00016843198481251108,
+            7.873969380887453e-05
+          ],
+          "max_adjacent_delta_degrees": 0.04333919817587814,
+          "max_second_difference_degrees": 0.04331806280957226,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "tail.0",
+          "baseline_accessor_identity": 76,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.0625,
+          "p2p_degrees": [
+            2.2263882796408492e-14,
+            0.24999755467982476,
+            3.2799472238852684e-14
+          ],
+          "mean_degrees": [
+            -1.1359121741750274e-17,
+            0.00032915350220210363,
+            -8.316501945360502e-17
+          ],
+          "max_adjacent_delta_degrees": 0.006436925292578079,
+          "max_second_difference_degrees": 0.00033147529612932713,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "tail.1",
+          "baseline_accessor_identity": 75,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.078125,
+          "p2p_degrees": [
+            1.017218429978648e-16,
+            0.3249960266445915,
+            1.573267089560354e-15
+          ],
+          "mean_degrees": [
+            -1.216603628256494e-18,
+            0.00047550254061058,
+            -3.452167572463571e-18
+          ],
+          "max_adjacent_delta_degrees": 0.008367982427796402,
+          "max_second_difference_degrees": 0.0004309168315955736,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "tail.2",
+          "baseline_accessor_identity": 74,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.09375,
+          "p2p_degrees": [
+            3.7175064341182284e-15,
+            0.3999941322380445,
+            1.4298326079762451e-15
+          ],
+          "mean_degrees": [
+            4.5144639809936496e-17,
+            0.0006381988710886724,
+            7.594867309766422e-18
+          ],
+          "max_adjacent_delta_degrees": 0.01029903012720889,
+          "max_second_difference_degrees": 0.0005303578816348853,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "tail.3",
+          "baseline_accessor_identity": 73,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.109375,
+          "p2p_degrees": [
+            1.5697007891185985e-15,
+            0.49999144359775227,
+            1.205132110479652e-15
+          ],
+          "mean_degrees": [
+            1.39697294300159e-17,
+            0.0008562927699579892,
+            4.9371310455462425e-18
+          ],
+          "max_adjacent_delta_degrees": 0.012873756193538071,
+          "max_second_difference_degrees": 0.0006629457326710886,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "tail.4",
+          "baseline_accessor_identity": 72,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.23,
+          "p2p_degrees": [
+            1.7618896773627297e-15,
+            1.4999632372727882,
+            9.58594334964983e-16
+          ],
+          "mean_degrees": [
+            2.63243437072511e-17,
+            0.0030109217222019508,
+            2.7090264612650384e-18
+          ],
+          "max_adjacent_delta_degrees": 0.03862098273854114,
+          "max_second_difference_degrees": 0.001988822477923202,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "tail.5",
+          "baseline_accessor_identity": 71,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.296,
+          "p2p_degrees": [
+            7.730683658041496e-15,
+            1.3499687432511216,
+            8.448376272031824e-16
+          ],
+          "mean_degrees": [
+            -9.972443701647566e-17,
+            0.002278139802104812,
+            -1.3818562071165073e-18
+          ],
+          "max_adjacent_delta_degrees": 0.03475893171038435,
+          "max_second_difference_degrees": 0.0017899426570868737,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "tail.6",
+          "baseline_accessor_identity": 70,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.329,
+          "p2p_degrees": [
+            4.139612906727185e-15,
+            1.724961229799463,
+            7.143832206882895e-16
+          ],
+          "mean_degrees": [
+            4.839256510731622e-17,
+            0.0024407414817974775,
+            -3.4102504476016594e-18
+          ],
+          "max_adjacent_delta_degrees": 0.04441422063350908,
+          "max_second_difference_degrees": 0.0022871505012780347,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "tail.7",
+          "baseline_accessor_identity": 69,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.362,
+          "p2p_degrees": [
+            7.086785891506697e-15,
+            2.0249558594115324,
+            7.951397938040058e-16
+          ],
+          "mean_degrees": [
+            6.124665275018984e-17,
+            0.002190521882008998,
+            -5.2485090588320666e-18
+          ],
+          "max_adjacent_delta_degrees": 0.052138468250187926,
+          "max_second_difference_degrees": 0.0026849176260665963,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "tail.8",
+          "baseline_accessor_identity": 68,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.395,
+          "p2p_degrees": [
+            8.341582573262864e-16,
+            2.249952479472916,
+            3.727232183221435e-16
+          ],
+          "mean_degrees": [
+            1.0050883340835249e-17,
+            0.0015800275744555147,
+            1.6647359838099088e-18
+          ],
+          "max_adjacent_delta_degrees": 0.057931670669116295,
+          "max_second_difference_degrees": 0.0029832438292041186,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "neck.0",
+          "baseline_accessor_identity": 35,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.0,
+          "p2p_degrees": [
+            0.006675074508364081,
+            0.12159780846439003,
+            0.057690444601896665
+          ],
+          "mean_degrees": [
+            0.0001328191572949012,
+            0.00022584755360669846,
+            3.5931110467577874e-05
+          ],
+          "max_adjacent_delta_degrees": 0.04408748526624055,
+          "max_second_difference_degrees": 0.04342444356701342,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "neck.1",
+          "baseline_accessor_identity": 34,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.0,
+          "p2p_degrees": [
+            0.006697176380662466,
+            0.12323746312209355,
+            0.053471808611066846
+          ],
+          "mean_degrees": [
+            0.00013010861369430334,
+            0.00022711279820829294,
+            3.4187409022689446e-05
+          ],
+          "max_adjacent_delta_degrees": 0.04409227988993975,
+          "max_second_difference_degrees": 0.043428323536914386,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "neck.2",
+          "baseline_accessor_identity": 33,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.0,
+          "p2p_degrees": [
+            0.006725989358778292,
+            0.11875576622296613,
+            0.06395228252059809
+          ],
+          "mean_degrees": [
+            0.0001266894379248718,
+            0.00022035899050893348,
+            7.078162190115782e-05
+          ],
+          "max_adjacent_delta_degrees": 0.04409837490447359,
+          "max_second_difference_degrees": 0.04343325911178622,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "neck.3",
+          "baseline_accessor_identity": 32,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.0,
+          "p2p_degrees": [
+            0.00676288342468738,
+            0.12318603455139202,
+            0.0534995944999946
+          ],
+          "mean_degrees": [
+            0.00012239288029150742,
+            0.00022688884370606095,
+            5.931797081763218e-05
+          ],
+          "max_adjacent_delta_degrees": 0.04410610862335732,
+          "max_second_difference_degrees": 0.043439526996522745,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "neck.4",
+          "baseline_accessor_identity": 31,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.0,
+          "p2p_degrees": [
+            0.00681990671825088,
+            0.12661333496908014,
+            0.03979921899921521
+          ],
+          "mean_degrees": [
+            0.00011687976432201256,
+            0.00023665707310976968,
+            -3.852280675772753e-05
+          ],
+          "max_adjacent_delta_degrees": 0.04411615500224581,
+          "max_second_difference_degrees": 0.043447677864515845,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "head",
+          "baseline_accessor_identity": 30,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.0,
+          "p2p_degrees": [
+            0.006161072389964262,
+            0.1282090425194944,
+            0.035179474975919375
+          ],
+          "mean_degrees": [
+            -0.00013590504863240964,
+            0.00026718591663188555,
+            6.839864266518311e-07
+          ],
+          "max_adjacent_delta_degrees": 0.04411530095819213,
+          "max_second_difference_degrees": 0.04344763388704145,
+          "loop_seam": 0.0
+        }
+      ],
+      "maxLocalDeltaDegrees": {
+        "Bone_007": 0.07215303856433626,
+        "Bone_006": 0.07143206994264382,
+        "Bone_005": 0.0737270304949795,
+        "Bone_004": 0.08562788500894583,
+        "Bone_003": 0.08642978767166318,
+        "Bone_002": 0.42235701889922517,
+        "Bone_041": 0.0679886435574079,
+        "Bone_040": 0.06798864355741199,
+        "Bone_039": 0.06798864355741212,
+        "Bone_038": 0.06798864355741202,
+        "Bone_037": 0.0679886435574124,
+        "Bone_036": 0.067988643557412
+      },
+      "maxHeadWorldErrorDegrees": 3.178378923302494e-15
+    },
+    "relaxed-walk-in-place": {
+      "deltaManifest": [
+        {
+          "semantic_role": "spine.0",
+          "baseline_accessor_identity": 113,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.0,
+          "p2p_degrees": [
+            2.226388291534085e-14,
+            3.5781240599569545e-14,
+            0.07499999981626881
+          ],
+          "mean_degrees": [
+            -4.219103177031916e-16,
+            -2.596371255628624e-17,
+            -3.514998902326201e-05
+          ],
+          "max_adjacent_delta_degrees": 0.0019310964602448917,
+          "max_second_difference_degrees": 9.944356127872256e-05,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "spine.1",
+          "baseline_accessor_identity": 112,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.0,
+          "p2p_degrees": [
+            7.264084994438378e-15,
+            4.659015725287019e-17,
+            0.0899999997795207
+          ],
+          "mean_degrees": [
+            7.823854563880759e-17,
+            8.216665425201633e-19,
+            -4.2179986828338504e-05
+          ],
+          "max_adjacent_delta_degrees": 0.0023173157522909217,
+          "max_second_difference_degrees": 0.00011933227353180115,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "spine.2",
+          "baseline_accessor_identity": 111,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.0,
+          "p2p_degrees": [
+            9.617166871564909e-16,
+            6.561447244891294e-17,
+            0.1099999997305254
+          ],
+          "mean_degrees": [
+            -4.807116291554474e-18,
+            1.0321344270242029e-18,
+            -5.155331723463685e-05
+          ],
+          "max_adjacent_delta_degrees": 0.002832274808355556,
+          "max_second_difference_degrees": 0.0001458505565388804,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "spine.3",
+          "baseline_accessor_identity": 110,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.0,
+          "p2p_degrees": [
+            9.254940857011343e-16,
+            1.0191597279324706e-16,
+            0.1349999996692811
+          ],
+          "mean_degrees": [
+            1.305741711601767e-17,
+            -4.674862752714237e-19,
+            -6.326998024250962e-05
+          ],
+          "max_adjacent_delta_degrees": 0.003475973628436363,
+          "max_second_difference_degrees": 0.00017899841029768437,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "spine.4",
+          "baseline_accessor_identity": 109,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.0,
+          "p2p_degrees": [
+            6.7586791197626055e-15,
+            4.253992062774219e-14,
+            0.15999999960803757
+          ],
+          "mean_degrees": [
+            -2.0933243363472792e-16,
+            9.156265517917505e-16,
+            -7.498664325038925e-05
+          ],
+          "max_adjacent_delta_degrees": 0.004119672448519608,
+          "max_second_difference_degrees": 0.00021214626406364234,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "chest",
+          "baseline_accessor_identity": 108,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.0,
+          "p2p_degrees": [
+            0.8499999979176956,
+            2.981773496842019e-15,
+            0.19999999951004133
+          ],
+          "mean_degrees": [
+            -0.00039836654226762207,
+            -9.249581930098737e-17,
+            -9.373330406317108e-05
+          ],
+          "max_adjacent_delta_degrees": 0.022483433202862255,
+          "max_second_difference_degrees": 0.001157804756750583,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "tail.0",
+          "baseline_accessor_identity": 148,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.0625,
+          "p2p_degrees": [
+            1.9878467114953686e-14,
+            0.24987549155203254,
+            3.0712233099270955e-14
+          ],
+          "mean_degrees": [
+            1.4604590914232348e-16,
+            0.0002981832892250999,
+            -5.647107714843945e-16
+          ],
+          "max_adjacent_delta_degrees": 0.006433782386559457,
+          "max_second_difference_degrees": 0.0003313134524663697,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "tail.1",
+          "baseline_accessor_identity": 147,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.078125,
+          "p2p_degrees": [
+            1.3491735812788922e-16,
+            0.3247976758033039,
+            1.4562094039601182e-15
+          ],
+          "mean_degrees": [
+            -1.1410890123285255e-18,
+            0.000438490083213655,
+            4.15909166129628e-18
+          ],
+          "max_adjacent_delta_degrees": 0.008362875247670166,
+          "max_second_difference_degrees": 0.0004306538334904464,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "tail.2",
+          "baseline_accessor_identity": 146,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.09375,
+          "p2p_degrees": [
+            3.3733223083565343e-15,
+            0.39976834479182294,
+            1.5289338852727765e-15
+          ],
+          "mean_degrees": [
+            -4.5801391673999044e-17,
+            0.0005970811936365138,
+            4.960800224669761e-18
+          ],
+          "max_adjacent_delta_degrees": 0.0102932165559927,
+          "max_second_difference_degrees": 0.0005300622925309695,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "tail.3",
+          "baseline_accessor_identity": 145,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.109375,
+          "p2p_degrees": [
+            1.901898230670254e-15,
+            0.4997724835948498,
+            1.2134794857408992e-15
+          ],
+          "mean_degrees": [
+            9.97413846466842e-18,
+            0.0008109347828749801,
+            7.2816964873676e-18
+          ],
+          "max_adjacent_delta_degrees": 0.012868118407313058,
+          "max_second_difference_degrees": 0.0006626601411111044,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "tail.4",
+          "baseline_accessor_identity": 144,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.23,
+          "p2p_degrees": [
+            1.7665535562619505e-15,
+            1.4998808698173292,
+            8.118342172435633e-16
+          ],
+          "mean_degrees": [
+            2.2779205877215267e-17,
+            0.0030437862765973775,
+            -1.8065624654076145e-18
+          ],
+          "max_adjacent_delta_degrees": 0.03861886168488945,
+          "max_second_difference_degrees": 0.001988721259347126,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "tail.5",
+          "baseline_accessor_identity": 143,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.296,
+          "p2p_degrees": [
+            5.8020427806272085e-15,
+            1.3497998580049453,
+            7.671859823028848e-16
+          ],
+          "mean_degrees": [
+            -1.1632612536218233e-16,
+            0.002389592304653039,
+            -7.251583378957858e-18
+          ],
+          "max_adjacent_delta_degrees": 0.034754582750369675,
+          "max_second_difference_degrees": 0.001789727518328954,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "tail.6",
+          "baseline_accessor_identity": 142,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.329,
+          "p2p_degrees": [
+            4.0133574499848806e-15,
+            1.7246848947867761,
+            7.392333126565585e-16
+          ],
+          "mean_degrees": [
+            -3.748770095518996e-17,
+            0.00262738508165177,
+            -1.21071088622502e-18
+          ],
+          "max_adjacent_delta_degrees": 0.044407105247420434,
+          "max_second_difference_degrees": 0.0022867922713222244,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "tail.7",
+          "baseline_accessor_identity": 141,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.362,
+          "p2p_degrees": [
+            6.405448020628961e-15,
+            2.0245603926076994,
+            5.218124246333345e-16
+          ],
+          "mean_degrees": [
+            -9.167467888786423e-17,
+            0.002452161841308104,
+            -5.628870259937544e-18
+          ],
+          "max_adjacent_delta_degrees": 0.05212828600141682,
+          "max_second_difference_degrees": 0.002684405265229728,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "tail.8",
+          "baseline_accessor_identity": 140,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.395,
+          "p2p_degrees": [
+            8.984201442193562e-16,
+            2.249434111310002,
+            4.030066048953543e-16
+          ],
+          "mean_degrees": [
+            -2.3985037284064457e-17,
+            0.0019055465505605396,
+            1.117451673297212e-19
+          ],
+          "max_adjacent_delta_degrees": 0.05791832327017489,
+          "max_second_difference_degrees": 0.002982567173694939,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "neck.0",
+          "baseline_accessor_identity": 107,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.0,
+          "p2p_degrees": [
+            0.009138026853918915,
+            0.18850397270757965,
+            0.10270039798187117
+          ],
+          "mean_degrees": [
+            -0.00014971997565065427,
+            1.6061270433350522e-05,
+            0.00014769473051992575
+          ],
+          "max_adjacent_delta_degrees": 0.005552016065968224,
+          "max_second_difference_degrees": 0.0009267929391127678,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "neck.1",
+          "baseline_accessor_identity": 106,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.0,
+          "p2p_degrees": [
+            0.012473935280691401,
+            0.26297856894894234,
+            0.12856585106415327
+          ],
+          "mean_degrees": [
+            -0.00023823865146444355,
+            3.071830151544072e-05,
+            0.00021463341937493836
+          ],
+          "max_adjacent_delta_degrees": 0.0075703047558678405,
+          "max_second_difference_degrees": 0.0012636347729335995,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "neck.2",
+          "baseline_accessor_identity": 105,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.0,
+          "p2p_degrees": [
+            0.015835265507226762,
+            0.313604160067741,
+            0.1988887014065822
+          ],
+          "mean_degrees": [
+            -0.000356444970436895,
+            4.586128168113725e-06,
+            0.0002973908652347156
+          ],
+          "max_adjacent_delta_degrees": 0.009588050605964385,
+          "max_second_difference_degrees": 0.0016003296965634809,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "neck.3",
+          "baseline_accessor_identity": 104,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.0,
+          "p2p_degrees": [
+            0.020066781372298226,
+            0.4207896926768372,
+            0.2066847894255221
+          ],
+          "mean_degrees": [
+            -0.0005374952959314057,
+            4.796544186881153e-05,
+            0.00040911903637242466
+          ],
+          "max_adjacent_delta_degrees": 0.012109629137764819,
+          "max_second_difference_degrees": 0.0021155372460946254,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "neck.4",
+          "baseline_accessor_identity": 103,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.0,
+          "p2p_degrees": [
+            0.02607966259951327,
+            0.600366502810908,
+            0.12887190083722452
+          ],
+          "mean_degrees": [
+            -0.0008398573912111991,
+            0.0003320481313079604,
+            0.0004902855350729265
+          ],
+          "max_adjacent_delta_degrees": 0.015638959936971474,
+          "max_second_difference_degrees": 0.002941271052519014,
+          "loop_seam": 0.0
+        },
+        {
+          "semantic_role": "head",
+          "baseline_accessor_identity": 102,
+          "rotation_delta_only": true,
+          "shared_sweep_scale": 0.5,
+          "phase_offset_cycles": 0.0,
+          "p2p_degrees": [
+            2.6509938439236468e-14,
+            2.71662764179578e-16,
+            2.1262070528321518e-16
+          ],
+          "mean_degrees": [
+            -2.891752343505775e-16,
+            -2.4230510909746415e-18,
+            -1.3967690331428911e-18
+          ],
+          "max_adjacent_delta_degrees": 1.69760360428182e-14,
+          "max_second_difference_degrees": 3.218652306324284e-14,
+          "loop_seam": 0.0
+        }
+      ],
+      "maxLocalDeltaDegrees": {
+        "Bone_041": 0.10698929311713279,
+        "Bone_040": 0.14589449061426668,
+        "Bone_039": 0.18479968811140296,
+        "Bone_038": 0.23343118498282492,
+        "Bone_037": 0.3015152806028165,
+        "Bone_036": 1.3797339391824794e-14
+      },
+      "maxHeadWorldErrorDegrees": 3.1785993300890385e-15
+    }
+  }
+}

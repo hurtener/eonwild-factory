@@ -1,0 +1,9 @@
+{
+  "schema": "eonwild.motion.motion-layer.v1", "id": "leg-contact-resolve", "version": 1,
+  "implementation": "leg_contact_resolve@1", "stage": "ik-contact",
+  "reads": ["pelvis.rotation", "pelvis.translation", "leftLeg.*.rotation", "rightLeg.*.rotation", "leftFoot.translation", "rightFoot.translation"],
+  "writes": ["leftLeg.*.rotation", "rightLeg.*.rotation", "leftFoot.translation", "rightFoot.translation"],
+  "parameters": {"damping": 0.00001, "finiteDifference": 0.00001, "iterations": 12, "tolerance": 0.0000001, "jointLimitsDegrees": [3.0, 3.0, 4.0]},
+  "bounds": {"jointLocalDeltaDegrees": 3.0, "footPivotTranslationM": 0.015, "footWorldPositionErrorM": 0.00035, "footWorldOrientationErrorDegrees": 0.01},
+  "provenance": {"status": "candidate", "source": "deterministic damped least-squares parent solve against exact approved V8.2 foot world transforms"}
+}

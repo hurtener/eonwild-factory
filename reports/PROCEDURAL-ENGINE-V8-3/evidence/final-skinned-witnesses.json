@@ -1,0 +1,44 @@
+{
+  "schema": "eonwild.motion.final-skinned-comparison.v1",
+  "status": "PASS",
+  "baseline": {
+    "actionFrames": [
+      0.0,
+      97.66957092285156
+    ],
+    "meshVertices": 59169,
+    "samples": 977
+  },
+  "candidate": {
+    "actionFrames": [
+      0.0,
+      97.66957092285156
+    ],
+    "meshVertices": 59169,
+    "samples": 977
+  },
+  "witnessVertexIndices": {
+    "left": [
+      51119,
+      49877,
+      50149
+    ],
+    "right": [
+      41588,
+      41368,
+      41936
+    ]
+  },
+  "denseSampleRateHz": 240,
+  "denseSamples": 977,
+  "maxAxisRegressionMetres": {
+    "x": 4.601478576660156e-05,
+    "y": 0.00010395050048828125,
+    "z": 9.12761315703392e-05
+  },
+  "maxEuclideanRegressionMetres": 0.00011930971920265128,
+  "thresholds": {
+    "worstAxisMetresMax": 0.0005,
+    "euclideanMetresMax": 0.002
+  }
+}

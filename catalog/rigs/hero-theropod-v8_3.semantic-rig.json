@@ -1,0 +1,27 @@
+{
+  "schema": "eonwild.motion.semantic-rig.v1",
+  "id": "hero-theropod-v8-3",
+  "version": 1,
+  "coordinate": {"units": "metres", "handedness": "right", "upAxis": "Y", "forwardAxis": "X"},
+  "roles": {
+    "root": "Bone_000",
+    "pelvis": "Bone_001",
+    "spine": ["Bone_007", "Bone_006", "Bone_005", "Bone_004", "Bone_003"],
+    "chest": "Bone_002",
+    "neck": ["Bone_041", "Bone_040", "Bone_039", "Bone_038", "Bone_037"],
+    "head": "Bone_036",
+    "tail": ["Bone_024", "Bone_023", "Bone_022", "Bone_021", "Bone_020", "Bone_019", "Bone_018", "Bone_017", "Bone_016"],
+    "legs": {
+      "left": {"contactChain": ["Bone_011", "Bone_010", "Bone_009", "Bone_008"], "toeChains": [["Bone_044", "Bone_043", "Bone_042"], ["Bone_047", "Bone_046", "Bone_045"], ["Bone_050", "Bone_049", "Bone_048"]]},
+      "right": {"contactChain": ["Bone_015", "Bone_014", "Bone_013", "Bone_012"], "toeChains": [["Bone_053", "Bone_052", "Bone_051"], ["Bone_056", "Bone_055", "Bone_054"], ["Bone_059", "Bone_058", "Bone_057"]]}
+    },
+    "leftLeg": ["Bone_011", "Bone_010", "Bone_009", "Bone_008"],
+    "rightLeg": ["Bone_015", "Bone_014", "Bone_013", "Bone_012"],
+    "leftFoot": "Bone_008",
+    "rightFoot": "Bone_012"
+  },
+  "expectedParents": {"pelvis": "root", "chest": "spine_parent", "neck": ["chest", "neck:0", "neck:1", "neck:2", "neck:3"], "head": "neck:4"},
+  "spineParent": "Bone_003",
+  "accessorContract": {"componentType": 5126, "type": "VEC4", "byteStride": 16, "commonTimeline": true, "interpolation": "LINEAR"},
+  "provenance": {"source": "approved V8.2 GLB hierarchy plus iteration-38 semantic contact map", "status": "complete", "purpose": "engineering semantic map; no anatomical claim"}
+}

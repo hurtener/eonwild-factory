@@ -1,25 +1,32 @@
 # Verification commands
 
-Run all tests from the repository root:
+Run all commands from the repository root with bytecode disabled.
 
 ```sh
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -m unittest discover -s tests -v
 ```
 
-Focused channel contracts:
+Build and validate the working candidate outside source:
 
 ```sh
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -m unittest tests.test_channels -v
+work_root="$(mktemp -d /tmp/eonwild-v83-verify.XXXXXX)"
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -m eonwild_motion.cli build --profile working --work-root "$work_root"
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -m eonwild_motion.cli validate --profile working --artifact assets/sha256/b5fc582e3bae3b2708735e7ae68cc31da65599f6d155d3b6d089a44ed5517d03.glb --work-root "$work_root"
 ```
 
-The combined suite covers exact double build and render, stable/working/direct
-resolution, schema and stale-state failures, metadata lock changes, ordinary
-command immutability, explicit approved stable transition, immutable history,
-promotion evidence, and all retained negative cases.
-
-Installed entry-point smoke (in an isolated virtual environment with the
-declared dependency available):
+Verify exact stable and working artifacts:
 
 ```sh
-eonwild-motion --help
+shasum -a 256 procedural-animation-toolkit\(v8.2\)/asset/tarbosaurus_v8_2_approved.glb assets/sha256/b5fc582e3bae3b2708735e7ae68cc31da65599f6d155d3b6d089a44ed5517d03.glb
 ```
+
+Regenerate synchronized comparison frames with Blender 5.2.0 LTS:
+
+```sh
+/Applications/Blender.app/Contents/MacOS/Blender --background --factory-startup --python-exit-code 1 --python reports/PROCEDURAL-ENGINE-V8-3/tools/render_comparison_blender.py -- --baseline procedural-animation-toolkit\(v8.2\)/asset/tarbosaurus_v8_2_approved.glb --candidate assets/sha256/b5fc582e3bae3b2708735e7ae68cc31da65599f6d155d3b6d089a44ed5517d03.glb --output /tmp/eonwild-v83-render --frames 240 --fps 24
+```
+
+The committed evidence bundle records the complete five-scale sweep, layer
+delta manifest, independent 240 Hz final-skinned vertex witnesses, media hashes,
+and channel locks. Visual approval is deliberately left to an independent
+reviewer.

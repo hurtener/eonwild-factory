@@ -211,27 +211,27 @@ def artifact_difference(
 ) -> dict[str, Any]:
     if base.document != candidate.document:
         raise ValidationFailure("candidate GLB JSON differs from immutable input")
-    allowed_nodes = {
-        node
+    allowed_channels = {
+        (node, property_name)
         for layer in layers
         for node, property_name in expanded_channels(rig["roles"], layer["writes"])
-        if property_name == "rotation"
     }
     changed = []
     allowed_bin_positions: set[int] = set()
     for clip in motion["clips"]:
-        base_accessors = base.rotation_accessors(clip["name"])
-        candidate_accessors = candidate.rotation_accessors(clip["name"])
+      for property_name in ("rotation", "translation"):
+        base_accessors = base.animation_accessors(clip["name"], property_name)
+        candidate_accessors = candidate.animation_accessors(clip["name"], property_name)
         if set(base_accessors) != set(candidate_accessors):
-            raise ValidationFailure("rotation channel set changed")
+            raise ValidationFailure(f"{property_name} channel set changed")
         for name, accessor in base_accessors.items():
             if base.accessor_bytes(accessor) != candidate.accessor_bytes(
                 candidate_accessors[name]
             ):
-                changed.append(f"{clip['semanticId']}/{name}")
-                if name not in allowed_nodes:
-                    raise ValidationFailure(f"undeclared rotation changed: {name}")
-            if name in allowed_nodes:
+                changed.append(f"{clip['semanticId']}/{name}.{property_name}")
+                if (name, property_name) not in allowed_channels:
+                    raise ValidationFailure(f"undeclared channel changed: {name}.{property_name}")
+            if (name, property_name) in allowed_channels:
                 offset, count, stride = base.accessor_region(accessor)
                 item, _, width, component_size, _ = base.accessor_layout(accessor)
                 item_size = width * component_size
@@ -255,7 +255,7 @@ def artifact_difference(
     return {
         "jsonEquivalent": True,
         "changedRotationAccessors": changed,
-        "allowedNodes": sorted(allowed_nodes),
+        "allowedChannels": sorted(f"{node}.{prop}" for node, prop in allowed_channels),
         "outsideDeclaredByteChanges": 0,
     }
 
