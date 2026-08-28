@@ -175,3 +175,69 @@ and frame count.  It still ships no render/input record connecting each media
 artifact to the approved/candidate GLB hashes, source clip, camera/bounds, or
 comparison left/right inputs.  Final-media integrity is therefore good, but
 self-contained render provenance remains a follow-up rather than a new P1.
+
+## Exceptional P1-only re-pin — `0ba8b90c1091940c06a9b83d3ea77a5480c24571`
+
+**Verdict: `P0=0`, `P1=1`; not accepted and no review commit was made.**
+P2 provenance was intentionally not reopened.
+
+The positive release replay remains clean: generator and verifier both passed,
+no warning was emitted, and the rebuilt approved GLB remained exactly
+`a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5`.
+The included base also remains exactly
+`bfe8e833721f1dc0b8b4a1df72a6ea933debb1c6d76ac6d7970ae3ed6c8f4bc2`.
+Zero chest/neck bounds still fail closed as intended.
+
+### Remaining P1 — required semantic/accessor contract fields are still inert
+
+The requested exact-head gate requires that `expectedParents` and the *full*
+`accessorContract` be actually enforced.  They are not:
+
+- There are no code reads of `expectedParents`, `interpolation`, or
+  `commonTimeline` in the shipped scripts.
+- I changed each field separately in a temporary config and re-ran the
+  generator: an invalid chest `expectedParents` value, `interpolation: STEP`,
+  and `commonTimeline: false` all exited `0` and reported `PASS` with the
+  approved SHA.  Only the independent zero-bound negative correctly failed.
+
+The direct hierarchy, VEC4, component-type, and stride checks are useful, but
+they do not make an unread configuration field authoritative.  In particular,
+the generator still has no sampler interpolation check, so the declared
+`LINEAR` contract cannot reject a STEP/CUBICSPLINE compatible-named source.
+
+The literal requirement is also not met as written: `rg 'Bone_[0-9]+'` still
+finds `Bone_002` and `Bone_036` in `scripts/glb_math.py`; the same legacy block
+reconstructs additional hard-coded names with `"Bone" + "_001"` / `_002` /
+`_036`.  This is not a semantic/config-driven factory simply because the
+literal was split to avoid the pattern.
+
+Required closure remains: delete or isolate the legacy hard-coded block, drive
+the hierarchy from `expectedParents`, and validate the configured
+`interpolation` and `commonTimeline` values against each affected sampler and
+timeline.  Re-run these four exact negative cases before another re-pin.
+
+## Final P1-only re-pin — `e69f42838b2b887cca54db75d3159fcc60762813`
+
+**Final narrow verdict: `P0=0`, `P1=0`.**  Prior P2 render-provenance scope was
+not reopened.  This release now passes the requested factory P1 gate.
+
+- Shipped `procedural-animation-toolkit(v8.2)/scripts/` has zero matches for
+  both `Bone_[0-9]+` and the former split-name construction pattern.  The
+  legacy rig-specific overlay code was removed; generation obtains semantic
+  nodes only through `contract.roles`.
+- `expectedParents` is now consumed through the configured selector mapping,
+  rather than reconstructed from fixed parent logic.  The complete
+  `accessorContract` is consumed and validated: `componentType`, `type`,
+  `byteStride`, `commonTimeline`, and `interpolation`.
+- I independently ran the supplied negative matrix in a temporary copied
+  package.  All 11 cases exited non-zero: wrong parent; STEP and CUBICSPLINE;
+  false and mismatched common timelines; wrong component type, accessor type,
+  and stride; zero local-delta bounds; and small/oversized bytecode caches.
+- A clean `PYTHONDONTWRITEBYTECODE=1` Blender 5.2 generation and v3 package
+  verification both passed with no warning.  The rebuilt approved SHA remains
+  `a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5`; the
+  included base remains
+  `bfe8e833721f1dc0b8b4a1df72a6ea933debb1c6d76ac6d7970ae3ed6c8f4bc2`.
+
+This re-pin modifies only this review report.  It is ready for the coordinated
+signed review-only commit with the independently owned technical review.

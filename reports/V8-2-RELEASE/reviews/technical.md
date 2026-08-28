@@ -191,3 +191,59 @@ case on the exact fixed head.
 
 No implementation or media was modified by this review. Because P1 remains
 non-zero, this appended review is intentionally uncommitted and unsigned.
+
+## Exceptional cache-only re-pin — `0ba8b90c1091940c06a9b83d3ea77a5480c24571`
+
+**FAIL. P0 = 0, P1 = 1. No review commit.**
+
+The signed head retains the expected `hurtener` SSH identity and fingerprint,
+remote-main ancestry, approved GLB SHA, and both approved media SHAs. A clean
+package exported directly from the commit passed under Blender 5.2.0 LTS.
+
+The cache bypass remains at
+`procedural-animation-toolkit(v8.2)/scripts/verify_release.py:11`. Setting
+`sys.dont_write_bytecode = True` prevents this process from creating a new
+cache, but the observed-inventory expression still explicitly excludes every
+file below `__pycache__`. Controlled clean-package copies produced:
+
+- ordinary package: exit 0, `PASS`;
+- `scripts/__pycache__/unexpected.pyc`: exit 0, `PASS`;
+- 110,100,480-byte `scripts/__pycache__/oversized.pyc`: exit 0, `PASS`.
+
+The physical review checkout also contains the ignored file
+`scripts/__pycache__/glb_math.cpython-314.pyc`, although no cache is tracked in
+the signed commit. The exact required code fix remains: remove the
+`"__pycache__" not in x.parts` filter so every non-manifest file participates
+in exact inventory and size validation. With bytecode creation disabled, the
+ordinary package should continue to pass while both injected-cache cases must
+fail.
+
+## Final cache/inventory re-pin — `e69f42838b2b887cca54db75d3159fcc60762813`
+
+**PASS. P0 = 0, P1 = 0.** The retained media-provenance P2 remains follow-up
+debt and was not reopened by this narrow review.
+
+The exact head is signed for
+`117486687+hurtener@users.noreply.github.com` with RSA fingerprint
+`SHA256:89wMdoHCHjswAf5f4ZX8L0jk8lgxaiI0/c1NHbdJN7U`; it is a direct child of
+`0ba8b90c1091940c06a9b83d3ea77a5480c24571`, and live remote main
+`e04c6a36fbea2b135d5f0c6b3ca1b04c6ebea04d` remains its ancestor. The approved
+GLB and media payloads remain exactly:
+
+- GLB: `a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5`
+- side media: `a29a14dcbcab3b6963c03966755e274419acb43704f26a71da2b055f0eaa8bac`
+- three-quarter media: `5e11692890b18166cea169c61894c0cb3824a69fea79c932ebfffbba00045d10`
+
+The physical package contained no cache or `.pyc`. Blender 5.2.0 LTS returned
+exit 0 and `PASS` for the ordinary package with all inventory, hash, size,
+media, GLB, and accessor checks true. Independent Git-clean package copies
+returned exit 1 and `FAIL` for both
+`scripts/__pycache__/unexpected.pyc` and a 110,100,480-byte
+`scripts/__pycache__/oversized.pyc`; the latter was reported in both
+`forbiddenPaths` and `oversizedFiles`.
+
+The committed `reports/V8-2-RELEASE/run_p1_negative_tests.py` also exited 0.
+Its fresh output was byte-identical to committed
+`reports/V8-2-RELEASE/p1-negative-tests.json`; all eleven negative cases had
+the expected nonzero exit, including the small and over-100-MB cache cases.
+This closes the sole remaining technical P1.
