@@ -1,0 +1,33 @@
+{
+  "schema": "eonwild.procedural_animation_toolkit.release_manifest.v1",
+  "release": "v8.2-candidate-a-balance-transfer",
+  "approvedArtifact": {
+    "path": "asset/tarbosaurus_v8_2_approved.glb",
+    "sha256": "a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5"
+  },
+  "includedReproductionBase": {
+    "path": "input/tarbosaurus_v8_2_iteration_b_base.glb",
+    "sha256": "bfe8e833721f1dc0b8b4a1df72a6ea933debb1c6d76ac6d7970ae3ed6c8f4bc2"
+  },
+  "upstreamApprovedV8_1": {
+    "sha256": "1b9a7d071c1b375e128beeb5bda68298e32b39aac3ea76a90afe7ca3f744b73e",
+    "provenance": "approved V8.1 walk iteration-38 snapshot; referenced, not duplicated"
+  },
+  "algorithm": {
+    "name": "official-world-relative-chest-roll-v1",
+    "formula": "Exp(Log(R_chest * inverse(R_pelvis)) + [0,0,-gain*pelvis_roll_z]) * R_pelvis",
+    "gain": 0.3984375,
+    "changedNodes": ["Bone_002", "Bone_041", "Bone_040", "Bone_039", "Bone_038", "Bone_037", "Bone_036"],
+    "clips": ["PROC_WALK_RELAXED_V8_1_RESPIN_ROOTMOTION", "PROC_WALK_RELAXED_V8_1_RESPIN_INPLACE"]
+  },
+  "evidence": {
+    "officialBalance": {"path": "evidence/official-balance.json", "sha256": "6a78aa26b14bb5e9248b873c4be6976a1ddc113121fa0fa84fe13cc8e0447219", "status": "PASS"},
+    "structuralMechanical": {"path": "evidence/structural-mechanical.json", "sha256": "b5a0e161e819311b79038130a4ce5a30927938237b0d8a06713d67d6bb1239ed", "status": "PASS"},
+    "reproduction": {"path": "evidence/reproduction-verify.json", "status": "PASS"}
+  },
+  "media": {
+    "side": {"path": "media/walk-relaxed-v8-2-side.mp4", "sha256": "a29a14dcbcab3b6963c03966755e274419acb43704f26a71da2b055f0eaa8bac", "durationSeconds": 10.0, "fps": 24, "resolution": [960,540]},
+    "comparison": {"path": "media/v8-1-approved-vs-v8-2-threeq.mp4", "sha256": "5e11692890b18166cea169c61894c0cb3824a69fea79c932ebfffbba00045d10", "durationSeconds": 10.0, "fps": 24, "resolution": [1920,540]}
+  },
+  "exclusions": ["rejected candidates", "render caches", "temporary frames", "duplicate rebuilt artifacts", "unapproved source packages"]
+}

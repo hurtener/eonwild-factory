@@ -1,0 +1,19 @@
+Blender 5.2.0 LTS
+
+1. Clean-output reproduction
+   blender --background --python-exit-code 1 --python procedural-animation-toolkit(v8.2)/scripts/release_generate.py -- --config procedural-animation-toolkit(v8.2)/config/release.json --output reports/V8-2-RELEASE/reproduction/tarbosaurus_v8_2_rebuilt.glb
+   Result: PASS, SHA-256 a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5.
+
+2. Rebuilt artifact verification
+   blender --background --python-exit-code 1 --python procedural-animation-toolkit(v8.2)/scripts/verify_release.py -- --config procedural-animation-toolkit(v8.2)/config/release.json --candidate reports/V8-2-RELEASE/reproduction/tarbosaurus_v8_2_rebuilt.glb --output reports/V8-2-RELEASE/reproduction/verify-rebuilt.json
+   Result: PASS; only approved chest/neck rotation accessors differ from base.
+
+3. Packaged artifact verification
+   blender --background --python-exit-code 1 --python procedural-animation-toolkit(v8.2)/scripts/verify_release.py -- --config procedural-animation-toolkit(v8.2)/config/release.json --output procedural-animation-toolkit(v8.2)/evidence/package-verify.json
+   Result: PASS.
+
+4. Media inspection
+   ffprobe reports 10.000 seconds, 24 fps, 240 frames; side 960x540 and comparison 1920x540.
+
+5. Inventory
+   No file exceeds 100 MB. No render frame/cache directories or rejected candidates are included.
