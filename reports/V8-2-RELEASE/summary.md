@@ -36,3 +36,13 @@ and GLB-structure data from the included base.
 Exact package paths and hashes are in
 `procedural-animation-toolkit(v8.2)/RELEASE_MANIFEST.json`; commands are in
 `commands.log`. No merge or push is part of this release handoff.
+
+## P1 release-fix round
+
+The v2 verifier now parses the release manifest, requires an exact inventory,
+checks every shipped file's SHA-256 and <=100 MB size, rejects extras, and
+probes both media files. The manifest intentionally excludes only itself from
+its inventory; the verifier schema-checks that documented convention and the
+signed commit binds the manifest bytes. The generator now validates configured
+semantic roles, hierarchy, timeline/layout and basis axis, enforces measured
+local-delta bounds, and avoids zero-angle NumPy division warnings.

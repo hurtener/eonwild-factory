@@ -1,5 +1,5 @@
 {
-  "schema": "eonwild.v8_2.release_verify.v1",
+  "schema": "eonwild.v8_2.release_verify.v2",
   "status": "PASS",
   "baseSha256": "bfe8e833721f1dc0b8b4a1df72a6ea933debb1c6d76ac6d7970ae3ed6c8f4bc2",
   "candidateSha256": "a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5",
@@ -27,6 +27,9 @@
     "Bone_041"
   ],
   "checks": {
+    "manifestInventoryExact": true,
+    "inventoryHashesAndSizes": true,
+    "mediaFacts": true,
     "baseHash": true,
     "candidateHash": true,
     "jsonByteEquivalent": true,

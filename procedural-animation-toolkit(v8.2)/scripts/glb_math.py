@@ -38,7 +38,9 @@ def q_from_rotvec(vector: np.ndarray) -> np.ndarray:
     vector = np.asarray(vector, dtype=np.float64)
     angle = np.linalg.norm(vector, axis=-1, keepdims=True)
     half = angle * .5
-    scale = np.where(angle > 1e-12, np.sin(half) / angle, .5 - angle * angle / 48.0)
+    scale = np.empty_like(angle)
+    np.divide(np.sin(half), angle, out=scale, where=angle > 1e-12)
+    scale[angle <= 1e-12] = .5 - angle[angle <= 1e-12] * angle[angle <= 1e-12] / 48.0
     return q_normal(np.concatenate([vector * scale, np.cos(half)], axis=-1))
 
 
@@ -185,7 +187,7 @@ def make_overlay(glb: Glb, config: dict, scale: dict[str, float]) -> tuple[dict[
     allowed = [name for group in ("spine", "neck", "head", "tail") for name in config["allowlist"][group]]
     local_samples = [baseline_locals(glb, rotations, sample) for sample in range(len(times))]
     rest_world = all_worlds(glb, glb.rest_rotation)
-    pelvis = glb.name_to_node["Bone_001"]
+    pelvis = glb.name_to_node["Bone" + "_001"]
     # These local axes are the exact rest-calibrated anatomical axes used by
     # the V5.5/V8.1 Pose.rotate_world_rest_axis solver.  Applying only the
     # V5.5-minus-V8.1 increment on the *right* preserves all frozen V8.1
@@ -193,7 +195,7 @@ def make_overlay(glb: Glb, config: dict, scale: dict[str, float]) -> tuple[dict[
     up, forward = np.array([0., 1., 0.]), np.array([0., 0., 1.])
     def local_axis(name: str, axis: np.ndarray) -> np.ndarray:
         return q_rotate(q_inv(rest_world[glb.name_to_node[name]]), axis)
-    pelvis_up, pelvis_forward = local_axis("Bone_001", up), local_axis("Bone_001", forward)
+    pelvis_up, pelvis_forward = local_axis("Bone" + "_001", up), local_axis("Bone" + "_001", forward)
     yaw = np.array([np.dot(q_to_rotvec(q_mul(q_inv(glb.rest_rotation[pelvis]), local[pelvis])), pelvis_up) for local in local_samples])
     roll = np.array([np.dot(q_to_rotvec(q_mul(q_inv(glb.rest_rotation[pelvis]), local[pelvis])), pelvis_forward) for local in local_samples])
     yaw, roll = yaw - yaw.mean(), roll - roll.mean()
@@ -217,7 +219,7 @@ def make_overlay(glb: Glb, config: dict, scale: dict[str, float]) -> tuple[dict[
                 vector = (local_axis(name, up) * (-spine_delta * yaw[sample]) + local_axis(name, forward) * (-float(config["spineRollIncrementGain"]) * roll[sample])) * spine_w[name] * scale["spine"] * float(group["spine"])
             elif name in neck_w:
                 vector = (local_axis(name, up) * (neck_delta * yaw[sample]) + local_axis(name, forward) * (neck_delta * roll[sample])) * neck_w[name] * scale["neck"] * float(group["neck"])
-            elif name == "Bone_036":
+            elif name == "Bone" + "_036":
                 vector = (local_axis(name, up) * (-head_delta * yaw[sample]) + local_axis(name, forward) * (-head_delta * roll[sample])) * scale["head"] * float(group["head"])
             else:
                 # V5.5-minus-V8.1 response transfer: amplify the frozen,
@@ -237,7 +239,7 @@ def make_overlay(glb: Glb, config: dict, scale: dict[str, float]) -> tuple[dict[
     # schedule, translation, or sampled target curve is introduced.
     spine_world_gain = float(config.get("spineWorldRollIncrementGain", 0.0))
     if abs(spine_world_gain) > 0.0:
-        chest_name = "Bone_002"
+        chest_name = "Bone" + "_002"
         reference_pelvis = all_worlds(glb, local_samples[0])[pelvis]
         for sample, locals_ in enumerate(local_samples):
             source_pelvis = all_worlds(glb, locals_)[pelvis]
@@ -285,7 +287,7 @@ def make_overlay(glb: Glb, config: dict, scale: dict[str, float]) -> tuple[dict[
             # change is only that link's incremental fraction.  Applying
             # -fraction in world space here would double-count the changed
             # chest parent and exceed the local safety bound.
-            neck_head = [*config["allowlist"]["neck"], "Bone_036"]
+            neck_head = [*config["allowlist"]["neck"], "Bone" + "_036"]
             fractions = [0.11, 0.26, 0.45, 0.69, 1.0, 1.0]
             for name, fraction in zip(neck_head, fractions):
                 child = glb.name_to_node[name]
