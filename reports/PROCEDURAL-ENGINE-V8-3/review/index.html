@@ -11,7 +11,7 @@
 <body>
   <header><span>Eonwild Motion Factory / Working 8.3</span><span class="status">Machine gate passed · Visual approval pending</span></header>
   <section class="hero">
-    <video src="../media/side.mp4" autoplay muted loop playsinline controls aria-label="Synchronized side comparison"></video>
+    <video src="../media/side.mp4" autoplay muted playsinline controls aria-label="Synchronized side comparison"></video>
     <div class="labels"><span>V8.2 · approved baseline</span><span>V8.3 · working candidate</span></div>
     <div class="hero-copy"><div class="eyebrow">Balance transfer / selected amplitude 0.5</div><h1>Weight lives in the hips.</h1><p>A controlled transfer of pelvis loading, body counterrotation, tail response, and head stabilization—without surrendering the approved stride or foot contact.</p></div>
   </section>
@@ -27,8 +27,8 @@
       </div>
     </section>
     <section class="views">
-      <article class="view reveal"><div class="view-head"><div><div class="kicker">Load transfer</div><h2>Front</h2></div><p>The lateral hip shift and quiet head are most legible here. Both panes share one locked camera and playback clock.</p></div><div class="media"><video data-sync src="../media/front.mp4" muted loop playsinline controls></video><div class="labels"><span>V8.2</span><span>V8.3</span></div></div></article>
-      <article class="view reveal"><div class="view-head"><div><div class="kicker">Whole-body response</div><h2>Fixed three-quarter</h2></div><p>Use this view to judge whether pelvis loading travels naturally through chest and tail without turning into decorative sway.</p></div><div class="media"><video data-sync src="../media/front-three-quarter.mp4" muted loop playsinline controls></video><div class="labels"><span>V8.2</span><span>V8.3</span></div></div></article>
+      <article class="view reveal"><div class="view-head"><div><div class="kicker">Load transfer</div><h2>Front</h2></div><p>The lateral hip shift and quiet head are most legible here. Both panes share one locked, finite 10-second playback clock.</p></div><div class="media"><video data-sync src="../media/front.mp4" muted playsinline controls></video><div class="labels"><span>V8.2</span><span>V8.3</span></div></div></article>
+      <article class="view reveal"><div class="view-head"><div><div class="kicker">Whole-body response</div><h2>Fixed three-quarter</h2></div><p>Use this view to judge whether pelvis loading travels naturally through chest and tail without turning into decorative sway. Playback stops at the end.</p></div><div class="media"><video data-sync src="../media/front-three-quarter.mp4" muted playsinline controls></video><div class="labels"><span>V8.2</span><span>V8.3</span></div></div></article>
     </section>
     <section class="phases">
       <div class="phase-tools reveal"><div><div class="kicker">Nine required diagnostics</div><h2>Read the gait by phase.</h2></div><div class="switch" role="group" aria-label="Diagnostic crop"><button class="active" data-crop="full">Full body</button><button data-crop="feet">Feet</button></div></div>
@@ -42,7 +42,7 @@
     const grid=document.querySelector('#phase-grid');
     function draw(crop){grid.innerHTML=phases.map((p,i)=>`<figure><img loading="lazy" src="../media/phases/${p}-${crop}.png" alt="${labels[p]||p} ${crop} comparison"><figcaption><span>${String(i+1).padStart(2,'0')} · ${labels[p]||p}</span><span>V8.2 / V8.3</span></figcaption></figure>`).join('')}
     draw('full');document.querySelectorAll('[data-crop]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-crop]').forEach(x=>x.classList.toggle('active',x===b));draw(b.dataset.crop)});
-    const master=document.querySelector('.hero video');document.querySelectorAll('[data-sync]').forEach(v=>{master.addEventListener('play',()=>v.play());master.addEventListener('pause',()=>v.pause());master.addEventListener('seeked',()=>v.currentTime=master.currentTime);});
+    const master=document.querySelector('.hero video');document.querySelectorAll('[data-sync]').forEach(v=>{master.addEventListener('play',()=>v.play());master.addEventListener('pause',()=>v.pause());master.addEventListener('ended',()=>{v.pause();v.currentTime=v.duration;});master.addEventListener('seeked',()=>v.currentTime=Math.min(master.currentTime,v.duration||master.currentTime));});
     const observer=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&e.target.classList.add('shown')),{threshold:.12});document.querySelectorAll('.reveal').forEach(e=>observer.observe(e));
   </script>
 </body>

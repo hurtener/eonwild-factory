@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema", "status", "baseline", "candidate", "witnessVertexIndices", "denseSampleRateHz", "denseSamples", "maxAxisRegressionMetres", "maxEuclideanRegressionMetres", "thresholds"],
+  "properties": {
+    "status": {"const": "PASS"},
+    "baseline": {"$ref": "#/$defs/subject"},
+    "candidate": {"$ref": "#/$defs/subject"},
+    "denseSampleRateHz": {"type": "integer", "minimum": 1},
+    "denseSamples": {"type": "integer", "minimum": 2},
+    "witnessVertexIndices": {"type": "object", "minProperties": 2},
+    "maxAxisRegressionMetres": {"type": "object", "required": ["x", "y", "z"], "additionalProperties": {"type": "number", "minimum": 0}},
+    "maxEuclideanRegressionMetres": {"type": "number", "minimum": 0},
+    "thresholds": {"type": "object", "required": ["worstAxisMetresMax", "euclideanMetresMax"]}
+  },
+  "$defs": {
+    "subject": {
+      "type": "object",
+      "required": ["actionFrames", "meshVertices", "samples"],
+      "properties": {
+        "actionFrames": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"}},
+        "meshVertices": {"type": "integer", "minimum": 1},
+        "samples": {"type": "integer", "minimum": 2}
+      }
+    }
+  }
+}

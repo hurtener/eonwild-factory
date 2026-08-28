@@ -11,12 +11,14 @@ from unittest.mock import patch
 import uuid
 from contextlib import contextmanager
 import shutil
+from dataclasses import replace
 
 from eonwild_motion.contracts.resolve import resolve_profile
 from eonwild_motion.errors import ValidationFailure
 from eonwild_motion.hashing import sha256_file
 from eonwild_motion.pipeline.channels import update_stable_channel
 from eonwild_motion.pipeline.promote import promote_run
+from eonwild_motion.pipeline.validate import contact_inheritance_facts
 from jsonschema import Draft202012Validator
 
 
@@ -161,6 +163,62 @@ class VerticalSliceTests(unittest.TestCase):
         self.assertEqual(comparison["media"]["status"], "PASS")
         review = Path(comparison["review"]["path"])
         self.assertIn("does not grant visual approval", review.read_text())
+
+    def test_normative_evidence_fails_closed_on_controlled_corruption(self):
+        resolved = resolve_profile("working")
+        original = json.loads(resolved.contact_evidence_path.read_text())
+
+        def reject(mutator):
+            document = json.loads(json.dumps(original))
+            mutator(document)
+            path = self.root / f"corrupt-{uuid.uuid4().hex}.json"
+            path.write_text(json.dumps(document))
+            corrupted = replace(
+                resolved,
+                contact_evidence_path=path,
+                contact_evidence_sha256=sha256_file(path),
+            )
+            with self.assertRaises(ValidationFailure):
+                contact_inheritance_facts(corrupted)
+
+        reject(lambda value: value.update(status="FAIL"))
+        reject(lambda value: value.update(artifactSha256="0" * 64))
+        reject(lambda value: value.update(selectedScale=999))
+        reject(lambda value: value.update(metrics={key: None for key in value["metrics"]}))
+        reject(lambda value: value["metrics"].pop("strideMetres"))
+        reject(lambda value: value["metrics"].update(strideMetres=float("nan")))
+        reject(lambda value: value["evidence"].update(thresholds=value["evidence"]["sweep"]))
+        reject(lambda value: value["evidence"].pop("sweep"))
+
+    def test_normative_evidence_rejects_cross_document_corruption(self):
+        resolved = resolve_profile("working")
+        threshold_path = ROOT / "reports/PROCEDURAL-ENGINE-V8-3/evaluation/thresholds.json"
+        sweep_path = ROOT / "reports/PROCEDURAL-ENGINE-V8-3/evidence/amplitude-sweep.json"
+        witness_path = ROOT / "reports/PROCEDURAL-ENGINE-V8-3/evidence/final-skinned-witnesses.json"
+
+        thresholds = json.loads(threshold_path.read_text())
+        thresholds["basis"]["sourceStableArtifactSha256"] = "0" * 64
+        with replaced(threshold_path, (json.dumps(thresholds) + "\n").encode()):
+            with self.assertRaises(ValidationFailure):
+                contact_inheritance_facts(resolved)
+
+        sweep = json.loads(sweep_path.read_text())
+        sweep["scales"][0]["status"] = "FAIL"
+        with replaced(sweep_path, (json.dumps(sweep) + "\n").encode()):
+            with self.assertRaises(ValidationFailure):
+                contact_inheritance_facts(resolved)
+
+        sweep = json.loads(sweep_path.read_text())
+        sweep["selectedScale"] = 0.625
+        with replaced(sweep_path, (json.dumps(sweep) + "\n").encode()):
+            with self.assertRaises(ValidationFailure):
+                contact_inheritance_facts(resolved)
+
+        witness = json.loads(witness_path.read_text())
+        witness["maxEuclideanRegressionMetres"] = 0.5
+        with replaced(witness_path, (json.dumps(witness) + "\n").encode()):
+            with self.assertRaises(ValidationFailure):
+                contact_inheritance_facts(resolved)
 
     def test_real_blender_render(self):
         artifact = self.builds[0][1]["outputs"][0]["path"]

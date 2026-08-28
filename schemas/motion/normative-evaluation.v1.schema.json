@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema", "status", "selectedScale", "artifactSha256", "checks", "counts", "metrics", "evidence"],
+  "properties": {
+    "schema": {"type": "string", "minLength": 1},
+    "status": {"const": "PASS"},
+    "selectedScale": {"type": "number"},
+    "artifactSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "checks": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "boolean"}},
+    "counts": {"type": "object", "required": ["undeclaredChanges"], "properties": {"undeclaredChanges": {"type": "integer", "minimum": 0}}},
+    "metrics": {
+      "type": "object",
+      "required": ["pelvisP2PByHipHeight", "pelvisRotationP2PDegrees", "chestRelativeP2PDegrees", "tailYawP2PDegrees", "headWorldP2PDegrees", "chestPelvisRollPearson", "maxFootWorldErrorMetres", "finalSkinnedDenseSamples", "finalSkinnedMaxAxisRegressionMetres", "finalSkinnedMaxEuclideanRegressionMetres", "maxUpperAdjacentDeltaDegrees", "maxUpperSecondDifferenceDegrees", "strideMetres", "speedKilometresPerHour"]
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["sweep", "layerMetrics", "finalSkinnedWitnesses", "thresholds"],
+      "additionalProperties": {"type": "string", "minLength": 1}
+    }
+  }
+}

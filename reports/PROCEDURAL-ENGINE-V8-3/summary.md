@@ -38,6 +38,17 @@ front-three-quarter. Nine full-body and nine foot-detail phase crops cover
 contact through receiving. The static review page labels visual approval as
 pending; this implementation does not self-approve.
 
+The evidence scene now includes a neutral matte floor and readable Eevee
+contact shadows derived from the primary skinned mesh floor. The 10-second
+files intentionally preserve the requested duration and stop cleanly at the
+end; the review page does not loop their non-integral 2.46 native cycles.
+
+The validator now runs the normative evidence cross-check rather than trusting
+PASS selectors alone. It binds artifact/baseline identity, shared layer scale,
+the complete strongest-pass sweep, thresholds, finite metrics, semantic
+rotation-only ownership manifests, final-skinned witnesses, and media/review
+hashes. Controlled corruptions fail closed.
+
 Representative frames were inspected locally. Direct `file://` navigation in
 the in-app browser was blocked by its security policy, and no alternate-server
 workaround was attempted.
@@ -47,3 +58,6 @@ workaround was attempted.
 Machine validation is PASS. Visual approval and stable promotion remain pending
 independent review. No stable channel state, stable history, or approved V8.2
 bytes were changed.
+
+The final full suite passed 29 tests in 60.622 seconds with zero failures,
+skips, or disabled cases.

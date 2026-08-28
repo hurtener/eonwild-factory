@@ -47,7 +47,7 @@ def compare_artifacts(
     difference = artifact_difference(
         baseline, candidate, resolved.rig, resolved.motion, [layer.data for layer in resolved.layers]
     )
-    contact = contact_inheritance_facts(resolved)
+    contact = contact_inheritance_facts(resolved, candidate_path)
     structural = {
         "status": "PASS",
         "jsonEquivalent": difference["jsonEquivalent"],

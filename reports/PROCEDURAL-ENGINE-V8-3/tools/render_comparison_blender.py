@@ -27,6 +27,7 @@ def arguments() -> argparse.Namespace:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--frames", type=int, default=240)
     parser.add_argument("--fps", type=int, default=24)
+    parser.add_argument("--view", choices=tuple(VIEWS), action="append")
     arguments = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else None
     return parser.parse_args(arguments)
 
@@ -85,6 +86,26 @@ def frame_camera(camera, direction: Vector, objects, aspect: float) -> dict:
     return {"center": list(center), "horizontalSpan": horizontal_span, "verticalSpan": vertical_span, "orthoScale": camera.data.ortho_scale}
 
 
+def add_review_ground(objects):
+    primary_mesh = max(
+        (item for item in objects if item.type == "MESH"),
+        key=lambda item: len(item.data.vertices),
+    )
+    points = [primary_mesh.matrix_world @ Vector(corner) for corner in primary_mesh.bound_box]
+    minimum = Vector(tuple(min(point[index] for point in points) for index in range(3)))
+    maximum = Vector(tuple(max(point[index] for point in points) for index in range(3)))
+    span = max(maximum.x - minimum.x, maximum.y - minimum.y, maximum.z - minimum.z)
+    bpy.ops.mesh.primitive_plane_add(size=span * 3.0, location=(0.0, 0.0, minimum.z - 0.012))
+    ground = bpy.context.object
+    ground.name = "neutral-review-ground"
+    material = bpy.data.materials.new("neutral-review-ground-material")
+    material.diffuse_color = (0.19, 0.205, 0.19, 1.0)
+    material.roughness = 0.94
+    material.metallic = 0.0
+    ground.data.materials.append(material)
+    return ground, float(minimum.z - 0.012)
+
+
 def main() -> int:
     args = arguments()
     args.output.mkdir(parents=True, exist_ok=True)
@@ -103,7 +124,7 @@ def main() -> int:
     scene.render.image_settings.file_format = "PNG"
     scene.render.film_transparent = False
     scene.world = scene.world or bpy.data.worlds.new("review-world")
-    scene.world.color = (0.035, 0.045, 0.055)
+    scene.world.color = (0.075, 0.085, 0.08)
     camera_data = bpy.data.cameras.new("locked-review-camera")
     camera_data.type = "ORTHO"
     camera = bpy.data.objects.new("locked-review-camera", camera_data)
@@ -119,8 +140,11 @@ def main() -> int:
     fill = bpy.data.objects.new("review-fill", fill_data)
     bpy.context.collection.objects.link(fill)
     fill.location = Vector((-6.0, 4.0, 7.0))
-    report = {"schema": "eonwild.motion.v8_3_media.v1", "frames": args.frames, "fps": args.fps, "durationSeconds": args.frames / args.fps, "layout": "v8.2-left-v8.3-right", "views": {}}
-    for name, direction in VIEWS.items():
+    ground, ground_z = add_review_ground(all_objects)
+    report = {"schema": "eonwild.motion.v8_3_media.v1", "frames": args.frames, "fps": args.fps, "durationSeconds": args.frames / args.fps, "layout": "v8.2-left-v8.3-right", "playback": "finite-non-looping", "ground": {"type": "matte-neutral-plane", "z": ground_z, "includedInCameraBounds": False, "receivesContactShadows": True}, "views": {}}
+    selected_views = args.view or list(VIEWS)
+    for name in selected_views:
+        direction = VIEWS[name]
         baseline_root.location = Vector((0.0, 0.0, 0.0))
         candidate_root.location = Vector((0.0, 0.0, 0.0))
         bpy.context.view_layer.update()

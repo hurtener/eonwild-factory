@@ -30,3 +30,8 @@ The committed evidence bundle records the complete five-scale sweep, layer
 delta manifest, independent 240 Hz final-skinned vertex witnesses, media hashes,
 and channel locks. Visual approval is deliberately left to an independent
 reviewer.
+
+The ordinary `validate` command invokes the normative evaluator. Its automated
+negative suite covers false status, wrong artifact/scale, null/missing/nonfinite
+metrics, wrong threshold/sweep binding, a contradictory or false selected
+winner, and corrupted final-skinned witnesses.

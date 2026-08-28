@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["scales", "selectedScale"],
+  "properties": {
+    "selectedScale": {"type": "number"},
+    "scales": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["scale", "status", "checks", "sha256", "metrics"],
+        "properties": {
+          "scale": {"type": "number"},
+          "status": {"enum": ["PASS", "FAIL"]},
+          "checks": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "boolean"}},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "metrics": {"type": "object", "minProperties": 1}
+        }
+      }
+    }
+  }
+}

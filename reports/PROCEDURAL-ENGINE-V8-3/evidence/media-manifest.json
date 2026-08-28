@@ -10,22 +10,24 @@
     "width": 960,
     "height": 540,
     "synchronized": true,
+    "playback": "finite-non-looping",
+    "ground": "neutral matte plane with Eevee contact shadows",
     "fixedCameras": ["side", "front", "front-three-quarter"]
   },
   "videos": {
-    "side.mp4": "52ab8356d087df7dda44fe79a57356152cdc478bb0cd6dce4783fa636f6c25ed",
-    "front.mp4": "6814a2924b884b04232c9e26466310863b39105520b6df01d52a2f556b534d22",
-    "front-three-quarter.mp4": "61519f3e535d953a2e782076f68fc19011e368acde909d75f7740a190fe0b2c4"
+    "side.mp4": "15cbe78410132a82bb8ff3f82680499a03ecfc3bd4750ee2422b6c132793bae5",
+    "front.mp4": "3e2d58631b1b342358327afd0efc4cc99c714679f06392193b6f72d288826f17",
+    "front-three-quarter.mp4": "4823bf2433109fe043245079eec057bff20efc23ff8d98bc13536ae1b61a9f2f"
   },
   "phaseCrops": {
     "count": 18,
     "fullBodyCount": 9,
     "feetCount": 9,
-    "sortedSha256LinesDigest": "a6caa7c7c70dbdaaf6ffe32831c8e5a24cb3915af0cf9b163faca7b0fc140391"
+    "sortedSha256LinesDigest": "0aabf48407bce37740351e66b5d3dab779c2e3583daf733773df35e2e52fd898"
   },
   "reviewPage": {
     "path": "reports/PROCEDURAL-ENGINE-V8-3/review/index.html",
-    "sha256": "aaf3ec4f45ad16ff187e3936b8df23e8547be022596102c3dcd24b99454f3156",
+    "sha256": "fe36a8807ddd3332cdb46abcc87ef12a1ec462ac75502b0bdb4a19ea4a1c17f4",
     "visualApproval": "PENDING_INDEPENDENT_REVIEW"
   },
   "verification": {

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema", "status", "basis", "layers", "v8_2Baseline", "pelvisProgression", "boundedAmplitudeSweep", "finalSkinnedContactAndTrajectory", "upperBodyCounterbalanceAndSeam", "failClosed"],
+  "properties": {
+    "schema": {"type": "string", "minLength": 1},
+    "status": {"type": "string", "minLength": 1},
+    "basis": {"type": "object", "required": ["sourceStableArtifactSha256"], "properties": {"sourceStableArtifactSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}},
+    "layers": {"type": "object", "required": ["requiredOrder", "semanticRoleOnly", "rejectImplicitOrder", "rejectUndeclaredWrite", "ownership"]},
+    "v8_2Baseline": {"type": "object", "required": ["strideMetres", "speedKilometresPerHour"]},
+    "pelvisProgression": {"type": "object", "required": ["lateralP2PByHipHeight", "verticalP2PByHipHeight", "rollP2PDegrees"]},
+    "boundedAmplitudeSweep": {"type": "object", "required": ["amplitudeScaleAscending", "selection"], "properties": {"amplitudeScaleAscending": {"type": "array", "minItems": 1, "items": {"type": "number"}}}},
+    "finalSkinnedContactAndTrajectory": {"type": "object", "required": ["phaseMatchedV8_2TrajectoryEuclideanRegressionMetresMax", "phaseMatchedV8_2TrajectoryWorstAxisRegressionMetresMax"]},
+    "upperBodyCounterbalanceAndSeam": {"type": "object", "required": ["headWorldP2PDegreesMax"]},
+    "failClosed": {"const": true}
+  }
+}

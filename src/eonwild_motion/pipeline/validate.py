@@ -10,6 +10,7 @@ from ..contracts.semantic import expanded_channels
 from ..errors import ValidationFailure
 from ..glb.container import Glb
 from ..hashing import sha256_file
+from .normative_evidence import evaluate_normative_evidence
 
 
 MAX_PACKAGE_FILE_BYTES = 100 * 1024 * 1024
@@ -37,11 +38,24 @@ def _document_value(document: dict[str, Any], selector: str) -> Any:
     return value
 
 
-def contact_inheritance_facts(resolved: ResolvedProfile) -> dict[str, Any]:
+def contact_inheritance_facts(
+    resolved: ResolvedProfile, candidate_path: Path | None = None
+) -> dict[str, Any]:
     try:
         evidence = json.loads(resolved.contact_evidence_path.read_text())
     except (OSError, json.JSONDecodeError) as exc:
         raise ValidationFailure(f"contact evidence is unreadable: {exc}") from exc
+    if {
+        "artifactSha256",
+        "selectedScale",
+        "metrics",
+        "evidence",
+    }.issubset(evidence):
+        normative = evaluate_normative_evidence(
+            resolved, evidence, candidate_path=candidate_path
+        )
+    else:
+        normative = None
     contract = resolved.motion["invariants"]["contactContract"]
     true_facts = {
         selector: _document_value(evidence, selector)
@@ -65,6 +79,7 @@ def contact_inheritance_facts(resolved: ResolvedProfile) -> dict[str, Any]:
         "requiredTrue": true_facts,
         "requiredZero": zero_facts,
         "protectedChannelsByteExact": True,
+        "normativeEvaluation": normative,
     }
 
 
@@ -330,6 +345,6 @@ def validate_candidate(
                 "outsideDeclaredByteChanges"
             ],
         },
-        "contactFacts": contact_inheritance_facts(resolved),
+        "contactFacts": contact_inheritance_facts(resolved, candidate_path),
         "gltfValidator": gltf,
     }
