@@ -184,11 +184,25 @@ class VerticalSliceTests(unittest.TestCase):
         reject(lambda value: value.update(status="FAIL"))
         reject(lambda value: value.update(artifactSha256="0" * 64))
         reject(lambda value: value.update(selectedScale=999))
+        reject(lambda value: value.pop("artifactSha256"))
+        reject(lambda value: value.pop("selectedScale"))
+        reject(lambda value: value.pop("metrics"))
+        reject(lambda value: value.pop("evidence"))
         reject(lambda value: value.update(metrics={key: None for key in value["metrics"]}))
         reject(lambda value: value["metrics"].pop("strideMetres"))
         reject(lambda value: value["metrics"].update(strideMetres=float("nan")))
         reject(lambda value: value["evidence"].update(thresholds=value["evidence"]["sweep"]))
         reject(lambda value: value["evidence"].pop("sweep"))
+
+        profile = json.loads(json.dumps(resolved.profile))
+        profile["validators"] = [
+            item for item in profile["validators"] if not item.startswith("normative-evidence@")
+        ]
+        with self.assertRaises(ValidationFailure):
+            contact_inheritance_facts(replace(resolved, profile=profile))
+        profile["validators"].append("normative-evidence@999#wrong.schema")
+        with self.assertRaises(ValidationFailure):
+            contact_inheritance_facts(replace(resolved, profile=profile))
 
     def test_normative_evidence_rejects_cross_document_corruption(self):
         resolved = resolve_profile("working")

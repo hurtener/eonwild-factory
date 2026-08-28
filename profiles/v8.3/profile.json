@@ -16,6 +16,6 @@
   "approvedOutput": {"path": "assets/sha256/b5fc582e3bae3b2708735e7ae68cc31da65599f6d155d3b6d089a44ed5517d03.glb", "sha256": "b5fc582e3bae3b2708735e7ae68cc31da65599f6d155d3b6d089a44ed5517d03"},
   "sourceRelease": {"root": "procedural-animation-toolkit(v8.2)", "manifest": {"path": "procedural-animation-toolkit(v8.2)/RELEASE_MANIFEST.json", "sha256": "51f493aaae13fe46d8b6d3600ec1a8de117c2ee39beb6e05159398cacb21fada"}},
   "contactEvidence": {"path": "reports/PROCEDURAL-ENGINE-V8-3/evidence/machine-evaluation.json", "sha256": "c7b679cb0d048bcf74c620f67f853596d780d35fb32b7711ceb0df4c79db3ffc"},
-  "validators": ["schema", "hash", "source-package", "hierarchy", "accessor", "timeline", "unchanged-region", "gltf-validator", "v8.3-balance", "final-skinned-contact", "upper-counterbalance"],
+  "validators": ["schema", "hash", "source-package", "hierarchy", "accessor", "timeline", "unchanged-region", "gltf-validator", "normative-evidence@1#eonwild.motion.v8_3_evaluation.v1", "final-skinned-contact", "upper-counterbalance"],
   "provenance": {"status": "working-candidate", "source": "immutable V8.2 output plus three declared semantic V8.3 balance layers", "stableUnchanged": true, "selectedScale": 0.5}
 }

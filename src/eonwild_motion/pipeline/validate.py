@@ -45,18 +45,33 @@ def contact_inheritance_facts(
         evidence = json.loads(resolved.contact_evidence_path.read_text())
     except (OSError, json.JSONDecodeError) as exc:
         raise ValidationFailure(f"contact evidence is unreadable: {exc}") from exc
-    if {
-        "artifactSha256",
-        "selectedScale",
-        "metrics",
-        "evidence",
-    }.issubset(evidence):
+    contract = resolved.motion["invariants"]["contactContract"]
+    declarations = [
+        value
+        for value in resolved.profile["validators"]
+        if value.startswith("normative-evidence@")
+    ]
+    if len(declarations) > 1:
+        raise ValidationFailure("multiple normative evaluator declarations")
+    if declarations:
+        declaration = declarations[0]
+        try:
+            implementation, declared_schema = declaration.split("#", 1)
+            name, version = implementation.rsplit("@", 1)
+        except ValueError as exc:
+            raise ValidationFailure("normative evaluator declaration is malformed") from exc
+        if name != "normative-evidence" or version != "1" or not declared_schema:
+            raise ValidationFailure("normative evaluator declaration is unsupported")
         normative = evaluate_normative_evidence(
-            resolved, evidence, candidate_path=candidate_path
+            resolved,
+            evidence,
+            candidate_path=candidate_path,
+            declared_schema=declared_schema,
         )
     else:
+        if contract.get("proof") != "protected-channel-byte-equivalence":
+            raise ValidationFailure("normative evaluator declaration is required")
         normative = None
-    contract = resolved.motion["invariants"]["contactContract"]
     true_facts = {
         selector: _document_value(evidence, selector)
         for selector in contract["requiredTruePaths"]

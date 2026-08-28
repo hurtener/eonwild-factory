@@ -49,6 +49,12 @@ the complete strongest-pass sweep, thresholds, finite metrics, semantic
 rotation-only ownership manifests, final-skinned witnesses, and media/review
 hashes. Controlled corruptions fail closed.
 
+Normative dispatch is owned by the resolved profile declaration
+`normative-evidence@1#eonwild.motion.v8_3_evaluation.v1`; missing top-level
+normative fields therefore reach the declared schema and cannot fall back to
+legacy selectors. The legacy path is restricted to the explicit
+`protected-channel-byte-equivalence` proof contract.
+
 Representative frames were inspected locally. Direct `file://` navigation in
 the in-app browser was blocked by its security policy, and no alternate-server
 workaround was attempted.
@@ -59,5 +65,5 @@ Machine validation is PASS. Visual approval and stable promotion remain pending
 independent review. No stable channel state, stable history, or approved V8.2
 bytes were changed.
 
-The final full suite passed 29 tests in 60.622 seconds with zero failures,
+The final dispatch-closure suite passed 29 tests in 62.685 seconds with zero failures,
 skips, or disabled cases.

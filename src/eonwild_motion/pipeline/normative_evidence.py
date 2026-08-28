@@ -154,8 +154,11 @@ def evaluate_normative_evidence(
     evidence: dict[str, Any],
     *,
     candidate_path: Path | None = None,
+    declared_schema: str,
 ) -> dict[str, Any]:
     _schema(resolved, evidence, "normative-evaluation.v1.schema.json")
+    if evidence.get("schema") != declared_schema:
+        raise ValidationFailure("normative evaluation schema declaration mismatch")
     if evidence["status"] != "PASS":
         raise ValidationFailure("normative evaluation status is not PASS")
     candidate_path = (candidate_path or resolved.approved_output_path).resolve()

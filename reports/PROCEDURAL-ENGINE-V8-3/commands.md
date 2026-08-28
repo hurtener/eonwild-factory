@@ -35,3 +35,9 @@ The ordinary `validate` command invokes the normative evaluator. Its automated
 negative suite covers false status, wrong artifact/scale, null/missing/nonfinite
 metrics, wrong threshold/sweep binding, a contradictory or false selected
 winner, and corrupted final-skinned witnesses.
+
+Evaluator dispatch is resolved from the profile capability
+`normative-evidence@1#eonwild.motion.v8_3_evaluation.v1`. The negative suite
+also deletes every required normative top-level field independently and tampers
+with the profile declaration; no malformed normative report may fall back to
+legacy selectors.

@@ -4,20 +4,20 @@
   "approvalStatus": "PENDING_INDEPENDENT_REVIEW",
   "engineVersion": "0.1.0",
   "channel": {
-    "stateSha256": "a44153a9ef45d9a1e5c734c9f9423945746333987e81ccce824bea256cc6e3a8",
+    "stateSha256": "0fb80ed42b0b53e91e6fd55af272c2f4a0c1a9f724c2d6263b6f74a8af543b8a",
     "generation": 1,
     "stable": {
       "revision": 1,
       "historyId": "stable-0001",
-      "resolvedLockSha256": "af645bb995c1f4683371a999a35b74622e80c253b5fc74f3a47963d86f100c7a",
+      "resolvedLockSha256": "649e5b3c740b3d0fae6d4cf8570ef4a0febbb2b605f6e23efc11ec3c4f66773e",
       "artifactSha256": "a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5"
     },
     "working": {
       "iteration": 1,
       "revision": 2,
       "basedOnStable": "stable-0001",
-      "resolvedLockSha256": "cf14adffb26d6607d8dceb62d5c48bb82dc44b218e096c1fbd041f69a108f393",
-      "profileLockSha256": "d99195ef6f2939c25535ef18e4549da05e0bf72b0e4633415e4f077913ece57b",
+      "resolvedLockSha256": "e20a9303dda08cae24522889b165d2fc347dc90e71d5617a212efc4bdcf66e9a",
+      "profileLockSha256": "4b506eb9145ccdeb21bebbb58d8fd40aa3a0048c1625be927655c012f989abc9",
       "artifactSha256": "b5fc582e3bae3b2708735e7ae68cc31da65599f6d155d3b6d089a44ed5517d03"
     }
   },
@@ -46,6 +46,7 @@
     "headStabilization": true,
     "amplitudeSweepComplete": true,
     "normativeEvidenceFailClosed": true,
+    "normativeEvaluatorExplicitlyDeclared": true,
     "finiteMetricsAndCrossDocumentBindings": true,
     "finiteNonLoopingReviewPlayback": true,
     "neutralGroundAndContactShadows": true,
