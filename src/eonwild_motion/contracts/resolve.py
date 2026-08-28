@@ -3,12 +3,23 @@ from __future__ import annotations
 from pathlib import Path
 import json
 from typing import Any
+from dataclasses import replace
 
+from .. import __version__
 from ..errors import ContractError
 from ..hashing import sha256_file, sha256_json
 from ..paths import repository_root
 from .load import load_and_validate
 from .models import ContractDocument, ResolvedProfile
+
+
+CHANNEL_NAMES = frozenset({"stable", "working"})
+
+
+def profile_repository(profile_selector: str | Path) -> Path:
+    if str(profile_selector) in CHANNEL_NAMES:
+        return repository_root(Path.cwd())
+    return repository_root(Path(profile_selector))
 
 
 def _resolve_repo_path(repository: Path, relative: str) -> Path:
@@ -93,7 +104,7 @@ def _validate_semantics(
                     )
 
 
-def resolve_profile(profile_path: Path) -> ResolvedProfile:
+def _resolve_explicit_profile(profile_path: Path) -> ResolvedProfile:
     profile_path = profile_path.resolve()
     repository = repository_root(profile_path)
     profile = load_and_validate(profile_path, repository=repository)
@@ -197,4 +208,83 @@ def resolve_profile(profile_path: Path) -> ResolvedProfile:
         contact_evidence_sha256=contact_sha,
         lock=lock,
         lock_sha256=lock_sha,
+        selector=str(profile_path),
+    )
+
+
+def resolve_profile(
+    profile_selector: str | Path,
+    *,
+    repository: Path | None = None,
+    channel_state_path: Path | None = None,
+) -> ResolvedProfile:
+    selector = str(profile_selector)
+    if selector not in CHANNEL_NAMES:
+        return _resolve_explicit_profile(Path(profile_selector))
+    repository = (repository or repository_root(Path.cwd())).resolve()
+    state_path = (
+        channel_state_path.resolve()
+        if channel_state_path is not None
+        else repository / "profiles/channels/state.json"
+    )
+    state = load_and_validate(state_path, repository=repository)
+    if state["engineVersion"] != __version__:
+        raise ContractError(
+            f"channel engine version {state['engineVersion']} does not match {__version__}"
+        )
+    entry = state[selector]
+    profile_path, profile_sha = _verify_reference(
+        repository, entry["profile"], label=f"channel {selector} profile"
+    )
+    resolved = _resolve_explicit_profile(profile_path)
+    if resolved.profile_sha256 != profile_sha:
+        raise ContractError(f"channel {selector} profile hash is stale")
+    if resolved.lock_sha256 != entry["profileLockSha256"]:
+        raise ContractError(f"channel {selector} profile lock is stale")
+    if selector == "stable":
+        manifest_path, manifest_sha = _verify_reference(
+            repository, entry["release"]["manifest"], label="stable release manifest"
+        )
+        artifact_path, artifact_sha = _verify_reference(
+            repository, entry["release"]["artifact"], label="stable artifact"
+        )
+        if (
+            manifest_path != resolved.source_manifest_path
+            or manifest_sha != resolved.source_manifest_sha256
+        ):
+            raise ContractError("stable release manifest does not match profile")
+        if (
+            artifact_path != resolved.approved_output_path
+            or artifact_sha != resolved.approved_output_sha256
+        ):
+            raise ContractError("stable artifact does not match profile")
+    elif entry["basedOnStable"] != state["stable"]["historyId"]:
+        raise ContractError("working channel base does not match stable history")
+    state_sha = sha256_file(state_path)
+    try:
+        state_identity = str(state_path.relative_to(repository))
+    except ValueError:
+        state_identity = str(state_path)
+    channel = {
+        "name": selector,
+        "statePath": state_identity,
+        "stateSha256": state_sha,
+        "generation": state["generation"],
+        "iteration": entry.get("iteration"),
+        "revision": entry["revision"],
+        "historyId": entry.get("historyId", entry.get("basedOnStable")),
+    }
+    lock = {
+        "schema": "eonwild.motion.resolved-channel-profile.v1",
+        "profileLockSha256": resolved.lock_sha256,
+        "channel": {
+            key: value for key, value in channel.items() if key != "statePath"
+        },
+    }
+    return replace(
+        resolved,
+        lock=lock,
+        lock_sha256=sha256_json(lock),
+        selector=selector,
+        channel=channel,
     )

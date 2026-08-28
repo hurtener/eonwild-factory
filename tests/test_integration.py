@@ -7,7 +7,9 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 from contextlib import contextmanager
+import shutil
 
 from eonwild_motion.contracts.resolve import resolve_profile
 from eonwild_motion.errors import ValidationFailure
@@ -72,13 +74,14 @@ class VerticalSliceTests(unittest.TestCase):
             cwd=ROOT,
             text=True,
         )
+        cls.channel_state_bytes = (ROOT / "profiles/channels/state.json").read_bytes()
         cls.builds = []
         for index in range(2):
             work = cls.root / f"build-{index}"
             process = cli(
                 "build",
                 "--profile",
-                str(PROFILE),
+                "working",
                 "--work-root",
                 str(work),
             )
@@ -100,6 +103,10 @@ class VerticalSliceTests(unittest.TestCase):
         first = Path(self.builds[0][1]["outputs"][0]["path"])
         second = Path(self.builds[1][1]["outputs"][0]["path"])
         self.assertEqual(first.read_bytes(), second.read_bytes())
+        for _, report in self.builds:
+            self.assertEqual(report["profile"]["channel"], "working")
+            self.assertEqual(report["profile"]["iteration"], 0)
+            self.assertEqual(report["profile"]["revision"], 1)
         render_reports = [json.loads((run / "render.json").read_text()) for run, _ in self.builds]
         self.assertEqual(
             render_reports[0]["media"]["fileSha256"],
@@ -120,7 +127,7 @@ class VerticalSliceTests(unittest.TestCase):
         validate = cli(
             "validate",
             "--profile",
-            str(PROFILE),
+            "stable",
             "--artifact",
             artifact,
             "--work-root",
@@ -132,7 +139,7 @@ class VerticalSliceTests(unittest.TestCase):
         compare = cli(
             "compare",
             "--profile",
-            str(PROFILE),
+            "working",
             "--baseline",
             str(resolved.input_path),
             "--candidate",
@@ -159,7 +166,7 @@ class VerticalSliceTests(unittest.TestCase):
         render = cli(
             "render",
             "--profile",
-            str(PROFILE),
+            "working",
             "--artifact",
             artifact,
             "--work-root",
@@ -182,6 +189,11 @@ class VerticalSliceTests(unittest.TestCase):
             text=True,
         )
         self.assertEqual(after, self.before_status)
+        self.assertEqual(
+            (ROOT / "profiles/channels/state.json").read_bytes(),
+            self.channel_state_bytes,
+        )
+        self.assertFalse((ROOT / "profiles/channels/history").exists())
 
     def test_promotion_gates_and_no_overwrite(self):
         run, report = self.builds[0]
@@ -247,6 +259,43 @@ class VerticalSliceTests(unittest.TestCase):
                 )
         finally:
             artifact.write_bytes(original)
+        channel_root = self.root / "approved-channel-update"
+        channel_root.mkdir()
+        channel_state = channel_root / "state.json"
+        shutil.copyfile(ROOT / "profiles/channels/state.json", channel_state)
+        runtime_path = run / "resolved-profile.json"
+        runtime = json.loads(runtime_path.read_text())
+        runtime["channelStatePath"] = str(channel_state)
+        with replaced(
+            runtime_path,
+            (json.dumps(runtime, indent=2, sort_keys=True) + "\n").encode(),
+        ):
+            channel_promotion = promote_run(
+                run_dir=run,
+                destination=self.root / "promoted-and-stable",
+                approvals_path=approvals,
+                source_state=state,
+                update_stable=True,
+                channel_state_path=channel_state,
+            )
+        self.assertEqual(channel_promotion["channelUpdate"]["generation"], 2)
+        self.assertEqual(json.loads(channel_state.read_text())["generation"], 2)
+        self.assertTrue(Path(channel_promotion["channelUpdate"]["historyPath"]).is_file())
+
+        rollback_destination = self.root / "rolled-back-stable-update"
+        with patch(
+            "eonwild_motion.pipeline.promote.update_stable_channel",
+            side_effect=ValidationFailure("injected channel update failure"),
+        ):
+            with self.assertRaises(ValidationFailure):
+                promote_run(
+                    run_dir=run,
+                    destination=rollback_destination,
+                    approvals_path=approvals,
+                    source_state=state,
+                    update_stable=True,
+                )
+        self.assertFalse(rollback_destination.exists())
 
     def test_promotion_rejects_untrusted_evidence(self):
         run, report = self.builds[1]

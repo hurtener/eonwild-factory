@@ -11,6 +11,7 @@ from ..contracts.resolve import resolve_profile
 from ..errors import ValidationFailure
 from ..hashing import sha256_file, write_json
 from .context import git_source_state
+from .channels import update_stable_channel
 from .validate import validate_candidate
 
 
@@ -20,6 +21,8 @@ def promote_run(
     destination: Path,
     approvals_path: Path,
     source_state: Callable[[Path], dict[str, object]] = git_source_state,
+    update_stable: bool = False,
+    channel_state_path: Path | None = None,
 ) -> dict:
     if destination.exists():
         raise ValidationFailure(f"promotion destination already exists: {destination}")
@@ -49,14 +52,22 @@ def promote_run(
         raise ValidationFailure("current source tree is dirty")
     if current.get("gitHead") != run_report["source"].get("gitHead"):
         raise ValidationFailure("current source head differs from build lock")
-    resolved = resolve_profile(Path(runtime["profilePath"]))
+    selector = runtime.get("profileSelector", runtime["profilePath"])
+    runtime_channel_state = (
+        Path(runtime["channelStatePath"]).resolve()
+        if runtime.get("channelStatePath")
+        else None
+    )
+    if channel_state_path is not None and runtime_channel_state != channel_state_path.resolve():
+        raise ValidationFailure("promotion channel-state path differs from build lock")
+    resolved = resolve_profile(
+        selector,
+        repository=repository,
+        channel_state_path=runtime_channel_state,
+    )
     if resolved.lock_sha256 != runtime.get("lockSha256"):
         raise ValidationFailure("resolved profile lock hash mismatch")
-    expected_profile = {
-        "id": resolved.profile["id"],
-        "sha256": resolved.profile_sha256,
-        "lockSha256": resolved.lock_sha256,
-    }
+    expected_profile = resolved.profile_binding()
     if run_report.get("profile") != expected_profile:
         raise ValidationFailure("build run profile binding mismatch")
     evidence = {
@@ -192,6 +203,7 @@ def promote_run(
     temporary = Path(
         tempfile.mkdtemp(prefix=destination.name + ".", dir=destination.parent)
     )
+    destination_installed = False
     try:
         artifact_dir = temporary / "artifacts" / artifact_hash[:2]
         artifact_dir.mkdir(parents=True)
@@ -258,18 +270,33 @@ def promote_run(
                 },
             },
             "approvals": approvals,
+            "channel": expected_profile,
         }
         validate_document(
             manifest, repository=repository, label="promotion manifest"
         )
         write_json(temporary / "manifest.json", manifest)
         temporary.replace(destination)
+        destination_installed = True
+        channel_update = None
+        if update_stable:
+            if runtime_channel_state is None:
+                raise ValidationFailure("stable update requires a channel build")
+            channel_update = update_stable_channel(
+                state_path=runtime_channel_state,
+                repository=repository,
+                resolved=resolved,
+                promotion_manifest_path=destination / "manifest.json",
+            )
     except Exception:
         shutil.rmtree(temporary, ignore_errors=True)
+        if destination_installed:
+            shutil.rmtree(destination, ignore_errors=True)
         raise
     return {
         "status": "PASS",
         "destination": str(destination),
         "artifactSha256": artifact_hash,
         "manifest": str(destination / "manifest.json"),
+        "channelUpdate": channel_update,
     }

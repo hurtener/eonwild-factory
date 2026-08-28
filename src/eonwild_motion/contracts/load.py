@@ -23,6 +23,8 @@ SCHEMA_FILES = {
     "eonwild.motion.validation-report.v1": "validation-report.v1.schema.json",
     "eonwild.motion.comparison-report.v1": "comparison-report.v1.schema.json",
     "eonwild.motion.render-report.v1": "render-report.v1.schema.json",
+    "eonwild.motion.channel-state.v1": "channel-state.v1.schema.json",
+    "eonwild.motion.channel-history.v1": "channel-history.v1.schema.json",
 }
 
 

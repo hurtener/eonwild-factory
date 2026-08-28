@@ -1,0 +1,35 @@
+{
+  "schema": "eonwild.motion.channel-state.v1",
+  "engineVersion": "0.1.0",
+  "generation": 1,
+  "stable": {
+    "revision": 1,
+    "historyId": "stable-0001",
+    "profile": {
+      "path": "profiles/v8.2/profile.json",
+      "sha256": "37a26e006700350bc42d40eeb50f93bb4fa63dae98c98db2423a8eb3c9157c9b"
+    },
+    "profileLockSha256": "eba6d05608e5b34c408dfeed5f9440ac85444b441d380c9279688e76d5c280ec",
+    "release": {
+      "id": "v8.2",
+      "manifest": {
+        "path": "procedural-animation-toolkit(v8.2)/RELEASE_MANIFEST.json",
+        "sha256": "51f493aaae13fe46d8b6d3600ec1a8de117c2ee39beb6e05159398cacb21fada"
+      },
+      "artifact": {
+        "path": "procedural-animation-toolkit(v8.2)/asset/tarbosaurus_v8_2_approved.glb",
+        "sha256": "a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5"
+      }
+    }
+  },
+  "working": {
+    "iteration": 0,
+    "revision": 1,
+    "basedOnStable": "stable-0001",
+    "profile": {
+      "path": "profiles/v8.2/profile.json",
+      "sha256": "37a26e006700350bc42d40eeb50f93bb4fa63dae98c98db2423a8eb3c9157c9b"
+    },
+    "profileLockSha256": "eba6d05608e5b34c408dfeed5f9440ac85444b441d380c9279688e76d5c280ec"
+  }
+}

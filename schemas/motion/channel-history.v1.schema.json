@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "eonwild.motion.channel-history.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "historyId", "priorStateSha256", "priorGeneration", "priorStable", "replacement"],
+  "properties": {
+    "schema": {"const": "eonwild.motion.channel-history.v1"},
+    "historyId": {"type": "string", "minLength": 1},
+    "priorStateSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "priorGeneration": {"type": "integer", "minimum": 1},
+    "priorStable": {"type": "object"},
+    "replacement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profileSha256", "profileLockSha256", "artifactSha256", "promotionManifestSha256"],
+      "properties": {
+        "profileSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "profileLockSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "artifactSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "promotionManifestSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  }
+}

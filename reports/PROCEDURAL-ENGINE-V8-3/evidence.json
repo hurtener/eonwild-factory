@@ -1,0 +1,32 @@
+{
+  "schema": "eonwild.motion.channel-model-evidence.v1",
+  "status": "PASS",
+  "engineVersion": "0.1.0",
+  "channelStateSha256": "d895da0d02cea27805153677d9bff34d2372c6066076024887772a05d9b9ac67",
+  "resolvedLocks": {
+    "stable": "ebd3305dad6064f359d5a2ffd2a351169f6df092da3ee75f293cc9a39256d419",
+    "working": "4198300a8a34e93f56f2235f1555b4024f42fc1b10cee5cb5cf01009f83a3bb3",
+    "explicit": "eba6d05608e5b34c408dfeed5f9440ac85444b441d380c9279688e76d5c280ec"
+  },
+  "approvedArtifactSha256": "a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5",
+  "tests": {
+    "count": 26,
+    "failures": 0,
+    "skipped": 0,
+    "seconds": 43.218
+  },
+  "checks": {
+    "stableWorkingExplicitResolve": true,
+    "missingInvalidStaleEngineMismatchRejected": true,
+    "iterationRevisionChangesLock": true,
+    "ordinaryCommandsDoNotMutateChannels": true,
+    "approvedPromotionUpdatesStable": true,
+    "priorStableHistoryRetained": true,
+    "historyOverwriteRejected": true,
+    "stableArtifactStalenessRejected": true,
+    "failedStableUpdateRollsBackNewDestination": true,
+    "noBranchOrFutureVersionAssumptions": true,
+    "approvedArtifactUnchanged": true,
+    "legacyTreesUnchanged": true
+  }
+}

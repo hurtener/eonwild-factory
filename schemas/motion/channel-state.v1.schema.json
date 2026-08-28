@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "eonwild.motion.channel-state.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "engineVersion", "generation", "stable", "working"],
+  "properties": {
+    "schema": {"const": "eonwild.motion.channel-state.v1"},
+    "engineVersion": {"type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"},
+    "generation": {"type": "integer", "minimum": 1},
+    "stable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["revision", "historyId", "profile", "profileLockSha256", "release"],
+      "properties": {
+        "revision": {"type": "integer", "minimum": 1},
+        "historyId": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+        "profile": {"$ref": "#/$defs/reference"},
+        "profileLockSha256": {"$ref": "#/$defs/sha"},
+        "release": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "manifest", "artifact"],
+          "properties": {
+            "id": {"type": "string", "minLength": 1},
+            "manifest": {"$ref": "#/$defs/reference"},
+            "artifact": {"$ref": "#/$defs/reference"}
+          }
+        }
+      }
+    },
+    "working": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["iteration", "revision", "basedOnStable", "profile", "profileLockSha256"],
+      "properties": {
+        "iteration": {"type": "integer", "minimum": 0},
+        "revision": {"type": "integer", "minimum": 1},
+        "basedOnStable": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+        "profile": {"$ref": "#/$defs/reference"},
+        "profileLockSha256": {"$ref": "#/$defs/sha"}
+      }
+    }
+  },
+  "$defs": {
+    "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha"}
+      }
+    }
+  }
+}

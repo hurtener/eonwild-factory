@@ -48,6 +48,12 @@ def emit_report(
             "id": None,
             "sha256": None,
             "lockSha256": None,
+            "channel": None,
+            "channelStateSha256": None,
+            "generation": None,
+            "iteration": None,
+            "revision": None,
+            "historyId": None,
         },
         "toolVersions": tool_versions or {
             "engine": __version__,

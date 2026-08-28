@@ -315,11 +315,7 @@ def validate_candidate(
     return {
         "schema": "eonwild.motion.validation-report.v1",
         "status": "PASS",
-        "profile": {
-            "id": resolved.profile["id"],
-            "sha256": resolved.profile_sha256,
-            "lockSha256": resolved.lock_sha256,
-        },
+        "profile": resolved.profile_binding(),
         "artifact": {
             "path": str(candidate_path),
             "sha256": sha256_file(candidate_path),

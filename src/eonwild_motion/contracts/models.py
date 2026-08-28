@@ -32,6 +32,8 @@ class ResolvedProfile:
     contact_evidence_sha256: str
     lock: dict[str, Any]
     lock_sha256: str
+    selector: str
+    channel: dict[str, Any] | None = None
 
     @property
     def rig(self) -> dict[str, Any]:
@@ -53,6 +55,20 @@ class ResolvedProfile:
     def render_set(self) -> dict[str, Any]:
         return self.documents["renderSet"].data
 
+    def profile_binding(self) -> dict[str, Any]:
+        channel = self.channel or {}
+        return {
+            "id": self.profile["id"],
+            "sha256": self.profile_sha256,
+            "lockSha256": self.lock_sha256,
+            "channel": channel.get("name"),
+            "channelStateSha256": channel.get("stateSha256"),
+            "generation": channel.get("generation"),
+            "iteration": channel.get("iteration"),
+            "revision": channel.get("revision"),
+            "historyId": channel.get("historyId"),
+        }
+
     def runtime_document(self) -> dict[str, Any]:
         return {
             "profile": self.profile,
@@ -72,4 +88,6 @@ class ResolvedProfile:
             "contactEvidenceSha256": self.contact_evidence_sha256,
             "lock": self.lock,
             "lockSha256": self.lock_sha256,
+            "profileSelector": self.selector,
+            "channel": self.channel,
         }

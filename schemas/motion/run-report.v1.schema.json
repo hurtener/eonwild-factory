@@ -29,11 +29,17 @@
     "profile": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "sha256", "lockSha256"],
+      "required": ["id", "sha256", "lockSha256", "channel", "channelStateSha256", "generation", "iteration", "revision", "historyId"],
       "properties": {
         "id": {"type": ["string", "null"]},
         "sha256": {"anyOf": [{"$ref": "#/$defs/sha"}, {"type": "null"}]},
-        "lockSha256": {"anyOf": [{"$ref": "#/$defs/sha"}, {"type": "null"}]}
+        "lockSha256": {"anyOf": [{"$ref": "#/$defs/sha"}, {"type": "null"}]},
+        "channel": {"type": ["string", "null"], "enum": ["stable", "working", null]},
+        "channelStateSha256": {"anyOf": [{"$ref": "#/$defs/sha"}, {"type": "null"}]},
+        "generation": {"type": ["integer", "null"], "minimum": 1},
+        "iteration": {"type": ["integer", "null"], "minimum": 0},
+        "revision": {"type": ["integer", "null"], "minimum": 1},
+        "historyId": {"type": ["string", "null"]}
       }
     },
     "toolVersions": {

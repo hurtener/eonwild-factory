@@ -72,11 +72,7 @@ def compare_artifacts(
         "schema": "eonwild.motion.comparison-report.v1",
         "status": "PASS",
         "runId": run_id,
-        "profile": {
-            "id": resolved.profile["id"],
-            "sha256": resolved.profile_sha256,
-            "lockSha256": resolved.lock_sha256,
-        },
+        "profile": resolved.profile_binding(),
         "source": {"gitHead": source["gitHead"]},
         "baseline": _artifact(baseline_path),
         "candidate": _artifact(candidate_path),

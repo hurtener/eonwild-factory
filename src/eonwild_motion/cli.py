@@ -9,7 +9,7 @@ from typing import Any
 
 from . import __version__
 from .contracts.load import validate_document
-from .contracts.resolve import resolve_profile
+from .contracts.resolve import profile_repository, resolve_profile
 from .hashing import sha256_file, write_json
 from .paths import default_work_root, repository_root
 from .pipeline.build import invoke_blender_build
@@ -38,12 +38,8 @@ def _source(repository: Path) -> dict[str, Any]:
     return {**state, "implementer": implementer, "engineVersion": __version__}
 
 
-def _profile(resolved) -> dict[str, str]:
-    return {
-        "id": resolved.profile["id"],
-        "sha256": resolved.profile_sha256,
-        "lockSha256": resolved.lock_sha256,
-    }
+def _profile(resolved) -> dict[str, Any]:
+    return resolved.profile_binding()
 
 
 def _tools(*, blender: str | None = None, validator: str | None = None) -> dict[str, Any]:
@@ -56,11 +52,25 @@ def _tools(*, blender: str | None = None, validator: str | None = None) -> dict[
 
 
 def _runtime_document(resolved) -> dict[str, Any]:
-    return {
+    runtime = {
         **resolved.runtime_document(),
         "repository": str(resolved.repository),
         "profilePath": str(resolved.profile_path),
     }
+    if resolved.channel is not None:
+        state_path = Path(resolved.channel["statePath"])
+        if not state_path.is_absolute():
+            state_path = resolved.repository / state_path
+        runtime["channelStatePath"] = str(state_path.resolve())
+    return runtime
+
+
+def _resolve_args(args, repository: Path):
+    return resolve_profile(
+        args.profile,
+        repository=repository,
+        channel_state_path=args.channel_state,
+    )
 
 
 def _output(report: dict, explicit: Path | None) -> None:
@@ -195,10 +205,10 @@ def command_build(args) -> int:
     started, repository, context, resolved = now_utc(), None, None, None
     source = _unknown_source()
     try:
-        repository = repository_root(args.profile)
+        repository = profile_repository(args.profile)
         context = create_run_context(repository, args.work_root, "build")
         source = _source(repository)
-        resolved = resolve_profile(args.profile)
+        resolved = _resolve_args(args, repository)
         _write_resolved(context, resolved)
         artifact = context.run_dir / "artifacts/candidate.glb"
         stage_path = context.run_dir / "build-stage.json"
@@ -234,10 +244,10 @@ def command_validate(args) -> int:
     started, repository, context, resolved = now_utc(), None, None, None
     source = _unknown_source()
     try:
-        repository = repository_root(args.profile)
+        repository = profile_repository(args.profile)
         context = create_run_context(repository, args.work_root, "validate")
         source = _source(repository)
-        resolved = resolve_profile(args.profile)
+        resolved = _resolve_args(args, repository)
         _write_resolved(context, resolved)
         artifact = args.artifact.resolve()
         validation = _bind_evidence(validate_candidate(resolved, artifact), run_id=context.run_id, source=source)
@@ -259,10 +269,10 @@ def command_compare(args) -> int:
     started, repository, context, resolved = now_utc(), None, None, None
     source = _unknown_source()
     try:
-        repository = repository_root(args.profile)
+        repository = profile_repository(args.profile)
         context = create_run_context(repository, args.work_root, "compare")
         source = _source(repository)
-        resolved = resolve_profile(args.profile)
+        resolved = _resolve_args(args, repository)
         _write_resolved(context, resolved)
         baseline, candidate = args.baseline.resolve(), args.candidate.resolve()
         _, render, comparison = _comparison_bundle(resolved=resolved, baseline=baseline, candidate=candidate, context=context, source=source)
@@ -284,10 +294,10 @@ def command_render(args) -> int:
     started, repository, context, resolved = now_utc(), None, None, None
     source = _unknown_source()
     try:
-        repository = repository_root(args.profile)
+        repository = profile_repository(args.profile)
         context = create_run_context(repository, args.work_root, "render")
         source = _source(repository)
-        resolved = resolve_profile(args.profile)
+        resolved = _resolve_args(args, repository)
         _write_resolved(context, resolved)
         artifact = args.artifact.resolve()
         render = _render_one(resolved=resolved, artifact=artifact, output=context.run_dir / "renders/review.png", stage_report=context.run_dir / "render.json", log_path=context.run_dir / "blender-render.log", context=context, source=source)
@@ -311,8 +321,24 @@ def command_promote(args) -> int:
         repository = Path(runtime["repository"]).resolve()
         context = create_run_context(repository, args.work_root, "promote")
         source = _source(repository)
-        resolved = resolve_profile(Path(runtime["profilePath"]))
-        result = promote_run(run_dir=args.run.resolve(), destination=args.destination.resolve(), approvals_path=args.approvals.resolve())
+        selector = runtime.get("profileSelector", runtime["profilePath"])
+        channel_state_path = (
+            Path(runtime["channelStatePath"])
+            if runtime.get("channelStatePath")
+            else None
+        )
+        resolved = resolve_profile(
+            selector,
+            repository=repository,
+            channel_state_path=channel_state_path,
+        )
+        result = promote_run(
+            run_dir=args.run.resolve(),
+            destination=args.destination.resolve(),
+            approvals_path=args.approvals.resolve(),
+            update_stable=args.update_stable,
+            channel_state_path=channel_state_path,
+        )
         report = emit_report(
             context.run_dir / "run-report.json", command="promote", status="PASS", run_id=context.run_id,
             inputs=[{"path": str(args.run.resolve()), "sha256": None, "kind": "passing-build-run"}, {"path": str(args.approvals.resolve()), "sha256": sha256_file(args.approvals.resolve()), "kind": "independent-approvals"}],
@@ -331,7 +357,8 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command", required=True)
     for name, handler in (("build", command_build), ("validate", command_validate), ("compare", command_compare), ("render", command_render)):
         command = subparsers.add_parser(name)
-        command.add_argument("--profile", type=Path, required=True)
+        command.add_argument("--profile", required=True)
+        command.add_argument("--channel-state", type=Path)
         command.add_argument("--work-root", type=Path, default=default_work_root())
         command.add_argument("--json-output", type=Path)
         command.set_defaults(handler=handler)
@@ -345,6 +372,7 @@ def build_parser() -> argparse.ArgumentParser:
     promote.add_argument("--approvals", type=Path, required=True)
     promote.add_argument("--work-root", type=Path, default=default_work_root())
     promote.add_argument("--json-output", type=Path)
+    promote.add_argument("--update-stable", action="store_true")
     promote.set_defaults(handler=command_promote)
     return parser
 
