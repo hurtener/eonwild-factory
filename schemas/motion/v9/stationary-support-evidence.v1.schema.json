@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "eonwild.motion.v9.stationary-support-evidence.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "report_id", "plan", "evidence"],
+  "properties": {
+    "schema": {"const": "eonwild.motion.v9.stationary-support-evidence.v1"},
+    "report_id": {"type": "string", "minLength": 1},
+    "plan": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["schema", "plan_id"]
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "scope", "plan_sha256", "evidence_sha256", "input_manifest", "checks"],
+      "properties": {
+        "status": {"const": "PASS"},
+        "scope": {"const": "contract_and_grounded_support_only"},
+        "plan_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "evidence_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "input_manifest": {
+          "type": "object",
+          "minProperties": 5,
+          "additionalProperties": false,
+          "required": ["intent", "program", "body"],
+          "properties": {
+            "intent": {"$ref": "#/$defs/inputEntry"},
+            "program": {"$ref": "#/$defs/inputEntry"},
+            "body": {"$ref": "#/$defs/inputEntry"}
+          },
+          "patternProperties": {
+            "^contact_.+$": {"$ref": "#/$defs/inputEntry"}
+          }
+        },
+        "checks": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["strict_contracts", "canonical_axes", "canonical_gravity", "grounded_contacts", "deterministic_com", "body_frame_com", "support_physics_unevaluated", "absolute_dynamics_policy"],
+          "properties": {
+            "strict_contracts": {"const": true},
+            "canonical_axes": {"const": true},
+            "canonical_gravity": {"const": true},
+            "grounded_contacts": {"const": true},
+            "deterministic_com": {"const": true},
+            "body_frame_com": {"const": true},
+            "support_physics_unevaluated": {"const": true},
+            "absolute_dynamics_policy": {"const": true}
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "inputEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  }
+}

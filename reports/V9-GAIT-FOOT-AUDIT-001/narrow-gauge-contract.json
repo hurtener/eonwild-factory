@@ -1,0 +1,307 @@
+{
+  "schema": "eonwild.motion.family_narrow_gauge_contract.v1",
+  "status": "PROVISIONAL_ENGINEERING_CONTRACT",
+  "scientificClaim": false,
+  "speciesHardcode": false,
+  "purpose": "Normalize family-level support width, foot heading, and COM targets while preserving state-specific uncertainty.",
+  "evidenceBoundary": {
+    "sourceBackedTrend": "Theropod and tyrannosaurid trackway evidence supports a generally narrow, digitigrade gait and a speed-conditioned reduction in step width.",
+    "notSourceBacked": "The numeric envelopes below, COM targets, and attack/brace/turn rules are engineering or gameplay priors, not fossil measurements.",
+    "requiredLabelsForBands": [
+      "family_calibrated",
+      "engineering_prior",
+      "gameplay_hypothesis",
+      "measurement_uncertainty"
+    ]
+  },
+  "normalization": {
+    "hipHeightH": {
+      "definition": "Median pelvis or hip joint height above the evaluated ground plane over valid samples.",
+      "unit": "metres",
+      "required": true,
+      "fallback": "Use a declared morphology-specific hip landmark; never infer H from species name."
+    },
+    "localGroundFrame": {
+      "up": "normalized ground normal",
+      "travelTangentT": "normalized measured root or COM ground velocity over the accepted local interval",
+      "lateralL": "normalized cross(up, travelTangentT), with sign stabilized by actor side",
+      "axisRule": "Derive T from measured motion; do not use a conflicting static forwardAxis field without reconciliation."
+    },
+    "contactCentroids": {
+      "left": "Weighted centroid of deterministic sole and toe vertices classified as in contact.",
+      "right": "Weighted centroid of deterministic sole and toe vertices classified as in contact.",
+      "forbiddenProxy": "Ankle, foot-bone, or toe-root origin alone",
+      "maskRequirements": [
+        "record vertex IDs and weight threshold",
+        "record floor-gap tolerance",
+        "record contact velocity threshold",
+        "separate toe-dominant masks from broad ankle/shin spill-through masks"
+      ]
+    }
+  },
+  "metrics": {
+    "stanceSupportWidthNormalized": {
+      "formula": "abs(dot(C_left - C_right, L)) / H",
+      "meaning": "Simultaneous lateral separation of active support contacts.",
+      "report": [
+        "q05",
+        "q50",
+        "q95",
+        "family median",
+        "family p10",
+        "family p90",
+        "measurement uncertainty"
+      ]
+    },
+    "stepWidthNormalized": {
+      "formula": "abs(dot(C_next_contact - C_previous_contact, L)) / H",
+      "meaning": "Mediolateral distance between successive contralateral footfalls; do not conflate with stanceSupportWidthNormalized.",
+      "report": [
+        "q05",
+        "q50",
+        "q95",
+        "family median",
+        "family p10",
+        "family p90",
+        "measurement uncertainty"
+      ]
+    },
+    "footHeadingPsi": {
+      "formula": "signed atan2(dot(cross(footAxis, T), up), dot(footAxis, T))",
+      "footAxis": "Projected direction from foot root or metatarsal base toward the toe-contact centroid.",
+      "report": [
+        "left signed degrees",
+        "right signed degrees",
+        "absolute q05/q50/q95",
+        "family p10/p90",
+        "heading measurement uncertainty"
+      ]
+    },
+    "comSupportMarginNormalized": {
+      "formula": "signed horizontal distance from COM projection to the active support-polygon boundary / H",
+      "staticRule": "COM projection must remain inside the active polygon with the declared positive margin.",
+      "dynamicRule": "Also evaluate capturePoint = COM + velocity / sqrt(g/H); use capture-point margin for moving or impulsive states.",
+      "comSource": "Explicit mass-weighted COM or declared proxy with provenance; do not infer COM from a trackway description."
+    },
+    "contactQuality": {
+      "metrics": [
+        "sole-to-ground gap",
+        "penetration depth",
+        "contact-point velocity",
+        "contact occupancy",
+        "unintended crossover flag"
+      ],
+      "required": true
+    }
+  },
+  "familyCalibration": {
+    "required": true,
+    "profileKey": "biomechanical_family_id",
+    "minimumStoredStatistics": [
+      "stanceSupportWidthNormalized median/p10/p90",
+      "stepWidthNormalized median/p10/p90",
+      "footHeadingPsi median/p10/p90",
+      "comSupportMarginNormalized median/p10/p90",
+      "measurement uncertainty",
+      "source provenance",
+      "gait-state applicability"
+    ],
+    "aggregation": "Calibrate within family and gait state; retain individual actor residuals rather than replacing them with a species constant.",
+    "acceptanceRule": "A target band is soft until the family profile has independent data and a declared uncertainty interval."
+  },
+  "gaitStates": {
+    "straight_walk": {
+      "classificationSignals": [
+        "low path curvature",
+        "stable travel tangent",
+        "alternating foot contacts",
+        "no deliberate attack or brace impulse"
+      ],
+      "confidence": "LOW_ENGINEERING_PRIOR",
+      "stanceSupportWidthHSoftBand": [
+        0.0,
+        0.1
+      ],
+      "stanceSupportWidthHUncertainty": 0.05,
+      "stanceSupportWidthHHardEnvelope": [
+        0.0,
+        0.18
+      ],
+      "footHeadingAbsDegreesSoftMax": 15.0,
+      "footHeadingUncertaintyDegrees": 5.0,
+      "comMarginHSoftMin": 0.0,
+      "dynamicCaptureMarginHSoftMin": -0.02,
+      "crossover": "forbidden unless an explicit high-speed or pivot state is declared"
+    },
+    "slow_cautious": {
+      "classificationSignals": [
+        "lower measured speed than straight-walk family median",
+        "longer or more frequent double-support interval",
+        "deliberate surface or target inspection"
+      ],
+      "confidence": "LOW_ENGINEERING_PRIOR",
+      "stanceSupportWidthHSoftBand": [
+        0.05,
+        0.18
+      ],
+      "stanceSupportWidthHUncertainty": 0.06,
+      "stanceSupportWidthHHardEnvelope": [
+        0.0,
+        0.25
+      ],
+      "footHeadingAbsDegreesSoftMax": 20.0,
+      "footHeadingUncertaintyDegrees": 7.0,
+      "comMarginHSoftMin": 0.02,
+      "dynamicCaptureMarginHSoftMin": 0.0,
+      "crossover": "forbidden"
+    },
+    "brace": {
+      "classificationSignals": [
+        "near-zero travel speed",
+        "external load or target impulse",
+        "persistent bilateral support"
+      ],
+      "confidence": "GAMEPLAY_HYPOTHESIS",
+      "stanceSupportWidthHSoftBand": [
+        0.12,
+        0.3
+      ],
+      "stanceSupportWidthHUncertainty": 0.08,
+      "stanceSupportWidthHHardEnvelope": [
+        0.05,
+        0.4
+      ],
+      "footHeadingAbsDegreesSoftMax": 30.0,
+      "footHeadingUncertaintyDegrees": 10.0,
+      "comMarginHSoftMin": 0.05,
+      "dynamicCaptureMarginHSoftMin": 0.03,
+      "crossover": "forbidden",
+      "contactRequirement": "both support contacts retained through the declared brace interval"
+    },
+    "attack": {
+      "classificationSignals": [
+        "declared acceleration or strike impulse",
+        "target-relative commitment",
+        "asymmetric support or follow-through"
+      ],
+      "confidence": "GAMEPLAY_HYPOTHESIS",
+      "stanceSupportWidthHSoftBand": [
+        0.05,
+        0.25
+      ],
+      "stanceSupportWidthHUncertainty": 0.1,
+      "stanceSupportWidthHHardEnvelope": [
+        0.0,
+        0.4
+      ],
+      "footHeadingAbsDegreesSoftMax": 25.0,
+      "footHeadingUncertaintyDegrees": 12.0,
+      "comMarginHSoftMin": 0.0,
+      "dynamicCaptureMarginHSoftMin": 0.0,
+      "crossover": "allowed only when explicitly authored and captured by the support polygon",
+      "scientificBoundary": "Do not present this state or its bands as a trackway-derived tyrannosaurid fact."
+    },
+    "turn": {
+      "classificationSignals": [
+        "declared nonzero path curvature",
+        "outer and inner foot roles",
+        "travel tangent changes over the interval"
+      ],
+      "confidence": "GAMEPLAY_HYPOTHESIS",
+      "outerStanceSupportWidthHSoftBand": [
+        0.1,
+        0.35
+      ],
+      "innerStanceSupportWidthHSoftBand": [
+        0.0,
+        0.2
+      ],
+      "stanceSupportWidthHUncertainty": 0.1,
+      "stanceSupportWidthHHardEnvelope": [
+        0.0,
+        0.45
+      ],
+      "footHeadingAbsDegreesSoftMax": 45.0,
+      "footHeadingUncertaintyDegrees": 15.0,
+      "comMarginHSoftMin": 0.0,
+      "dynamicCaptureMarginHSoftMin": 0.0,
+      "crossover": "forbidden unless the turn explicitly declares a pivot or high-speed crossover",
+      "roleRequirement": "Report inner and outer contacts separately; a single scalar width is insufficient."
+    }
+  },
+  "acceptanceGates": {
+    "sampling": {
+      "commonPhaseSamples": 120,
+      "densePlaybackHz": 240,
+      "quantilesRequired": [
+        0.05,
+        0.5,
+        0.95
+      ],
+      "allMetricsFinite": true
+    },
+    "candidateAgainstV8_2": {
+      "repositoryWitnessEuclideanMaxM": 0.002,
+      "repositoryWitnessWorstAxisMaxM": 0.0005,
+      "toeDominantEuclideanRegressionMaxM": 0.0005,
+      "footBoneTargetErrorMaxM": 0.00035,
+      "footPivotTranslationMaxM": 0.015,
+      "solePenetrationRegressionMaxM": 0.0005,
+      "note": "Absolute inherited penetration is a separate gate; V8.3 must not hide it behind candidate-vs-baseline regression."
+    },
+    "stateRules": {
+      "straightWalkNoUnintendedCrossover": true,
+      "slowCautiousNoUnintendedCrossover": true,
+      "braceBilateralContactRequired": true,
+      "attackCapturePointMarginRequired": true,
+      "turnInnerOuterRolesRequired": true
+    },
+    "absoluteContact": {
+      "solePenetrationMustBeReported": true,
+      "currentLegacyObservationM": 0.005569492967027145,
+      "requiredDisposition": "correct baseline/render plane or record an explicit approved legacy exception"
+    },
+    "evidence": {
+      "fixedTopViewRequired": true,
+      "fixedSideFrontThreeQuarterRequired": true,
+      "groundBoundaryOutsideFrame": true,
+      "overlaysRequired": [
+        "contact centroids",
+        "foot heading vectors",
+        "COM projection",
+        "capture point for dynamic states",
+        "support polygon",
+        "travel tangent and lateral axis",
+        "phase/frame/time identifier"
+      ]
+    }
+  },
+  "primarySources": [
+    {
+      "id": "PMC4108409",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4108409/",
+      "role": "Tyrannosaurid trackways: narrow trackway and slight inward pes rotation are trackway-specific evidence."
+    },
+    {
+      "id": "PMC2752196",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2752196/",
+      "role": "Early-theropod trackways: narrow digitigrade gait is common in the discussed record, with wider stance in some low-speed/rest contexts."
+    },
+    {
+      "id": "PMC5550975",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5550975/",
+      "role": "Step width in the studied non-avian theropod trackways decreases continuously with increasing stride length/speed."
+    }
+  ],
+  "recommendedEvidence": {
+    "camera": "Locked orthographic top-down camera with an effectively infinite ground surface or plane boundary outside the crop.",
+    "comparison": "Synchronized V8.2-left/V8.3-right panes plus side/front/three-quarter and a foot macro crop.",
+    "doNotUseAsSoleProof": [
+      "single ankle origin",
+      "three vertices per side",
+      "a dark unreferenced floor",
+      "a finite plane edge inside the frame",
+      "species-name constants"
+    ]
+  }
+}

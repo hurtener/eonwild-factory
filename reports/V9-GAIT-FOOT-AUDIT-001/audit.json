@@ -1,0 +1,310 @@
+{
+  "schema": "eonwild.motion.v9_gait_foot_audit.v1",
+  "status": "INDEPENDENT_READ_ONLY_AUDIT",
+  "scope": {
+    "purpose": "Audit V8.3 foot-adjacent artifacts and define a family-level narrow-gauge contract.",
+    "engineMotionAssetChanges": false,
+    "independentOfExistingPassReports": true,
+    "worktree": "/Volumes/m2-extended-disk/Repos/eonwild-factory-v8-3-hip",
+    "head": "195a8b4707997b3309f86f8821217ed1d7e9c22a"
+  },
+  "inputs": {
+    "v8_3": {
+      "path": "assets/sha256/b5fc582e3bae3b2708735e7ae68cc31da65599f6d155d3b6d089a44ed5517d03.glb",
+      "sha256": "b5fc582e3bae3b2708735e7ae68cc31da65599f6d155d3b6d089a44ed5517d03",
+      "byteSize": 45331840,
+      "vertexCount": 59169,
+      "polygonCount": 102258,
+      "animationFrameRange": [
+        0.0,
+        97.66957092285156
+      ]
+    },
+    "v8_2": {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-factory-v8-2-release/procedural-animation-toolkit(v8.2)/asset/tarbosaurus_v8_2_approved.glb",
+      "sha256": "a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5",
+      "byteSize": 45331840,
+      "vertexCount": 59169,
+      "polygonCount": 102258,
+      "animationFrameRange": [
+        0.0,
+        97.66957092285156
+      ]
+    }
+  },
+  "tools": {
+    "blender": "5.2.0 LTS",
+    "renderEngine": "Eevee",
+    "coordinateEvaluation": "Blender imported world coordinates; contract uses measured local ground frame"
+  },
+  "media": {
+    "manifest": "reports/PROCEDURAL-ENGINE-V8-3/evidence/media-manifest.json",
+    "comparisonLayout": "v8_2_left_v8_3_right",
+    "views": [
+      "side",
+      "front",
+      "front-three-quarter"
+    ],
+    "width": 960,
+    "height": 540,
+    "fps": 24,
+    "frames": 240,
+    "durationSeconds": 10.0,
+    "playback": "finite-non-looping",
+    "phaseCropCount": 18,
+    "fullBodyPhaseCropCount": 9,
+    "feetPhaseCropCount": 9,
+    "independentlyInspected": true
+  },
+  "semanticAndCoordinateRisk": {
+    "declaredSemanticRig": {
+      "upAxis": "Y",
+      "forwardAxis": "X",
+      "path": "catalog/rigs/hero-theropod-v8_3.semantic-rig.json"
+    },
+    "thresholdBasis": {
+      "x": "lateral",
+      "y": "vertical",
+      "z": "sagittal",
+      "path": "reports/PROCEDURAL-ENGINE-V8-3/evaluation/thresholds.json"
+    },
+    "observedTravel": "exported body/root travel is predominantly along the sagittal axis",
+    "risk": "A literal read of forwardAxis X can produce a heading error; derive travel from measured root velocity and version the semantic field before gating headings."
+  },
+  "layerMetrics": {
+    "path": "reports/PROCEDURAL-ENGINE-V8-3/evidence/layer-metrics.json",
+    "pelvisBalancePreIk": {
+      "addedLateralP2PM": 0.021,
+      "addedVerticalP2PM": 0.009993370713473285,
+      "addedRollP2PDegrees": 1.7
+    },
+    "legContactResolveRootMotion": {
+      "maxFootWorldPositionErrorM": 2.5823128856601336e-15,
+      "maxFootWorldOrientationErrorDegrees": 0.000005454337916859027,
+      "maxFootPivotTranslationM": 4.867755750919621e-8,
+      "maxJointLocalDeltaDegrees": 2.1284536214200096
+    },
+    "legContactResolveInPlace": {
+      "maxFootWorldPositionErrorM": 9.019494489765868e-16,
+      "maxFootWorldOrientationErrorDegrees": 0.000005454203027630727,
+      "maxFootPivotTranslationM": 4.976054252038489e-8,
+      "maxJointLocalDeltaDegrees": 2.029901383041815
+    }
+  },
+  "denseFinalSkinnedComparison": {
+    "method": "Direct Blender evaluated mesh comparison at common integer frames 0 through 97.",
+    "framesSampled": 98,
+    "vertexCount": 59169,
+    "toeMaskWeightThreshold": 0.75,
+    "masks": {
+      "leftToeAnyWeightAbove1eMinus8": 3737,
+      "rightToeAnyWeightAbove1eMinus8": 3459,
+      "leftFootAnyWeightAbove1eMinus8": 4063,
+      "rightFootAnyWeightAbove1eMinus8": 3943,
+      "leftToeWeightAtLeast0.75": 1395,
+      "rightToeWeightAtLeast0.75": 1386,
+      "leftFootWeightAtLeast0.75": 1564,
+      "rightFootWeightAtLeast0.75": 1417
+    },
+    "broadMaskMaximums": {
+      "leftToeAnyWeightAbove1eMinus8": {
+        "euclideanM": 0.005848941655474254,
+        "frame": 10,
+        "vertex": 49506,
+        "classification": "ankle_or_lower_leg_spill_through"
+      },
+      "rightToeAnyWeightAbove1eMinus8": {
+        "euclideanM": 0.0055189357098963335,
+        "frame": 0,
+        "vertex": 45742,
+        "classification": "ankle_or_lower_leg_spill_through"
+      },
+      "leftFootAnyWeightAbove1eMinus8": {
+        "euclideanM": 0.00788823985760007,
+        "frame": 23,
+        "vertex": 48869,
+        "classification": "lower_leg_dominated"
+      },
+      "rightFootAnyWeightAbove1eMinus8": {
+        "euclideanM": 0.014342410290023037,
+        "frame": 0,
+        "vertex": 44873,
+        "classification": "ankle_or_shin_dominated",
+        "weights": {
+          "Bone_013": 0.8183919191360474,
+          "Bone_014": 0.18019050359725952,
+          "Bone_012": 0.0014176156837493181
+        }
+      }
+    },
+    "toeDominantMaximums": {
+      "leftToeWeightAtLeast0.75": {
+        "euclideanM": 0.0003832554835665211,
+        "frame": 23,
+        "vertex": 51488
+      },
+      "rightToeWeightAtLeast0.75": {
+        "euclideanM": 0.00038674751184692384,
+        "frame": 0,
+        "vertex": 42852
+      },
+      "leftFootWeightAtLeast0.75": {
+        "euclideanM": 0.0008299047701335106,
+        "frame": 23,
+        "vertex": 48829
+      },
+      "rightFootWeightAtLeast0.75": {
+        "euclideanM": 0.0008252059891013888,
+        "frame": 0,
+        "vertex": 43649
+      }
+    },
+    "sixRepositoryWitnesses": {
+      "vertices": [
+        51119,
+        49877,
+        50149,
+        41588,
+        41368,
+        41936
+      ],
+      "directBlenderMaxEuclideanM": 0.00003155676150813735,
+      "directBlenderMaxWorstAxisM": 0.000029325485229492188,
+      "repositoryEvidenceSamples": 977,
+      "repositoryEvidenceMaxEuclideanM": 0.0001193097,
+      "repositoryEvidenceMaxWorstAxisM": 0.0001039505,
+      "repositoryLimits": {
+        "euclideanM": 0.002,
+        "worstAxisM": 0.0005
+      }
+    },
+    "interpretation": "Toe-dominant geometry is bounded and visually stable; broad maxima are expected leg compensation caused by masks admitting ankle/shin influences."
+  },
+  "floorContactCheck": {
+    "renderScript": "reports/PROCEDURAL-ENGINE-V8-3/tools/render_comparison_blender.py",
+    "planeFormula": "primary mesh bound-box minimum z minus 0.012 m",
+    "planeZ": -0.01200103802869944,
+    "sampledFrames": 98,
+    "base": {
+      "maximumPenetrationM": 0.005567486898201423,
+      "frame": 38,
+      "vertex": 50291,
+      "bone": "Bone_045",
+      "gapM": -0.005567486898201423
+    },
+    "candidate": {
+      "maximumPenetrationM": 0.005569492967027145,
+      "frame": 38,
+      "vertex": 50291,
+      "bone": "Bone_045",
+      "gapM": -0.005569492967027145
+    },
+    "otherNamedTip": {
+      "frame": 11,
+      "vertex": 42208,
+      "bone": "Bone_054",
+      "candidateGapM": -0.005431087256568389
+    },
+    "candidateMinusBaselineAtWorstNamedTipM": 0.0000020342072095157234,
+    "classification": "inherited_motion_target_to_sole_plane_mismatch",
+    "visualStatus": "mostly evidence-hidden at supplied camera scale; must be measured explicitly"
+  },
+  "visualFindings": [
+    {
+      "id": "dark_far_hock_strip",
+      "classification": "lighting_or_occlusion",
+      "candidateOnly": false,
+      "finding": "Appears in corresponding V8.2 and V8.3 phases and follows a continuous limb silhouette.",
+      "confidence": "high"
+    },
+    {
+      "id": "toe_deformation",
+      "classification": "no_candidate_only_artifact",
+      "candidateOnly": false,
+      "finding": "No toe explosion or detached geometry; toe-dominant maximum regression is 0.00038674751184692384 m.",
+      "confidence": "high"
+    },
+    {
+      "id": "knee_ankle_compensation",
+      "classification": "intentional_motion",
+      "candidateOnly": false,
+      "finding": "Smooth local leg changes up to 2.1284536214200096 degrees, with no visible pop.",
+      "confidence": "high"
+    },
+    {
+      "id": "foot_crossing",
+      "classification": "no_defect_observed",
+      "candidateOnly": false,
+      "finding": "Front and three-quarter comparisons show no unintended foot crossing.",
+      "confidence": "medium"
+    },
+    {
+      "id": "toe_tip_plane_intersection",
+      "classification": "inherited_geometry_ground_mismatch",
+      "candidateOnly": false,
+      "finding": "Both GLBs place named toe tips up to 0.005569492967027145 m below the fixed plane.",
+      "confidence": "high"
+    },
+    {
+      "id": "three_quarter_plane_edge",
+      "classification": "evidence_only",
+      "candidateOnly": true,
+      "finding": "Finite matte-plane boundary enters the bottom of the three-quarter framing.",
+      "confidence": "high"
+    }
+  ],
+  "primarySources": [
+    {
+      "id": "PMC4108409",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4108409/",
+      "supportedClaim": "Reported tyrannosaurid trackways are narrow with slight inward pes rotation and footprints near or overlapping the trackway midline; pace and stride observations are trackway-specific.",
+      "notSupported": "Universal Tarbosaurus support width, COM target, or attack/brace/turn bands."
+    },
+    {
+      "id": "PMC2752196",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2752196/",
+      "supportedClaim": "Most discussed theropod trackways are narrow-gauge and digitigrade; wider stance occurs in some low-speed/rest contexts, with an early-theropod uneven-surface example retaining narrow gait.",
+      "notSupported": "Universal behavior for all theropods or numeric family envelopes."
+    },
+    {
+      "id": "PMC5550975",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5550975/",
+      "supportedClaim": "Step width decreases continuously with stride length/speed in the studied non-avian theropod trackways; faster feet approach the midline and crossover can occur.",
+      "notSupported": "An absolute dinosaur support-width ratio or COM target."
+    }
+  ],
+  "contract": {
+    "path": "narrow-gauge-contract.json",
+    "status": "PROVISIONAL_ENGINEERING_CONTRACT",
+    "speciesHardcode": false,
+    "scientificClaim": false,
+    "gaitStates": [
+      "straight_walk",
+      "slow_cautious",
+      "brace",
+      "attack",
+      "turn"
+    ]
+  },
+  "recommendations": {
+    "implementationOrder": [
+      "Remove the three-quarter plane boundary from evidence and add a locked top view.",
+      "Implement deterministic sole/toe contact masks and normalized family metrics.",
+      "Derive travel tangent from measured velocity and reconcile the semantic forward-axis field.",
+      "Make dense toe/sole regression normative and retain sparse witnesses as a secondary guard.",
+      "Calibrate family/state envelopes across multiple families before promotion."
+    ],
+    "topViewEvidence": {
+      "camera": "locked orthographic top-down with plane boundary outside frame",
+      "overlays": [
+        "left/right sole-toe contact centroids",
+        "foot-heading vectors",
+        "COM projection and capture point",
+        "active support polygon",
+        "local travel tangent and lateral axis",
+        "phase/frame/time identifiers"
+      ],
+      "layout": "synchronized V8.2-left and V8.3-right plus foot macro crop"
+    }
+  }
+}

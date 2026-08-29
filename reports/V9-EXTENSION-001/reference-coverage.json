@@ -1,0 +1,1133 @@
+{
+  "report_id": "V9-EXTENSION-001",
+  "status": "phase_0_reference_audit",
+  "audit_date": "2026-08-29",
+  "read_only": true,
+  "scope": {
+    "spec_pack_root": "/Volumes/m2-extended-disk/Repos/eonwild-factory/v9_extension",
+    "productized_worktree": "/Volumes/m2-extended-disk/Repos/eonwild-factory-v8-3-hip",
+    "animation_contract_count": 29,
+    "authored_bridge_count": 16,
+    "engine_or_motion_files_changed": false,
+    "external_protected_sources_browsed": false,
+    "review_pin": "aca1eab3f6e9f6970cf8a8281f4440a74f8551d3"
+  },
+  "classification_legend": {
+    "A": "Existing engine/mechanical/contact evidence is sufficient; no new user reference is required.",
+    "B": "A still-image posture target is needed; timing can be authored by the contract and solver.",
+    "C": "A native-speed video is needed for timing, momentum, force-chain, or contact order.",
+    "D": "Both a posture still and a native-speed video are needed.",
+    "E": "Do not visually imitate an assumed animal performance; use a provenance-labeled bounded gameplay/engineering reconstruction."
+  },
+  "capture_protocol": {
+    "native_speed_definition": "Capture and encode the performance at its intended playback rate; do not retime slow motion into contract timing.",
+    "recommended_dynamic_fps": 60,
+    "fixed_camera": true,
+    "camera_cuts": false,
+    "motion_blur_that_hides_contact": false,
+    "neutral_lighting": true,
+    "required_framing": [
+      "full head",
+      "full tail",
+      "pelvis and torso",
+      "both feet and toes",
+      "floor/contact surface"
+    ],
+    "paired_camera_rule": "Side and three-quarter takes use the same scale, lens, floor, target placement, and timing. Front/rear or top views are requested only where lateral support or target/terrain relation matters.",
+    "provenance_rule": "Requested captures must be original project-owned or properly commissioned. Their fps recommendations are engineering capture choices, not biological claims."
+  },
+  "user_generated_reference_additions": [
+    {
+      "id": "tarbosaurus_narrow_gauge_relaxed_walk_sheet",
+      "path": "reports/V9-EXTENSION-001/references/user-generated/tarbosaurus-narrow-gauge-relaxed-walk-sheet.png",
+      "provenance_path": "reports/V9-EXTENSION-001/references/user-generated/tarbosaurus-narrow-gauge-relaxed-walk-sheet.provenance.json",
+      "sha256": "d8416309bab3a7fa48d4f15659cef15504304c5e94490fc5b2b5317615fb1b2d",
+      "dimensions_px": [1448, 1086],
+      "use": "user art-direction reference for narrow-gauge silhouette and phase-sheet framing",
+      "scientific_evidence": false,
+      "license_status": "unverified"
+    },
+    {
+      "id": "tarbosaurus_investigate_scent_sheet",
+      "path": "reports/V9-EXTENSION-001/references/user-generated/tarbosaurus-investigate-scent-sheet.png",
+      "sha256": "0adbfef74f471d5614fe74e4bc8e9b65ab7d0778b6461600bb2ee834edc5b14b",
+      "use": "art-direction posture target; not biological scent evidence",
+      "scientific_evidence": false,
+      "license_status": "unverified"
+    },
+    {
+      "id": "tarbosaurus_wounded_idle_sheet",
+      "path": "reports/V9-EXTENSION-001/references/user-generated/tarbosaurus-wounded-idle-sheet.png",
+      "sha256": "2b64e81749a00ad939c989a79cd33950900070202fd11e6f6034e9035d0b04ad",
+      "use": "art-direction guarded-pose target; not injury science",
+      "scientific_evidence": false,
+      "license_status": "unverified"
+    },
+    {
+      "id": "tarbosaurus_listen_reaction_sheet",
+      "path": "reports/V9-EXTENSION-001/references/user-generated/tarbosaurus-listen-reaction-sheet.png",
+      "sha256": "8fa8edadde2a94bbb1c00b110d7dbdf48b2255c9cf180a000560560cca0391ac",
+      "use": "choreography target; 24 fps sheet is not native-speed evidence",
+      "scientific_evidence": false,
+      "license_status": "unverified"
+    },
+    {
+      "id": "tarbosaurus_faster_locomotion_sheet",
+      "path": "reports/V9-EXTENSION-001/references/user-generated/tarbosaurus-faster-locomotion-sheet.png",
+      "sha256": "d49cd9ec095088a024f717758f95535984496393bc572c3675cfef64e81c0b57",
+      "use": "gait-regime art direction; printed speeds are illustrative only",
+      "scientific_evidence": false,
+      "license_status": "unverified"
+    },
+    {
+      "id": "tarbosaurus_body_shove_stumble_sheet",
+      "path": "reports/V9-EXTENSION-001/references/user-generated/tarbosaurus-body-shove-stumble-sheet.png",
+      "sha256": "ad9fc68fdedb174c3e6b84a32e5f1f2157da50d21a7f2e7dbade27a7b0bf4a88",
+      "use": "action choreography target; illustrated timing/forces are not evidence",
+      "scientific_evidence": false,
+      "license_status": "unverified"
+    }
+  ],
+  "existing_coverage": [
+    {
+      "id": "v55_manifest_solver",
+      "status": "historical_verified",
+      "paths": [
+        "procedural-animation-toolkit(v5.5)/validated_result/v5.5/animation-manifest.v5.5.json",
+        "procedural-animation-toolkit(v5.5)/validated_result/v5.5/v5.5-release-validation.json",
+        "procedural-animation-toolkit(v5.5)/validated_result/v5.5/constrained-solve-report.json"
+      ],
+      "coverage": [
+        "37 historical clips",
+        "21 base/action clips",
+        "16 authored transitions with exact historical endpoints",
+        "contact, terrain, pelvis, tail, jaw, and transition mechanisms"
+      ],
+      "limitations": [
+        "V5.5 is not V9 event semantics.",
+        "Historical balance metrics are animated-skeleton visual proxies, not physical COM or biological validation."
+      ]
+    },
+    {
+      "id": "v55_balance_candidate_5",
+      "status": "accepted_historical_visual_evidence",
+      "paths": [
+        "reports/V5-5-BALANCE-001/summary.md",
+        "reports/V5-5-BALANCE-001/reference-analysis.md",
+        "showcase/v5.5/site/media/films/idle-breath.mp4",
+        "showcase/v5.5/site/media/films/walk-relaxed-inplace.mp4",
+        "showcase/v5.5/site/media/films/bite-attack.mp4",
+        "showcase/v5.5/site/media/films/eat-loop.mp4"
+      ],
+      "coverage": [
+        "asymmetric support",
+        "hip-led walk recovery",
+        "leg-driven bite preload and drive",
+        "feeding descent and tail counterbalance",
+        "breathing and loop readability"
+      ],
+      "media_facts": {
+        "films": "four 960x540 H.264 films at 24 fps",
+        "still_review": "21 base/action stills"
+      },
+      "limitations": [
+        "The walk reference supports a repeatable phase hypothesis, not laboratory-grade kinetics.",
+        "Attack/eat source and observations are qualitative because the camera changes."
+      ]
+    },
+    {
+      "id": "user_tarbosaurus_media",
+      "status": "existing_local_reference_media",
+      "paths": [
+        "assets/examples/tarbosaurus/Tarbosaurus#walk_side_v02.mp4",
+        "assets/examples/tarbosaurus/Tarbosaurus#walk_3q_v02.mp4",
+        "assets/examples/tarbosaurus/tarbosaurus-stops-stands.mp4",
+        "assets/examples/tarbosaurus/tarbosaurus-walking-looking.mp4",
+        "assets/examples/tarbosaurus/attack-eat.mp4",
+        "assets/examples/tarbosaurus/tarbosaurus_walk.mp4",
+        "assets/examples/tarbosaurus/tarbosaurus_walk copy.mp4",
+        "assets/examples/tarbosaurus/tarbosaurus_3q.png",
+        "assets/examples/tarbosaurus/tarbosaurus_3Q_zoom.png",
+        "assets/examples/tarbosaurus/tarbosaurus open mouth.png",
+        "assets/examples/tarbosaurus/tarbosaurus right open.png",
+        "assets/examples/tarbosaurus/tarbosaurus_zoom_left.png"
+      ],
+      "media_facts": {
+        "walk_side_and_three_quarter": "736x400, 24 fps, 193 frames, 8.041667 s",
+        "attack_eat": "736x400, 24 fps, 289 frames, 12.041667 s",
+        "stops_stands": "736x400, 24 fps, 145 frames, 6.041667 s",
+        "walking_looking": "736x400, 24 fps, 217 frames, 9.041667 s",
+        "walk_variants": "672x448, 24 fps, 241 frames, 10.041667 s"
+      },
+      "coverage": [
+        "relaxed walking silhouette and broad walk phases",
+        "standing/stop intent",
+        "looking intent",
+        "broad attack/eat choreography",
+        "open-mouth posture stills"
+      ],
+      "limitations": [
+        "All listed clips are 24 fps.",
+        "Attack/eat is stylized and camera-changing; it is not a clean V9 force/contact reference.",
+        "These inputs do not establish Tarbosaurus kinetics or biological truth."
+      ]
+    },
+    {
+      "id": "v82_approved_walk",
+      "status": "approved_authority",
+      "paths": [
+        "procedural-animation-toolkit(v8.2)/RELEASE_MANIFEST.json",
+        "procedural-animation-toolkit(v8.2)/evidence/official-balance.json",
+        "procedural-animation-toolkit(v8.2)/evidence/structural-mechanical.json",
+        "procedural-animation-toolkit(v8.2)/evidence/reproduction-verify.json",
+        "procedural-animation-toolkit(v8.2)/media/walk-relaxed-v8-2-side.mp4",
+        "procedural-animation-toolkit(v8.2)/media/v8-1-approved-vs-v8-2-threeq.mp4"
+      ],
+      "coverage": [
+        "approved relaxed walk",
+        "root/contact preservation",
+        "fixed side and three-quarter comparisons",
+        "exact V8.2 artifact and release lineage"
+      ],
+      "media_facts": {
+        "side": "960x540, 24 fps, 240 frames, 10.0 s",
+        "comparison": "1920x540, 24 fps, 240 frames, 10.0 s"
+      },
+      "limitations": [
+        "V8.2 is walk-only.",
+        "V8.2 does not establish physical COM, growth, run, action, feeding, rest, or calls."
+      ]
+    },
+    {
+      "id": "v83_working_diagnostic",
+      "status": "diagnostic_not_approved",
+      "paths": [
+        "reports/PROCEDURAL-ENGINE-V8-3/summary.md",
+        "reports/PROCEDURAL-ENGINE-V8-3/blocker.md",
+        "reports/PROCEDURAL-ENGINE-V8-3/media/side.mp4",
+        "reports/PROCEDURAL-ENGINE-V8-3/media/front.mp4",
+        "reports/PROCEDURAL-ENGINE-V8-3/media/front-three-quarter.mp4"
+      ],
+      "coverage": [
+        "working pelvis/contact diagnostic",
+        "fixed side, front, and front-three-quarter review layout"
+      ],
+      "media_facts": "Each listed review video is 960x540, 24 fps, 240 frames, 10.0 s.",
+      "limitations": [
+        "Machine validation is reported PASS, but visual approval and stable promotion remain pending.",
+        "The blocker report explicitly says no V8.3 artifact or visual media is eligible as release evidence."
+      ]
+    },
+    {
+      "id": "v9_spec_only",
+      "status": "specification_only",
+      "paths": [
+        "/Volumes/m2-extended-disk/Repos/eonwild-factory/v9_extension/motions/tarbosaurus/catalog.yaml",
+        "/Volumes/m2-extended-disk/Repos/eonwild-factory/v9_extension/motions/tarbosaurus/power-attack.yaml",
+        "/Volumes/m2-extended-disk/Repos/eonwild-factory/v9_extension/docs/animations/ALL_29_ANIMATIONS.md",
+        "/Volumes/m2-extended-disk/Repos/eonwild-factory/v9_extension/docs/03A_V8_3_CLIP_RECOVERY_CATALOG.md",
+        "/Volumes/m2-extended-disk/Repos/eonwild-factory/v9_extension/docs/RESEARCH_NOTES.md"
+      ],
+      "coverage": [
+        "29 contract IDs and phase graphs",
+        "16 recovered bridge IDs",
+        "contact/event/target requirements",
+        "uncertainty and gameplay labels"
+      ],
+      "limitations": [
+        "No generated V9 clip or approved V9 visual evidence is claimed.",
+        "The airborne power-attack branch remains feasibility-gated with grounded fallback."
+      ]
+    }
+  ],
+  "capture_packages": [
+    {
+      "id": "R-GAIT",
+      "priority": "must_have",
+      "medium": "native_speed_video",
+      "fps": 60,
+      "cameras": ["side", "three_quarter"],
+      "full_body_framing": true,
+      "required_visible": ["head", "tail", "pelvis", "both_feet", "toes", "floor"],
+      "takes": [
+        {
+          "id": "fast_walk_loop",
+          "duration_seconds": 3.15,
+          "phase": "Two or more steady faster-walk cycles with alternating contacts and a visibly distinct regime from relaxed walk and run.",
+          "contracts": ["tarbosaurus_fast_walk"]
+        },
+        {
+          "id": "run_loop",
+          "duration_seconds": 2.15,
+          "phase": "Two or more steady running cycles showing compression and contact order.",
+          "contracts": ["tarbosaurus_run"]
+        },
+        {
+          "id": "sprint_loop",
+          "duration_seconds": 1.55,
+          "phase": "Steady sprint cycle including the brief unsupported/compressed phase.",
+          "contracts": ["tarbosaurus_sprint"]
+        },
+        {
+          "id": "run_start",
+          "duration_seconds": 3.8,
+          "phase": "Prepare → crouched load → first propulsion/contact → second propulsion → run handoff.",
+          "contracts": ["tarbosaurus_run_start"]
+        },
+        {
+          "id": "run_stop",
+          "duration_seconds": 4.5,
+          "phase": "Incoming run → first braking contact/absorption → second braking step → final settle.",
+          "contracts": ["tarbosaurus_run_stop"]
+        }
+      ],
+      "optional_cameras": ["front", "rear"],
+      "why": "Existing evidence is relaxed-walk-only; it does not constrain distinct faster regimes or run-specific acceleration/braking timing."
+    },
+    {
+      "id": "R-LISTEN",
+      "priority": "must_have",
+      "medium": "native_speed_video",
+      "fps": 60,
+      "cameras": ["side", "front", "three_quarter"],
+      "duration_seconds": 1.6,
+      "full_body_framing": true,
+      "required_visible": ["head", "feet", "pelvis", "tail", "floor"],
+      "phase": "Interrupt current behavior → acoustic orientation → perceptible processing freeze → lower-body preparation → alert handoff.",
+      "constraints": ["off-camera cue", "no theatrical head snap", "normal-speed timing"],
+      "contracts": ["tarbosaurus_listen_reaction"],
+      "why": "Existing looking and alert material provides intent but not the required freeze and delayed whole-body catch."
+    },
+    {
+      "id": "R-BITE",
+      "priority": "must_have",
+      "medium": "native_speed_video_and_posture_stills",
+      "fps": 60,
+      "video_cameras": ["side", "three_quarter"],
+      "still_cameras": ["side", "three_quarter", "front"],
+      "full_body_framing": true,
+      "required_visible": ["head", "jaw", "pelvis", "both_feet", "tail", "floor", "target_contact_marker"],
+      "takes": [
+        {
+          "id": "quick_bite_hit",
+          "duration_seconds": 0.9,
+          "phase": "Acquire → anticipation retract → jaw open → strike/contact → recoil/recovery.",
+          "contracts": ["tarbosaurus_quick_bite"]
+        },
+        {
+          "id": "committed_grounded_bite",
+          "duration_seconds": 2.1,
+          "phase": "Target commitment → whole-body alignment/load → hindlimb propulsion → maximum gape before contact → follow-through → long recovery.",
+          "contracts": ["tarbosaurus_committed_power_bite"],
+          "required_stills": ["preload", "maximum_gape_contact", "recovered_posture"]
+        },
+        {
+          "id": "quick_bite_miss_recovery",
+          "duration_seconds": 1.6,
+          "phase": "Missing resistance → safe overextension → imbalance → emergency step → neck/body recovery → posture reset.",
+          "contracts": ["tarbosaurus_bite_miss_recovery"]
+        },
+        {
+          "id": "low_downward_bite",
+          "duration_seconds": 2.2,
+          "phase": "Low-target acquisition → stabilized support → shared lowering → downward contact → absorb/hold → raise/rebalance.",
+          "contracts": ["tarbosaurus_low_downward_bite"],
+          "required_stills": ["stable_low_support", "lowest_safe_head_neck", "rebalanced_posture"]
+        }
+      ],
+      "why": "V5.5 has a longer bite clip and V8.1-era material shows broad attack choreography, but neither supplies V9 short-bite, miss, low-target, and grounded event ordering."
+    },
+    {
+      "id": "R-FEED",
+      "priority": "must_have",
+      "medium": "native_speed_video_and_posture_stills",
+      "fps": 60,
+      "video_cameras": ["side", "three_quarter"],
+      "still_cameras": ["side", "three_quarter", "front"],
+      "full_body_framing": true,
+      "required_visible": ["head", "jaw", "pelvis", "both_feet", "tail", "floor", "carcass_contact_region"],
+      "takes": [
+        {
+          "id": "head_down_feeding",
+          "duration_seconds": 8.0,
+          "phase": "Carcass assessment → feeding stance → progressive pelvis/thorax/neck lowering → mouth acquisition → feeding bite → head manipulation/process → target reset/loop.",
+          "contracts": ["tarbosaurus_head_down_feeding"]
+        },
+        {
+          "id": "tear_pull",
+          "duration_seconds": 2.8,
+          "phase": "Acquire tissue → rear support → jaw preload/attachment → whole-body pull → tension peak → release/hold → recovery.",
+          "contracts": ["tarbosaurus_tear_pull"]
+        }
+      ],
+      "required_stills": ["stable_feeding_stance", "lowest_safe_head_neck_support", "post_pull_recovery"],
+      "optional_cameras": ["top"],
+      "why": "Existing eat-loop and attack/eat footage supplies intent but is not clean fixed-camera evidence for V9 descent, target contact, pull, or release timing."
+    },
+    {
+      "id": "R-SHOVE-STUMBLE",
+      "priority": "must_have",
+      "medium": "native_speed_video",
+      "fps": 60,
+      "cameras": ["side", "three_quarter", "front"],
+      "full_body_framing": true,
+      "required_visible": ["head", "tail", "pelvis", "both_feet", "toes", "floor", "target"],
+      "takes": [
+        {
+          "id": "body_shove",
+          "duration_seconds": 2.1,
+          "phase": "Contact-region alignment → stance → load → body drive → contact peak/maintain pressure → recovery step.",
+          "contracts": ["tarbosaurus_body_shove"]
+        },
+        {
+          "id": "stumble",
+          "duration_seconds": 2.1,
+          "phase": "Normal incoming motion → support failure → pelvis drop → tail emergency correction → reachable recovery foot → body catch → head/neck rebound.",
+          "contracts": ["tarbosaurus_stumble"]
+        }
+      ],
+      "why": "No existing clip proves target-owned displacement, pressure support, or a non-resetting stumble with a reachable catch foot."
+    },
+    {
+      "id": "R-POSES",
+      "priority": "useful_narrowly_scoped",
+      "medium": "still_image_posture",
+      "fps": null,
+      "cameras": ["side", "three_quarter", "front"],
+      "full_body_framing": true,
+      "required_visible": ["head", "tail", "pelvis", "both_feet", "floor"],
+      "takes": [
+        {
+          "id": "investigate_scent_posture",
+          "phase": "Restrained neck/thorax lowering toward a visible ground evidence point with planted feet and directional attention.",
+          "contracts": ["tarbosaurus_investigate_scent"],
+          "optional_camera": "top",
+          "constraint": "Design posture only; do not depict or imitate a mammalian/dog sniff cycle."
+        },
+        {
+          "id": "wounded_idle_posture",
+          "phase": "Guarded pelvis/spine posture with healthy-side support bias, in left- and right-injury variants.",
+          "contracts": ["tarbosaurus_wounded_idle"],
+          "required_variants": ["left_injury", "right_injury"],
+          "constraint": "Gameplay target only; not a biological injury-performance claim."
+        }
+      ],
+      "why": "These contracts need a stable silhouette target, while their timing and injury variation can be authored by the motion contract and runtime state."
+    }
+  ],
+  "animations": [
+    {
+      "index": 1,
+      "id": "tarbosaurus_neutral_idle",
+      "class": "A",
+      "priority": "P0",
+      "program": "stationary_support",
+      "existing_coverage": ["v55_manifest_solver", "v55_balance_candidate_5"],
+      "required_capture_packages": [],
+      "reconstruction_only": false,
+      "uncertainty_labels": [],
+      "phase_summary": "Settled support → inspiration → micro-attention → weight redistribution → exhale/loop.",
+      "rationale": "Existing asymmetric support, breathing, loop, and contact evidence are adequate."
+    },
+    {
+      "index": 2,
+      "id": "tarbosaurus_alert_idle",
+      "class": "A",
+      "priority": "P0",
+      "program": "stationary_support",
+      "existing_coverage": ["v55_manifest_solver", "v55_balance_candidate_5", "user_tarbosaurus_media"],
+      "required_capture_packages": [],
+      "reconstruction_only": false,
+      "uncertainty_labels": [],
+      "phase_summary": "Target lock → posture elevation → body alignment → sustained vigilance → loop settle.",
+      "rationale": "Historical alert-idle and alert posture intent cover the needed static silhouette and support behavior; do not request a duplicate still."
+    },
+    {
+      "index": 3,
+      "id": "tarbosaurus_walk",
+      "class": "A",
+      "priority": "P0",
+      "program": "alternating_gait",
+      "existing_coverage": ["v82_approved_walk", "v55_manifest_solver", "user_tarbosaurus_media"],
+      "required_capture_packages": [],
+      "reconstruction_only": false,
+      "uncertainty_labels": [],
+      "phase_summary": "Alternating contact/load/toe-off/swing cycle with root motion and head stabilization.",
+      "rationale": "V8.2 is the approved relaxed-walk authority and V5.5 supplies contact/root evidence."
+    },
+    {
+      "index": 4,
+      "id": "tarbosaurus_fast_walk",
+      "class": "C",
+      "priority": "P0",
+      "program": "alternating_gait",
+      "existing_coverage": ["v55_manifest_solver", "v82_approved_walk"],
+      "required_capture_packages": ["R-GAIT"],
+      "reconstruction_only": false,
+      "uncertainty_labels": ["gameplay_hypothesis"],
+      "phase_summary": "Alternating gait with a distinct faster-walk regime.",
+      "rationale": "No approved native faster-walk regime exists; the reference sets an authored distinction, not a fossil speed claim."
+    },
+    {
+      "index": 5,
+      "id": "tarbosaurus_run",
+      "class": "C",
+      "priority": "P0",
+      "program": "alternating_gait",
+      "existing_coverage": ["v55_manifest_solver", "user_tarbosaurus_media"],
+      "required_capture_packages": ["R-GAIT"],
+      "reconstruction_only": false,
+      "uncertainty_labels": ["gameplay_hypothesis"],
+      "phase_summary": "Alternating run contacts with stronger compression and possible brief unsupported interval.",
+      "rationale": "Existing walk and broad charge choreography do not provide a clean native run cycle."
+    },
+    {
+      "index": 6,
+      "id": "tarbosaurus_sprint",
+      "class": "C",
+      "priority": "P0",
+      "program": "alternating_gait",
+      "existing_coverage": ["v55_manifest_solver", "user_tarbosaurus_media"],
+      "required_capture_packages": ["R-GAIT"],
+      "reconstruction_only": false,
+      "uncertainty_labels": ["gameplay_hypothesis"],
+      "phase_summary": "Strongly compressed alternating gait with a possible brief unsupported interval.",
+      "rationale": "No native sprint phase is present; capacity and speed remain provisional engineering values."
+    },
+    {
+      "index": 7,
+      "id": "tarbosaurus_walk_start",
+      "class": "A",
+      "priority": "P0",
+      "program": "gait_transition",
+      "existing_coverage": ["v55_manifest_solver", "user_tarbosaurus_media"],
+      "required_capture_packages": [],
+      "reconstruction_only": false,
+      "uncertainty_labels": [],
+      "phase_summary": "Idle intent → first-foot unload → short first step → first contact/load → second step → walk handoff.",
+      "rationale": "V5.5 start-walk and support-transfer evidence constrain this transition; V9 must re-solve continuity against V8.2."
+    },
+    {
+      "index": 8,
+      "id": "tarbosaurus_walk_stop",
+      "class": "A",
+      "priority": "P0",
+      "program": "gait_transition",
+      "existing_coverage": ["v55_manifest_solver", "user_tarbosaurus_media"],
+      "required_capture_packages": [],
+      "reconstruction_only": false,
+      "uncertainty_labels": [],
+      "phase_summary": "Incoming walk → shortened braking step → absorption → stabilizing step → momentum resolution → idle handoff.",
+      "rationale": "V5.5 brake-to-idle and stop/stands evidence provide adequate mechanics without another user capture."
+    },
+    {
+      "index": 9,
+      "id": "tarbosaurus_run_start",
+      "class": "C",
+      "priority": "P0",
+      "program": "gait_transition",
+      "existing_coverage": ["v55_manifest_solver"],
+      "required_capture_packages": ["R-GAIT"],
+      "reconstruction_only": false,
+      "uncertainty_labels": ["gameplay_hypothesis"],
+      "phase_summary": "Prepare → crouched load → first propulsion/contact → second propulsion → run handoff.",
+      "rationale": "Run-specific loading and acceleration timing are absent from existing approved evidence."
+    },
+    {
+      "index": 10,
+      "id": "tarbosaurus_run_stop",
+      "class": "C",
+      "priority": "P0",
+      "program": "gait_transition",
+      "existing_coverage": ["v55_manifest_solver"],
+      "required_capture_packages": ["R-GAIT"],
+      "reconstruction_only": false,
+      "uncertainty_labels": ["gameplay_hypothesis"],
+      "phase_summary": "Incoming run → braking contact/absorption → second braking step → final settle.",
+      "rationale": "Run braking step count and absorption are not constrained by existing walk-stop evidence."
+    },
+    {
+      "index": 11,
+      "id": "tarbosaurus_investigate_scent",
+      "class": "B",
+      "priority": "P1",
+      "program": "attention_reaction",
+      "existing_coverage": ["user_tarbosaurus_media", "v55_manifest_solver"],
+      "required_capture_packages": ["R-POSES"],
+      "reconstruction_only": false,
+      "uncertainty_labels": ["gameplay_hypothesis"],
+      "phase_summary": "Curiosity orient → air sample → directional comparison → ground-evidence branch → stronger detection → decision-ready.",
+      "rationale": "A restrained target-relative posture still is needed; no mammalian sniff imitation is appropriate."
+    },
+    {
+      "index": 12,
+      "id": "tarbosaurus_listen_reaction",
+      "class": "C",
+      "priority": "P0",
+      "program": "attention_reaction",
+      "existing_coverage": ["user_tarbosaurus_media", "v55_manifest_solver"],
+      "required_capture_packages": ["R-LISTEN"],
+      "reconstruction_only": false,
+      "uncertainty_labels": ["gameplay_hypothesis"],
+      "phase_summary": "Interrupt → acoustic recognition → processing freeze → lower-body preparation → alert handoff.",
+      "rationale": "Existing looking/alert material does not establish the freeze duration or delayed body catch."
+    },
+    {
+      "index": 13,
+      "id": "tarbosaurus_quick_bite",
+      "class": "C",
+      "priority": "P0",
+      "program": "bite_action",
+      "existing_coverage": ["v55_manifest_solver", "v55_balance_candidate_5", "user_tarbosaurus_media"],
+      "required_capture_packages": ["R-BITE"],
+      "reconstruction_only": false,
+      "uncertainty_labels": ["gameplay_hypothesis"],
+      "phase_summary": "Acquire → retract → jaw open → strike → contact → recoil → recovery.",
+      "rationale": "The historical bite clip is longer and semantically broader than the V9 short strike; native timing is missing."
+    },
+    {
+      "index": 14,
+      "id": "tarbosaurus_committed_power_bite",
+      "class": "D",
+      "priority": "P0",
+      "program": "bite_action",
+      "existing_coverage": ["v55_balance_candidate_5", "user_tarbosaurus_media"],
+      "required_capture_packages": ["R-BITE"],
+      "reconstruction_only": false,
+      "uncertainty_labels": ["gameplay_hypothesis", "synthetic_test_fixture"],
+      "phase_summary": "Commit → align → load → propulsion → maximum gape → contact peak → follow-through → disengage → long recovery.",
+      "rationale": "Grounded whole-body commitment needs posture stills and clean native timing. The optional airborne branch is separately E/reconstruction-only."
+    },
+    {
+      "index": 15,
+      "id": "tarbosaurus_low_downward_bite",
+      "class": "D",
+      "priority": "P1",
+      "program": "bite_action",
+      "existing_coverage": ["v55_balance_candidate_5", "user_tarbosaurus_media"],
+      "required_capture_packages": ["R-BITE", "R-FEED"],
+      "reconstruction_only": false,
+      "uncertainty_labels": ["gameplay_hypothesis"],
+      "phase_summary": "Low target → stabilized support → shared lowering → downward contact → absorb/hold → raise/recover.",
+      "rationale": "The low target and terrain-safe support posture need stills; the descent/contact order needs native video."
+    },
+    {
+      "index": 16,
+      "id": "tarbosaurus_bite_miss_recovery",
+      "class": "C",
+      "priority": "P0",
+      "program": "recovery_failure",
+      "existing_coverage": ["v55_manifest_solver", "user_tarbosaurus_media"],
+      "required_capture_packages": ["R-BITE"],
+      "reconstruction_only": false,
+      "uncertainty_labels": ["gameplay_hypothesis"],
+      "phase_summary": "Missing resistance → safe overextension → imbalance → emergency step → neck/body recovery → posture reset.",
+      "rationale": "The emergency catch and non-instant recovery are not present in existing action media."
+    },
+    {
+      "index": 17,
+      "id": "tarbosaurus_body_shove",
+      "class": "C",
+      "priority": "P1",
+      "program": "body_pressure",
+      "existing_coverage": ["v55_manifest_solver"],
+      "required_capture_packages": ["R-SHOVE-STUMBLE"],
+      "reconstruction_only": false,
+      "uncertainty_labels": ["gameplay_hypothesis", "synthetic_test_fixture"],
+      "phase_summary": "Align contact region → stance → load → body drive → contact peak/pressure → recovery step.",
+      "rationale": "No existing reference establishes a target-owned displacement and ground-supported pressure chain."
+    },
+    {
+      "index": 18,
+      "id": "tarbosaurus_head_down_feeding",
+      "class": "D",
+      "priority": "P0",
+      "program": "feeding_interaction",
+      "existing_coverage": ["v55_balance_candidate_5", "user_tarbosaurus_media"],
+      "required_capture_packages": ["R-FEED"],
+      "reconstruction_only": false,
+      "uncertainty_labels": ["gameplay_hypothesis"],
+      "phase_summary": "Carcass assessment → feeding stance → progressive lowering → mouth acquisition → feeding bite → manipulation/process → loop.",
+      "rationale": "Existing eat-loop proves intent but not the clean V9 stance, target, and shared lowering evidence."
+    },
+    {
+      "index": 19,
+      "id": "tarbosaurus_tear_pull",
+      "class": "C",
+      "priority": "P1",
+      "program": "feeding_interaction",
+      "existing_coverage": ["v55_balance_candidate_5", "user_tarbosaurus_media"],
+      "required_capture_packages": ["R-FEED"],
+      "reconstruction_only": false,
+      "uncertainty_labels": ["gameplay_hypothesis"],
+      "phase_summary": "Acquire tissue → rear support → jaw preload/attachment → whole-body pull → tension peak → release/hold → recovery.",
+      "rationale": "Existing feeding material does not establish whole-body pull, target attachment, or release timing."
+    },
+    {
+      "index": 20,
+      "id": "tarbosaurus_swallow",
+      "class": "E",
+      "priority": "P1",
+      "program": "feeding_interaction",
+      "existing_coverage": ["v55_balance_candidate_5"],
+      "required_capture_packages": [],
+      "reconstruction_only": true,
+      "uncertainty_labels": ["gameplay_only", "gameplay_hypothesis"],
+      "phase_summary": "Raise with food → jaw manipulation → swallow posture → throat transit → pause → jaw relax → context exit.",
+      "rationale": "Exact throat/transit behavior is unresolved; do not request or imitate an assumed biological swallow."
+    },
+    {
+      "index": 21,
+      "id": "tarbosaurus_drink",
+      "class": "E",
+      "priority": "P1",
+      "program": "feeding_interaction",
+      "existing_coverage": [],
+      "required_capture_packages": [],
+      "reconstruction_only": true,
+      "uncertainty_labels": ["gameplay_only", "gameplay_hypothesis"],
+      "phase_summary": "Inspect water → stable stance → progressive lowering → snout contact → pulses → pause → raise/rebalance → post-drink swallow.",
+      "rationale": "The catalog explicitly labels the exact drinking reconstruction as gameplay interpretation; no imitative visual request is justified."
+    },
+    {
+      "index": 22,
+      "id": "tarbosaurus_lie_down",
+      "class": "E",
+      "priority": "P1",
+      "program": "ground_posture",
+      "existing_coverage": [],
+      "required_capture_packages": [],
+      "reconstruction_only": true,
+      "uncertainty_labels": ["gameplay_only", "gameplay_hypothesis"],
+      "phase_summary": "Standing assessment → foot reposition → lowering → first ground support → pelvis/torso settle → head/neck settle.",
+      "rationale": "Habitual resting posture is unresolved; solve a bounded game pose from contacts and terrain rather than imitate footage."
+    },
+    {
+      "index": 23,
+      "id": "tarbosaurus_rest_lying_loop",
+      "class": "E",
+      "priority": "P1",
+      "program": "ground_posture",
+      "existing_coverage": [],
+      "required_capture_packages": [],
+      "reconstruction_only": true,
+      "uncertainty_labels": ["gameplay_only", "gameplay_hypothesis"],
+      "phase_summary": "Supported rest → deep breath → rare head adjustment → relaxation drift → breath/loop close.",
+      "rationale": "No defensible habitual resting reference exists; use a labeled gameplay reconstruction."
+    },
+    {
+      "index": 24,
+      "id": "tarbosaurus_rise_to_standing",
+      "class": "E",
+      "priority": "P1",
+      "program": "ground_posture",
+      "existing_coverage": [],
+      "required_capture_packages": [],
+      "reconstruction_only": true,
+      "uncertainty_labels": ["gameplay_only", "gameplay_hypothesis"],
+      "phase_summary": "Head up → prepare → first foot engagement → push → second foot engagement → extension → corrective step → standing settle.",
+      "rationale": "The transition depends on the selected gameplay rest pose; contacts and COM must drive a bounded reconstruction."
+    },
+    {
+      "index": 25,
+      "id": "tarbosaurus_wounded_idle",
+      "class": "B",
+      "priority": "P0",
+      "program": "stationary_support",
+      "existing_coverage": ["v55_manifest_solver", "v55_balance_candidate_5"],
+      "required_capture_packages": ["R-POSES"],
+      "reconstruction_only": false,
+      "uncertainty_labels": ["gameplay_only", "gameplay_hypothesis"],
+      "phase_summary": "Guarded support → pain breath → cautious unload → injured reposition → optional pain event → guarded loop.",
+      "rationale": "A left/right guarded silhouette and support bias are needed; this still is a gameplay target, not biological injury evidence."
+    },
+    {
+      "index": 26,
+      "id": "tarbosaurus_stumble",
+      "class": "C",
+      "priority": "P0",
+      "program": "recovery_failure",
+      "existing_coverage": ["v55_manifest_solver"],
+      "required_capture_packages": ["R-SHOVE-STUMBLE"],
+      "reconstruction_only": false,
+      "uncertainty_labels": ["gameplay_hypothesis"],
+      "phase_summary": "Incoming motion → support failure → pelvis drop → tail correction → recovery foot → catch → head/neck rebound → outcome branch.",
+      "rationale": "No native-speed failure/recovery reference establishes the pelvis-first drop and reachable catch."
+    },
+    {
+      "index": 27,
+      "id": "tarbosaurus_threat_call",
+      "class": "E",
+      "priority": "P1",
+      "program": "vocal_display",
+      "existing_coverage": ["v55_manifest_solver"],
+      "required_capture_packages": [],
+      "reconstruction_only": true,
+      "uncertainty_labels": ["gameplay_only", "gameplay_hypothesis"],
+      "phase_summary": "Target orientation → presentation stance → inhalation → jaw/resonance setup → call onset/peak → decay → post-call hold.",
+      "rationale": "Vocalization is a scientific non-decision; do not imitate a presumed threat call or treat generic roar as evidence."
+    },
+    {
+      "index": 28,
+      "id": "tarbosaurus_long_distance_contact_call",
+      "class": "E",
+      "priority": "P1",
+      "program": "vocal_display",
+      "existing_coverage": ["v55_manifest_solver"],
+      "required_capture_packages": [],
+      "reconstruction_only": true,
+      "uncertainty_labels": ["gameplay_only", "gameplay_hypothesis"],
+      "phase_summary": "Pause activity → orient to open space → deep inspiration → resonant posture → vocal pulses → directional sweep → listening pause.",
+      "rationale": "Long-distance vocalization and projection posture are unresolved; author a bounded social display."
+    },
+    {
+      "index": 29,
+      "id": "tarbosaurus_collapse_death",
+      "class": "E",
+      "priority": "P0",
+      "program": "terminal_fall",
+      "existing_coverage": [],
+      "required_capture_packages": [],
+      "reconstruction_only": true,
+      "uncertainty_labels": ["gameplay_only", "gameplay_hypothesis", "synthetic_test_fixture"],
+      "phase_summary": "Fatal impairment → support failure → correction attempt → irreversible failure → first body contact → torso/head settle → stillness.",
+      "rationale": "Death/fall staging is a gameplay reconstruction; solver-owned contacts and momentum are preferable to imitating an assumed animal death."
+    }
+  ],
+  "bridges": [
+    {
+      "index": 1,
+      "id": "PROC_IDLE_TO_WALK_V8_3",
+      "from": "idle",
+      "to": "walk",
+      "class": "A",
+      "existing_coverage": ["v55_manifest_solver", "v82_approved_walk"],
+      "required_capture_packages": [],
+      "reconstruction_only": false,
+      "rationale": "Existing endpoint/contact bridge plus V8.2 walk authority."
+    },
+    {
+      "index": 2,
+      "id": "PROC_WALK_TO_IDLE_V8_3",
+      "from": "walk",
+      "to": "idle",
+      "class": "A",
+      "existing_coverage": ["v55_manifest_solver", "v82_approved_walk"],
+      "required_capture_packages": [],
+      "reconstruction_only": false,
+      "rationale": "Existing brake/idle endpoint mechanics."
+    },
+    {
+      "index": 3,
+      "id": "PROC_WALK_TO_ALERT_WALK_V8_3",
+      "from": "walk",
+      "to": "alert_walk",
+      "class": "A",
+      "existing_coverage": ["v55_manifest_solver", "v82_approved_walk"],
+      "required_capture_packages": [],
+      "reconstruction_only": false,
+      "rationale": "Existing alert-walk endpoint and support continuity."
+    },
+    {
+      "index": 4,
+      "id": "PROC_ALERT_WALK_TO_WALK_V8_3",
+      "from": "alert_walk",
+      "to": "walk",
+      "class": "A",
+      "existing_coverage": ["v55_manifest_solver", "v82_approved_walk"],
+      "required_capture_packages": [],
+      "reconstruction_only": false,
+      "rationale": "Existing paired endpoint mechanics."
+    },
+    {
+      "index": 5,
+      "id": "PROC_IDLE_TO_ALERT_IDLE_V8_3",
+      "from": "idle",
+      "to": "alert_idle",
+      "class": "A",
+      "existing_coverage": ["v55_manifest_solver", "v55_balance_candidate_5"],
+      "required_capture_packages": [],
+      "reconstruction_only": false,
+      "rationale": "Existing alert posture transition."
+    },
+    {
+      "index": 6,
+      "id": "PROC_ALERT_IDLE_TO_IDLE_V8_3",
+      "from": "alert_idle",
+      "to": "idle",
+      "class": "A",
+      "existing_coverage": ["v55_manifest_solver", "v55_balance_candidate_5"],
+      "required_capture_packages": [],
+      "reconstruction_only": false,
+      "rationale": "Existing endpoint/contact and loop evidence."
+    },
+    {
+      "index": 7,
+      "id": "PROC_IDLE_TO_FEED_V8_3",
+      "from": "idle",
+      "to": "feeding",
+      "class": "D",
+      "existing_coverage": ["v55_manifest_solver", "v55_balance_candidate_5"],
+      "required_capture_packages": ["R-FEED"],
+      "reconstruction_only": false,
+      "rationale": "Feeding stance and target-relative descent are not covered by approved V9 evidence."
+    },
+    {
+      "index": 8,
+      "id": "PROC_FEED_TO_IDLE_V8_3",
+      "from": "feeding",
+      "to": "idle",
+      "class": "D",
+      "existing_coverage": ["v55_manifest_solver", "v55_balance_candidate_5"],
+      "required_capture_packages": ["R-FEED"],
+      "reconstruction_only": false,
+      "rationale": "Feeding recovery and idle endpoint need the same shared package."
+    },
+    {
+      "index": 9,
+      "id": "PROC_IDLE_TO_THREAT_READY_V8_3",
+      "from": "idle",
+      "to": "threat_call",
+      "class": "E",
+      "existing_coverage": ["v55_manifest_solver"],
+      "required_capture_packages": [],
+      "reconstruction_only": true,
+      "rationale": "No imitative vocal/display reference; bounded social reconstruction only."
+    },
+    {
+      "index": 10,
+      "id": "PROC_THREAT_TO_IDLE_V8_3",
+      "from": "threat_call",
+      "to": "idle",
+      "class": "E",
+      "existing_coverage": ["v55_manifest_solver"],
+      "required_capture_packages": [],
+      "reconstruction_only": true,
+      "rationale": "No imitative vocal/display reference; bounded social reconstruction only."
+    },
+    {
+      "index": 11,
+      "id": "PROC_WALK_TO_BITE_READY_V8_3",
+      "from": "walk",
+      "to": "committed_bite",
+      "class": "D",
+      "existing_coverage": ["v55_manifest_solver", "v82_approved_walk"],
+      "required_capture_packages": ["R-BITE"],
+      "reconstruction_only": false,
+      "rationale": "Bridge must select a mechanically valid support phase and preserve bite preload/commitment."
+    },
+    {
+      "index": 12,
+      "id": "PROC_BITE_TO_WALK_V8_3",
+      "from": "committed_bite",
+      "to": "walk",
+      "class": "D",
+      "existing_coverage": ["v55_manifest_solver", "v82_approved_walk"],
+      "required_capture_packages": ["R-BITE"],
+      "reconstruction_only": false,
+      "rationale": "Bridge must preserve bite recovery and the target walk support/velocity state."
+    },
+    {
+      "index": 13,
+      "id": "PROC_WALK_TO_THREAT_READY_V8_3",
+      "from": "walk",
+      "to": "threat_call",
+      "class": "E",
+      "existing_coverage": ["v55_manifest_solver", "v82_approved_walk"],
+      "required_capture_packages": [],
+      "reconstruction_only": true,
+      "rationale": "No imitative vocal/display reference; bounded social reconstruction only."
+    },
+    {
+      "index": 14,
+      "id": "PROC_THREAT_TO_WALK_V8_3",
+      "from": "threat_call",
+      "to": "walk",
+      "class": "E",
+      "existing_coverage": ["v55_manifest_solver", "v82_approved_walk"],
+      "required_capture_packages": [],
+      "reconstruction_only": true,
+      "rationale": "No imitative vocal/display reference; bounded social reconstruction only."
+    },
+    {
+      "index": 15,
+      "id": "PROC_WALK_TO_FEED_V8_3",
+      "from": "walk",
+      "to": "feeding",
+      "class": "D",
+      "existing_coverage": ["v55_manifest_solver", "v82_approved_walk"],
+      "required_capture_packages": ["R-FEED"],
+      "reconstruction_only": false,
+      "rationale": "Bridge needs target-relative lowering while preserving incoming walk support and velocity."
+    },
+    {
+      "index": 16,
+      "id": "PROC_FEED_TO_WALK_V8_3",
+      "from": "feeding",
+      "to": "walk",
+      "class": "D",
+      "existing_coverage": ["v55_manifest_solver", "v82_approved_walk"],
+      "required_capture_packages": ["R-FEED"],
+      "reconstruction_only": false,
+      "rationale": "Bridge needs feeding recovery and a valid walk handoff without a reset/crossfade mask."
+    }
+  ],
+  "reconstruction_only_cases": [
+    {
+      "id": "power_attack_airborne_branch",
+      "classification": "E",
+      "reason": "Airborne feasibility is unresolved; use whole-body COM, reach, takeoff, friction, angular momentum, collision, landing, and condition gates with grounded fallback before commitment.",
+      "required_reference": "none"
+    },
+    {
+      "id": "tarbosaurus_swallow",
+      "classification": "E",
+      "reason": "Exact throat/transit behavior is unresolved.",
+      "required_reference": "none"
+    },
+    {
+      "id": "tarbosaurus_drink",
+      "classification": "E",
+      "reason": "The catalog labels exact reconstruction gameplay interpretation.",
+      "required_reference": "none"
+    },
+    {
+      "id": "tarbosaurus_lie_down",
+      "classification": "E",
+      "reason": "Habitual resting posture is unresolved.",
+      "required_reference": "none"
+    },
+    {
+      "id": "tarbosaurus_rest_lying_loop",
+      "classification": "E",
+      "reason": "Habitual resting posture is unresolved.",
+      "required_reference": "none"
+    },
+    {
+      "id": "tarbosaurus_rise_to_standing",
+      "classification": "E",
+      "reason": "The rise depends on a selected gameplay rest reconstruction.",
+      "required_reference": "none"
+    },
+    {
+      "id": "tarbosaurus_threat_call",
+      "classification": "E",
+      "reason": "Vocalization is a scientific non-decision.",
+      "required_reference": "none"
+    },
+    {
+      "id": "tarbosaurus_long_distance_contact_call",
+      "classification": "E",
+      "reason": "Vocalization and projection posture are unresolved.",
+      "required_reference": "none"
+    },
+    {
+      "id": "tarbosaurus_collapse_death",
+      "classification": "E",
+      "reason": "Fatal failure and terminal stillness are gameplay reconstruction.",
+      "required_reference": "none"
+    }
+  ],
+  "bridge_invariants": [
+    "Preserve source and target pose.",
+    "Preserve or explicitly solve root position/orientation and linear/angular velocity.",
+    "Preserve left/right support and contact states, pelvis support bias, and tail angle/angular velocity.",
+    "Preserve visible breathing/overlay state, commitment, interruptibility, and event cursor.",
+    "If a bridge is infeasible, queue, choose a fallback, or reject; do not teleport or hide a mismatch in a generic crossfade."
+  ],
+  "uncertainty_and_provenance": {
+    "scientific_non_decisions": [
+      "individual Tarbosaurus body mass",
+      "segment mass fractions",
+      "muscle force/torque/power",
+      "joint soft-tissue limits",
+      "maximum speed or jump authority",
+      "landing tolerance",
+      "habitual resting posture",
+      "vocalization",
+      "airborne attack behavior"
+    ],
+    "allowed_status_labels": [
+      "supported",
+      "plausible_inference",
+      "disputed",
+      "speculative",
+      "gameplay_only",
+      "gameplay_hypothesis",
+      "synthetic_test_fixture"
+    ],
+    "accepted_capture_source_types": [
+      "original_project_generated",
+      "commissioned_with_explicit_rights",
+      "public_domain",
+      "commercially_compatible_creative_commons_with_attribution",
+      "independently cited primary research used as context, not copied media"
+    ],
+    "preferred_scientific_source_hierarchy": [
+      "peer-reviewed description/revision, biomechanical, histological, or ecological paper",
+      "museum or university specimen page authored by subject experts",
+      "Paleobiology Database record with attribution for occurrence/taxonomy",
+      "reputable synthesis or review for discovery and context"
+    ],
+    "primary_sources_named_by_pack": [
+      {
+        "citation": "Bates et al. 2009, Estimating Mass Properties of Dinosaurs Using Laser Imaging and 3D Computer Modelling",
+        "doi": "10.1371/journal.pone.0004532",
+        "use": "Mass-property/COM workflow and uncertainty methodology; not exact Tarbosaurus values."
+      },
+      {
+        "citation": "Hutchinson et al. 2011, A Computational Analysis of Limb and Body Dimensions in Tyrannosaurus rex",
+        "doi": "10.1371/journal.pone.0026037",
+        "use": "Tyrannosaurid analog methodology; not exact Tarbosaurus values."
+      },
+      {
+        "citation": "Snively et al. 2019, tyrannosaurid turning and rotational inertia",
+        "doi": "10.7717/peerj.6432",
+        "use": "Turning/inertia context; not a clip or exact species performance."
+      },
+      {
+        "citation": "Daley and Birn-Jeffery 2018, avian bipedal dynamic similarity",
+        "doi": "10.1242/jeb.152538",
+        "use": "Cadence/stride baseline only; not a sole generator of Tarbosaurus motion."
+      },
+      {
+        "citation": "Manafzadeh et al. 2024, articular surface interactions and dinosaurian locomotor poses",
+        "doi": "10.1038/s41467-024-44832-z",
+        "use": "Hard articulation-limit context; not habitual soft-tissue posture."
+      },
+      {
+        "citation": "van Bijlert et al. 2021, tyrannosaur tail natural frequency and walking implications",
+        "doi": "10.1098/rsos.201441",
+        "use": "Tail mechanical coupling context; not a ready-made animation curve."
+      },
+      {
+        "citation": "Johnson-Ransom et al. 2024, tyrannosauroid cranial biomechanics",
+        "doi": "10.1002/ar.25326",
+        "use": "Broad cranial/bite mechanics context; not a whole-body attack performance."
+      }
+    ],
+    "required_capture_metadata": [
+      "creator_or_generating_tool",
+      "tool_version",
+      "date",
+      "prompt_and_seed_when_generative",
+      "input_assets_and_hashes",
+      "licenses_and_commercial_use_status",
+      "human_modifications",
+      "reviewer",
+      "AI-content disclosure"
+    ],
+    "forbidden_source_use": [
+      "Fantastic Dinosaurs text, imagery, models, animation, sounds, or direct generation input",
+      "unverified copyrighted film/game/paleoart references",
+      "untraceable social-media or Pinterest imagery"
+    ],
+    "interpretation_boundary": "Still/video requests constrain authored posture and timing only. They do not establish Tarbosaurus mass, COM, force, speed, joint envelope, vocalization, or habitual behavior."
+  },
+  "audit_notes": [
+    "No engine, profile, schema, or motion file was edited.",
+    "No external web search or protected-source browsing was performed.",
+    "Existing V8.3 working media is recorded as diagnostic only because visual approval/promotion is pending.",
+    "A transient untracked uv.lock appeared in an intermediate status snapshot; it is outside this report, was not inspected or edited, and is not attributed to a user."
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "schema": "eonwild.motion.v9.motion-intent.v1",
+  "id": "intent_stationary_support_v1",
+  "coordinate_system": {
+    "units": "m",
+    "time_units": "s",
+    "mass_units": "kg",
+    "handedness": "right",
+    "up_axis": "Y",
+    "forward_axis": "-Z"
+  },
+  "desired_motion": {"kind": "stationary_support", "duration_s": 0.5},
+  "current_state": {"support_state": "double", "linear_velocity_mps": [0.0, 0.0, 0.0]},
+  "environment": {"gravity_mps2": [0.0, -9.81, 0.0], "surface_normal": [0.0, 1.0, 0.0]},
+  "condition": {"grounded": true, "allow_airborne": false},
+  "provenance": {"source": "v9_extension_stationary_support_fixture", "status": "fixture", "scientific_claims": false}
+}

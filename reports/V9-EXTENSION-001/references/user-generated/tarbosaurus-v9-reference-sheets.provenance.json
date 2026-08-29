@@ -1,0 +1,67 @@
+{
+  "schema": "eonwild.reference_asset_set_provenance.v1",
+  "set_id": "tarbosaurus-v9-user-generated-reference-sheets-2026-08-29",
+  "provided_at": "2026-08-29",
+  "source": {
+    "kind": "user_supplied_generated_reference",
+    "creator_or_generating_tool": "not supplied",
+    "tool_version": "not supplied",
+    "prompt": "not supplied",
+    "seed": "not supplied",
+    "input_asset_hashes": [],
+    "human_modifications": "not supplied",
+    "license": "user supplied for this project; broader source rights not independently verified",
+    "commercial_use_status": "unverified",
+    "ai_content_disclosure": "appears generated; exact generator metadata not supplied"
+  },
+  "common_media": {
+    "format": "png",
+    "pixel_width": 1448,
+    "pixel_height": 1086,
+    "color_model": "8-bit RGB",
+    "recompressed_on_ingest": false
+  },
+  "assets": [
+    {
+      "asset_id": "tarbosaurus-investigate-scent-sheet",
+      "path": "reports/V9-EXTENSION-001/references/user-generated/tarbosaurus-investigate-scent-sheet.png",
+      "sha256": "0adbfef74f471d5614fe74e4bc8e9b65ab7d0778b6461600bb2ee834edc5b14b",
+      "category": "art_direction_and_pose_reference",
+      "supports": ["investigate/scent silhouette", "shared pelvis/thorax/neck lowering", "stable planted support"],
+      "limitations": ["olfactory behavior is a gameplay interpretation", "does not establish scientifically exact posture or scent behavior"]
+    },
+    {
+      "asset_id": "tarbosaurus-wounded-idle-sheet",
+      "path": "reports/V9-EXTENSION-001/references/user-generated/tarbosaurus-wounded-idle-sheet.png",
+      "sha256": "2b64e81749a00ad939c989a79cd33950900070202fd11e6f6034e9035d0b04ad",
+      "category": "art_direction_and_pose_reference",
+      "supports": ["left/right guarded silhouettes", "healthy-side support bias", "protective and cautious pose variants"],
+      "limitations": ["injury response is gameplay interpretation", "visible wound placement is not medical or paleobiological evidence"]
+    },
+    {
+      "asset_id": "tarbosaurus-listen-reaction-sheet",
+      "path": "reports/V9-EXTENSION-001/references/user-generated/tarbosaurus-listen-reaction-sheet.png",
+      "sha256": "8fa8edadde2a94bbb1c00b110d7dbdf48b2255c9cf180a000560560cca0391ac",
+      "category": "art_direction_and_choreography_reference",
+      "supports": ["cue to head orientation", "processing freeze", "lower-body preparation"],
+      "limitations": ["24 fps illustrated sheet is not native-speed timing evidence", "does not establish auditory behavior or reaction latency"]
+    },
+    {
+      "asset_id": "tarbosaurus-faster-locomotion-sheet",
+      "path": "reports/V9-EXTENSION-001/references/user-generated/tarbosaurus-faster-locomotion-sheet.png",
+      "sha256": "d49cd9ec095088a024f717758f95535984496393bc572c3675cfef64e81c0b57",
+      "category": "art_direction_and_gait-regime_reference",
+      "supports": ["visual separation of fast walk/run/sprint", "run start and braking sequence", "side and three-quarter review layout"],
+      "limitations": ["printed speeds are illustrative and not accepted Tarbosaurus values", "still sequences do not replace native-speed 60 fps reference or feasibility checks"]
+    },
+    {
+      "asset_id": "tarbosaurus-body-shove-stumble-sheet",
+      "path": "reports/V9-EXTENSION-001/references/user-generated/tarbosaurus-body-shove-stumble-sheet.png",
+      "sha256": "ad9fc68fdedb174c3e6b84a32e5f1f2157da50d21a7f2e7dbade27a7b0bf4a88",
+      "category": "art_direction_and_action-choreography_reference",
+      "supports": ["leg/hip-driven shove chain", "target displacement read", "support failure and corrective recovery"],
+      "limitations": ["illustrated timing is not native-speed evidence", "target species, collision forces, and fall recovery are gameplay reconstruction"]
+    }
+  ],
+  "review_status": "accepted_as_user_art_direction_references_only"
+}

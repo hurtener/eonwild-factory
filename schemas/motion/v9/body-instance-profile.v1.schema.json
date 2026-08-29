@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "eonwild.motion.v9.body-instance-profile.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "profile_id", "family", "taxon", "coordinate_system", "dimensions", "segment_com_frame", "mass", "segments", "provenance"],
+  "properties": {
+    "schema": {"const": "eonwild.motion.v9.body-instance-profile.v1"},
+    "profile_id": {"type": "string", "minLength": 1},
+    "family": {"const": "heavy_predatory_biped"},
+    "taxon": {"type": "string", "minLength": 1},
+    "coordinate_system": {"$ref": "#/$defs/coordinateSystem"},
+    "dimensions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["body_length_m", "hip_height_m", "body_width_m"],
+      "properties": {
+        "body_length_m": {"type": ["number", "null"], "exclusiveMinimum": 0},
+        "hip_height_m": {"type": ["number", "null"], "exclusiveMinimum": 0},
+        "body_width_m": {"type": ["number", "null"], "exclusiveMinimum": 0}
+      }
+    },
+    "segment_com_frame": {"const": "body"},
+    "mass": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "total_mass_kg", "mass_fraction_sum", "absolute_dynamics_enabled", "absolute_policy"],
+      "properties": {
+        "mode": {"enum": ["normalized", "absolute"]},
+        "total_mass_kg": {"type": ["number", "null"], "exclusiveMinimum": 0},
+        "mass_fraction_sum": {"type": "number", "minimum": 0.999999999, "maximum": 1.000000001},
+        "absolute_dynamics_enabled": {"type": "boolean"},
+        "absolute_policy": {"enum": ["normalized_only", "fixture_absolute_allowed"]}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"absolute_policy": {"const": "normalized_only"}}},
+          "then": {
+            "properties": {
+              "mode": {"const": "normalized"},
+              "total_mass_kg": {"type": "null"},
+              "absolute_dynamics_enabled": {"const": false}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"absolute_policy": {"const": "fixture_absolute_allowed"}}},
+          "then": {
+            "properties": {
+              "mode": {"const": "absolute"},
+              "total_mass_kg": {"type": "number", "exclusiveMinimum": 0},
+              "absolute_dynamics_enabled": {"const": true}
+            }
+          }
+        }
+      ]
+    },
+    "segments": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "parent_id", "role", "mass_fraction", "com_body_m", "inertia_diagonal_normalized"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "parent_id": {"type": ["string", "null"]},
+          "role": {"type": "string", "minLength": 1},
+          "mass_fraction": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
+          "com_body_m": {"$ref": "#/$defs/vector3"},
+          "inertia_diagonal_normalized": {"$ref": "#/$defs/positiveVector3"}
+        }
+      }
+    },
+    "provenance": {"$ref": "#/$defs/provenance"}
+  },
+  "$defs": {
+    "coordinateSystem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["units", "time_units", "mass_units", "handedness", "up_axis", "forward_axis"],
+      "properties": {
+        "units": {"const": "m"},
+        "time_units": {"const": "s"},
+        "mass_units": {"const": "kg"},
+        "handedness": {"const": "right"},
+        "up_axis": {"const": "Y"},
+        "forward_axis": {"const": "-Z"}
+      }
+    },
+    "vector3": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {"type": "number"}
+    },
+    "positiveVector3": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {"type": "number", "exclusiveMinimum": 0}
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "status", "kind", "scientific_claims"],
+      "properties": {
+        "source": {"type": "string", "minLength": 1},
+        "status": {"enum": ["provisional", "fixture"]},
+        "kind": {"enum": ["provisional_taxon", "synthetic_fixture"]},
+        "scientific_claims": {"const": false}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "mass": {
+            "properties": {"absolute_policy": {"const": "fixture_absolute_allowed"}}
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "provenance": {
+            "properties": {
+              "status": {"const": "fixture"},
+              "kind": {"const": "synthetic_fixture"},
+              "scientific_claims": {"const": false}
+            }
+          }
+        }
+      }
+    }
+  ]
+}

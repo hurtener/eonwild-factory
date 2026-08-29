@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "eonwild.motion.v9.centroidal-contact-plan.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "plan_id", "intent_id", "program_id", "body_profile_id", "coordinate_system", "gravity_mps2", "grounded", "contacts", "centroidal_state", "support", "feasibility", "provenance"],
+  "properties": {
+    "schema": {"const": "eonwild.motion.v9.centroidal-contact-plan.v1"},
+    "plan_id": {"type": "string", "minLength": 1},
+    "intent_id": {"type": "string", "minLength": 1},
+    "program_id": {"type": "string", "minLength": 1},
+    "body_profile_id": {"type": "string", "minLength": 1},
+    "coordinate_system": {"$ref": "#/$defs/coordinateSystem"},
+    "gravity_mps2": {"$ref": "#/$defs/vector3"},
+    "grounded": {"const": true},
+    "contacts": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["contact_id", "effector", "state", "time_s", "load_fraction", "patch"],
+        "properties": {
+          "contact_id": {"type": "string", "minLength": 1},
+          "effector": {"type": "string", "minLength": 1},
+          "state": {"const": "loaded"},
+          "time_s": {"type": "number", "minimum": 0},
+          "load_fraction": {"type": "number", "minimum": 0, "maximum": 1},
+          "patch": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["frame", "point_m", "normal", "friction_coefficient"],
+            "properties": {
+              "frame": {"const": "body"},
+              "point_m": {"$ref": "#/$defs/vector3"},
+              "normal": {"$ref": "#/$defs/vector3"},
+              "friction_coefficient": {"type": "number", "minimum": 0, "maximum": 2}
+            }
+          }
+        }
+      }
+    },
+    "centroidal_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mass_mode", "mass_kg", "com_frame", "com_m", "linear_momentum_kg_mps", "angular_momentum_kg_m2ps"],
+      "properties": {
+        "mass_mode": {"enum": ["normalized", "absolute"]},
+        "mass_kg": {"type": ["number", "null"], "exclusiveMinimum": 0},
+        "com_frame": {"const": "body"},
+        "com_m": {"$ref": "#/$defs/vector3"},
+        "linear_momentum_kg_mps": {"$ref": "#/$defs/vector3"},
+        "angular_momentum_kg_m2ps": {"$ref": "#/$defs/vector3"}
+      }
+    },
+    "support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contact_effectors", "net_load_fraction", "normal", "contact_centroid_m", "contact_centroid_frame", "evaluation"],
+      "properties": {
+        "contact_effectors": {"type": "array", "minItems": 2, "items": {"type": "string", "minLength": 1}},
+        "net_load_fraction": {"const": 1.0},
+        "normal": {"$ref": "#/$defs/vector3"},
+        "contact_centroid_m": {"$ref": "#/$defs/vector3"},
+        "contact_centroid_frame": {"const": "body"},
+        "evaluation": {"const": "bookkeeping_only"}
+      }
+    },
+    "feasibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "absolute_dynamics_enabled", "physics_evaluated", "reason"],
+      "properties": {
+        "status": {"const": "grounded_support_only"},
+        "absolute_dynamics_enabled": {"type": "boolean"},
+        "physics_evaluated": {"const": false},
+        "reason": {"type": "string", "minLength": 1}
+      }
+    },
+    "provenance": {"$ref": "#/$defs/provenance"}
+  },
+  "$defs": {
+    "coordinateSystem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["units", "time_units", "mass_units", "handedness", "up_axis", "forward_axis"],
+      "properties": {
+        "units": {"const": "m"},
+        "time_units": {"const": "s"},
+        "mass_units": {"const": "kg"},
+        "handedness": {"const": "right"},
+        "up_axis": {"const": "Y"},
+        "forward_axis": {"const": "-Z"}
+      }
+    },
+    "vector3": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {"type": "number"}
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "status", "kind", "scientific_claims"],
+      "properties": {
+        "source": {"type": "string", "minLength": 1},
+        "status": {"enum": ["provisional", "fixture"]},
+        "kind": {"enum": ["provisional_taxon", "synthetic_fixture"]},
+        "scientific_claims": {"const": false}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "feasibility": {
+            "properties": {"absolute_dynamics_enabled": {"const": true}}
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "provenance": {
+            "properties": {
+              "status": {"const": "fixture"},
+              "kind": {"const": "synthetic_fixture"},
+              "scientific_claims": {"const": false}
+            }
+          }
+        }
+      }
+    }
+  ]
+}

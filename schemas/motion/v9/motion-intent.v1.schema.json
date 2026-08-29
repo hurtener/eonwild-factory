@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "eonwild.motion.v9.motion-intent.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "id", "coordinate_system", "desired_motion", "current_state", "environment", "condition", "provenance"],
+  "properties": {
+    "schema": {"const": "eonwild.motion.v9.motion-intent.v1"},
+    "id": {"type": "string", "minLength": 1},
+    "coordinate_system": {"$ref": "#/$defs/coordinateSystem"},
+    "desired_motion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "duration_s"],
+      "properties": {
+        "kind": {"const": "stationary_support"},
+        "duration_s": {"type": "number", "exclusiveMinimum": 0, "maximum": 60}
+      }
+    },
+    "current_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["support_state", "linear_velocity_mps"],
+      "properties": {
+        "support_state": {"const": "double"},
+        "linear_velocity_mps": {"$ref": "#/$defs/vector3"}
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gravity_mps2", "surface_normal"],
+      "properties": {
+        "gravity_mps2": {"$ref": "#/$defs/vector3"},
+        "surface_normal": {"$ref": "#/$defs/vector3"}
+      }
+    },
+    "condition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["grounded", "allow_airborne"],
+      "properties": {
+        "grounded": {"const": true},
+        "allow_airborne": {"const": false}
+      }
+    },
+    "provenance": {"$ref": "#/$defs/provenance"}
+  },
+  "$defs": {
+    "coordinateSystem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["units", "time_units", "mass_units", "handedness", "up_axis", "forward_axis"],
+      "properties": {
+        "units": {"const": "m"},
+        "time_units": {"const": "s"},
+        "mass_units": {"const": "kg"},
+        "handedness": {"const": "right"},
+        "up_axis": {"const": "Y"},
+        "forward_axis": {"const": "-Z"}
+      }
+    },
+    "vector3": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {"type": "number"}
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "status", "scientific_claims"],
+      "properties": {
+        "source": {"type": "string", "minLength": 1},
+        "status": {"enum": ["provisional", "fixture"]},
+        "kind": {"enum": ["provisional_taxon", "synthetic_fixture"]},
+        "scientific_claims": {"const": false}
+      }
+    }
+  }
+}

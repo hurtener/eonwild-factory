@@ -1,0 +1,158 @@
+{
+  "evidence": {
+    "checks": {
+      "absolute_dynamics_policy": true,
+      "body_frame_com": true,
+      "canonical_axes": true,
+      "canonical_gravity": true,
+      "deterministic_com": true,
+      "grounded_contacts": true,
+      "strict_contracts": true,
+      "support_physics_unevaluated": true
+    },
+    "evidence_sha256": "9120adbbfa66330c909de0402fb48c9cedb235ee6f5bc233501ab638713ed8d0",
+    "input_manifest": {
+      "body": {
+        "path": "profiles/v9/tarbosaurus-provisional.json",
+        "sha256": "58e7ce3001df9eacc3da7c642dd50c9793ed8e2d843dcc730a781552881662c2"
+      },
+      "contact_left_foot": {
+        "path": "profiles/v9/contact.left-foot.loaded.json",
+        "sha256": "b030bb7896c72d7b8e2b9750387d1990b3c4d60a64c8b34b5657c9399fcc806e"
+      },
+      "contact_right_foot": {
+        "path": "profiles/v9/contact.right-foot.loaded.json",
+        "sha256": "ac8f7fa30470d43a71ca1651521e2c477d3531a1348c6172d03ea4c3e07f1793"
+      },
+      "intent": {
+        "path": "profiles/v9/intent.stationary-support.json",
+        "sha256": "306b885a6d3dcaa871d651f315571cc58bef2236ba5f6d923d54cc5095e59f52"
+      },
+      "program": {
+        "path": "profiles/v9/program.stationary-support.json",
+        "sha256": "c477c892e5c73375a81a1dea399e262c948862509d3c1c49dcbee59aaba67e78"
+      }
+    },
+    "plan_sha256": "828f59439732de0de8b287b688284afdb0ab4d60ee5caae45c755f2178866629",
+    "scope": "contract_and_grounded_support_only",
+    "status": "PASS"
+  },
+  "plan": {
+    "body_profile_id": "tarbosaurus_provisional_normalized_v1",
+    "centroidal_state": {
+      "angular_momentum_kg_m2ps": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "com_frame": "body",
+      "com_m": [
+        0.0,
+        1.2919,
+        0.0771
+      ],
+      "linear_momentum_kg_mps": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mass_kg": null,
+      "mass_mode": "normalized"
+    },
+    "contacts": [
+      {
+        "contact_id": "contact_left_foot_loaded_v1",
+        "effector": "left_foot",
+        "load_fraction": 0.5,
+        "patch": {
+          "frame": "body",
+          "friction_coefficient": 0.8,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "point_m": [
+            -0.22,
+            0.0,
+            -0.25
+          ]
+        },
+        "state": "loaded",
+        "time_s": 0.0
+      },
+      {
+        "contact_id": "contact_right_foot_loaded_v1",
+        "effector": "right_foot",
+        "load_fraction": 0.5,
+        "patch": {
+          "frame": "body",
+          "friction_coefficient": 0.8,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "point_m": [
+            0.22,
+            0.0,
+            -0.25
+          ]
+        },
+        "state": "loaded",
+        "time_s": 0.0
+      }
+    ],
+    "coordinate_system": {
+      "forward_axis": "-Z",
+      "handedness": "right",
+      "mass_units": "kg",
+      "time_units": "s",
+      "units": "m",
+      "up_axis": "Y"
+    },
+    "feasibility": {
+      "absolute_dynamics_enabled": false,
+      "physics_evaluated": false,
+      "reason": "normalized mass; absolute dynamics disabled by profile policy",
+      "status": "grounded_support_only"
+    },
+    "gravity_mps2": [
+      0.0,
+      -9.81,
+      0.0
+    ],
+    "grounded": true,
+    "intent_id": "intent_stationary_support_v1",
+    "plan_id": "program_stationary_support_v1:intent_stationary_support_v1:tarbosaurus_provisional_normalized_v1",
+    "program_id": "program_stationary_support_v1",
+    "provenance": {
+      "kind": "provisional_taxon",
+      "scientific_claims": false,
+      "source": "eonwild_motion_v9_stationary_support",
+      "status": "provisional"
+    },
+    "schema": "eonwild.motion.v9.centroidal-contact-plan.v1",
+    "support": {
+      "contact_centroid_frame": "body",
+      "contact_centroid_m": [
+        0.0,
+        0.0,
+        -0.25
+      ],
+      "contact_effectors": [
+        "left_foot",
+        "right_foot"
+      ],
+      "evaluation": "bookkeeping_only",
+      "net_load_fraction": 1.0,
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ]
+    }
+  },
+  "report_id": "stationary-support:program_stationary_support_v1:intent_stationary_support_v1:tarbosaurus_provisional_normalized_v1",
+  "schema": "eonwild.motion.v9.stationary-support-evidence.v1"
+}

@@ -1,0 +1,52 @@
+{
+  "schema": "eonwild.motion.v9.body-instance-profile.v1",
+  "profile_id": "tarbosaurus_provisional_normalized_v1",
+  "family": "heavy_predatory_biped",
+  "taxon": "Tarbosaurus bataar",
+  "coordinate_system": {
+    "units": "m",
+    "time_units": "s",
+    "mass_units": "kg",
+    "handedness": "right",
+    "up_axis": "Y",
+    "forward_axis": "-Z"
+  },
+  "dimensions": {
+    "body_length_m": null,
+    "hip_height_m": null,
+    "body_width_m": null
+  },
+  "segment_com_frame": "body",
+  "mass": {
+    "mode": "normalized",
+    "total_mass_kg": null,
+    "mass_fraction_sum": 1.0,
+    "absolute_dynamics_enabled": false,
+    "absolute_policy": "normalized_only"
+  },
+  "segments": [
+    {"id": "pelvis", "parent_id": null, "role": "pelvis", "mass_fraction": 0.16, "com_body_m": [0.0, 1.0, 0.0], "inertia_diagonal_normalized": [0.004, 0.006, 0.004]},
+    {"id": "trunk", "parent_id": "pelvis", "role": "trunk", "mass_fraction": 0.17, "com_body_m": [0.0, 1.5, 0.0], "inertia_diagonal_normalized": [0.006, 0.009, 0.006]},
+    {"id": "chest", "parent_id": "trunk", "role": "chest", "mass_fraction": 0.13, "com_body_m": [0.0, 1.9, -0.05], "inertia_diagonal_normalized": [0.004, 0.006, 0.004]},
+    {"id": "neck", "parent_id": "chest", "role": "neck", "mass_fraction": 0.04, "com_body_m": [0.0, 2.15, -0.1], "inertia_diagonal_normalized": [0.001, 0.002, 0.001]},
+    {"id": "head", "parent_id": "neck", "role": "head", "mass_fraction": 0.08, "com_body_m": [0.0, 2.35, -0.25], "inertia_diagonal_normalized": [0.002, 0.003, 0.002]},
+    {"id": "tail_01", "parent_id": "pelvis", "role": "tail_proximal", "mass_fraction": 0.06, "com_body_m": [0.0, 1.2, 0.3], "inertia_diagonal_normalized": [0.002, 0.003, 0.002]},
+    {"id": "tail_02", "parent_id": "tail_01", "role": "tail_mid", "mass_fraction": 0.05, "com_body_m": [0.0, 1.1, 0.65], "inertia_diagonal_normalized": [0.0015, 0.002, 0.0015]},
+    {"id": "tail_03", "parent_id": "tail_02", "role": "tail_distal", "mass_fraction": 0.04, "com_body_m": [0.0, 1.0, 0.95], "inertia_diagonal_normalized": [0.001, 0.0015, 0.001]},
+    {"id": "tail_04", "parent_id": "tail_03", "role": "tail_tip", "mass_fraction": 0.03, "com_body_m": [0.0, 0.95, 1.2], "inertia_diagonal_normalized": [0.0005, 0.001, 0.0005]},
+    {"id": "thigh_l", "parent_id": "pelvis", "role": "hindlimb_thigh", "mass_fraction": 0.07, "com_body_m": [-0.22, 0.85, -0.02], "inertia_diagonal_normalized": [0.002, 0.003, 0.002]},
+    {"id": "thigh_r", "parent_id": "pelvis", "role": "hindlimb_thigh", "mass_fraction": 0.07, "com_body_m": [0.22, 0.85, -0.02], "inertia_diagonal_normalized": [0.002, 0.003, 0.002]},
+    {"id": "shin_l", "parent_id": "thigh_l", "role": "hindlimb_shin", "mass_fraction": 0.03, "com_body_m": [-0.22, 0.4, -0.08], "inertia_diagonal_normalized": [0.0008, 0.0012, 0.0008]},
+    {"id": "shin_r", "parent_id": "thigh_r", "role": "hindlimb_shin", "mass_fraction": 0.03, "com_body_m": [0.22, 0.4, -0.08], "inertia_diagonal_normalized": [0.0008, 0.0012, 0.0008]},
+    {"id": "foot_l", "parent_id": "shin_l", "role": "hindlimb_foot", "mass_fraction": 0.015, "com_body_m": [-0.22, 0.08, -0.25], "inertia_diagonal_normalized": [0.0003, 0.0004, 0.0003]},
+    {"id": "foot_r", "parent_id": "shin_r", "role": "hindlimb_foot", "mass_fraction": 0.015, "com_body_m": [0.22, 0.08, -0.25], "inertia_diagonal_normalized": [0.0003, 0.0004, 0.0003]},
+    {"id": "forelimb_l", "parent_id": "chest", "role": "forelimb", "mass_fraction": 0.005, "com_body_m": [-0.35, 1.5, -0.18], "inertia_diagonal_normalized": [0.0002, 0.0003, 0.0002]},
+    {"id": "forelimb_r", "parent_id": "chest", "role": "forelimb", "mass_fraction": 0.005, "com_body_m": [0.35, 1.5, -0.18], "inertia_diagonal_normalized": [0.0002, 0.0003, 0.0002]}
+  ],
+  "provenance": {
+    "source": "v9_extension_handoff_provisional_profile",
+    "status": "provisional",
+    "kind": "provisional_taxon",
+    "scientific_claims": false
+  }
+}

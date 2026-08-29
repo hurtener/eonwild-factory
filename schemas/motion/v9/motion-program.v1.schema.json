@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "eonwild.motion.v9.motion-program.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "id", "version", "kind", "coordinate_system", "purpose", "phase_template", "inputs", "outputs", "invariants", "provenance"],
+  "properties": {
+    "schema": {"const": "eonwild.motion.v9.motion-program.v1"},
+    "id": {"type": "string", "minLength": 1},
+    "version": {"type": "integer", "minimum": 1},
+    "kind": {"const": "stationary_support"},
+    "coordinate_system": {"$ref": "#/$defs/coordinateSystem"},
+    "purpose": {"type": "string", "minLength": 1},
+    "phase_template": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "duration_s", "contact_effectors"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "duration_s": {"type": "number", "exclusiveMinimum": 0, "maximum": 60},
+          "contact_effectors": {"type": "array", "minItems": 2, "items": {"type": "string", "minLength": 1}}
+        }
+      }
+    },
+    "inputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "outputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "invariants": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["grounded_only", "airborne_allowed", "zero_velocity"],
+      "properties": {
+        "grounded_only": {"const": true},
+        "airborne_allowed": {"const": false},
+        "zero_velocity": {"const": true}
+      }
+    },
+    "provenance": {"$ref": "#/$defs/provenance"}
+  },
+  "$defs": {
+    "coordinateSystem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["units", "time_units", "mass_units", "handedness", "up_axis", "forward_axis"],
+      "properties": {
+        "units": {"const": "m"},
+        "time_units": {"const": "s"},
+        "mass_units": {"const": "kg"},
+        "handedness": {"const": "right"},
+        "up_axis": {"const": "Y"},
+        "forward_axis": {"const": "-Z"}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "status", "scientific_claims"],
+      "properties": {
+        "source": {"type": "string", "minLength": 1},
+        "status": {"enum": ["provisional", "fixture"]},
+        "scientific_claims": {"const": false}
+      }
+    }
+  }
+}

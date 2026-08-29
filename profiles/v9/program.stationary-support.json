@@ -1,0 +1,20 @@
+{
+  "schema": "eonwild.motion.v9.motion-program.v1",
+  "id": "program_stationary_support_v1",
+  "version": 1,
+  "kind": "stationary_support",
+  "coordinate_system": {
+    "units": "m",
+    "time_units": "s",
+    "mass_units": "kg",
+    "handedness": "right",
+    "up_axis": "Y",
+    "forward_axis": "-Z"
+  },
+  "purpose": "Compose a deterministic grounded double-support contact plan.",
+  "phase_template": [{"id": "support", "duration_s": 0.5, "contact_effectors": ["left_foot", "right_foot"]}],
+  "inputs": ["motion_intent", "body_instance_profile", "contact_state"],
+  "outputs": ["centroidal_contact_plan"],
+  "invariants": {"grounded_only": true, "airborne_allowed": false, "zero_velocity": true},
+  "provenance": {"source": "v9_extension_stationary_support_fixture", "status": "fixture", "scientific_claims": false}
+}

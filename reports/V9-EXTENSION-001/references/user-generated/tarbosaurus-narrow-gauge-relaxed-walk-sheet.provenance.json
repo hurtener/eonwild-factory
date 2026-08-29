@@ -1,0 +1,44 @@
+{
+  "schema": "eonwild.reference_asset_provenance.v1",
+  "asset_id": "tarbosaurus-narrow-gauge-relaxed-walk-sheet",
+  "path": "reports/V9-EXTENSION-001/references/user-generated/tarbosaurus-narrow-gauge-relaxed-walk-sheet.png",
+  "sha256": "d8416309bab3a7fa48d4f15659cef15504304c5e94490fc5b2b5317615fb1b2d",
+  "media": {
+    "format": "png",
+    "pixel_width": 1448,
+    "pixel_height": 1086,
+    "color_model": "8-bit RGB",
+    "recompressed_on_ingest": false
+  },
+  "source": {
+    "kind": "user_supplied_generated_reference",
+    "provided_at": "2026-08-29",
+    "original_attachment_path": "/var/folders/qf/9hz3q9b55xb9hjwg0w478_h00000gn/T/codex-clipboard-ddef342a-57eb-4953-8c19-86c48d41c8d6.png",
+    "creator_or_generating_tool": "not supplied",
+    "tool_version": "not supplied",
+    "prompt": "not supplied",
+    "seed": "not supplied",
+    "input_asset_hashes": [],
+    "human_modifications": "not supplied",
+    "license": "user supplied for this project; broader source rights not independently verified",
+    "commercial_use_status": "unverified",
+    "ai_content_disclosure": "appears generated; exact generator metadata not supplied"
+  },
+  "intended_use": {
+    "category": "art_direction_and_pose_reference",
+    "supports": [
+      "front and rear narrow-gauge silhouette",
+      "close-to-midline foot-placement target",
+      "relaxed whole-body balance target",
+      "fixed-camera phase-sheet planning"
+    ],
+    "does_not_establish": [
+      "scientifically exact Tarbosaurus step width",
+      "scientifically exact phase timing",
+      "whole-body COM or force measurements",
+      "solver acceptance",
+      "commercially cleared external source provenance"
+    ]
+  },
+  "review_status": "accepted_as_user_art_direction_reference_only"
+}

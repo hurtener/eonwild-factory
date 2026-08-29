@@ -1,0 +1,52 @@
+{
+  "schema": "eonwild.motion.v9.body-instance-profile.v1",
+  "profile_id": "synthetic_heavy_biped_fixture_v1",
+  "family": "heavy_predatory_biped",
+  "taxon": "synthetic fixture",
+  "coordinate_system": {
+    "units": "m",
+    "time_units": "s",
+  "mass_units": "kg",
+    "handedness": "right",
+    "up_axis": "Y",
+    "forward_axis": "-Z"
+  },
+  "dimensions": {
+    "body_length_m": 7.0,
+    "hip_height_m": 2.15,
+    "body_width_m": 0.95
+  },
+  "segment_com_frame": "body",
+  "mass": {
+    "mode": "absolute",
+    "total_mass_kg": 1500.0,
+    "mass_fraction_sum": 1.0,
+    "absolute_dynamics_enabled": true,
+    "absolute_policy": "fixture_absolute_allowed"
+  },
+  "segments": [
+    {"id": "pelvis", "parent_id": null, "role": "pelvis", "mass_fraction": 0.15, "com_body_m": [0.0, 1.05, 0.10], "inertia_diagonal_normalized": [0.005, 0.007, 0.005]},
+    {"id": "abdomen", "parent_id": "pelvis", "role": "abdomen", "mass_fraction": 0.18, "com_body_m": [0.0, 1.55, 0.20], "inertia_diagonal_normalized": [0.008, 0.011, 0.008]},
+    {"id": "thorax", "parent_id": "abdomen", "role": "thorax", "mass_fraction": 0.12, "com_body_m": [0.0, 1.95, 0.05], "inertia_diagonal_normalized": [0.005, 0.008, 0.005]},
+    {"id": "neck_base", "parent_id": "thorax", "role": "neck_base", "mass_fraction": 0.025, "com_body_m": [0.0, 2.15, -0.10], "inertia_diagonal_normalized": [0.0012, 0.002, 0.0012]},
+    {"id": "neck_distal", "parent_id": "neck_base", "role": "neck_distal", "mass_fraction": 0.02, "com_body_m": [0.0, 2.30, -0.23], "inertia_diagonal_normalized": [0.0009, 0.0015, 0.0009]},
+    {"id": "head", "parent_id": "neck_distal", "role": "head", "mass_fraction": 0.055, "com_body_m": [0.0, 2.46, -0.48], "inertia_diagonal_normalized": [0.0018, 0.0025, 0.0018]},
+    {"id": "tail_base", "parent_id": "pelvis", "role": "tail_base", "mass_fraction": 0.08, "com_body_m": [0.0, 1.20, 0.45], "inertia_diagonal_normalized": [0.003, 0.004, 0.003]},
+    {"id": "tail_mid", "parent_id": "tail_base", "role": "tail_mid", "mass_fraction": 0.055, "com_body_m": [0.0, 1.10, 0.95], "inertia_diagonal_normalized": [0.002, 0.003, 0.002]},
+    {"id": "tail_distal", "parent_id": "tail_mid", "role": "tail_distal", "mass_fraction": 0.025, "com_body_m": [0.0, 1.02, 1.45], "inertia_diagonal_normalized": [0.001, 0.0015, 0.001]},
+    {"id": "thigh_l", "parent_id": "pelvis", "role": "hindlimb_thigh", "mass_fraction": 0.06, "com_body_m": [-0.28, 0.90, 0.05], "inertia_diagonal_normalized": [0.0025, 0.0035, 0.0025]},
+    {"id": "thigh_r", "parent_id": "pelvis", "role": "hindlimb_thigh", "mass_fraction": 0.06, "com_body_m": [0.28, 0.90, 0.05], "inertia_diagonal_normalized": [0.0025, 0.0035, 0.0025]},
+    {"id": "lower_leg_l", "parent_id": "thigh_l", "role": "hindlimb_lower_leg", "mass_fraction": 0.035, "com_body_m": [-0.28, 0.42, -0.05], "inertia_diagonal_normalized": [0.001, 0.0014, 0.001]},
+    {"id": "lower_leg_r", "parent_id": "thigh_r", "role": "hindlimb_lower_leg", "mass_fraction": 0.035, "com_body_m": [0.28, 0.42, -0.05], "inertia_diagonal_normalized": [0.001, 0.0014, 0.001]},
+    {"id": "foot_l", "parent_id": "lower_leg_l", "role": "hindlimb_foot", "mass_fraction": 0.025, "com_body_m": [-0.28, 0.08, -0.35], "inertia_diagonal_normalized": [0.0005, 0.0007, 0.0005]},
+    {"id": "foot_r", "parent_id": "lower_leg_r", "role": "hindlimb_foot", "mass_fraction": 0.025, "com_body_m": [0.28, 0.08, -0.35], "inertia_diagonal_normalized": [0.0005, 0.0007, 0.0005]},
+    {"id": "forelimb_l", "parent_id": "thorax", "role": "forelimb", "mass_fraction": 0.025, "com_body_m": [-0.42, 1.60, -0.20], "inertia_diagonal_normalized": [0.0005, 0.0007, 0.0005]},
+    {"id": "forelimb_r", "parent_id": "thorax", "role": "forelimb", "mass_fraction": 0.025, "com_body_m": [0.42, 1.60, -0.20], "inertia_diagonal_normalized": [0.0005, 0.0007, 0.0005]}
+  ],
+  "provenance": {
+    "source": "v9_extension_synthetic_fixture",
+    "status": "fixture",
+    "kind": "synthetic_fixture",
+    "scientific_claims": false
+  }
+}

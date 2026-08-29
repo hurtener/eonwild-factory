@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "eonwild.motion.v9.contact-state.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "id", "coordinate_system", "effector", "state", "time_s", "load_fraction", "patch", "provenance"],
+  "properties": {
+    "schema": {"const": "eonwild.motion.v9.contact-state.v1"},
+    "id": {"type": "string", "minLength": 1},
+    "coordinate_system": {"$ref": "#/$defs/coordinateSystem"},
+    "effector": {"type": "string", "minLength": 1},
+    "state": {"const": "loaded"},
+    "time_s": {"type": "number", "minimum": 0},
+    "load_fraction": {"type": "number", "minimum": 0, "maximum": 1},
+    "patch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["frame", "point_m", "normal", "friction_coefficient"],
+      "properties": {
+        "frame": {"const": "body"},
+        "point_m": {"$ref": "#/$defs/vector3"},
+        "normal": {"$ref": "#/$defs/vector3"},
+        "friction_coefficient": {"type": "number", "minimum": 0, "maximum": 2}
+      }
+    },
+    "provenance": {"$ref": "#/$defs/provenance"}
+  },
+  "$defs": {
+    "coordinateSystem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["units", "time_units", "mass_units", "handedness", "up_axis", "forward_axis"],
+      "properties": {
+        "units": {"const": "m"},
+        "time_units": {"const": "s"},
+        "mass_units": {"const": "kg"},
+        "handedness": {"const": "right"},
+        "up_axis": {"const": "Y"},
+        "forward_axis": {"const": "-Z"}
+      }
+    },
+    "vector3": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {"type": "number"}
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "status", "scientific_claims"],
+      "properties": {
+        "source": {"type": "string", "minLength": 1},
+        "status": {"enum": ["provisional", "fixture"]},
+        "scientific_claims": {"const": false}
+      }
+    }
+  }
+}
