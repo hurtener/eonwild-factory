@@ -24,11 +24,18 @@ proxies, not physical COM or biological validation. The productized worktree
 contains a V8.3 working diagnostic, but its visual approval and promotion are
 pending and its blocker report says it is not release evidence.
 
-Five new native-speed capture packages and one small design-posture still sheet
-cover all B/C/D gaps without requesting duplicate walk or idle material. The
-airborne power-attack branch, drinking, swallowing, resting, vocalization, and
-terminal-death interpretations are reconstruction-only and should not receive
-imitative reference footage.
+The prior five native-speed capture packages and one small design-posture still
+sheet remain the requested coverage plan. Ten user-supplied MP4s have now been
+received externally and are recorded as exact-byte, filename-mapped technical
+evidence in `reports/V9-EVIDENCE-INGEST-001/audit.json`. They are not stored in
+the productized worktree: the ten duplicate copies were removed pending
+confirmation of project ownership or reuse rights. All ten primary video
+streams are 24 fps rather than the requested 60 fps, so receipt does not close
+any native-speed timing gate or B/C/D requirement. Fixed-camera pairing,
+framing, phase-boundary, and choreography acceptance were not adjudicated in
+the ingest pass. The airborne power-attack branch, drinking, swallowing,
+resting, vocalization, and terminal-death interpretations remain
+reconstruction-only and should not receive imitative reference footage.
 
 ## User-supplied narrow-gauge sheet
 
@@ -57,6 +64,52 @@ Their set-level provenance record preserves each hash and its separate
 interpretation boundary. In particular, the printed faster-locomotion speeds
 remain illustrative, and the 24 fps listen/shove panels remain choreography
 guides rather than native-speed timing evidence.
+
+## Received user-supplied video set
+
+These ten files are externally received user-supplied art-direction/choreography
+evidence, not scientific truth. They are unavailable for engine or reference
+use until project ownership or reuse rights are confirmed. The mappings below
+are filename-derived candidate bindings only; no choreography, support, foot
+heading, COM, or biological claim is made from receipt. Exact source paths,
+bytes, hashes, stream metadata, removal disposition, and unresolved provenance
+fields are in `reports/V9-EVIDENCE-INGEST-001/audit.json`.
+
+| Received file | Candidate package/contract labels | Encoded technical facts | Coverage status |
+|---|---|---|---|
+| `BITE MISS + RECOVERY — front three-quarter.mp4` | `R-BITE` / `tarbosaurus_bite_miss_recovery` | H.264, 1280×704, 24 fps, 193 frames, 8.041667 s, AAC | 24 fps; timing and content not adjudicated |
+| `BODY SHOVE → SMALL STUMBLE → RECOVERY.mp4` | `R-SHOVE-STUMBLE` / `tarbosaurus_body_shove`, `tarbosaurus_stumble` | H.264, 736×400, 24 fps, 193 frames, 8.041667 s, AAC | 24 fps; timing and content not adjudicated |
+| `FEEDING + TEAR:PULL — fixed side.mp4` | `R-FEED` / `tarbosaurus_head_down_feeding`, `tarbosaurus_tear_pull` | H.264, 736×400, 24 fps, 145 frames, 6.041667 s, AAC | 24 fps; timing and content not adjudicated |
+| `GROUNDED COMMITTED BITE — fixed side.mp4` | `R-BITE` / `tarbosaurus_committed_power_bite` | H.264, 736×400, 24 fps, 193 frames, 8.041667 s, AAC | 24 fps; timing and content not adjudicated |
+| `LISTEN REACTION — front three-quarter.mp4` | `R-LISTEN` / `tarbosaurus_listen_reaction` | H.264, 736×400, 24 fps, 193 frames, 8.041667 s, AAC | 24 fps; timing and content not adjudicated |
+| `RUN START-RUN-RUN STOP.mp4` | `R-GAIT` / `tarbosaurus_run_start`, `tarbosaurus_run`, `tarbosaurus_run_stop` | H.264, 736×400, 24 fps, 193 frames, 8.041667 s, AAC | 24 fps; combined filename is not separate-take proof |
+| `running-sustained-left.mp4` | `R-GAIT` / `tarbosaurus_run` | H.264, 736×400, 24 fps, 145 frames, 6.041667 s, AAC | 24 fps; timing and content not adjudicated |
+| `sprint-left.mp4` | `R-GAIT` / `tarbosaurus_sprint` | H.264, 736×400, 24 fps, 145 frames, 6.041667 s, AAC | 24 fps; timing and content not adjudicated |
+| `walking-back-gauge.mp4` | `R-GAIT` / `tarbosaurus_walk`, `tarbosaurus_fast_walk` | H.264, 736×400, 24 fps, 145 frames, 6.041667 s, AAC | gauge label only; no state/metric adjudication |
+| `walking-front-gauge.mp4` | `R-GAIT` / `tarbosaurus_walk`, `tarbosaurus_fast_walk` | H.264, 736×400, 24 fps, 145 frames, 6.041667 s, AAC | gauge label only; no state/metric adjudication |
+
+All ten primary streams are 24/1 fps. Nine files also contain an attached
+MJPEG picture stream; it is retained as auxiliary metadata and is not counted
+as motion timing evidence. Generator, original source, creator identity,
+license, commercial-use status, prompt/seed, human modifications, reviewer,
+and AI-content disclosure remain unresolved. The receipt status is
+`BLOCKED_PENDING_RIGHTS_CONFIRMATION`: no productized media path remains, and
+the clips are not available for engine/reference use.
+
+### Receipt does not close the requested packages
+
+The received set is useful as an archived reference handoff, but the following
+requirements remain open:
+
+- 60 fps native-speed encoding and sub-frame timing validation for every
+  dynamic take.
+- Independent fixed-camera, paired-camera, scale/lens, full-body,
+  floor/contact, and phase-boundary adjudication.
+- Separately evidenced `fast_walk_loop`, `quick_bite_hit`, and
+  `low_downward_bite` takes; no received filename closes those named requests.
+- Any acceptance claim about gait, support width, foot heading, COM, force,
+  or contact. Those require deterministic masks and measured fixed-camera
+  evidence, not these technical receipts.
 
 ## Existing coverage and limits
 

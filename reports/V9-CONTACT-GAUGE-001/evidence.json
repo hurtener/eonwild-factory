@@ -1,0 +1,140 @@
+{
+  "schema": "eonwild.motion.v9.contact-gauge-evidence.v1",
+  "status": "PASS_BOUNDED_PRE_SOLVER",
+  "task_id": "V9-CONTACT-GAUGE-001",
+  "scope": {
+    "branch": "codex/procedural-engine",
+    "head": "85de1f2ceaa75427f74090a47d2b6a1ca3c6022a",
+    "canonical_engine": "src/eonwild_motion",
+    "read_only_source": true,
+    "glb_mutation": false,
+    "cli_wiring": false,
+    "diagnostic_renderer": false,
+    "uploaded_video_set_ingested": false
+  },
+  "ownership": {
+    "implementation": [
+      "src/eonwild_motion/contact_gauge.py"
+    ],
+    "data": [
+      "profiles/v9/contact-gauge-v8.2.json"
+    ],
+    "tests": [
+      "tests/test_v9_contact_gauge.py"
+    ],
+    "report": [
+      "reports/V9-CONTACT-GAUGE-001/"
+    ]
+  },
+  "inputs": {
+    "policy": {
+      "path": "reports/V9-GAIT-FOOT-AUDIT-001/narrow-gauge-contract.json",
+      "sha256": "9c1a142867b46c19b5f5c8f45677ecae86e50918e56562f86702cc10c085c89f",
+      "schema": "eonwild.motion.family_narrow_gauge_contract.v1",
+      "status": "PROVISIONAL_ENGINEERING_CONTRACT",
+      "scientific_claim": false,
+      "species_hardcode": false
+    },
+    "source_profile": {
+      "path": "profiles/v9/contact-gauge-v8.2.json",
+      "sha256": "b1235eae91ec033fe4e7c2a475b7a2ab666fb5aae758d860eb5cae02e4425cd6",
+      "schema": "eonwild.motion.v9.contact-gauge-source.v1"
+    },
+    "v8_2_source": {
+      "path": "procedural-animation-toolkit(v8.2)/asset/tarbosaurus_v8_2_approved.glb",
+      "sha256": "a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5",
+      "bytes": 45331840,
+      "clip": "PROC_WALK_RELAXED_V8_1_RESPIN_ROOTMOTION",
+      "read_only": true
+    },
+    "v8_3_witness": {
+      "path": "assets/sha256/b5fc582e3bae3b2708735e7ae68cc31da65599f6d155d3b6d089a44ed5517d03.glb",
+      "sha256": "b5fc582e3bae3b2708735e7ae68cc31da65599f6d155d3b6d089a44ed5517d03",
+      "bytes": 45331840,
+      "read_only": true
+    },
+    "release_witnesses": {
+      "v8_2_profile_sha256": "37a26e006700350bc42d40eeb50f93bb4fa63dae98c98db2423a8eb3c9157c9b",
+      "v8_2_profile_lock_file_sha256": "6e4a740605d8b06feb33d318bafc65bbd75f64a8df19210f00031f5fbeffa228",
+      "v8_2_profile_lock_declared_lock_sha256": "eba6d05608e5b34c408dfeed5f9440ac85444b441d380c9279688e76d5c280ec",
+      "v8_3_profile_sha256": "d222e1159db92928a442c1fa0c048ac1c8c733a3dfc3e7a18731a9416cd96815",
+      "v8_3_profile_lock_file_sha256": "0419a7612337d911ac88286f31916345d6d5d76151943b4b74bcd1fdda2632cf",
+      "v8_3_profile_lock_declared_lock_sha256": "4b506eb9145ccdeb21bebbb58d8fd40aa3a0048c1625be927655c012f989abc9",
+      "channels_state_sha256": "0fb80ed42b0b53e91e6fd55af272c2f4a0c1a9f724c2d6263b6f74a8af543b8a"
+    }
+  },
+  "output": {
+    "path": "reports/V9-CONTACT-GAUGE-001/contact-gauge-report.json",
+    "canonical_sha256": "04debe04ab7e4c27cb58824d7ab7e1a7d3b972432229fa50b0822a293ad20be6",
+    "file_sha256": "1357d48d152e457bebe47ec474fa8e24ae390b4b7a975b5521dc29ad93a87f46",
+    "bytes": 419660,
+    "all_numeric_values_finite": true
+  },
+  "measured_witness": {
+    "sampling_count": 120,
+    "source_timeline_count": 245,
+    "travel_speed_mps": 1.2807337396095912,
+    "travel_tangent": [
+      0.03893162055641767,
+      0.0,
+      0.9992418770852487
+    ],
+    "hip_height_m_median": 2.67496789138752,
+    "hip_width_m_median": 1.3050593048989103,
+    "support_width_m_median": 2.127868285918672,
+    "support_width_over_hip_width_median": 1.6304763147016499,
+    "support_width_over_hip_height_median": 0.7954743280357417,
+    "step_width_normalized_median": 0.7898320079537304,
+    "step_width_event_pair_count": 3,
+    "left_toe_penetration_m_max": 0.0026326468370590442,
+    "right_toe_penetration_m_max": 0.005769422736138424,
+    "crossover_observed": false,
+    "left_contact_occupancy": 0.8,
+    "right_contact_occupancy": 0.7916666666666666,
+    "source_timeline_start_s": 0.0,
+    "source_timeline_end_s": 4.069565296173096
+  },
+  "checks": {
+    "strict_policy_and_source_admission": "PASS",
+    "measured_travel_tangent": "PASS",
+    "axis_rotation_invariance": "PASS",
+    "zero_travel_fail_closed": "PASS",
+    "generic_synthetic_fixture": "PASS",
+    "immutable_root_motion_extraction": "PASS",
+    "in_place_zero_travel_rejection": "PASS",
+    "time_weighted_travel": "PASS",
+    "finite_difference_contact_velocity": "PASS",
+    "hip_anatomical_lateral": "PASS",
+    "canonical_median_height_normalization": "PASS",
+    "required_step_width_metric": "PASS",
+    "temporal_step_pairing": "PASS",
+    "simultaneous_touchdown_not_step": "PASS",
+    "turn_unevaluated_unsupported": "PASS",
+    "nonzero_timeline_bounds": "PASS",
+    "nonzero_glb_timeline_bounds": "PASS",
+    "skin_weights_normalized": "PASS",
+    "profile_accessor_bounds": "PASS",
+    "malformed_glb_container_contract_error": "PASS",
+    "repository_path_admission": "PASS",
+    "deterministic_double_run": "PASS",
+    "finite_json_output": "PASS",
+    "release_witness_hashes_unchanged": "PASS",
+    "focused_tests": {
+      "count": 27,
+      "status": "PASS"
+    },
+    "full_regression": {
+      "count": 76,
+      "status": "PASS",
+      "skipped": 0
+    }
+  },
+  "limitations": [
+    "Measured geometry/animation bookkeeping is not physical support feasibility or scientific truth.",
+    "No support polygon, friction, impulse/dynamics, whole-body solve, curve adjustment, promotion, CLI, or runtime mutation.",
+    "Ground level, masks and thresholds are explicit input policy; inherited toe penetration is reported rather than corrected.",
+    "The V8.2 in-place clip is rejected for zero travel and is not used as a stationary support proof.",
+    "Same-timestamp bilateral touchdown onsets cannot establish a temporal step-width pair and are marked unevaluated.",
+    "Incoming evidence videos were not ingested or analyzed."
+  ]
+}

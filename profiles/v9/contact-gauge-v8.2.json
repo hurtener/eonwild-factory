@@ -1,0 +1,73 @@
+{
+  "schema": "eonwild.motion.v9.contact-gauge-source.v1",
+  "coordinate_system": {
+    "units": "m",
+    "time_units": "s",
+    "mass_units": "kg",
+    "handedness": "right",
+    "up_axis": "Y",
+    "forward_axis": "-Z"
+  },
+  "source": {
+    "path": "procedural-animation-toolkit(v8.2)/asset/tarbosaurus_v8_2_approved.glb",
+    "sha256": "a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5",
+    "clips": {
+      "root_motion": "PROC_WALK_RELAXED_V8_1_RESPIN_ROOTMOTION",
+      "in_place": "PROC_WALK_RELAXED_V8_1_RESPIN_INPLACE"
+    }
+  },
+  "geometry": {
+    "mesh_node": "Mesh_0",
+    "position_accessor": 0,
+    "joint_accessors": [3, 4, 5],
+    "weight_accessors": [6, 7, 8],
+    "skin_index": 0,
+    "landmarks": {
+      "root_node": "Bone_000",
+      "hip_left_node": "Bone_011",
+      "hip_right_node": "Bone_015",
+      "foot_roots": {
+        "left": "Bone_008",
+        "right": "Bone_012"
+      }
+    },
+    "feet": {
+      "left": {
+        "side": "left",
+        "sole_joints": ["Bone_008"],
+        "toe_joints": [
+          "Bone_044", "Bone_043", "Bone_042",
+          "Bone_047", "Bone_046", "Bone_045",
+          "Bone_050", "Bone_049", "Bone_048"
+        ],
+        "weight_threshold": 0.75
+      },
+      "right": {
+        "side": "right",
+        "sole_joints": ["Bone_012"],
+        "toe_joints": [
+          "Bone_053", "Bone_052", "Bone_051",
+          "Bone_056", "Bone_055", "Bone_054",
+          "Bone_059", "Bone_058", "Bone_057"
+        ],
+        "weight_threshold": 0.75
+      }
+    },
+    "ground": {
+      "up_axis": "Y",
+      "level_m": -0.01200103802869944
+    }
+  },
+  "sampling": {
+    "mode": "uniform_time",
+    "count": 120
+  },
+  "thresholds": {
+    "floor_gap_tolerance_m": 0.03,
+    "contact_relative_velocity_mps": 1.0,
+    "toe_off_gap_m": 0.04,
+    "minimum_active_points": 3,
+    "travel_epsilon_mps": 0.000001,
+    "crossover_epsilon_m": 0.000001
+  }
+}

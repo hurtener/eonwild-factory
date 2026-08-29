@@ -88,6 +88,115 @@
       "license_status": "unverified"
     }
   ],
+  "received_user_video_evidence": {
+    "status": "BLOCKED_PENDING_RIGHTS_CONFIRMATION",
+    "manifest": "reports/V9-EVIDENCE-INGEST-001/audit.json",
+    "evidence_class": "user_supplied_art_direction_and_choreography_evidence",
+    "scientific_evidence": false,
+    "source_root": "/Volumes/m2-extended-disk/Repos/eonwild-factory/assets/examples/tarbosaurus/v9_evidence",
+    "stored_root": null,
+    "stored_file_count": 0,
+    "productized_duplicates_removed": true,
+    "available_for_engine_or_reference_use": false,
+    "rights_status": "unresolved",
+    "rights_confirmation": null,
+    "rights_confirmation_required": true,
+    "receipt_disposition": "external_receipt_only_until_project_ownership_or_reuse_rights_confirmed",
+    "file_count": 10,
+    "requested_primary_fps": 60,
+    "observed_primary_fps": "24/1",
+    "timing_status": "lower_confidence_insufficient_for_60fps_or_sub_frame_native_speed_validation",
+    "mapping_basis": "filename_only; content and choreography not adjudicated",
+    "files": [
+      {
+        "filename": "BITE MISS + RECOVERY — front three-quarter.mp4",
+        "sha256": "9fe404e4075c206a251c853d026dcf648b2fe16aa020233b67a0f95486db5629",
+        "byte_size": 6192005,
+        "technical": {"codec": "h264", "dimensions_px": [1280, 704], "fps": "24/1", "frame_count": 193, "duration_seconds": 8.041667, "audio_presence": true},
+        "candidate_packages": ["R-BITE"],
+        "candidate_contracts": ["tarbosaurus_bite_miss_recovery"]
+      },
+      {
+        "filename": "BODY SHOVE → SMALL STUMBLE → RECOVERY.mp4",
+        "sha256": "9bc5d7925617daf9af23a48b5206ea6f2fcb2e123c665b356d0b601ece38a143",
+        "byte_size": 3423440,
+        "technical": {"codec": "h264", "dimensions_px": [736, 400], "fps": "24/1", "frame_count": 193, "duration_seconds": 8.041667, "audio_presence": true},
+        "candidate_packages": ["R-SHOVE-STUMBLE"],
+        "candidate_contracts": ["tarbosaurus_body_shove", "tarbosaurus_stumble"]
+      },
+      {
+        "filename": "FEEDING + TEAR:PULL — fixed side.mp4",
+        "sha256": "e56f2dc9ecc22716892b36d7559bf5cb348dee3459ca725dc7ae4205d98c7e43",
+        "byte_size": 2321904,
+        "technical": {"codec": "h264", "dimensions_px": [736, 400], "fps": "24/1", "frame_count": 145, "duration_seconds": 6.041667, "audio_presence": true},
+        "candidate_packages": ["R-FEED"],
+        "candidate_contracts": ["tarbosaurus_head_down_feeding", "tarbosaurus_tear_pull"]
+      },
+      {
+        "filename": "GROUNDED COMMITTED BITE — fixed side.mp4",
+        "sha256": "fcc0076f06b2b4c1f59afdb0b28e1d2d1067d6ceeb5c55f06f1866e12e9688e8",
+        "byte_size": 2528271,
+        "technical": {"codec": "h264", "dimensions_px": [736, 400], "fps": "24/1", "frame_count": 193, "duration_seconds": 8.041667, "audio_presence": true},
+        "candidate_packages": ["R-BITE"],
+        "candidate_contracts": ["tarbosaurus_committed_power_bite"]
+      },
+      {
+        "filename": "LISTEN REACTION — front three-quarter.mp4",
+        "sha256": "4c93b18c8482e440ce3d13be57a4986cbb929652031561acb68f0863415bce27",
+        "byte_size": 1653853,
+        "technical": {"codec": "h264", "dimensions_px": [736, 400], "fps": "24/1", "frame_count": 193, "duration_seconds": 8.041667, "audio_presence": true},
+        "candidate_packages": ["R-LISTEN"],
+        "candidate_contracts": ["tarbosaurus_listen_reaction"]
+      },
+      {
+        "filename": "RUN START-RUN-RUN STOP.mp4",
+        "sha256": "2abe624212986285f22d2ee4b3f3e579e2ad7637ca2cba635af92b211c58a478",
+        "byte_size": 3120966,
+        "technical": {"codec": "h264", "dimensions_px": [736, 400], "fps": "24/1", "frame_count": 193, "duration_seconds": 8.041667, "audio_presence": true},
+        "candidate_packages": ["R-GAIT"],
+        "candidate_contracts": ["tarbosaurus_run_start", "tarbosaurus_run", "tarbosaurus_run_stop"]
+      },
+      {
+        "filename": "running-sustained-left.mp4",
+        "sha256": "d1ba1e31e0cbf9ee8a4c0a24c877f2797b22ecb376124d529193eee975d6c9eb",
+        "byte_size": 1808155,
+        "technical": {"codec": "h264", "dimensions_px": [736, 400], "fps": "24/1", "frame_count": 145, "duration_seconds": 6.041667, "audio_presence": true},
+        "candidate_packages": ["R-GAIT"],
+        "candidate_contracts": ["tarbosaurus_run"]
+      },
+      {
+        "filename": "sprint-left.mp4",
+        "sha256": "6f32bc7ac3a51db67b08a8904f732e168513fa11b0ae94da4b336cce09e518b1",
+        "byte_size": 3100395,
+        "technical": {"codec": "h264", "dimensions_px": [736, 400], "fps": "24/1", "frame_count": 145, "duration_seconds": 6.041667, "audio_presence": true},
+        "candidate_packages": ["R-GAIT"],
+        "candidate_contracts": ["tarbosaurus_sprint"]
+      },
+      {
+        "filename": "walking-back-gauge.mp4",
+        "sha256": "318e9bbd5e9e0d0c9872e9a0f76e067ef94e5bc28a1329adc7f84ce9af22a65a",
+        "byte_size": 1174906,
+        "technical": {"codec": "h264", "dimensions_px": [736, 400], "fps": "24/1", "frame_count": 145, "duration_seconds": 6.041667, "audio_presence": true},
+        "candidate_packages": ["R-GAIT"],
+        "candidate_contracts": ["tarbosaurus_walk", "tarbosaurus_fast_walk"]
+      },
+      {
+        "filename": "walking-front-gauge.mp4",
+        "sha256": "2f6ad8626eebf01cd92b58f6cc75e342cff784130f265ccc0d2cee099b9af22e",
+        "byte_size": 1326486,
+        "technical": {"codec": "h264", "dimensions_px": [736, 400], "fps": "24/1", "frame_count": 145, "duration_seconds": 6.041667, "audio_presence": true},
+        "candidate_packages": ["R-GAIT"],
+        "candidate_contracts": ["tarbosaurus_walk", "tarbosaurus_fast_walk"]
+      }
+    ],
+    "remaining_gaps": [
+      "60 fps native-speed encoding and sub-frame timing for every dynamic take",
+      "independent fixed-camera, paired-camera, scale/lens, framing, floor/contact, and phase-boundary adjudication",
+      "separate filename-evidenced fast_walk_loop, quick_bite_hit, and low_downward_bite takes",
+      "any accepted gait, support-width, foot-heading, COM, force, or contact measurement"
+    ],
+    "provenance_unresolved": ["generator", "generator_version", "original_source", "license", "commercial_use_status", "prompt", "seed", "human_modifications", "reviewer", "AI-content disclosure"]
+  },
   "existing_coverage": [
     {
       "id": "v55_manifest_solver",
