@@ -1,0 +1,164 @@
+{
+  "candidate": "build/V9-AIRBORNE-RUN-001/iteration-008-open-support/trial-05",
+  "status": "REVIEW_CANDIDATE_NOT_USER_ACCEPTED",
+  "hashes": {
+    "airborne-run-root_motion.glb": "0ed1093aab2009057a45e44e445afca5a30b15239a1558c7c3c90fec24918460",
+    "airborne-run-in_place.glb": "be2235f64693ddeaebc35616514992e6f74d742265c84f5e70a99b28c3ce990e",
+    "engineering-profile.json": "ff97780a406d37428dbabb9d18054c5d5f66332a2afef195b9ccc3b12de4a9cf"
+  },
+  "media": {
+    "run-front-2cycles.mp4": {
+      "sha256": "15a218921497e8bd08ee28174f626c6f3fdae428b78e9feb3c2f15aafe4a89b0",
+      "width": 1100,
+      "height": 620,
+      "r_frame_rate": "24/1",
+      "duration": "2.500000",
+      "nb_frames": "60"
+    },
+    "run-opposing-2cycles.mp4": {
+      "sha256": "cfcdb6a6ed13c7f12f67bbec1ee8bf27939b86523dd38e087a6f51ecef442fa1",
+      "width": 1100,
+      "height": 620,
+      "r_frame_rate": "24/1",
+      "duration": "2.500000",
+      "nb_frames": "60"
+    },
+    "run-rear-2cycles.mp4": {
+      "sha256": "54c02c7e26a613f25bcfda0f918d679065da13c71f3bae72778152ad911d86db",
+      "width": 1100,
+      "height": 620,
+      "r_frame_rate": "24/1",
+      "duration": "2.500000",
+      "nb_frames": "60"
+    },
+    "run-side-2cycles.mp4": {
+      "sha256": "fc0b6dea57f47e1529d17543203d819f0d15e174a88bcfced9804170fbc369e1",
+      "width": 1100,
+      "height": 620,
+      "r_frame_rate": "24/1",
+      "duration": "2.500000",
+      "nb_frames": "60"
+    }
+  },
+  "parameters": {
+    "step_period_s": 0.625,
+    "flight_fraction": 0.26666666666666666,
+    "step_length_body_heights": 1.33,
+    "touchdown_reach_body_heights": 0.32,
+    "swing_clearance_body_heights": 0.16,
+    "swing_lift_fraction": 0.24,
+    "swing_lower_fraction": 0.32,
+    "pelvis_compression_body_heights": 0.045,
+    "pelvis_crouch_body_heights": 0.035,
+    "flight_height_body_heights": 0.06,
+    "continuous_body_launch_fraction": 0.85,
+    "rounded_swing_peak_fraction": 0.42,
+    "toe_flex_degrees": 32,
+    "foot_recovery_pitch_degrees": 0,
+    "push_off_pitch_degrees": 55,
+    "compression_peak_fraction": 0.32,
+    "push_off_start_fraction": 0.4,
+    "swing_hip_lift_degrees": 45,
+    "swing_recovery_peak_fraction": 0.42,
+    "hip_extension_limit_degrees": 45,
+    "hip_flexion_limit_degrees": 80,
+    "knee_min_interior_degrees": 65,
+    "knee_max_interior_degrees": 165,
+    "ankle_min_interior_degrees": 30,
+    "ankle_max_interior_degrees": 165,
+    "max_joint_angular_velocity_degrees_per_s": 1200,
+    "max_ankle_pitch_velocity_degrees_per_s": 600,
+    "articulation_preferred_margin_degrees": 0,
+    "cycles": 1,
+    "sample_hz": 120,
+    "chest_response_gain_degrees": 2,
+    "head_stabilization_gain": 0.85,
+    "tail_response_gain_degrees": 12,
+    "body_response_time_s": 0.06,
+    "flight_foot_lift_body_heights": 0.03,
+    "swing_approach_lift_body_heights": 0.06
+  },
+  "focused_tests": "21 passed",
+  "maximum_joint_angular_velocity_degrees_per_s": 633.0215670482054,
+  "maximum_rotation_seam_degrees": 0.023358487705173767,
+  "bend_sign_flip_count": 0,
+  "max_unreachable_extension_m": 0,
+  "maximum_articulation_envelope_violation_degrees": 0,
+  "max_planted_distal_contact_velocity_mps": 0.000058842522295026086,
+  "maximum_foot_surface_penetration_m": 0,
+  "interior_flight_with_surface_ground_intersection_samples": 0,
+  "highest_common_toe_clearance_witness": {
+    "time_s": 0.5583333333333333,
+    "planned_flight": true,
+    "feet": {
+      "left": {
+        "planned_contact": false,
+        "sole_minimum_gap_m": 0.8422310902267908,
+        "toe_minimum_gap_m": 0.11780192622778413,
+        "toe_surface_centroid_m": [
+          -0.41686487121510973,
+          0.4270771063043651,
+          2.7968715406983975
+        ]
+      },
+      "right": {
+        "planned_contact": false,
+        "sole_minimum_gap_m": 0.3338993609909909,
+        "toe_minimum_gap_m": 0.14884147300590897,
+        "toe_surface_centroid_m": [
+          0.7975453554733467,
+          0.2305910387062238,
+          6.005127981853229
+        ]
+      }
+    }
+  },
+  "physical_ground_velocity": "UNKNOWN: no persistent skin points within 0.1/0.5/1mm of fixed source floor",
+  "proximity_band_velocity_mps": 0.6232329808940293,
+  "stroke_comparison": [
+    {
+      "path": "build/V9-AIRBORNE-RUN-001/iteration-007-sustained-run-polish/stage-b-driven-response/airborne-run-root_motion.glb",
+      "clip": "V9_AIRBORNE_RUN_ROOT_MOTION",
+      "duration_s": 1.25,
+      "body_length_m_frame0": 11.963930799045816,
+      "maximum_same_frame_distal_toe_split_m": 3.380701111677361,
+      "maximum_same_frame_split_body_lengths": 0.28257444551141914,
+      "split_peak_time_s": 0.5416666865348816,
+      "signed_hip_relative_reaches_at_split_peak_m": {
+        "left": -1.729806998997235,
+        "right": 1.650894112680126
+      },
+      "root_travel_m": 7.026845971351312,
+      "root_relative_foot_stroke_m": {
+        "left": 3.5646369474313024,
+        "right": 3.564636190576402
+      },
+      "root_relative_foot_stroke_body_lengths": {
+        "left": 0.2979486430760365,
+        "right": 0.29794857981464584
+      }
+    },
+    {
+      "path": "build/V9-AIRBORNE-RUN-001/iteration-008-open-support/trial-05/airborne-run-root_motion.glb",
+      "clip": "V9_AIRBORNE_RUN_ROOT_MOTION",
+      "duration_s": 1.25,
+      "body_length_m_frame0": 11.963930799045816,
+      "maximum_same_frame_distal_toe_split_m": 3.381925767320465,
+      "maximum_same_frame_split_body_lengths": 0.2826768078255844,
+      "split_peak_time_s": 0.5416666865348816,
+      "signed_hip_relative_reaches_at_split_peak_m": {
+        "left": -1.7310315895503623,
+        "right": 1.6508941777701025
+      },
+      "root_travel_m": 7.026845971351312,
+      "root_relative_foot_stroke_m": {
+        "left": 3.564637251733843,
+        "right": 3.5646365812552627
+      },
+      "root_relative_foot_stroke_body_lengths": {
+        "left": 0.29794866851103324,
+        "right": 0.29794861246937004
+      }
+    }
+  ]
+}

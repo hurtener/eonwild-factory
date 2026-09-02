@@ -234,6 +234,16 @@ def solve_airborne_gait(source: Glb, *, source_clip: str, semantic_roles: Mappin
                 n = source.name_to_node[nname]
                 axis = _qrotate(_qinv(_rotation_from_matrix(base_w[n])), tuple(lateral))
                 rot[n] = _qmul(base_r[n], _qrotvec(tuple(np.asarray(axis) * math.radians(0.8 * pulse))))
+        # Profile-owned sagittal posture distributed over semantic chains.
+        # A higher pelvis can retain leg reach while the front body inclines;
+        # the tail is a distributed elevation, never an attachment offset.
+        for names, total in ((list(roles.get("spine", [])) + ([roles["chest"]] if roles.get("chest") else []), gait.front_body_pitch_degrees), (list(roles.get("tail", [])), gait.tail_elevation_degrees)):
+            if total and not names:
+                raise ContractError("sagittal posture requires its semantic body chain")
+            for name in names if total else []:
+                n = source.name_to_node[name]
+                axis = _qrotate(_qinv(_rotation_from_matrix(base_w[n])), tuple(lateral))
+                rot[n] = _qmul(rot[n], _qrotvec(tuple(np.asarray(axis) * math.radians(total / len(names)))))
         facts = {}
         for side, chain in legs.items():
             hip, knee, ankle, foot = chain

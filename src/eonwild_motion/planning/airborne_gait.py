@@ -48,6 +48,10 @@ class AirborneGait:
     head_stabilization_gain: float = 0.85
     tail_response_gain_degrees: float = 0.0
     body_response_time_s: float = 0.06
+    front_body_pitch_degrees: float = 0.0
+    tail_elevation_degrees: float = 0.0
+    flight_foot_lift_body_heights: float = 0.0
+    swing_approach_lift_body_heights: float = 0.0
     cycles: int = 2
     sample_hz: int = 120
 
@@ -90,6 +94,12 @@ class AirborneGait:
             raise ContractError("driven body response gains exceed engineering bounds")
         if not 0 < self.body_response_time_s <= self.step_period_s:
             raise ContractError("response lag must be positive and at most one step")
+        if not 0 <= self.front_body_pitch_degrees <= 20 or not 0 <= self.tail_elevation_degrees <= 30:
+            raise ContractError("front body pitch and tail elevation exceed engineering bounds")
+        if not 0 <= self.flight_foot_lift_body_heights <= .15:
+            raise ContractError("flight foot lift exceeds body-normalized engineering bounds")
+        if not 0 <= self.swing_approach_lift_body_heights <= .15:
+            raise ContractError("approach lift exceeds body-normalized engineering bounds")
         if (self.chest_response_gain_degrees or self.tail_response_gain_degrees) and not self.continuous_body_launch_fraction:
             raise ContractError("driven body response requires the continuous carrier")
         if int(self.cycles) != self.cycles or self.cycles < 1 or int(self.sample_hz) != self.sample_hz or self.sample_hz < 24:
@@ -214,6 +224,11 @@ def sample_airborne_gait(gait: AirborneGait, time_s: float, body_height_m: float
             y = gait.swing_clearance_body_heights * body_height_m * lift * lower
             if gait.rounded_swing_peak_fraction:
                 y = gait.swing_clearance_body_heights * body_height_m * rounded_swing_height(swing_phase, gait.rounded_swing_peak_fraction, gait.swing_lift_fraction, gait.swing_lower_fraction)
+            # Open the leading leg along an elevated approach before lowering
+            # it into contact. This avoids forcing maximal forward reach and
+            # a nearly grounded foot simultaneously, without shortening step.
+            approach = _smooth((swing_phase - .55) / .23) * (1 - _smooth((swing_phase - .78) / .22))
+            y += gait.swing_approach_lift_body_heights * body_height_m * approach
             toe = gait.toe_flex_degrees * (0.55 * (1 - _smooth(swing_phase)) + 0.65 * math.sin(math.pi * swing_phase) ** 2)
             # Release heel-up push-off before the foot passes under the hip.
             # Holding plantarflexion into mid-recovery folds the shank upward
@@ -226,6 +241,14 @@ def sample_airborne_gait(gait: AirborneGait, time_s: float, body_height_m: float
                 pitch = -gait.foot_recovery_pitch_degrees * (1 - _smooth((swing_phase - peak) / (1 - peak)))
         feet[side] = {"contact": stance, "touchdown_time_s": touchdown, "forward_m": x, "height_m": y, "toe_flex_degrees": toe, "foot_pitch_degrees": pitch, "swing_phase": swing_phase}
     support = sum(int(foot["contact"]) for foot in feet.values())
+    if support == 0 and gait.flight_foot_lift_body_heights:
+        # Coordinated leg exchange only while both feet are free. Fourth-power
+        # sine has zero position, velocity and acceleration at both joins.
+        # The rotation-only solver realizes this trajectory; no bone stretches.
+        flight_phase = (p - contact_fraction) / gait.flight_fraction
+        extra = gait.flight_foot_lift_body_heights * body_height_m * math.sin(math.pi * flight_phase) ** 4
+        for foot in feet.values():
+            foot["height_m"] += extra
     return {"time_s": time_s, "root_forward_m": speed * time_s, "pelvis_height_offset_m": body_y, "stage": stage, "support_count": support, "flight": support == 0, "feet": feet, **(body_derivatives or {})}
 
 

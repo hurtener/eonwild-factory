@@ -1,0 +1,46 @@
+[
+  {
+    "path": "build/V9-AIRBORNE-SPRINT-001/review-candidate-003/trial-04-conservative-approach/airborne-run-root_motion.glb",
+    "clip": "V9_AIRBORNE_RUN_ROOT_MOTION",
+    "duration_s": 0.9583333134651184,
+    "body_length_m_frame0": 11.961980832989383,
+    "maximum_same_frame_distal_toe_split_m": 3.650756565411194,
+    "maximum_same_frame_split_body_lengths": 0.3051966573414785,
+    "split_peak_time_s": 0.4416666626930237,
+    "signed_hip_relative_reaches_at_split_peak_m": {
+      "left": -1.8385206598825843,
+      "right": 1.81223590552861
+    },
+    "root_travel_m": 7.396680404049558,
+    "root_relative_foot_stroke_m": {
+      "left": 3.9768881994945886,
+      "right": 3.9757798636854518
+    },
+    "root_relative_foot_stroke_body_lengths": {
+      "left": 0.3324606731125096,
+      "right": 0.3323680182399922
+    }
+  },
+  {
+    "path": "build/V9-AIRBORNE-SPRINT-001/review-candidate-004/trial-06/airborne-run-root_motion.glb",
+    "clip": "V9_AIRBORNE_RUN_ROOT_MOTION",
+    "duration_s": 0.9583333134651184,
+    "body_length_m_frame0": 12.141399830280443,
+    "maximum_same_frame_distal_toe_split_m": 3.9987915000937737,
+    "maximum_same_frame_split_body_lengths": 0.32935176799967136,
+    "split_peak_time_s": 0.42500001192092896,
+    "signed_hip_relative_reaches_at_split_peak_m": {
+      "left": -1.9441028135061789,
+      "right": 2.054688686587595
+    },
+    "root_travel_m": 8.189181529281347,
+    "root_relative_foot_stroke_m": {
+      "left": 4.279160903217659,
+      "right": 4.277721775582462
+    },
+    "root_relative_foot_stroke_body_lengths": {
+      "left": 0.3524437843275291,
+      "right": 0.3523252537087113
+    }
+  }
+]

@@ -1,0 +1,46 @@
+[
+  {
+    "path": "build/V9-AIRBORNE-RUN-001/iteration-007-sustained-run-polish/stage-b-driven-response/airborne-run-root_motion.glb",
+    "clip": "V9_AIRBORNE_RUN_ROOT_MOTION",
+    "duration_s": 1.25,
+    "body_length_m_frame0": 11.963930799045816,
+    "maximum_same_frame_distal_toe_split_m": 3.380701111677361,
+    "maximum_same_frame_split_body_lengths": 0.28257444551141914,
+    "split_peak_time_s": 0.5416666865348816,
+    "signed_hip_relative_reaches_at_split_peak_m": {
+      "left": -1.729806998997235,
+      "right": 1.650894112680126
+    },
+    "root_travel_m": 7.026845971351312,
+    "root_relative_foot_stroke_m": {
+      "left": 3.5646369474313024,
+      "right": 3.564636190576402
+    },
+    "root_relative_foot_stroke_body_lengths": {
+      "left": 0.2979486430760365,
+      "right": 0.29794857981464584
+    }
+  },
+  {
+    "path": "build/V9-AIRBORNE-RUN-001/iteration-008-open-support/trial-05/airborne-run-root_motion.glb",
+    "clip": "V9_AIRBORNE_RUN_ROOT_MOTION",
+    "duration_s": 1.25,
+    "body_length_m_frame0": 11.963930799045816,
+    "maximum_same_frame_distal_toe_split_m": 3.381925767320465,
+    "maximum_same_frame_split_body_lengths": 0.2826768078255844,
+    "split_peak_time_s": 0.5416666865348816,
+    "signed_hip_relative_reaches_at_split_peak_m": {
+      "left": -1.7310315895503623,
+      "right": 1.6508941777701025
+    },
+    "root_travel_m": 7.026845971351312,
+    "root_relative_foot_stroke_m": {
+      "left": 3.564637251733843,
+      "right": 3.5646365812552627
+    },
+    "root_relative_foot_stroke_body_lengths": {
+      "left": 0.29794866851103324,
+      "right": 0.29794861246937004
+    }
+  }
+]

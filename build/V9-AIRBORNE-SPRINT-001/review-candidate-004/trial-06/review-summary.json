@@ -1,0 +1,158 @@
+{
+  "candidate": "build/V9-AIRBORNE-SPRINT-001/review-candidate-004/trial-06",
+  "status": "REVIEW_CANDIDATE_NOT_USER_ACCEPTED",
+  "hashes": {
+    "airborne-run-root_motion.glb": "f4497595c1039b38f0bcc569c9bb338991ceae980ec4ef1e3d1abf7d64f2cfa1",
+    "airborne-run-in_place.glb": "e053bba3da95d85af148111f3204c5a9717cf41ddce585c36a5396889473a2bb",
+    "engineering-profile.json": "e8e691dade5cac454f5d9bd0a44fc9b8ba19dbba552cd34f5e48193fb4694989"
+  },
+  "media": {
+    "sprint-front-2cycles.mp4": {
+      "sha256": "6bcfb257bc98cabdb3c2104de41cc5353eb1a06afb62f90da8ce699756b16c76",
+      "width": 1100,
+      "height": 620,
+      "r_frame_rate": "24/1",
+      "duration": "1.916667",
+      "nb_frames": "46"
+    },
+    "sprint-rear-2cycles.mp4": {
+      "sha256": "d5d677002f725e36e191a1283e4014a23f0b17b4f5658a423cac6f1d8a403fcb",
+      "width": 1100,
+      "height": 620,
+      "r_frame_rate": "24/1",
+      "duration": "1.916667",
+      "nb_frames": "46"
+    },
+    "sprint-side-2cycles.mp4": {
+      "sha256": "978eb0ae233e7337ba186aedde84cb0f1c057d642cbf410825d76669334f9880",
+      "width": 1100,
+      "height": 620,
+      "r_frame_rate": "24/1",
+      "duration": "1.916667",
+      "nb_frames": "46"
+    }
+  },
+  "parameters": {
+    "step_period_s": 0.4791666666666667,
+    "flight_fraction": 0.22,
+    "step_length_body_heights": 1.55,
+    "touchdown_reach_body_heights": 0.47,
+    "swing_clearance_body_heights": 0.1,
+    "swing_lift_fraction": 0.12,
+    "swing_lower_fraction": 0.2,
+    "pelvis_compression_body_heights": 0.035,
+    "pelvis_crouch_body_heights": 0.14,
+    "flight_height_body_heights": 0.06,
+    "continuous_body_launch_fraction": 0.9,
+    "rounded_swing_peak_fraction": 0.42,
+    "toe_flex_degrees": 32,
+    "foot_recovery_pitch_degrees": 0,
+    "push_off_pitch_degrees": 60,
+    "compression_peak_fraction": 0.32,
+    "push_off_start_fraction": 0.4,
+    "swing_hip_lift_degrees": 35,
+    "swing_recovery_peak_fraction": 0.42,
+    "hip_extension_limit_degrees": 45,
+    "hip_flexion_limit_degrees": 80,
+    "knee_min_interior_degrees": 65,
+    "knee_max_interior_degrees": 165,
+    "ankle_min_interior_degrees": 30,
+    "ankle_max_interior_degrees": 165,
+    "max_joint_angular_velocity_degrees_per_s": 1200,
+    "max_ankle_pitch_velocity_degrees_per_s": 600,
+    "articulation_preferred_margin_degrees": 0,
+    "cycles": 1,
+    "sample_hz": 120,
+    "chest_response_gain_degrees": 2,
+    "head_stabilization_gain": 0.85,
+    "tail_response_gain_degrees": 6,
+    "body_response_time_s": 0.06,
+    "flight_foot_lift_body_heights": 0.035,
+    "front_body_pitch_degrees": 10,
+    "tail_elevation_degrees": 18,
+    "swing_approach_lift_body_heights": 0.1
+  },
+  "focused_tests": "21 passed",
+  "maximum_joint_angular_velocity_degrees_per_s": 793.5078340664211,
+  "maximum_rotation_seam_degrees": 0.02770969883265055,
+  "bend_sign_flip_count": 0,
+  "max_unreachable_extension_m": 0,
+  "maximum_articulation_envelope_violation_degrees": 0,
+  "max_planted_distal_contact_velocity_mps": 0.00009448144611629947,
+  "maximum_foot_surface_penetration_m": 0,
+  "interior_flight_with_surface_ground_intersection_samples": 0,
+  "highest_common_toe_clearance_witness": {
+    "time_s": 0.4249999911888786,
+    "planned_flight": true,
+    "feet": {
+      "left": {
+        "planned_contact": false,
+        "sole_minimum_gap_m": 0.8486851454145977,
+        "toe_minimum_gap_m": 0.20558805544730632,
+        "toe_surface_centroid_m": [
+          -0.4014464663960211,
+          0.456275994821277,
+          3.1229160769490893
+        ]
+      },
+      "right": {
+        "planned_contact": false,
+        "sole_minimum_gap_m": 0.43933634034072644,
+        "toe_minimum_gap_m": 0.26174487442975475,
+        "toe_surface_centroid_m": [
+          0.8348460207668962,
+          0.3439487632958531,
+          6.9624259079950805
+        ]
+      }
+    }
+  },
+  "physical_ground_velocity": "UNKNOWN: no persistent skin points within 0.1/0.5/1mm of fixed source floor",
+  "proximity_band_velocity_mps": 0.7660143333959671,
+  "stroke_comparison": [
+    {
+      "path": "build/V9-AIRBORNE-SPRINT-001/review-candidate-003/trial-04-conservative-approach/airborne-run-root_motion.glb",
+      "clip": "V9_AIRBORNE_RUN_ROOT_MOTION",
+      "duration_s": 0.9583333134651184,
+      "body_length_m_frame0": 11.961980832989383,
+      "maximum_same_frame_distal_toe_split_m": 3.650756565411194,
+      "maximum_same_frame_split_body_lengths": 0.3051966573414785,
+      "split_peak_time_s": 0.4416666626930237,
+      "signed_hip_relative_reaches_at_split_peak_m": {
+        "left": -1.8385206598825843,
+        "right": 1.81223590552861
+      },
+      "root_travel_m": 7.396680404049558,
+      "root_relative_foot_stroke_m": {
+        "left": 3.9768881994945886,
+        "right": 3.9757798636854518
+      },
+      "root_relative_foot_stroke_body_lengths": {
+        "left": 0.3324606731125096,
+        "right": 0.3323680182399922
+      }
+    },
+    {
+      "path": "build/V9-AIRBORNE-SPRINT-001/review-candidate-004/trial-06/airborne-run-root_motion.glb",
+      "clip": "V9_AIRBORNE_RUN_ROOT_MOTION",
+      "duration_s": 0.9583333134651184,
+      "body_length_m_frame0": 12.141399830280443,
+      "maximum_same_frame_distal_toe_split_m": 3.9987915000937737,
+      "maximum_same_frame_split_body_lengths": 0.32935176799967136,
+      "split_peak_time_s": 0.42500001192092896,
+      "signed_hip_relative_reaches_at_split_peak_m": {
+        "left": -1.9441028135061789,
+        "right": 2.054688686587595
+      },
+      "root_travel_m": 8.189181529281347,
+      "root_relative_foot_stroke_m": {
+        "left": 4.279160903217659,
+        "right": 4.277721775582462
+      },
+      "root_relative_foot_stroke_body_lengths": {
+        "left": 0.3524437843275291,
+        "right": 0.3523252537087113
+      }
+    }
+  ]
+}

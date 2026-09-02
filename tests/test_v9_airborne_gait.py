@@ -183,7 +183,7 @@ def test_emitted_renamed_binding_and_morphology_are_equivariant(polished):
     for prefix, scale in (("a", 1), ("completely_renamed_", 1.6)):
         source, roles = fixture(prefix, scale, upper_body=polished)
         if polished:
-            gait = replace(gait, chest_response_gain_degrees=2, tail_response_gain_degrees=12)
+            gait = replace(gait, chest_response_gain_degrees=2, tail_response_gain_degrees=12, front_body_pitch_degrees=10, tail_elevation_degrees=18, swing_approach_lift_body_heights=.03)
         root, inplace, plan, receipt = solve_airborne_gait(source, source_clip="source", semantic_roles=roles, gait=gait)
         assert receipt["flight_sample_count"] > 0
         assert receipt["max_foot_target_residual_m"] < 1e-5
@@ -231,6 +231,40 @@ def test_periodic_response_has_no_startup_transient_and_tracks_actual_drive():
     assert all(abs(v) < 1e-12 for row in zero["samples"] for v in row["sagittal_node_degrees"].values())
 
 
+def test_distributed_sprint_posture_is_opt_in_and_does_not_move_leg_targets():
+    run = AirborneGait(continuous_body_launch_fraction=.85)
+    sprint = replace(run, step_period_s=11.5 / 24, flight_fraction=.22, continuous_body_launch_fraction=.9)
+    inclined = replace(sprint, front_body_pitch_degrees=10, tail_elevation_degrees=18)
+    assert run.flight_fraction > sprint.flight_fraction > 2 / 11.5
+    assert build_airborne_plan(sprint, 2)["samples"] == build_airborne_plan(inclined, 2)["samples"]
+    for change in ({"front_body_pitch_degrees": 21}, {"tail_elevation_degrees": 31}, {"front_body_pitch_degrees": -1}):
+        with pytest.raises(ContractError):
+            replace(run, **change)
+
+
+def test_flight_exchange_lift_is_c2_and_never_moves_loaded_feet():
+    base = AirborneGait(flight_fraction=.22)
+    lifted = replace(base, flight_foot_lift_body_heights=.10)
+    toeoff = base.step_period_s * (1 - base.flight_fraction)
+    end = base.step_period_s
+    for t in np.linspace(0, 2 * end, 241):
+        a, b = (sample_airborne_gait(g, float(t), 2) for g in (base, lifted))
+        assert a["root_forward_m"] == b["root_forward_m"]
+        assert a["pelvis_height_offset_m"] == b["pelvis_height_offset_m"]
+        for side in ("left", "right"):
+            assert a["feet"][side]["forward_m"] == b["feet"][side]["forward_m"]
+            if not a["flight"]:
+                assert a["feet"][side] == b["feet"][side]
+    mid = (toeoff + end) * .5
+    assert sample_airborne_gait(lifted, mid, 2)["feet"]["left"]["height_m"] - sample_airborne_gait(base, mid, 2)["feet"]["left"]["height_m"] == pytest.approx(.2)
+    h = 1e-6
+    def added(t):
+        return sample_airborne_gait(lifted, t, 2)["feet"]["left"]["height_m"] - sample_airborne_gait(base, t, 2)["feet"]["left"]["height_m"]
+    for t in (toeoff, end):
+        assert abs((added(t+h)-added(t-h))/(2*h)) < 1e-6
+        assert abs((added(t+h)-2*added(t)+added(t-h))/(h*h)) < .01
+
+
 def test_continuous_body_c2_launch_and_loop_keep_original_extrema():
     gait = AirborneGait(continuous_body_launch_fraction=.85)
     height = 2.0
@@ -276,6 +310,28 @@ def test_polish_preserves_schedule_static_stance_anchors_and_forward_stroke():
             assert a["feet"][side]["contact"] == b["feet"][side]["contact"]
             if b["feet"][side]["contact"]:
                 assert b["feet"][side]["height_m"] == 0
+
+
+def test_approach_lift_preserves_stroke_and_contact_with_c2_join():
+    base = AirborneGait(cycles=1)
+    lifted = replace(base, swing_approach_lift_body_heights=.08)
+    toeoff = base.step_period_s * (1 - base.flight_fraction)
+    swing = 2 * base.step_period_s - toeoff
+    def extra(u):
+        t = toeoff + u * swing
+        return sample_airborne_gait(lifted, t, 2)["feet"]["left"]["height_m"] - sample_airborne_gait(base, t, 2)["feet"]["left"]["height_m"]
+    assert extra(.78) == pytest.approx(.16)
+    h = 1e-6
+    for u in (.55, .78, 1):
+        assert (extra(u + h) - extra(u)) / h == pytest.approx((extra(u) - extra(u - h)) / h, abs=.001)
+        assert abs((extra(u + h) - 2 * extra(u) + extra(u - h)) / h**2) < .01
+    for t in np.linspace(0, 2 * base.step_period_s, 301):
+        a, b = (sample_airborne_gait(g, t, 2) for g in (base, lifted))
+        assert a["root_forward_m"] == b["root_forward_m"]
+        for side in ("left", "right"):
+            assert a["feet"][side]["forward_m"] == b["feet"][side]["forward_m"]
+            if a["feet"][side]["contact"]:
+                assert a["feet"][side] == b["feet"][side]
 
 
 def test_emitted_parameter_mutations_change_real_channels_and_contact_times():

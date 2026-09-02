@@ -1,0 +1,5780 @@
+{
+  "samples": [
+    {
+      "time_seconds": 0.0,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.006006981711834669,
+        1.1515779495239258,
+        2.845020055770874
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.007157107349485159,
+        1.1554126739501953,
+        2.841284990310669
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.016666666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.0060239857994019985,
+        1.1508485078811646,
+        2.8450241088867188
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.007174110505729914,
+        1.1546845436096191,
+        2.8412904739379883
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.03333333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.006074278615415096,
+        1.1486997604370117,
+        2.8450348377227783
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.007224398665130138,
+        1.1525393724441528,
+        2.8413052558898926
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.05,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.006156716030091047,
+        1.1451904773712158,
+        2.845048666000366
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.0073068286292254925,
+        1.149036169052124,
+        2.8413262367248535
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.06666666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.006270085461437702,
+        1.1403805017471313,
+        2.845061779022217
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.007420187816023827,
+        1.1442341804504395,
+        2.841348648071289
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.08333333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.006413116119801998,
+        1.134328842163086,
+        2.845067262649536
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.007563204970210791,
+        1.1381927728652954,
+        2.8413662910461426
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.1,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.006584486924111843,
+        1.1270955801010132,
+        2.8450586795806885
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.007734559942036867,
+        1.1309715509414673,
+        2.841372013092041
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.11666666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.006782836746424437,
+        1.1187407970428467,
+        2.8450276851654053
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.007932893000543118,
+        1.1226304769515991,
+        2.841357707977295
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.13333333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.0070067765191197395,
+        1.1093244552612305,
+        2.844965696334839
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.008156814612448215,
+        1.113229513168335,
+        2.8413145542144775
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.15,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.007254895754158497,
+        1.0989068746566772,
+        2.8448643684387207
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.00840491522103548,
+        1.1028287410736084,
+        2.841233968734741
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.16666666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.007525770924985409,
+        1.0875482559204102,
+        2.8447134494781494
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.0086757717654109,
+        1.091488242149353,
+        2.8411059379577637
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.18333333333333332,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.007817975245416164,
+        1.0753095149993896,
+        2.844503879547119
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.008967958390712738,
+        1.0792686939239502,
+        2.84092116355896
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.2,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.008130083791911602,
+        1.0622508525848389,
+        2.844226837158203
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.009280051104724407,
+        1.066230297088623,
+        2.840670585632324
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.21666666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.008460682816803455,
+        1.0484331846237183,
+        2.8438732624053955
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.009610636159777641,
+        1.052433729171753,
+        2.8403451442718506
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.23333333333333334,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.008808376267552376,
+        1.0339170694351196,
+        2.8434340953826904
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.009958317503333092,
+        1.037939429283142,
+        2.839935779571533
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.25,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.009171788580715656,
+        1.0187633037567139,
+        2.842902183532715
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.010321720503270626,
+        1.0228080749511719,
+        2.839434862136841
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.26666666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.009549576789140701,
+        1.0030326843261719,
+        2.8422696590423584
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.010699502192437649,
+        1.007100224494934,
+        2.838834762573242
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.2833333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.009940430521965027,
+        0.9867857098579407,
+        2.8415300846099854
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.011090349406003952,
+        0.9908763766288757,
+        2.8381288051605225
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.3,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.010343076661229134,
+        0.9700831174850464,
+        2.8406784534454346
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.011492992751300335,
+        0.9741970300674438,
+        2.8373117446899414
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.31666666666666665,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.010756288655102253,
+        0.9529853463172913,
+        2.839709758758545
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.011906202882528305,
+        0.9571225047111511,
+        2.836378574371338
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.3333333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.011178884655237198,
+        0.9355528354644775,
+        2.83862042427063
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.012328797951340675,
+        0.939713180065155,
+        2.8353257179260254
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.35,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.011609736829996109,
+        0.9178456664085388,
+        2.8374087810516357
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.012759648263454437,
+        0.9220289587974548,
+        2.834151029586792
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.36666666666666664,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.012047767639160156,
+        0.8999239802360535,
+        2.836073160171509
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.013197675347328186,
+        0.9041298031806946,
+        2.832853078842163
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.3833333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.012491957284510136,
+        0.8818472623825073,
+        2.834613800048828
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.013641858473420143,
+        0.8860752582550049,
+        2.8314318656921387
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.4,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.012941347435116768,
+        0.8636751770973206,
+        2.8330326080322266
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.01409123558551073,
+        0.867924690246582,
+        2.8298890590667725
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.4166666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.013395031914114952,
+        0.845466673374176,
+        2.831332206726074
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.014544901438057423,
+        0.8497371673583984,
+        2.8282270431518555
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.43333333333333335,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.013852172531187534,
+        0.8272807598114014,
+        2.829517126083374
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.015002015046775341,
+        0.8315713405609131,
+        2.8264501094818115
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.45,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.014311989769339561,
+        0.8091756105422974,
+        2.827592134475708
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.015461794100701809,
+        0.8134854435920715,
+        2.824563503265381
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.4666666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.014773767441511154,
+        0.7912092804908752,
+        2.8255648612976074
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.01592351868748665,
+        0.7955374717712402,
+        2.8225741386413574
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.48333333333333334,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.015236848033964634,
+        0.773439347743988,
+        2.8234431743621826
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.01638653129339218,
+        0.7777848243713379,
+        2.8204896450042725
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.5,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.01570063643157482,
+        0.7559229135513306,
+        2.8212363719940186
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.01685023121535778,
+        0.7602845430374146,
+        2.81831955909729
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.5166666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.016164597123861313,
+        0.7387165427207947,
+        2.818955421447754
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.017314080148935318,
+        0.7430931925773621,
+        2.8160746097564697
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.5333333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.01662825047969818,
+        0.7218763828277588,
+        2.816612482070923
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.017777597531676292,
+        0.7262668013572693,
+        2.8137664794921875
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.55,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.01709117367863655,
+        0.7054581046104431,
+        2.8142201900482178
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.01824035495519638,
+        0.7098609209060669,
+        2.811408042907715
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.5666666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.017552996054291725,
+        0.6895168423652649,
+        2.811793088912964
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.018701979890465736,
+        0.6939307451248169,
+        2.809013605117798
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.5833333333333334,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.018013399094343185,
+        0.6741073131561279,
+        2.8093461990356445
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.019162148237228394,
+        0.6785308122634888,
+        2.8065977096557617
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.6,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.018472105264663696,
+        0.6592835783958435,
+        2.8068959712982178
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.019620580598711967,
+        0.6637152433395386,
+        2.8041768074035645
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.6166666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.018928885459899902,
+        0.6450995802879333,
+        2.8044588565826416
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.020077044144272804,
+        0.6495378613471985,
+        2.801767349243164
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.6333333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.019383542239665985,
+        0.6316085457801819,
+        2.8020529747009277
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.020531339570879936,
+        0.6360518336296082,
+        2.799386978149414
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.65,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.01983591914176941,
+        0.6188633441925049,
+        2.7996959686279297
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.02098330296576023,
+        0.6233100295066833,
+        2.797053813934326
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.6666666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.02028588391840458,
+        0.6069167256355286,
+        2.797407627105713
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.021432800218462944,
+        0.6113651394844055,
+        2.7947866916656494
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.6833333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.02073332481086254,
+        0.5958209037780762,
+        2.7952065467834473
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.021879715844988823,
+        0.6002692580223083,
+        2.792604446411133
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.7,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.021178150549530983,
+        0.5856279730796814,
+        2.793111801147461
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.022323956713080406,
+        0.5900745391845703,
+        2.7905263900756836
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.7166666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.021614164113998413,
+        0.5760151743888855,
+        2.791004180908203
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.022759374231100082,
+        0.5804588198661804,
+        2.78843355178833
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.7333333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.022034477442502975,
+        0.5666394829750061,
+        2.788748264312744
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.02317913994193077,
+        0.571079671382904,
+        2.7861921787261963
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.75,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.022437995299696922,
+        0.557522177696228,
+        2.786341428756714
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.023582156747579575,
+        0.5619584321975708,
+        2.783799409866333
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.7666666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.022823946550488472,
+        0.5486845970153809,
+        2.7837882041931152
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.02396765910089016,
+        0.5531164407730103,
+        2.7812600135803223
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.7833333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.0231943316757679,
+        0.5401426553726196,
+        2.7811601161956787
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.02433764934539795,
+        0.5445696115493774,
+        2.7786450386047363
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.8,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.023549025878310204,
+        0.5317404866218567,
+        2.7784769535064697
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.024692004546523094,
+        0.5361620187759399,
+        2.775974750518799
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.8166666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.023887190967798233,
+        0.5234019756317139,
+        2.7757420539855957
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.02502988837659359,
+        0.5278174877166748,
+        2.773252248764038
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.8333333333333334,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.02420799806714058,
+        0.5151330828666687,
+        2.772958993911743
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.025350475683808327,
+        0.5195420980453491,
+        2.7704808712005615
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.85,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.02451062761247158,
+        0.5069400072097778,
+        2.7701306343078613
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.025652948766946793,
+        0.51134192943573,
+        2.7676637172698975
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.8666666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.02479426935315132,
+        0.4988286793231964,
+        2.767261028289795
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.025936497375369072,
+        0.5032230019569397,
+        2.7648043632507324
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.8833333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.025058120489120483,
+        0.4908052086830139,
+        2.7643532752990723
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.026200322434306145,
+        0.4951913356781006,
+        2.761906623840332
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.9,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.025301381945610046,
+        0.48287540674209595,
+        2.761411666870117
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.026443632319569588,
+        0.48725274205207825,
+        2.758974075317383
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.9166666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.02552327699959278,
+        0.4750450849533081,
+        2.758439779281616
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.026665644720196724,
+        0.47941309213638306,
+        2.7560105323791504
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.9333333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.02572302334010601,
+        0.4673200249671936,
+        2.755441665649414
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.026865584775805473,
+        0.47167807817459106,
+        2.7530200481414795
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.95,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.025899849832057953,
+        0.4597058594226837,
+        2.752422332763672
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.027042685076594353,
+        0.4640533924102783,
+        2.750007152557373
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.9666666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.02605299837887287,
+        0.4522082209587097,
+        2.749384880065918
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.027196187525987625,
+        0.4565446078777313,
+        2.7469756603240967
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.9833333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.026181716471910477,
+        0.44483259320259094,
+        2.7463345527648926
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.02732534147799015,
+        0.4491572380065918,
+        2.7439303398132324
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.0,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.026285257190465927,
+        0.43758442997932434,
+        2.7432754039764404
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.027429405599832535,
+        0.4418967366218567,
+        2.740875244140625
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.0166666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.02636287733912468,
+        0.4304691553115845,
+        2.7402126789093018
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.027507640421390533,
+        0.4347684681415558,
+        2.7378156185150146
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.0333333333333332,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.026413854211568832,
+        0.4234920144081116,
+        2.7371504306793213
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.027559321373701096,
+        0.4277777075767517,
+        2.734755516052246
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.05,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.02643745392560959,
+        0.4166582226753235,
+        2.7340939044952393
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.02758372202515602,
+        0.4209296703338623,
+        2.7317001819610596
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.0666666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.026432963088154793,
+        0.40997299551963806,
+        2.731048345565796
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.027580130845308304,
+        0.41422954201698303,
+        2.728654623031616
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.0833333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.02639966458082199,
+        0.4034413993358612,
+        2.728018283843994
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.02754783444106579,
+        0.4076823890209198,
+        2.725623607635498
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.1,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.026336848735809326,
+        0.3970683813095093,
+        2.725008964538574
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.027486128732562065,
+        0.40129318833351135,
+        2.7226123809814453
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.1166666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.026238467544317245,
+        0.39085906744003296,
+        2.7220263481140137
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.027388986200094223,
+        0.3950669765472412,
+        2.7196261882781982
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.1333333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.026099378243088722,
+        0.38481828570365906,
+        2.7190747261047363
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.027251295745372772,
+        0.38900867104530334,
+        2.716670274734497
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.15,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.025920286774635315,
+        0.37895095348358154,
+        2.7161600589752197
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.027073753997683525,
+        0.3831230700016022,
+        2.713750123977661
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.1666666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.02570187672972679,
+        0.37326177954673767,
+        2.713287830352783
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.026857048273086548,
+        0.3774149715900421,
+        2.7108709812164307
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.1833333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.025444846600294113,
+        0.3677554726600647,
+        2.710463523864746
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.026601873338222504,
+        0.37188899517059326,
+        2.708038568496704
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.2,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.025149893015623093,
+        0.3624366521835327,
+        2.7076921463012695
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.026308922097086906,
+        0.3665497899055481,
+        2.7052578926086426
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.2166666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.024823661893606186,
+        0.35730990767478943,
+        2.704979419708252
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.02598484233021736,
+        0.3614019453525543,
+        2.7025344371795654
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.2333333333333334,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.024472380056977272,
+        0.35237982869148254,
+        2.7023303508758545
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.0256358589977026,
+        0.35645002126693726,
+        2.699873447418213
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.25,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.02409609779715538,
+        0.3476509153842926,
+        2.6997509002685547
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.025262022390961647,
+        0.35169851779937744,
+        2.6972808837890625
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.2666666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.023694870993494987,
+        0.34312763810157776,
+        2.697246551513672
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.024863384664058685,
+        0.34715187549591064,
+        2.6947617530822754
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.2833333333333332,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.023268742486834526,
+        0.3388144373893738,
+        2.6948235034942627
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.024439990520477295,
+        0.34281450510025024,
+        2.6923224925994873
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.3,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.022817756980657578,
+        0.3347157835960388,
+        2.692486524581909
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.023991884663701057,
+        0.3386908769607544,
+        2.6899681091308594
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.3166666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.0223431084305048,
+        0.3305965065956116,
+        2.6900081634521484
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.02352038584649563,
+        0.33451923727989197,
+        2.6874449253082275
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.3333333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.021845897659659386,
+        0.32625827193260193,
+        2.6871871948242188
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.023026715964078903,
+        0.3300786018371582,
+        2.6845285892486572
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.35,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.021326083689928055,
+        0.32176050543785095,
+        2.6840672492980957
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.022510820999741554,
+        0.3254346251487732,
+        2.681267261505127
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.3666666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.020783666521310806,
+        0.3171629309654236,
+        2.6806936264038086
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.02197270281612873,
+        0.3206530213356018,
+        2.6777102947235107
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.3833333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.02021869830787182,
+        0.31252479553222656,
+        2.6771113872528076
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.02141241356730461,
+        0.31579914689064026,
+        2.6739072799682617
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.4,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.019631264731287956,
+        0.30791711807250977,
+        2.6733672618865967
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.020830051973462105,
+        0.3109499216079712,
+        2.6699094772338867
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.4166666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.01901964098215103,
+        0.30334052443504333,
+        2.669466733932495
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.020223908126354218,
+        0.30611199140548706,
+        2.6657276153564453
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.4333333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.018381895497441292,
+        0.2987796366214752,
+        2.665412425994873
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.01959206908941269,
+        0.30127573013305664,
+        2.6613688468933105
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.45,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.01771780289709568,
+        0.29427671432495117,
+        2.661247491836548
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.018934326246380806,
+        0.2964889705181122,
+        2.65688157081604
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.4666666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.017027124762535095,
+        0.28987210988998413,
+        2.657017946243286
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.018250448629260063,
+        0.29179731011390686,
+        2.6523172855377197
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.4833333333333334,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.016309572383761406,
+        0.28560394048690796,
+        2.652771234512329
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.01754015125334263,
+        0.2872438430786133,
+        2.647728681564331
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.5,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.015564792789518833,
+        0.28150808811187744,
+        2.6485564708709717
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.016803080216050148,
+        0.28286927938461304,
+        2.6431710720062256
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.5166666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.014792334288358688,
+        0.2776181399822235,
+        2.644425392150879
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.016038771718740463,
+        0.2787116765975952,
+        2.6387016773223877
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.5333333333333332,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.013991638086736202,
+        0.27396541833877563,
+        2.6404306888580322
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.01524664182215929,
+        0.2748066186904907,
+        2.6343796253204346
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.55,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.013162004761397839,
+        0.2705792486667633,
+        2.6366262435913086
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.014425951987504959,
+        0.27118751406669617,
+        2.630265474319458
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.5666666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.012302574701607227,
+        0.26748713850975037,
+        2.633068799972534
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.013575784862041473,
+        0.26788559556007385,
+        2.6264214515686035
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.5833333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.011412310414016247,
+        0.2647150456905365,
+        2.6298139095306396
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.012695025652647018,
+        0.26493051648139954,
+        2.622910737991333
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.6,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.01048997975885868,
+        0.2622879445552826,
+        2.6269187927246094
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.011782344430685043,
+        0.26235079765319824,
+        2.6197967529296875
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.6166666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.009534141980111599,
+        0.26023024320602417,
+        2.6244406700134277
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.010836177505552769,
+        0.2601742744445801,
+        2.617143392562866
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.6333333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.008543143980205059,
+        0.25856655836105347,
+        2.6224365234375
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.009854727424681187,
+        0.25842905044555664,
+        2.61501407623291
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.65,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.007515121251344681,
+        0.25732213258743286,
+        2.620962619781494
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.008835958316922188,
+        0.2571439743041992,
+        2.613471746444702
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.6666666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.006447579246014357,
+        0.25654783844947815,
+        2.620107412338257
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.007777138613164425,
+        0.2563762664794922,
+        2.6126151084899902
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.6833333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.005334859248250723,
+        0.2564513385295868,
+        2.6201767921447754
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.006672019138932228,
+        0.25635746121406555,
+        2.6127843856811523
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.7,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.004175341222435236,
+        0.2570001184940338,
+        2.6211225986480713
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.005518835969269276,
+        0.25705212354660034,
+        2.613926410675049
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.7166666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.002968850312754512,
+        0.258105605840683,
+        2.6228058338165283
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.004317433573305607,
+        0.2583625912666321,
+        2.61588716506958
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.7333333333333334,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.001715630991384387,
+        0.25968137383461,
+        2.6250863075256348
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.003068121150135994,
+        0.2601935863494873,
+        2.6185107231140137
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.75,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.0004163358826190233,
+        0.2616405189037323,
+        2.6278226375579834
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.0017716612201184034,
+        0.2624492645263672,
+        2.621640920639038
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.7666666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.0009280059020966291,
+        0.2638935446739197,
+        2.630876064300537
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.00042923400178551674,
+        0.26503095030784607,
+        2.6251237392425537
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.7833333333333332,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.0023160313721746206,
+        0.2663467824459076,
+        2.634110689163208
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.0009576088050380349,
+        0.26783525943756104,
+        2.62880802154541
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.8,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.0037460927851498127,
+        0.2689012885093689,
+        2.6373937129974365
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.002386999549344182,
+        0.27075305581092834,
+        2.632547378540039
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.8166666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.005216308869421482,
+        0.2714526653289795,
+        2.640597343444824
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.003856811672449112,
+        0.27366897463798523,
+        2.6361992359161377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.8333333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.007022458128631115,
+        0.273898184299469,
+        2.643594741821289
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.005660985596477985,
+        0.2764686048030853,
+        2.63962459564209
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.8499999999999999,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.009743912145495415,
+        0.2761382460594177,
+        2.646259069442749
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.008375848643481731,
+        0.27903974056243896,
+        2.642683982849121
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.8666666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.013335544615983963,
+        0.2780548632144928,
+        2.648470401763916
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.01195664331316948,
+        0.2812519967556,
+        2.645244836807251
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.8833333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.01773107796907425,
+        0.2795273959636688,
+        2.6501097679138184
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.016337335109710693,
+        0.28297191858291626,
+        2.647176504135132
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.9,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.022861899808049202,
+        0.2804345190525055,
+        2.6510603427886963
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.02144930697977543,
+        0.2840653359889984,
+        2.6483490467071533
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.9166666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.028711268678307533,
+        0.2806563973426819,
+        2.6512045860290527
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.027275539934635162,
+        0.28439968824386597,
+        2.6486334800720215
+      ],
+      "prop_yield_m": 4.572473708276267e-05,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.9333333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.035253435373306274,
+        0.28007271885871887,
+        2.6504178047180176
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.033789683133363724,
+        0.2838418781757355,
+        2.6478915214538574
+      ],
+      "prop_yield_m": 0.00018061271147691013,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.95,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.04239802435040474,
+        0.2784680724143982,
+        2.6484501361846924
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.04089998081326485,
+        0.2821531295776367,
+        2.6458470821380615
+      ],
+      "prop_yield_m": 0.00040123456790123525,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.9666666666666666,
+      "food_gain": 0.09017934257989069,
+      "food_center_canonical": [
+        -0.05005151033401489,
+        0.2758411765098572,
+        2.6453781127929688
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.04851175472140312,
+        0.2793312668800354,
+        2.6425719261169434
+      ],
+      "prop_yield_m": 0.0007041609510745312,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.9833333333333334,
+      "food_gain": 0.3099121068942758,
+      "food_center_canonical": [
+        -0.05812127888202667,
+        0.2723008394241333,
+        2.641364812850952
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.05653133988380432,
+        0.2754955589771271,
+        2.638235092163086
+      ],
+      "prop_yield_m": 0.0010859625057155961,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.0,
+      "food_gain": 0.5829903978052133,
+      "food_center_canonical": [
+        -0.06651832908391953,
+        0.2679557502269745,
+        2.636441469192505
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.06486847996711731,
+        0.270766019821167,
+        2.6328728199005127
+      ],
+      "prop_yield_m": 0.0015432098765432124,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.0166666666666666,
+      "food_gain": 0.8332063201747699,
+      "food_center_canonical": [
+        -0.07515212893486023,
+        0.26292112469673157,
+        2.630636692047119
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.07343120872974396,
+        0.2652699947357178,
+        2.6265182495117188
+      ],
+      "prop_yield_m": 0.0020724737082761786,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.033333333333333,
+      "food_gain": 0.9843519788650101,
+      "food_center_canonical": [
+        -0.08393099904060364,
+        0.257316529750824,
+        2.6239802837371826
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.08212625980377197,
+        0.2591398060321808,
+        2.6192049980163574
+      ],
+      "prop_yield_m": 0.0026703246456332872,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.05,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.09276265650987625,
+        0.251263827085495,
+        2.6165032386779785
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.09085970371961594,
+        0.25251033902168274,
+        2.610968828201294
+      ],
+      "prop_yield_m": 0.00333333333333333,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.0666666666666664,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.10155493766069412,
+        0.24488511681556702,
+        2.6082427501678467
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.09953766316175461,
+        0.245516836643219,
+        2.60185170173645
+      ],
+      "prop_yield_m": 0.0040580704160951015,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.0833333333333335,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.11021658033132553,
+        0.2383006513118744,
+        2.5992422103881836
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.10806728899478912,
+        0.2382926046848297,
+        2.591902256011963
+      ],
+      "prop_yield_m": 0.0048411065386374155,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.1,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.11865822970867157,
+        0.2316269427537918,
+        2.589553117752075
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.11635777354240417,
+        0.23096686601638794,
+        2.5811781883239746
+      ],
+      "prop_yield_m": 0.005679012345679022,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.1166666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.12679344415664673,
+        0.22497493028640747,
+        2.5792367458343506
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.12432151287794113,
+        0.22366279363632202,
+        2.5697474479675293
+      ],
+      "prop_yield_m": 0.006568358481938736,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.1333333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.13453973829746246,
+        0.21844817698001862,
+        2.5683631896972656
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.13187526166439056,
+        0.21649539470672607,
+        2.5576882362365723
+      ],
+      "prop_yield_m": 0.00750571559213535,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.15,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.14181965589523315,
+        0.21214114129543304,
+        2.5570125579833984
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.13894133269786835,
+        0.20956973731517792,
+        2.5450892448425293
+      ],
+      "prop_yield_m": 0.008487654320987656,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.1666666666666665,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.1485617458820343,
+        0.20613786578178406,
+        2.545274019241333
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.14544858038425446,
+        0.20297934114933014,
+        2.5320489406585693
+      ],
+      "prop_yield_m": 0.009510745313214448,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.183333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.1547013372182846,
+        0.20051050186157227,
+        2.533245801925659
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.15133346617221832,
+        0.19680464267730713,
+        2.5186758041381836
+      ],
+      "prop_yield_m": 0.010571559213534516,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.2,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.16018131375312805,
+        0.19531837105751038,
+        2.5210318565368652
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.15654069185256958,
+        0.19111187756061554,
+        2.5050852298736572
+      ],
+      "prop_yield_m": 0.011666666666666686,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.216666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.16495248675346375,
+        0.19060710072517395,
+        2.50874400138855
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.16102378070354462,
+        0.18595218658447266,
+        2.4914002418518066
+      ],
+      "prop_yield_m": 0.012792638317329692,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.2333333333333334,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.16897380352020264,
+        0.18640823662281036,
+        2.4964969158172607
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.1647452414035797,
+        0.18136107921600342,
+        2.477747917175293
+      ],
+      "prop_yield_m": 0.013946044810242352,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.25,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.17221230268478394,
+        0.1827390193939209,
+        2.4844095706939697
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.16767655313014984,
+        0.1773582100868225,
+        2.464258909225464
+      ],
+      "prop_yield_m": 0.015123456790123462,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.2666666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.17464271187782288,
+        0.1796025037765503,
+        2.4726006984710693
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.16979767382144928,
+        0.1739475578069687,
+        2.4510650634765625
+      ],
+      "prop_yield_m": 0.01632144490169182,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.283333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.17624671757221222,
+        0.1769881248474121,
+        2.4611897468566895
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.17109636962413788,
+        0.17111793160438538,
+        2.438297748565674
+      ],
+      "prop_yield_m": 0.01753657978966621,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.3,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.17701204121112823,
+        0.17487242817878723,
+        2.450294017791748
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.17156702280044556,
+        0.1688438504934311,
+        2.426086664199829
+      ],
+      "prop_yield_m": 0.018765432098765425,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.3166666666666664,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.17693117260932922,
+        0.17322024703025818,
+        2.440027952194214
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.1712093949317932,
+        0.16708675026893616,
+        2.414557933807373
+      ],
+      "prop_yield_m": 0.02000457247370827,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.3333333333333335,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.17599985003471375,
+        0.17198607325553894,
+        2.4305014610290527
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.17002682387828827,
+        0.16579656302928925,
+        2.4038336277008057
+      ],
+      "prop_yield_m": 0.021250571559213557,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.35,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.1740865558385849,
+        0.1711057722568512,
+        2.4218366146087646
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.16789919137954712,
+        0.1649041473865509,
+        2.3940460681915283
+      ],
+      "prop_yield_m": 0.022500000000000013,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.3666666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.17073120176792145,
+        0.17048360407352448,
+        2.4141886234283447
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.16438794136047363,
+        0.1643095761537552,
+        2.3853580951690674
+      ],
+      "prop_yield_m": 0.023749428440786476,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.3833333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.1660291701555252,
+        0.17006438970565796,
+        2.4076359272003174
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.15959540009498596,
+        0.1639503389596939,
+        2.377859592437744
+      ],
+      "prop_yield_m": 0.024995427526291737,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.4,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.16012310981750488,
+        0.16979552805423737,
+        2.4022459983825684
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.1536681205034256,
+        0.16376562416553497,
+        2.3716297149658203
+      ],
+      "prop_yield_m": 0.02623456790123457,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.4166666666666665,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.15314143896102905,
+        0.16962426900863647,
+        2.398083209991455
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.14673678576946259,
+        0.16369417309761047,
+        2.3667449951171875
+      ],
+      "prop_yield_m": 0.027463420210333787,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.433333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.14520631730556488,
+        0.16950015723705292,
+        2.395211696624756
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.13892406225204468,
+        0.1636771261692047,
+        2.3632822036743164
+      ],
+      "prop_yield_m": 0.028678555098308182,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.45,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.1364263892173767,
+        0.1693781316280365,
+        2.3936970233917236
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.1303371787071228,
+        0.16366137564182281,
+        2.361318826675415
+      ],
+      "prop_yield_m": 0.02987654320987657,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.466666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.1268927901983261,
+        0.16922171413898468,
+        2.3936052322387695
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.12106394022703171,
+        0.16360336542129517,
+        2.360934257507324
+      ],
+      "prop_yield_m": 0.031053955189757676,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.4833333333333334,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.11667950451374054,
+        0.16900673508644104,
+        2.3950068950653076
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.11117301136255264,
+        0.16347312927246094,
+        2.3622119426727295
+      ],
+      "prop_yield_m": 0.032207361682670334,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.5,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.10583888739347458,
+        0.1687277853488922,
+        2.3979406356811523
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.1007089912891388,
+        0.16326160728931427,
+        2.3652000427246094
+      ],
+      "prop_yield_m": 0.03333333333333335,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.5166666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.09438735246658325,
+        0.16841059923171997,
+        2.4022696018218994
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.08967640995979309,
+        0.162994384765625,
+        2.3697516918182373
+      ],
+      "prop_yield_m": 0.034428440786465474,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.533333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08233580738306046,
+        0.16810007393360138,
+        2.4078190326690674
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.07807359099388123,
+        0.1627185046672821,
+        2.3756775856018066
+      ],
+      "prop_yield_m": 0.03548925468678556,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.55,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.06969993561506271,
+        0.1678524613380432,
+        2.414414405822754
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.06590405106544495,
+        0.1624937355518341,
+        2.3827874660491943
+      ],
+      "prop_yield_m": 0.03651234567901235,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.5666666666666664,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.056503776460886,
+        0.16771958768367767,
+        2.4218692779541016
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.05318042263388634,
+        0.16237673163414001,
+        2.3908798694610596
+      ],
+      "prop_yield_m": 0.03749428440786464,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.5833333333333335,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.042782604694366455,
+        0.1677403450012207,
+        2.429983139038086
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.0399276539683342,
+        0.16241204738616943,
+        2.3997373580932617
+      ],
+      "prop_yield_m": 0.03843164151806129,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.6,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.0285849217325449,
+        0.1679536998271942,
+        2.438547134399414
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.026185225695371628,
+        0.16264408826828003,
+        2.409134864807129
+      ],
+      "prop_yield_m": 0.03932098765432099,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.6166666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.013974003493785858,
+        0.1684073507785797,
+        2.447340488433838
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.012008890509605408,
+        0.16312545537948608,
+        2.4188337326049805
+      ],
+      "prop_yield_m": 0.04015889346136261,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.6333333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.0009744485141709447,
+        0.16915102303028107,
+        2.4562063217163086
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.0025315857492387295,
+        0.1639098972082138,
+        2.428658962249756
+      ],
+      "prop_yield_m": 0.040941929583904885,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.65,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.016169801354408264,
+        0.1702113002538681,
+        2.4649953842163086
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.017349880188703537,
+        0.16502685844898224,
+        2.4384427070617676
+      ],
+      "prop_yield_m": 0.04166666666666666,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.6666666666666665,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.031506720930337906,
+        0.1715993583202362,
+        2.473560333251953
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.03234335780143738,
+        0.16648896038532257,
+        2.4480199813842773
+      ],
+      "prop_yield_m": 0.042329675354366714,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.683333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.046866126358509064,
+        0.17330950498580933,
+        2.4817616939544678
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.04739413037896156,
+        0.1682904213666916,
+        2.4572317600250244
+      ],
+      "prop_yield_m": 0.04292752629172382,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.7,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.06211666017770767,
+        0.1753186583518982,
+        2.4894638061523438
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.06237063556909561,
+        0.17040644586086273,
+        2.4659242630004883
+      ],
+      "prop_yield_m": 0.04345679012345681,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.716666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.07711640000343323,
+        0.17758657038211823,
+        2.49653959274292
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.0771295577287674,
+        0.17279334366321564,
+        2.473952054977417
+      ],
+      "prop_yield_m": 0.04391403749428442,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.7333333333333334,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.09171489626169205,
+        0.18005655705928802,
+        2.5028703212738037
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.09151799976825714,
+        0.17538955807685852,
+        2.4811785221099854
+      ],
+      "prop_yield_m": 0.044295839048925464,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.75,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.10575517266988754,
+        0.1826573759317398,
+        2.508345127105713
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.10537580400705338,
+        0.17811745405197144,
+        2.4874753952026367
+      ],
+      "prop_yield_m": 0.04459876543209878,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.7666666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.11908631771802902,
+        0.18533356487751007,
+        2.5129826068878174
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.11854943633079529,
+        0.18091723322868347,
+        2.4928579330444336
+      ],
+      "prop_yield_m": 0.0448193872885231,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.783333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.1316545456647873,
+        0.1882828325033188,
+        2.517810106277466
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.13099320232868195,
+        0.18401047587394714,
+        2.4984614849090576
+      ],
+      "prop_yield_m": 0.044954275262917225,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.8,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.1433524787425995,
+        0.1915539652109146,
+        2.5230228900909424
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.14260178804397583,
+        0.18745335936546326,
+        2.5044972896575928
+      ],
+      "prop_yield_m": 0.045,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.8166666666666664,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.1540435254573822,
+        0.1951289027929306,
+        2.5285491943359375
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.15323734283447266,
+        0.1912279576063156,
+        2.510878801345825
+      ],
+      "prop_yield_m": 0.04497778744232251,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.8333333333333335,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.16358406841754913,
+        0.1989799588918686,
+        2.534320116043091
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.16275417804718018,
+        0.19530555605888367,
+        2.517523765563965
+      ],
+      "prop_yield_m": 0.044912261543311835,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.85,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.17182499170303345,
+        0.20306935906410217,
+        2.5402698516845703
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.17100046575069427,
+        0.19964618980884552,
+        2.524352788925171
+      ],
+      "prop_yield_m": 0.044805089964000726,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.8666666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.17861327528953552,
+        0.2073492407798767,
+        2.5463359355926514
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.17782002687454224,
+        0.20419861376285553,
+        2.531290054321289
+      ],
+      "prop_yield_m": 0.0446579403654219,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.8833333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.18379342555999756,
+        0.21176230907440186,
+        2.552456855773926
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.18305401504039764,
+        0.20890088379383087,
+        2.538261651992798
+      ],
+      "prop_yield_m": 0.044472480408608114,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.9,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.1872091144323349,
+        0.216242715716362,
+        2.558572769165039
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.18654267489910126,
+        0.21368135511875153,
+        2.545196056365967
+      ],
+      "prop_yield_m": 0.04425037775459208,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.9166666666666665,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.18879660964012146,
+        0.2207207828760147,
+        2.5646111965179443
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.18821798264980316,
+        0.21846337616443634,
+        2.552009105682373
+      ],
+      "prop_yield_m": 0.04399330006440652,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.933333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.1893090307712555,
+        0.22514930367469788,
+        2.5703935623168945
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.188820481300354,
+        0.22319212555885315,
+        2.5585122108459473
+      ],
+      "prop_yield_m": 0.04370291499908418,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.95,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.18895801901817322,
+        0.22945557534694672,
+        2.5758135318756104
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.18855717778205872,
+        0.22778630256652832,
+        2.5645885467529297
+      ],
+      "prop_yield_m": 0.04338089021965777,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.966666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.1877613365650177,
+        0.23355457186698914,
+        2.5807931423187256
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.18744392693042755,
+        0.23215162754058838,
+        2.5701496601104736
+      ],
+      "prop_yield_m": 0.04302889338716007,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.9833333333333334,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.18574006855487823,
+        0.2373577058315277,
+        2.5852553844451904
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.18550042808055878,
+        0.2361898124217987,
+        2.5751097202301025
+      ],
+      "prop_yield_m": 0.04264859216262379,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.0,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.1829162836074829,
+        0.24077460169792175,
+        2.5891263484954834
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.18274760246276855,
+        0.2398006170988083,
+        2.5793848037719727
+      ],
+      "prop_yield_m": 0.04224165420708162,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.0166666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.17932920157909393,
+        0.2437153309583664,
+        2.5923309326171875
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.1792239397764206,
+        0.24288424849510193,
+        2.582890510559082
+      ],
+      "prop_yield_m": 0.041809747181566326,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.033333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.17502561211585999,
+        0.2460927516222,
+        2.5947940349578857
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.17497572302818298,
+        0.24534404277801514,
+        2.5855422019958496
+      ],
+      "prop_yield_m": 0.04135453874711066,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.05,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.17005428671836853,
+        0.24782516062259674,
+        2.596436023712158
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.1700514703989029,
+        0.24708937108516693,
+        2.5872507095336914
+      ],
+      "prop_yield_m": 0.04087769656474734,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.0666666666666664,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.16443008184432983,
+        0.2485991269350052,
+        2.596766471862793
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.16446194052696228,
+        0.24777214229106903,
+        2.5874698162078857
+      ],
+      "prop_yield_m": 0.04038088829550905,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.0833333333333335,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.15819385647773743,
+        0.24826808273792267,
+        2.5955262184143066
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.1582467406988144,
+        0.2472284883260727,
+        2.585909366607666
+      ],
+      "prop_yield_m": 0.039865781600428564,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.1,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.15144507586956024,
+        0.24733495712280273,
+        2.5931897163391113
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.15150918066501617,
+        0.2459784299135208,
+        2.583071231842041
+      ],
+      "prop_yield_m": 0.039334044140538635,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.1166666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.144270658493042,
+        0.24610605835914612,
+        2.590059280395508
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.14433972537517548,
+        0.24434833228588104,
+        2.579282760620117
+      ],
+      "prop_yield_m": 0.038787343576871955,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.1333333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.13674147427082062,
+        0.24472062289714813,
+        2.586135149002075
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.13681255280971527,
+        0.24249926209449768,
+        2.5745697021484375
+      ],
+      "prop_yield_m": 0.03822734757046126,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.15,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.128932386636734,
+        0.24328649044036865,
+        2.581538677215576
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.1290057897567749,
+        0.2405603975057602,
+        2.569080114364624
+      ],
+      "prop_yield_m": 0.037590058671905464,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.1666666666666665,
+      "food_gain": 0.984351978865011,
+      "food_center_canonical": [
+        0.12091928720474243,
+        0.2418147474527359,
+        2.576444625854492
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.12099836766719818,
+        0.23856301605701447,
+        2.5630154609680176
+      ],
+      "prop_yield_m": 0.03662265154724947,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.183333333333333,
+      "food_gain": 0.8332063201747727,
+      "food_center_canonical": [
+        0.11277657747268677,
+        0.24039369821548462,
+        2.571037530899048
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.11286760866641998,
+        0.23661386966705322,
+        2.5565879344940186
+      ],
+      "prop_yield_m": 0.03533288563335701,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.2,
+      "food_gain": 0.5829903978052025,
+      "food_center_canonical": [
+        0.1045762300491333,
+        0.23910340666770935,
+        2.565513849258423
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.10468808561563492,
+        0.23480941355228424,
+        2.5500235557556152
+      ],
+      "prop_yield_m": 0.03375867133375096,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.216666666666667,
+      "food_gain": 0.3099121068942724,
+      "food_center_canonical": [
+        0.09638664126396179,
+        0.23800203204154968,
+        2.560081958770752
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.09653033316135406,
+        0.23322181403636932,
+        2.54356050491333
+      ],
+      "prop_yield_m": 0.03193791905195448,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.2333333333333334,
+      "food_gain": 0.09017934257989516,
+      "food_center_canonical": [
+        0.0882713571190834,
+        0.2371254414319992,
+        2.554959297180176
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.08845949918031693,
+        0.23189862072467804,
+        2.537447929382324
+      ],
+      "prop_yield_m": 0.029908539191490408,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.25,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.08028790354728699,
+        0.2364886850118637,
+        2.550373077392578
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.08053397387266159,
+        0.2308642715215683,
+        2.531944751739502
+      ],
+      "prop_yield_m": 0.02770844215588157,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.2666666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.07248684018850327,
+        0.2360890805721283,
+        2.546556234359741
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.07280440628528595,
+        0.23012365400791168,
+        2.5273163318634033
+      ],
+      "prop_yield_m": 0.025375538348651035,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.283333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.06491108983755112,
+        0.23591145873069763,
+        2.543745279312134
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.0653129369020462,
+        0.2296677976846695,
+        2.523832082748413
+      ],
+      "prop_yield_m": 0.022947738173321883,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.3,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.057595767080783844,
+        0.23593516647815704,
+        2.542178153991699
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.05809299275279045,
+        0.22948169708251953,
+        2.5217626094818115
+      ],
+      "prop_yield_m": 0.020462952033416942,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.3166666666666664,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.050568412989377975,
+        0.23614287376403809,
+        2.54209041595459
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.05116957798600197,
+        0.22955408692359924,
+        2.521376371383667
+      ],
+      "prop_yield_m": 0.017959090332459026,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.3333333333333335,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.04384951665997505,
+        0.23652862012386322,
+        2.543705463409424
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.04455985501408577,
+        0.22988636791706085,
+        2.5229272842407227
+      ],
+      "prop_yield_m": 0.015474063473971237,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.35,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.03728175535798073,
+        0.23699253797531128,
+        2.546847343444824
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.03810478001832962,
+        0.2303752452135086,
+        2.5262255668640137
+      ],
+      "prop_yield_m": 0.013045781861476568,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.3666666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.03020617738366127,
+        0.23742787539958954,
+        2.551203489303589
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.03115292452275753,
+        0.23090730607509613,
+        2.53092885017395
+      ],
+      "prop_yield_m": 0.010712155898497944,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.3833333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.022588256746530533,
+        0.23788951337337494,
+        2.5566165447235107
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.023665927350521088,
+        0.23153367638587952,
+        2.5368590354919434
+      ],
+      "prop_yield_m": 0.008511095988558275,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.4,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.014468762092292309,
+        0.23843957483768463,
+        2.5629215240478516
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.01567947119474411,
+        0.23231372237205505,
+        2.543830633163452
+      ],
+      "prop_yield_m": 0.006480512535180534,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.4166666666666665,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.005891651380807161,
+        0.239127054810524,
+        2.569939613342285
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.007232832256704569,
+        0.23329436779022217,
+        2.5516436100006104
+      ],
+      "prop_yield_m": 0.004658315941887699,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.433333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.0030935537070035934,
+        0.2399989515542984,
+        2.57749080657959
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.0016285383608192205,
+        0.2345203012228012,
+        2.5600969791412354
+      ],
+      "prop_yield_m": 0.0030824166122026702,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.4499999999999997,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.012430468574166298,
+        0.24109603464603424,
+        2.585395574569702
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.01085156574845314,
+        0.23602935671806335,
+        2.5689897537231445
+      ],
+      "prop_yield_m": 0.0017907249496484374,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.466666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.02205505594611168,
+        0.24244940280914307,
+        2.5934786796569824
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.020374663174152374,
+        0.237848699092865,
+        2.578125
+      ],
+      "prop_yield_m": 0.0008211513577479352,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.4833333333333334,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.03189503774046898,
+        0.2440776824951172,
+        2.6015679836273193
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.03012710250914097,
+        0.23999173939228058,
+        2.5873100757598877
+      ],
+      "prop_yield_m": 0.00021160624002415022,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.5,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.041865814477205276,
+        0.24598513543605804,
+        2.6094977855682373
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.040024954825639725,
+        0.24245601892471313,
+        2.59635853767395
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.5166666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.0518946573138237,
+        0.24816030263900757,
+        2.617105484008789
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.04999532923102379,
+        0.245221808552742,
+        2.6050877571105957
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.533333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.06191137060523033,
+        0.2505756914615631,
+        2.6241962909698486
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.059967149049043655,
+        0.24825164675712585,
+        2.613284111022949
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.55,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.07183802872896194,
+        0.25318780541419983,
+        2.630653142929077
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.06986100226640701,
+        0.2514904737472534,
+        2.620811939239502
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.5666666666666664,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.0815923735499382,
+        0.25593823194503784,
+        2.636385440826416
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.07959267497062683,
+        0.2548667788505554,
+        2.627563953399658
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.5833333333333335,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.09108985215425491,
+        0.2587548792362213,
+        2.64131498336792
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.08907536417245865,
+        0.25829410552978516,
+        2.6334452629089355
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.6,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.10024484992027283,
+        0.2615883946418762,
+        2.6453733444213867
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.09822101891040802,
+        0.26170748472213745,
+        2.6383724212646484
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.6166666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.10897176712751389,
+        0.2644771635532379,
+        2.648503303527832
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.10694152861833572,
+        0.2651289403438568,
+        2.642273187637329
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.6333333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.11718568205833435,
+        0.2673181891441345,
+        2.650653600692749
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.11514949798583984,
+        0.26843854784965515,
+        2.645082950592041
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.65,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.12480270117521286,
+        0.2699902355670929,
+        2.651778221130371
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.12275861203670502,
+        0.2714979648590088,
+        2.646742582321167
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.6666666666666665,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.1318003237247467,
+        0.272942453622818,
+        2.65256404876709
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.12975068390369415,
+        0.2748027443885803,
+        2.6480062007904053
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.683333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.13816073536872864,
+        0.2766479551792145,
+        2.653663396835327
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.1361127495765686,
+        0.2788749933242798,
+        2.649590015411377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.6999999999999997,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.14380696415901184,
+        0.2810163199901581,
+        2.6549861431121826
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.1417660117149353,
+        0.28361088037490845,
+        2.651385545730591
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.716666666666667,
+      "food_gain": 0.01564802113499029,
+      "food_center_canonical": [
+        -0.14866186678409576,
+        0.28592395782470703,
+        2.6564316749572754
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.14663146436214447,
+        0.28887248039245605,
+        2.6532740592956543
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.7333333333333334,
+      "food_gain": 0.16679367982522544,
+      "food_center_canonical": [
+        -0.15265220403671265,
+        0.2909975051879883,
+        2.6577508449554443
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.1506340205669403,
+        0.29427191615104675,
+        2.6549901962280273
+      ],
+      "prop_yield_m": 0.00010435401107553853,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.75,
+      "food_gain": 0.417009602194788,
+      "food_center_canonical": [
+        -0.15570324659347534,
+        0.29598549008369446,
+        2.658784866333008
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.1536971777677536,
+        0.2995418608188629,
+        2.6563589572906494
+      ],
+      "prop_yield_m": 0.0005115740740740679,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.7666666666666666,
+      "food_gain": 0.6900878931057323,
+      "food_center_canonical": [
+        -0.15774035453796387,
+        0.3006855249404907,
+        2.659412384033203
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.15574468672275543,
+        0.30446335673332214,
+        2.6572437286376953
+      ],
+      "prop_yield_m": 0.0011974292536706904,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.783333333333333,
+      "food_gain": 0.9098206574201079,
+      "food_center_canonical": [
+        -0.15868984162807465,
+        0.3048941195011139,
+        2.659513473510742
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.15670140087604523,
+        0.3088161051273346,
+        2.657508611679077
+      ],
+      "prop_yield_m": 0.002130960092465561,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.8,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.15847879648208618,
+        0.30841004848480225,
+        2.658963918685913
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.15649305284023285,
+        0.31238240003585815,
+        2.6570146083831787
+      ],
+      "prop_yield_m": 0.0032812071330589254,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.8166666666666664,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.15581166744232178,
+        0.31040701270103455,
+        2.65716290473938
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.1538219153881073,
+        0.3142600655555725,
+        2.6550748348236084
+      ],
+      "prop_yield_m": 0.004617210918051077,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.8333333333333335,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.14969179034233093,
+        0.31045329570770264,
+        2.6537604331970215
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.1476922333240509,
+        0.31398245692253113,
+        2.651294231414795
+      ],
+      "prop_yield_m": 0.006108011990042166,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.85,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.14050078392028809,
+        0.3089718222618103,
+        2.6489341259002686
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.13849005103111267,
+        0.3120197653770447,
+        2.6458919048309326
+      ],
+      "prop_yield_m": 0.007722650891632369,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.8666666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.1286233514547348,
+        0.3064000606536865,
+        2.6429522037506104
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.1266055703163147,
+        0.3088577389717102,
+        2.6391773223876953
+      ],
+      "prop_yield_m": 0.009430168165421925,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.8833333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.11445216089487076,
+        0.3031671941280365,
+        2.6360909938812256
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.11243780702352524,
+        0.3049725294113159,
+        2.6314704418182373
+      ],
+      "prop_yield_m": 0.011199604354011055,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.9,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.09838517010211945,
+        0.29967594146728516,
+        2.6286535263061523
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.09639156609773636,
+        0.3008109927177429,
+        2.623119354248047
+      ],
+      "prop_yield_m": 0.012999999999999977,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.9166666666666665,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.0808197557926178,
+        0.29628950357437134,
+        2.6209776401519775
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.07887066155672073,
+        0.29677629470825195,
+        2.614511489868164
+      ],
+      "prop_yield_m": 0.01480039564598889,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.933333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.06214490905404091,
+        0.29332485795021057,
+        2.6134438514709473
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.06026909872889519,
+        0.29322054982185364,
+        2.6060805320739746
+      ],
+      "prop_yield_m": 0.01656983183457803,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.9499999999999997,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.04274989664554596,
+        0.29105186462402344,
+        2.6064743995666504
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.040978603065013885,
+        0.29044437408447266,
+        2.5983047485351562
+      ],
+      "prop_yield_m": 0.018277349108367587,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.966666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.022964730858802795,
+        0.28970107436180115,
+        2.6005260944366455
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.02132810838520527,
+        0.2887052297592163,
+        2.591700315475464
+      ],
+      "prop_yield_m": 0.01989198800995783,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.9833333333333334,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.003069150261580944,
+        0.28947827219963074,
+        2.5960803031921387
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.001592046464793384,
+        0.288234144449234,
+        2.5868077278137207
+      ],
+      "prop_yield_m": 0.02138278908194885,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.0,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.01669391803443432,
+        0.2905878722667694,
+        2.593630313873291
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.017996342852711678,
+        0.2892613410949707,
+        2.584179162979126
+      ],
+      "prop_yield_m": 0.022718792866941,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.016666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.03611340373754501,
+        0.29307809472084045,
+        2.5933635234832764
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.03723938763141632,
+        0.29184460639953613,
+        2.5840237140655518
+      ],
+      "prop_yield_m": 0.0238690399075344,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.033333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.05497581511735916,
+        0.2966662049293518,
+        2.594844341278076
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.05593680217862129,
+        0.2956748306751251,
+        2.585857629776001
+      ],
+      "prop_yield_m": 0.024802570746329307,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.05,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.07303620874881744,
+        0.30108681321144104,
+        2.59763240814209
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.0738532766699791,
+        0.30046308040618896,
+        2.5891880989074707
+      ],
+      "prop_yield_m": 0.025488425925925914,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.066666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.09001822769641876,
+        0.3061372637748718,
+        2.601341724395752
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.09071818739175797,
+        0.3059830665588379,
+        2.5935776233673096
+      ],
+      "prop_yield_m": 0.025895645988924448,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.083333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.1056157723069191,
+        0.3116283714771271,
+        2.605631113052368
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.10622742772102356,
+        0.3120201528072357,
+        2.598632574081421
+      ],
+      "prop_yield_m": 0.02599511291877127,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.1,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.11949598789215088,
+        0.3173180818557739,
+        2.6101531982421875
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.12004705518484116,
+        0.31830424070358276,
+        2.6039557456970215
+      ],
+      "prop_yield_m": 0.02582874419609114,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.116666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.1313086450099945,
+        0.3229392468929291,
+        2.6145925521850586
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.13182350993156433,
+        0.3245363235473633,
+        2.609184980392456
+      ],
+      "prop_yield_m": 0.025440117257955516,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.133333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.1406944841146469,
+        0.328181654214859,
+        2.618664503097534
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.1411929577589035,
+        0.3303704857826233,
+        2.6139907836914062
+      ],
+      "prop_yield_m": 0.02484872843905348,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.15,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.14729255437850952,
+        0.3327047824859619,
+        2.6221089363098145
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.14778953790664673,
+        0.33542686700820923,
+        2.618072509765625
+      ],
+      "prop_yield_m": 0.02407407407407406,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.166666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.15074607729911804,
+        0.3361484110355377,
+        2.6246790885925293
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.15125198662281036,
+        0.3393034338951111,
+        2.6211442947387695
+      ],
+      "prop_yield_m": 0.023135650497706415,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.183333333333334,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.15077215433120728,
+        0.33814918994903564,
+        2.6261188983917236
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.15129363536834717,
+        0.34159377217292786,
+        2.622912883758545
+      ],
+      "prop_yield_m": 0.022052954044639594,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.2,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.14930285513401031,
+        0.3384074866771698,
+        2.6259143352508545
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.14983321726322174,
+        0.34195658564567566,
+        2.6228256225585938
+      ],
+      "prop_yield_m": 0.020845481049562672,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.216666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.14744199812412262,
+        0.3375869393348694,
+        2.624624252319336
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.14797456562519073,
+        0.3411222994327545,
+        2.621520757675171
+      ],
+      "prop_yield_m": 0.019532727847164724,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.233333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.145284041762352,
+        0.3365788459777832,
+        2.6231565475463867
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.14581885933876038,
+        0.3400765359401703,
+        2.620011806488037
+      ],
+      "prop_yield_m": 0.018134190772134837,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.25,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.14288853108882904,
+        0.3360848128795624,
+        2.6219322681427
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.1434255689382553,
+        0.33952024579048157,
+        2.6187186241149902
+      ],
+      "prop_yield_m": 0.01666936615916208,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.266666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.1403815746307373,
+        0.3386872410774231,
+        2.622504472732544
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.14092041552066803,
+        0.3420300781726837,
+        2.619189739227295
+      ],
+      "prop_yield_m": 0.015157750342935537,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.283333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.13779643177986145,
+        0.3444175720214844,
+        2.6248600482940674
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.13833679258823395,
+        0.3476376533508301,
+        2.621413230895996
+      ],
+      "prop_yield_m": 0.013618839658144283,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.3,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.13515496253967285,
+        0.3530184328556061,
+        2.6287922859191895
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.13569678366184235,
+        0.3560863137245178,
+        2.62518572807312
+      ],
+      "prop_yield_m": 0.012072130439477398,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.316666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.13247860968112946,
+        0.3642372488975525,
+        2.6340854167938232
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.13302205502986908,
+        0.3671239912509918,
+        2.6302947998046875
+      ],
+      "prop_yield_m": 0.010537119021623959,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.333333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.12978863716125488,
+        0.3778230845928192,
+        2.6405203342437744
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.13033415377140045,
+        0.38050031661987305,
+        2.6365249156951904
+      ],
+      "prop_yield_m": 0.009033301739273044,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.35,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.1271064430475235,
+        0.3935237526893616,
+        2.6478772163391113
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.12765471637248993,
+        0.3959636390209198,
+        2.643659830093384
+      ],
+      "prop_yield_m": 0.007580174927113736,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.366666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.1244407594203949,
+        0.41108351945877075,
+        2.6559407711029053
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.12499271333217621,
+        0.4132589101791382,
+        2.6514875888824463
+      ],
+      "prop_yield_m": 0.00619723491983511,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.383333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.12168768793344498,
+        0.43024101853370667,
+        2.6645069122314453
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.12224448472261429,
+        0.4321257174015045,
+        2.6598074436187744
+      ],
+      "prop_yield_m": 0.004903978052126233,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.4,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.11882500350475311,
+        0.45072799921035767,
+        2.6733767986297607
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.11938800662755966,
+        0.4522969126701355,
+        2.668423891067505
+      ],
+      "prop_yield_m": 0.0037199006586761483,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.416666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.11585962027311325,
+        0.47226816415786743,
+        2.6823620796203613
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.11643036454916,
+        0.4734976887702942,
+        2.677151679992676
+      ],
+      "prop_yield_m": 0.002664499074174036,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.433333333333334,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.11279942840337753,
+        0.4945768713951111,
+        2.691288709640503
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.1133795902132988,
+        0.4954451620578766,
+        2.685819149017334
+      ],
+      "prop_yield_m": 0.0017572696333089269,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.45,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.10965331643819809,
+        0.5173607468605042,
+        2.699995994567871
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.11024467647075653,
+        0.5178480744361877,
+        2.694267988204956
+      ],
+      "prop_yield_m": 0.001017708670769888,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.466666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.10643123090267181,
+        0.540317952632904,
+        2.708339214324951
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.10703562945127487,
+        0.540407121181488,
+        2.7023556232452393
+      ],
+      "prop_yield_m": 0.00046531252124600096,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.483333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.10314252227544785,
+        0.5630956888198853,
+        2.716151714324951
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.10376162081956863,
+        0.5627672672271729,
+        2.7099127769470215
+      ],
+      "prop_yield_m": 0.00011957751942634819,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.5,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.09974996745586395,
+        0.5839893221855164,
+        2.7221364974975586
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.10037994384765625,
+        0.5830729007720947,
+        2.7155110836029053
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.516666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.09625738114118576,
+        0.602181077003479,
+        2.725803852081299
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.096893310546875,
+        0.6004545092582703,
+        2.718618869781494
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.533333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.09269315749406815,
+        0.6176069378852844,
+        2.727267026901245
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.09333162009716034,
+        0.6148808002471924,
+        2.7193703651428223
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.55,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.08908303827047348,
+        0.6302124857902527,
+        2.726612091064453
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.0897216796875,
+        0.6263342499732971,
+        2.717869281768799
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.566666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.08545142412185669,
+        0.6399483680725098,
+        2.723910331726074
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.08608871698379517,
+        0.6348047852516174,
+        2.714200735092163
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.583333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.08182220906019211,
+        0.6467797160148621,
+        2.719226837158203
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.08245733380317688,
+        0.6402990221977234,
+        2.708442211151123
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.6,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.07821914553642273,
+        0.650680661201477,
+        2.7126283645629883
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.07885188609361649,
+        0.6428333520889282,
+        2.700671911239624
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.616666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.07466568797826767,
+        0.6516285538673401,
+        2.704188346862793
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.07529640942811966,
+        0.6424275636672974,
+        2.69097638130188
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.633333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.07118622213602066,
+        0.649668276309967,
+        2.6940207481384277
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.07181583344936371,
+        0.6391676664352417,
+        2.6794838905334473
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.65,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.06776923686265945,
+        0.6471205949783325,
+        2.6832244396209717
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.06840173155069351,
+        0.6353856325149536,
+        2.667332887649536
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.666666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.06412094831466675,
+        0.6452400088310242,
+        2.672555923461914
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.06476793438196182,
+        0.6323478817939758,
+        2.6553196907043457
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.683333333333334,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.060252971947193146,
+        0.6441527605056763,
+        2.662332534790039
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.06092900410294533,
+        0.6301993727684021,
+        2.6437978744506836
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.7,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.05621151998639107,
+        0.6439499855041504,
+        2.652890682220459
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.056933049112558365,
+        0.6290462613105774,
+        2.63314151763916
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.716666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.052035972476005554,
+        0.6446933746337891,
+        2.6445798873901367
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.05282057449221611,
+        0.6289617419242859,
+        2.623739242553711
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.733333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.04775693267583847,
+        0.6464234590530396,
+        2.637756109237671
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.048622310161590576,
+        0.6299958825111389,
+        2.6159873008728027
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.75,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.04339459165930748,
+        0.6491714119911194,
+        2.6327755451202393
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.044357407838106155,
+        0.6321880221366882,
+        2.610281467437744
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.766666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.0389576181769371,
+        0.6529737710952759,
+        2.6299870014190674
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.040032219141721725,
+        0.6355836987495422,
+        2.607009172439575
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.783333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.03444252535700798,
+        0.6578897833824158,
+        2.6297218799591064
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.03563955798745155,
+        0.6402536034584045,
+        2.606539487838745
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.8,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.0298323892056942,
+        0.6642530560493469,
+        2.632676362991333
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.0311574824154377,
+        0.6465731859207153,
+        2.609649658203125
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.816666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.02508404105901718,
+        0.672954797744751,
+        2.640324115753174
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.026534808799624443,
+        0.6555377244949341,
+        2.6179797649383545
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.833333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.020139701664447784,
+        0.6838468909263611,
+        2.651897430419922
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.0217040553689003,
+        0.6669875383377075,
+        2.6306774616241455
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.85,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.014962567947804928,
+        0.696712851524353,
+        2.666361093521118
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.01662103459239006,
+        0.6806867718696594,
+        2.6465938091278076
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.866666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.009542899206280708,
+        0.7112953662872314,
+        2.682675838470459
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.01127163041383028,
+        0.6963546872138977,
+        2.6645750999450684
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.883333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.0038994322530925274,
+        0.7272321581840515,
+        2.6998398303985596
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.005673361476510763,
+        0.7135935425758362,
+        2.6835086345672607
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.9,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.0019223506096750498,
+        0.7440171837806702,
+        2.7169294357299805
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.00012653697922360152,
+        0.7318458557128906,
+        2.702368974685669
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.916666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.007854611612856388,
+        0.760987401008606,
+        2.7331342697143555
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.006055988371372223,
+        0.7503799200057983,
+        2.720256805419922
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.933333333333334,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.013813352212309837,
+        0.7773329019546509,
+        2.7477846145629883
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.012024958617985249,
+        0.7683007717132568,
+        2.7364275455474854
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.95,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.019705209881067276,
+        0.7921317219734192,
+        2.760352849960327
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.01793300360441208,
+        0.7845879793167114,
+        2.7502968311309814
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.966666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.025433426722884178,
+        0.8044177293777466,
+        2.770442485809326
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.02367590367794037,
+        0.7981680631637573,
+        2.7614243030548096
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.983333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.030901815742254257,
+        0.8131574392318726,
+        2.7777369022369385
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.029150035232305527,
+        0.807896614074707,
+        2.7694590091705322
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.0,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.03602183610200882,
+        0.8166406154632568,
+        2.7817304134368896
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.034259553998708725,
+        0.8119579553604126,
+        2.7738616466522217
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.016666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.040702007710933685,
+        0.8137880563735962,
+        2.7820522785186768
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.038905855268239975,
+        0.8091835975646973,
+        2.774228811264038
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.033333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.0449155792593956,
+        0.805354654788971,
+        2.7791881561279297
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.04306262359023094,
+        0.8003997206687927,
+        2.7710981369018555
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.05,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.04865109175443649,
+        0.7924044132232666,
+        2.773625373840332
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.046720489859580994,
+        0.7867755889892578,
+        2.7650084495544434
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.066666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.0518953762948513,
+        0.775905966758728,
+        2.7657041549682617
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.049868158996105194,
+        0.769374430179596,
+        2.7563366889953613
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.083333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.0546443946659565,
+        0.7568275332450867,
+        2.755786657333374
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.052504438906908035,
+        0.749259352684021,
+        2.745483160018921
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.1,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.056906770914793015,
+        0.7360996603965759,
+        2.74430513381958
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.05464218184351921,
+        0.7274511456489563,
+        2.7329273223876953
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.116666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.05870630964636803,
+        0.7145816087722778,
+        2.731792688369751
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.056311093270778656,
+        0.704891562461853,
+        2.719259262084961
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.133333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.0600828155875206,
+        0.6930370330810547,
+        2.71889066696167
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.057558611035346985,
+        0.6824163198471069,
+        2.705190896987915
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.15,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.06109052896499634,
+        0.6721218228340149,
+        2.7063422203063965
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.05844821035861969,
+        0.6607411503791809,
+        2.6915457248687744
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.166666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.06177985668182373,
+        0.6523874402046204,
+        2.6949682235717773
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.05904068797826767,
+        0.640466034412384,
+        2.679234743118286
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.183333333333334,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.0622042715549469,
+        0.634304404258728,
+        2.6856398582458496
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.05940037965774536,
+        0.6221009492874146,
+        2.6692237854003906
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.2,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.0624270997941494,
+        0.6183058023452759,
+        2.6792397499084473
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.05960104241967201,
+        0.6061145067214966,
+        2.662491798400879
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.216666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.06222236528992653,
+        0.6043614149093628,
+        2.6759536266326904
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.05942177399992943,
+        0.592461109161377,
+        2.659240961074829
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.233333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.06134752184152603,
+        0.5920215845108032,
+        2.6751859188079834
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.058614324778318405,
+        0.580629289150238,
+        2.6588058471679688
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.25,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.059821225702762604,
+        0.5811434984207153,
+        2.6765999794006348
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.05718939006328583,
+        0.5704475045204163,
+        2.660811185836792
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.266666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.05765330791473389,
+        0.5716233849525452,
+        2.6798322200775146
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.0551479272544384,
+        0.561788022518158,
+        2.664851427078247
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.283333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.05485180765390396,
+        0.563374936580658,
+        2.684504270553589
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.052488937973976135,
+        0.5545422434806824,
+        2.670504331588745
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.3,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.051428962498903275,
+        0.5563108325004578,
+        2.6902360916137695
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.04921611025929451,
+        0.5486006736755371,
+        2.6773455142974854
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.316666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.04740583524107933,
+        0.550328254699707,
+        2.6966552734375
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.04534301534295082,
+        0.5438365936279297,
+        2.6849584579467773
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.333333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.04281561076641083,
+        0.5452982783317566,
+        2.7034058570861816
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.0408967062830925,
+        0.5400944948196411,
+        2.6929452419281006
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.35,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.037705276161432266,
+        0.5410597920417786,
+        2.710157632827759
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.035919614136219025,
+        0.5371832251548767,
+        2.7009356021881104
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.366666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.03213585913181305,
+        0.5374171733856201,
+        2.716611623764038
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.03046981804072857,
+        0.534873366355896,
+        2.7085928916931152
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.383333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.02618134766817093,
+        0.5341412425041199,
+        2.7225024700164795
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.02461983636021614,
+        0.5328983068466187,
+        2.71561861038208
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.4,
+      "food_gain": 0.9657064471879233,
+      "food_center_canonical": [
+        -0.019926631823182106,
+        0.5309731364250183,
+        2.7276008129119873
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.018454331904649734,
+        0.5309587717056274,
+        2.7217531204223633
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.416666666666667,
+      "food_gain": 0.7886501041507918,
+      "food_center_canonical": [
+        -0.013464787974953651,
+        0.5276311039924622,
+        2.73170804977417
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.012067106552422047,
+        0.5287300944328308,
+        2.7267708778381348
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.433333333333334,
+      "food_gain": 0.5277650764619246,
+      "food_center_canonical": [
+        -0.0068941861391067505,
+        0.5238187313079834,
+        2.734652042388916
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        -0.005557888187468052,
+        0.5258715748786926,
+        2.7304742336273193
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.45,
+      "food_gain": 0.2592592592592629,
+      "food_center_canonical": [
+        -0.0003158639301545918,
+        0.5192351937294006,
+        2.736271619796753
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.0009705965057946742,
+        0.5220375061035156,
+        2.7326791286468506
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.466666666666667,
+      "food_gain": 0.05934054768074978,
+      "food_center_canonical": [
+        0.0061684660613536835,
+        0.5135862231254578,
+        2.7364041805267334
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.0074148341082036495,
+        0.5168898701667786,
+        2.733198642730713
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.483333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.012456675991415977,
+        0.5066549777984619,
+        2.734909772872925
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.013670817948877811,
+        0.5101765990257263,
+        2.731870651245117
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.5,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.01842605136334896,
+        0.5001524686813354,
+        2.733109474182129
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.019611641764640808,
+        0.5037878751754761,
+        2.730156660079956
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.516666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.023979639634490013,
+        0.4950518012046814,
+        2.731741189956665
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.025139007717370987,
+        0.49879392981529236,
+        2.728869676589966
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.533333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.029035214334726334,
+        0.4914492666721344,
+        2.730858564376831
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.03017096035182476,
+        0.4952910542488098,
+        2.7280633449554443
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.55,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.033510420471429825,
+        0.4893394112586975,
+        2.7305150032043457
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.034625425934791565,
+        0.49327388405799866,
+        2.727790117263794
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.566666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.037308644503355026,
+        0.4880143404006958,
+        2.7304563522338867
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.03840615972876549,
+        0.49203601479530334,
+        2.7277982234954834
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.583333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.04033122584223747,
+        0.48675549030303955,
+        2.730400800704956
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.04141490161418915,
+        0.4908604025840759,
+        2.7278072834014893
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.6,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.042492661625146866,
+        0.4855615198612213,
+        2.7303552627563477
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.04356643930077553,
+        0.4897456467151642,
+        2.7278244495391846
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.616666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.043707460165023804,
+        0.4844312071800232,
+        2.7303271293640137
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.044775571674108505,
+        0.4886905550956726,
+        2.7278571128845215
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.633333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.04390242323279381,
+        0.4833638072013855,
+        2.730320453643799
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.044969342648983,
+        0.4876943528652191,
+        2.727909803390503
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.65,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.043429240584373474,
+        0.48235562443733215,
+        2.730327606201172
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.04449784383177757,
+        0.48675358295440674,
+        2.7279741764068604
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.666666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.042515721172094345,
+        0.48140448331832886,
+        2.7303431034088135
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.04358787462115288,
+        0.4858661890029907,
+        2.7280445098876953
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.683333333333334,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.04120683670043945,
+        0.48050954937934875,
+        2.7303647994995117
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.04228418692946434,
+        0.485031396150589,
+        2.728118896484375
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.7,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.03954761102795601,
+        0.47967028617858887,
+        2.730391263961792
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.04063158854842186,
+        0.48424866795539856,
+        2.7281956672668457
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.716666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.03758308291435242,
+        0.4788858890533447,
+        2.7304210662841797
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.038674913346767426,
+        0.4835173189640045,
+        2.728273391723633
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.733333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.03535833954811096,
+        0.47815579175949097,
+        2.730451822280884
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.03645904362201691,
+        0.4828368127346039,
+        2.7283496856689453
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.75,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.03291847184300423,
+        0.4774792790412903,
+        2.7304821014404297
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.03402888402342796,
+        0.48220646381378174,
+        2.7284231185913086
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.766666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.030308621004223824,
+        0.47685563564300537,
+        2.7305104732513428
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.03142937645316124,
+        0.48162561655044556,
+        2.728492021560669
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.783333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.02757393568754196,
+        0.4762839674949646,
+        2.7305355072021484
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.02870548889040947,
+        0.4810934364795685,
+        2.728555202484131
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.8,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.02475958690047264,
+        0.4757634103298187,
+        2.7305564880371094
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.02590220980346203,
+        0.48060908913612366,
+        2.728611707687378
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.816666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.021910760551691055,
+        0.4752928614616394,
+        2.730572462081909
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.023064544424414635,
+        0.4801715612411499,
+        2.7286605834960938
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.833333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.019072646275162697,
+        0.4748712480068207,
+        2.7305829524993896
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.020237509161233902,
+        0.47977977991104126,
+        2.728701591491699
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.85,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.016290435567498207,
+        0.4744972586631775,
+        2.730588436126709
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.017466126009821892,
+        0.47943252325057983,
+        2.7287347316741943
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.866666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.013609329238533974,
+        0.47416946291923523,
+        2.730588912963867
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.01479541976004839,
+        0.4791284501552582,
+        2.728760004043579
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.883333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.011074511334300041,
+        0.47388648986816406,
+        2.7305848598480225
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.012270410545170307,
+        0.4788661599159241,
+        2.72877836227417
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.9,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.008731169626116753,
+        0.47364670038223267,
+        2.7305777072906494
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.009936113841831684,
+        0.47864410281181335,
+        2.728790521621704
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.916666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.0066244713962078094,
+        0.47344839572906494,
+        2.7305681705474854
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.007837534882128239,
+        0.4784606993198395,
+        2.728797435760498
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.933333333333334,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.004799581132829189,
+        0.47328996658325195,
+        2.730557680130005
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.0060196672566235065,
+        0.4783143103122711,
+        2.7288005352020264
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.95,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.0033016493543982506,
+        0.4731696546077728,
+        2.7305471897125244
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.0045274957083165646,
+        0.47820326685905457,
+        2.7288007736206055
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.966666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.0021758186630904675,
+        0.4730857014656067,
+        2.7305383682250977
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.0034059921745210886,
+        0.4781259000301361,
+        2.728799819946289
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.983333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.0014672235120087862,
+        0.4730364680290222,
+        2.730532646179199
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.0027001213748008013,
+        0.4780805706977844,
+        2.7287986278533936
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 6.0,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.0012209962587803602,
+        0.47302040457725525,
+        2.7305307388305664
+      ],
+      "connector_lower_oral_endpoint_canonical": [
+        0.0024548410438001156,
+        0.4780657887458801,
+        2.7287981510162354
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    }
+  ]
+}

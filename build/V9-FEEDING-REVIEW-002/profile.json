@@ -1,0 +1,49 @@
+{
+  "schema":"eonwild.experimental.overlapped-planted-feeding.v2",
+  "foundation_profile":"build/V9-GROUNDED-COMMITTED-BITE-001/profile.json",
+  "duration_seconds":6.0,
+  "gape_degrees":58,
+  "jaw_clearance_height_fraction":0.002,
+  "prop_radius_width_fraction":0.15,
+  "max_joint_rate_degrees_per_second":220,
+  "prop_yield_keys_m":[[0,0],[1.9,0],[2.80,0.045],[3.14,0.038],[3.50,0],[3.72,0],[4.08,0.026],[4.50,0],[6,0]],
+  "grip_windows":[[1.95,3.25],[3.71,4.375]],
+  "food_hold_windows":[[1.95,3.25],[3.71,5.48]],
+  "food_chunk_radius_m":0.045,
+  "base_pitch_degrees":{
+    "pelvis":[12],"spine":[2,3,4,4,3],"chest":[3],
+    "neck":[1,1,2,2,3],"head":[8],
+    "tail":[-1.5,-1.5,-1.2,-0.9,-0.6,0,0.6,0.9,1.2]
+  },
+  "yaw_weights":{"pelvis":0.1,"spine":0.2,"chest":0.15,"neck":0.6,"head":0.8,"tail":-0.7},
+  "support_limits":{"knee_interior_degrees":[80,155],"ankle_interior_degrees":[65,155],"hip_sagittal_degrees":[-15,85]},
+  "channels":{
+    "body":[[0,0.10],[0.7,0.48],[1.4,0.73],[1.95,0.79],[2.55,0.885],[3.08,0.805],[3.36,0.755],[3.71,0.80],[4.05,0.775],[4.24,0.77],[4.63,0.37],[4.98,0.29],[5.55,0.60],[6,0.63]],
+    "drop":[[0,0],[0.78,0.085],[1.38,0.072],[1.95,0.052],[2.60,0.002],[3.14,0.032],[3.59,0.043],[4.08,0.015],[4.52,0.035],[4.94,0.016],[5.53,0.048],[6,0.043]],
+    "forward":[[0,0],[0.76,0.024],[1.4,0.032],[1.95,0.035],[2.59,0.073],[3.11,0.045],[3.51,0.052],[3.82,0.042],[4.20,0.025],[4.78,0.006],[5.55,0.022],[6,0.025]],
+    "lateral":[[0,0],[1.2,0.002],[1.9,0.007],[2.40,-0.012],[2.98,0.014],[3.48,-0.007],[3.93,0.012],[4.36,-0.010],[5.15,0.004],[6,0]],
+    "yaw":[[0,0],[1.10,0.8],[1.82,-0.4],[2.34,-7.0],[2.91,6.5],[3.34,1.6],[3.80,-5.8],[4.18,5.4],[4.64,2.5],[5.20,-2.8],[5.63,1.4],[6,0]],
+    "jaw":[[0,0],[1.30,0.035],[1.66,0.18],[1.93,0.045],[2.48,0.76],[2.76,0.48],[3.05,0.22],[3.33,0.50],[3.65,0.12],[3.80,0.035],[4.00,0.23],[4.20,0.055],[4.48,0.14],[4.79,0.66],[5.01,0.22],[5.20,0.48],[5.48,0.04],[6,0]],
+    "tail":[[0,0],[0.95,0.2],[1.75,0.5],[2.30,1.0],[2.75,1.4],[3.24,0.68],[3.62,0.28],[4.11,0.82],[4.53,0.22],[4.97,-0.32],[5.48,0.10],[6,0.23]]
+  },
+  "events":[
+    {"name":"ACQUIRE","reference_time_seconds":0},
+    {"name":"GRIP","reference_time_seconds":1.95},
+    {"name":"LATERAL_TEAR_LEFT","reference_time_seconds":2.34},
+    {"name":"TARGET_YIELDED","reference_time_seconds":2.75},
+    {"name":"LATERAL_TEAR_RIGHT","reference_time_seconds":2.91},
+    {"name":"RELEASE_REPOSITION","reference_time_seconds":3.25},
+    {"name":"REGRIP","reference_time_seconds":3.71},
+    {"name":"SHORT_PULL_REGRIP","reference_time_seconds":4.00},
+    {"name":"TEAR_RELEASE","reference_time_seconds":4.375},
+    {"name":"POSTBITE_GAPE_CHEW_PROXY","reference_time_seconds":4.79},
+    {"name":"RETURN_TO_HOVER","reference_time_seconds":5.48}
+  ],
+  "limitations":[
+    "Kinematic authored feeding performance; no force,COM,friction,muscle or biological chewing proof.",
+    "Read complete145-frame reference analysis. More lateral tearing and timing overlap are user-directed artistic parameters, not measured3D reference reconstruction.",
+    "Fixed ankle and foot transforms are preserved prototype support constraints; no gait plan or bone-offset changes.",
+    "Food chunk and tissue connector are preview approximations bound to oral witnesses, not collision-resolved tooth/tissue physics.",
+    "Feeding001 checkpoint remains unchanged. This is a new review candidate, not promotion or production acceptance."
+  ]
+}
