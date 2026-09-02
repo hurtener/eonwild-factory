@@ -20,7 +20,7 @@ from ..layers.leg_contact_resolve_v3 import (
     _clip_state, _pose, _world_matrices, _world_position, _rotation_from_matrix,
     _qmul, _qinv, _qrotate as _scalar_qrotate, _qrotvec as _scalar_qrotvec,
 )
-from ..planning.airborne_gait import AirborneGait, build_airborne_plan, sample_airborne_gait, _smooth
+from ..planning.airborne_gait import AirborneGait, build_airborne_plan, sample_airborne_gait, jaw_breathing_angle, _smooth
 from .whole_body_gait_transition import _build_glb, _encode
 
 
@@ -200,6 +200,12 @@ def solve_airborne_gait(source: Glb, *, source_clip: str, semantic_roles: Mappin
     body_response = driven_body_response(gait, plan, roles)
     base_t, base_r, base_s = translations[:], rotations[:], scales[:]
     base_w = worlds
+    jaw = None
+    if gait.jaw_breathing_max_degrees:
+        if roles.get("jaw_lower") not in source.name_to_node:
+            raise ContractError("breathing requires a bound semantic lower jaw")
+        jaw = source.name_to_node[roles["jaw_lower"]]
+        jaw_axis = _qrotate(_qinv(_rotation_from_matrix(base_w[jaw])), tuple(lateral))
     anatomical_normals = {}
     for side, (hip, knee, ankle, foot) in legs.items():
         hp, kp, ap = (np.asarray(_world_position(base_w[n])) for n in (hip, knee, ankle))
@@ -244,6 +250,11 @@ def solve_airborne_gait(source: Glb, *, source_clip: str, semantic_roles: Mappin
                 n = source.name_to_node[name]
                 axis = _qrotate(_qinv(_rotation_from_matrix(base_w[n])), tuple(lateral))
                 rot[n] = _qmul(rot[n], _qrotvec(tuple(np.asarray(axis) * math.radians(total / len(names)))))
+        if jaw is not None:
+            # Rotate the lower jaw about the rig-derived sagittal axis only.
+            # The full-cycle cosine is C2 at the loop; no head/neck compensation
+            # is added, so the accepted whole-body motion remains unchanged.
+            rot[jaw] = _qmul(base_r[jaw], _qrotvec(tuple(np.asarray(jaw_axis) * math.radians(jaw_breathing_angle(gait, row["time_s"])))))
         facts = {}
         for side, chain in legs.items():
             hip, knee, ankle, foot = chain

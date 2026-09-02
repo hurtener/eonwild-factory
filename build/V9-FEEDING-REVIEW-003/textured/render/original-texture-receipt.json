@@ -1,0 +1,35 @@
+{
+  "candidate_sha256": "8f70dcab8e8b56035ed0787ca15674166575213f098ec9c6579e6e8350b6d47b",
+  "renderer_sha256": "835186d4181c6434eacc918330f489b671c7c6a25abe187934a5ecfae5e29462",
+  "material_mode": "ORIGINAL_BASE_COLOR_WORKBENCH_TEXTURE",
+  "limitations": "Original normal and metallic/roughness textures remain intact in GLB but are not evaluated by Workbench. No invented textures. Motion/UVs/material assets unchanged.",
+  "bindings": [
+    {
+      "object": "Mesh_0",
+      "material": "Material_0",
+      "original_base_color_image": "Image_0",
+      "size": [
+        4096,
+        4096
+      ],
+      "uv_layer": "UVMap"
+    }
+  ],
+  "embedded_images": [
+    {
+      "name": "normal",
+      "mimeType": "image/png",
+      "embedded_sha256": "480eac49be691a2fecb41da9275a1dc51af765f7c4ea2011300f4f4c3715b84f"
+    },
+    {
+      "name": "Image_0",
+      "mimeType": "image/jpeg",
+      "embedded_sha256": "cd930428009d328676e9ecaadbe13f9829bf093eba28207ff124fea8faf3f7eb"
+    },
+    {
+      "name": "Image_1",
+      "mimeType": "image/jpeg",
+      "embedded_sha256": "e204bca089d938cdda453af1fe4a3f0ecd943724b252be52b170c568a4e64958"
+    }
+  ]
+}

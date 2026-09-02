@@ -1,0 +1,20 @@
+{
+  "label": "Sprint006",
+  "before": "build/V9-AIRBORNE-SPRINT-001/review-candidate-005/candidate",
+  "after": "build/V9-AIRBORNE-SPRINT-001/review-candidate-006/candidate",
+  "status": "PASS_JAW_ONLY_IDENTITY_AND_LOOP",
+  "all_non_jaw_channels_identical": true,
+  "sample_times_identical": true,
+  "maximum_root_leg_tail_world_matrix_difference": 0,
+  "jaw_opening_degrees_range": [
+    0.5000011480281901,
+    3.0000004073582702
+  ],
+  "maximum_jaw_rate_degrees_per_s": 8.193720817062244,
+  "jaw_rotation_seam_degrees": 0,
+  "duration_s": 0.9583333134651184,
+  "hashes": {
+    "airborne-run-in_place.glb": "69c0c27a19f51f3cadf26ceae911ca8b801027f3d947a8753ee8b912ae221e19",
+    "airborne-run-root_motion.glb": "d4682e87dbb73c55b2336cf0076c821639bc5573d97bda664a3e426df5fc62d4"
+  }
+}

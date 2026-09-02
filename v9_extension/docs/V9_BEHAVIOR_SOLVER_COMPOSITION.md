@@ -53,6 +53,40 @@ The interaction simulation owns whether resistance changes or a tear releases. A
 
 ## What travels with the GLB
 
+### Locomotion speed and scale
+
+User targets recorded 2026-09-02: sustained Run 18–24 km/h; Sprint 28–32 km/h.
+The reviewed Run008 and Sprint004 root tracks already travel at approximately
+20.24 and 30.76 km/h respectively at this rig's current metre scale. An in-place
+preview removes root translation but retains cadence; it cannot show forward
+speed directly. Derive speed from root displacement / elapsed seconds, then
+multiply metres/second by 3.6 for km/h.
+
+These values are animation/gameplay targets, not biological maximum-speed claims.
+The generic gait uses body-normalized travel and explicit seconds. A runtime
+adapter must reconcile desired world speed, model scale, stride and cadence;
+do not move an avatar at an unrelated speed while replaying fixed foot contacts.
+Changing the imported scale changes physical travel unless the controller
+deliberately recalibrates. Never hide that mismatch by sliding planted feet.
+
+### Feeding grip authority
+
+The next feeding refinement distinguishes closed-jaw resisted pulling from
+backward accommodation/chewing. During resistance, the oral grip witness can
+serve as a world/target-space anchor while neck and body articulation move
+behind it; release or target yield permits retraction. Jaw grip state and target
+resistance are separate inputs, not consequences of a walking phase. Authored
+preview events approximate this exchange; a physics adapter can later provide
+target movement/resistance without changing the behavioral distinction.
+
+Contact authority ends when resistance yields; it must not force the released
+mouth through an unreachable Cartesian path. Preserve pose and velocity through
+that handoff, then allow bounded backward retraction before jaw cycling. Test
+oral anchoring during resistance separately from foot planting throughout the
+body pull. A stationary bite point does not require a stationary skull or body.
+
+### Asset, data and code
+
 - **GLB asset:** rigged geometry and sampled animation used as a visual baseline or fallback. A baked execution is one outcome at one parameter point.
 - **Companion runtime data:** semantic rig/body mapping, behavior parameters, joint envelopes, contact/event windows, transition state, and permitted procedural corrections. Keep these versioned with the asset; engine import must preserve or explicitly load them.
 - **Runtime code:** behavior selection, solver composition, target/terrain adaptation, event handling, and physics integration. Do not assume importing a GLB imports these algorithms or their intent.

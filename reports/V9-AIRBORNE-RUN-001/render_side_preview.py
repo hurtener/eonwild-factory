@@ -12,6 +12,41 @@ sys.path.insert(0, str(ROOT))
 from src.eonwild_motion.blender.render_walk_review import import_character, frame_camera, add_review_ground, _mesh_objects
 
 
+def configure_material_preview(scene, objects, mode):
+    """Use embedded original albedo without changing materials or animation.
+
+    Workbench displays the active image node, which need not be the albedo
+    after glTF import. Select the image actually wired to Principled Base Color.
+    Normal/roughness maps remain imported but this preview is not full PBR.
+    """
+    facts = {"mode": mode, "engine": "BLENDER_WORKBENCH", "images": []}
+    if mode == "clay":
+        return facts
+    materials = {}
+    for obj in _mesh_objects(objects):
+        if not obj.data.uv_layers:
+            raise RuntimeError(f"original texture preview requires UVs: {obj.name}")
+        for material in obj.data.materials:
+            if material is not None:
+                materials[material.name] = material
+    for material in materials.values():
+        nodes = material.node_tree.nodes if material.use_nodes else ()
+        shaders = [node for node in nodes if node.type == "BSDF_PRINCIPLED"]
+        images = [link.from_node for shader in shaders for link in shader.inputs["Base Color"].links
+                  if link.from_node.type == "TEX_IMAGE" and link.from_node.image is not None]
+        if len(images) != 1:
+            raise RuntimeError(f"expected one original base-color image: {material.name}")
+        node = images[0]
+        material.node_tree.nodes.active = node
+        facts["images"].append({"material": material.name, "image": node.image.name,
+                                "size": list(node.image.size), "packed": bool(node.image.packed_file)})
+    if not facts["images"]:
+        raise RuntimeError("no original base-color textures available")
+    scene.display.shading.color_type = "TEXTURE"
+    facts["scope"] = "original embedded base-color preview; normal/roughness not evaluated"
+    return facts
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--candidate", type=Path, required=True)
@@ -24,6 +59,7 @@ def main():
     parser.add_argument("--probe-frame", type=float, action="append")
     parser.add_argument("--camera-side", type=int, choices=(-1, 1), default=1)
     parser.add_argument("--view", choices=("side", "front", "rear"), default="side")
+    parser.add_argument("--material-mode", choices=("clay", "texture"), default="clay")
     args = parser.parse_args(sys.argv[sys.argv.index("--") + 1:])
     bpy.ops.wm.read_factory_settings(use_empty=True)
     scene = bpy.context.scene
@@ -45,6 +81,7 @@ def main():
     scene.display.shading.show_shadows = True
     scene.display.shading.show_cavity = True
     scene.display.shading.cavity_type = "WORLD"
+    material_facts = configure_material_preview(scene, objects, args.material_mode)
     scene.render.resolution_x = 1100
     scene.render.resolution_y = 620
     scene.render.resolution_percentage = 100
@@ -90,7 +127,7 @@ def main():
         camera.data.ortho_scale = max(maximum.y - minimum.y, (maximum.z - minimum.z + .45) * 1100 / 620) * 1.25
         camera_facts.update(center=list(center), orthoScale=camera.data.ortho_scale, camera_side=args.camera_side, region="diagnostic hip-knee-ankle crop; not full-body acceptance")
     args.output.mkdir(parents=True, exist_ok=True)
-    (args.output / "render-receipt.json").write_text(json.dumps({"status": "ENGINEERING_MEDIAN_SEED_NOT_VISUALLY_ACCEPTED", "timeline": timeline, "camera": camera_facts, "ground": args.ground, "frames": args.frames, "fps": 24}, indent=2))
+    (args.output / "render-receipt.json").write_text(json.dumps({"status": "ENGINEERING_MEDIAN_SEED_NOT_VISUALLY_ACCEPTED", "timeline": timeline, "camera": camera_facts, "ground": args.ground, "frames": args.frames, "fps": 24, "materials": material_facts}, indent=2))
     scene.render.filepath = str(args.output / "frame-")
     if args.probe_frame:
         for frame in args.probe_frame:

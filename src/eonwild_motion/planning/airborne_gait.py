@@ -52,6 +52,9 @@ class AirborneGait:
     tail_elevation_degrees: float = 0.0
     flight_foot_lift_body_heights: float = 0.0
     swing_approach_lift_body_heights: float = 0.0
+    jaw_breathing_min_degrees: float = 0.0
+    jaw_breathing_max_degrees: float = 0.0
+    jaw_breathing_cycles_per_cycle: int = 1
     cycles: int = 2
     sample_hz: int = 120
 
@@ -100,6 +103,10 @@ class AirborneGait:
             raise ContractError("flight foot lift exceeds body-normalized engineering bounds")
         if not 0 <= self.swing_approach_lift_body_heights <= .15:
             raise ContractError("approach lift exceeds body-normalized engineering bounds")
+        if not 0 <= self.jaw_breathing_min_degrees <= self.jaw_breathing_max_degrees <= 8:
+            raise ContractError("subtle breathing gape must be ordered within zero to eight degrees")
+        if self.jaw_breathing_cycles_per_cycle != int(self.jaw_breathing_cycles_per_cycle) or not 1 <= self.jaw_breathing_cycles_per_cycle <= 4:
+            raise ContractError("breathing cycles must be an integer from one to four per same-foot cycle")
         if (self.chest_response_gain_degrees or self.tail_response_gain_degrees) and not self.continuous_body_launch_fraction:
             raise ContractError("driven body response requires the continuous carrier")
         if int(self.cycles) != self.cycles or self.cycles < 1 or int(self.sample_hz) != self.sample_hz or self.sample_hz < 24:
@@ -250,6 +257,13 @@ def sample_airborne_gait(gait: AirborneGait, time_s: float, body_height_m: float
         for foot in feet.values():
             foot["height_m"] += extra
     return {"time_s": time_s, "root_forward_m": speed * time_s, "pelvis_height_offset_m": body_y, "stage": stage, "support_count": support, "flight": support == 0, "feet": feet, **(body_derivatives or {})}
+
+
+def jaw_breathing_angle(gait: AirborneGait, time_s: float) -> float:
+    """Small smooth opening/closing; authored breath style, not respiration physics."""
+    phase = time_s * gait.jaw_breathing_cycles_per_cycle / (2 * gait.step_period_s)
+    pulse = .5 - .5 * math.cos(2 * math.pi * phase)
+    return gait.jaw_breathing_min_degrees + (gait.jaw_breathing_max_degrees - gait.jaw_breathing_min_degrees) * pulse
 
 
 def build_airborne_plan(gait: AirborneGait, body_height_m: float) -> dict[str, Any]:

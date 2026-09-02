@@ -1,0 +1,5780 @@
+{
+  "samples": [
+    {
+      "time_seconds": 0.0,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.00031871069222688675,
+        1.1304869651794434,
+        2.8655641078948975
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.004344151355326176,
+        1.1170655488967896,
+        2.8786375522613525
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.016666666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.0003016996197402477,
+        1.1297507286071777,
+        2.8655600547790527
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.004327133763581514,
+        1.1163249015808105,
+        2.8786284923553467
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.03333333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.0002513874787837267,
+        1.1275818347930908,
+        2.8655474185943604
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.0042768013663589954,
+        1.1141430139541626,
+        2.878600835800171
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.05,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.00016891583800315857,
+        1.1240402460098267,
+        2.865523099899292
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.0041942959651350975,
+        1.1105802059173584,
+        2.878552198410034
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.06666666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -5.5498210713267326e-05,
+        1.1191858053207397,
+        2.8654837608337402
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.0040808310732245445,
+        1.1056969165802002,
+        2.878479480743408
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.08333333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        8.759251795709133e-05,
+        1.1130788326263428,
+        2.8654234409332275
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.003937681205570698,
+        1.0995539426803589,
+        2.8783769607543945
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.1,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.00025903270579874516,
+        1.1057798862457275,
+        2.8653359413146973
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.0037661718670278788,
+        1.092212438583374,
+        2.8782389163970947
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.11666666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.00045746006071567535,
+        1.097350001335144,
+        2.865213394165039
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.003567667445167899,
+        1.0837336778640747,
+        2.8780579566955566
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.13333333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.0006814808584749699,
+        1.0878498554229736,
+        2.865048408508301
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.003343563759699464,
+        1.0741790533065796,
+        2.8778269290924072
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.15,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.0009296820499002934,
+        1.0773404836654663,
+        2.8648319244384766
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.003095277352258563,
+        1.0636101961135864,
+        2.877537250518799
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.16666666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.0012006360339000821,
+        1.0658832788467407,
+        2.864555597305298
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.0028242371045053005,
+        1.052088737487793,
+        2.877180576324463
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.18333333333333332,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.001492912881076336,
+        1.053539514541626,
+        2.864210605621338
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.002531876089051366,
+        1.0396766662597656,
+        2.876749038696289
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.2,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.0018050858052447438,
+        1.0403704643249512,
+        2.863788366317749
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.002219623187556863,
+        1.0264357328414917,
+        2.8762335777282715
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.21666666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.0021357382647693157,
+        1.0264376401901245,
+        2.8632802963256836
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.0018888963386416435,
+        1.0124281644821167,
+        2.875626802444458
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.23333333333333334,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.0024834719952195883,
+        1.0118025541305542,
+        2.8626787662506104
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.001541095320135355,
+        0.9977157115936279,
+        2.8749210834503174
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.25,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.002846912480890751,
+        0.9965268969535828,
+        2.861975908279419
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.0011775956954807043,
+        0.9823605418205261,
+        2.8741090297698975
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.26666666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.003224715357646346,
+        0.9806719422340393,
+        2.861165761947632
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.0007997420034371316,
+        0.9664245843887329,
+        2.873185157775879
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.2833333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.0036155711859464645,
+        0.9642990827560425,
+        2.8602421283721924
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.00040884347981773317,
+        0.9499698281288147,
+        2.872143507003784
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.3,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.004018210340291262,
+        0.9474698305130005,
+        2.8592002391815186
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -6.168206255097175e-06,
+        0.9330580234527588,
+        2.8709797859191895
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.31666666666666665,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.004431408364325762,
+        0.9302453994750977,
+        2.8580362796783447
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.00040706098661758006,
+        0.9157508611679077,
+        2.8696906566619873
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.3333333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.0048539899289608,
+        0.9126867055892944,
+        2.8567473888397217
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.0008296705782413483,
+        0.8981099128723145,
+        2.8682737350463867
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.35,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.005284829996526241,
+        0.8948546648025513,
+        2.855332136154175
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.001260539866052568,
+        0.8801963329315186,
+        2.8667280673980713
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.36666666666666664,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.005722858943045139,
+        0.8768099546432495,
+        2.853790283203125
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.0016986038535833359,
+        0.8620712757110596,
+        2.86505389213562
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.3833333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.006167067214846611,
+        0.8586128354072571,
+        2.8521227836608887
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.002142856130376458,
+        0.8437954783439636,
+        2.8632524013519287
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.4,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.00661650113761425,
+        0.8403234481811523,
+        2.8503315448760986
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.0025923503562808037,
+        0.8254293203353882,
+        2.8613264560699463
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.4166666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.007070271298289299,
+        0.8220012784004211,
+        2.8484208583831787
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.0030462024733424187,
+        0.8070328235626221,
+        2.8592803478240967
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.43333333333333335,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.0075275469571352005,
+        0.8037058115005493,
+        2.8463950157165527
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.0035035903565585613,
+        0.7886657118797302,
+        2.857119560241699
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.45,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.00798756256699562,
+        0.7854959964752197,
+        2.8442611694335938
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.003963756375014782,
+        0.7703871726989746,
+        2.854851007461548
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.4666666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.0084496159106493,
+        0.7674301862716675,
+        2.8420262336730957
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.004426006227731705,
+        0.7522560358047485,
+        2.852482795715332
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.48333333333333334,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.008913065306842327,
+        0.749566376209259,
+        2.8396997451782227
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.004889707546681166,
+        0.7343305349349976,
+        2.850024700164795
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.5,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.009377330541610718,
+        0.7319620847702026,
+        2.837291955947876
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.005354291759431362,
+        0.716668426990509,
+        2.847487449645996
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.5166666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.009841891936957836,
+        0.7146743535995483,
+        2.8348145484924316
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.005819249432533979,
+        0.6993270516395569,
+        2.844883441925049
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.5333333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.010306290350854397,
+        0.6977596282958984,
+        2.832280158996582
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.006284131668508053,
+        0.6823631525039673,
+        2.842226028442383
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.55,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.010770118795335293,
+        0.6812739968299866,
+        2.8297033309936523
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.006748544052243233,
+        0.6658329367637634,
+        2.8395297527313232
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.5666666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.011233027093112469,
+        0.6652729511260986,
+        2.8270983695983887
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.007212148047983646,
+        0.6497921347618103,
+        2.8368101119995117
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.5833333333333334,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.011694712564349174,
+        0.6498113870620728,
+        2.82448148727417
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.007674654014408588,
+        0.6342958807945251,
+        2.8340840339660645
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.6,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.012154921889305115,
+        0.6349438428878784,
+        2.8218703269958496
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.008135820738971233,
+        0.619398832321167,
+        2.8313686847686768
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.6166666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.012613443657755852,
+        0.6207243204116821,
+        2.819282054901123
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.008595447987318039,
+        0.6051552891731262,
+        2.8286828994750977
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.6333333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.013070101849734783,
+        0.6072065234184265,
+        2.8167357444763184
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.009053375571966171,
+        0.5916190147399902,
+        2.8260457515716553
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.65,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.013524757698178291,
+        0.5944435000419617,
+        2.8142499923706055
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.009509474970400333,
+        0.578843355178833,
+        2.823476552963257
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.6666666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.013977296650409698,
+        0.5824882388114929,
+        2.811845064163208
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.009963647462427616,
+        0.5668813586235046,
+        2.820996046066284
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.6833333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.01442763116210699,
+        0.5713931918144226,
+        2.8095405101776123
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.010415813885629177,
+        0.5557857155799866,
+        2.818624496459961
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.7,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.01487568486481905,
+        0.5612108707427979,
+        2.807356595993042
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.010865912772715092,
+        0.5456090569496155,
+        2.816382646560669
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.7166666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.015314839780330658,
+        0.5516068339347839,
+        2.8051648139953613
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.01130713801831007,
+        0.5360146760940552,
+        2.8141376972198486
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.7333333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.015737775713205338,
+        0.5422270894050598,
+        2.8028204441070557
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.01173197478055954,
+        0.5266463160514832,
+        2.811741590499878
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.75,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.01614338904619217,
+        0.5330944061279297,
+        2.800321102142334
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.01213930919766426,
+        0.5175266265869141,
+        2.8091917037963867
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.7666666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.016530878841876984,
+        0.5242314338684082,
+        2.7976715564727783
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.012528331018984318,
+        0.5086783766746521,
+        2.806492805480957
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.7833333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.016901928931474686,
+        0.5156553983688354,
+        2.794935941696167
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.012900721281766891,
+        0.5001189708709717,
+        2.8037095069885254
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.8,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.017256371676921844,
+        0.5072132349014282,
+        2.7921340465545654
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.013256299309432507,
+        0.49169519543647766,
+        2.800861358642578
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.8166666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.017593402415513992,
+        0.4988304376602173,
+        2.7892699241638184
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.013594257645308971,
+        0.48333269357681274,
+        2.797952890396118
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.8333333333333334,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.017912231385707855,
+        0.49051421880722046,
+        2.786348581314087
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.013913797214627266,
+        0.4750387370586395,
+        2.7949891090393066
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.85,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.018212078139185905,
+        0.4822719097137451,
+        2.783374547958374
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.01421412918716669,
+        0.4668205976486206,
+        2.7919747829437256
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.8666666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.018492169678211212,
+        0.4741104245185852,
+        2.78035306930542
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.014494472183287144,
+        0.45868533849716187,
+        2.7889151573181152
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.8833333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.01875174418091774,
+        0.46603691577911377,
+        2.7772889137268066
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.014754058793187141,
+        0.45064011216163635,
+        2.785815477371216
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.9,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.01899004727602005,
+        0.45805823802948,
+        2.7741880416870117
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.014992128126323223,
+        0.4426918029785156,
+        2.7826812267303467
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.9166666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.01920633763074875,
+        0.4501812756061554,
+        2.771054983139038
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.015207926742732525,
+        0.43484732508659363,
+        2.779517889022827
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.9333333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.019399885088205338,
+        0.442412793636322,
+        2.7678961753845215
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.015400714240968227,
+        0.42711347341537476,
+        2.7763311862945557
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.95,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.01956995576620102,
+        0.4347594380378723,
+        2.764716863632202
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.015569756738841534,
+        0.41949695348739624,
+        2.773127317428589
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.9666666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.019715839996933937,
+        0.42722782492637634,
+        2.7615230083465576
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.01571432687342167,
+        0.41200438141822815,
+        2.769911766052246
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 0.9833333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.019836828112602234,
+        0.41982439160346985,
+        2.7583208084106445
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.015833711251616478,
+        0.404642254114151,
+        2.766690969467163
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.0,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.0199322160333395,
+        0.41255563497543335,
+        2.7551162242889404
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.01592719554901123,
+        0.3974170684814453,
+        2.7634713649749756
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.0166666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.02000131458044052,
+        0.40542781352996826,
+        2.751915454864502
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.015994081273674965,
+        0.3903351426124573,
+        2.7602591514587402
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.0333333333333332,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.02004344016313553,
+        0.3984472155570984,
+        2.748725414276123
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.01603366993367672,
+        0.3834027647972107,
+        2.757061004638672
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.05,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.020057907328009605,
+        0.3916199207305908,
+        2.745551824569702
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.01604527421295643,
+        0.3766261041164398,
+        2.7538833618164062
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.0666666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.020044051110744476,
+        0.3849520683288574,
+        2.7424020767211914
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.016028212383389473,
+        0.37001127004623413,
+        2.7507331371307373
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.0833333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.020001200959086418,
+        0.37844961881637573,
+        2.7392821311950684
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.015981804579496384,
+        0.36356428265571594,
+        2.747617244720459
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.1,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.019928697496652603,
+        0.3721185326576233,
+        2.7361996173858643
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.01590537838637829,
+        0.3572911322116852,
+        2.744542360305786
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.1166666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.01981864497065544,
+        0.36596471071243286,
+        2.733160972595215
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.015790920704603195,
+        0.3511977791786194,
+        2.741515874862671
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.1333333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.01966426894068718,
+        0.3599940538406372,
+        2.730173349380493
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.015631550922989845,
+        0.3452901840209961,
+        2.7385447025299072
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.15,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.019466591998934746,
+        0.35421228408813477,
+        2.7272439002990723
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.015428302809596062,
+        0.33957403898239136,
+        2.7356362342834473
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.1666666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.019226636737585068,
+        0.34862491488456726,
+        2.7243800163269043
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.015182209201157093,
+        0.33405500650405884,
+        2.732797622680664
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.1833333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.018945425748825073,
+        0.34323763847351074,
+        2.721588373184204
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.014894302003085613,
+        0.3287387490272522,
+        2.7300362586975098
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.2,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.01862398535013199,
+        0.33805590867996216,
+        2.718876361846924
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.014565611258149147,
+        0.32363075017929077,
+        2.7273590564727783
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.2166666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.018269283697009087,
+        0.33308517932891846,
+        2.7162511348724365
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.01420312188565731,
+        0.31873655319213867,
+        2.724773645401001
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.2333333333333334,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.017887873575091362,
+        0.3283308744430542,
+        2.713719606399536
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.013813388533890247,
+        0.3140616714954376,
+        2.7222869396209717
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.25,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.01748013123869896,
+        0.32379841804504395,
+        2.711289167404175
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.0133967949077487,
+        0.3096114993095398,
+        2.7199065685272217
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.2666666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.017046425491571426,
+        0.3194930851459503,
+        2.7089672088623047
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.01295371726155281,
+        0.30539143085479736,
+        2.717639684677124
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.2833333333333332,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.01658712327480316,
+        0.3154202997684479,
+        2.706761360168457
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.012484529986977577,
+        0.30140694975852966,
+        2.715494155883789
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.3,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.016102587804198265,
+        0.31158530712127686,
+        2.7046782970428467
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.011989600025117397,
+        0.2976633608341217,
+        2.7134768962860107
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.3166666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.015593832358717918,
+        0.30785754323005676,
+        2.7025930881500244
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.011469286866486073,
+        0.29416605830192566,
+        2.7115957736968994
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.3333333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.015061830170452595,
+        0.30412718653678894,
+        2.70039439201355
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.010923945344984531,
+        0.2909204959869385,
+        2.709857940673828
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.35,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.014506886713206768,
+        0.30043119192123413,
+        2.698110818862915
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.010353920981287956,
+        0.28793200850486755,
+        2.708270788192749
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.3666666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.0139293372631073,
+        0.2968069016933441,
+        2.695770263671875
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.009759552776813507,
+        0.28520604968070984,
+        2.706841468811035
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.3833333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.013329537585377693,
+        0.29329177737236023,
+        2.693402051925659
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.009141168557107449,
+        0.28274840116500854,
+        2.7055776119232178
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.4,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.012707864865660667,
+        0.289933443069458,
+        2.6910345554351807
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.008499087765812874,
+        0.2805755138397217,
+        2.7044858932495117
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.4166666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.012062141671776772,
+        0.2866796553134918,
+        2.6886396408081055
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.007831022143363953,
+        0.27860382199287415,
+        2.7035138607025146
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.4333333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.01138992514461279,
+        0.28346461057662964,
+        2.6861822605133057
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.007134418934583664,
+        0.2767367959022522,
+        2.7026021480560303
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.45,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.01069120317697525,
+        0.280312716960907,
+        2.683685779571533
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.006409190595149994,
+        0.27497026324272156,
+        2.7017486095428467
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.4666666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.00996595248579979,
+        0.2772468328475952,
+        2.681173801422119
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.005655247252434492,
+        0.27330008149147034,
+        2.7009499073028564
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.4833333333333334,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.009214121848344803,
+        0.27428823709487915,
+        2.6786723136901855
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.004872497636824846,
+        0.27172213792800903,
+        2.7002036571502686
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.5,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.008435619063675404,
+        0.27145636081695557,
+        2.67620849609375
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.00406084768474102,
+        0.27023231983184814,
+        2.699507236480713
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.5166666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.007630291394889355,
+        0.268768846988678,
+        2.6738102436065674
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.0032202021684497595,
+        0.26882654428482056,
+        2.698857545852661
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.5333333333333332,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.00679791672155261,
+        0.2662416696548462,
+        2.6715078353881836
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.0023504639975726604,
+        0.2675008177757263,
+        2.698251962661743
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.55,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.005938179325312376,
+        0.2638888955116272,
+        2.6693317890167236
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.0014515349175781012,
+        0.2662510573863983,
+        2.697687864303589
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.5666666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.005050660111010075,
+        0.26172327995300293,
+        2.667313575744629
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.0005233155679889023,
+        0.2650732398033142,
+        2.697161912918091
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.5833333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.004134826827794313,
+        0.25975632667541504,
+        2.665485382080078
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.00043429419747553766,
+        0.2639634311199188,
+        2.6966712474823
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.6,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.0031900163739919662,
+        0.25799858570098877,
+        2.663879871368408
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.0014213952235877514,
+        0.26291757822036743,
+        2.6962132453918457
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.6166666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.002215434331446886,
+        0.2564602494239807,
+        2.662529945373535
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.0024380888789892197,
+        0.26193177700042725,
+        2.6957848072052
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.6333333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.001210149610415101,
+        0.2551516592502594,
+        2.6614673137664795
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.003484476823359728,
+        0.2610020637512207,
+        2.695382833480835
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.65,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.0001730998046696186,
+        0.2540838122367859,
+        2.660724639892578
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.004560661036521196,
+        0.26012447476387024,
+        2.69500470161438
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.6666666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.0008972578216344118,
+        0.25328582525253296,
+        2.6603591442108154
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.005666742566972971,
+        0.25929513573646545,
+        2.6946470737457275
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.6833333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.002005216432735324,
+        0.25290408730506897,
+        2.660611629486084
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.006802823860198259,
+        0.25851011276245117,
+        2.6943068504333496
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.7,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.003151919925585389,
+        0.2529306709766388,
+        2.6614599227905273
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.007969005964696407,
+        0.2577655017375946,
+        2.693981409072876
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.7166666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.0043373266234993935,
+        0.2533215284347534,
+        2.662809133529663
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.009165390394628048,
+        0.25705742835998535,
+        2.69366717338562
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.7333333333333334,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.005561052355915308,
+        0.2540348768234253,
+        2.664564609527588
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.010392076335847378,
+        0.256382018327713,
+        2.693361520767212
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.75,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.006822394207119942,
+        0.25502824783325195,
+        2.6666295528411865
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.01164916530251503,
+        0.2557353973388672,
+        2.693061113357544
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.7666666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.008120366372168064,
+        0.2562563419342041,
+        2.668909788131714
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.012936754152178764,
+        0.25511375069618225,
+        2.692763090133667
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.7833333333333332,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.0094550596550107,
+        0.2576688528060913,
+        2.6713128089904785
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.014256279915571213,
+        0.2545130252838135,
+        2.6924638748168945
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.8,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.011072988621890545,
+        0.2591835856437683,
+        2.673719882965088
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.015861550346016884,
+        0.25390321016311646,
+        2.6921281814575195
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.8166666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.013600174337625504,
+        0.26067954301834106,
+        2.675971031188965
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.01839272864162922,
+        0.2532227337360382,
+        2.6916728019714355
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.8333333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.017589954659342766,
+        0.26207464933395386,
+        2.6779472827911377
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.022411813959479332,
+        0.2524564862251282,
+        2.6910510063171387
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.8499999999999999,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.023433351889252663,
+        0.26332008838653564,
+        2.679569959640503
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.02831287868320942,
+        0.25162872672080994,
+        2.6902523040771484
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.8666666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.030816903337836266,
+        0.26437124609947205,
+        2.680799722671509
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.035773877054452896,
+        0.250770628452301,
+        2.689305067062378
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.8833333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.03920748457312584,
+        0.2651897668838501,
+        2.6816225051879883
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.044252730906009674,
+        0.2499217987060547,
+        2.688260793685913
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.9,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        -0.04796072468161583,
+        0.2657371759414673,
+        2.6820390224456787
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.053097840398550034,
+        0.2491227686405182,
+        2.6871845722198486
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.9166666666666667,
+      "food_gain": 0.09017934257989293,
+      "food_center_canonical": [
+        -0.056445494294166565,
+        0.26597076654434204,
+        2.682056188583374
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.061673037707805634,
+        0.24840912222862244,
+        2.6861462593078613
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.9333333333333333,
+      "food_gain": 0.3099121068942758,
+      "food_center_canonical": [
+        -0.06407927721738815,
+        0.26584094762802124,
+        2.6816744804382324
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.0693933293223381,
+        0.24780750274658203,
+        2.6852099895477295
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.95,
+      "food_gain": 0.5829903978052133,
+      "food_center_canonical": [
+        -0.07039781659841537,
+        0.2653976380825043,
+        2.6809847354888916
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.07579082250595093,
+        0.24733315408229828,
+        2.6844260692596436
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.9666666666666666,
+      "food_gain": 0.8332063201747699,
+      "food_center_canonical": [
+        -0.07516291737556458,
+        0.2650441527366638,
+        2.680422306060791
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08061005175113678,
+        0.24698865413665771,
+        2.6838252544403076
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 1.9833333333333334,
+      "food_gain": 0.984351978865011,
+      "food_center_canonical": [
+        -0.07835596054792404,
+        0.2648167610168457,
+        2.6800403594970703
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08383067697286606,
+        0.24676422774791718,
+        2.6834146976470947
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.0,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08017463237047195,
+        0.2646940350532532,
+        2.679821491241455
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08565375953912735,
+        0.2466391623020172,
+        2.683176040649414
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.0166666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08098258823156357,
+        0.26464617252349854,
+        2.67972731590271
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.0864487960934639,
+        0.24658499658107758,
+        2.6830689907073975
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.033333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08121760934591293,
+        0.26464030146598816,
+        2.679706573486328
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08666057139635086,
+        0.24657055735588074,
+        2.683039665222168
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.05,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08126101642847061,
+        0.2646486759185791,
+        2.679710626602173
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667650073766708,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.0666666666666664,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08128975331783295,
+        0.26465821266174316,
+        2.679715871810913
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667650073766708,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.0833333333333335,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08131924271583557,
+        0.26466768980026245,
+        2.6797196865081787
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667650073766708,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.1,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08134927600622177,
+        0.2646770179271698,
+        2.679722309112549
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667650073766708,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.1166666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08137962222099304,
+        0.26468613743782043,
+        2.6797235012054443
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667650073766708,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.1333333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08141005039215088,
+        0.26469501852989197,
+        2.6797235012054443
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667650818824768,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.15,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08144034445285797,
+        0.26470357179641724,
+        2.679722309112549
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667650818824768,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.1666666666666665,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08147026598453522,
+        0.26471173763275146,
+        2.679719924926758
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667650818824768,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.183333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08149959146976471,
+        0.26471948623657227,
+        2.6797165870666504
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667650818824768,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.2,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08152808994054794,
+        0.26472675800323486,
+        2.6797118186950684
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667650818824768,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.216666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08155554533004761,
+        0.26473352313041687,
+        2.679706335067749
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667650818824768,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.2333333333333334,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.0815817192196846,
+        0.2647396922111511,
+        2.6796998977661133
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667650818824768,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.25,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08160638809204102,
+        0.26474523544311523,
+        2.679692506790161
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667650818824768,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.2666666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08162932842969894,
+        0.26475009322166443,
+        2.6796841621398926
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667650818824768,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.283333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08165030181407928,
+        0.2647542357444763,
+        2.6796751022338867
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667650818824768,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.3,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08166909217834473,
+        0.2647576332092285,
+        2.6796655654907227
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667650818824768,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.3166666666666664,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08168546110391617,
+        0.26476019620895386,
+        2.679655075073242
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667651563882828,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.3333333333333335,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.0816991925239563,
+        0.26476192474365234,
+        2.6796443462371826
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667651563882828,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.35,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08171004801988602,
+        0.2647627592086792,
+        2.6796329021453857
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667651563882828,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.3666666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08171781152486801,
+        0.26476266980171204,
+        2.6796212196350098
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667651563882828,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.3833333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08172225952148438,
+        0.26476162672042847,
+        2.6796090602874756
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667651563882828,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.4,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.0817231610417366,
+        0.26475951075553894,
+        2.6795966625213623
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667651563882828,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.4166666666666665,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08171969652175903,
+        0.2647562026977539,
+        2.67958402633667
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667651563882828,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.433333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08171140402555466,
+        0.2647515535354614,
+        2.6795713901519775
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667651563882828,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.45,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08169857412576675,
+        0.2647456228733063,
+        2.679558753967285
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667651563882828,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.466666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.0816815197467804,
+        0.264738529920578,
+        2.679546356201172
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667650818824768,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.4833333333333334,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08166055381298065,
+        0.2647303640842438,
+        2.6795339584350586
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667650818824768,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.5,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.081635981798172,
+        0.26472118496894836,
+        2.6795215606689453
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667650818824768,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.5166666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.0816081166267395,
+        0.2647111117839813,
+        2.6795096397399902
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667650818824768,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.533333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08157724142074585,
+        0.2647002041339874,
+        2.6794981956481934
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667650818824768,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.55,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08154365420341492,
+        0.26468855142593384,
+        2.6794869899749756
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667650818824768,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.5666666666666664,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08150766789913177,
+        0.26467621326446533,
+        2.679476261138916
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667650818824768,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.5833333333333335,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08146954327821732,
+        0.2646632790565491,
+        2.6794662475585938
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667650818824768,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.6,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08142957091331482,
+        0.2646498680114746,
+        2.6794567108154297
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667650073766708,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.6166666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08138804882764816,
+        0.26463600993156433,
+        2.679447889328003
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667650073766708,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.6333333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08134523779153824,
+        0.2646218538284302,
+        2.6794397830963135
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667650073766708,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.65,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08130140602588654,
+        0.26460742950439453,
+        2.6794326305389404
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667650073766708,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.6666666666666665,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08125684410333633,
+        0.2645924985408783,
+        2.67942476272583
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667650073766708,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.683333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08121183514595032,
+        0.26457691192626953,
+        2.679414749145508
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667649328708649,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.7,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08116666227579117,
+        0.26456084847450256,
+        2.67940354347229
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667649328708649,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.716666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08112157881259918,
+        0.2645444869995117,
+        2.6793911457061768
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667649328708649,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.7333333333333334,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08107683807611465,
+        0.26452791690826416,
+        2.679378032684326
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667649328708649,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.75,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08103270828723907,
+        0.26451125741004944,
+        2.6793642044067383
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667649328708649,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.7666666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08098943531513214,
+        0.2644945979118347,
+        2.679349422454834
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667649328708649,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.783333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08094727993011475,
+        0.26447802782058716,
+        2.6793341636657715
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667648583650589,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.8,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08090651035308838,
+        0.2644616961479187,
+        2.679318904876709
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667648583650589,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.8166666666666664,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08086736500263214,
+        0.2644457221031189,
+        2.679302930831909
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667648583650589,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.8333333333333335,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08083011209964752,
+        0.2644302248954773,
+        2.6792869567871094
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667648583650589,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.85,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08079501241445541,
+        0.26441532373428345,
+        2.6792707443237305
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667648583650589,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.8666666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08076231181621552,
+        0.2644011378288269,
+        2.6792550086975098
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667647838592529,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.8833333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08073228597640991,
+        0.264387845993042,
+        2.679239511489868
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667647838592529,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.9,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.0807051956653595,
+        0.2643755376338959,
+        2.6792242527008057
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667647838592529,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.9166666666666665,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08068224042654037,
+        0.2643452286720276,
+        2.6791820526123047
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.0866769552230835,
+        0.24655042588710785,
+        2.683011054992676
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.933333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.0806628167629242,
+        0.264315664768219,
+        2.679140329360962
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667745441198349,
+        0.24653084576129913,
+        2.6829843521118164
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.95,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08064655214548111,
+        0.26429903507232666,
+        2.6791157722473145
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.0866776704788208,
+        0.2465227097272873,
+        2.6829733848571777
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.966666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08063366264104843,
+        0.2642963230609894,
+        2.679110050201416
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667757362127304,
+        0.24652685225009918,
+        2.682979106903076
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 2.9833333333333334,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08062434941530228,
+        0.2643083333969116,
+        2.679124116897583
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667714148759842,
+        0.24654394388198853,
+        2.683002471923828
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.0,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08061910420656204,
+        0.2643306851387024,
+        2.6791515350341797
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667647838592529,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.0166666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08061982691287994,
+        0.2643292546272278,
+        2.6791439056396484
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667647838592529,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.033333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08062531054019928,
+        0.26432979106903076,
+        2.679137706756592
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667647838592529,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.05,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08063553273677826,
+        0.26433229446411133,
+        2.679133415222168
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667647838592529,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.0666666666666664,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08065018057823181,
+        0.2643367052078247,
+        2.6791305541992188
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667647838592529,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.0833333333333335,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08066888153553009,
+        0.2643428444862366,
+        2.6791300773620605
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667647838592529,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.1,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08069133013486862,
+        0.26435065269470215,
+        2.679131031036377
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667647838592529,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.1166666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08071716874837875,
+        0.2643599510192871,
+        2.679133892059326
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667647838592529,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.1333333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08074606209993362,
+        0.2643706798553467,
+        2.679138660430908
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667647838592529,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.15,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08077767491340637,
+        0.26438266038894653,
+        2.679145336151123
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667647838592529,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.1666666666666665,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08081164956092834,
+        0.2643958330154419,
+        2.679154396057129
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667648583650589,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.183333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08084757626056671,
+        0.2644106149673462,
+        2.679168224334717
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667648583650589,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.2,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.080885149538517,
+        0.2644267678260803,
+        2.6791863441467285
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667648583650589,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.216666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08092406392097473,
+        0.264443963766098,
+        2.6792080402374268
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667648583650589,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.2333333333333334,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08096400648355484,
+        0.2644619345664978,
+        2.679232120513916
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667648583650589,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.25,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08100467920303345,
+        0.2644804120063782,
+        2.679258346557617
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667648583650589,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.2666666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08104577660560608,
+        0.26449906826019287,
+        2.6792855262756348
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667649328708649,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.283333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08108696341514587,
+        0.26451772451400757,
+        2.6793131828308105
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667649328708649,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.3,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08112794160842896,
+        0.264536052942276,
+        2.679340362548828
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667649328708649,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.3166666666666664,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08116835355758667,
+        0.26455384492874146,
+        2.6793665885925293
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667649328708649,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.3333333333333335,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08120789378881454,
+        0.2645708918571472,
+        2.6793909072875977
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667649328708649,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.35,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08124620467424393,
+        0.2645868957042694,
+        2.679412841796875
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08667649328708649,
+        0.2465694695711136,
+        2.683037281036377
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.3666666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08123819530010223,
+        0.2646121382713318,
+        2.6794328689575195
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08663103729486465,
+        0.24657972157001495,
+        2.6830387115478516
+      ],
+      "prop_yield_m": 3.0331921631506617e-05,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.3833333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.08085045963525772,
+        0.264765202999115,
+        2.6794729232788086
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08620184659957886,
+        0.2467174530029297,
+        2.6830637454986572
+      ],
+      "prop_yield_m": 0.0003608580849431194,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.4,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.080076202750206,
+        0.2651509940624237,
+        2.6795637607574463
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08538234978914261,
+        0.24708786606788635,
+        2.6831443309783936
+      ],
+      "prop_yield_m": 0.0010290126266457639,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.4166666666666665,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.07897007465362549,
+        0.26584652066230774,
+        2.6797304153442383
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08422841876745224,
+        0.24776844680309296,
+        2.6833059787750244
+      ],
+      "prop_yield_m": 0.0020020160925267195,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.433333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.07756485790014267,
+        0.26691412925720215,
+        2.679993152618408
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08277370035648346,
+        0.2488219290971756,
+        2.68356990814209
+      ],
+      "prop_yield_m": 0.0032470890283732624,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.4499999999999997,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.07587237656116486,
+        0.26840248703956604,
+        2.6803665161132812
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08103056252002716,
+        0.2502973675727844,
+        2.6839511394500732
+      ],
+      "prop_yield_m": 0.004731451979972674,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.466666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.07390031963586807,
+        0.2703477442264557,
+        2.680481433868408
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.07900693267583847,
+        0.25223103165626526,
+        2.6840813159942627
+      ],
+      "prop_yield_m": 0.00642232549311228,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.4833333333333334,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.07163691520690918,
+        0.2727741599082947,
+        2.680006742477417
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.07669096440076828,
+        0.2546473443508148,
+        2.6836299896240234
+      ],
+      "prop_yield_m": 0.008286930113579213,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.5,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.06908006966114044,
+        0.275695264339447,
+        2.6790082454681396
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.07408022880554199,
+        0.25755995512008667,
+        2.6826634407043457
+      ],
+      "prop_yield_m": 0.010292486387160956,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.5166666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.06618982553482056,
+        0.2793436348438263,
+        2.6776907444000244
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.07113403081893921,
+        0.26120200753211975,
+        2.6813905239105225
+      ],
+      "prop_yield_m": 0.012406214859644682,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.533333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.06289082020521164,
+        0.2839183807373047,
+        2.6762335300445557
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.06777603179216385,
+        0.2657732367515564,
+        2.6799941062927246
+      ],
+      "prop_yield_m": 0.014595336076817553,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.55,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.059097982943058014,
+        0.28937000036239624,
+        2.6746551990509033
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.0639200359582901,
+        0.2712240219116211,
+        2.678492307662964
+      ],
+      "prop_yield_m": 0.01682707058446696,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.5666666666666664,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.05518145114183426,
+        0.29571276903152466,
+        2.6729536056518555
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.05994107574224472,
+        0.2775697112083435,
+        2.6768815517425537
+      ],
+      "prop_yield_m": 0.019068638928380306,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.5833333333333335,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.05158517509698868,
+        0.30297422409057617,
+        2.67112398147583
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.05628899112343788,
+        0.284839004278183,
+        2.675154209136963
+      ],
+      "prop_yield_m": 0.021287261654344747,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.6,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.04831552505493164,
+        0.3111151456832886,
+        2.66917085647583
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.052970170974731445,
+        0.2929927408695221,
+        2.673313856124878
+      ],
+      "prop_yield_m": 0.023450159308147492,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.6166666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.045368343591690063,
+        0.3200905919075012,
+        2.6670944690704346
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.04998031258583069,
+        0.3019859194755554,
+        2.671360969543457
+      ],
+      "prop_yield_m": 0.025524552435575897,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.6333333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.04273000732064247,
+        0.3298504650592804,
+        2.6648921966552734
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.04730549827218056,
+        0.3117683529853821,
+        2.6692914962768555
+      ],
+      "prop_yield_m": 0.027477661582417233,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.65,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.04037851095199585,
+        0.340339720249176,
+        2.662558078765869
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.04492327943444252,
+        0.3222849369049072,
+        2.6670992374420166
+      ],
+      "prop_yield_m": 0.029276707294458776,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.6666666666666665,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.03828452527523041,
+        0.351499080657959,
+        2.6600852012634277
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.042803775519132614,
+        0.333476185798645,
+        2.664776086807251
+      ],
+      "prop_yield_m": 0.030888910117487792,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.683333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.03641246259212494,
+        0.36326509714126587,
+        2.6574647426605225
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.040910739451646805,
+        0.3452785313129425,
+        2.6623125076293945
+      ],
+      "prop_yield_m": 0.032281490597291594,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.6999999999999997,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.03472154960036278,
+        0.37557077407836914,
+        2.6546871662139893
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.03920265659689903,
+        0.35762476921081543,
+        2.659698486328125
+      ],
+      "prop_yield_m": 0.03342166927965743,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.716666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.033166877925395966,
+        0.3883460760116577,
+        2.6517443656921387
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.03763379901647568,
+        0.3704446256160736,
+        2.6569247245788574
+      ],
+      "prop_yield_m": 0.03427666671037262,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.7333333333333334,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.031700462102890015,
+        0.4015183448791504,
+        2.6486287117004395
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.036155324429273605,
+        0.3836651146411896,
+        2.6539828777313232
+      ],
+      "prop_yield_m": 0.034813703435224365,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.75,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.03027229942381382,
+        0.41501277685165405,
+        2.645334005355835
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.03471633419394493,
+        0.3972111642360687,
+        2.6508662700653076
+      ],
+      "prop_yield_m": 0.035,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.7666666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.028831426054239273,
+        0.42875319719314575,
+        2.641857147216797
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.03326495364308357,
+        0.41100621223449707,
+        2.6475703716278076
+      ],
+      "prop_yield_m": 0.03492621990268274,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.783333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.027326975017786026,
+        0.4426625669002533,
+        2.638197183609009
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.03174940496683121,
+        0.42497286200523376,
+        2.6440937519073486
+      ],
+      "prop_yield_m": 0.03471243677996916,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.8,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.025709226727485657,
+        0.45666375756263733,
+        2.6343564987182617
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.030119072645902634,
+        0.4390336871147156,
+        2.6404380798339844
+      ],
+      "prop_yield_m": 0.03436998638571653,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.8166666666666664,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.023930668830871582,
+        0.470680296421051,
+        2.630340576171875
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.02832559123635292,
+        0.4531117379665375,
+        2.636608123779297
+      ],
+      "prop_yield_m": 0.03391020447378214,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.8333333333333335,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.021947067230939865,
+        0.4846372902393341,
+        2.6261589527130127
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.026323920115828514,
+        0.46713167428970337,
+        2.632612466812134
+      ],
+      "prop_yield_m": 0.033344426798023255,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.85,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.01971852406859398,
+        0.4984619915485382,
+        2.621824026107788
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.024073423817753792,
+        0.48102033138275146,
+        2.62846302986145
+      ],
+      "prop_yield_m": 0.032683989112297196,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.8666666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.017210563644766808,
+        0.5120847821235657,
+        2.6173524856567383
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.02153897099196911,
+        0.49470770359039307,
+        2.624175548553467
+      ],
+      "prop_yield_m": 0.031940227170461244,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.8833333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.014395187608897686,
+        0.5254401564598083,
+        2.6127638816833496
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.0186920203268528,
+        0.5081278085708618,
+        2.6197690963745117
+      ],
+      "prop_yield_m": 0.03112447672637268,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.9,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.011251991614699364,
+        0.5384672284126282,
+        2.608081817626953
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.01551173534244299,
+        0.5212194323539734,
+        2.6152665615081787
+      ],
+      "prop_yield_m": 0.030248073533888774,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.9166666666666665,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.00776924192905426,
+        0.551111102104187,
+        2.603332757949829
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.011986094526946545,
+        0.5339272022247314,
+        2.6106936931610107
+      ],
+      "prop_yield_m": 0.029322353346866826,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.933333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.0039449878968298435,
+        0.5633231401443481,
+        2.598546266555786
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.008113016374409199,
+        0.5462021827697754,
+        2.606079578399658
+      ],
+      "prop_yield_m": 0.028358651919164125,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.9499999999999997,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.00021182838827371597,
+        0.5750623941421509,
+        2.5937557220458984
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.00390148744918406,
+        0.5580029487609863,
+        2.601456880569458
+      ],
+      "prop_yield_m": 0.027368305004637935,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.966666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.004680251702666283,
+        0.5862957835197449,
+        2.588996410369873
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.0006272941245697439,
+        0.5692962408065796,
+        2.596860408782959
+      ],
+      "prop_yield_m": 0.02636264835714554,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 3.9833333333333334,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.009426191449165344,
+        0.5969994068145752,
+        2.584307909011841
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.00543877761811018,
+        0.5800578594207764,
+        2.5923290252685547
+      ],
+      "prop_yield_m": 0.025353017730544294,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.0,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.01440129429101944,
+        0.6071590185165405,
+        2.5797324180603027
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.010483913123607635,
+        0.5902734398841858,
+        2.587904453277588
+      ],
+      "prop_yield_m": 0.024350748878691368,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.016666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.019541827961802483,
+        0.6167710423469543,
+        2.575315237045288
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.015698008239269257,
+        0.5999391078948975,
+        2.583631753921509
+      ],
+      "prop_yield_m": 0.023367177555444145,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.033333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.02476755529642105,
+        0.6258428692817688,
+        2.57110595703125
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.020999589934945107,
+        0.6090622544288635,
+        2.579559803009033
+      ],
+      "prop_yield_m": 0.02241363951465987,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.05,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.02998063899576664,
+        0.6343941688537598,
+        2.5671582221984863
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.02628927305340767,
+        0.6176624894142151,
+        2.575741767883301
+      ],
+      "prop_yield_m": 0.021501470510195828,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.066666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.03506452962756157,
+        0.6424569487571716,
+        2.5635297298431396
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.03144865110516548,
+        0.6257719397544861,
+        2.572235345840454
+      ],
+      "prop_yield_m": 0.020642006295909322,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.083333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.03989573195576668,
+        0.6501362323760986,
+        2.560251235961914
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.03633936494588852,
+        0.6334363222122192,
+        2.5691027641296387
+      ],
+      "prop_yield_m": 0.01984379492417509,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.1,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.044722456485033035,
+        0.6592170000076294,
+        2.55643892288208
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.04084094613790512,
+        0.6406868696212769,
+        2.56640362739563
+      ],
+      "prop_yield_m": 0.019025300566913518,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.116666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.049520961940288544,
+        0.6698606610298157,
+        2.5519955158233643
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.04490789398550987,
+        0.6474992632865906,
+        2.564181089401245
+      ],
+      "prop_yield_m": 0.01814998975359921,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.133333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.05406978726387024,
+        0.6811883449554443,
+        2.5473952293395996
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.04850560799241066,
+        0.6538414359092712,
+        2.562476873397827
+      ],
+      "prop_yield_m": 0.01722554226719878,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.15,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.0581645742058754,
+        0.6924616098403931,
+        2.5431764125823975
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.05160186067223549,
+        0.6598143577575684,
+        2.5613789558410645
+      ],
+      "prop_yield_m": 0.016259637890678767,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.166666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.06163659319281578,
+        0.7033915519714355,
+        2.540030002593994
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.05418895557522774,
+        0.6659676432609558,
+        2.56112003326416
+      ],
+      "prop_yield_m": 0.015259956407005877,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.183333333333334,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.06431915611028671,
+        0.713211715221405,
+        2.5384974479675293
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.05625275894999504,
+        0.6723622679710388,
+        2.5617620944976807
+      ],
+      "prop_yield_m": 0.014234177599146665,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.2,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.06603257358074188,
+        0.721074640750885,
+        2.5391149520874023
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.05776192992925644,
+        0.67896968126297,
+        2.5633456707000732
+      ],
+      "prop_yield_m": 0.01318998125006773,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.216666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.06690149754285812,
+        0.7258838415145874,
+        2.54006028175354
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.05866646021604538,
+        0.6857612729072571,
+        2.5654656887054443
+      ],
+      "prop_yield_m": 0.012135047142735673,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.233333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.06714621186256409,
+        0.7274068593978882,
+        2.539283514022827
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.058915842324495316,
+        0.6927087306976318,
+        2.5676865577697754
+      ],
+      "prop_yield_m": 0.011077055060117098,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.25,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.06676936894655228,
+        0.72613126039505,
+        2.5369303226470947
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.05851954594254494,
+        0.6997833251953125,
+        2.570000648498535
+      ],
+      "prop_yield_m": 0.010023684785178606,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.266666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.065802663564682,
+        0.7225737571716309,
+        2.5331010818481445
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.05751725286245346,
+        0.706956684589386,
+        2.5723989009857178
+      ],
+      "prop_yield_m": 0.008982616100886794,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.283333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.064274862408638,
+        0.7172649502754211,
+        2.5278868675231934
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.05594290420413017,
+        0.7142001390457153,
+        2.5748720169067383
+      ],
+      "prop_yield_m": 0.007961528790208268,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.3,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.062219470739364624,
+        0.710735023021698,
+        2.521399736404419
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.05383049324154854,
+        0.7214853763580322,
+        2.5774102210998535
+      ],
+      "prop_yield_m": 0.006968102636109629,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.316666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.059675898402929306,
+        0.7034993171691895,
+        2.51379656791687
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.0512140654027462,
+        0.7287838459014893,
+        2.5800037384033203
+      ],
+      "prop_yield_m": 0.006010017421557477,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.333333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.05668957531452179,
+        0.6960445642471313,
+        2.505293130874634
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.048127736896276474,
+        0.7360671162605286,
+        2.5826425552368164
+      ],
+      "prop_yield_m": 0.005094952929518413,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.35,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.05331087112426758,
+        0.6888155937194824,
+        2.496171236038208
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.04460569843649864,
+        0.743306577205658,
+        2.5853166580200195
+      ],
+      "prop_yield_m": 0.004230588942959041,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.366666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.04959304630756378,
+        0.6822053790092468,
+        2.486781120300293
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.040682222694158554,
+        0.7504737973213196,
+        2.5880160331726074
+      ],
+      "prop_yield_m": 0.0034246052448459632,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.383333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.045589379966259,
+        0.6765488386154175,
+        2.4775338172912598
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.03639166057109833,
+        0.7575399875640869,
+        2.590731143951416
+      ],
+      "prop_yield_m": 0.002684681618145771,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.4,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.0413498617708683,
+        0.6721214652061462,
+        2.468892812728882
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.03176845610141754,
+        0.7644764184951782,
+        2.593452215194702
+      ],
+      "prop_yield_m": 0.002018497845825048,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.416666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.03691776841878891,
+        0.6691454648971558,
+        2.4613583087921143
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.026847131550312042,
+        0.7712544202804565,
+        2.596170663833618
+      ],
+      "prop_yield_m": 0.0014337337108504544,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.433333333333334,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.03232649713754654,
+        0.6678028106689453,
+        2.4554522037506104
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.021662304177880287,
+        0.7778449058532715,
+        2.598877429962158
+      ],
+      "prop_yield_m": 0.0009380689961885646,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.45,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.02759695053100586,
+        0.6682555675506592,
+        2.451699733734131
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.016248667612671852,
+        0.7842190861701965,
+        2.601564407348633
+      ],
+      "prop_yield_m": 0.0005391834848059678,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.466666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.022735774517059326,
+        0.670674204826355,
+        2.4506094455718994
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.010640991851687431,
+        0.7903477549552917,
+        2.6042239665985107
+      ],
+      "prop_yield_m": 0.00024475695966927357,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.483333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.01773449406027794,
+        0.6752828359603882,
+        2.4526681900024414
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.0048741186037659645,
+        0.7962018251419067,
+        2.60684871673584
+      ],
+      "prop_yield_m": 6.246920374508482e-05,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.5,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.012565786950290203,
+        0.6825792789459229,
+        2.4585440158843994
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.00101705442648381,
+        0.8017520904541016,
+        2.6094322204589844
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.516666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.007205531466752291,
+        0.6924712061882019,
+        2.467881917953491
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.006997578777372837,
+        0.8069693446159363,
+        2.6119682788848877
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.533333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.0016456479206681252,
+        0.7046668529510498,
+        2.479903221130371
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.013032467104494572,
+        0.8118242025375366,
+        2.6144514083862305
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.55,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.00410429434850812,
+        0.7188792824745178,
+        2.493806838989258
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.01908670924603939,
+        0.8162872791290283,
+        2.6168768405914307
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.566666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.010015483945608139,
+        0.7347750067710876,
+        2.5088038444519043
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.025125276297330856,
+        0.8203292489051819,
+        2.6192398071289062
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.583333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.016040630638599396,
+        0.751939058303833,
+        2.524153470993042
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.031113145872950554,
+        0.8239206671714783,
+        2.6215367317199707
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.6,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.022116782143712044,
+        0.7698557376861572,
+        2.5391955375671387
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.03701530396938324,
+        0.8270320892333984,
+        2.6237642765045166
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.616666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.0281696617603302,
+        0.7879059314727783,
+        2.5533721446990967
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.04279676079750061,
+        0.8296340703964233,
+        2.6259191036224365
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.633333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.03411882370710373,
+        0.8053774833679199,
+        2.5662472248077393
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.048422567546367645,
+        0.8316972851753235,
+        2.6279990673065186
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.65,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.039882730692625046,
+        0.8214833736419678,
+        2.5775060653686523
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.05385781452059746,
+        0.8331921696662903,
+        2.6300017833709717
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.666666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.04538285359740257,
+        0.8353879451751709,
+        2.586944103240967
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.059067659080028534,
+        0.8340895175933838,
+        2.631925344467163
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.683333333333334,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.05054599046707153,
+        0.8462315797805786,
+        2.594435691833496
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.06401734799146652,
+        0.834358274936676,
+        2.6337664127349854
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.7,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.05530489236116409,
+        0.8531255125999451,
+        2.5998620986938477
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.06867318600416183,
+        0.8339318037033081,
+        2.6354939937591553
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.716666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.05959349125623703,
+        0.8552722334861755,
+        2.6031007766723633
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.07300066202878952,
+        0.8328074216842651,
+        2.6371002197265625
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.733333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.06336835026741028,
+        0.852615475654602,
+        2.604248523712158
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.07696482539176941,
+        0.8310136795043945,
+        2.638593912124634
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.75,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.0666351467370987,
+        0.8464478850364685,
+        2.6038858890533447
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08053082227706909,
+        0.8285791873931885,
+        2.639983654022217
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.766666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.0693664699792862,
+        0.8372853994369507,
+        2.6021406650543213
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08366391807794571,
+        0.8255325555801392,
+        2.641277313232422
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.783333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.07153406739234924,
+        0.8256286382675171,
+        2.5990970134735107
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08632947504520416,
+        0.8219023942947388,
+        2.6424827575683594
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.8,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.07311226427555084,
+        0.8119853734970093,
+        2.594838857650757
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08849292993545532,
+        0.8177173733711243,
+        2.6436071395874023
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.816666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.07408004999160767,
+        0.7968602180480957,
+        2.5894720554351807
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.09011980891227722,
+        0.8130061626434326,
+        2.6446571350097656
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.833333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.07442286610603333,
+        0.7807442545890808,
+        2.5831398963928223
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.09117567539215088,
+        0.807797372341156,
+        2.645639181137085
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.85,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.07413364201784134,
+        0.7641050815582275,
+        2.5760364532470703
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.0916261300444603,
+        0.8021196722984314,
+        2.6465587615966797
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.866666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.07323648780584335,
+        0.7473779320716858,
+        2.5684075355529785
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.09146198630332947,
+        0.7960023283958435,
+        2.64741849899292
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.883333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.07180363684892654,
+        0.7309591174125671,
+        2.560551166534424
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.09071937948465347,
+        0.7894755601882935,
+        2.6482181549072266
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.9,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.06990817934274673,
+        0.7152012586593628,
+        2.552816867828369
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08943194150924683,
+        0.7825696468353271,
+        2.648956298828125
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.916666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.06762389093637466,
+        0.7004134058952332,
+        2.5455942153930664
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08763324469327927,
+        0.7753149271011353,
+        2.6496315002441406
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.933333333333334,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.06502223759889603,
+        0.6868656873703003,
+        2.539304494857788
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08535682410001755,
+        0.767741858959198,
+        2.6502418518066406
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.95,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.06216943636536598,
+        0.6748006939888,
+        2.534385919570923
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.08263619989156723,
+        0.759880781173706,
+        2.6507856845855713
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.966666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.059123601764440536,
+        0.6644488573074341,
+        2.531278133392334
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.0795048326253891,
+        0.7517621517181396,
+        2.651261329650879
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 4.983333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.05593302845954895,
+        0.6560581922531128,
+        2.5304152965545654
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.07599619030952454,
+        0.7434163689613342,
+        2.651667356491089
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.0,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.052640870213508606,
+        0.6500040292739868,
+        2.532299757003784
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.07214369624853134,
+        0.7348739504814148,
+        2.6520028114318848
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.016666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.049230802804231644,
+        0.6461383700370789,
+        2.536717176437378
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.06798075884580612,
+        0.7261651754379272,
+        2.6522669792175293
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.033333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.045669376850128174,
+        0.6441650986671448,
+        2.543177843093872
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.06354077160358429,
+        0.7173203825950623,
+        2.6524598598480225
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.05,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.04192831739783287,
+        0.6438084244728088,
+        2.5511679649353027
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.05885710567235947,
+        0.7083697319030762,
+        2.6525819301605225
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.066666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.0379878468811512,
+        0.644784688949585,
+        2.5601742267608643
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.05396309494972229,
+        0.6993433237075806,
+        2.652634620666504
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.083333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.0338386707007885,
+        0.6467815041542053,
+        2.5697033405303955
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.04889204725623131,
+        0.6902711987495422,
+        2.6526198387145996
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.1,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.02948276326060295,
+        0.6494443416595459,
+        2.579298257827759
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.04367724061012268,
+        0.6811830401420593,
+        2.652540922164917
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.116666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.024932995438575745,
+        0.6523714065551758,
+        2.5885488986968994
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.038351915776729584,
+        0.67210853099823,
+        2.6524014472961426
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.133333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.020211825147271156,
+        0.6551142334938049,
+        2.597099781036377
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.03294925019145012,
+        0.6630770564079285,
+        2.6522059440612793
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.15,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.01534935925155878,
+        0.6571847200393677,
+        2.6046509742736816
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.027502385899424553,
+        0.6541179418563843,
+        2.6519603729248047
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.166666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.010379825718700886,
+        0.6580657362937927,
+        2.6110780239105225
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.022043155506253242,
+        0.6452600359916687,
+        2.6518006324768066
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.183333333333334,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.005341444630175829,
+        0.6572245359420776,
+        2.616283893585205
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.016604101285338402,
+        0.636532187461853,
+        2.651857376098633
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.2,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        -0.00027561490423977375,
+        0.6541293859481812,
+        2.620046615600586
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.011219320818781853,
+        0.6279628276824951,
+        2.6521294116973877
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.216666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.0047754584811627865,
+        0.6482676863670349,
+        2.6221213340759277
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.0059228334575891495,
+        0.6195801496505737,
+        2.6526169776916504
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.233333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.009759890846908092,
+        0.6397494673728943,
+        2.62257981300354
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.000748577294871211,
+        0.6114121675491333,
+        2.6533203125
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.25,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.014614622108638287,
+        0.6297463178634644,
+        2.622105598449707
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.004269591998308897,
+        0.6034865379333496,
+        2.6542413234710693
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.266666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.019293928518891335,
+        0.6186167597770691,
+        2.6208441257476807
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.009097903035581112,
+        0.5958307981491089,
+        2.655381679534912
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.283333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.023754479363560677,
+        0.606690526008606,
+        2.6189184188842773
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.013702665455639362,
+        0.5884720683097839,
+        2.6567442417144775
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.3,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.027955016121268272,
+        0.5942934155464172,
+        2.6164631843566895
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.018050268292427063,
+        0.581437349319458,
+        2.658332586288452
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.316666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.03185674920678139,
+        0.5817426443099976,
+        2.6136281490325928
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.022107169032096863,
+        0.5747534036636353,
+        2.6601500511169434
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.333333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.035423826426267624,
+        0.5693413019180298,
+        2.6105849742889404
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.025839895009994507,
+        0.568446934223175,
+        2.662201166152954
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.35,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.03862374275922775,
+        0.5573753118515015,
+        2.607529640197754
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.029215022921562195,
+        0.5625442862510681,
+        2.664489984512329
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.366666666666666,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.041427500545978546,
+        0.5461111664772034,
+        2.604681968688965
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.03219916671514511,
+        0.5570719838142395,
+        2.6670210361480713
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.383333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.04380955547094345,
+        0.5357952117919922,
+        2.602282762527466
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.03475896641612053,
+        0.5520562529563904,
+        2.6697986125946045
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.4,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.0457472987473011,
+        0.5266548991203308,
+        2.600590705871582
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.03686106950044632,
+        0.5475234389305115,
+        2.6728272438049316
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.416666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.047214899212121964,
+        0.5186691284179688,
+        2.599769353866577
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.038467083126306534,
+        0.5432525277137756,
+        2.6760060787200928
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.433333333333334,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.04818681254982948,
+        0.5118013024330139,
+        2.599978446960449
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.03953825309872627,
+        0.5390139222145081,
+        2.6792287826538086
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.45,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.04864185303449631,
+        0.5062426924705505,
+        2.6014833450317383
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.04004070907831192,
+        0.5348209142684937,
+        2.6824891567230225
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.466666666666667,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.04870541766285896,
+        0.5021895170211792,
+        2.604534149169922
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.0401010625064373,
+        0.5306856632232666,
+        2.685776710510254
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.483333333333333,
+      "food_gain": 1.0,
+      "food_center_canonical": [
+        0.0485290102660656,
+        0.4997120201587677,
+        2.6092114448547363
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.03988042101264,
+        0.5266200304031372,
+        2.689079999923706
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.5,
+      "food_gain": 0.9657064471879292,
+      "food_center_canonical": [
+        0.04812411591410637,
+        0.4986478388309479,
+        2.615304470062256
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.03939664363861084,
+        0.5226372480392456,
+        2.6923906803131104
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.516666666666667,
+      "food_gain": 0.7886501041507918,
+      "food_center_canonical": [
+        0.04749995470046997,
+        0.49879541993141174,
+        2.622561454772949
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.03866758570075035,
+        0.5187192559242249,
+        2.695700168609619
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.533333333333333,
+      "food_gain": 0.52776507646191,
+      "food_center_canonical": [
+        0.04666507989168167,
+        0.4999554455280304,
+        2.6307239532470703
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.037711095064878464,
+        0.5148440599441528,
+        2.699000597000122
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.55,
+      "food_gain": 0.2592592592592629,
+      "food_center_canonical": [
+        0.04562840238213539,
+        0.5019555687904358,
+        2.639533758163452
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.03654499724507332,
+        0.5110183954238892,
+        2.7022833824157715
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.566666666666666,
+      "food_gain": 0.05934054768074233,
+      "food_center_canonical": [
+        0.044400036334991455,
+        0.5046151876449585,
+        2.648738384246826
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.03518711030483246,
+        0.5072490572929382,
+        2.705540180206299
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.583333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.042991794645786285,
+        0.5077414512634277,
+        2.658097267150879
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.03365524113178253,
+        0.5035429000854492,
+        2.708763360977173
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.6,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.04141756519675255,
+        0.5111263990402222,
+        2.667383909225464
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.0319671705365181,
+        0.499906450510025,
+        2.711944103240967
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.616666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.03969334810972214,
+        0.5145466923713684,
+        2.67638897895813
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.03014068491756916,
+        0.49634647369384766,
+        2.7150752544403076
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.633333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.037837110459804535,
+        0.5177640914916992,
+        2.6849207878112793
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.028193539008498192,
+        0.49286946654319763,
+        2.7181482315063477
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.65,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.03586855158209801,
+        0.5205280780792236,
+        2.6928038597106934
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.026143480092287064,
+        0.48948201537132263,
+        2.721155881881714
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.666666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.03380867466330528,
+        0.5225788950920105,
+        2.6998772621154785
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.024008238688111305,
+        0.4861904978752136,
+        2.724090337753296
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.683333333333334,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.03167938441038132,
+        0.523652195930481,
+        2.705986976623535
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.021805526688694954,
+        0.48300135135650635,
+        2.7269444465637207
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.7,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.02950308285653591,
+        0.5234841108322144,
+        2.710981845855713
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.01955304481089115,
+        0.4799208641052246,
+        2.7297110557556152
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.716666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.027302365750074387,
+        0.5218173861503601,
+        2.7147011756896973
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.01726846769452095,
+        0.47695526480674744,
+        2.7323830127716064
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.733333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.025094958022236824,
+        0.5190399289131165,
+        2.71742582321167
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.01496946346014738,
+        0.4741106927394867,
+        2.7349531650543213
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.75,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.0228903666138649,
+        0.5163497924804688,
+        2.7200112342834473
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.012673675082623959,
+        0.47139328718185425,
+        2.737415313720703
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.766666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.02070530131459236,
+        0.5137909650802612,
+        2.722477674484253
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.010398730635643005,
+        0.4688090682029724,
+        2.739762306213379
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.783333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.018556738272309303,
+        0.5113693475723267,
+        2.7248177528381348
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.0081622414290905,
+        0.46636393666267395,
+        2.74198842048645
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.8,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.016461631283164024,
+        0.5090909004211426,
+        2.727025270462036
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.005981802009046078,
+        0.4640638530254364,
+        2.744086742401123
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.816666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.014436926692724228,
+        0.506961464881897,
+        2.729093074798584
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.003874991787597537,
+        0.461914598941803,
+        2.746051549911499
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.833333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.012499557808041573,
+        0.5049868822097778,
+        2.73101544380188
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        0.001859374693594873,
+        0.45992204546928406,
+        2.7478766441345215
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.85,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.01066645048558712,
+        0.5031729340553284,
+        2.7327847480773926
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -4.749705840367824e-05,
+        0.4580919146537781,
+        2.749556303024292
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.866666666666666,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.008954517543315887,
+        0.5015252828598022,
+        2.7343955039978027
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.0018280826043337584,
+        0.45642992854118347,
+        2.751084089279175
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.883333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.007380669005215168,
+        0.5000497698783875,
+        2.7358410358428955
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.0034648494329303503,
+        0.4549418091773987,
+        2.7524545192718506
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.9,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.005961806047707796,
+        0.4987521469593048,
+        2.7371153831481934
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.004940270446240902,
+        0.45363330841064453,
+        2.753661870956421
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.916666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.004714831244200468,
+        0.4976380467414856,
+        2.738210916519165
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.006236822344362736,
+        0.4525100886821747,
+        2.754699945449829
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.933333333333334,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.003656645305454731,
+        0.4967133402824402,
+        2.7391228675842285
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.007336978800594807,
+        0.45157793164253235,
+        2.755563259124756
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.95,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.0028041545301675797,
+        0.49598386883735657,
+        2.7398433685302734
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.008223210461437702,
+        0.45084261894226074,
+        2.7562453746795654
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.966666666666667,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.0021742710378021,
+        0.49545538425445557,
+        2.7403669357299805
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.008877976797521114,
+        0.45031002163887024,
+        2.7567405700683594
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 5.983333333333333,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.0017839178908616304,
+        0.4951338768005371,
+        2.7406857013702393
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.009283725172281265,
+        0.4499860107898712,
+        2.757042407989502
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    },
+    {
+      "time_seconds": 6.0,
+      "food_gain": 0.0,
+      "food_center_canonical": [
+        0.0016500335186719894,
+        0.4950253665447235,
+        2.7407937049865723
+      ],
+      "connector_upper_oral_endpoint_canonical": [
+        -0.00942288339138031,
+        0.44987666606903076,
+        2.7571446895599365
+      ],
+      "prop_yield_m": 0.0,
+      "authority": "AUTHORED_NOT_PHYSICS"
+    }
+  ]
+}

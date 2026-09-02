@@ -1,0 +1,49 @@
+{
+  "candidate_sha256": "8f70dcab8e8b56035ed0787ca15674166575213f098ec9c6579e6e8350b6d47b",
+  "presentation": "Original embedded albedo and UVs under existing studio lighting; not full PBR",
+  "renderer_sha256": "835186d4181c6434eacc918330f489b671c7c6a25abe187934a5ecfae5e29462",
+  "original_base_color_binding": [
+    {
+      "object": "Mesh_0",
+      "material": "Material_0",
+      "original_base_color_image": "Image_0",
+      "size": [
+        4096,
+        4096
+      ],
+      "uv_layer": "UVMap"
+    }
+  ],
+  "media": [
+    {
+      "view": "side",
+      "path": "build/V9-FEEDING-REVIEW-003/textured/feeding-side.mp4",
+      "sha256": "48cbf2487546a9cc9d80e36bd807605ea902d4910b68a1320bc291dbc12d5703",
+      "width": 960,
+      "height": 540,
+      "avg_frame_rate": "24/1",
+      "duration": "6.000000",
+      "nb_read_frames": "144"
+    },
+    {
+      "view": "front",
+      "path": "build/V9-FEEDING-REVIEW-003/textured/feeding-front.mp4",
+      "sha256": "47a2981ffffec433da4caf35a1e6028b527b4a727c99a77f7b29f1171b6b7e2c",
+      "width": 960,
+      "height": 540,
+      "avg_frame_rate": "24/1",
+      "duration": "6.000000",
+      "nb_read_frames": "144"
+    },
+    {
+      "view": "rear",
+      "path": "build/V9-FEEDING-REVIEW-003/textured/feeding-rear.mp4",
+      "sha256": "32c29c748352eea3d74d2fd5581576e56edce0c181d0b6e9d05f6a81f4413eae",
+      "width": 960,
+      "height": 540,
+      "avg_frame_rate": "24/1",
+      "duration": "6.000000",
+      "nb_read_frames": "144"
+    }
+  ]
+}

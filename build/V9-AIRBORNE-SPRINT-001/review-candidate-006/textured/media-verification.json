@@ -1,0 +1,20 @@
+{
+  "candidate_in_place_sha256": "69c0c27a19f51f3cadf26ceae911ca8b801027f3d947a8753ee8b912ae221e19",
+  "material_mode": "original embedded base-color preview; Workbench TEXTURE; not full PBR",
+  "renderer": "reports/V9-AIRBORNE-RUN-001/render_side_preview.py --material-mode texture",
+  "source_frames_per_cycle": 23,
+  "encoded_cycles": 2,
+  "fps": 24,
+  "frame_count": 46,
+  "duration_seconds": 1.916667,
+  "resolution": [1100, 620],
+  "retimed": false,
+  "ffprobe_decoded_counts_pass": true,
+  "native_visual_probes": ["side-native-cycle/frame-0012.png", "front-native-cycle/frame-0012.png", "rear-native-cycle/frame-0012.png"],
+  "media_sha256": {
+    "sprint-side-textured-2cycles.mp4": "c8cdcff95282a88c12bbf7efbfdc2f73e6beb54f729afe687977718dcd30670a",
+    "sprint-front-textured-2cycles.mp4": "21293f702583ab565fc23f95a1ee6c5a3b59af9616af7fa7c92181aa08acc4cb",
+    "sprint-rear-textured-2cycles.mp4": "865a9a35862768dcd99846afbf4a39e1e2f7585b1f75bfda965041076b62b33a"
+  },
+  "limits": "Original embedded albedo selected through the Principled Base Color link; imported normal and roughness maps are not evaluated by Workbench. Existing clay previews unchanged. Minor side-view floor boundary retained. Live playback acceptance belongs to the host/user."
+}

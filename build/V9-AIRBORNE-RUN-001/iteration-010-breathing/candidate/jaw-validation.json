@@ -1,0 +1,20 @@
+{
+  "label": "Run010",
+  "before": "build/V9-AIRBORNE-RUN-001/iteration-009-tail-compensation/candidate",
+  "after": "build/V9-AIRBORNE-RUN-001/iteration-010-breathing/candidate",
+  "status": "PASS_JAW_ONLY_IDENTITY_AND_LOOP",
+  "all_non_jaw_channels_identical": true,
+  "sample_times_identical": true,
+  "maximum_root_leg_tail_world_matrix_difference": 0,
+  "jaw_opening_degrees_range": [
+    1.0000002855672478,
+    3.9999999438853515
+  ],
+  "maximum_jaw_rate_degrees_per_s": 7.539311703433595,
+  "jaw_rotation_seam_degrees": 0,
+  "duration_s": 1.25,
+  "hashes": {
+    "airborne-run-in_place.glb": "4556412236a9373748cc087c29d27795daebcd3b65159823efcb5cd172ce98be",
+    "airborne-run-root_motion.glb": "0804bff764ca1765f29ee0d5bb7cd86c74d336b960ea445a36a1d37921ec3b00"
+  }
+}

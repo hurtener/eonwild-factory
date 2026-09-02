@@ -10,7 +10,7 @@ import pytest
 
 from eonwild_motion.errors import ContractError
 from eonwild_motion.glb.container import Glb
-from eonwild_motion.planning.airborne_gait import AirborneGait, build_airborne_plan, load_airborne_gait, sample_airborne_gait, continuous_body_timing, continuous_body_state, rounded_swing_height
+from eonwild_motion.planning.airborne_gait import AirborneGait, build_airborne_plan, load_airborne_gait, sample_airborne_gait, continuous_body_timing, continuous_body_state, rounded_swing_height, jaw_breathing_angle
 from eonwild_motion.solve.airborne_gait import solve_airborne_gait, active_surface_velocity, ground_plane_velocity_witness, stable_knee_geometry, _orientation_from_bend, _qrotate, periodic_response, driven_body_response
 from eonwild_motion.solve.whole_body_gait_transition import _build_glb, _encode
 
@@ -38,6 +38,10 @@ def fixture(prefix="a", scale=1.0, upper_body=False):
                 nodes.append({"name": prefix + name, "translation": [v * scale for v in offset]})
                 parent = node
         roles.update(chest=prefix + "chest", neck=[prefix + "neck"], head=prefix + "head", tail=[prefix + "tail" + str(i) for i in range(3)])
+        head = next(i for i, n in enumerate(nodes) if n["name"] == roles["head"])
+        nodes[head].setdefault("children", []).append(len(nodes))
+        nodes.append({"name": prefix + "lower_jaw", "translation": [0, -.1 * scale, .1 * scale]})
+        roles["jaw_lower"] = prefix + "lower_jaw"
     doc = {"asset": {"version": "2.0"}, "nodes": nodes, "scenes": [{"nodes": [0]}], "scene": 0, "buffers": [{"byteLength": 4}], "bufferViews": [], "accessors": []}
     base = Glb.from_bytes(_encode(doc, b"\0" * 4))
     blob = _build_glb(base, "source", np.array([0., 1.]), {(0, "translation"): np.array([[0., 0., 0.], [0., 0., 2. * scale]])}, "fixture", {})
@@ -332,6 +336,34 @@ def test_approach_lift_preserves_stroke_and_contact_with_c2_join():
             assert a["feet"][side]["forward_m"] == b["feet"][side]["forward_m"]
             if a["feet"][side]["contact"]:
                 assert a["feet"][side] == b["feet"][side]
+
+
+def test_breathing_is_subtle_cyclic_and_only_changes_semantic_jaw():
+    source, roles = fixture("renamed_", 1.6, upper_body=True)
+    base = AirborneGait(cycles=1, sample_hz=24, step_length_body_heights=.38, touchdown_reach_body_heights=.17, swing_clearance_body_heights=.18)
+    breathing = replace(base, jaw_breathing_min_degrees=1, jaw_breathing_max_degrees=4)
+    period = 2 * base.step_period_s
+    assert jaw_breathing_angle(breathing, 0) == 1
+    assert jaw_breathing_angle(breathing, period / 2) == 4
+    assert jaw_breathing_angle(breathing, period) == 1
+    h = 1e-6
+    assert abs((jaw_breathing_angle(breathing, h) - jaw_breathing_angle(breathing, -h)) / (2*h)) < 1e-8
+    outputs = [Glb.from_bytes(solve_airborne_gait(source, source_clip="source", semantic_roles=roles, gait=g)[0]) for g in (base, breathing)]
+    from eonwild_motion.layers.leg_contact_resolve_v3 import _clip_state
+    tracks = [_clip_state(g, "V9_AIRBORNE_RUN_ROOT_MOTION") for g in outputs]
+    assert tracks[0][1] == tracks[1][1]
+    for key, values in tracks[0][0].items():
+        if key == (roles["jaw_lower"], "rotation"):
+            assert values != tracks[1][0][key]
+            assert tracks[1][0][key][0] == pytest.approx(tracks[1][0][key][-1], abs=1e-7)
+        else:
+            assert values == tracks[1][0][key]
+    for change in ({"jaw_breathing_max_degrees": 9}, {"jaw_breathing_min_degrees": -1}, {"jaw_breathing_cycles_per_cycle": 1.5}):
+        with pytest.raises(ContractError):
+            replace(base, **change)
+    missing = dict(roles); missing.pop("jaw_lower")
+    with pytest.raises(ContractError, match="lower jaw"):
+        solve_airborne_gait(source, source_clip="source", semantic_roles=missing, gait=breathing)
 
 
 def test_emitted_parameter_mutations_change_real_channels_and_contact_times():

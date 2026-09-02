@@ -1,0 +1,24 @@
+{
+  "schema":"eonwild.experimental.anchored-feeding.v3",
+  "foundation_profile":"build/V9-GROUNDED-COMMITTED-BITE-001/profile.json",
+  "duration_seconds":6.0,"gape_degrees":58,
+  "jaw_clearance_height_fraction":0.002,"prop_radius_width_fraction":0.15,
+  "max_joint_rate_degrees_per_second":220,
+  "anchor":{"enter":1.78,"capture":2.05,"resisted_end":3.36,"release":4.08,"tolerance_m":0.002},
+  "prop_yield_keys_m":[[0,0],[3.36,0],[3.75,0.035],[4.08,0.02],[4.5,0],[6,0]],
+  "grip_windows":[[1.9,4.08]],"food_hold_windows":[[1.9,5.58]],"food_chunk_radius_m":0.045,
+  "base_pitch_degrees":{"pelvis":[12],"spine":[2,3,4,4,3],"chest":[3],"neck":[1,1,2,2,3],"head":[8],"tail":[-1.5,-1.5,-1.2,-0.9,-0.6,0,0.6,0.9,1.2]},
+  "yaw_weights":{"pelvis":0.1,"spine":0.2,"chest":0.15,"neck":0.6,"head":0.8,"tail":-0.7},
+  "support_limits":{"knee_interior_degrees":[80,155],"ankle_interior_degrees":[65,155],"hip_sagittal_degrees":[-15,85]},
+  "channels":{
+    "body":[[0,0.10],[0.7,0.48],[1.4,0.73],[2.05,0.79],[2.65,0.86],[3.15,0.81],[3.5,0.75],[4.14,0.43],[4.68,0.31],[5.4,0.52],[6,0.61]],
+    "drop":[[0,0],[0.78,0.085],[1.38,0.072],[2.05,0.052],[2.68,0.008],[3.18,0.035],[3.55,0.02],[4.15,0.043],[4.68,0.018],[5.5,0.047],[6,0.043]],
+    "forward":[[0,0],[0.76,0.024],[1.4,0.032],[2.05,0.04],[2.65,0.045],[3.16,0.038],[3.45,0.042],[4.2,-0.09],[5.15,-0.05],[6,0.025]],
+    "lateral":[[0,0],[1.2,0.002],[1.9,0.007],[2.40,-0.012],[2.98,0.010],[3.48,-0.007],[4.15,0.006],[5.15,-0.003],[6,0]],
+    "yaw":[[0,0],[1.10,0.8],[1.82,-0.4],[2.4,-6],[3.02,5],[3.55,-3.8],[4.23,2.3],[4.85,-2.5],[5.45,1.8],[6,0]],
+    "jaw":[[0,0],[1.30,0.035],[1.66,0.24],[1.94,0],[4.20,0],[4.48,0.50],[4.72,0.045],[4.98,0.39],[5.22,0.04],[5.46,0.23],[5.72,0],[6,0]],
+    "tail":[[0,0],[0.95,0.2],[1.75,0.5],[2.3,1.0],[2.8,1.4],[3.3,0.65],[3.75,0.3],[4.35,-0.32],[5.0,0.20],[5.5,0.10],[6,0.23]]
+  },
+  "events":[{"name":"ACQUIRE","reference_time_seconds":0},{"name":"CLOSE_GRIP","reference_time_seconds":1.94},{"name":"TARGET_RESISTED_ORAL_ANCHOR","reference_time_seconds":2.05},{"name":"TARGET_YIELDED","reference_time_seconds":3.36},{"name":"RETRACT_COMPLETE_RELEASE","reference_time_seconds":4.08},{"name":"RETURN_CHEW_REGRIP","reference_time_seconds":4.20},{"name":"SETTLE","reference_time_seconds":5.72}],
+  "limitations":["Authored kinematic resisted contact, not solved forces, friction or tissue physics.","Closed-jaw oral surface centroid is the grip witness; not exact individual tooth contact.","Fixed ankle and foot prototype support remains unchanged; no bone attachment or scale changes.","Feeding002 preserved. User-directed braced contact supersedes free-tip travel during resistance; body still rises and bends around the contact.","Food, tissue connector and target resistance events are authored preview proxies, not biological chewing proof."]
+}
