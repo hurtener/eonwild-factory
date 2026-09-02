@@ -49,7 +49,7 @@ jobs:
           cp "build/V9-AIRBORNE-RUN-001/iteration-008-open-support/trial-05/README.md" \
              "$OUT/run/SELECTION_NOTES.md"
 
-          cp "build/V9-AIRBORNE-SPRINT-001/review-candidate-004/trial-06/airborne-run_in_place.glb" \
+          cp "build/V9-AIRBORNE-SPRINT-001/review-candidate-004/trial-06/airborne-run-in_place.glb" \
              "$OUT/sprint/sprint-in-place.glb"
           cp "build/V9-AIRBORNE-SPRINT-001/review-candidate-004/trial-06/engineering-profile.json" \
              "$OUT/sprint/engineering-profile.json"
