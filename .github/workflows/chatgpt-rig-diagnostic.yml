@@ -14,12 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Compare GLB node and animation target contracts
+      - name: Report unmatched animation target nodes
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
           import json
+          import re
           import struct
           from pathlib import Path
 
@@ -35,83 +36,73 @@ jobs:
               while offset + 8 <= len(data):
                   length, kind = struct.unpack_from("<II", data, offset)
                   offset += 8
-                  payload = data[offset:offset+length]
+                  payload = data[offset:offset + length]
                   offset += length
                   if kind == 0x4E4F534A:
                       return json.loads(payload.decode("utf-8").rstrip(" \t\r\n\0"))
               raise RuntimeError(path)
 
-          docs = {key: read(path) for key, path in paths.items()}
+          def norm(name):
+              name = re.sub(r"\.\d{3}$", "", name)
+              return re.sub(r"[^A-Za-z0-9]+", "", name).lower()
 
-          def parent_map(doc):
-              out = {}
-              for pi, node in enumerate(doc.get("nodes", [])):
+          def parents(doc):
+              result = {}
+              for parent, node in enumerate(doc.get("nodes", [])):
                   for child in node.get("children", []):
-                      out[child] = pi
-              return out
+                      result[child] = parent
+              return result
 
-          def describe(doc):
-              nodes = doc.get("nodes", [])
-              parents = parent_map(doc)
-              targets = sorted({
-                  channel.get("target", {}).get("node")
-                  for anim in doc.get("animations", [])
-                  for channel in anim.get("channels", [])
-                  if channel.get("target", {}).get("node") is not None
-              })
-              return {
-                  "nodeCount": len(nodes),
-                  "nodes": [
-                      {
-                          "index": i,
-                          "name": node.get("name", ""),
-                          "parent": parents.get(i),
-                          "parentName": nodes[parents[i]].get("name", "") if i in parents else None,
-                          "mesh": node.get("mesh"),
-                          "skin": node.get("skin"),
-                          "targeted": i in targets,
-                      }
-                      for i, node in enumerate(nodes)
-                  ],
-                  "animations": [
-                      {
-                          "index": ai,
-                          "name": anim.get("name", ""),
-                          "channels": [
-                              {
-                                  "node": ch.get("target", {}).get("node"),
-                                  "nodeName": nodes[ch.get("target", {}).get("node")].get("name", "") if ch.get("target", {}).get("node") is not None else None,
-                                  "path": ch.get("target", {}).get("path"),
-                              }
-                              for ch in anim.get("channels", [])
-                          ],
-                      }
-                      for ai, anim in enumerate(doc.get("animations", []))
-                  ],
-              }
+          docs = {key: read(path) for key, path in paths.items()}
+          base = docs["v5.5"]
+          base_nodes = base.get("nodes", [])
+          base_exact = {node.get("name", ""): index for index, node in enumerate(base_nodes) if node.get("name")}
+          base_normalized = {norm(name): (name, index) for name, index in base_exact.items()}
 
-          report = {key: describe(doc) for key, doc in docs.items()}
-
-          base_names = {n["name"] for n in report["v5.5"]["nodes"] if n["name"]}
+          report = {"baseNodeCount": len(base_nodes), "sources": {}}
           for key in ("run", "sprint"):
-              targeted_names = {
-                  channel["nodeName"]
-                  for animation in report[key]["animations"]
-                  for channel in animation["channels"]
-                  if channel["nodeName"]
+              doc = docs[key]
+              nodes = doc.get("nodes", [])
+              parent = parents(doc)
+              target_indices = sorted({
+                  channel["target"]["node"]
+                  for animation in doc.get("animations", [])
+                  for channel in animation.get("channels", [])
+                  if "node" in channel.get("target", {})
+              })
+              unmatched = []
+              for index in target_indices:
+                  name = nodes[index].get("name", "")
+                  if name in base_exact or norm(name) in base_normalized:
+                      continue
+                  parent_index = parent.get(index)
+                  unmatched.append({
+                      "index": index,
+                      "name": name,
+                      "normalized": norm(name),
+                      "parentIndex": parent_index,
+                      "parentName": nodes[parent_index].get("name", "") if parent_index is not None else None,
+                      "mesh": nodes[index].get("mesh"),
+                      "skin": nodes[index].get("skin"),
+                  })
+              report["sources"][key] = {
+                  "nodeCount": len(nodes),
+                  "targetNodeCount": len(target_indices),
+                  "unmatched": unmatched,
+                  "rootNodes": [
+                      {"index": index, "name": node.get("name", ""), "mesh": node.get("mesh"), "skin": node.get("skin")}
+                      for index, node in enumerate(nodes)
+                      if index not in parent
+                  ],
               }
-              missing = sorted(targeted_names - base_names)
-              report[key]["targetNamesMissingFromV5.5"] = missing
 
-          print("BEGIN_RIG_REPORT")
-          print(json.dumps(report, indent=2))
-          print("END_RIG_REPORT")
-          Path("rig-compatibility.json").write_text(json.dumps(report, indent=2) + "\n")
+          print("RETARGET_DIAGNOSTIC=" + json.dumps(report, separators=(",", ":")))
+          Path("retarget-diagnostic.json").write_text(json.dumps(report, indent=2) + "\n")
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: eonwild-rig-compatibility
-          path: rig-compatibility.json
+          name: eonwild-retarget-diagnostic
+          path: retarget-diagnostic.json
           if-no-files-found: error
           compression-level: 0
           retention-days: 3
