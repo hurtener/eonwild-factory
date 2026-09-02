@@ -1,0 +1,150 @@
+name: chatgpt-babylon-runtime-v2
+
+on:
+  push:
+    branches:
+      - chatgpt/babylon-runtime-v2
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  export-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Collect immutable runtime exports
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="$RUNNER_TEMP/eonwild-factory-runtime-v2"
+          mkdir -p "$OUT/v5.5" "$OUT/v9-walk" "$OUT/v9-run" "$OUT/v9-sprint"
+
+          cp "procedural-animation-toolkit(v5.5)/validated_result/v5.5/tarbosaurus_procedural_v5_5_animation_pack.glb" \
+             "$OUT/v5.5/tarbosaurus-animation-pack.glb"
+          cp "procedural-animation-toolkit(v5.5)/validated_result/v5.5/animation-manifest.v5.5.json" \
+             "$OUT/v5.5/animation-manifest.json"
+          cp "procedural-animation-toolkit(v5.5)/validated_result/v5.5/v5.5-release-validation.json" \
+             "$OUT/v5.5/release-validation.json"
+          cp "procedural-animation-toolkit(v5.5)/validated_result/v5.5/resolved-profile-v5.5.json" \
+             "$OUT/v5.5/resolved-profile.json"
+
+          cp "build/V9-NARROW-GAUGE-WALK-002/sweep-run-016-v4-skinned-authority/sweep-0p34000000000000002-fa4aa9445c12/narrow-gauge-walk-root_motion.glb" \
+             "$OUT/v9-walk/narrow-gauge-walk-root-motion.glb"
+          cp "build/V9-NARROW-GAUGE-WALK-002/sweep-run-016-v4-skinned-authority/sweep-0p34000000000000002-fa4aa9445c12/candidate-contact-profile-root_motion.json" \
+             "$OUT/v9-walk/contact-profile.json"
+
+          cp "build/V9-AIRBORNE-RUN-001/iteration-008-open-support/trial-05/airborne-run-in_place.glb" \
+             "$OUT/v9-run/run-in-place.glb"
+          cp "build/V9-AIRBORNE-RUN-001/iteration-008-open-support/trial-05/engineering-profile.json" \
+             "$OUT/v9-run/engineering-profile.json"
+          cp "build/V9-AIRBORNE-RUN-001/iteration-008-open-support/trial-05/README.md" \
+             "$OUT/v9-run/SELECTION_NOTES.md"
+
+          cp "build/V9-AIRBORNE-SPRINT-001/review-candidate-004/trial-06/airborne-run-in_place.glb" \
+             "$OUT/v9-sprint/sprint-in-place.glb"
+          cp "build/V9-AIRBORNE-SPRINT-001/review-candidate-004/trial-06/engineering-profile.json" \
+             "$OUT/v9-sprint/engineering-profile.json"
+          cp "build/V9-AIRBORNE-SPRINT-001/review-candidate-004/trial-06/README.md" \
+             "$OUT/v9-sprint/SELECTION_NOTES.md"
+
+          cat > "$OUT/PROVENANCE.md" <<'EOF'
+          # Eonwild Babylon runtime transfer v2
+
+          This package is an immutable integration handoff from `eonwild-factory`.
+
+          - The V5.5 animation pack is the validated multi-clip base used for idle, walk, start, stop, turns, alert, feeding and related transitions.
+          - The V9 narrow-gauge walk is retained as a root-motion comparison artifact.
+          - V9 Run008 and Sprint004 are selected host-reviewed integration candidates. Their own notes remain bundled and must not be relabeled as user-accepted production releases.
+          - The Babylon runtime must use in-place locomotion clips when Havok/controller translation is authoritative. Root-motion and controller translation must never be added together.
+          EOF
+
+      - name: Inspect GLB animation contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="$RUNNER_TEMP/eonwild-factory-runtime-v2"
+          python3 - "$OUT" <<'PY'
+          import json
+          import struct
+          import sys
+          from pathlib import Path
+
+          root = Path(sys.argv[1])
+          glbs = sorted(root.rglob("*.glb"))
+          report = {"schema": "eonwild.babylon-transfer.glb-inventory.v1", "files": []}
+
+          def read_json_chunk(path: Path):
+              data = path.read_bytes()
+              if len(data) < 20 or data[:4] != b"glTF":
+                  raise SystemExit(f"Invalid GLB header: {path}")
+              version, total = struct.unpack_from("<II", data, 4)
+              if version != 2 or total != len(data):
+                  raise SystemExit(f"Invalid GLB length/version: {path}")
+              offset = 12
+              while offset + 8 <= len(data):
+                  length, kind = struct.unpack_from("<II", data, offset)
+                  offset += 8
+                  payload = data[offset:offset + length]
+                  offset += length
+                  if kind == 0x4E4F534A:
+                      return json.loads(payload.decode("utf-8").rstrip(" \t\r\n\0"))
+              raise SystemExit(f"GLB has no JSON chunk: {path}")
+
+          for path in glbs:
+              doc = read_json_chunk(path)
+              report["files"].append({
+                  "path": str(path.relative_to(root)),
+                  "bytes": path.stat().st_size,
+                  "animations": [a.get("name", "") for a in doc.get("animations", [])],
+                  "nodes": len(doc.get("nodes", [])),
+                  "meshes": len(doc.get("meshes", [])),
+                  "skins": len(doc.get("skins", [])),
+              })
+
+          base = next(x for x in report["files"] if x["path"] == "v5.5/tarbosaurus-animation-pack.glb")
+          expected = {
+              "PROC_IDLE_BREATH_V5_5",
+              "PROC_WALK_RELAXED_V5_5_INPLACE",
+              "PROC_START_WALK_V5_5_INPLACE",
+              "PROC_BRAKE_TO_IDLE_V5_5_INPLACE",
+              "PROC_IDLE_TO_WALK_V5_5",
+              "PROC_WALK_TO_IDLE_V5_5",
+              "PROC_EAT_LOOP_V5_5",
+          }
+          missing = sorted(expected - set(base["animations"]))
+          if missing:
+              raise SystemExit(f"Validated V5.5 pack is missing expected clips: {missing}")
+
+          for item in report["files"]:
+              if not item["animations"]:
+                  raise SystemExit(f"No animations found in {item['path']}")
+              if item["skins"] < 1:
+                  raise SystemExit(f"No skin found in {item['path']}")
+
+          (root / "glb-inventory.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+          print(json.dumps(report, indent=2))
+          PY
+
+      - name: Write checksums
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="$RUNNER_TEMP/eonwild-factory-runtime-v2"
+          (
+            cd "$OUT"
+            find . -type f ! -name MANIFEST.sha256 -print0 \
+              | sort -z \
+              | xargs -0 sha256sum > MANIFEST.sha256
+          )
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: eonwild-factory-runtime-v2
+          path: ${{ runner.temp }}/eonwild-factory-runtime-v2
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
