@@ -10,17 +10,83 @@ permissions:
   contents: read
 
 jobs:
-  smoke-artifact:
+  export-runtime-candidates:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Build smoke artifact
+
+      - name: Collect approved and selected runtime artifacts
+        shell: bash
         run: |
-          mkdir -p artifact
-          printf 'Eonwild Babylon export transfer smoke test\n' > artifact/README.txt
+          set -euo pipefail
+          OUT="$RUNNER_TEMP/eonwild-factory-runtime"
+          mkdir -p \
+            "$OUT/base" \
+            "$OUT/v8-approved" \
+            "$OUT/walk" \
+            "$OUT/run" \
+            "$OUT/sprint" \
+            "$OUT/idle" \
+            "$OUT/feeding"
+
+          cp "assets/sha256/b5fc582e3bae3b2708735e7ae68cc31da65599f6d155d3b6d089a44ed5517d03.glb" \
+             "$OUT/base/tarbosaurus-source.glb"
+
+          cp "procedural-animation-toolkit(v8.2)/asset/tarbosaurus_v8_2_approved.glb" \
+             "$OUT/v8-approved/tarbosaurus-v8-2-approved.glb"
+          cp "procedural-animation-toolkit(v8.2)/RELEASE_MANIFEST.json" \
+             "$OUT/v8-approved/RELEASE_MANIFEST.json"
+
+          cp "build/V9-NARROW-GAUGE-WALK-002/sweep-run-016-v4-skinned-authority/sweep-0p34000000000000002-fa4aa9445c12/narrow-gauge-walk-root_motion.glb" \
+             "$OUT/walk/narrow-gauge-walk-root-motion.glb"
+          cp "build/V9-NARROW-GAUGE-WALK-002/sweep-run-016-v4-skinned-authority/sweep-0p34000000000000002-fa4aa9445c12/candidate-contact-profile-root_motion.json" \
+             "$OUT/walk/contact-profile.json"
+
+          cp "build/V9-AIRBORNE-RUN-001/iteration-008-open-support/trial-05/airborne-run-in_place.glb" \
+             "$OUT/run/run-in-place.glb"
+          cp "build/V9-AIRBORNE-RUN-001/iteration-008-open-support/trial-05/engineering-profile.json" \
+             "$OUT/run/engineering-profile.json"
+          cp "build/V9-AIRBORNE-RUN-001/iteration-008-open-support/trial-05/README.md" \
+             "$OUT/run/SELECTION_NOTES.md"
+
+          cp "build/V9-AIRBORNE-SPRINT-001/review-candidate-004/trial-06/airborne-run_in_place.glb" \
+             "$OUT/sprint/sprint-in-place.glb"
+          cp "build/V9-AIRBORNE-SPRINT-001/review-candidate-004/trial-06/engineering-profile.json" \
+             "$OUT/sprint/engineering-profile.json"
+          cp "build/V9-AIRBORNE-SPRINT-001/review-candidate-004/trial-06/README.md" \
+             "$OUT/sprint/SELECTION_NOTES.md"
+
+          cp "build/V9-NEUTRAL-IDLE-SEAM-CONDITIONING-002/diagnostic/neutral-idle-conditioned-candidate.glb" \
+             "$OUT/idle/neutral-idle.glb"
+
+          cp "build/V9-FEEDING-REVIEW-003/feeding.glb" \
+             "$OUT/feeding/feeding.glb"
+          cp "build/V9-FEEDING-REVIEW-003/profile.json" \
+             "$OUT/feeding/profile.json"
+
+          cat > "$OUT/SELECTION_MANIFEST.md" <<'EOF'
+          # Eonwild factory runtime export
+
+          This transfer bundle is for the Babylon/Havok integration test only.
+
+          - V8.2 is the repository's approved/provenance-bound relaxed-walk package.
+          - V9 walk is the selected narrow-gauge root-motion candidate.
+          - V9 run and sprint are frozen host-reviewed candidates whose own notes state that they are not yet user accepted.
+          - Neutral idle and feeding are current generated candidates used for runtime integration testing.
+          - Runtime locomotion should use in-place clips when Havok/controller translation is authoritative; do not add root translation twice.
+          EOF
+
+          (
+            cd "$OUT"
+            find . -type f ! -name MANIFEST.sha256 -print0 \
+              | sort -z \
+              | xargs -0 sha256sum > MANIFEST.sha256
+          )
+
       - uses: actions/upload-artifact@v4
         with:
-          name: eonwild-babylon-transfer-smoke
-          path: artifact
+          name: eonwild-factory-runtime-candidates
+          path: ${{ runner.temp }}/eonwild-factory-runtime
           if-no-files-found: error
           compression-level: 0
+          retention-days: 7
