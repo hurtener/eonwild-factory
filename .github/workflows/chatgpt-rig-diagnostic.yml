@@ -1,0 +1,117 @@
+name: chatgpt-rig-diagnostic
+
+on:
+  push:
+    branches:
+      - chatgpt/babylon-rig-diagnostic
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compare GLB node and animation target contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import struct
+          from pathlib import Path
+
+          paths = {
+              "v5.5": Path("procedural-animation-toolkit(v5.5)/validated_result/v5.5/tarbosaurus_procedural_v5_5_animation_pack.glb"),
+              "run": Path("build/V9-AIRBORNE-RUN-001/iteration-008-open-support/trial-05/airborne-run-in_place.glb"),
+              "sprint": Path("build/V9-AIRBORNE-SPRINT-001/review-candidate-004/trial-06/airborne-run-in_place.glb"),
+          }
+
+          def read(path):
+              data = path.read_bytes()
+              offset = 12
+              while offset + 8 <= len(data):
+                  length, kind = struct.unpack_from("<II", data, offset)
+                  offset += 8
+                  payload = data[offset:offset+length]
+                  offset += length
+                  if kind == 0x4E4F534A:
+                      return json.loads(payload.decode("utf-8").rstrip(" \t\r\n\0"))
+              raise RuntimeError(path)
+
+          docs = {key: read(path) for key, path in paths.items()}
+
+          def parent_map(doc):
+              out = {}
+              for pi, node in enumerate(doc.get("nodes", [])):
+                  for child in node.get("children", []):
+                      out[child] = pi
+              return out
+
+          def describe(doc):
+              nodes = doc.get("nodes", [])
+              parents = parent_map(doc)
+              targets = sorted({
+                  channel.get("target", {}).get("node")
+                  for anim in doc.get("animations", [])
+                  for channel in anim.get("channels", [])
+                  if channel.get("target", {}).get("node") is not None
+              })
+              return {
+                  "nodeCount": len(nodes),
+                  "nodes": [
+                      {
+                          "index": i,
+                          "name": node.get("name", ""),
+                          "parent": parents.get(i),
+                          "parentName": nodes[parents[i]].get("name", "") if i in parents else None,
+                          "mesh": node.get("mesh"),
+                          "skin": node.get("skin"),
+                          "targeted": i in targets,
+                      }
+                      for i, node in enumerate(nodes)
+                  ],
+                  "animations": [
+                      {
+                          "index": ai,
+                          "name": anim.get("name", ""),
+                          "channels": [
+                              {
+                                  "node": ch.get("target", {}).get("node"),
+                                  "nodeName": nodes[ch.get("target", {}).get("node")].get("name", "") if ch.get("target", {}).get("node") is not None else None,
+                                  "path": ch.get("target", {}).get("path"),
+                              }
+                              for ch in anim.get("channels", [])
+                          ],
+                      }
+                      for ai, anim in enumerate(doc.get("animations", []))
+                  ],
+              }
+
+          report = {key: describe(doc) for key, doc in docs.items()}
+
+          base_names = {n["name"] for n in report["v5.5"]["nodes"] if n["name"]}
+          for key in ("run", "sprint"):
+              targeted_names = {
+                  channel["nodeName"]
+                  for animation in report[key]["animations"]
+                  for channel in animation["channels"]
+                  if channel["nodeName"]
+              }
+              missing = sorted(targeted_names - base_names)
+              report[key]["targetNamesMissingFromV5.5"] = missing
+
+          print("BEGIN_RIG_REPORT")
+          print(json.dumps(report, indent=2))
+          print("END_RIG_REPORT")
+          Path("rig-compatibility.json").write_text(json.dumps(report, indent=2) + "\n")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: eonwild-rig-compatibility
+          path: rig-compatibility.json
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 3
