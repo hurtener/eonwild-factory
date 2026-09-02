@@ -1,0 +1,4337 @@
+{
+  "authority": "AUTHORED_PREVIEW_APPROXIMATION_NOT_PHYSICS",
+  "samples": [
+    {
+      "time_seconds": 0.0,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.007157107128845892,
+        1.1554126377116898,
+        2.84128509805106
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.016666666666666666,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.007157142618021258,
+        1.1553482600556861,
+        2.8412859470226994
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.03333333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.007157379873820283,
+        1.1549149027928032,
+        2.841291622653325
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.05,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.007157982372318256,
+        1.1537900876778346,
+        2.841306035617131
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.06666666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.007159050848579866,
+        1.1516999930676683,
+        2.8413315957020484
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.08333333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.0071605949803008094,
+        1.148417195985368,
+        2.841368534429151
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.1,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.007162505051645516,
+        1.1437584204348603,
+        2.8414142271980865
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.11666666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.007164528321112891,
+        1.137582279025661,
+        2.841462627961934
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.13333333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.007166253374149383,
+        1.1297869994281964,
+        2.8415038949121962
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.15,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.007167104483245066,
+        1.1203081298562187,
+        2.841524255561815
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.16666666666666666,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.007166346916546208,
+        1.109116219036913,
+        2.8415061337371594
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.18333333333333332,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.007163103222163795,
+        1.096214466479045,
+        2.841428539129741
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.2,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.007156379761280229,
+        1.081636338803497,
+        2.8412677020182753
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.21666666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.007145102160455277,
+        1.0654431479238073,
+        2.840997921355083
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.23333333333333334,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.0071281578940848205,
+        1.0477215873202474,
+        2.840592583418893
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.25,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.007104443883230909,
+        1.0285812237726002,
+        2.840025300469239
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.26666666666666666,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.00707291679870992,
+        1.0081519437986866,
+        2.8392711140914186
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.2833333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.007032643675270898,
+        0.9865813566480476,
+        2.8383077059834707
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.3,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.006982850470679634,
+        0.9640321588663243,
+        2.837116559581522
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.31666666666666665,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.006922966328067512,
+        0.940679468926987,
+        2.835684018899102
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.3333333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.006852661510547211,
+        0.9167081439130492,
+        2.834002195994876
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.35,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.006771877260971831,
+        0.8923100933845473,
+        2.832069685275046
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.36666666666666664,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.006680846182837793,
+        0.8676816080562647,
+        2.829892051043191
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.3833333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.006580102125176741,
+        0.8430207224402984,
+        2.8274820639657623
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.4,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.006470478968925032,
+        0.8185246309506456,
+        2.8248596720400796
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.4166666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.006353098138211412,
+        0.7943871759789309,
+        2.822051701840903
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.43333333333333335,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.006229345081111995,
+        0.7707964240886733,
+        2.81909129589589
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.45,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.006100835365640314,
+        0.7479323428030357,
+        2.816017101637644
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.4666666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.005969371404438399,
+        0.7259645856443749,
+        2.812872236176667
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.48333333333333334,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.005836891144463753,
+        0.7050503873842745,
+        2.809703058861871
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.5,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.00570541032686421,
+        0.6853325652191181,
+        2.80655779002745
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.5166666666666666,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.005576960130610686,
+        0.6669376151954299,
+        2.8034850193108682
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.5333333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.005453522157199172,
+        0.6499738871005543,
+        2.8005321503639045
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.55,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.005336962790196612,
+        0.6345298156448402,
+        2.7977438306088533
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.5666666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.0052289689713521156,
+        0.6206721815092687,
+        2.7951604148815976
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.5833333333333334,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.005130987373147884,
+        0.608444373092819,
+        2.7928165103238975
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.6,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.005044168814043263,
+        0.5978646188772114,
+        2.7907396466909753
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.6166666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.004969319553532175,
+        0.5889241614607708,
+        2.7889491112370335
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.6333333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.00490686081299248,
+        0.5815853476294339,
+        2.7874549803774458
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.65,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.004856797485650361,
+        0.5757796143586194,
+        2.7862573711719456
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.6666666666666666,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.004818696511597256,
+        0.5714053582968843,
+        2.7853459240142255
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.6833333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.00479167478536792,
+        0.5683256858965318,
+        2.7846995133583445
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.7,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.00477439571504619,
+        0.5663660526766289,
+        2.7842861654063467
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.7166666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.004765072643015681,
+        0.5653118128397696,
+        2.784063139938985
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.7333333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.004761476249227521,
+        0.5649057143422654,
+        2.7839771074163266
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.75,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.004760941771411717,
+        0.564845389367077,
+        2.7839643216988663
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.7666666666666666,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.00476178552816916,
+        0.5648204822538947,
+        2.783955459492004
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.7833333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.004767479028527149,
+        0.5646524038895612,
+        2.783895641402948
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.8,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.004782296286898163,
+        0.5642148989561073,
+        2.7837398209756654
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.8166666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.004809900343028909,
+        0.5633995208453316,
+        2.7834489746634894
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.8333333333333334,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.004853360030178675,
+        0.5621149452945885,
+        2.782989592428064
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.85,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.004915166379371148,
+        0.56028628933019,
+        2.782333161401229
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.8666666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.004997250231836597,
+        0.5578544188833487,
+        2.781455676938426
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.8833333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.005101002194817661,
+        0.5547752332272216,
+        2.7803372059624762
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.9,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.005227295694131923,
+        0.5510189183268818,
+        2.7789615190924497
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.9166666666666666,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.005376513547089252,
+        0.54656916438169,
+        2.7773158006422247
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.9333333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.0055485781983399315,
+        0.541422345386857,
+        2.775390439140804
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.95,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.0057429855254934594,
+        0.535586660573758,
+        2.7731788955602217
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.9666666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.00595884192771867,
+        0.5290812392281091,
+        2.7706776419242853
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 0.9833333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.006194904255668366,
+        0.5219352117374843,
+        2.767886159393251
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.0,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.006449622022225573,
+        0.5141867508689996,
+        2.7648069822486887
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.0166666666666666,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.006721181247907012,
+        0.5058820882824159,
+        2.761445772401618
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.0333333333333332,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.007007549239998216,
+        0.4970745121758333,
+        2.7578114080672185
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.05,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.007306519578338082,
+        0.48782335274795124,
+        2.7539160700319414
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.0666666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.00761575658112856,
+        0.47819296282967516,
+        2.749775309413601
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.0833333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.007932838549026752,
+        0.4682517015596463,
+        2.7454080819018034
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.1,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.00825529913304101,
+        0.4580709293144529,
+        2.7408367350758747
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.1166666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.00858066623909034,
+        0.44772402221218865,
+        2.73608693743291
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.1333333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.008906497966766016,
+        0.4372854143476971,
+        2.7311875401181336
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.15,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.009230415179249541,
+        0.4268296754566913,
+        2.7261703649275337
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.1666666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.009550130412159234,
+        0.41643063092411964,
+        2.721069914844564
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.1833333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.00986347294806204,
+        0.40616052994549834,
+        2.7159230060768906
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.2,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.010168410006844736,
+        0.3960892662323988,
+        2.7107683231818385
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.2166666666666666,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.010463064126564314,
+        0.38628365395766273,
+        2.7056459013262164
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.2333333333333334,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.010745726931035779,
+        0.37680675971324556,
+        2.700596541946908
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.25,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.011014869595842466,
+        0.36771728917190116,
+        2.6956611700067064
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.2666666666666666,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.011269150430338949,
+        0.3590690249846481,
+        2.6908801426357183
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.2833333333333332,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.011507420086590222,
+        0.35091031030169983,
+        2.6862925201875294
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.3,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.011728724984323691,
+        0.34328357027418394,
+        2.681935311611692
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.3166666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.011932309601580548,
+        0.33622486207910296,
+        2.6778427065511337
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.3333333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.012117618321668956,
+        0.32976344251105655,
+        2.6740453067246266
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.35,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.012284297546566401,
+        0.3239213410962029,
+        2.6705693689628918
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.3666666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.012432198783127959,
+        0.31871292609397717,
+        2.6674360717426224
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.3833333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.012561383379845418,
+        0.31414445073558117,
+        2.664660816208575
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.4,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.012672129536368633,
+        0.31021356766792363,
+        2.6622525714793794
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.4166666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.012764942123614518,
+        0.3069088008748799,
+        2.6602132724701986
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.4333333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.012840565736466863,
+        0.3042089663660839,
+        2.6585372764858275
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.45,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.01290000125109567,
+        0.30208253567280763,
+        2.657210882369823
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.4666666666666666,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.012944525971455905,
+        0.3004869396712272,
+        2.656211912944953
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.4833333333333334,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.0129757172211407,
+        0.29936781445306554,
+        2.6555093577348403
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.5,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.012995478963569207,
+        0.29865819586078934,
+        2.655063068389636
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.5166666666666666,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.013006070711671744,
+        0.29827767487512524,
+        2.6548234937206443
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.5333333333333332,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.013010137614120837,
+        0.29813153226991174,
+        2.6547314346579123
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.55,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.013010740175322496,
+        0.29810987783770265,
+        2.654717791686739
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.5666666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.013003397429413947,
+        0.29810143789733456,
+        2.6547163164874834
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.5833333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.012955713149156658,
+        0.29804663497494205,
+        2.6547067279533474
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.6,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.012837116492902248,
+        0.297910383056251,
+        2.654682816280535
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.6166666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.012626794784207702,
+        0.29766892527973027,
+        2.654640187070514
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.6333333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.01231270569492037,
+        0.29730875247656813,
+        2.654575993257935
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.65,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.011890597271838265,
+        0.2968254914218409,
+        2.654488718776432
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.6666666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.011363037345320811,
+        0.296222756016898,
+        2.654378025319627
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.6833333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.010738451069249363,
+        0.29551096475310096,
+        2.6542446560800452
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.7,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.010030163523380913,
+        0.2947061344353817,
+        2.6540903789224317
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.7166666666666666,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.009255443453526828,
+        0.29382866380341066,
+        2.6539179452926507
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.7333333333333334,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.008434544233551906,
+        0.2929021218606356,
+        2.65373103948287
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.75,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.007589738821307113,
+        0.29195205484216064,
+        2.6535341948497724
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.7666666666666666,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.006744346607983701,
+        0.2910048232260898,
+        2.6533326583837145
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.7833333333333332,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.005921751370574459,
+        0.2900864764183583,
+        2.653132191814734
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.8,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.005144410798286716,
+        0.2892216681318067,
+        2.6529388053812806
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.8166666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.004432859100053419,
+        0.28843261048256974,
+        2.6527584286570973
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.8333333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.0038047049102271045,
+        0.2877380599267281,
+        2.65259653062638
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.8499999999999999,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.003273627066469029,
+        0.28715232388226253,
+        2.6524577077340257
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.8666666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.0028483708692318296,
+        0.2866842737789707,
+        2.6523452631511684
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.8833333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.002531747204279571,
+        0.2863363489161339,
+        2.6522608022309124
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.9,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.002319636462054436,
+        0.28610353643976455,
+        2.6522038673283643
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.9166666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.0021999985078326287,
+        0.2859723165033198,
+        2.6521716290503212
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.9333333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.0021518889447076834,
+        0.2859195687296495,
+        2.652158639786102
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.95,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.0021444803741398565,
+        0.2859114468824987,
+        2.6521566382263035
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.9666666666666666,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.002136547293304283,
+        0.285854136388973,
+        2.6521037004844294
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 1.9833333333333334,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.0020836997013247297,
+        0.2854725421710742,
+        2.6517506500455803
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.0,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.0019482831863025054,
+        0.2844962526978796,
+        2.6508428402636595
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.0166666666666666,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.0017003723338149903,
+        0.28271456346093554,
+        2.649169066933011
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.033333333333333,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.001317606292285044,
+        0.27997807587938367,
+        2.6465545065085703
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.05,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.0007850263577134434,
+        0.2761998187218404,
+        2.6428544933969715
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.0666666666666664,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        9.488366113397589e-05,
+        0.27135510343300473,
+        2.637950007639214
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.0833333333333335,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.0007536061339713081,
+        0.2654796442160533,
+        2.6317453388120637
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.1,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.001754585634208145,
+        0.2586656911762052,
+        2.6241680093666813
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.1166666666666667,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.002895986344979617,
+        0.2510560777531905,
+        2.615170700227679
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.1333333333333333,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.004160101761489753,
+        0.24283620912009254,
+        2.604734643697792
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.15,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.005524335669423926,
+        0.23422414451185003,
+        2.592873751561199
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.1666666666666665,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.006962147640617884,
+        0.22545906807372704,
+        2.5796386433923733
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.183333333333333,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.008444197802381377,
+        0.21678859888699586,
+        2.5651197389289435
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.2,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.009939666023743162,
+        0.20845554670246172,
+        2.549448678240788
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.216666666666667,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.011417690787822022,
+        0.20068485164070046,
+        2.532797523563299
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.2333333333333334,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.012848845492673929,
+        0.1936715266856475,
+        2.5153754553839245
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.25,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.014206550177114387,
+        0.18757042799561208,
+        2.4974229710236933
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.2666666666666666,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.01546830914537873,
+        0.1824885965607714,
+        2.4792038880846285
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.283333333333333,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.016616672122949275,
+        0.17848074608822467,
+        2.4609957076825326
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.3,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.017639838283043486,
+        0.17554823153607077,
+        2.4430790680262437
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.3166666666666664,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.018531855966621495,
+        0.17364154823745784,
+        2.425727093160502
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.3333333333333335,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.019292411307562554,
+        0.17266611818435212,
+        2.4091954053997013
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.35,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.019926240309976046,
+        0.17249085360545932,
+        2.3937134310356982
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.3666666666666667,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.020442235383557848,
+        0.17295877843608096,
+        2.3794774108229415
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.3833333333333333,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.02085234436137836,
+        0.1738988548404573,
+        2.3666452644434823
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.4,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.02117037503594653,
+        0.17513811093480267,
+        2.355333191911578
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.4166666666666665,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.021410820869338043,
+        0.17651319179034222,
+        2.3456136638128515
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.433333333333333,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.02158781517854079,
+        0.17788054522558885,
+        2.3375142885797446
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.45,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.021714304181388488,
+        0.17912459098168365,
+        2.3310169697715137
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.466666666666667,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.021801506245206836,
+        0.18016339422840355,
+        2.3260567872604154
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.4833333333333334,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.021858697096400842,
+        0.18095156775128202,
+        2.3225201471455486
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.5,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.021893328853978294,
+        0.1814803679560689,
+        2.320241927026609
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.5166666666666666,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.021911453389706757,
+        0.18177524431696865,
+        2.3190015663314902
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.533333333333333,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.021918375600840603,
+        0.18189147291069194,
+        2.318518279715066
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.55,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.02191940740733034,
+        0.18190897589855143,
+        2.3184457698919787
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.5666666666666664,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.021905230766107977,
+        0.18190140768985386,
+        2.318616724486197
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.5833333333333335,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.021815207508947304,
+        0.18185531235051516,
+        2.3196979219970335
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.6,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.021595829467448688,
+        0.1817568260664134,
+        2.3223018024546493
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.6166666666666667,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.021212210833738632,
+        0.1816293055910579,
+        2.3267554207201977
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.6333333333333333,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.02064370638431831,
+        0.18153624251342562,
+        2.3331417575915414
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.65,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.019882492032039133,
+        0.18157110499022547,
+        2.3413381576815304
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.6666666666666665,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.018934603734194276,
+        0.18183595758054374,
+        2.351053092469701
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.683333333333333,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.017822044152863866,
+        0.182414523499777,
+        2.361863441217848
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 2.7,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.016584283081899742,
+        0.18334683858210984,
+        2.3732542534253827
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 5.495603971894525e-17
+    },
+    {
+      "time_seconds": 2.716666666666667,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.015277688421285249,
+        0.18461224332708398,
+        2.384661771009238
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.002619047619047665
+    },
+    {
+      "time_seconds": 2.7333333333333334,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.013971987628546798,
+        0.1861255477321582,
+        2.395518996152838
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.005238095238095274
+    },
+    {
+      "time_seconds": 2.75,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.012743597316219941,
+        0.18774824369286164,
+        2.405302016907161
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.007857142857142884
+    },
+    {
+      "time_seconds": 2.7666666666666666,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.011666379752376903,
+        0.18931324008698822,
+        2.4135751295655092
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.010476190476190495
+    },
+    {
+      "time_seconds": 2.783333333333333,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.010800927792732961,
+        0.19065846390366803,
+        2.4200335621862825
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.013095238095238104
+    },
+    {
+      "time_seconds": 2.8,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.010183748673291429,
+        0.1916624994637523,
+        2.424543892711498
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.015714285714285712
+    },
+    {
+      "time_seconds": 2.8166666666666664,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.009817682759365941,
+        0.19227481816525233,
+        2.4271833941560166
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.018333333333333323
+    },
+    {
+      "time_seconds": 2.8333333333333335,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.0096645466035165,
+        0.19253457974949598,
+        2.428279918369165
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.020952380952381
+    },
+    {
+      "time_seconds": 2.85,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.009640272178015398,
+        0.19257594902217348,
+        2.4284533252050404
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.02357142857142861
+    },
+    {
+      "time_seconds": 2.8666666666666667,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.009612618283086799,
+        0.1925822285879677,
+        2.428674260298413
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.02619047619047622
+    },
+    {
+      "time_seconds": 2.8833333333333333,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.009437135356946156,
+        0.19262614464521932,
+        2.4300709027691276
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.02880952380952383
+    },
+    {
+      "time_seconds": 2.9,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.0090103731947253,
+        0.19276162643326786,
+        2.4334297495471784
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.03142857142857144
+    },
+    {
+      "time_seconds": 2.9166666666666665,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.008266997629248547,
+        0.19309029629058827,
+        2.4391585702948175
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.03404761904761905
+    },
+    {
+      "time_seconds": 2.933333333333333,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.007171808846207166,
+        0.193773719758778,
+        2.4473359884559134
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.03666666666666666
+    },
+    {
+      "time_seconds": 2.95,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.0057167718513652524,
+        0.19501384943750852,
+        2.4577612155075625
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.03928571428571434
+    },
+    {
+      "time_seconds": 2.966666666666667,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.003922012339679398,
+        0.1970066197647042,
+        2.470006706726502
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.04190476190476195
+    },
+    {
+      "time_seconds": 2.9833333333333334,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.0018381462310118539,
+        0.1998831782842319,
+        2.4834769956405665
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.04452380952380956
+    },
+    {
+      "time_seconds": 3.0,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.00045308071543001576,
+        0.2036567087297862,
+        2.497474959284971
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.047142857142857174
+    },
+    {
+      "time_seconds": 3.0166666666666666,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.0028422190395117337,
+        0.20819113247404145,
+        2.5112728881042825
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.04976190476190478
+    },
+    {
+      "time_seconds": 3.033333333333333,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.0052006419253449706,
+        0.2132022792718376,
+        2.5241820203328693
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.05238095238095239
+    },
+    {
+      "time_seconds": 3.05,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.0073936867686842005,
+        0.21829405862842333,
+        2.5356128608055886
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.055
+    },
+    {
+      "time_seconds": 3.0666666666666664,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.009296767231003783,
+        0.22302387380597374,
+        2.545120795180442
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.05238095238095239
+    },
+    {
+      "time_seconds": 3.0833333333333335,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.010812353106895054,
+        0.22698505490768375,
+        2.5524366827145095
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.04976190476190464
+    },
+    {
+      "time_seconds": 3.1,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.011885958784629273,
+        0.22989078889659156,
+        2.5574881816455965
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.04714285714285703
+    },
+    {
+      "time_seconds": 3.1166666666666667,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.012519929378128966,
+        0.23164434012730006,
+        2.5604217731132075
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.044523809523809424
+    },
+    {
+      "time_seconds": 3.1333333333333333,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.012784518543193854,
+        0.232384326655964,
+        2.5616354808057977
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.04190476190476181
+    },
+    {
+      "time_seconds": 3.15,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.012826426483334177,
+        0.23250196833984033,
+        2.561827148965295
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0392857142857142
+    },
+    {
+      "time_seconds": 3.1666666666666665,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.013024379042139163,
+        0.23257329182586692,
+        2.5614258746051775
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.03666666666666659
+    },
+    {
+      "time_seconds": 3.183333333333333,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.014181229147551287,
+        0.2330073396914717,
+        2.5590650948743225
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.03404761904761898
+    },
+    {
+      "time_seconds": 3.2,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.016682266461568472,
+        0.23404840287468762,
+        2.553867857446887
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.031428571428571375
+    },
+    {
+      "time_seconds": 3.216666666666667,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.020410237951165425,
+        0.2358719288579181,
+        2.545874915808795
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.02880952380952376
+    },
+    {
+      "time_seconds": 3.2333333333333334,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.024904164058270704,
+        0.2385315430894756,
+        2.53582453959384
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.026190476190476153
+    },
+    {
+      "time_seconds": 3.25,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.029535572373243044,
+        0.24184717082947066,
+        2.524953808882789
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 3.2666666666666666,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.03367881793689334,
+        0.24535782337754988,
+        2.5147472257044625
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 3.283333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.03684879895481572,
+        0.2484258358318991,
+        2.50660314602369
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 3.3,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.038796431257549835,
+        0.2504887938300718,
+        2.501444419957406
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 3.3166666666666664,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.039583096713536076,
+        0.25136259190668775,
+        2.49932560855886
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 3.3333333333333335,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.03967206509560736,
+        0.2514630911100025,
+        2.499085727001153
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 3.35,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.03962853547620375,
+        0.25144735006134106,
+        2.4994122043057705
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 3.3666666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.03942357485527654,
+        0.25137710762246096,
+        2.500943417886609
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 3.3833333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.03896625582601969,
+        0.2512429773757076,
+        2.50432487603327
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 3.4,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.03819958572494585,
+        0.2510854972999482,
+        2.5098892441145244
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 3.4166666666666665,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.03709440342962584,
+        0.25099840151790803,
+        2.5176939402460534
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 3.433333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.03564651021479525,
+        0.25111506885639606,
+        2.5275626671395277
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 3.4499999999999997,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.03387633894537718,
+        0.2515807362928925,
+        2.5391315271269153
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 3.466666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.03182952007945089,
+        0.2525176243241613,
+        2.5518996021271168
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 3.4833333333333334,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.029576459873241766,
+        0.2539918443505201,
+        2.5652827642903495
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 3.5,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.027209429173594143,
+        0.2559902795489636,
+        2.578668066588056
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 3.5166666666666666,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.024836466369749448,
+        0.25841312499321406,
+        2.5914649206365437
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 3.533333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.02257232422056147,
+        0.2610841986613721,
+        2.6031490972141182
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 3.55,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.02052742153677105,
+        0.26377737226083386,
+        2.613296788761192
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 3.5666666666666664,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.01879607907367125,
+        0.2662543428633808,
+        2.62160841901474
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 3.5833333333333335,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.017445189932786962,
+        0.2683070369282409,
+        2.6279248942106097
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 3.6,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.01650405096562736,
+        0.2697974173323432,
+        2.632241549676497
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 3.6166666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.01595560976288761,
+        0.27068831255655446,
+        2.634726125520443
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 3.6333333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.01572904933931344,
+        0.27106109746671264,
+        2.635745960787844
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 3.65,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.0156934286064828,
+        0.27111995990158233,
+        2.6359059580643636
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 3.6666666666666665,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.015367086365243716,
+        0.2718347518847001,
+        2.6367670083977903
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 3.683333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.013693391769358526,
+        0.27554304131661594,
+        2.641124471669183
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 3.6999999999999997,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.01069644076120268,
+        0.2823581036557154,
+        2.6486871870590214
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 3.716666666666667,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.0073072963987997445,
+        0.29033077122481377,
+        2.6568799618481815
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0033333333333333717
+    },
+    {
+      "time_seconds": 3.7333333333333334,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.00470712580966277,
+        0.29663576206766185,
+        2.6629145010537942
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0045238095238095575
+    },
+    {
+      "time_seconds": 3.75,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.0036052279723818963,
+        0.2993565709334858,
+        2.665407446257378
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.005714285714285745
+    },
+    {
+      "time_seconds": 3.7666666666666666,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.003520503626669537,
+        0.2995620763107432,
+        2.6655843227378235
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.006904761904761931
+    },
+    {
+      "time_seconds": 3.783333333333333,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.0033705361143209576,
+        0.2997496267766482,
+        2.665420535982622
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.008095238095238117
+    },
+    {
+      "time_seconds": 3.8,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.002826326623530351,
+        0.3004303225530383,
+        2.6648259711601576
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.009285714285714303
+    },
+    {
+      "time_seconds": 3.8166666666666664,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.0017470636397454175,
+        0.3017807418878103,
+        2.6636458818170263
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.01047619047619049
+    },
+    {
+      "time_seconds": 3.8333333333333335,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        9.508488822955303e-05,
+        0.30384900567990003,
+        2.661837088247726
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.01166666666666674
+    },
+    {
+      "time_seconds": 3.85,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.002083229793005109,
+        0.30657853354529435,
+        2.6594473879253653
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.012857142857142926
+    },
+    {
+      "time_seconds": 3.8666666666666667,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.004676646550413648,
+        0.3098316198211546,
+        2.6565954420665503
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.014047619047619113
+    },
+    {
+      "time_seconds": 3.8833333333333333,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.007528306430531662,
+        0.31341294068113273,
+        2.6534508600645603
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.015238095238095299
+    },
+    {
+      "time_seconds": 3.9,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.010454939928759125,
+        0.31709312681513363,
+        2.6502141346482753
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.016428571428571483
+    },
+    {
+      "time_seconds": 3.9166666666666665,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.01326601367060582,
+        0.3206325093485204,
+        2.647096134900672
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.01761904761904767
+    },
+    {
+      "time_seconds": 3.933333333333333,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.01578277221286689,
+        0.3238050900402593,
+        2.6442969997543
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.01880952380952386
+    },
+    {
+      "time_seconds": 3.9499999999999997,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.01785716688681447,
+        0.3264227202439479,
+        2.641984449059796
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.020000000000000046
+    },
+    {
+      "time_seconds": 3.966666666666667,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.01939069903047463,
+        0.3283594138343898,
+        2.640271700082002
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.021190476190476232
+    },
+    {
+      "time_seconds": 3.9833333333333334,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.020353236321971623,
+        0.3295756808779909,
+        2.639195301270866
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.022380952380952418
+    },
+    {
+      "time_seconds": 4.0,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.02080187465095323,
+        0.3301427623789114,
+        2.6386932293443244
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.023571428571428604
+    },
+    {
+      "time_seconds": 4.016666666666667,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.02089990086753054,
+        0.33026668332840003,
+        2.638583497301861
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.02476190476190479
+    },
+    {
+      "time_seconds": 4.033333333333333,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.020861650118862287,
+        0.3300705908625018,
+        2.638354932432348
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.024047619047619026
+    },
+    {
+      "time_seconds": 4.05,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.02052130529605906,
+        0.3283449769555023,
+        2.636348240753225
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.02285714285714284
+    },
+    {
+      "time_seconds": 4.066666666666666,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.019689808535833707,
+        0.3241447647404823,
+        2.6314123872665487
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.021666666666666654
+    },
+    {
+      "time_seconds": 4.083333333333333,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.01836841307611238,
+        0.31751527715046757,
+        2.6234694202434774
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.020476190476190467
+    },
+    {
+      "time_seconds": 4.1,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.016695919235037108,
+        0.3092035768043075,
+        2.6132365817259875
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.01928571428571428
+    },
+    {
+      "time_seconds": 4.116666666666666,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.014892093193946418,
+        0.3003376033661681,
+        2.601966881957247
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.01809523809523809
+    },
+    {
+      "time_seconds": 4.133333333333333,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.013201068434591257,
+        0.2921180976620502,
+        2.5911724144959183
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.016904761904761905
+    },
+    {
+      "time_seconds": 4.15,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.01183823957841172,
+        0.28555831071959437,
+        2.5823043536941475
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.01571428571428566
+    },
+    {
+      "time_seconds": 4.166666666666667,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.010942674108195778,
+        0.2812788648919606,
+        2.576391902049458
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.014523809523809474
+    },
+    {
+      "time_seconds": 4.183333333333334,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.010533254769533172,
+        0.27933070057489073,
+        2.5736659476066173
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.013333333333333287
+    },
+    {
+      "time_seconds": 4.2,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.01046349504257968,
+        0.278999274002742,
+        2.573200022355519
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.012142857142857101
+    },
+    {
+      "time_seconds": 4.216666666666667,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.010398069340659325,
+        0.27947290102492833,
+        2.5735188202465125
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.010952380952380915
+    },
+    {
+      "time_seconds": 4.233333333333333,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.00998158997393432,
+        0.28249105071335595,
+        2.5755444909078786
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.009761904761904729
+    },
+    {
+      "time_seconds": 4.25,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.008970870806456085,
+        0.28983845314480805,
+        2.580433822370297
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.00857142857142854
+    },
+    {
+      "time_seconds": 4.266666666666667,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.007227803430311705,
+        0.3025857399877889,
+        2.5887770998899744
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.007380952380952355
+    },
+    {
+      "time_seconds": 4.283333333333333,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.004705663740198052,
+        0.3212005666487502,
+        2.6006495121966244
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.006190476190476169
+    },
+    {
+      "time_seconds": 4.3,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        -0.0014356130180166768,
+        0.3456337750638058,
+        2.6156879528954655
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.004999999999999983
+    },
+    {
+      "time_seconds": 4.316666666666666,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.0024867541176362058,
+        0.37538344907998594,
+        2.633192944086421
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.003809523809523796
+    },
+    {
+      "time_seconds": 4.333333333333333,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.006915072765474995,
+        0.40954784528927635,
+        2.652248159294965
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0026190476190476072
+    },
+    {
+      "time_seconds": 4.35,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.011666303726326063,
+        0.4468811603739576,
+        2.671845807094344
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0014285714285714208
+    },
+    {
+      "time_seconds": 4.366666666666666,
+      "grip_active": true,
+      "lower_oral_surface_centroid_canonical": [
+        0.01653530784281233,
+        0.48586457280211515,
+        2.6910042418851963
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0002380952380952345
+    },
+    {
+      "time_seconds": 4.383333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.021309707634559232,
+        0.524800300739515,
+        2.708864665620568
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.4,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.025784661224268153,
+        0.5619303321164288,
+        2.7247569465753916
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.416666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.029777134871447536,
+        0.5955758389619669,
+        2.7382302850727083
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.433333333333334,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.033139399418818334,
+        0.6242894839163339,
+        2.749051847430261
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.45,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.03577174917812285,
+        0.6470114500104317,
+        2.7571840176942315
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.466666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.03763474407485098,
+        0.6632207885678301,
+        2.7627566548416342
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.483333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.038761478285896926,
+        0.6730757653094251,
+        2.7660527981767205
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.5,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.03927037672569866,
+        0.6775395986302254,
+        2.76752309533176
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.516666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.03937877631058924,
+        0.6784914575809873,
+        2.767834794794162
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.533333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.03939391901887045,
+        0.6785019146065688,
+        2.7677662455750207
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.55,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.03953237781990148,
+        0.678556978564232,
+        2.7670984333043895
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.566666666666666,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.03990726732509133,
+        0.6787188828071307,
+        2.765265874699836
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.583333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.04058231671437672,
+        0.6790587995551441,
+        2.761874704513832
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.6,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.04157654619558846,
+        0.6796778396014245,
+        2.756659692001785
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.616666666666666,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.04286961470240253,
+        0.6807085324849559,
+        2.7494655454834813
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.633333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.04440857920985301,
+        0.6822996036826074,
+        2.7402547372366914
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.65,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.04611636056514005,
+        0.6845867167338363,
+        2.7291310305755894
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.666666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.04790186427786424,
+        0.6876551682427986,
+        2.7163632661989
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.683333333333334,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.04967108064400197,
+        0.6915031833305273,
+        2.7023945328234777
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.7,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.051337819471087474,
+        0.6960158927104874,
+        2.687826439782958
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.716666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.052832392342080765,
+        0.7009593158205014,
+        2.6733750062828823
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.733333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.05410681664035557,
+        0.7060002159596719,
+        2.659801534548751
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.75,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.05513598779567083,
+        0.7107519921748768,
+        2.6478268525573894
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.766666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.05591546649876962,
+        0.7148402343449658,
+        2.638039472598515
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.783333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.05645761696183272,
+        0.7179760818208237,
+        2.6308076292111635
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.8,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.0567884065402094,
+        0.7200228829207542,
+        2.6262028000235875
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.816666666666666,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.05694699318564373,
+        0.7210431572296034,
+        2.6239392124557055
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.833333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.05698921485155621,
+        0.72131924889459,
+        2.6233301829636626
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.85,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.056957694189733524,
+        0.7212888566081445,
+        2.623342829271881
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.866666666666666,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.05646815806199349,
+        0.7207254747959078,
+        2.623769405542628
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.883333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.055123575956346524,
+        0.7191829284905114,
+        2.6249359889736845
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.9,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.05292520135146772,
+        0.7166760692516925,
+        2.626827474600472
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.916666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.05015980052712139,
+        0.7135489016266265,
+        2.629179277203126
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.933333333333334,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.047277908895548615,
+        0.7103204896350818,
+        2.6315980575491826
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.95,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.044767652790360164,
+        0.7075331873773383,
+        2.6336787160989235
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.966666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.04301982285332327,
+        0.7056058233634424,
+        2.6351132428356663
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 4.983333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.04218653545264937,
+        0.7046907521328799,
+        2.635793106968104
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.0,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.04204054479651149,
+        0.7045306844839108,
+        2.635911950195565
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.016666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.04201421644191241,
+        0.7044175267832326,
+        2.6360590701467097
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.033333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.04184400466515662,
+        0.7036888803783249,
+        2.6370070371953944
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.05,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.04142155243136939,
+        0.701901911977998,
+        2.6393365095387495
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.066666666666666,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.040670705077786126,
+        0.6987989653726864,
+        2.64339718018101
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.083333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.03954152978960758,
+        0.6942994295510339,
+        2.6493211574434894
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.1,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.038006858654364616,
+        0.6884815585393922,
+        2.6570439749371517
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.116666666666666,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.036061494004483656,
+        0.6815532150425226,
+        2.6663346518010895
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.133333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.033723249568726035,
+        0.6738139346209109,
+        2.6768340739568637
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.15,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.031034422489424854,
+        0.6656127703865863,
+        2.688099500311185
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.166666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.028062164233216103,
+        0.657307151969223,
+        2.6996518758220542
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.183333333333334,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.024896533912983004,
+        0.6492276176464011,
+        2.71102181776889
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.2,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.021645670320038352,
+        0.6416519912425749,
+        2.721789809622255
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.216666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.018428309819799676,
+        0.6347907167995371,
+        2.731616520865182
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.233333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.015364557968721673,
+        0.6287830498934074,
+        2.740260394287562
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.25,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.012566177524407928,
+        0.6237020491334827,
+        2.7475816133930326
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.266666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.010127584507911416,
+        0.6195651284926096,
+        2.7535339619614927
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.283333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.008118304777177966,
+        0.616346455128685,
+        2.7581484384837434
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.3,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.006577027550448064,
+        0.6139876481861859,
+        2.7615142701099487
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.316666666666666,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.005506845041633032,
+        0.6124038640569701,
+        2.7637637255770513
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.333333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.004870988881453361,
+        0.6114832598874097,
+        2.765066516341635
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.35,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.0045884379504810835,
+        0.6110789805495288,
+        2.76563739112421
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.366666666666666,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.004529090746229402,
+        0.6109944379929948,
+        2.76575667080157
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.383333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.004524028607466314,
+        0.6109567252131972,
+        2.7657462600981897
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.4,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.004477833963946902,
+        0.6105953180631781,
+        2.765639566803611
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.416666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.0043490765032984735,
+        0.6095882009303873,
+        2.765341854766536
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.433333333333334,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.0041087321502139154,
+        0.60770916257092,
+        2.7647848420883645
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.45,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.0037387856254664275,
+        0.6048191477410533,
+        2.7639241880864343
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.466666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.0032310595356840363,
+        0.6008572772989473,
+        2.7627365353082607
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.483333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.002586056866674614,
+        0.5958316832568018,
+        2.7612170073235935
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.5,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.0018118163288515447,
+        0.589810159714342,
+        2.759377150034284
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.516666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.0009227771686489639,
+        0.5829106664002708,
+        2.7572432111009144
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.533333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        -6.135155458960426e-05,
+        0.5752917438533625,
+        2.7548545971814793
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.55,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        -0.0011167227370691326,
+        0.5671429108100815,
+        2.752262326972847
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.566666666666666,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        -0.0022164891450239866,
+        0.5586751168806814,
+        2.749527304047501
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.583333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        -0.003331951480878536,
+        0.5501113181226681,
+        2.7467182613333354
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.6,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        -0.004433719086405395,
+        0.5416772303804591,
+        2.743909272741318
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.616666666666666,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        -0.00549288407708884,
+        0.5335922960980958,
+        2.7411767808516827
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.633333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        -0.006482208062554058,
+        0.5260608760615204,
+        2.738596146857593
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.65,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        -0.007377319192651474,
+        0.5192636502387978,
+        2.7362377846095116
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.666666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        -0.008157916192487798,
+        0.5133491843897502,
+        2.7341629894982806
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.683333333333334,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        -0.00880897537544469,
+        0.5084255949079182,
+        2.7324196103662937
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.7,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        -0.009321956379236641,
+        0.5045522273478447,
+        2.731037734249546
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.716666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        -0.00969600257677343,
+        0.5017312582446846,
+        2.7300255552331905
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.733333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        -0.00993913281511638,
+        0.4998991387775207,
+        2.7293655755985267
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.75,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        -0.010069422428161176,
+        0.4989178254975286,
+        2.7290112348982505
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.766666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        -0.010116173518899967,
+        0.49856578977246835,
+        2.7288839752086367
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.783333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        -0.010120569708703463,
+        0.4985294607261697,
+        2.7288708444942587
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.8,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        -0.010038902122573613,
+        0.4985279762815631,
+        2.7288715332124753
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.816666666666666,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        -0.009674485457610075,
+        0.49852136861407975,
+        2.7288745527520346
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.833333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        -0.008917241799045475,
+        0.49850772284989253,
+        2.728880546896432
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.85,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        -0.007756532896510693,
+        0.49848702853790683,
+        2.7288890000164967
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.866666666666666,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        -0.006258563698575401,
+        0.4984607183732015,
+        2.728898594899241
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.883333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        -0.00454379025180297,
+        0.49843114965046986,
+        2.7289077603387346
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.9,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        -0.0027643259676566356,
+        0.4984010854306807,
+        2.7289152196164843
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.916666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        -0.0010813416541222058,
+        0.4983732322602986,
+        2.7289203515257445
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.933333333333334,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.00035754159796811254,
+        0.4983498667833275,
+        2.728923256838439
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.95,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.0014408642763646788,
+        0.4983325475227389,
+        2.7289245426312667
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.966666666666667,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.002115941308314813,
+        0.49832187329327327,
+        2.728924952196636
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 5.983333333333333,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.002411472713275309,
+        0.4983172289850221,
+        2.728925036847325
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    },
+    {
+      "time_seconds": 6.0,
+      "grip_active": false,
+      "lower_oral_surface_centroid_canonical": [
+        0.0024601503350093154,
+        0.49831646568120225,
+        2.728925045261842
+      ],
+      "authored_connector_endpoint_error_m": 0.0,
+      "prop_bottom_canonical_y": 0.0008014736783756348,
+      "prop_edge_lift_m": 0.0
+    }
+  ]
+}

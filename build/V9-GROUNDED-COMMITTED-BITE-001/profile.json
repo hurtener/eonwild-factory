@@ -1,0 +1,116 @@
+{
+  "schema": "eonwild.motion.v9.experimental-grounded-committed-bite.v1",
+  "id": "grounded-committed-bite-engineering-v1",
+  "version": 1,
+  "body_articulation": {"path": "profiles/v9/body-articulation.grounded-bite.v1.json"},
+  "attack": {
+    "duration_seconds": 5.0,
+    "timing": {"anticipation_end": 0.55, "gape_peak": 1.0, "reach_end": 1.45, "close_end": 1.68, "hold_end": 2.65, "recovery_end": 4.55},
+    "prop_radius_width_fraction": 0.12,
+    "target_forward_length_fraction": 0.90,
+    "target_lateral_width_fraction": 0.0,
+    "pelvis_drop_height_fraction": 0.286619399607784,
+    "pelvis_forward_length_fraction": 0.072,
+    "gape_degrees": 58.0,
+    "closed_hold_fraction": 0.05,
+    "jaw_ground_clearance_height_fraction": 0.002,
+    "foot_transform_tolerance_width_fraction": 0.003,
+    "mouth_reach_tolerance_length_fraction": 0.024
+  },
+  "classification": "experimental_reusable_grounded_action_not_visual_acceptance_or_scientific_reconstruction",
+  "source": {
+    "path": "build/V9-NEUTRAL-IDLE-SEAM-CONDITIONING-002/diagnostic/neutral-idle-conditioned-candidate.glb",
+    "sha256": "4c0883ee2eb3b337a9095f2da2a11dee97ca14ae5ee8e5d662b1b1db2498ab47",
+    "clip": "neutral_idle_reference_calibration",
+    "duration_seconds": 6.0,
+    "sample_count": 361
+  },
+  "semantic_rig": {
+    "path": "catalog/rigs/hero-theropod-v8_3.semantic-rig.json",
+    "sha256": "35bbcc97654057dc57d2cb7153457c4836bc78d21170f67c33e112f808c27b99"
+  },
+  "semantic_binding": {
+    "path": "profiles/v9/rig.v5_5-neutral-idle.json",
+    "sha256": "0566370eef4e57ad0722cd4e369dbc1e8063d852925aafb18f4532de93043ea6"
+  },
+  "timing": {
+    "duration_seconds": 8.0,
+    "retime_source_to_duration": true,
+    "source_timeline_preserved_as_order": true,
+    "exact_cycle": true,
+    "phase_windows_seconds": {
+      "acquire_align_lower": [0.0, 3.0],
+      "gape_reach": [3.0, 3.7],
+      "contact_hold": [3.7, 5.8],
+      "release_recovery": [5.8, 8.0]
+    }
+  },
+  "parameter": {
+    "name": "commitment_strength",
+    "minimum": 0.0,
+    "maximum": 1.0,
+    "default": 0.78
+  },
+  "body_metrics": {
+    "body_height_m": 1.3258,
+    "body_length_m": 2.5,
+    "body_width_m": 1.0,
+    "frame": "root_body_relative",
+    "claims": "engineering scale parameters only; not biological measurements"
+  },
+  "target": {
+    "frame": "root_body_relative",
+    "normalized_position": [0.18, -0.25, 0.0],
+    "axis_order": ["forward", "vertical", "lateral"],
+    "scale_by_metric": ["body_length_m", "body_height_m", "body_width_m"],
+    "contact_radius_normalized": 0.12,
+    "velocity_normalized_per_second": [0.0, 0.0, 0.0],
+    "uncertainty_normalized": 0.08,
+    "claims": "target-relative geometry witness; no target force, impulse, or physical COM claim"
+  },
+  "axes_local_xyz": {
+    "pitch": [1.0, 0.0, 0.0],
+    "yaw": [0.0, 1.0, 0.0],
+    "roll": [0.0, 0.0, 1.0]
+  },
+  "authority_masks": {
+    "pelvis": {"chain_weights": [1.0], "pitch_degrees": -8.0, "yaw_degrees": 0.8, "roll_degrees": 0.0},
+    "spine": {"chain_weights": [0.10, 0.16, 0.23, 0.30, 0.38], "pitch_degrees": -16.0, "yaw_degrees": 1.2, "roll_degrees": 0.0},
+    "chest": {"chain_weights": [1.0], "pitch_degrees": -14.0, "yaw_degrees": 1.5, "roll_degrees": 0.0},
+    "neck": {"chain_weights": [0.14, 0.22, 0.32, 0.44, 0.58], "pitch_degrees": -22.0, "yaw_degrees": 2.8, "roll_degrees": 0.0},
+    "head": {"chain_weights": [1.0], "pitch_degrees": -18.0, "yaw_degrees": 4.0, "roll_degrees": 0.0},
+    "jaw_lower": {"chain_weights": [1.0], "open_degrees": 24.0},
+    "tail": {"chain_weights": [0.18, 0.24, 0.30, 0.36, 0.42, 0.38, 0.32, 0.25, 0.18], "pitch_degrees": 3.0, "yaw_degrees": -1.1, "roll_degrees": 0.0}
+  },
+  "limits": {
+    "max_action_rotation_degrees": 35.0,
+    "max_action_angular_rate_degrees_per_second": 55.0,
+    "max_support_root_relative_drift_m": 0.08,
+    "max_quaternion_norm_error": 0.000002,
+    "target_contact_distance_m": 0.28,
+    "minimum_contact_hold_seconds": 1.9
+    ,"minimum_mouth_proxy_aim_reduction_m": 0.15
+  },
+  "events": [
+    {"name": "TARGET_LOCK", "time_seconds": 0.2, "phase": "acquire_align_lower"},
+    {"name": "LOWER_START", "time_seconds": 0.7, "phase": "acquire_align_lower"},
+    {"name": "JAW_OPEN", "time_seconds": 2.8, "phase": "acquire_align_lower"},
+    {"name": "REACH_START", "time_seconds": 3.0, "phase": "gape_reach"},
+    {"name": "CONTACT_BEGIN", "time_seconds": 3.7, "phase": "contact_hold"},
+    {"name": "JAW_CONTACT", "time_seconds": 4.4, "phase": "contact_hold"},
+    {"name": "CONTACT_HOLD_END", "time_seconds": 5.8, "phase": "contact_hold"},
+    {"name": "RELEASE", "time_seconds": 5.8, "phase": "release_recovery"},
+    {"name": "RECOVERY_END", "time_seconds": 8.0, "phase": "release_recovery"}
+  ],
+  "claims": {
+    "grounded_only": true,
+    "flight_enabled": false,
+    "force": false,
+    "impulse": false,
+    "physical_com": false,
+    "scientific": false,
+    "biological": false,
+    "capacity_feasibility": "unevaluated",
+    "visual_reference": "V04 broad choreography only"
+  }
+}

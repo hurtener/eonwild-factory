@@ -1,0 +1,131 @@
+{
+  "status": "PASS_FOCUSED_KINEMATICS",
+  "checks": {
+    "unreachable_extension": true,
+    "target_residual": true,
+    "angle_envelope": true,
+    "joint_rate": true,
+    "rotation_seam": true,
+    "anatomical_branches": true,
+    "limb_translations": true,
+    "limb_scales": true
+  },
+  "maximum_joint_rate_degrees_per_s": 866.152543796572,
+  "maximum_seam_degrees": 0.020986291366849364,
+  "max_leg_toe_local_translation_difference_from_source_m": 3.5885154645687757e-09,
+  "max_leg_toe_local_scale_difference_from_source": 0.0,
+  "late_left_approach": [
+    {
+      "time_s": 0.800000011920929,
+      "hip_degrees": 48.84983985798302,
+      "knee_interior_degrees": 122.94913234343674,
+      "ankle_interior_degrees": 102.72917057910993,
+      "pitch_degrees": -25.03271140015273
+    },
+    {
+      "time_s": 0.8083333373069763,
+      "hip_degrees": 48.420879526464276,
+      "knee_interior_degrees": 127.02675556064445,
+      "ankle_interior_degrees": 106.2079608606133,
+      "pitch_degrees": -25.107831592460425
+    },
+    {
+      "time_s": 0.8166666626930237,
+      "hip_degrees": 48.003611781356106,
+      "knee_interior_degrees": 130.66032760285486,
+      "ankle_interior_degrees": 109.44254651137662,
+      "pitch_degrees": -24.996653707845045
+    },
+    {
+      "time_s": 0.824999988079071,
+      "hip_degrees": 47.73694111118177,
+      "knee_interior_degrees": 133.62621335242736,
+      "ankle_interior_degrees": 112.36919401954276,
+      "pitch_degrees": -24.684153707845052
+    },
+    {
+      "time_s": 0.8333333134651184,
+      "hip_degrees": 47.81257232284719,
+      "knee_interior_degrees": 135.6177811874666,
+      "ankle_interior_degrees": 114.92418665701727,
+      "pitch_degrees": -24.12525947707582
+    },
+    {
+      "time_s": 0.8416666388511658,
+      "hip_degrees": 48.35566903391329,
+      "knee_interior_degrees": 136.4547698748969,
+      "ankle_interior_degrees": 117.17301280418495,
+      "pitch_degrees": -23.199778707845056
+    },
+    {
+      "time_s": 0.8500000238418579,
+      "hip_degrees": 49.29304721473835,
+      "knee_interior_degrees": 136.2931795597802,
+      "ankle_interior_degrees": 119.29624310515496,
+      "pitch_degrees": -21.802543130921983
+    },
+    {
+      "time_s": 0.8583333492279053,
+      "hip_degrees": 50.625322955935246,
+      "knee_interior_degrees": 135.17310959534504,
+      "ankle_interior_degrees": 121.32179978367547,
+      "pitch_degrees": -19.942567169383505
+    },
+    {
+      "time_s": 0.8666666746139526,
+      "hip_degrees": 52.205305819026236,
+      "knee_interior_degrees": 133.36446075708767,
+      "ankle_interior_degrees": 123.27300084867005,
+      "pitch_degrees": -17.71299986169121
+    },
+    {
+      "time_s": 0.875,
+      "hip_degrees": 53.8292611643105,
+      "knee_interior_degrees": 131.20311588730223,
+      "ankle_interior_degrees": 125.13922037669983,
+      "pitch_degrees": -15.252062361691218
+    },
+    {
+      "time_s": 0.8833333253860474,
+      "hip_degrees": 54.699110328454495,
+      "knee_interior_degrees": 129.90364998441106,
+      "ankle_interior_degrees": 127.19769397457775,
+      "pitch_degrees": -12.685956592460423
+    },
+    {
+      "time_s": 0.8916666507720947,
+      "hip_degrees": 54.33589931008176,
+      "knee_interior_degrees": 130.15300626767296,
+      "ankle_interior_degrees": 129.52828401146803,
+      "pitch_degrees": -10.143889284768125
+    },
+    {
+      "time_s": 0.8999999761581421,
+      "hip_degrees": 53.273029533357956,
+      "knee_interior_degrees": 131.10092208368306,
+      "ankle_interior_degrees": 131.6858484136927,
+      "pitch_degrees": -7.7761008232296716
+    },
+    {
+      "time_s": 0.9083333611488342,
+      "hip_degrees": 52.279878894937646,
+      "knee_interior_degrees": 131.54123678039704,
+      "ankle_interior_degrees": 133.15609548130877,
+      "pitch_degrees": -5.6817498616911895
+    },
+    {
+      "time_s": 0.9166666865348816,
+      "hip_degrees": 52.052523258092855,
+      "knee_interior_degrees": 130.3738980407879,
+      "ankle_interior_degrees": 133.50609522688313,
+      "pitch_degrees": -3.9059085155373494
+    },
+    {
+      "time_s": 0.925000011920929,
+      "hip_degrees": 52.83148037424827,
+      "knee_interior_degrees": 127.23151080276543,
+      "ankle_interior_degrees": 132.59488856851917,
+      "pitch_degrees": -2.4666056309219706
+    }
+  ]
+}

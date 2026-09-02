@@ -1,0 +1,52 @@
+{
+  "before": "build/V9-AIRBORNE-RUN-001/iteration-007-sustained-run-polish/stage-a-c2-crown-45/airborne-run-root_motion.glb",
+  "after": "build/V9-AIRBORNE-RUN-001/iteration-007-sustained-run-polish/stage-b-driven-response/airborne-run-root_motion.glb",
+  "sample_times_identical": true,
+  "all_translation_channels_identical": true,
+  "maximum_local_rotation_change": {
+    "node": "Bone_002",
+    "maximum_degrees": 3.4156256712029176,
+    "time_s": 0.4583333432674408
+  },
+  "maximum_semantic_leg_joint_position_change": {
+    "distance_m": 0.0
+  },
+  "per_semantic_contact_joint_rotation_change": {
+    "left": {
+      "Bone_011": {
+        "maximum_degrees": 2.4148365394514667e-06,
+        "time_s": 0.0
+      },
+      "Bone_010": {
+        "maximum_degrees": 2.9575586669421963e-06,
+        "time_s": 0.0833333358168602
+      },
+      "Bone_009": {
+        "maximum_degrees": 2.9575586669421963e-06,
+        "time_s": 0.06666667014360428
+      },
+      "Bone_008": {
+        "maximum_degrees": 0.0,
+        "time_s": 0.0
+      }
+    },
+    "right": {
+      "Bone_015": {
+        "maximum_degrees": 2.9575586669421963e-06,
+        "time_s": 0.7083333134651184
+      },
+      "Bone_014": {
+        "maximum_degrees": 2.9575586669421963e-06,
+        "time_s": 0.5166666507720947
+      },
+      "Bone_013": {
+        "maximum_degrees": 2.9575586669421963e-06,
+        "time_s": 0.30000001192092896
+      },
+      "Bone_012": {
+        "maximum_degrees": 0.0,
+        "time_s": 0.0
+      }
+    }
+  }
+}

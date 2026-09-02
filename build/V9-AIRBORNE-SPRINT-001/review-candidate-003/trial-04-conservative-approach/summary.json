@@ -1,0 +1,142 @@
+{
+  "status": "PROVISIONAL_REQUIRES_SKINNED_AND_VISUAL_GATE",
+  "body_height_m": 2.6416714066117652,
+  "forward_axis": [
+    0.03893162055641767,
+    0.0,
+    0.9992418770852486
+  ],
+  "up_axis": [
+    0.0,
+    1.0,
+    0.0
+  ],
+  "ground_toe_joint_plane_m": 0.09643532171940516,
+  "max_foot_target_residual_m": 5.343663308213158e-07,
+  "max_unreachable_extension_m": 0.0,
+  "max_planted_distal_contact_step_drift_m": 5.554088262046627e-07,
+  "minimum_toe_joint_height_m": -7.850110496365748e-08,
+  "flight_sample_count": 21,
+  "leg_local_translations_constant": true,
+  "in_place_derived_only_from_authority": true,
+  "final_skinned_contact_gate": "NOT_YET_MEASURED",
+  "max_planted_distal_contact_velocity_mps": 0.00010928821513638119,
+  "maximum_articulation_envelope_violation_degrees": 0.0,
+  "articulation_limits_classification": "body-configurable engineering limits, not biologically certified; provisional-envelope consolidation deferred",
+  "stroke": {
+    "path": "/Volumes/m2-extended-disk/Repos/eonwild-factory-v8-3-hip/build/V9-AIRBORNE-SPRINT-001/review-candidate-003/trial-04-conservative-approach/airborne-run-root_motion.glb",
+    "clip": "V9_AIRBORNE_RUN_ROOT_MOTION",
+    "duration_s": 0.9583333134651184,
+    "body_length_m_frame0": 11.961980832989383,
+    "maximum_same_frame_distal_toe_split_m": 3.650756565411194,
+    "maximum_same_frame_split_body_lengths": 0.3051966573414785,
+    "split_peak_time_s": 0.4416666626930237,
+    "signed_hip_relative_reaches_at_split_peak_m": {
+      "left": -1.8385206598825843,
+      "right": 1.81223590552861
+    },
+    "root_travel_m": 7.396680404049558,
+    "root_relative_foot_stroke_m": {
+      "left": 3.9768881994945886,
+      "right": 3.9757798636854518
+    },
+    "root_relative_foot_stroke_body_lengths": {
+      "left": 0.3324606731125096,
+      "right": 0.3323680182399922
+    }
+  },
+  "articulation": {
+    "left": {
+      "bend_sign_minimum": 0.5668717538523027,
+      "bend_sign_flip_count": 0,
+      "hip_sagittal_degrees": [
+        -44.49542534816899,
+        56.60745336820165
+      ],
+      "knee_interior_degrees": [
+        72.57115630624017,
+        149.23808268968563
+      ],
+      "ankle_interior_degrees": [
+        56.00598037709374,
+        133.50609522688313
+      ],
+      "maximum_knee_lateral_offset_from_hip_m": 0.1613372571748161,
+      "rotation_rates": {
+        "hip": {
+          "max_step_degrees": 4.868507971032292,
+          "maximum_angular_velocity_degrees_per_s": 584.2215136809277,
+          "peak_time_s": [
+            0.6583333611488342,
+            0.6666666865348816
+          ],
+          "cyclic_rotation_seam_degrees": 0.0
+        },
+        "knee": {
+          "max_step_degrees": 7.217956794766821,
+          "maximum_angular_velocity_degrees_per_s": 866.152543796572,
+          "peak_time_s": [
+            0.4166666567325592,
+            0.42500001192092896
+          ],
+          "cyclic_rotation_seam_degrees": 0.0
+        },
+        "ankle": {
+          "max_step_degrees": 4.285625609507023,
+          "maximum_angular_velocity_degrees_per_s": 514.2737244043257,
+          "peak_time_s": [
+            0.32499998807907104,
+            0.3333333432674408
+          ],
+          "cyclic_rotation_seam_degrees": 1.7075472925031877e-06
+        }
+      }
+    },
+    "right": {
+      "bend_sign_minimum": 0.6329731109766952,
+      "bend_sign_flip_count": 0,
+      "hip_sagittal_degrees": [
+        -40.890020584307344,
+        65.13299127392779
+      ],
+      "knee_interior_degrees": [
+        66.1918427377424,
+        145.24399685367453
+      ],
+      "ankle_interior_degrees": [
+        73.00562341558133,
+        155.04490175500896
+      ],
+      "maximum_knee_lateral_offset_from_hip_m": 0.09180495399968287,
+      "rotation_rates": {
+        "hip": {
+          "max_step_degrees": 5.149914784873339,
+          "maximum_angular_velocity_degrees_per_s": 617.9903635463381,
+          "peak_time_s": [
+            0.15000000596046448,
+            0.15833333134651184
+          ],
+          "cyclic_rotation_seam_degrees": 0.015022045392277762
+        },
+        "knee": {
+          "max_step_degrees": 6.576183185444844,
+          "maximum_angular_velocity_degrees_per_s": 789.1427348385395,
+          "peak_time_s": [
+            0.8916666507720947,
+            0.8999999761581421
+          ],
+          "cyclic_rotation_seam_degrees": 0.020986291366849364
+        },
+        "ankle": {
+          "max_step_degrees": 5.5113967045801155,
+          "maximum_angular_velocity_degrees_per_s": 661.3682352795136,
+          "peak_time_s": [
+            0.8083333373069763,
+            0.8166666626930237
+          ],
+          "cyclic_rotation_seam_degrees": 0.003111979994932961
+        }
+      }
+    }
+  }
+}

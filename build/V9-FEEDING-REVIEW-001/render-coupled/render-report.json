@@ -1,0 +1,227 @@
+{
+  "clip": "feeding_planted_wholebody_review",
+  "coordinateMapping": {
+    "blenderScene": "right-handed Z-up",
+    "canonical": "right-handed Y-up glTF metres",
+    "canonicalToBlender": "[x,y,z] -> [x,-z,y]"
+  },
+  "durationSeconds": 6.0,
+  "evidenceAuthority": false,
+  "fps": 24,
+  "frames": 144,
+  "ground": {
+    "canonicalGroundY": 0.0008014736783756348,
+    "cropBoundaryAssertion": "required per view",
+    "includedInCameraBounds": false,
+    "meshGroundGapMeasurements": [
+      {
+        "frame": 1,
+        "groundBlenderZ": 0.0008014736783756348,
+        "minimumMeshBlenderZ": 0.0008013705373741686,
+        "minimumMeshGroundGapM": -1.0314100146614075e-07
+      },
+      {
+        "frame": 72,
+        "groundBlenderZ": 0.0008014736783756348,
+        "minimumMeshBlenderZ": 0.0007899752818048,
+        "minimumMeshGroundGapM": -1.1498396570834742e-05
+      },
+      {
+        "frame": 144,
+        "groundBlenderZ": 0.0008014736783756348,
+        "minimumMeshBlenderZ": 0.0008014926570467651,
+        "minimumMeshGroundGapM": 1.8978671130313873e-08
+      }
+    ],
+    "placementSource": "explicit measured canonical contact floor mapped by [x,y,z] -> [x,-z,y]",
+    "size": 597.7167129516602,
+    "type": "matte-neutral-plane",
+    "z": 0.0008014736783756348
+  },
+  "layout": "candidate-only-four-view-sequences",
+  "overlay": {
+    "input": null,
+    "states": [],
+    "status": "NOT_PROVIDED",
+    "topViewOnly": true
+  },
+  "presentationLoop": {
+    "action_timeline": {
+      "action_name": "feeding_planted_wholebody_review",
+      "duration_s": 6.0,
+      "frame_end": 144.0,
+      "frame_start": 0.0,
+      "nla_repeat": 1.0,
+      "presentation_cycle_coverage": 1.0,
+      "presentation_scale": 1.0,
+      "previewTargetProp": {
+        "authority": "preview-only-not-mechanics-or-content",
+        "behavior": "grounded ellipsoid edge yield and explicit lower-oral-surface tissue connector; authored approximation, not mechanics",
+        "canonicalWorldPositionM": [
+          -0.010677068494260311,
+          0.15080147981643677,
+          2.6792564392089844
+        ],
+        "radiusM": 0.15
+      },
+      "timeline_sha256": "35f81ec26a2b4a89b47952ea514bb7fc1e15fc296644ed7d9766e47f50e9debf"
+    },
+    "candidate_sha256": "51ef2bc8f7d8990f54948a410c89eb777f57e71b97ba48eb2236524949be3682",
+    "clip": "feeding_planted_wholebody_review",
+    "presentation": {
+      "contract": "legacy_explicit_cli",
+      "duration_s": 6.0,
+      "evidence_authority": false,
+      "fps": 24,
+      "frame_count": 144
+    },
+    "presentation_loop_sha256": "d014b37719d66ab5b594a6d7587142b9a4fab5ae5a6cb937bbc406dc23321630"
+  },
+  "presentationOnly": true,
+  "renderMode": "animation",
+  "renderedFrameNumbers": {
+    "end": 144,
+    "start": 1
+  },
+  "schema": "eonwild.motion.v9.walk-review-media.v2",
+  "views": {
+    "front": {
+      "camera": {
+        "center": [
+          0.009635388851165771,
+          0.028787970542907715,
+          0.886624813079834
+        ],
+        "direction": [
+          0.04155905917286873,
+          -0.9941688776016235,
+          0.09950371831655502
+        ],
+        "framing": "all-frame union with ground prop, horizontal landscape fit",
+        "horizontalSpan": 1.7755217403173447,
+        "orthoScale": 4.9585957527160645,
+        "right": [
+          -0.9991273880004883,
+          -0.04176633805036545,
+          0.0
+        ],
+        "up": [
+          -0.00415590638294816,
+          0.09941690415143967,
+          0.9950371980667114
+        ],
+        "verticalSpan": 2.36373734427616
+      },
+      "cropBoundaryAssertion": {
+        "checks": {
+          "horizontal": true,
+          "vertical": true
+        },
+        "frameSpan": [
+          4.407640669080946,
+          4.9585957527160645
+        ],
+        "marginFactor": 1.25,
+        "projectedGroundSpan": [
+          597.7167663574219,
+          59.47499656677246
+        ],
+        "status": "PASS",
+        "view": "front"
+      },
+      "framePattern": "build/V9-FEEDING-REVIEW-001/render-coupled/front-candidate-frames/frame-%04d.png"
+    },
+    "rear": {
+      "camera": {
+        "center": [
+          0.009635388851165771,
+          0.028787970542907715,
+          0.886624813079834
+        ],
+        "direction": [
+          -0.04155905917286873,
+          0.9941688776016235,
+          0.09950371831655502
+        ],
+        "framing": "all-frame union with ground prop, horizontal landscape fit",
+        "horizontalSpan": 1.7755217403173447,
+        "orthoScale": 4.9585957527160645,
+        "right": [
+          0.9991273880004883,
+          0.04176633805036545,
+          -0.0
+        ],
+        "up": [
+          0.00415590638294816,
+          -0.09941690415143967,
+          0.9950371980667114
+        ],
+        "verticalSpan": 2.36373734427616
+      },
+      "cropBoundaryAssertion": {
+        "checks": {
+          "horizontal": true,
+          "vertical": true
+        },
+        "frameSpan": [
+          4.407640669080946,
+          4.9585957527160645
+        ],
+        "marginFactor": 1.25,
+        "projectedGroundSpan": [
+          622.1596374511719,
+          61.90721893310547
+        ],
+        "status": "PASS",
+        "view": "rear"
+      },
+      "framePattern": "build/V9-FEEDING-REVIEW-001/render-coupled/rear-candidate-frames/frame-%04d.png"
+    },
+    "side": {
+      "camera": {
+        "center": [
+          0.009635388851165771,
+          0.028787970542907715,
+          0.886624813079834
+        ],
+        "direction": [
+          0.9950371384620667,
+          0.0,
+          0.09950371831655502
+        ],
+        "framing": "all-frame union with ground prop, horizontal landscape fit",
+        "horizontalSpan": 5.979918479919434,
+        "orthoScale": 7.056303977966309,
+        "right": [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        "up": [
+          -0.09950373321771622,
+          0.0,
+          0.9950372576713562
+        ],
+        "verticalSpan": 1.9148376435041428
+      },
+      "cropBoundaryAssertion": {
+        "checks": {
+          "horizontal": true,
+          "vertical": true
+        },
+        "frameSpan": [
+          6.272270202636719,
+          7.056303977966309
+        ],
+        "marginFactor": 1.25,
+        "projectedGroundSpan": [
+          597.7167358398438,
+          597.7167358398438
+        ],
+        "status": "PASS",
+        "view": "side"
+      },
+      "framePattern": "build/V9-FEEDING-REVIEW-001/render-coupled/side-candidate-frames/frame-%04d.png"
+    }
+  }
+}

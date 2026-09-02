@@ -7,7 +7,10 @@ name = "eonwild-motion"
 version = "0.1.0"
 description = "Deterministic procedural animation build and release engine"
 requires-python = ">=3.12"
-dependencies = ["jsonschema==4.26.0"]
+dependencies = ["jsonschema==4.26.0", "numpy==2.5.2"]
+
+[dependency-groups]
+test = ["pytest==9.1.1"]
 
 [project.scripts]
 eonwild-motion = "eonwild_motion.cli:main"

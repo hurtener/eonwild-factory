@@ -1,0 +1,24 @@
+{
+  "schema": "eonwild.experimental.body-articulation.v1",
+  "id": "grounded-bite-engineering-articulation-v1",
+  "claims": "Engineering pose limits relative to the neutral source; not biological or scientific ranges.",
+  "pitch_convention": "positive_nose_down_about_neutral_anatomical_lateral_axis",
+  "joint_pitch_limits_degrees": {
+    "pelvis": [[-12, 15]],
+    "spine": [[-5, 8], [-5, 8], [-5, 8], [-5, 8], [-5, 8]],
+    "chest": [[-6, 12]],
+    "neck": [[-4, 12], [-4, 12], [-4, 12], [-4, 12], [-4, 16]],
+    "head": [[-4, 32]]
+  },
+  "cervical_curve": {
+    "semantics": ["chest", "neck", "head"],
+    "max_adjacent_pitch_change_degrees": 10.0,
+    "max_reverse_pitch_degrees": 1.0
+  },
+  "reach_translation_limits": {
+    "pelvis_drop_height_fraction": [0.20, 0.43],
+    "pelvis_forward_length_fraction": [0.03, 0.20]
+  },
+  "hold_head_nose_down_degrees": [24.0, 48.0],
+  "preferred_hold_head_nose_down_degrees": 36.0
+}

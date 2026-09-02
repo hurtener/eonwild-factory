@@ -1,0 +1,28 @@
+{
+  "schema": "eonwild.motion.v9.airborne-gait.v1",
+  "program": "airborne_gait",
+  "body_branching": false,
+  "status": "USER_VISUAL_REJECTED_KNEE_HIP_COLLAPSE_005",
+  "timing_basis": "V07 visually checked engineering seed: 15-frame step, 4-frame flight at 24 fps; variable source step range 14-17 frames, not an exact source period",
+  "amplitude_basis": "reference-informed body-normalized engineering candidate; same-frame split .283 body lengths, distinct from .298 body-length per-foot excursion; no absolute capacity claim",
+  "selected_candidate": "build/V9-AIRBORNE-RUN-001/iteration-005-centered-push-off",
+  "parameters": {
+    "step_period_s": 0.625,
+    "flight_fraction": 0.26666666666666666,
+    "step_length_body_heights": 1.33,
+    "touchdown_reach_body_heights": 0.32,
+    "swing_clearance_body_heights": 0.30,
+    "swing_lift_fraction": 0.22,
+    "swing_lower_fraction": 0.22,
+    "pelvis_compression_body_heights": 0.07,
+    "pelvis_crouch_body_heights": 0.08,
+    "flight_height_body_heights": 0.035,
+    "toe_flex_degrees": 32.0,
+    "foot_recovery_pitch_degrees": 30.0,
+    "push_off_pitch_degrees": 60.0,
+    "compression_peak_fraction": 0.32,
+    "push_off_start_fraction": 0.55,
+    "cycles": 2,
+    "sample_hz": 120
+  }
+}

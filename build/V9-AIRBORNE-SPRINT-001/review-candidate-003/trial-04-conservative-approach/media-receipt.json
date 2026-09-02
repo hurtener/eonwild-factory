@@ -1,0 +1,30 @@
+{
+  "source_frames_per_cycle": 23,
+  "fps": 24,
+  "cycles": 2,
+  "speed_stretch": false,
+  "native_duration_s": 0.9583333333333334,
+  "views": {
+    "side": {
+      "width": 1100,
+      "height": 620,
+      "r_frame_rate": "24/1",
+      "duration": "1.916667",
+      "nb_frames": "46"
+    },
+    "front": {
+      "width": 1100,
+      "height": 620,
+      "r_frame_rate": "24/1",
+      "duration": "1.916667",
+      "nb_frames": "46"
+    },
+    "rear": {
+      "width": 1100,
+      "height": 620,
+      "r_frame_rate": "24/1",
+      "duration": "1.916667",
+      "nb_frames": "46"
+    }
+  }
+}

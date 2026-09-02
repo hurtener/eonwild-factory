@@ -1,0 +1,534 @@
+{
+  "schema": "eonwild.review-persistence-closure.v1",
+  "candidate": "Feeding001",
+  "scope": "Preserve existing candidate; no new motion version",
+  "inspection": "Runtime import trace through setup and peak pose, static dynamic-helper imports, profile reads, final artifact hash checks",
+  "test": {
+    "command": ".venv/bin/python -m pytest -q build/V9-FEEDING-REVIEW-001/test_feeding.py",
+    "result": "7 passed in 1.56s"
+  },
+  "dependency_notes": [
+    "grounded_committed_bite.py dynamically loads build/V9-ALERT-IDLE-OVERLAY-001/alert_idle_overlay.py; it does not appear in sys.modules.",
+    "render_feeding.py loads Bite render_fixed_views.py, whose import callback reads the Bite profile.json and semantic rig.",
+    "Feeding only calls limb geometry but importing solve.airborne_gait also imports planning.airborne_gait and whole_body_gait_transition; package initializers load stationary_support and whole_body_walk.",
+    "support_solver.py and R6 profiles are not called by this feeding implementation.",
+    "Tracked transitive module hashes record inspected current versions; parent should coordinate shared source staging with Run/Sprint closure."
+  ],
+  "external_tools": [
+    "Python >=3.12; numpy 2.5.2; jsonschema4.26.0; pytest9.1.1",
+    "Blender5.2.0LTS; ffmpeg/ffprobe; systemPython Pillow for make_media.py"
+  ],
+  "force_add_paths": [
+    "build/V9-ALERT-IDLE-OVERLAY-001/alert_idle_overlay.py",
+    "build/V9-FEEDING-REVIEW-001/feeding.py",
+    "build/V9-FEEDING-REVIEW-001/make_media.py",
+    "build/V9-FEEDING-REVIEW-001/render_feeding.py",
+    "build/V9-FEEDING-REVIEW-001/test_feeding.py",
+    "build/V9-GROUNDED-COMMITTED-BITE-001/attack_solver.py",
+    "build/V9-GROUNDED-COMMITTED-BITE-001/grounded_committed_bite.py",
+    "build/V9-GROUNDED-COMMITTED-BITE-001/render_fixed_views.py",
+    "build/V9-FEEDING-REVIEW-001/profile.json",
+    "build/V9-GROUNDED-COMMITTED-BITE-001/profile.json",
+    "build/V9-NEUTRAL-IDLE-SEAM-CONDITIONING-002/diagnostic/neutral-idle-conditioned-candidate.glb",
+    "build/V9-FEEDING-REVIEW-001/feeding.glb",
+    "build/V9-FEEDING-REVIEW-001/feeding-side.mp4",
+    "build/V9-FEEDING-REVIEW-001/feeding-front.mp4",
+    "build/V9-FEEDING-REVIEW-001/feeding-rear.mp4",
+    "build/V9-FEEDING-REVIEW-001/feeding-review-sheet.jpg",
+    "build/V9-FEEDING-REVIEW-001/receipt.json",
+    "build/V9-FEEDING-REVIEW-001/prop-coupling-receipt.json",
+    "build/V9-FEEDING-REVIEW-001/render-coupled/render-report.json"
+  ],
+  "normal_add_paths": [
+    "src/eonwild_motion/blender/render_walk_review.py",
+    "src/eonwild_motion/contracts/gait_transition.py",
+    "src/eonwild_motion/contracts/v9_loader.py",
+    "src/eonwild_motion/contracts/v9_models.py",
+    "src/eonwild_motion/layers/leg_contact_resolve_v3.py",
+    "src/eonwild_motion/layers/narrow_gauge_target_space_v1.py",
+    "src/eonwild_motion/layers/registry.py",
+    "src/eonwild_motion/planning/airborne_gait.py",
+    "src/eonwild_motion/solve/__init__.py",
+    "src/eonwild_motion/solve/airborne_gait.py",
+    "src/eonwild_motion/solve/whole_body_gait_transition.py",
+    "src/eonwild_motion/solve/whole_body_walk.py",
+    "profiles/v9/body-articulation.grounded-bite.v1.json",
+    "profiles/v9/rig.v5_5-neutral-idle.json",
+    "reports/V9-FEEDING-REVIEW-001/README.md",
+    "reports/V9-FEEDING-REVIEW-001/media-verification.json",
+    "reports/V9-FEEDING-WHOLE-BODY-FRAME-ANALYSIS-001/README.md",
+    "reports/V9-FEEDING-WHOLE-BODY-FRAME-ANALYSIS-001/frame-ledger.csv",
+    "pyproject.toml",
+    "uv.lock"
+  ],
+  "already_tracked_unchanged_paths": [
+    "src/eonwild_motion/__init__.py",
+    "src/eonwild_motion/blender/__init__.py",
+    "src/eonwild_motion/contracts/__init__.py",
+    "src/eonwild_motion/errors.py",
+    "src/eonwild_motion/glb/__init__.py",
+    "src/eonwild_motion/glb/container.py",
+    "src/eonwild_motion/hashing.py",
+    "src/eonwild_motion/layers/__init__.py",
+    "src/eonwild_motion/planning/__init__.py",
+    "src/eonwild_motion/planning/stationary_support.py",
+    "catalog/rigs/hero-theropod-v8_3.semantic-rig.json"
+  ],
+  "excluded": [
+    "All PNG render sequences, probe directories, partial render directory, __pycache__, R5/R6 artifacts and unused support_solver.py",
+    "Original reference video is provenance, not runtime dependency; it lives in original eonwild-factory repo, absent from this worktree. Reference README and145-row ledger included."
+  ],
+  "files": [
+    {
+      "category": "source",
+      "path": "build/V9-ALERT-IDLE-OVERLAY-001/alert_idle_overlay.py",
+      "bytes": 15632,
+      "sha256": "eb779a04885cfd670128f58140512916b11ed84399cc8b0c6b250f1b201d79b6",
+      "tracked": false,
+      "ignored": true,
+      "status": ""
+    },
+    {
+      "category": "source",
+      "path": "build/V9-FEEDING-REVIEW-001/feeding.py",
+      "bytes": 13179,
+      "sha256": "b92e774538808612507f9f68d216924eaa74504981ad887b302b013e7e0e3a84",
+      "tracked": false,
+      "ignored": true,
+      "status": ""
+    },
+    {
+      "category": "source",
+      "path": "build/V9-FEEDING-REVIEW-001/make_media.py",
+      "bytes": 2683,
+      "sha256": "f7c586d007641a7104685f8dbf6615b0b84e890d7eb643c79816a2825e925c00",
+      "tracked": false,
+      "ignored": true,
+      "status": ""
+    },
+    {
+      "category": "source",
+      "path": "build/V9-FEEDING-REVIEW-001/render_feeding.py",
+      "bytes": 4462,
+      "sha256": "25418c8befb09c77ce77b6ff63ce6ab3283ce1384be96eba34900463c1c4e1b1",
+      "tracked": false,
+      "ignored": true,
+      "status": ""
+    },
+    {
+      "category": "source",
+      "path": "build/V9-FEEDING-REVIEW-001/test_feeding.py",
+      "bytes": 4855,
+      "sha256": "e228a6305298a21fd2046bc8c9c3dd346ffe0e2bfd0cb16338f224e8824df4a8",
+      "tracked": false,
+      "ignored": true,
+      "status": ""
+    },
+    {
+      "category": "source",
+      "path": "build/V9-GROUNDED-COMMITTED-BITE-001/attack_solver.py",
+      "bytes": 38008,
+      "sha256": "c40f770ca01c7d9f0babd46e0d35afd657e6b2b396378b207c17b08d2d0732cb",
+      "tracked": false,
+      "ignored": true,
+      "status": ""
+    },
+    {
+      "category": "source",
+      "path": "build/V9-GROUNDED-COMMITTED-BITE-001/grounded_committed_bite.py",
+      "bytes": 20226,
+      "sha256": "9f899ba6f7e595b4b2b89af3f40bb13bb16cbd8cfd58193ed47cba539f80343a",
+      "tracked": false,
+      "ignored": true,
+      "status": ""
+    },
+    {
+      "category": "source",
+      "path": "build/V9-GROUNDED-COMMITTED-BITE-001/render_fixed_views.py",
+      "bytes": 4238,
+      "sha256": "cd30d0ee1e8e3f52eab3d2366e2ef0095292fcf89b5287e267e7c8862c2e08c9",
+      "tracked": false,
+      "ignored": true,
+      "status": ""
+    },
+    {
+      "category": "source",
+      "path": "src/eonwild_motion/__init__.py",
+      "bytes": 82,
+      "sha256": "78ca4a56537a3203f042048e6ca2512a50a592440142d955db44fe8f6e146593",
+      "tracked": true,
+      "ignored": false,
+      "status": ""
+    },
+    {
+      "category": "source",
+      "path": "src/eonwild_motion/blender/__init__.py",
+      "bytes": 48,
+      "sha256": "89c3d3ee91ebb24482cefa80630f3456003d2bcad6e553a8e4a69a9c4d6a2c79",
+      "tracked": true,
+      "ignored": false,
+      "status": ""
+    },
+    {
+      "category": "source",
+      "path": "src/eonwild_motion/blender/render_walk_review.py",
+      "bytes": 26047,
+      "sha256": "e70617e6b05c29b388f086fff16945ab8878bd0cc420b32ef2aecab6fac07b02",
+      "tracked": false,
+      "ignored": false,
+      "status": "?? src/eonwild_motion/blender/render_walk_review.py"
+    },
+    {
+      "category": "source",
+      "path": "src/eonwild_motion/contracts/__init__.py",
+      "bytes": 171,
+      "sha256": "54ca75ea6ee395681b6314e264e8eb9e9dc476bb5cb06ac390fb45b23af62ddf",
+      "tracked": true,
+      "ignored": false,
+      "status": ""
+    },
+    {
+      "category": "source",
+      "path": "src/eonwild_motion/contracts/gait_transition.py",
+      "bytes": 5255,
+      "sha256": "671b3c7c8007ee9005308418c63e17ad077937066b9925820415fafc7d2253ab",
+      "tracked": false,
+      "ignored": false,
+      "status": "?? src/eonwild_motion/contracts/gait_transition.py"
+    },
+    {
+      "category": "source",
+      "path": "src/eonwild_motion/contracts/v9_loader.py",
+      "bytes": 30927,
+      "sha256": "7de480f3d5b05e9abc3deafa0fd3b50a437e725f076553906897e7526d90dd37",
+      "tracked": true,
+      "ignored": false,
+      "status": "M src/eonwild_motion/contracts/v9_loader.py"
+    },
+    {
+      "category": "source",
+      "path": "src/eonwild_motion/contracts/v9_models.py",
+      "bytes": 11683,
+      "sha256": "2ee4ddc458ec571ea426ed54719f90ca01d8dbe5b6294422402045ac6030fee6",
+      "tracked": true,
+      "ignored": false,
+      "status": "M src/eonwild_motion/contracts/v9_models.py"
+    },
+    {
+      "category": "source",
+      "path": "src/eonwild_motion/errors.py",
+      "bytes": 274,
+      "sha256": "c3f9eb7ab7c2407039810af435dc9f2b9017aa46f0731899c5b1a2408ff44f47",
+      "tracked": true,
+      "ignored": false,
+      "status": ""
+    },
+    {
+      "category": "source",
+      "path": "src/eonwild_motion/glb/__init__.py",
+      "bytes": 46,
+      "sha256": "8c92942e1e863c9f61533a91a4969a32e64868442de1cd5aaf6cf056e4e00ef3",
+      "tracked": true,
+      "ignored": false,
+      "status": ""
+    },
+    {
+      "category": "source",
+      "path": "src/eonwild_motion/glb/container.py",
+      "bytes": 7116,
+      "sha256": "090287e0433ba6ac0d8eb383b0a7460e3b8aa1b3721182d195b14eac73607757",
+      "tracked": true,
+      "ignored": false,
+      "status": ""
+    },
+    {
+      "category": "source",
+      "path": "src/eonwild_motion/hashing.py",
+      "bytes": 873,
+      "sha256": "ec8a2d8932dff8eab8c078f4afdf8f77d95e5febc313259c8c3891333e96f3dc",
+      "tracked": true,
+      "ignored": false,
+      "status": ""
+    },
+    {
+      "category": "source",
+      "path": "src/eonwild_motion/layers/__init__.py",
+      "bytes": 83,
+      "sha256": "8d2813d90b9c3329d20193772a8bec0818a84069c01c0c529f0ad2c35a353dfd",
+      "tracked": true,
+      "ignored": false,
+      "status": ""
+    },
+    {
+      "category": "source",
+      "path": "src/eonwild_motion/layers/leg_contact_resolve_v3.py",
+      "bytes": 88224,
+      "sha256": "274e2835b52309a53963419d3cde684c4206130282232be87c4e3fc2dd1eb21b",
+      "tracked": false,
+      "ignored": false,
+      "status": "?? src/eonwild_motion/layers/leg_contact_resolve_v3.py"
+    },
+    {
+      "category": "source",
+      "path": "src/eonwild_motion/layers/narrow_gauge_target_space_v1.py",
+      "bytes": 14799,
+      "sha256": "dbd5000587fcab725ce256e4f5817e53578d50da30f106822594082fe2d76181",
+      "tracked": false,
+      "ignored": false,
+      "status": "?? src/eonwild_motion/layers/narrow_gauge_target_space_v1.py"
+    },
+    {
+      "category": "source",
+      "path": "src/eonwild_motion/layers/registry.py",
+      "bytes": 1148,
+      "sha256": "a04be8c0eaccd6d196c9ec883ce424b8bfd4353ed625d73fffc284ecd17aae5e",
+      "tracked": true,
+      "ignored": false,
+      "status": "M src/eonwild_motion/layers/registry.py"
+    },
+    {
+      "category": "source",
+      "path": "src/eonwild_motion/planning/__init__.py",
+      "bytes": 233,
+      "sha256": "3766fac38405b622638e579a3d6951906ac9cb93b0277963c0c0928b0f48b6ed",
+      "tracked": true,
+      "ignored": false,
+      "status": ""
+    },
+    {
+      "category": "source",
+      "path": "src/eonwild_motion/planning/airborne_gait.py",
+      "bytes": 14733,
+      "sha256": "73ca43ff1bcb1031d9bef70ab0b539061a2dc64d54b0d4f9979f7ebf6aa60fd7",
+      "tracked": false,
+      "ignored": false,
+      "status": "?? src/eonwild_motion/planning/airborne_gait.py"
+    },
+    {
+      "category": "source",
+      "path": "src/eonwild_motion/planning/stationary_support.py",
+      "bytes": 11425,
+      "sha256": "2447b83e42173869f599418d2174144e92b0f42850134e5f8f9ca792fc2d8951",
+      "tracked": true,
+      "ignored": false,
+      "status": ""
+    },
+    {
+      "category": "source",
+      "path": "src/eonwild_motion/solve/__init__.py",
+      "bytes": 133,
+      "sha256": "9bcc07e98a6d07aeb60b5d5e7901d00e052c82937eb5e84a5034c2382320704f",
+      "tracked": false,
+      "ignored": false,
+      "status": "?? src/eonwild_motion/solve/__init__.py"
+    },
+    {
+      "category": "source",
+      "path": "src/eonwild_motion/solve/airborne_gait.py",
+      "bytes": 40184,
+      "sha256": "18bca8da39db7c2f7e3fb8e7a35a1a2ee76488d8bfdd4603d4908a8ec087b7c6",
+      "tracked": false,
+      "ignored": false,
+      "status": "?? src/eonwild_motion/solve/airborne_gait.py"
+    },
+    {
+      "category": "source",
+      "path": "src/eonwild_motion/solve/whole_body_gait_transition.py",
+      "bytes": 38890,
+      "sha256": "7b476272ca967ff67fbb30cb70847bc7e75befbb94c68b317480b8e7b15077c4",
+      "tracked": false,
+      "ignored": false,
+      "status": "?? src/eonwild_motion/solve/whole_body_gait_transition.py"
+    },
+    {
+      "category": "source",
+      "path": "src/eonwild_motion/solve/whole_body_walk.py",
+      "bytes": 5861,
+      "sha256": "d5e400044d248abc813d286ba98d70a0db7be12bd5ee46378176063bb6f089f0",
+      "tracked": false,
+      "ignored": false,
+      "status": "?? src/eonwild_motion/solve/whole_body_walk.py"
+    },
+    {
+      "category": "data",
+      "path": "build/V9-FEEDING-REVIEW-001/profile.json",
+      "bytes": 3082,
+      "sha256": "5997f17d535522edf378ccb74d1e9c091b2423b3297918c75713413e3f5aca69",
+      "tracked": false,
+      "ignored": true,
+      "status": ""
+    },
+    {
+      "category": "data",
+      "path": "build/V9-GROUNDED-COMMITTED-BITE-001/profile.json",
+      "bytes": 5022,
+      "sha256": "ad9e88c9005a4578746c4948b4d627eeccfff1f515e9c732b33379f27eccdd32",
+      "tracked": false,
+      "ignored": true,
+      "status": ""
+    },
+    {
+      "category": "data",
+      "path": "profiles/v9/body-articulation.grounded-bite.v1.json",
+      "bytes": 929,
+      "sha256": "f854b2f21c795ef8d2ef295941b30ef9aec21f6c89be406a1bab203eda5444d1",
+      "tracked": false,
+      "ignored": false,
+      "status": "?? profiles/v9/body-articulation.grounded-bite.v1.json"
+    },
+    {
+      "category": "data",
+      "path": "build/V9-NEUTRAL-IDLE-SEAM-CONDITIONING-002/diagnostic/neutral-idle-conditioned-candidate.glb",
+      "bytes": 62316300,
+      "sha256": "4c0883ee2eb3b337a9095f2da2a11dee97ca14ae5ee8e5d662b1b1db2498ab47",
+      "tracked": false,
+      "ignored": true,
+      "status": ""
+    },
+    {
+      "category": "data",
+      "path": "catalog/rigs/hero-theropod-v8_3.semantic-rig.json",
+      "bytes": 1692,
+      "sha256": "35bbcc97654057dc57d2cb7153457c4836bc78d21170f67c33e112f808c27b99",
+      "tracked": true,
+      "ignored": false,
+      "status": ""
+    },
+    {
+      "category": "data",
+      "path": "profiles/v9/rig.v5_5-neutral-idle.json",
+      "bytes": 3514,
+      "sha256": "0566370eef4e57ad0722cd4e369dbc1e8063d852925aafb18f4532de93043ea6",
+      "tracked": false,
+      "ignored": false,
+      "status": "?? profiles/v9/rig.v5_5-neutral-idle.json"
+    },
+    {
+      "category": "artifact",
+      "path": "build/V9-FEEDING-REVIEW-001/feeding.glb",
+      "bytes": 62316300,
+      "sha256": "51ef2bc8f7d8990f54948a410c89eb777f57e71b97ba48eb2236524949be3682",
+      "tracked": false,
+      "ignored": true,
+      "status": ""
+    },
+    {
+      "category": "artifact",
+      "path": "build/V9-FEEDING-REVIEW-001/feeding-side.mp4",
+      "bytes": 304821,
+      "sha256": "921ccd05b8cba8b3c8d42b979272dae6fdc2e7e37d5344cf760da1ab235cbb9a",
+      "tracked": false,
+      "ignored": true,
+      "status": ""
+    },
+    {
+      "category": "artifact",
+      "path": "build/V9-FEEDING-REVIEW-001/feeding-front.mp4",
+      "bytes": 273722,
+      "sha256": "d6823b7d0cfd53d057080cdf6c05b175922b4c3ce5434096c4e69ec86bd044c4",
+      "tracked": false,
+      "ignored": true,
+      "status": ""
+    },
+    {
+      "category": "artifact",
+      "path": "build/V9-FEEDING-REVIEW-001/feeding-rear.mp4",
+      "bytes": 194018,
+      "sha256": "88c700bd6168b2ebf443276f34ab9de9608c5149ee22d75e483b0703ee51cb92",
+      "tracked": false,
+      "ignored": true,
+      "status": ""
+    },
+    {
+      "category": "artifact",
+      "path": "build/V9-FEEDING-REVIEW-001/feeding-review-sheet.jpg",
+      "bytes": 88959,
+      "sha256": "b4538b737ce890ebf31ffd47635bb0259dd2f964234cf167c07a9d0be098e7fe",
+      "tracked": false,
+      "ignored": true,
+      "status": ""
+    },
+    {
+      "category": "artifact",
+      "path": "build/V9-FEEDING-REVIEW-001/receipt.json",
+      "bytes": 589116,
+      "sha256": "cb4f970bbac95f8e71282a907914bc8c2280bf17fd8fdf8a4162bdcf9e9294b5",
+      "tracked": false,
+      "ignored": true,
+      "status": ""
+    },
+    {
+      "category": "artifact",
+      "path": "build/V9-FEEDING-REVIEW-001/prop-coupling-receipt.json",
+      "bytes": 130037,
+      "sha256": "001c0834f756ce28d20f6c17c657abb59fc7561b7df1e50d79ccaf89d16f3a0e",
+      "tracked": false,
+      "ignored": true,
+      "status": ""
+    },
+    {
+      "category": "artifact",
+      "path": "build/V9-FEEDING-REVIEW-001/render-coupled/render-report.json",
+      "bytes": 6493,
+      "sha256": "fdcb57efcf874697b84546194bb5427091cfde710e48164751e982e22eef7c1b",
+      "tracked": false,
+      "ignored": true,
+      "status": ""
+    },
+    {
+      "category": "report",
+      "path": "reports/V9-FEEDING-REVIEW-001/README.md",
+      "bytes": 7569,
+      "sha256": "040df4e272cd332ab20c73737fcef37630c6bda771cbb6aae2c9bf2e62c6cef3",
+      "tracked": false,
+      "ignored": false,
+      "status": "?? reports/V9-FEEDING-REVIEW-001/README.md"
+    },
+    {
+      "category": "report",
+      "path": "reports/V9-FEEDING-REVIEW-001/media-verification.json",
+      "bytes": 1348,
+      "sha256": "4e5fa8b3eb47072e12458d8db3eb5133dd4259ea620783deae8437bd010af71d",
+      "tracked": false,
+      "ignored": false,
+      "status": "?? reports/V9-FEEDING-REVIEW-001/media-verification.json"
+    },
+    {
+      "category": "report",
+      "path": "reports/V9-FEEDING-WHOLE-BODY-FRAME-ANALYSIS-001/README.md",
+      "bytes": 19732,
+      "sha256": "c0c6dbec9936ff72200096968c7f82392f00d4d873f680302e157b2d88548618",
+      "tracked": false,
+      "ignored": false,
+      "status": "?? reports/V9-FEEDING-WHOLE-BODY-FRAME-ANALYSIS-001/README.md"
+    },
+    {
+      "category": "report",
+      "path": "reports/V9-FEEDING-WHOLE-BODY-FRAME-ANALYSIS-001/frame-ledger.csv",
+      "bytes": 63427,
+      "sha256": "f4ff7b2dc3fe6a683dc4dfe038f1979dbefb07091e071f4818ce22d82cbd75af",
+      "tracked": false,
+      "ignored": false,
+      "status": "?? reports/V9-FEEDING-WHOLE-BODY-FRAME-ANALYSIS-001/frame-ledger.csv"
+    },
+    {
+      "category": "environment",
+      "path": "pyproject.toml",
+      "bytes": 502,
+      "sha256": "f54ce96ade73e536fe3358d1f4a0089bd42026fc9114e481cc40af51a82134eb",
+      "tracked": true,
+      "ignored": false,
+      "status": "M pyproject.toml"
+    },
+    {
+      "category": "environment",
+      "path": "uv.lock",
+      "bytes": 58434,
+      "sha256": "0e65eac46243b174e4782b87c0fd00872d1e6d4e823b379d12048420228b2e9d",
+      "tracked": false,
+      "ignored": false,
+      "status": "?? uv.lock"
+    }
+  ],
+  "total_bytes": 126786535
+}

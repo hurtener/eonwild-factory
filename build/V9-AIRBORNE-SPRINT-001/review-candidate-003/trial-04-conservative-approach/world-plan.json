@@ -1,0 +1,3351 @@
+{
+  "schema": "eonwild.motion.v9.airborne-gait-plan.v1",
+  "program": "airborne_gait",
+  "parameters": {
+    "step_period_s": 0.4791666666666667,
+    "flight_fraction": 0.17391304347826086,
+    "step_length_body_heights": 1.4,
+    "touchdown_reach_body_heights": 0.43,
+    "swing_clearance_body_heights": 0.1,
+    "swing_lift_fraction": 0.2,
+    "swing_lower_fraction": 0.22,
+    "pelvis_compression_body_heights": 0.07,
+    "pelvis_crouch_body_heights": 0.11,
+    "flight_height_body_heights": 0.035,
+    "toe_flex_degrees": 32.0,
+    "foot_recovery_pitch_degrees": 30.0,
+    "push_off_pitch_degrees": 60.0,
+    "compression_peak_fraction": 0.32,
+    "push_off_start_fraction": 0.55,
+    "swing_hip_lift_degrees": 60.0,
+    "swing_recovery_peak_fraction": 0.42,
+    "hip_extension_limit_degrees": 45.0,
+    "hip_flexion_limit_degrees": 80.0,
+    "knee_min_interior_degrees": 65.0,
+    "knee_max_interior_degrees": 165.0,
+    "ankle_min_interior_degrees": 30.0,
+    "ankle_max_interior_degrees": 165.0,
+    "max_joint_angular_velocity_degrees_per_s": 1200.0,
+    "max_ankle_pitch_velocity_degrees_per_s": 600.0,
+    "articulation_preferred_margin_degrees": 0.0,
+    "articulation_preferred_margin_weight": 25.0,
+    "continuous_body_launch_fraction": 0,
+    "rounded_swing_peak_fraction": 0,
+    "cycles": 1,
+    "sample_hz": 120
+  },
+  "body_height_m": 2.6416714066117652,
+  "step_period_s": 0.4791666666666667,
+  "same_foot_cycle_s": 0.9583333333333334,
+  "per_foot_duty_factor": 0.41304347826086957,
+  "flight_seconds_per_step": 0.08333333333333333,
+  "duration_s": 0.9583333333333334,
+  "root_motion_authority": true,
+  "claims": "kinematic engineering candidate; no physical or biological claim",
+  "samples": [
+    {
+      "time_s": 0.0,
+      "root_forward_m": 0.0,
+      "pelvis_height_offset_m": -0.2905838547272942,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.4791666666666667,
+          "forward_m": -2.3721940633011735,
+          "height_m": 0.2227248159698011,
+          "toe_flex_degrees": 21.3369153061916,
+          "foot_pitch_degrees": 38.451375472420516,
+          "swing_phase": 0.1481481481481481
+        }
+      }
+    },
+    {
+      "time_s": 0.008333333333333333,
+      "root_forward_m": 0.06431895598706905,
+      "pelvis_height_offset_m": -0.2910598170555127,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.4791666666666667,
+          "forward_m": -2.3154572348075746,
+          "height_m": 0.24243778342969813,
+          "toe_flex_degrees": 22.004194713606363,
+          "foot_pitch_degrees": 33.276225031238454,
+          "swing_phase": 0.16296296296296298
+        }
+      }
+    },
+    {
+      "time_s": 0.016666666666666666,
+      "root_forward_m": 0.1286379119741381,
+      "pelvis_height_offset_m": -0.294008668507511,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.4791666666666667,
+          "forward_m": -2.2497714536712676,
+          "height_m": 0.25620152669729856,
+          "toe_flex_degrees": 22.697006752659966,
+          "foot_pitch_degrees": 27.744660347741984,
+          "swing_phase": 0.17777777777777773
+        }
+      }
+    },
+    {
+      "time_s": 0.025,
+      "root_forward_m": 0.19295686796120717,
+      "pelvis_height_offset_m": -0.300924206959211,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666663,
+          "forward_m": -2.1749169985673458,
+          "height_m": 0.26327403881043415,
+          "toe_flex_degrees": 23.407476677451832,
+          "foot_pitch_degrees": 21.962075548039294,
+          "swing_phase": 0.1925925925925925
+        }
+      }
+    },
+    {
+      "time_s": 0.03333333333333333,
+      "root_forward_m": 0.2572758239482762,
+      "pelvis_height_offset_m": -0.3123813066572601,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666663,
+          "forward_m": -2.090756810896382,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 24.12758464898536,
+          "foot_pitch_degrees": 16.04156082720762,
+          "swing_phase": 0.20740740740740726
+        }
+      }
+    },
+    {
+      "time_s": 0.04166666666666667,
+      "root_forward_m": 0.3215947799353453,
+      "pelvis_height_offset_m": -0.3282000117242586,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.4791666666666667,
+          "forward_m": -1.9972326941993455,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 24.849223307291105,
+          "foot_pitch_degrees": 10.100364026778674,
+          "swing_phase": 0.2222222222222222
+        }
+      }
+    },
+    {
+      "time_s": 0.05,
+      "root_forward_m": 0.38591373592241435,
+      "pelvis_height_offset_m": -0.3476096296639876,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.4791666666666667,
+          "forward_m": -1.8943615135725287,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 25.564257726079866,
+          "foot_pitch_degrees": 4.256352212224382,
+          "swing_phase": 0.237037037037037
+        }
+      }
+    },
+    {
+      "time_s": 0.05833333333333334,
+      "root_forward_m": 0.45023269190948345,
+      "pelvis_height_offset_m": -0.3694128248666365,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666674,
+          "forward_m": -1.7822313950824602,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 26.264587152512668,
+          "foot_pitch_degrees": -1.3755267495580057,
+          "swing_phase": 0.25185185185185194
+        }
+      }
+    },
+    {
+      "time_s": 0.06666666666666667,
+      "root_forward_m": 0.5145516478965524,
+      "pelvis_height_offset_m": -0.3921497121140304,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666674,
+          "forward_m": -1.6609979251808307,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 26.94220791921817,
+          "foot_pitch_degrees": -6.6867826127599805,
+          "swing_phase": 0.2666666666666667
+        }
+      }
+    },
+    {
+      "time_s": 0.075,
+      "root_forward_m": 0.5788706038836214,
+      "pelvis_height_offset_m": -0.4142619500848579,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.4791666666666667,
+          "forward_m": -1.53088035011941,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 27.589276905538497,
+          "foot_pitch_degrees": -11.578921175176584,
+          "swing_phase": 0.28148148148148144
+        }
+      }
+    },
+    {
+      "time_s": 0.08333333333333334,
+      "root_forward_m": 0.6431895598706906,
+      "pelvis_height_offset_m": -0.43425683485989863,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666663,
+          "forward_m": -1.3921577753649719,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 28.19817492022885,
+          "foot_pitch_degrees": -15.966982700720855,
+          "swing_phase": 0.2962962962962962
+        }
+      }
+    },
+    {
+      "time_s": 0.09166666666666667,
+      "root_forward_m": 0.7075085158577596,
+      "pelvis_height_offset_m": -0.45087139342725097,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666663,
+          "forward_m": -1.2451653650142103,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 28.76156937851629,
+          "foot_pitch_degrees": -19.783080341938206,
+          "swing_phase": 0.311111111111111
+        }
+      }
+    },
+    {
+      "time_s": 0.1,
+      "root_forward_m": 0.7718274718448287,
+      "pelvis_height_offset_m": -0.4632364771875594,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666674,
+          "forward_m": -1.0902905412086608,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 29.272475652533025,
+          "foot_pitch_degrees": -22.97993856252095,
+          "swing_phase": 0.32592592592592595
+        }
+      }
+    },
+    {
+      "time_s": 0.10833333333333334,
+      "root_forward_m": 0.8361464278318977,
+      "pelvis_height_offset_m": -0.47104085545924235,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.4791666666666667,
+          "forward_m": -0.9279691835496244,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 29.724316485625884,
+          "foot_pitch_degrees": -25.534431559822647,
+          "swing_phase": 0.34074074074074073
+        }
+      }
+    },
+    {
+      "time_s": 0.11666666666666668,
+      "root_forward_m": 0.9004653838189669,
+      "pelvis_height_offset_m": -0.4746953089837192,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666674,
+          "forward_m": -0.7586818285130839,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 30.110978877807415,
+          "foot_pitch_degrees": -27.451121687373096,
+          "swing_phase": 0.3555555555555557
+        }
+      }
+    },
+    {
+      "time_s": 0.125,
+      "root_forward_m": 0.9647843398060358,
+      "pelvis_height_offset_m": -0.4754967234306391,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666674,
+          "forward_m": -0.5829498688646289,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 30.426867871509923,
+          "foot_pitch_degrees": -28.76579787739231,
+          "swing_phase": 0.37037037037037046
+        }
+      }
+    },
+    {
+      "time_s": 0.13333333333333333,
+      "root_forward_m": 1.0291032957931048,
+      "pelvis_height_offset_m": -0.4754737909912334,
+      "stage": "SUPPORT_EXTENSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666674,
+          "forward_m": -0.40133175307437075,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 30.666956693642522,
+          "foot_pitch_degrees": -29.549014063305062,
+          "swing_phase": 0.3851851851851852
+        }
+      }
+    },
+    {
+      "time_s": 0.1416666666666667,
+      "root_forward_m": 1.0934222517801742,
+      "pelvis_height_offset_m": -0.4752069812446468,
+      "stage": "SUPPORT_EXTENSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666663,
+          "forward_m": -0.2144191847318635,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 30.826832741499455,
+          "foot_pitch_degrees": -29.909627602255657,
+          "swing_phase": 0.39999999999999997
+        }
+      }
+    },
+    {
+      "time_s": 0.15,
+      "root_forward_m": 1.1577412077672429,
+      "pelvis_height_offset_m": -0.47444745594594484,
+      "stage": "SUPPORT_EXTENSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666663,
+          "forward_m": -0.022833321961035047,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 30.902738936054035,
+          "foot_pitch_degrees": -29.99833769762231,
+          "swing_phase": 0.41481481481481475
+        }
+      }
+    },
+    {
+      "time_s": 0.15833333333333335,
+      "root_forward_m": 1.2220601637543123,
+      "pelvis_height_offset_m": -0.4729961476356591,
+      "stage": "SUPPORT_EXTENSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666674,
+          "forward_m": 0.1727790231649089,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 30.891610006283507,
+          "foot_pitch_degrees": -29.998660980314202,
+          "swing_phase": 0.4296296296296297
+        }
+      }
+    },
+    {
+      "time_s": 0.16666666666666669,
+      "root_forward_m": 1.2863791197413812,
+      "pelvis_height_offset_m": -0.47070454546905327,
+      "stage": "SUPPORT_EXTENSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.4791666666666667,
+          "forward_m": 0.3717491852085484,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 30.791103312059235,
+          "foot_pitch_degrees": -29.978937498539132,
+          "swing_phase": 0.4444444444444444
+        }
+      }
+    },
+    {
+      "time_s": 0.175,
+      "root_forward_m": 1.3506980757284501,
+      "pelvis_height_offset_m": -0.4674709082037837,
+      "stage": "SUPPORT_EXTENSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.4791666666666667,
+          "forward_m": 0.5733904459533412,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 30.599623860424437,
+          "foot_pitch_degrees": -29.916152002718672,
+          "swing_phase": 0.4592592592592592
+        }
+      }
+    },
+    {
+      "time_s": 0.18333333333333335,
+      "root_forward_m": 1.4150170317155193,
+      "pelvis_height_offset_m": -0.46323647718755945,
+      "stage": "SUPPORT_EXTENSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666674,
+          "forward_m": 0.777001834988698,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 30.31634322035717,
+          "foot_pitch_degrees": -29.789619431351422,
+          "swing_phase": 0.47407407407407415
+        }
+      }
+    },
+    {
+      "time_s": 0.19166666666666668,
+      "root_forward_m": 1.4793359877025885,
+      "pelvis_height_offset_m": -0.4579816893458037,
+      "stage": "SUPPORT_EXTENSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666674,
+          "forward_m": 0.9818719302950556,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 29.941212093946397,
+          "foot_pitch_degrees": -29.58262959904179,
+          "swing_phase": 0.48888888888888893
+        }
+      }
+    },
+    {
+      "time_s": 0.2,
+      "root_forward_m": 1.5436549436896574,
+      "pelvis_height_offset_m": -0.4517223901693135,
+      "stage": "SUPPORT_EXTENSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.4791666666666667,
+          "forward_m": 1.187282658828964,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 29.474966356833768,
+          "foot_pitch_degrees": -29.282212344145133,
+          "swing_phase": 0.5037037037037037
+        }
+      }
+    },
+    {
+      "time_s": 0.20833333333333334,
+      "root_forward_m": 1.6079738996767265,
+      "pelvis_height_offset_m": -0.4445060467019206,
+      "stage": "SUPPORT_EXTENSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666663,
+          "forward_m": 1.392513097108166,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 28.919126437320102,
+          "foot_pitch_degrees": -28.87890267641291,
+          "swing_phase": 0.5185185185185185
+        }
+      }
+    },
+    {
+      "time_s": 0.21666666666666667,
+      "root_forward_m": 1.6722928556637955,
+      "pelvis_height_offset_m": -0.436407960528152,
+      "stage": "SUPPORT_EXTENSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666663,
+          "forward_m": 1.5968432717966738,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 28.27598996121183,
+          "foot_pitch_degrees": -28.36650592463785,
+          "swing_phase": 0.5333333333333332
+        }
+      }
+    },
+    {
+      "time_s": 0.225,
+      "root_forward_m": 1.7366118116508646,
+      "pelvis_height_offset_m": -0.4275274807608904,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.011343899134999245,
+          "foot_pitch_degrees": 0.038672383414770146,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666674,
+          "forward_m": 1.799557960289845,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 27.54861764779089,
+          "foot_pitch_degrees": -27.741862884299067,
+          "swing_phase": 0.5481481481481482
+        }
+      }
+    },
+    {
+      "time_s": 0.23333333333333336,
+      "root_forward_m": 1.8009307676379338,
+      "pelvis_height_offset_m": -0.41798421702903454,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.10371252083854596,
+          "foot_pitch_degrees": 0.35356541194958846,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666663,
+          "forward_m": 1.9999504912994706,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 26.740812500726136,
+          "foot_pitch_degrees": -27.004614965207274,
+          "swing_phase": 0.5629629629629629
+        }
+      }
+    },
+    {
+      "time_s": 0.24166666666666667,
+      "root_forward_m": 1.8652497236250027,
+      "pelvis_height_offset_m": -0.4079142524651602,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.3465055319674209,
+          "foot_pitch_degrees": 1.181268858979844,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666663,
+          "forward_m": 2.197326545438849,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 25.8570923957994,
+          "foot_pitch_degrees": -26.156969339149857,
+          "swing_phase": 0.5777777777777777
+        }
+      }
+    },
+    {
+      "time_s": 0.25,
+      "root_forward_m": 1.9295686796120717,
+      "pelvis_height_offset_m": -0.3974663566931802,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.7841308259446611,
+          "foot_pitch_degrees": 2.67317327026589,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666674,
+          "forward_m": 2.391007955807863,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 24.902656224492684,
+          "foot_pitch_degrees": -25.20346408753609,
+          "swing_phase": 0.5925925925925927
+        }
+      }
+    },
+    {
+      "time_s": 0.25833333333333336,
+      "root_forward_m": 1.9938876355991408,
+      "pelvis_height_offset_m": -0.386798198816005,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 1.4388089899614545,
+          "foot_pitch_degrees": 4.905030647595867,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.4791666666666667,
+          "forward_m": 2.5803365085780614,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 23.883343808278966,
+          "foot_pitch_degrees": -24.150733349042277,
+          "swing_phase": 0.6074074074074074
+        }
+      }
+    },
+    {
+      "time_s": 0.26666666666666666,
+      "root_forward_m": 2.0582065915862096,
+      "pelvis_height_offset_m": -0.37607256040320386,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 2.313413280174815,
+          "foot_pitch_degrees": 7.886636182414141,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.4791666666666667,
+          "forward_m": 2.764677743577753,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 22.805589852394604,
+          "foot_pitch_degrees": -23.00727246725686,
+          "swing_phase": 0.6222222222222222
+        }
+      }
+    },
+    {
+      "time_s": 0.275,
+      "root_forward_m": 2.122525547573279,
+      "pelvis_height_offset_m": -0.3654535484786643,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 3.394309596905294,
+          "foot_pitch_degrees": 11.571509989449865,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666663,
+          "forward_m": 2.943424754877051,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 21.676372259480853,
+          "foot_pitch_degrees": -21.78320313832564,
+          "swing_phase": 0.637037037037037
+        }
+      }
+    },
+    {
+      "time_s": 0.2833333333333334,
+      "root_forward_m": 2.1868445035603483,
+      "pelvis_height_offset_m": -0.35510280850825365,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 4.654196459834601,
+          "foot_pitch_degrees": 15.86657884034523,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.4791666666666667,
+          "forward_m": 3.116001991372994,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 20.50315517231539,
+          "foot_pitch_degrees": -20.490038558596833,
+          "swing_phase": 0.6518518518518519
+        }
+      }
+    },
+    {
+      "time_s": 0.2916666666666667,
+      "root_forward_m": 2.251163459547417,
+      "pelvis_height_offset_m": -0.34517573738747864,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 6.054944983203309,
+          "foot_pitch_degrees": 20.64185789728401,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.4791666666666667,
+          "forward_m": 3.2818690573745926,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 19.29382716049383,
+          "foot_pitch_degrees": -19.14044857226636,
+          "swing_phase": 0.6666666666666666
+        }
+      }
+    },
+    {
+      "time_s": 0.3,
+      "root_forward_m": 2.3154824155344857,
+      "pelvis_height_offset_m": -0.33581769642914694,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 7.55043885100854,
+          "foot_pitch_degrees": 25.74013244662002,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.4791666666666667,
+          "forward_m": 3.4405245131879276,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 18.05663500796561,
+          "foot_pitch_degrees": -17.748024819022866,
+          "swing_phase": 0.6814814814814815
+        }
+      }
+    },
+    {
+      "time_s": 0.30833333333333335,
+      "root_forward_m": 2.3798013715215554,
+      "pelvis_height_offset_m": -0.32716022435102643,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 9.089414292201631,
+          "foot_pitch_degrees": 30.986639632505558,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666674,
+          "forward_m": 3.591509675701224,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 16.800113596419518,
+          "foot_pitch_degrees": -16.32704588169292,
+          "swing_phase": 0.6962962962962964
+        }
+      }
+    },
+    {
+      "time_s": 0.3166666666666667,
+      "root_forward_m": 2.4441203275086245,
+      "pelvis_height_offset_m": -0.31931725026350694,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 10.618300055885792,
+          "foot_pitch_degrees": 36.19875019051974,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.4791666666666667,
+          "forward_m": 3.7344124189699235,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 15.533012413316975,
+          "foot_pitch_degrees": -14.892242433886235,
+          "swing_phase": 0.7111111111111111
+        }
+      }
+    },
+    {
+      "time_s": 0.325,
+      "root_forward_m": 2.5084392834956932,
+      "pelvis_height_offset_m": -0.31238130665726005,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 12.084057386513797,
+          "foot_pitch_degrees": 41.195650181297026,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.4791666666666667,
+          "forward_m": 3.8688709748017818,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 14.264219242596578,
+          "foot_pitch_degrees": -13.45856238764069,
+          "swing_phase": 0.7259259259259259
+        }
+      }
+    },
+    {
+      "time_s": 0.33333333333333337,
+      "root_forward_m": 2.5727582394827624,
+      "pelvis_height_offset_m": -0.30641974239089975,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 13.437019999085681,
+          "foot_pitch_degrees": 45.80802272415573,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666663,
+          "forward_m": 3.994577733341931,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 13.0026816204677,
+          "foot_pitch_degrees": -12.04093604106757,
+          "swing_phase": 0.7407407407407407
+        }
+      }
+    },
+    {
+      "time_s": 0.34166666666666673,
+      "root_forward_m": 2.637077195469832,
+      "pelvis_height_offset_m": -0.3014709356786432,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 14.633734054346375,
+          "foot_pitch_degrees": 49.88772973072627,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.4791666666666667,
+          "forward_m": 4.111283043657964,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 11.757326658060677,
+          "foot_pitch_degrees": -10.654041225996702,
+          "swing_phase": 0.7555555555555556
+        }
+      }
+    },
+    {
+      "time_s": 0.35,
+      "root_forward_m": 2.7013961514569003,
+      "pelvis_height_offset_m": -0.297540507077971,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 15.639798133983405,
+          "foot_pitch_degrees": 53.31749363857978,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666663,
+          "forward_m": 4.2187990143250005,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 10.536979846842465,
+          "foot_pitch_degrees": -9.312068455621661,
+          "swing_phase": 0.7703703703703701
+        }
+      }
+    },
+    {
+      "time_s": 0.35833333333333334,
+      "root_forward_m": 2.7657151074439694,
+      "pelvis_height_offset_m": -0.29459753247728726,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 16.43270321582457,
+          "foot_pitch_degrees": 56.020579144856484,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.4791666666666667,
+          "forward_m": 4.317003314010824,
+          "height_m": 0.2638052283959988,
+          "toe_flex_degrees": 9.350283471513336,
+          "foot_pitch_degrees": -8.028486072144723,
+          "swing_phase": 0.7851851851851852
+        }
+      }
+    },
+    {
+      "time_s": 0.3666666666666667,
+      "root_forward_m": 2.8300340634310386,
+      "pelvis_height_offset_m": -0.29257075608358124,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 17.00467264903562,
+          "foot_pitch_degrees": 57.97047493989416,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666674,
+          "forward_m": 4.405842972060863,
+          "height_m": 0.25881682799270395,
+          "toe_flex_degrees": 8.205615258500533,
+          "foot_pitch_degrees": -6.8158053944223065,
+          "swing_phase": 0.8000000000000002
+        }
+      }
+    },
+    {
+      "time_s": 0.375,
+      "root_forward_m": 2.8943530194181077,
+      "pelvis_height_offset_m": -0.2913448034100873,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 17.365502129317893,
+          "foot_pitch_degrees": 59.200575440856454,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666674,
+          "forward_m": 4.485338179083363,
+          "height_m": 0.24817753470761905,
+          "toe_flex_degrees": 7.1110078861221035,
+          "foot_pitch_degrees": -5.685345865609925,
+          "swing_phase": 0.8148148148148149
+        }
+      }
+    },
+    {
+      "time_s": 0.38333333333333336,
+      "root_forward_m": 2.958671975405177,
+      "pelvis_height_offset_m": -0.29075639426394456,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 17.545399674106058,
+          "foot_pitch_degrees": 59.81386252536156,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.4791666666666667,
+          "forward_m": 4.5555860875344205,
+          "height_m": 0.23236174261694056,
+          "toe_flex_degrees": 6.074069975036444,
+          "foot_pitch_degrees": -4.6470002008073585,
+          "swing_phase": 0.8296296296296296
+        }
+      }
+    },
+    {
+      "time_s": 0.3916666666666667,
+      "root_forward_m": 3.022990931392246,
+      "pelvis_height_offset_m": -0.2905905557338596,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 17.59782559776572,
+          "foot_pitch_degrees": 59.99258726511041,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666663,
+          "forward_m": 4.616764612303059,
+          "height_m": 0.2120746600345218,
+          "toe_flex_degrees": 5.101909164774027,
+          "foot_pitch_degrees": -3.7089995347038562,
+          "swing_phase": 0.8444444444444444
+        }
+      }
+    },
+    {
+      "time_s": 0.39583333333333337,
+      "root_forward_m": 3.0551504093857806,
+      "pelvis_height_offset_m": -0.2905838547272942,
+      "stage": "FLIGHT",
+      "support_count": 0,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.135918704843059,
+          "height_m": 0.0,
+          "toe_flex_degrees": 17.6,
+          "foot_pitch_degrees": 60.0,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666663,
+          "forward_m": 4.6440314729872965,
+          "height_m": 0.2005303271237752,
+          "toe_flex_degrees": 4.642185986390448,
+          "foot_pitch_degrees": -3.2796886716644433,
+          "swing_phase": 0.8518518518518517
+        }
+      }
+    },
+    {
+      "time_s": 0.4,
+      "root_forward_m": 3.0873098873793148,
+      "pelvis_height_offset_m": -0.2883212342020406,
+      "stage": "FLIGHT",
+      "support_count": 0,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.1359484350188167,
+          "height_m": 0.0008931018507423445,
+          "toe_flex_degrees": 17.61119130073354,
+          "foot_pitch_degrees": 59.995192352701274,
+          "swing_phase": 0.007407407407407381
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666663,
+          "forward_m": 4.669136231296344,
+          "height_m": 0.18822086506931482,
+          "toe_flex_degrees": 4.20105786408659,
+          "foot_pitch_degrees": -2.877678569223284,
+          "swing_phase": 0.8592592592592592
+        }
+      }
+    },
+    {
+      "time_s": 0.4083333333333334,
+      "root_forward_m": 3.151628843366384,
+      "pelvis_height_offset_m": -0.2715274762602476,
+      "stage": "FLIGHT",
+      "support_count": 0,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.1367035954383329,
+          "height_m": 0.007965613963877937,
+          "toe_flex_degrees": 17.69934448035262,
+          "foot_pitch_degrees": 59.87704783435991,
+          "swing_phase": 0.02222222222222224
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.4791666666666667,
+          "forward_m": 4.713051786024397,
+          "height_m": 0.1618639715087271,
+          "toe_flex_degrees": 3.377402239697732,
+          "foot_pitch_degrees": -2.15724072116923,
+          "swing_phase": 0.8740740740740741
+        }
+      }
+    },
+    {
+      "time_s": 0.4166666666666667,
+      "root_forward_m": 3.215947799353453,
+      "pelvis_height_offset_m": -0.24435460511158835,
+      "stage": "FLIGHT",
+      "support_count": 0,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.1394709281208524,
+          "height_m": 0.021729357231478383,
+          "toe_flex_degrees": 17.87188102273713,
+          "foot_pitch_degrees": 59.46158846999535,
+          "swing_phase": 0.03703703703703701
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.4791666666666667,
+          "forward_m": 4.748954282185568,
+          "height_m": 0.13417920348062579,
+          "toe_flex_degrees": 2.6361149799993635,
+          "foot_pitch_degrees": -1.5495232698702766,
+          "swing_phase": 0.8888888888888888
+        }
+      }
+    },
+    {
+      "time_s": 0.425,
+      "root_forward_m": 3.280266755340522,
+      "pelvis_height_offset_m": -0.2171817339629289,
+      "stage": "FLIGHT",
+      "support_count": 0,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.1454450044641609,
+          "height_m": 0.04144232469137516,
+          "toe_flex_degrees": 18.124407602957653,
+          "foot_pitch_degrees": 58.604616907599855,
+          "swing_phase": 0.05185185185185177
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.4791666666666667,
+          "forward_m": 4.777382690251433,
+          "height_m": 0.10640099353625976,
+          "toe_flex_degrees": 1.9815923375538573,
+          "foot_pitch_degrees": -1.053762504824911,
+          "swing_phase": 0.9037037037037037
+        }
+      }
+    },
+    {
+      "time_s": 0.43333333333333335,
+      "root_forward_m": 3.344585711327591,
+      "pelvis_height_offset_m": -0.200387976021136,
+      "stage": "FLIGHT",
+      "support_count": 0,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.1557016275823113,
+          "height_m": 0.06604178516529405,
+          "toe_flex_degrees": 18.452054845455223,
+          "foot_pitch_degrees": 57.203246878022306,
+          "swing_phase": 0.06666666666666662
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666674,
+          "forward_m": 4.798975746051892,
+          "height_m": 0.07976794069643219,
+          "toe_flex_degrees": 1.4173959172133686,
+          "foot_pitch_degrees": -0.666358873347046,
+          "swing_phase": 0.9185185185185186
+        }
+      }
+    },
+    {
+      "time_s": 0.4416666666666667,
+      "root_forward_m": 3.40890466731466,
+      "pelvis_height_offset_m": -0.200387976021136,
+      "stage": "FLIGHT",
+      "support_count": 0,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.1712016328907031,
+          "height_m": 0.0942015753717529,
+          "toe_flex_degrees": 18.849488277893958,
+          "foot_pitch_degrees": 55.19236477245386,
+          "swing_phase": 0.08148148148148149
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.4791666666666667,
+          "forward_m": 4.814475751360278,
+          "height_m": 0.055467582719497206,
+          "toe_flex_degrees": 0.9461996355786786,
+          "foot_pitch_degrees": -0.3806421282107286,
+          "swing_phase": 0.9333333333333333
+        }
+      }
+    },
+    {
+      "time_s": 0.45,
+      "root_forward_m": 3.4732236233017293,
+      "pelvis_height_offset_m": -0.21718173396292895,
+      "stage": "FLIGHT",
+      "support_count": 0,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.1927946886911613,
+          "height_m": 0.12440359373183134,
+          "toe_flex_degrees": 19.310925680608356,
+          "foot_pitch_degrees": 52.541091219913355,
+          "swing_phase": 0.09629629629629625
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.4791666666666667,
+          "forward_m": 4.824732374478431,
+          "height_m": 0.0345834451334015,
+          "toe_flex_degrees": 0.569742232744291,
+          "foot_pitch_degrees": -0.1866364752956673,
+          "swing_phase": 0.9481481481481482
+        }
+      }
+    },
+    {
+      "time_s": 0.45833333333333337,
+      "root_forward_m": 3.5375425792887984,
+      "pelvis_height_offset_m": -0.24435460511158835,
+      "stage": "FLIGHT",
+      "support_count": 0,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.2212230967570172,
+          "height_m": 0.15501964161823673,
+          "toe_flex_degrees": 19.830160603125908,
+          "foot_pitch_degrees": 49.24924266473283,
+          "swing_phase": 0.1111111111111111
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666663,
+          "forward_m": 4.830706450821749,
+          "height_m": 0.018046728055656963,
+          "toe_flex_degrees": 0.2887856692025071,
+          "foot_pitch_degrees": -0.07082572123220499,
+          "swing_phase": 0.9629629629629629
+        }
+      }
+    },
+    {
+      "time_s": 0.46666666666666673,
+      "root_forward_m": 3.6018615352758676,
+      "pelvis_height_offset_m": -0.27152747626024776,
+      "stage": "FLIGHT",
+      "support_count": 0,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.2571255929181862,
+          "height_m": 0.18439919996474421,
+          "toe_flex_degrees": 20.400591765848525,
+          "foot_pitch_degrees": 45.34379294404308,
+          "swing_phase": 0.12592592592592597
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.4791666666666667,
+          "forward_m": 4.833473783504256,
+          "height_m": 0.006594785031391452,
+          "toe_flex_degrees": 0.10307968982271877,
+          "foot_pitch_degrees": -0.015918421046479114,
+          "swing_phase": 0.9777777777777779
+        }
+      }
+    },
+    {
+      "time_s": 0.475,
+      "root_forward_m": 3.666180491262936,
+      "pelvis_height_offset_m": -0.2883212342020406,
+      "stage": "FLIGHT",
+      "support_count": 0,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.3010411476462476,
+          "height_m": 0.21095840917627806,
+          "toe_flex_degrees": 21.015258014020237,
+          "foot_pitch_degrees": 40.87533486525919,
+          "swing_phase": 0.14074074074074064
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": -0.47916666666666663,
+          "forward_m": 4.834228943923785,
+          "height_m": 0.0007382452712188522,
+          "toe_flex_degrees": 0.011332783425120748,
+          "foot_pitch_degrees": -0.0006130258056646909,
+          "swing_phase": 0.9925925925925925
+        }
+      }
+    },
+    {
+      "time_s": 0.4791666666666667,
+      "root_forward_m": 3.698339969256471,
+      "pelvis_height_offset_m": -0.2905838547272942,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.326145905955297,
+          "height_m": 0.2227248159698011,
+          "toe_flex_degrees": 21.3369153061916,
+          "foot_pitch_degrees": 38.451375472420516,
+          "swing_phase": 0.1481481481481481
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.48333333333333334,
+      "root_forward_m": 3.7304994472500055,
+      "pelvis_height_offset_m": -0.2906464695042282,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.3534127666395266,
+          "height_m": 0.23326545540965005,
+          "toe_flex_degrees": 21.666878443034445,
+          "foot_pitch_degrees": 35.91454178356583,
+          "swing_phase": 0.1555555555555555
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.4916666666666667,
+      "root_forward_m": 3.7948184032370746,
+      "pelvis_height_offset_m": -0.29210830903046875,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.4145912914081697,
+          "height_m": 0.2501177600284549,
+          "toe_flex_degrees": 22.34789726935844,
+          "foot_pitch_degrees": 30.54862917940306,
+          "swing_phase": 0.17037037037037037
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.5,
+      "root_forward_m": 3.8591373592241434,
+      "pelvis_height_offset_m": -0.2969150579161861,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.4848391998592259,
+          "height_m": 0.2606068109286365,
+          "toe_flex_degrees": 23.050532980263426,
+          "foot_pitch_degrees": 24.87781623595171,
+          "swing_phase": 0.18518518518518512
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.5083333333333333,
+      "root_forward_m": 3.923456315211212,
+      "pelvis_height_offset_m": -0.30608054053451134,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.564334406881728,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 23.766831258500545,
+          "foot_pitch_degrees": 19.011787416618787,
+          "swing_phase": 0.19999999999999987
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.5166666666666667,
+      "root_forward_m": 3.9877752711982817,
+      "pelvis_height_offset_m": -0.31978170438191517,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.6531740649317703,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 24.488721145378264,
+          "foot_pitch_degrees": 13.066154042523028,
+          "swing_phase": 0.21481481481481485
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.525,
+      "root_forward_m": 4.052094227185351,
+      "pelvis_height_offset_m": -0.33752271358343466,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.7513783646175853,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 25.208073877657192,
+          "foot_pitch_degrees": 7.158915869980678,
+          "swing_phase": 0.2296296296296296
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.5333333333333333,
+      "root_forward_m": 4.116413183172419,
+      "pelvis_height_offset_m": -0.35829904239790134,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.8588943352846292,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 25.916763810527282,
+          "foot_pitch_degrees": 1.4069226679905924,
+          "swing_phase": 0.24444444444444435
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.5416666666666667,
+      "root_forward_m": 4.180732139159489,
+      "pelvis_height_offset_m": -0.3807615687231696,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 1.9755996456006586,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 26.606730820870204,
+          "foot_pitch_degrees": -4.077664204280126,
+          "swing_phase": 0.2592592592592593
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.55,
+      "root_forward_m": 4.245051095146558,
+      "pelvis_height_offset_m": -0.40338066760134217,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 2.101306404140805,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 27.270043572192684,
+          "foot_pitch_degrees": -9.190910220010384,
+          "swing_phase": 0.2740740740740741
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.5583333333333335,
+      "root_forward_m": 4.3093700511336275,
+      "pelvis_height_offset_m": -0.4246103047240003,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 2.2357649599726654,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 27.898963015156127,
+          "foot_pitch_degrees": -13.840646107239946,
+          "swing_phase": 0.28888888888888903
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.5666666666666668,
+      "root_forward_m": 4.373689007120697,
+      "pelvis_height_offset_m": -0.44305212993742904,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 2.3786677032413674,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 28.4860054955876,
+          "foot_pitch_degrees": -17.950006271383565,
+          "swing_phase": 0.3037037037037038
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.575,
+      "root_forward_m": 4.438007963107765,
+      "pelvis_height_offset_m": -0.45761957074784676,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 2.5296528657546604,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 29.024004845256204,
+          "foot_pitch_degrees": -21.460967217745782,
+          "swing_phase": 0.31851851851851837
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.5833333333333334,
+      "root_forward_m": 4.502326919094834,
+      "pelvis_height_offset_m": -0.4677019258266313,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 2.6883083215679973,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 29.50617283950617,
+          "foot_pitch_degrees": -24.33788597403557,
+          "swing_phase": 0.3333333333333333
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.5916666666666667,
+      "root_forward_m": 4.566645875081903,
+      "pelvis_height_offset_m": -0.473328458515548,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 2.854175387569596,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 29.926157419978722,
+          "foot_pitch_degrees": -26.57103851287989,
+          "swing_phase": 0.3481481481481481
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.6,
+      "root_forward_m": 4.6309648310689715,
+      "pelvis_height_offset_m": -0.475332490331978,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 3.026752624065537,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 30.278098100005426,
+          "foot_pitch_degrees": -28.180158174339535,
+          "swing_phase": 0.3629629629629629
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.6083333333333334,
+      "root_forward_m": 4.6952837870560415,
+      "pelvis_height_offset_m": -0.47549939214797604,
+      "stage": "SUPPORT_EXTENSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 3.2054996353648386,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 30.55667799464934,
+          "foot_pitch_degrees": -29.217974088422718,
+          "swing_phase": 0.3777777777777778
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.6166666666666667,
+      "root_forward_m": 4.759602743043111,
+      "pelvis_height_offset_m": -0.4753874554268561,
+      "stage": "SUPPORT_EXTENSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 3.3898408703645257,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 30.757171946595555,
+          "foot_pitch_degrees": -29.773749597599434,
+          "swing_phase": 0.3925925925925926
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.625,
+      "root_forward_m": 4.823921699030179,
+      "pelvis_height_offset_m": -0.47490247905523564,
+      "stage": "SUPPORT_EXTENSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 3.5791694231347257,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 30.875490252896387,
+          "foot_pitch_degrees": -29.976820679316738,
+          "swing_phase": 0.40740740740740733
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.6333333333333334,
+      "root_forward_m": 4.888240655017249,
+      "pelvis_height_offset_m": -0.47381869713665287,
+      "stage": "SUPPORT_EXTENSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 3.7728508335037407,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 30.90821753566629,
+          "foot_pitch_degrees": -29.999983223535782,
+          "swing_phase": 0.4222222222222223
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.6416666666666667,
+      "root_forward_m": 4.952559611004317,
+      "pelvis_height_offset_m": -0.4719627938955479,
+      "stage": "SUPPORT_EXTENSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 3.9702268876431166,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 30.852646341867064,
+          "foot_pitch_degrees": -29.992727484496545,
+          "swing_phase": 0.43703703703703706
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.65,
+      "root_forward_m": 5.0168785669913865,
+      "pelvis_height_offset_m": -0.4692101166649231,
+      "stage": "SUPPORT_EXTENSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 4.170619418652743,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 30.706805102961933,
+          "foot_pitch_degrees": -29.954316232063178,
+          "swing_phase": 0.45185185185185184
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.6583333333333334,
+      "root_forward_m": 5.0811975229784565,
+      "pelvis_height_offset_m": -0.46548088887400374,
+      "stage": "SUPPORT_EXTENSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 4.373334107145916,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 30.46948013405133,
+          "foot_pitch_degrees": -29.861988897048317,
+          "swing_phase": 0.4666666666666668
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.6666666666666667,
+      "root_forward_m": 5.145516478965525,
+      "pelvis_height_offset_m": -0.46073642303589823,
+      "stage": "SUPPORT_EXTENSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 4.577664281834423,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 30.140231403712313,
+          "foot_pitch_degrees": -29.697077212547825,
+          "swing_phase": 0.48148148148148157
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.675,
+      "root_forward_m": 5.209835434952594,
+      "pelvis_height_offset_m": -0.4549753337352593,
+      "stage": "SUPPORT_EXTENSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 4.7828947201136245,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 29.719401859699037,
+          "foot_pitch_degrees": -29.444770361585938,
+          "swing_phase": 0.4962962962962963
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.6833333333333335,
+      "root_forward_m": 5.274154390939664,
+      "pelvis_height_offset_m": -0.44822975061594356,
+      "stage": "SUPPORT_EXTENSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 4.988305448647537,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 29.208120151457948,
+          "foot_pitch_degrees": -29.09388012476041,
+          "swing_phase": 0.5111111111111113
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.6916666666666668,
+      "root_forward_m": 5.338473346926732,
+      "pelvis_height_offset_m": -0.4405615313686731,
+      "stage": "SUPPORT_EXTENSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 5.193175543953891,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 28.60829664758448,
+          "foot_pitch_degrees": -28.636606027887712,
+          "swing_phase": 0.525925925925926
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.7,
+      "root_forward_m": 5.4027923029138005,
+      "pelvis_height_offset_m": -0.4320584747186951,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 5.396786932989245,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 27.922612704403146,
+          "foot_pitch_degrees": -28.06830048964812,
+          "swing_phase": 0.5407407407407406
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0009255259289552752,
+          "foot_pitch_degrees": 0.003155202030529347,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.7083333333333334,
+      "root_forward_m": 5.46711125890087,
+      "pelvis_height_offset_m": -0.42283053341344234,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 5.5984281937340405,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 27.154503200287657,
+          "foot_pitch_degrees": -27.387233969230877,
+          "swing_phase": 0.5555555555555556
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.04244500186903841,
+          "foot_pitch_degrees": 0.14469887000808548,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.7166666666666667,
+      "root_forward_m": 5.531430214887939,
+      "pelvis_height_offset_m": -0.4130060272101951,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 5.797398355777679,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 26.308132408645733,
+          "foot_pitch_degrees": -26.59436011397942,
+          "swing_phase": 0.5703703703703703
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.2029771884367201,
+          "foot_pitch_degrees": 0.6919676878524549,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.725,
+      "root_forward_m": 5.595749170875008,
+      "pelvis_height_offset_m": -0.40272785586373966,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 5.993010700903621,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 25.388363340169576,
+          "foot_pitch_degrees": -25.69308090703642,
+          "swing_phase": 0.585185185185185
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.5390886228700827,
+          "foot_pitch_degrees": 1.8378021234207367,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.7333333333333334,
+      "root_forward_m": 5.660068126862077,
+      "pelvis_height_offset_m": -0.3921497121140304,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 6.184596563674455,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 24.40072074149945,
+          "foot_pitch_degrees": -24.689011814989005,
+          "swing_phase": 0.6000000000000001
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 1.083738548576534,
+          "foot_pitch_degrees": 3.6945632337836383,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.7416666666666667,
+      "root_forward_m": 5.724387082849146,
+      "pelvis_height_offset_m": -0.3814322946738495,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 6.371509132016959,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 23.35134799237266,
+          "foot_pitch_degrees": -23.58974693551394,
+          "swing_phase": 0.6148148148148148
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 1.8491188903304598,
+          "foot_pitch_degrees": 6.30381439885384,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.75,
+      "root_forward_m": 5.7887060388362155,
+      "pelvis_height_offset_m": -0.37073952121646786,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 6.5531272478072164,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 22.246958196159753,
+          "foot_pitch_degrees": -22.404624145022677,
+          "swing_phase": 0.6296296296296295
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 2.8294942294709333,
+          "foot_pitch_degrees": 9.646003055014544,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.7583333333333334,
+      "root_forward_m": 5.853024994823285,
+      "pelvis_height_offset_m": -0.36023474136330497,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 6.728859207455674,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 21.09477980896628,
+          "foot_pitch_degrees": -21.14449024630658,
+          "swing_phase": 0.6444444444444445
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 4.004041779099387,
+          "foot_pitch_degrees": 13.650142428747909,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.7666666666666667,
+      "root_forward_m": 5.917343950810354,
+      "pelvis_height_offset_m": -0.3500769496715908,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 6.898146562492213,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 19.902497199765577,
+          "foot_pitch_degrees": -19.82146611618209,
+          "swing_phase": 0.6592592592592593
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 5.3396913592772295,
+          "foot_pitch_degrees": 18.203493270263284,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.775,
+      "root_forward_m": 5.981662906797422,
+      "pelvis_height_offset_m": -0.34041699862202485,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 7.060467920151249,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 18.67818657791682,
+          "foot_pitch_degrees": -18.448711853135844,
+          "swing_phase": 0.674074074074074
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 6.793965372223618,
+          "foot_pitch_degrees": 23.16124558712597,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.7833333333333334,
+      "root_forward_m": 6.045981862784492,
+      "pelvis_height_offset_m": -0.33139381160643705,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 7.215342743956799,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 17.430247764534673,
+          "foot_pitch_degrees": -17.040191924969783,
+          "swing_phase": 0.688888888888889
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 8.317818777513075,
+          "foot_pitch_degrees": 28.35620037788548,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.7916666666666667,
+      "root_forward_m": 6.110300818771561,
+      "pelvis_height_offset_m": -0.32313059591544907,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 7.362335154307558,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 16.167332320161837,
+          "foot_pitch_degrees": -15.610440316446436,
+          "swing_phase": 0.7037037037037037
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 9.858479067273134,
+          "foot_pitch_degrees": 33.608451365703864,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.8,
+      "root_forward_m": 6.1746197747586296,
+      "pelvis_height_offset_m": -0.3157310557261338,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 7.5010577290619995,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 14.898268572744364,
+          "foot_pitch_degrees": -14.174325676933911,
+          "swing_phase": 0.7185185185185186
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 11.362286241382108,
+          "foot_pitch_degrees": 38.73506673198445,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.8083333333333335,
+      "root_forward_m": 6.2389387307457,
+      "pelvis_height_offset_m": -0.30927560508967666,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 7.631175304123423,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 13.631984116749008,
+          "foot_pitch_degrees": -12.746816468051186,
+          "swing_phase": 0.7333333333333335
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 12.7775327826667,
+          "foot_pitch_degrees": 43.55977085000011,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.8166666666666668,
+      "root_forward_m": 6.303257686732768,
+      "pelvis_height_offset_m": -0.3038175809190353,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 7.7524087740250485,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 12.377426376156393,
+          "foot_pitch_degrees": -11.342746111313186,
+          "swing_phase": 0.7481481481481482
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 14.057303632099647,
+          "foot_pitch_degrees": 47.92262601852152,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.825,
+      "root_forward_m": 6.367576642719836,
+      "pelvis_height_offset_m": -0.29937945597660165,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 7.864538892515116,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 11.143481840828693,
+          "foot_pitch_degrees": -9.976578135775936,
+          "swing_phase": 0.7629629629629628
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 15.16231616399748,
+          "foot_pitch_degrees": 51.689714195445944,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.8333333333333334,
+      "root_forward_m": 6.431895598706906,
+      "pelvis_height_offset_m": -0.29594905186185955,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 7.967410073141938,
+          "height_m": 0.2641671406611765,
+          "toe_flex_degrees": 9.93889459723674,
+          "foot_pitch_degrees": -8.66217132568169,
+          "swing_phase": 0.7777777777777778
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 16.06376016121819,
+          "foot_pitch_degrees": 54.76281873142565,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.8416666666666667,
+      "root_forward_m": 6.4962145546939745,
+      "pelvis_height_offset_m": -0.2934757519990493,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 8.060934189838965,
+          "height_m": 0.2620373696887018,
+          "toe_flex_degrees": 8.772184780640844,
+          "foot_pitch_degrees": -7.412544868104228,
+          "swing_phase": 0.7925925925925925
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 16.746137790358798,
+          "foot_pitch_degrees": 57.0891061034959,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.85,
+      "root_forward_m": 6.560533510681044,
+      "pelvis_height_offset_m": -0.291866714624824,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 8.145094377509938,
+          "height_m": 0.2541796039956291,
+          "toe_flex_degrees": 7.651567576499687,
+          "foot_pitch_degrees": -6.239643500593797,
+          "swing_phase": 0.8074074074074074
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 17.21010357695315,
+          "foot_pitch_degrees": 58.670807648703914,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.8583333333333334,
+      "root_forward_m": 6.624852466668113,
+      "pelvis_height_offset_m": -0.29098308577591364,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 8.219948832613854,
+          "height_m": 0.24087771400353403,
+          "toe_flex_degrees": 6.58487339412723,
+          "foot_pitch_degrees": -5.154102658822428,
+          "swing_phase": 0.8222222222222223
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 17.475304380669535,
+          "foot_pitch_degrees": 59.57490129773705,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.8666666666666667,
+      "root_forward_m": 6.689171422655182,
+      "pelvis_height_offset_m": -0.29063621227678327,
+      "stage": "PUSH_OFF",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 8.285634613750162,
+          "height_m": 0.22272481596980126,
+          "toe_flex_degrees": 5.579469825465969,
+          "foot_pitch_degrees": -4.165013624229006,
+          "swing_phase": 0.837037037037037
+        },
+        "right": {
+          "contact": true,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 0.0,
+          "toe_flex_degrees": 17.583219370508427,
+          "foot_pitch_degrees": 59.94279330855146,
+          "swing_phase": 0.0
+        }
+      }
+    },
+    {
+      "time_s": 0.875,
+      "root_forward_m": 6.753490378642251,
+      "pelvis_height_offset_m": -0.2905838547272942,
+      "stage": "PUSH_OFF",
+      "support_count": 0,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 8.342371442243767,
+          "height_m": 0.2005303271237752,
+          "toe_flex_degrees": 4.642185986390448,
+          "foot_pitch_degrees": -3.2796886716644433,
+          "swing_phase": 0.8518518518518517
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.83425867409953,
+          "height_m": 1.5869892059797901e-31,
+          "toe_flex_degrees": 17.6,
+          "foot_pitch_degrees": 60.0,
+          "swing_phase": -9.868649107779169e-17
+        }
+      }
+    },
+    {
+      "time_s": 0.8833333333333334,
+      "root_forward_m": 6.81780933462932,
+      "pelvis_height_offset_m": -0.2817548536878959,
+      "stage": "FLIGHT",
+      "support_count": 0,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 8.390465502730114,
+          "height_m": 0.17528387466630715,
+          "toe_flex_degrees": 3.779239817324668,
+          "foot_pitch_degrees": -2.503426217036812,
+          "swing_phase": 0.8666666666666667
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.834493866972863,
+          "height_m": 0.0035603297325399667,
+          "toe_flex_degrees": 17.644464148516025,
+          "foot_pitch_degrees": 59.962561646868274,
+          "swing_phase": 0.01481481481481486
+        }
+      }
+    },
+    {
+      "time_s": 0.8916666666666667,
+      "root_forward_m": 6.882128290616389,
+      "pelvis_height_offset_m": -0.25864022888004273,
+      "stage": "FLIGHT",
+      "support_count": 0,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 8.430313243740327,
+          "height_m": 0.14811116941012462,
+          "toe_flex_degrees": 2.996168894334566,
+          "foot_pitch_degrees": -1.8392759649565404,
+          "swing_phase": 0.8814814814814815
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.8360982206210705,
+          "height_m": 0.014049380632721547,
+          "toe_flex_degrees": 17.775328172763412,
+          "foot_pitch_degrees": 59.7165045368243,
+          "swing_phase": 0.029629629629629624
+        }
+      }
+    },
+    {
+      "time_s": 0.9,
+      "root_forward_m": 6.946447246603459,
+      "pelvis_height_offset_m": -0.23006898134313364,
+      "stage": "FLIGHT",
+      "support_count": 0,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 8.4624051782862,
+          "height_m": 0.12022381160557798,
+          "toe_flex_degrees": 2.2977652714618007,
+          "foot_pitch_degrees": -1.2878040563815607,
+          "swing_phase": 0.8962962962962963
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.840327115803207,
+          "height_m": 0.030901685251526322,
+          "toe_flex_degrees": 17.98843883330789,
+          "foot_pitch_degrees": 59.09564886798903,
+          "swing_phase": 0.044444444444444384
+        }
+      }
+    },
+    {
+      "time_s": 0.9083333333333334,
+      "root_forward_m": 7.010766202590528,
+      "pelvis_height_offset_m": -0.20695435653528058,
+      "stage": "FLIGHT",
+      "support_count": 0,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 8.48732968444537,
+          "height_m": 0.09286526705333124,
+          "toe_flex_degrees": 1.6880148401601394,
+          "foot_pitch_degrees": -0.8468582162623828,
+          "swing_phase": 0.9111111111111112
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.848315264702059,
+          "height_m": 0.05320873148489841,
+          "toe_flex_degrees": 18.279163817822145,
+          "foot_pitch_degrees": 57.976895132597306,
+          "swing_phase": 0.059259259259259345
+        }
+      }
+    },
+    {
+      "time_s": 0.9166666666666667,
+      "root_forward_m": 7.075085158577597,
+      "pelvis_height_offset_m": -0.1981253554958824,
+      "stage": "FLIGHT",
+      "support_count": 0,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 8.505776805946317,
+          "height_m": 0.06725542236814083,
+          "toe_flex_degrees": 1.1700416525860085,
+          "foot_pitch_degrees": -0.5113329011873535,
+          "swing_phase": 0.925925925925926
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.861080511509217,
+          "height_m": 0.07976794069643241,
+          "toe_flex_degrees": 18.642399428687014,
+          "foot_pitch_degrees": 56.27668569448351,
+          "swing_phase": 0.07407407407407411
+        }
+      }
+    },
+    {
+      "time_s": 0.925,
+      "root_forward_m": 7.139404114564665,
+      "pelvis_height_offset_m": -0.20695435653528071,
+      "stage": "FLIGHT",
+      "support_count": 0,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 8.518542052753476,
+          "height_m": 0.04453619161191089,
+          "toe_flex_degrees": 0.7460576125140898,
+          "foot_pitch_degrees": -0.2729344470277262,
+          "swing_phase": 0.9407407407407408
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.879527633010157,
+          "height_m": 0.10914749904293972,
+          "toe_flex_degrees": 19.072584759786206,
+          "foot_pitch_degrees": 53.94746636656692,
+          "swing_phase": 0.08888888888888886
+        }
+      }
+    },
+    {
+      "time_s": 0.9333333333333335,
+      "root_forward_m": 7.203723070551735,
+      "pelvis_height_offset_m": -0.23006898134313378,
+      "stage": "FLIGHT",
+      "support_count": 0,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 8.52653020165232,
+          "height_m": 0.025720599634853583,
+          "toe_flex_degrees": 0.417317891175087,
+          "foot_pitch_degrees": -0.11994621658284021,
+          "swing_phase": 0.9555555555555557
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.904452139169324,
+          "height_m": 0.1397635469293453,
+          "toe_flex_degrees": 19.56372216144539,
+          "foot_pitch_degrees": 50.974147988337265,
+          "swing_phase": 0.10370370370370383
+        }
+      }
+    },
+    {
+      "time_s": 0.9416666666666668,
+      "root_forward_m": 7.268042026538804,
+      "pelvis_height_offset_m": -0.25864022888004323,
+      "stage": "FLIGHT",
+      "support_count": 0,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 8.530759096834464,
+          "height_m": 0.011647612441088865,
+          "toe_flex_degrees": 0.184082375743183,
+          "foot_pitch_degrees": -0.03699374722530124,
+          "swing_phase": 0.9703703703703704
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.936544073715205,
+          "height_m": 0.16996556528942375,
+          "toe_flex_degrees": 20.109403738020998,
+          "foot_pitch_degrees": 47.370568003340345,
+          "swing_phase": 0.11851851851851859
+        }
+      }
+    },
+    {
+      "time_s": 0.95,
+      "root_forward_m": 7.332360982525872,
+      "pelvis_height_offset_m": -0.28175485368789577,
+      "stage": "FLIGHT",
+      "support_count": 0,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "touchdown_time_s": 0.0,
+          "forward_m": 8.532363450482674,
+          "height_m": 0.002944728641681817,
+          "toe_flex_degrees": 0.045583405968026985,
+          "foot_pitch_degrees": -0.004809898546197511,
+          "swing_phase": 0.985185185185185
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 4.976391814725414,
+          "height_m": 0.19812535549588206,
+          "toe_flex_degrees": 20.702843570411076,
+          "foot_pitch_degrees": 43.17595203666342,
+          "swing_phase": 0.13333333333333316
+        }
+      }
+    },
+    {
+      "time_s": 0.9583333333333334,
+      "root_forward_m": 7.396679938512942,
+      "pelvis_height_offset_m": -0.2905838547272942,
+      "stage": "LANDING_COMPRESSION",
+      "support_count": 1,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "touchdown_time_s": 0.9583333333333334,
+          "forward_m": 8.532598643356001,
+          "height_m": 0.0,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 0.0,
+          "swing_phase": 0.0
+        },
+        "right": {
+          "contact": false,
+          "touchdown_time_s": 0.4791666666666667,
+          "forward_m": 5.024485875211768,
+          "height_m": 0.2227248159698011,
+          "toe_flex_degrees": 21.3369153061916,
+          "foot_pitch_degrees": 38.451375472420516,
+          "swing_phase": 0.1481481481481481
+        }
+      }
+    }
+  ]
+}

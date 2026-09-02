@@ -1,0 +1,6025 @@
+{
+  "status": "PROVISIONAL_REQUIRES_SKINNED_AND_VISUAL_GATE",
+  "semantic_binding": {
+    "root": "Bone_000",
+    "pelvis": "Bone_001",
+    "spine": [
+      "Bone_007",
+      "Bone_006",
+      "Bone_005",
+      "Bone_004",
+      "Bone_003"
+    ],
+    "chest": "Bone_002",
+    "neck": [
+      "Bone_041",
+      "Bone_040",
+      "Bone_039",
+      "Bone_038",
+      "Bone_037"
+    ],
+    "head": "Bone_036",
+    "tail": [
+      "Bone_024",
+      "Bone_023",
+      "Bone_022",
+      "Bone_021",
+      "Bone_020",
+      "Bone_019",
+      "Bone_018",
+      "Bone_017",
+      "Bone_016"
+    ],
+    "legs": {
+      "left": {
+        "contactChain": [
+          "Bone_011",
+          "Bone_010",
+          "Bone_009",
+          "Bone_008"
+        ],
+        "toeChains": [
+          [
+            "Bone_044",
+            "Bone_043",
+            "Bone_042"
+          ],
+          [
+            "Bone_047",
+            "Bone_046",
+            "Bone_045"
+          ],
+          [
+            "Bone_050",
+            "Bone_049",
+            "Bone_048"
+          ]
+        ]
+      },
+      "right": {
+        "contactChain": [
+          "Bone_015",
+          "Bone_014",
+          "Bone_013",
+          "Bone_012"
+        ],
+        "toeChains": [
+          [
+            "Bone_053",
+            "Bone_052",
+            "Bone_051"
+          ],
+          [
+            "Bone_056",
+            "Bone_055",
+            "Bone_054"
+          ],
+          [
+            "Bone_059",
+            "Bone_058",
+            "Bone_057"
+          ]
+        ]
+      }
+    },
+    "leftLeg": [
+      "Bone_011",
+      "Bone_010",
+      "Bone_009",
+      "Bone_008"
+    ],
+    "rightLeg": [
+      "Bone_015",
+      "Bone_014",
+      "Bone_013",
+      "Bone_012"
+    ],
+    "leftFoot": "Bone_008",
+    "rightFoot": "Bone_012"
+  },
+  "body_height_m": 2.6416714066117652,
+  "forward_axis": [
+    0.03893162055641767,
+    0.0,
+    0.9992418770852486
+  ],
+  "up_axis": [
+    0.0,
+    1.0,
+    0.0
+  ],
+  "ground_toe_joint_plane_m": 0.09643532171940516,
+  "max_foot_target_residual_m": 5.343663308213158e-07,
+  "max_unreachable_extension_m": 0.0,
+  "max_planted_distal_contact_step_drift_m": 5.554088262046627e-07,
+  "minimum_toe_joint_height_m": -7.850110496365748e-08,
+  "flight_sample_count": 21,
+  "leg_local_translations_constant": true,
+  "in_place_derived_only_from_authority": true,
+  "final_skinned_contact_gate": "NOT_YET_MEASURED",
+  "emitted_proxy_samples": [
+    {
+      "time_s": 0.0,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.3008939314310902,
+            0.2234123915890982,
+            2.470472294448366
+          ],
+          "distal_contact_centroid_m": [
+            -0.3657485811407371,
+            0.09859278478005562,
+            2.9755488465696622
+          ],
+          "target_foot_world_m": [
+            -0.30089386530433193,
+            0.22341249811993036,
+            2.470472378420678
+          ],
+          "foot_target_residual_m": 1.5090697633319363e-07,
+          "minimum_toe_joint_height_m": -6.304516055044562e-08,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.4665452075021776,
+            0.8066219144227031,
+            -0.6696143123209529
+          ],
+          "distal_contact_centroid_m": [
+            0.5330408907838843,
+            0.29747135215611137,
+            -0.5622953833310114
+          ],
+          "target_foot_world_m": [
+            0.4665451540650867,
+            0.8066219862690243,
+            -0.6696144160301489
+          ],
+          "foot_target_residual_m": 1.3701464841531032e-07,
+          "minimum_toe_joint_height_m": 0.10419518975053654,
+          "solved_foot_pitch_degrees": 56.09375,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.008333333767950535,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.30089379880437567,
+            0.2234124241605108,
+            2.4704724950026806
+          ],
+          "distal_contact_centroid_m": [
+            -0.36574844687807095,
+            0.0985928850405715,
+            2.975549058579768
+          ],
+          "target_foot_world_m": [
+            -0.30089386530433193,
+            0.22341249811993036,
+            2.470472378420678
+          ],
+          "foot_target_residual_m": 1.5324360764049923e-07,
+          "minimum_toe_joint_height_m": 6.477971699336837e-08,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.45837004716805957,
+            0.856085366236952,
+            -0.615264352482234
+          ],
+          "distal_contact_centroid_m": [
+            0.525432441560919,
+            0.3453371293040474,
+            -0.5071170270194566
+          ],
+          "target_foot_world_m": [
+            0.4583700738100583,
+            0.8560853084248271,
+            -0.6152644226005557
+          ],
+          "foot_target_residual_m": 9.470278198538687e-08,
+          "minimum_toe_joint_height_m": 0.14759251789219607,
+          "solved_foot_pitch_degrees": 55.68509615384615,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.01666666753590107,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.30089387640772686,
+            0.22341244147886766,
+            2.4704724607874944
+          ],
+          "distal_contact_centroid_m": [
+            -0.3657485431062497,
+            0.09859291211766531,
+            2.975549019576853
+          ],
+          "target_foot_world_m": [
+            -0.30089386530433193,
+            0.22341249811993036,
+            2.4704723784206783
+          ],
+          "foot_target_residual_m": 1.0057727251439344e-07,
+          "minimum_toe_joint_height_m": 8.584955034363073e-08,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.45779621167596385,
+            0.8813185755826538,
+            -0.5520623234964658
+          ],
+          "distal_contact_centroid_m": [
+            0.5249449627930272,
+            0.370734465441173,
+            -0.4422707321494151
+          ],
+          "target_foot_world_m": [
+            0.45779616553524416,
+            0.8813185603982218,
+            -0.5520623781268398
+          ],
+          "foot_target_residual_m": 7.310274108147899e-08,
+          "minimum_toe_joint_height_m": 0.17229278604318576,
+          "solved_foot_pitch_degrees": 55.16225961538462,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.02500000037252903,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.30089386891171926,
+            0.22341236621096466,
+            2.4704723999712765
+          ],
+          "distal_contact_centroid_m": [
+            -0.3657485250986518,
+            0.09859278499353848,
+            2.9755489409025997
+          ],
+          "target_foot_world_m": [
+            -0.300893865304332,
+            0.22341249811993036,
+            2.470472378420678
+          ],
+          "foot_target_residual_m": 1.3370645749306665e-07,
+          "minimum_toe_joint_height_m": -5.16197116856576e-08,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.460571315804006,
+            0.8877814964386436,
+            -0.48061791990810476
+          ],
+          "distal_contact_centroid_m": [
+            0.5278506033701644,
+            0.3778401643322695,
+            -0.3674754274492664
+          ],
+          "target_foot_world_m": [
+            0.4605714984595488,
+            0.887781439742941,
+            -0.4806179907421613
+          ],
+          "foot_target_residual_m": 2.0394831104082403e-07,
+          "minimum_toe_joint_height_m": 0.17995729060776788,
+          "solved_foot_pitch_degrees": 54.43810096153847,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.03333333507180214,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.30089386037991356,
+            0.22341237198641145,
+            2.470472355111707
+          ],
+          "distal_contact_centroid_m": [
+            -0.3657485432164851,
+            0.09859281466371815,
+            2.975548895345691
+          ],
+          "target_foot_world_m": [
+            -0.300893865304332,
+            0.22341249811993036,
+            2.4704723784206775
+          ],
+          "foot_target_residual_m": 1.283636342025777e-07,
+          "minimum_toe_joint_height_m": -3.494510843193854e-08,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.46363824840040024,
+            0.8875258862383726,
+            -0.4019063433121876
+          ],
+          "distal_contact_centroid_m": [
+            0.5311273473110608,
+            0.37873320886052575,
+            -0.2833790424193023
+          ],
+          "target_foot_world_m": [
+            0.4636381935010828,
+            0.8875258956795071,
+            -0.4019063864339931
+          ],
+          "foot_target_residual_m": 7.044544120160749e-08,
+          "minimum_toe_joint_height_m": 0.18175859042423637,
+          "solved_foot_pitch_degrees": 53.479567307692314,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.0416666679084301,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.30089383835720873,
+            0.22341238447511666,
+            2.470472567345462
+          ],
+          "distal_contact_centroid_m": [
+            -0.36574852096412186,
+            0.09859289072700654,
+            2.9755491200756943
+          ],
+          "target_foot_world_m": [
+            -0.30089386530433193,
+            0.22341249811993036,
+            2.470472378420678
+          ],
+          "foot_target_residual_m": 2.2211228069930482e-07,
+          "minimum_toe_joint_height_m": 5.7574402384519274e-08,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.4669695977048652,
+            0.8856683508958765,
+            -0.31639692118092194
+          ],
+          "distal_contact_centroid_m": [
+            0.5347681717033114,
+            0.3787332555559131,
+            -0.1899257866702401
+          ],
+          "target_foot_world_m": [
+            0.46696973771111533,
+            0.8856683125776561,
+            -0.3163970075645825
+          ],
+          "foot_target_residual_m": 1.689146912048175e-07,
+          "minimum_toe_joint_height_m": 0.18312003038119123,
+          "solved_foot_pitch_degrees": 52.229567307692314,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.05000000074505806,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.3008938262419091,
+            0.22341235931609746,
+            2.4704724586773326
+          ],
+          "distal_contact_centroid_m": [
+            -0.3657484878183374,
+            0.09859286200508995,
+            2.9755490117698096
+          ],
+          "target_foot_world_m": [
+            -0.30089386530433193,
+            0.22341249811993036,
+            2.470472378420678
+          ],
+          "foot_target_residual_m": 1.6502577835962991e-07,
+          "minimum_toe_joint_height_m": 4.0875699672260346e-08,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.4705744722542634,
+            0.8830363537511688,
+            -0.22387313770045997
+          ],
+          "distal_contact_centroid_m": [
+            0.5387731753804437,
+            0.3787332052177513,
+            -0.0871326449955463
+          ],
+          "target_foot_world_m": [
+            0.47057457341854103,
+            0.8830363678783895,
+            -0.22387316841238675
+          ],
+          "foot_target_residual_m": 1.066630764394941e-07,
+          "minimum_toe_joint_height_m": 0.18492363065762119,
+          "solved_foot_pitch_degrees": 50.71514423076923,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.05833333358168602,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.3008937604039768,
+            0.22341238894322382,
+            2.4704724649609138
+          ],
+          "distal_contact_centroid_m": [
+            -0.3657484486248965,
+            0.09859287702456256,
+            2.9755490098901247
+          ],
+          "target_foot_world_m": [
+            -0.30089386530433193,
+            0.2234124981199303,
+            2.4704723784206783
+          ],
+          "foot_target_residual_m": 1.7439280400925383e-07,
+          "minimum_toe_joint_height_m": 5.615513851142673e-08,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.4744617561756248,
+            0.8795713069269396,
+            -0.12410080655498511
+          ],
+          "distal_contact_centroid_m": [
+            0.543138624563441,
+            0.3787331960129349,
+            0.024912552136114995
+          ],
+          "target_foot_world_m": [
+            0.47446181561341494,
+            0.8795713323343715,
+            -0.12410091833756734
+          ],
+          "foot_target_residual_m": 1.291268143279428e-07,
+          "minimum_toe_joint_height_m": 0.18714670273899736,
+          "solved_foot_pitch_degrees": 48.972355769230774,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.06666667014360428,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.30089391289078826,
+            0.2234123461324775,
+            2.47047240207385
+          ],
+          "distal_contact_centroid_m": [
+            -0.36574857357748886,
+            0.09859284594738187,
+            2.9755489537953292
+          ],
+          "target_foot_world_m": [
+            -0.300893865304332,
+            0.2234124981199303,
+            2.470472378420678
+          ],
+          "foot_target_residual_m": 1.6100971767802347e-07,
+          "minimum_toe_joint_height_m": 8.849979513114725e-09,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.478643202103783,
+            0.875259575480975,
+            -0.016776709318503228
+          ],
+          "distal_contact_centroid_m": [
+            0.5478584054233631,
+            0.37873326261119944,
+            0.1460539337567047
+          ],
+          "target_foot_world_m": [
+            0.47864329225288,
+            0.8752595317532295,
+            -0.016776674089206273
+          ],
+          "foot_target_residual_m": 1.0620771524341864e-07,
+          "minimum_toe_joint_height_m": 0.1897402004891115,
+          "solved_foot_pitch_degrees": 47.05228365384616,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.07500000298023224,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.30089383160321553,
+            0.22341237595528163,
+            2.4704724228436676
+          ],
+          "distal_contact_centroid_m": [
+            -0.3657484973389211,
+            0.09859291490934345,
+            2.9755489814331724
+          ],
+          "target_foot_world_m": [
+            -0.300893865304332,
+            0.2234124981199303,
+            2.4704723784206775
+          ],
+          "foot_target_residual_m": 1.3428837884251025e-07,
+          "minimum_toe_joint_height_m": 8.305192680801987e-08,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.48312421913642145,
+            0.8700784443856007,
+            0.09823606601445453
+          ],
+          "distal_contact_centroid_m": [
+            0.5529240873884436,
+            0.378733192361366,
+            0.27607292815720635
+          ],
+          "target_foot_world_m": [
+            0.4831243202191837,
+            0.8700784655942353,
+            0.09823603050686308
+          ],
+          "foot_target_residual_m": 1.092168487999042e-07,
+          "minimum_toe_joint_height_m": 0.19266815842963414,
+          "solved_foot_pitch_degrees": 44.9939903846154,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.0833333358168602,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.3008938720738893,
+            0.22341229455663533,
+            2.4704723883767707
+          ],
+          "distal_contact_centroid_m": [
+            -0.3657485355229018,
+            0.09859281682869216,
+            2.9755489444777155
+          ],
+          "target_foot_world_m": [
+            -0.30089386530433193,
+            0.2234124981199303,
+            2.470472378420678
+          ],
+          "foot_target_residual_m": 2.039190176287241e-07,
+          "minimum_toe_joint_height_m": -1.7955565825844566e-08,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.48790601865557875,
+            0.8640127278027337,
+            0.22096236355005366
+          ],
+          "distal_contact_centroid_m": [
+            0.558325023695256,
+            0.37873319808385236,
+            0.4146902223182279
+          ],
+          "target_foot_world_m": [
+            0.4879058829526154,
+            0.8640127430204874,
+            0.2209624369565646
+          ],
+          "foot_target_residual_m": 1.550335129501913e-07,
+          "minimum_toe_joint_height_m": 0.19589880846113222,
+          "solved_foot_pitch_degrees": 42.83052884615386,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.09166666865348816,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.3008938399340197,
+            0.22341231230570083,
+            2.4704723012030154
+          ],
+          "distal_contact_centroid_m": [
+            -0.36574851106371337,
+            0.0985927874793638,
+            2.975548846066921
+          ],
+          "target_foot_world_m": [
+            -0.30089386530433193,
+            0.2234124981199303,
+            2.4704723784206783
+          ],
+          "foot_target_residual_m": 2.0281308657747779e-07,
+          "minimum_toe_joint_height_m": -4.931698584231814e-08,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.4929885954881335,
+            0.8570972862010002,
+            0.35142029584818085
+          ],
+          "distal_contact_centroid_m": [
+            0.5640474536217644,
+            0.37873318487405894,
+            0.5615713380868808
+          ],
+          "target_foot_world_m": [
+            0.4929886707782912,
+            0.8570973325252531,
+            0.35142026350208433
+          ],
+          "foot_target_residual_m": 9.413189796471581e-08,
+          "minimum_toe_joint_height_m": 0.19938287585730058,
+          "solved_foot_pitch_degrees": 40.600961538461554,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.10000000149011612,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.3008937535883751,
+            0.22341232385947013,
+            2.4704724428752853
+          ],
+          "distal_contact_centroid_m": [
+            -0.3657484418629556,
+            0.0985928367426895,
+            2.975548999262013
+          ],
+          "target_foot_world_m": [
+            -0.300893865304332,
+            0.2234124981199303,
+            2.4704723784206775
+          ],
+          "foot_target_residual_m": 2.1679843052030987e-07,
+          "minimum_toe_joint_height_m": 3.5694002337161024e-09,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.49836804069807983,
+            0.8493707396290779,
+            0.489492681812204
+          ],
+          "distal_contact_centroid_m": [
+            0.5700769783936322,
+            0.37873313138444015,
+            0.7163288881231633
+          ],
+          "target_foot_world_m": [
+            0.49836812622705495,
+            0.8493708561675053,
+            0.4894925354134728
+          ],
+          "foot_target_residual_m": 2.057401252325784e-07,
+          "minimum_toe_joint_height_m": 0.2030794394999471,
+          "solved_foot_pitch_degrees": 38.33533653846155,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.10833333432674408,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.3008938187499498,
+            0.22341231665838224,
+            2.4704724770779687
+          ],
+          "distal_contact_centroid_m": [
+            -0.3657484713281154,
+            0.09859283591744566,
+            2.9755490445580954
+          ],
+          "target_foot_world_m": [
+            -0.300893865304332,
+            0.2234124981199303,
+            2.470472378420678
+          ],
+          "foot_target_residual_m": 2.1172828094292521e-07,
+          "minimum_toe_joint_height_m": -1.2231248333605116e-08,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.5040375186242398,
+            0.8409041961461041,
+            0.6350061001458627
+          ],
+          "distal_contact_centroid_m": [
+            0.5763964983364347,
+            0.37873320323659604,
+            0.8785270320288968
+          ],
+          "target_foot_world_m": [
+            0.5040375007356487,
+            0.8409042098073558,
+            0.6350060400537401
+          ],
+          "foot_target_residual_m": 6.41692659407163e-08,
+          "minimum_toe_joint_height_m": 0.20694112348230437,
+          "solved_foot_pitch_degrees": 36.06370192307693,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.11666666716337204,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.3008938154837764,
+            0.22341231720921617,
+            2.470472407007503
+          ],
+          "distal_contact_centroid_m": [
+            -0.36574848077271155,
+            0.09859288167778656,
+            2.9755489877469263
+          ],
+          "target_foot_world_m": [
+            -0.300893865304332,
+            0.2234124981199303,
+            2.470472378420678
+          ],
+          "foot_target_residual_m": 1.8981038117854487e-07,
+          "minimum_toe_joint_height_m": 6.07255623424896e-08,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.5099888331117445,
+            0.8318155594869617,
+            0.7877552746480441
+          ],
+          "distal_contact_centroid_m": [
+            0.5829871580751558,
+            0.3787331924586688,
+            1.0476858181700262
+          ],
+          "target_foot_world_m": [
+            0.5099887937795542,
+            0.8318155815070427,
+            0.7877554312150397
+          ],
+          "foot_target_residual_m": 1.6292676043875035e-07,
+          "minimum_toe_joint_height_m": 0.2109080446949716,
+          "solved_foot_pitch_degrees": 33.81911057692307,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.125,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.3008938744462101,
+            0.22341231513499926,
+            2.4704724695898763
+          ],
+          "distal_contact_centroid_m": [
+            -0.3657485305967087,
+            0.09859285941488198,
+            2.975549050682399
+          ],
+          "target_foot_world_m": [
+            -0.30089386530433193,
+            0.2234124981199303,
+            2.470472378420678
+          ],
+          "foot_target_residual_m": 2.04643303489913e-07,
+          "minimum_toe_joint_height_m": 3.8684462938531894e-08,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.5162072448164021,
+            0.8221867653792082,
+            0.9473618815408379
+          ],
+          "distal_contact_centroid_m": [
+            0.589828673087735,
+            0.37873310253506953,
+            1.2232847692751294
+          ],
+          "target_foot_world_m": [
+            0.5162072454776989,
+            0.8221869115667686,
+            0.9473618730711054
+          ],
+          "foot_target_residual_m": 1.464342053430506e-07,
+          "minimum_toe_joint_height_m": 0.2149438423419221,
+          "solved_foot_pitch_degrees": 31.619591346153847,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.13333334028720856,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.30089380743217414,
+            0.2234123303576144,
+            2.470472489476579
+          ],
+          "distal_contact_centroid_m": [
+            -0.3657484815176806,
+            0.09859284703111598,
+            2.9755490653457994
+          ],
+          "target_foot_world_m": [
+            -0.30089386530433193,
+            0.2234124981199303,
+            2.470472378420678
+          ],
+          "foot_target_residual_m": 2.0934849990478954e-07,
+          "minimum_toe_joint_height_m": 2.1189292778722724e-08,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.5226682425967161,
+            0.8119802824507989,
+            1.1131962429140436
+          ],
+          "distal_contact_centroid_m": [
+            0.5968992221232268,
+            0.37873315910874233,
+            1.4047651380374546
+          ],
+          "target_foot_world_m": [
+            0.5226683453134816,
+            0.811980351266317,
+            1.113196264251457
+          ],
+          "foot_target_residual_m": 1.2546551183039748e-07,
+          "minimum_toe_joint_height_m": 0.2190637304691535,
+          "solved_foot_pitch_degrees": 29.45612980769231,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.14166666567325592,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.30089388813871093,
+            0.22341232721997611,
+            2.4704723889454385
+          ],
+          "distal_contact_centroid_m": [
+            -0.3657485351735216,
+            0.09859276682299996,
+            2.975548953212503
+          ],
+          "target_foot_world_m": [
+            -0.300893865304332,
+            0.2234124981199303,
+            2.470472378420678
+          ],
+          "foot_target_residual_m": 1.7273961268151566e-07,
+          "minimum_toe_joint_height_m": -7.74151900223563e-08,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.5293398313231846,
+            0.801017744938548,
+            1.2844290304412207
+          ],
+          "distal_contact_centroid_m": [
+            0.6041762180378168,
+            0.378733159898802,
+            1.591535988517714
+          ],
+          "target_foot_world_m": [
+            0.5293397722225446,
+            0.8010178063524638,
+            1.2844290332755532
+          ],
+          "foot_target_residual_m": 8.527947080338561e-08,
+          "minimum_toe_joint_height_m": 0.22333345976646435,
+          "solved_foot_pitch_degrees": 27.29567307692307,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.15000000596046448,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.30089383898469696,
+            0.22341233857770829,
+            2.470472263610808
+          ],
+          "distal_contact_centroid_m": [
+            -0.3657485213741995,
+            0.09859281499618627,
+            2.975548838434951
+          ],
+          "target_foot_world_m": [
+            -0.300893865304332,
+            0.2234124981199303,
+            2.470472378420678
+          ],
+          "foot_target_residual_m": 1.9831225392337918e-07,
+          "minimum_toe_joint_height_m": -1.7767444390748288e-08,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.5361699266755668,
+            0.7886932261171695,
+            1.4597372224841585
+          ],
+          "distal_contact_centroid_m": [
+            0.611634842560819,
+            0.37873314435978084,
+            1.7829765347462179
+          ],
+          "target_foot_world_m": [
+            0.5361699869208842,
+            0.7886933376890806,
+            1.459737342534932
+          ],
+          "foot_target_residual_m": 1.7461379622263004e-07,
+          "minimum_toe_joint_height_m": 0.22796863675480028,
+          "solved_foot_pitch_degrees": 25.036057692307693,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.15833333134651184,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.3008938616733503,
+            0.22341232159821223,
+            2.4704723508620767
+          ],
+          "distal_contact_centroid_m": [
+            -0.36574852882891334,
+            0.09859280154663198,
+            2.9755489316369683
+          ],
+          "target_foot_world_m": [
+            -0.30089386530433193,
+            0.2234124981199303,
+            2.4704723784206775
+          ],
+          "foot_target_residual_m": 1.7869688708688664e-07,
+          "minimum_toe_joint_height_m": -2.9760956324342835e-08,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.5430910652148624,
+            0.7738542250024089,
+            1.6373775047010029
+          ],
+          "distal_contact_centroid_m": [
+            0.6192504197749447,
+            0.3787331303978782,
+            1.9784405533960234
+          ],
+          "target_foot_world_m": [
+            0.5430910573456716,
+            0.7738543181730784,
+            1.6373776077196274
+          ],
+          "foot_target_residual_m": 1.3912417050391669e-07,
+          "minimum_toe_joint_height_m": 0.23335307506429465,
+          "solved_foot_pitch_degrees": 22.5030048076923,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.1666666716337204,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.3008938976593224,
+            0.22341233593738521,
+            2.470472397709194
+          ],
+          "distal_contact_centroid_m": [
+            -0.36574854693847586,
+            0.09859283334525243,
+            2.975548984682366
+          ],
+          "target_foot_world_m": [
+            -0.30089386530433193,
+            0.2234124981199303,
+            2.470472378420678
+          ],
+          "foot_target_residual_m": 1.6649946003893402e-07,
+          "minimum_toe_joint_height_m": -5.866820779187876e-10,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.5500576189713574,
+            0.7554849880617548,
+            1.8161854182104749
+          ],
+          "distal_contact_centroid_m": [
+            0.6269966331423045,
+            0.3787331492456385,
+            2.1772599583874785
+          ],
+          "target_foot_world_m": [
+            0.5500576181414799,
+            0.7554850793022017,
+            1.816185454912021
+          ],
+          "foot_target_residual_m": 9.834892646889977e-08,
+          "minimum_toe_joint_height_m": 0.23977049074462403,
+          "solved_foot_pitch_degrees": 19.579326923076916,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.17499999701976776,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.3008938241312928,
+            0.22341241772637163,
+            2.4704724307016646
+          ],
+          "distal_contact_centroid_m": [
+            -0.36574845886390256,
+            0.09859289784732901,
+            2.975549016426585
+          ],
+          "target_foot_world_m": [
+            -0.30089386530433193,
+            0.2234124981199303,
+            2.470472378420678
+          ],
+          "foot_target_residual_m": 1.0436304419405704e-07,
+          "minimum_toe_joint_height_m": 5.3721809015194744e-08,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.5570547359928018,
+            0.732994283267939,
+            1.9957768225828714
+          ],
+          "distal_contact_centroid_m": [
+            0.6348469007192884,
+            0.37873306088185915,
+            2.3787483886064953
+          ],
+          "target_foot_world_m": [
+            0.557054705797741,
+            0.7329944755909976,
+            1.9957768218343404
+          ],
+          "foot_target_residual_m": 1.9468040697473416e-07,
+          "minimum_toe_joint_height_m": 0.24731686408114156,
+          "solved_foot_pitch_degrees": 16.237980769230777,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.18333333730697632,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.3008938374884121,
+            0.22341239825488413,
+            2.470472215185733
+          ],
+          "distal_contact_centroid_m": [
+            -0.3657484824705317,
+            0.098592845850547,
+            2.975548793669752
+          ],
+          "target_foot_world_m": [
+            -0.30089386530433193,
+            0.2234124981199303,
+            2.4704723784206775
+          ],
+          "foot_target_residual_m": 1.9337114574552173e-07,
+          "minimum_toe_joint_height_m": 1.2983646116571101e-08,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.5640839462276562,
+            0.7060832337264273,
+            2.176194561539109
+          ],
+          "distal_contact_centroid_m": [
+            0.6427737125856243,
+            0.37873304927534074,
+            2.5822051624241857
+          ],
+          "target_foot_world_m": [
+            0.5640839990634092,
+            0.7060834016499355,
+            2.1761947962366657
+          ],
+          "foot_target_residual_m": 2.9338177249322164e-07,
+          "minimum_toe_joint_height_m": 0.2559721423994553,
+          "solved_foot_pitch_degrees": 12.499999999999998,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.19166666269302368,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.3008938176169346,
+            0.2234123776057015,
+            2.4704722273392266
+          ],
+          "distal_contact_centroid_m": [
+            -0.3657484692987721,
+            0.0985927685348237,
+            2.9755487897613286
+          ],
+          "target_foot_world_m": [
+            -0.30089386530433193,
+            0.2234124981199303,
+            2.470472378420677
+          ],
+          "foot_target_residual_m": 1.9905620280866214e-07,
+          "minimum_toe_joint_height_m": -7.850110496365748e-08,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.5711618694889421,
+            0.674934609126475,
+            2.3578617194553257
+          ],
+          "distal_contact_centroid_m": [
+            0.6507495939234594,
+            0.3787330492873456,
+            2.786920030071261
+          ],
+          "target_foot_world_m": [
+            0.5711619584535055,
+            0.6749347751261943,
+            2.3578618633773862
+          ],
+          "foot_target_residual_m": 2.370319806332978e-07,
+          "minimum_toe_joint_height_m": 0.2655631884098742,
+          "solved_foot_pitch_degrees": 8.443509615384613,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.20000000298023224,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.300893938817394,
+            0.2234124090313258,
+            2.470472382982314
+          ],
+          "distal_contact_centroid_m": [
+            -0.36574854500605775,
+            0.09859286158017443,
+            2.9755489617799626
+          ],
+          "target_foot_world_m": [
+            -0.30089386530433193,
+            0.2234124981199303,
+            2.4704723784206775
+          ],
+          "foot_target_residual_m": 1.155930719115999e-07,
+          "minimum_toe_joint_height_m": 2.2298108692808682e-08,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.5783090072282424,
+            0.6401912856619775,
+            2.5413029966601837
+          ],
+          "distal_contact_centroid_m": [
+            0.6587466290447029,
+            0.37873307596760575,
+            2.992175214191455
+          ],
+          "target_foot_world_m": [
+            0.5783090375160702,
+            0.6401914767675755,
+            2.541302996053852
+          ],
+          "foot_target_residual_m": 1.9349178210764243e-07,
+          "minimum_toe_joint_height_m": 0.2758019092585944,
+          "solved_foot_pitch_degrees": 4.182692307692307,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.2083333283662796,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.3008938833877516,
+            0.2234123789898771,
+            2.4704725061961055
+          ],
+          "distal_contact_centroid_m": [
+            -0.36574851377042994,
+            0.09859286206466378,
+            2.9755490870589614
+          ],
+          "target_foot_world_m": [
+            -0.30089386530433193,
+            0.2234124981199303,
+            2.4704723784206775
+          ],
+          "foot_target_residual_m": 1.7562898294132956e-07,
+          "minimum_toe_joint_height_m": 2.6732269786666762e-08,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.5855420715835111,
+            0.6029830717226297,
+            2.72695175792642
+          ],
+          "distal_contact_centroid_m": [
+            0.6667365824530345,
+            0.3787330981191975,
+            3.1972501051351148
+          ],
+          "target_foot_world_m": [
+            0.5855421262863649,
+            0.6029832397969968,
+            2.726951703852424
+          ],
+          "foot_target_residual_m": 1.8483882742750826e-07,
+          "minimum_toe_joint_height_m": 0.2770293531735379,
+          "solved_foot_pitch_degrees": -0.138221153846154,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.21666666865348816,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.3008938633158291,
+            0.2234123838819526,
+            2.4704726034200277
+          ],
+          "distal_contact_centroid_m": [
+            -0.36574847525680565,
+            0.09859285075645581,
+            2.975549179989475
+          ],
+          "target_foot_world_m": [
+            -0.30089386530433193,
+            0.2234124981199303,
+            2.4704723784206766
+          ],
+          "foot_target_residual_m": 2.523469391815266e-07,
+          "minimum_toe_joint_height_m": 3.049859706449887e-08,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.5928616668807682,
+            0.5645081126582094,
+            2.914819457392681
+          ],
+          "distal_contact_centroid_m": [
+            0.6746915158556398,
+            0.37873304773734734,
+            3.401425437730533
+          ],
+          "target_foot_world_m": [
+            0.5928616671869497,
+            0.5645083247882986,
+            2.914819342260157
+          ],
+          "foot_target_residual_m": 2.4136024226811903e-07,
+          "minimum_toe_joint_height_m": 0.27376279619685323,
+          "solved_foot_pitch_degrees": -4.396033653846153,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.22499999403953552,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.30089027821127173,
+            0.22380032981530512,
+            2.4705658337007743
+          ],
+          "distal_contact_centroid_m": [
+            -0.365748528993414,
+            0.09859282386630731,
+            2.9755489380919333
+          ],
+          "target_foot_world_m": [
+            -0.30089022424332384,
+            0.22380044383262537,
+            2.470565832120805
+          ],
+          "foot_target_residual_m": 1.2615460760621678e-07,
+          "minimum_toe_joint_height_m": -2.455979218607407e-08,
+          "solved_foot_pitch_degrees": 0.038672383414770146,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.6002550646150224,
+            0.5261513308715656,
+            3.1045832951262047
+          ],
+          "distal_contact_centroid_m": [
+            0.682583514617752,
+            0.3787330098728507,
+            3.6039862722933402
+          ],
+          "target_foot_world_m": [
+            0.6002550927532846,
+            0.5261515671013696,
+            3.1045833473526816
+          ],
+          "foot_target_residual_m": 2.4356495429138967e-07,
+          "minimum_toe_joint_height_m": 0.2695622802960355,
+          "solved_foot_pitch_degrees": -8.464543269230768,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.23333333432674408,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.3008600200704719,
+            0.2269566329230953,
+            2.471337921504381
+          ],
+          "distal_contact_centroid_m": [
+            -0.3657484160058126,
+            0.09859283606118913,
+            2.9755488661489875
+          ],
+          "target_foot_world_m": [
+            -0.30086014091985636,
+            0.2269566875658784,
+            2.4713379691013055
+          ],
+          "foot_target_residual_m": 1.4091087502205243e-07,
+          "minimum_toe_joint_height_m": -6.864909266046659e-09,
+          "solved_foot_pitch_degrees": 0.35356541194958846,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.6076931925201454,
+            0.48906570526621523,
+            3.2954955986575887
+          ],
+          "distal_contact_centroid_m": [
+            0.6903851128023487,
+            0.3787330430248779,
+            3.8042268785920736
+          ],
+          "target_foot_world_m": [
+            0.6076932573486922,
+            0.4890658822071438,
+            3.295495650091286
+          ],
+          "foot_target_residual_m": 1.9533626877107714e-07,
+          "minimum_toe_joint_height_m": 0.2631676019616865,
+          "solved_foot_pitch_degrees": -12.25360576923078,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.24166665971279144,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.30077747704930524,
+            0.23522976859393957,
+            2.4734623499973125
+          ],
+          "distal_contact_centroid_m": [
+            -0.3657486371258502,
+            0.09859285453555504,
+            2.9755488970868407
+          ],
+          "target_foot_world_m": [
+            -0.3007773721267559,
+            0.2352298038177129,
+            2.4734623634841846
+          ],
+          "foot_target_residual_m": 1.1149596979894373e-07,
+          "minimum_toe_joint_height_m": -1.3669992859899338e-08,
+          "solved_foot_pitch_degrees": 1.181268858979844,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.6151365309335733,
+            0.45418782642352185,
+            3.4865385484846483
+          ],
+          "distal_contact_centroid_m": [
+            0.6980693717676746,
+            0.37873313513816614,
+            4.0014534768762955
+          ],
+          "target_foot_world_m": [
+            0.6151365057981392,
+            0.4541879632299417,
+            3.4865384374479422
+          ],
+          "foot_target_residual_m": 1.7798015804272172e-07,
+          "minimum_toe_joint_height_m": 0.2573572424183149,
+          "solved_foot_pitch_degrees": -15.697115384615383,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.25,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.30061456176291057,
+            0.2500509015976147,
+            2.477637082971434
+          ],
+          "distal_contact_centroid_m": [
+            -0.3657483625663162,
+            0.09859282718963702,
+            2.975549051837635
+          ],
+          "target_foot_world_m": [
+            -0.30061472593262445,
+            0.25005098591198366,
+            2.477636939715675
+          ],
+          "foot_target_residual_m": 2.3362966463146212e-07,
+          "minimum_toe_joint_height_m": -6.088583109908896e-09,
+          "solved_foot_pitch_degrees": 2.67317327026589,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.6225391016791023,
+            0.4222426739429496,
+            3.676540009217673
+          ],
+          "distal_contact_centroid_m": [
+            0.7056096236803769,
+            0.3787330804540412,
+            4.194987958165186
+          ],
+          "target_foot_world_m": [
+            0.6225391860229111,
+            0.4222427935032791,
+            3.6765399763417403
+          ],
+          "foot_target_residual_m": 1.499645872112238e-07,
+          "minimum_toe_joint_height_m": 0.2501918714335764,
+          "solved_foot_pitch_degrees": -18.74699519230769,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.25833332538604736,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.30033933221964093,
+            0.2719797611506436,
+            2.484704623755928
+          ],
+          "distal_contact_centroid_m": [
+            -0.36574845895176167,
+            0.09859278325169496,
+            2.975548833379029
+          ],
+          "target_foot_world_m": [
+            -0.30033935795319106,
+            0.2719798717964813,
+            2.4847047012542403
+          ],
+          "foot_target_residual_m": 1.3751620050450596e-07,
+          "minimum_toe_joint_height_m": -5.884361203856159e-08,
+          "solved_foot_pitch_degrees": 4.905030647595867,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.6298530747978909,
+            0.39361288132646877,
+            3.8642627581624938
+          ],
+          "distal_contact_centroid_m": [
+            0.7129805621348807,
+            0.3787330948175156,
+            4.38417289714774
+          ],
+          "target_foot_world_m": [
+            0.6298530852048924,
+            0.3936130292920934,
+            3.8642628082528936
+          ],
+          "foot_target_residual_m": 1.565604672655117e-07,
+          "minimum_toe_joint_height_m": 0.23590020539201018,
+          "solved_foot_pitch_degrees": -21.385216346153854,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.2666666805744171,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.29991252587328,
+            0.3007514836219976,
+            2.4956637913121895
+          ],
+          "distal_contact_centroid_m": [
+            -0.36574862478443354,
+            0.09859288673719824,
+            2.9755488957093044
+          ],
+          "target_foot_world_m": [
+            -0.29991237780862845,
+            0.30075153761777423,
+            2.4956638314899378
+          ],
+          "foot_target_residual_m": 1.6264358697081876e-07,
+          "minimum_toe_joint_height_m": 4.016463649170188e-08,
+          "solved_foot_pitch_degrees": 7.886636182414141,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.637031487283112,
+            0.3684747980925185,
+            4.048508158137224
+          ],
+          "distal_contact_centroid_m": [
+            0.7201572597927971,
+            0.3787331806173704,
+            4.568374497415642
+          ],
+          "target_foot_world_m": [
+            0.6370314954122136,
+            0.36847489379506887,
+            4.048508099962437
+          ],
+          "foot_target_residual_m": 1.1229143448354923e-07,
+          "minimum_toe_joint_height_m": 0.22338907577444944,
+          "solved_foot_pitch_degrees": -23.608774038461537,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.2750000059604645,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.29929331180375424,
+            0.3353400276584401,
+            2.51155258979536
+          ],
+          "distal_contact_centroid_m": [
+            -0.36574845557917784,
+            0.09859280562850677,
+            2.9755490187239046
+          ],
+          "target_foot_world_m": [
+            -0.2992933366303623,
+            0.3353401496698633,
+            2.5115525147757918
+          ],
+          "foot_target_residual_m": 1.453653448675141e-07,
+          "minimum_toe_joint_height_m": -2.956647277008173e-08,
+          "solved_foot_pitch_degrees": 11.571509989449865,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.6440310406215672,
+            0.34689380160579203,
+            4.22816166343531
+          ],
+          "distal_contact_centroid_m": [
+            0.7271162437320213,
+            0.3787331356345409,
+            4.746985984950981
+          ],
+          "target_foot_world_m": [
+            0.6440310047833755,
+            0.34689390360427935,
+            4.228161617137618
+          ],
+          "foot_target_residual_m": 1.1760758342641247e-07,
+          "minimum_toe_joint_height_m": 0.21264561062948678,
+          "solved_foot_pitch_degrees": -25.420673076923084,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.28333333134651184,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.3003635252522249,
+            0.37182562232129546,
+            2.536222543519846
+          ],
+          "distal_contact_centroid_m": [
+            -0.36574853904208354,
+            0.09859284845367257,
+            2.9755490827176114
+          ],
+          "target_foot_world_m": [
+            -0.300363480432182,
+            0.37182571352075783,
+            2.5362224284706283
+          ],
+          "foot_target_residual_m": 1.5350081655315734e-07,
+          "minimum_toe_joint_height_m": 1.7569982690979202e-08,
+          "solved_foot_pitch_degrees": 15.86657884034523,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.6508128565695936,
+            0.32867745880515076,
+            4.40223028960788
+          ],
+          "distal_contact_centroid_m": [
+            0.7338347837065368,
+            0.3787331538336085,
+            4.919432393166616
+          ],
+          "target_foot_world_m": [
+            0.6508129201719347,
+            0.328677521706225,
+            4.402230238767217
+          ],
+          "foot_target_residual_m": 1.0289108788836907e-07,
+          "minimum_toe_joint_height_m": 0.20354222219506424,
+          "solved_foot_pitch_degrees": -26.847956730769244,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.2916666567325592,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.3017645740401131,
+            0.4088263521148862,
+            2.567457501349104
+          ],
+          "distal_contact_centroid_m": [
+            -0.3657484539275029,
+            0.09859279602531905,
+            2.9755488596232538
+          ],
+          "target_foot_world_m": [
+            -0.3017645880690949,
+            0.408826456376918,
+            2.5674576044384096
+          ],
+          "foot_target_residual_m": 1.472915086443831e-07,
+          "minimum_toe_joint_height_m": -4.594075583841395e-08,
+          "solved_foot_pitch_degrees": 20.64185789728401,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.657343378710008,
+            0.3136650632141731,
+            4.569844660407745
+          ],
+          "distal_contact_centroid_m": [
+            0.7402923254340439,
+            0.3787331809618885,
+            5.085173577838322
+          ],
+          "target_foot_world_m": [
+            0.6573433757058338,
+            0.3136651246872534,
+            4.569844743508952
+          ],
+          "foot_target_residual_m": 1.0341071141799331e-07,
+          "minimum_toe_joint_height_m": 0.19597430827366713,
+          "solved_foot_pitch_degrees": -27.911658653846164,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.30000001192092896,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.30338604559763505,
+            0.44328805197060633,
+            2.60386637749475
+          ],
+          "distal_contact_centroid_m": [
+            -0.365748623783698,
+            0.09859278982349505,
+            2.9755488550522826
+          ],
+          "target_foot_world_m": [
+            -0.3033859242225047,
+            0.4432881667963112,
+            2.6038664982764526
+          ],
+          "foot_target_residual_m": 2.0616761240787494e-07,
+          "minimum_toe_joint_height_m": -5.7159445052135105e-08,
+          "solved_foot_pitch_degrees": 25.64185789728399,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.6635932228179653,
+            0.30165758863332337,
+            4.730256586344835
+          ],
+          "distal_contact_centroid_m": [
+            0.7464690772726791,
+            0.378733177224769,
+            5.2437087826830755
+          ],
+          "target_foot_world_m": [
+            0.6635932092414771,
+            0.3016576430442388,
+            4.730256638686724
+          ],
+          "foot_target_residual_m": 7.671076911672331e-08,
+          "minimum_toe_joint_height_m": 0.18982639718974376,
+          "solved_foot_pitch_degrees": -28.635817307692314,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.3083333373069763,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.3051246375203912,
+            0.4730699301572434,
+            2.6434649139293747
+          ],
+          "distal_contact_centroid_m": [
+            -0.3657485080687488,
+            0.09859287282189355,
+            2.975548849117285
+          ],
+          "target_foot_world_m": [
+            -0.30512464448952953,
+            0.47306994856683576,
+            2.643465025624852
+          ],
+          "foot_target_residual_m": 1.1341676080437132e-07,
+          "minimum_toe_joint_height_m": 1.2976859517510597e-08,
+          "solved_foot_pitch_degrees": 30.641857897284005,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.669537694995297,
+            0.29245297246960567,
+            4.882830370612073
+          ],
+          "distal_contact_centroid_m": [
+            0.7523472019091845,
+            0.3787332023480179,
+            5.394579553883715
+          ],
+          "target_foot_world_m": [
+            0.6695376580881574,
+            0.29245300816146286,
+            4.882830350574372
+          ],
+          "foot_target_residual_m": 5.511401877778764e-08,
+          "minimum_toe_joint_height_m": 0.18498820853284936,
+          "solved_foot_pitch_degrees": -29.04447115384616,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.3166666626930237,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.30692770151728765,
+            0.4978261364311047,
+            2.6854044027241923
+          ],
+          "distal_contact_centroid_m": [
+            -0.3657484522227456,
+            0.09859279497438284,
+            2.9755490850400186
+          ],
+          "target_foot_world_m": [
+            -0.30692773729613243,
+            0.49782627142300706,
+            2.685404338350577
+          ],
+          "foot_target_residual_m": 1.537754915178558e-07,
+          "minimum_toe_joint_height_m": -4.8287742582253657e-08,
+          "solved_foot_pitch_degrees": 35.64185789728402,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.6751559563215405,
+            0.28587802840703724,
+            5.027031638716358
+          ],
+          "distal_contact_centroid_m": [
+            0.7579106329989048,
+            0.37873318314682614,
+            5.537373962771103
+          ],
+          "target_foot_world_m": [
+            0.6751559069792936,
+            0.2858780728212459,
+            5.0270316223589875
+          ],
+          "foot_target_residual_m": 6.837282226905757e-08,
+          "minimum_toe_joint_height_m": 0.1813682661702481,
+          "solved_foot_pitch_degrees": -29.15865384615385,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.32499998807907104,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.30874575165781687,
+            0.5174106874554503,
+            2.728819088182175
+          ],
+          "distal_contact_centroid_m": [
+            -0.36574857627494256,
+            0.0985928798003326,
+            2.9755490115220655
+          ],
+          "target_foot_world_m": [
+            -0.3087456815833175,
+            0.5174107430049969,
+            2.72881908533663
+          ],
+          "foot_target_residual_m": 8.94666682052263e-08,
+          "minimum_toe_joint_height_m": 4.39557562570414e-08,
+          "solved_foot_pitch_degrees": 40.641857897284,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.6804307507992848,
+            0.28179105841979785,
+            5.162420595343552
+          ],
+          "distal_contact_centroid_m": [
+            0.7631452346721641,
+            0.37873327406549756,
+            5.671730718785781
+          ],
+          "target_foot_world_m": [
+            0.6804308123161517,
+            0.28179103027508784,
+            5.1624204364174435
+          ],
+          "foot_target_residual_m": 1.727250926680448e-07,
+          "minimum_toe_joint_height_m": 0.17889434544663008,
+          "solved_foot_pitch_degrees": -28.99639423076924,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.3333333432674408,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.3105356845189374,
+            0.5318623231676507,
+            2.7728827701105367
+          ],
+          "distal_contact_centroid_m": [
+            -0.365748507116026,
+            0.09859282185709416,
+            2.9755490142035623
+          ],
+          "target_foot_world_m": [
+            -0.31053565585786796,
+            0.5318624641748155,
+            2.772882820233613
+          ],
+          "foot_target_residual_m": 1.5237060156228714e-07,
+          "minimum_toe_joint_height_m": 1.141238037405401e-08,
+          "solved_foot_pitch_degrees": 45.64185789728401,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.6853473100148713,
+            0.28027027451582404,
+            5.2886103300014335
+          ],
+          "distal_contact_centroid_m": [
+            0.7680392185566182,
+            0.37873329089687074,
+            5.7973419423277095
+          ],
+          "target_foot_world_m": [
+            0.6853473202086074,
+            0.2802702324356355,
+            5.288610410819262
+          ],
+          "foot_target_residual_m": 9.168520049725149e-08,
+          "minimum_toe_joint_height_m": 0.17759847352653974,
+          "solved_foot_pitch_degrees": -28.5516826923077,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.34166666865348816,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.3120394760266019,
+            0.5403671460335283,
+            2.8108930941989745
+          ],
+          "distal_contact_centroid_m": [
+            -0.3657485615168264,
+            0.09859280843956299,
+            2.9755492165718826
+          ],
+          "target_foot_world_m": [
+            -0.3120393974500666,
+            0.5403672819190266,
+            2.8108929119863633
+          ],
+          "foot_target_residual_m": 2.4050067825475277e-07,
+          "minimum_toe_joint_height_m": -1.7785893674515663e-08,
+          "solved_foot_pitch_degrees": 49.88772973072627,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.6898936701424053,
+            0.28145316866619996,
+            5.405299217918414
+          ],
+          "distal_contact_centroid_m": [
+            0.772582797959887,
+            0.3787332052996559,
+            5.9139590055479525
+          ],
+          "target_foot_world_m": [
+            0.6898936460445649,
+            0.2814531746783061,
+            5.405299074848518
+          ],
+          "foot_target_residual_m": 1.4520966421133444e-07,
+          "minimum_toe_joint_height_m": 0.1775433319403779,
+          "solved_foot_pitch_degrees": -27.81250000000001,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.3499999940395355,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.3132335669073498,
+            0.5447393280371352,
+            2.841792730751567
+          ],
+          "distal_contact_centroid_m": [
+            -0.3657485715377598,
+            0.09859280757024058,
+            2.975548848885728
+          ],
+          "target_foot_world_m": [
+            -0.3132334857649488,
+            0.5447394771055141,
+            2.841792943474379
+          ],
+          "foot_target_residual_m": 2.7213317600854034e-07,
+          "minimum_toe_joint_height_m": -1.0985931775397972e-08,
+          "solved_foot_pitch_degrees": 53.31749363857978,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.6940611435616838,
+            0.2856184716828155,
+            5.51226344966004
+          ],
+          "distal_contact_centroid_m": [
+            0.7767685663379358,
+            0.3787332676321253,
+            6.021393059670107
+          ],
+          "target_foot_world_m": [
+            0.6940611120997252,
+            0.2856184584887772,
+            5.512263700999846
+          ],
+          "foot_target_residual_m": 2.536447032632923e-07,
+          "minimum_toe_joint_height_m": 0.17886098416515772,
+          "solved_foot_pitch_degrees": -26.751802884615405,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.3583333194255829,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.31415226927412393,
+            0.5466253025131397,
+            2.8660639995871575
+          ],
+          "distal_contact_centroid_m": [
+            -0.3657484934004402,
+            0.09859282043560968,
+            2.975548865108473
+          ],
+          "target_foot_world_m": [
+            -0.31415226006101715,
+            0.5466254345706983,
+            2.866064195207841
+          ],
+          "foot_target_residual_m": 2.3620231160959688e-07,
+          "minimum_toe_joint_height_m": 6.358816043161575e-09,
+          "solved_foot_pitch_degrees": 56.020579144856484,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.6978451979442648,
+            0.29279891684358095,
+            5.609386865791538
+          ],
+          "distal_contact_centroid_m": [
+            0.7805918222352642,
+            0.37837132125000333,
+            6.119522924531503
+          ],
+          "target_foot_world_m": [
+            0.69784515285003,
+            0.29279892339633307,
+            5.609387107918232
+          ],
+          "foot_target_residual_m": 2.4637728065913335e-07,
+          "minimum_toe_joint_height_m": 0.18138095883589217,
+          "solved_foot_pitch_degrees": -25.33052884615386,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.36666667461395264,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.3148010350185983,
+            0.5471513151429609,
+            2.8834829925097796
+          ],
+          "distal_contact_centroid_m": [
+            -0.36574833037624116,
+            0.09859286092330859,
+            2.9755489266226647
+          ],
+          "target_foot_world_m": [
+            -0.3148011586656003,
+            0.5471513856725831,
+            2.8834831143073285
+          ],
+          "foot_target_residual_m": 1.8734367256978365e-07,
+          "minimum_toe_joint_height_m": 3.711595378264043e-08,
+          "solved_foot_pitch_degrees": 57.97047493989416,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.7012458017974744,
+            0.2993776667011897,
+            5.69667113009039
+          ],
+          "distal_contact_centroid_m": [
+            0.7840504362979827,
+            0.37338308163088035,
+            6.2082954482782915
+          ],
+          "target_foot_world_m": [
+            0.7012458401841145,
+            0.29937755350947737,
+            5.696671140809971
+          ],
+          "foot_target_residual_m": 1.200033636655298e-07,
+          "minimum_toe_joint_height_m": 0.18115694419081113,
+          "solved_foot_pitch_degrees": -23.482572115384627,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.375,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.315204170161186,
+            0.5471297896932589,
+            2.894420002053395
+          ],
+          "distal_contact_centroid_m": [
+            -0.36574854572404475,
+            0.0985927932521438,
+            2.97554892883397
+          ],
+          "target_foot_world_m": [
+            -0.3152040887880448,
+            0.5471298979361943,
+            2.8944201361905013
+          ],
+          "foot_target_residual_m": 1.906066223006208e-07,
+          "minimum_toe_joint_height_m": -4.1012810675367106e-08,
+          "solved_foot_pitch_degrees": 59.200575440856454,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.7042755552458259,
+            0.3040952983112563,
+            5.7744335523744965
+          ],
+          "distal_contact_centroid_m": [
+            0.7871453631340005,
+            0.36274372042763076,
+            6.287730371619786
+          ],
+          "target_foot_world_m": [
+            0.7042755548110051,
+            0.30409524060768867,
+            5.7744335703049465
+          ],
+          "foot_target_residual_m": 6.042674760301681e-08,
+          "minimum_toe_joint_height_m": 0.17709052799181085,
+          "solved_foot_pitch_degrees": -21.240985576923094,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.38333332538604736,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.31540317605118434,
+            0.5470182816679933,
+            2.8998555873991094
+          ],
+          "distal_contact_centroid_m": [
+            -0.3657486151571723,
+            0.09859282884061887,
+            2.9755490437177485
+          ],
+          "target_foot_world_m": [
+            -0.3154030420837425,
+            0.5470183479405863,
+            2.899855630800522
+          ],
+          "foot_target_residual_m": 1.5563744631600563e-07,
+          "minimum_toe_joint_height_m": -4.0787067057124204e-09,
+          "solved_foot_pitch_degrees": 59.81386252536156,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.7069537476525165,
+            0.30655892344127444,
+            5.843173440865564
+          ],
+          "distal_contact_centroid_m": [
+            0.7898802732466695,
+            0.3469278295676894,
+            6.357924982912258
+          ],
+          "target_foot_world_m": [
+            0.7069537428366394,
+            0.30655891705198135,
+            5.8431735116639585
+          ],
+          "foot_target_residual_m": 7.124905916096537e-08,
+          "minimum_toe_joint_height_m": 0.16928967044589732,
+          "solved_foot_pitch_degrees": -18.7079326923077,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.3916666805744171,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.31546071804181025,
+            0.5469732787591308,
+            2.901437310297888
+          ],
+          "distal_contact_centroid_m": [
+            -0.36574839723178015,
+            0.09859285156464222,
+            2.975549027284512
+          ],
+          "target_foot_world_m": [
+            -0.31546077434480135,
+            0.5469733007655205,
+            2.901437322333486
+          ],
+          "foot_target_residual_m": 6.163735573123911e-08,
+          "minimum_toe_joint_height_m": 5.810853992427312e-09,
+          "solved_foot_pitch_degrees": 59.99258726511041,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.7093007794609203,
+            0.3063917578748707,
+            5.9034132642060015
+          ],
+          "distal_contact_centroid_m": [
+            0.7922620698394381,
+            0.32664082993419724,
+            6.419057276511045
+          ],
+          "target_foot_world_m": [
+            0.7093007503610598,
+            0.3063916907473591,
+            5.903413179922344
+          ],
+          "foot_target_residual_m": 1.1160931681132243e-07,
+          "minimum_toe_joint_height_m": 0.15793249498281736,
+          "solved_foot_pitch_degrees": -16.00661057692308,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.3958333432674408,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.31546315619165854,
+            0.5469712615619875,
+            2.901502648212507
+          ],
+          "distal_contact_centroid_m": [
+            -0.3657484613871516,
+            0.09859282338260511,
+            2.975548775548143
+          ],
+          "target_foot_world_m": [
+            -0.3154631664067947,
+            0.5469713105130515,
+            2.901502900848248
+          ],
+          "foot_target_residual_m": 2.5753712972552414e-07,
+          "minimum_toe_joint_height_m": -1.7958149911567745e-08,
+          "solved_foot_pitch_degrees": 60.0,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.7103558992776781,
+            0.305165757147964,
+            5.930495957056884
+          ],
+          "distal_contact_centroid_m": [
+            0.7933235172861259,
+            0.3150965180703113,
+            6.446303267287594
+          ],
+          "target_foot_world_m": [
+            0.7103559314324085,
+            0.3051657019075968,
+            5.930496074455713
+          ],
+          "foot_target_residual_m": 1.336709017969276e-07,
+          "minimum_toe_joint_height_m": 0.15098168052664546,
+          "solved_foot_pitch_degrees": -14.64092548076924,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.4000000059604645,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.3154657876229956,
+            0.5478614663651132,
+            2.901632580097585
+          ],
+          "distal_contact_centroid_m": [
+            -0.36576775217428575,
+            0.0994413729326407,
+            2.9755769137063464
+          ],
+          "target_foot_world_m": [
+            -0.31546593212039903,
+            0.547861592530145,
+            2.901632444531179
+          ],
+          "foot_target_residual_m": 2.3489437025808734e-07,
+          "minimum_toe_joint_height_m": 0.0007738916623107467,
+          "solved_foot_pitch_degrees": 60.007512019230774,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.7113348045275357,
+            0.3032830971669948,
+            5.955619850890756
+          ],
+          "distal_contact_centroid_m": [
+            0.7943009329238747,
+            0.30278695198713956,
+            6.471389133756953
+          ],
+          "target_foot_world_m": [
+            0.7113347821365816,
+            0.3032830986305353,
+            5.95561982902044
+          ],
+          "foot_target_residual_m": 3.1333807123365124e-08,
+          "minimum_toe_joint_height_m": 0.14332414680692346,
+          "solved_foot_pitch_degrees": -13.272235576923093,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.40833333134651184,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.3154536468385628,
+            0.5549238592381358,
+            2.9027844662182223
+          ],
+          "distal_contact_centroid_m": [
+            -0.36620660042902586,
+            0.10550390367183811,
+            2.976285381747927
+          ],
+          "target_foot_world_m": [
+            -0.3154536925956946,
+            0.5549239089915957,
+            2.9027843291899864
+          ],
+          "foot_target_residual_m": 1.5279351854480353e-07,
+          "minimum_toe_joint_height_m": 0.0051423703169313495,
+          "solved_foot_pitch_degrees": 60.0165264423077,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.7130712099387608,
+            0.2976400352626654,
+            6.000187988263218
+          ],
+          "distal_contact_centroid_m": [
+            0.7960106692055917,
+            0.2764301044553865,
+            6.515271490593073
+          ],
+          "target_foot_world_m": [
+            0.7130712048226817,
+            0.2976399996619257,
+            6.0001878687328905
+          ],
+          "foot_target_residual_m": 1.248242212463763e-07,
+          "minimum_toe_joint_height_m": 0.1262609929032121,
+          "solved_foot_pitch_degrees": -10.576923076923084,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.4166666567325592,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.31536577953044725,
+            0.5686798923485701,
+            2.9059340961120523
+          ],
+          "distal_contact_centroid_m": [
+            -0.3675810444459063,
+            0.11606999242526606,
+            2.9789006102100983
+          ],
+          "target_foot_world_m": [
+            -0.3153656203824308,
+            0.5686798771223371,
+            2.905933926896563
+          ],
+          "foot_target_residual_m": 2.3279564231536123e-07,
+          "minimum_toe_joint_height_m": 0.010352519056425619,
+          "solved_foot_pitch_degrees": 59.983473557692314,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.7145221151107125,
+            0.2890317266243324,
+            6.03742884275691
+          ],
+          "distal_contact_centroid_m": [
+            0.7974083544495921,
+            0.24874540194457131,
+            6.551146942392232
+          ],
+          "target_foot_world_m": [
+            0.7145221455860393,
+            0.2890316545690396,
+            6.037428562100491
+          ],
+          "foot_target_residual_m": 2.9135671656214716e-07,
+          "minimum_toe_joint_height_m": 0.10722755217294463,
+          "solved_foot_pitch_degrees": -8.097956730769248,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.42500001192092896,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.3151716389576116,
+            0.5883707462894934,
+            2.9127476398524865
+          ],
+          "distal_contact_centroid_m": [
+            -0.3700491945917355,
+            0.1299536113342538,
+            2.9845770589878207
+          ],
+          "target_foot_world_m": [
+            -0.31517163862155595,
+            0.5883707941601019,
+            2.912747813070108
+          ],
+          "foot_target_residual_m": 1.79711025023692e-07,
+          "minimum_toe_joint_height_m": 0.01450331827468615,
+          "solved_foot_pitch_degrees": 59.97145432692309,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.7156970318218002,
+            0.27764804813511645,
+            6.067584842227006
+          ],
+          "distal_contact_centroid_m": [
+            0.7985150925112094,
+            0.2209671534973753,
+            6.579553354777747
+          ],
+          "target_foot_world_m": [
+            0.7156970765108569,
+            0.2776480037131997,
+            6.067585025248612
+          ],
+          "foot_target_residual_m": 1.9356478764384234e-07,
+          "minimum_toe_joint_height_m": 0.08700476854798989,
+          "solved_foot_pitch_degrees": -5.952524038461563,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.4333333373069763,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.3148705302078104,
+            0.6128845968697344,
+            2.9254691701480797
+          ],
+          "distal_contact_centroid_m": [
+            -0.3735017178884898,
+            0.14623366181385658,
+            2.994313734278998
+          ],
+          "target_foot_world_m": [
+            -0.31487063919583874,
+            0.6128846847445937,
+            2.9254692440622403
+          ],
+          "foot_target_residual_m": 1.5831514249734385e-07,
+          "minimum_toe_joint_height_m": 0.017028181772768824,
+          "solved_foot_pitch_degrees": 60.13371394230771,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.7166092193409417,
+            0.2644056127529014,
+            6.090995556106903
+          ],
+          "distal_contact_centroid_m": [
+            0.7993557806305432,
+            0.19433402785523612,
+            6.601130000620903
+          ],
+          "target_foot_world_m": [
+            0.7166091872430125,
+            0.2644056039848507,
+            6.090995791420568
+          ],
+          "foot_target_residual_m": 2.3765453182828955e-07,
+          "minimum_toe_joint_height_m": 0.06668091145531602,
+          "solved_foot_pitch_degrees": -4.179687500000019,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.4416666626930237,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.31442357659125697,
+            0.6408687909984767,
+            2.945032997477248
+          ],
+          "distal_contact_centroid_m": [
+            -0.3776314705511628,
+            0.16416091371377026,
+            3.0089723038760874
+          ],
+          "target_foot_world_m": [
+            -0.31442364915887083,
+            0.6408688544837199,
+            2.9450330482406915
+          ],
+          "foot_target_residual_m": 1.0896495719181984e-07,
+          "minimum_toe_joint_height_m": 0.01831085243905632,
+          "solved_foot_pitch_degrees": 60.470252403846175,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.7172793701692505,
+            0.2506887372284867,
+            6.108196342113453
+          ],
+          "distal_contact_centroid_m": [
+            0.7999592463789353,
+            0.1700337105714791,
+            6.616618395751203
+          ],
+          "target_foot_world_m": [
+            0.7172793447615968,
+            0.25068870680129707,
+            6.108196444802938
+          ],
+          "foot_target_residual_m": 1.1007494327815821e-07,
+          "minimum_toe_joint_height_m": 0.04751233786137496,
+          "solved_foot_pitch_degrees": -2.7614182692307843,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.44999998807907104,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.3137355076866515,
+            0.6708678068858864,
+            2.970566495234903
+          ],
+          "distal_contact_centroid_m": [
+            -0.3819238665743218,
+            0.18326010315748686,
+            3.029469146887683
+          ],
+          "target_foot_world_m": [
+            -0.3137354455157294,
+            0.6708678573093041,
+            2.970566507384174
+          ],
+          "foot_target_residual_m": 8.096511214555521e-08,
+          "minimum_toe_joint_height_m": 0.01959114389547141,
+          "solved_foot_pitch_degrees": 60.76171875000002,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.7177361026537687,
+            0.2379340235896489,
+            6.119919704380422
+          ],
+          "distal_contact_centroid_m": [
+            0.8003585546331058,
+            0.1491495578458998,
+            6.6268673084861005
+          ],
+          "target_foot_world_m": [
+            0.7177360980050432,
+            0.23793399772036983,
+            6.119919739262121
+          ],
+          "foot_target_residual_m": 4.3675659074202694e-08,
+          "minimum_toe_joint_height_m": 0.030705552779744294,
+          "solved_foot_pitch_degrees": -1.6616586538461728,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.4583333432674408,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.31267072357945846,
+            0.7014762155076978,
+            3.0017598351107293
+          ],
+          "distal_contact_centroid_m": [
+            -0.3857065760139479,
+            0.20329860468825287,
+            3.0567645083450574
+          ],
+          "target_foot_world_m": [
+            -0.312670727983032,
+            0.7014762634438676,
+            3.0017597845011093
+          ],
+          "foot_target_residual_m": 6.98469861764392e-08,
+          "minimum_toe_joint_height_m": 0.022598938883090114,
+          "solved_foot_pitch_degrees": 60.87289663461541,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.7180145276913954,
+            0.2273896544618269,
+            6.127063880788896
+          ],
+          "distal_contact_centroid_m": [
+            0.8005911952571315,
+            0.13261280118452828,
+            6.63283685590994
+          ],
+          "target_foot_world_m": [
+            0.7180144436251362,
+            0.22738969409257528,
+            6.127063919460216
+          ],
+          "foot_target_residual_m": 1.006638126033322e-07,
+          "minimum_toe_joint_height_m": 0.017281024214625643,
+          "solved_foot_pitch_degrees": -0.8473557692307855,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.46666666865348816,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.30961104424355734,
+            0.7331544010288734,
+            3.039935308830092
+          ],
+          "distal_contact_centroid_m": [
+            -0.3870645600169343,
+            0.22557764122869098,
+            3.0918528276528807
+          ],
+          "target_foot_world_m": [
+            -0.3096110764859944,
+            0.7331545320938545,
+            3.039935131192404
+          ],
+          "foot_target_residual_m": 2.2309807765664013e-07,
+          "minimum_toe_joint_height_m": 0.030414337809373,
+          "solved_foot_pitch_degrees": 60.86087740384619,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.7181541229889407,
+            0.21991341127968422,
+            6.130649184402041
+          ],
+          "distal_contact_centroid_m": [
+            0.8006988367741643,
+            0.1211608741201614,
+            6.635602229949197
+          ],
+          "target_foot_world_m": [
+            0.7181541256855626,
+            0.21991345230786874,
+            6.1306490799174345
+          ],
+          "foot_target_residual_m": 1.1228364413866007e-07,
+          "minimum_toe_joint_height_m": 0.0079545189764927,
+          "solved_foot_pitch_degrees": -0.3064903846153987,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.4749999940395355,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.30062582473080035,
+            0.7747099702347338,
+            3.0866707961322963
+          ],
+          "distal_contact_centroid_m": [
+            -0.3815002801946934,
+            0.25961060035741473,
+            3.1362315854263563
+          ],
+          "target_foot_world_m": [
+            -0.3006257629231019,
+            0.7747100882668119,
+            3.0866705873956697
+          ],
+          "foot_target_residual_m": 2.4763429156194384e-07,
+          "minimum_toe_joint_height_m": 0.05388036997872861,
+          "solved_foot_pitch_degrees": 60.755709134615415,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.718200161503898,
+            0.21606812247550758,
+            6.131830155671458
+          ],
+          "distal_contact_centroid_m": [
+            0.800728273731255,
+            0.11530426491127821,
+            6.636356673588902
+          ],
+          "target_foot_world_m": [
+            0.7182001425358534,
+            0.21606818695602142,
+            6.131830174736694
+          ],
+          "foot_target_residual_m": 6.98642013030194e-08,
+          "minimum_toe_joint_height_m": 0.0031930378605669746,
+          "solved_foot_pitch_degrees": -0.03366591042104897,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.4791666567325592,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.29279016011342407,
+            0.8009627772900814,
+            3.1137654767077554
+          ],
+          "distal_contact_centroid_m": [
+            -0.37472217062394925,
+            0.2834975430505357,
+            3.1623529602332856
+          ],
+          "target_foot_world_m": [
+            -0.29279007476868096,
+            0.8009628280969361,
+            3.1137655542695577
+          ],
+          "foot_target_residual_m": 1.26019422474929e-07,
+          "minimum_toe_joint_height_m": 0.07415188109768542,
+          "solved_foot_pitch_degrees": 60.68509615384619,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7182034593674675,
+            0.21557790452963813,
+            6.131912989242197
+          ],
+          "distal_contact_centroid_m": [
+            0.8007294994039517,
+            0.11456609316944429,
+            6.636386330138419
+          ],
+          "target_foot_world_m": [
+            0.7182033719546886,
+            0.21557795052524092,
+            6.131913062809926
+          ],
+          "foot_target_residual_m": 1.2316168281172378e-07,
+          "minimum_toe_joint_height_m": 0.0025903987060330452,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.4833333194255829,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.28421047484158973,
+            0.8274732416170756,
+            3.1431100605560047
+          ],
+          "distal_contact_centroid_m": [
+            -0.3666882658391855,
+            0.30875340008922025,
+            3.190916822957736
+          ],
+          "target_foot_world_m": [
+            -0.28421051749482273,
+            0.827473328859781,
+            3.14310981825877
+          ],
+          "foot_target_residual_m": 2.6103359531480474e-07,
+          "minimum_toe_joint_height_m": 0.09689806624874181,
+          "solved_foot_pitch_degrees": 60.59945913461542,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.718203267438043,
+            0.21557793950240928,
+            6.131913377384506
+          ],
+          "distal_contact_centroid_m": [
+            0.800729283035483,
+            0.11456616114655409,
+            6.636386725009309
+          ],
+          "target_foot_world_m": [
+            0.7182033719546886,
+            0.21557795052524092,
+            6.131913062809927
+          ],
+          "foot_target_residual_m": 3.3166609366371826e-07,
+          "minimum_toe_joint_height_m": 0.002590503851148826,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.49166667461395264,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.2729264675235746,
+            0.8658500902846175,
+            3.206925966278662
+          ],
+          "distal_contact_centroid_m": [
+            -0.35563058548735443,
+            0.3465349326897961,
+            3.253840494519034
+          ],
+          "target_foot_world_m": [
+            -0.27292631939320106,
+            0.8658501911198312,
+            3.2069261682082426
+          ],
+          "foot_target_residual_m": 2.6997389395105665e-07,
+          "minimum_toe_joint_height_m": 0.13250233033598463,
+          "solved_foot_pitch_degrees": 60.36207932692312,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7182033683827473,
+            0.21557786729159134,
+            6.131912860030098
+          ],
+          "distal_contact_centroid_m": [
+            0.8007294170049041,
+            0.11456608619954865,
+            6.636386191235851
+          ],
+          "target_foot_world_m": [
+            0.7182033719546886,
+            0.21557795052524092,
+            6.131913062809927
+          ],
+          "foot_target_residual_m": 2.1922650019553954e-07,
+          "minimum_toe_joint_height_m": 0.0025904094652773046,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.5,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.26946897787492197,
+            0.8785432070833509,
+            3.277041263131669
+          ],
+          "distal_contact_centroid_m": [
+            -0.35216438620713936,
+            0.3591994916654216,
+            3.324204840084489
+          ],
+          "target_foot_world_m": [
+            -0.2694690104486055,
+            0.8785433007106545,
+            3.277041364599807
+          ],
+          "foot_target_residual_m": 1.4185520730980236e-07,
+          "minimum_toe_joint_height_m": 0.14508945147256108,
+          "solved_foot_pitch_degrees": 59.99248798076927,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7182033993580391,
+            0.2155778492155222,
+            6.13191287614591
+          ],
+          "distal_contact_centroid_m": [
+            0.8007294586212086,
+            0.1145660593320399,
+            6.636386196817412
+          ],
+          "target_foot_world_m": [
+            0.7182033719546885,
+            0.21557795052524092,
+            6.131913062809925
+          ],
+          "foot_target_residual_m": 2.1414494435929517e-07,
+          "minimum_toe_joint_height_m": 0.0025903649785005978,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.5083333253860474,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.26646848626570924,
+            0.8819362110250647,
+            3.3540566149993873
+          ],
+          "distal_contact_centroid_m": [
+            -0.34906965161972714,
+            0.36275987017110195,
+            3.403639700683623
+          ],
+          "target_foot_world_m": [
+            -0.2664684026019579,
+            0.8819362512408107,
+            3.354056736186048
+          ],
+          "foot_target_residual_m": 1.5265364797532816e-07,
+          "minimum_toe_joint_height_m": 0.148907823032613,
+          "solved_foot_pitch_degrees": 59.3765024038462,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7182032617715263,
+            0.2155778882723486,
+            6.131913020588547
+          ],
+          "distal_contact_centroid_m": [
+            0.8007292962479209,
+            0.11456610607753481,
+            6.636386342225459
+          ],
+          "target_foot_world_m": [
+            0.7182033719546885,
+            0.21557795052524092,
+            6.131913062809926
+          ],
+          "foot_target_residual_m": 1.3341063194362865e-07,
+          "minimum_toe_joint_height_m": 0.0025903934328227324,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.5166666507720947,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.2632058265609101,
+            0.8815011592503146,
+            3.4377980698625645
+          ],
+          "distal_contact_centroid_m": [
+            -0.34561096351659176,
+            0.3627598547229702,
+            3.4924120913775596
+          ],
+          "target_foot_world_m": [
+            -0.2632057411895826,
+            0.8815012330508081,
+            3.437798128791019
+          ],
+          "foot_target_residual_m": 1.2730804828141199e-07,
+          "minimum_toe_joint_height_m": 0.14938075272712828,
+          "solved_foot_pitch_degrees": 58.46905048076927,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7182032623952713,
+            0.21557787238081433,
+            6.131913004795537
+          ],
+          "distal_contact_centroid_m": [
+            0.8007293030818041,
+            0.11456608959676522,
+            6.636386315682954
+          ],
+          "target_foot_world_m": [
+            0.7182033719546885,
+            0.21557795052524092,
+            6.131913062809926
+          ],
+          "foot_target_residual_m": 1.465451692136162e-07,
+          "minimum_toe_joint_height_m": 0.002590355445662579,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.5249999761581421,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.25968654408270103,
+            0.8807024059250737,
+            3.528121625267863
+          ],
+          "distal_contact_centroid_m": [
+            -0.34178755491470514,
+            0.3627598425053116,
+            3.59054199822385
+          ],
+          "target_foot_world_m": [
+            -0.25968663349516297,
+            0.8807024970943502,
+            3.528121622512411
+          ],
+          "foot_target_residual_m": 1.2772633970692843e-07,
+          "minimum_toe_joint_height_m": 0.15010015980759242,
+          "solved_foot_pitch_degrees": 57.255108173076955,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7182033120783406,
+            0.215577848698607,
+            6.13191307664044
+          ],
+          "distal_contact_centroid_m": [
+            0.8007293606245701,
+            0.11456609934220485,
+            6.636386386557535
+          ],
+          "target_foot_world_m": [
+            0.7182033719546885,
+            0.21557795052524092,
+            6.131913062809927
+          ],
+          "foot_target_residual_m": 1.1893327329021099e-07,
+          "minimum_toe_joint_height_m": 0.002590327632174691,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.5333333611488342,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.2559023871446142,
+            0.8794495278584359,
+            3.625251626660513
+          ],
+          "distal_contact_centroid_m": [
+            -0.33760192453847687,
+            0.3627599461119595,
+            3.6979764384332445
+          ],
+          "target_foot_world_m": [
+            -0.255902336575255,
+            0.8794495125556885,
+            3.6252516188202306
+          ],
+          "foot_target_residual_m": 5.341258459363741e-08,
+          "minimum_toe_joint_height_m": 0.15107065677467998,
+          "solved_foot_pitch_degrees": 55.767728365384656,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7182033815119839,
+            0.21557780865325268,
+            6.1319130219898375
+          ],
+          "distal_contact_centroid_m": [
+            0.8007294386109156,
+            0.11456604034095114,
+            6.636386319667584
+          ],
+          "target_foot_world_m": [
+            0.7182033719546885,
+            0.2155779505252408,
+            6.131913062809926
+          ],
+          "foot_target_residual_m": 1.479367518502491e-07,
+          "minimum_toe_joint_height_m": 0.002590245071764752,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.5416666865348816,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.25184560027886865,
+            0.8776383705947347,
+            3.7293774339749834
+          ],
+          "distal_contact_centroid_m": [
+            -0.3330584727218892,
+            0.36275987863239756,
+            3.814593377314789
+          ],
+          "target_foot_world_m": [
+            -0.2518454780052827,
+            0.8776384249184892,
+            3.729377342641883
+          ],
+          "foot_target_residual_m": 1.6199887469548503e-07,
+          "minimum_toe_joint_height_m": 0.15229731038447933,
+          "solved_foot_pitch_degrees": 54.04296875000003,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7182032554347666,
+            0.21557785712147445,
+            6.131913303515787
+          ],
+          "distal_contact_centroid_m": [
+            0.8007293143955233,
+            0.1145661611531883,
+            6.636386620027802
+          ],
+          "target_foot_world_m": [
+            0.7182033719546885,
+            0.2155779505252408,
+            6.131913062809926
+          ],
+          "foot_target_residual_m": 2.832674832974705e-07,
+          "minimum_toe_joint_height_m": 0.0025903668091837723,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.550000011920929,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.24751099023943834,
+            0.8751634126346844,
+            3.8406300823904296
+          ],
+          "distal_contact_centroid_m": [
+            -0.3281644262956505,
+            0.3627599174847851,
+            3.9402047813717505
+          ],
+          "target_foot_world_m": [
+            -0.24751094577282573,
+            0.8751634233833876,
+            3.8406300018379858
+          ],
+          "foot_target_residual_m": 9.263644241431546e-08,
+          "minimum_toe_joint_height_m": 0.15378548330093056,
+          "solved_foot_pitch_degrees": 52.1168870192308,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7182032870462559,
+            0.21557779180135883,
+            6.131913273720789
+          ],
+          "distal_contact_centroid_m": [
+            0.8007293528621724,
+            0.11456608853072082,
+            6.63638658662656
+          ],
+          "target_foot_world_m": [
+            0.7182033719546885,
+            0.2155779505252408,
+            6.131913062809927
+          ],
+          "foot_target_residual_m": 2.77283436931458e-07,
+          "minimum_toe_joint_height_m": 0.0025902818039857944,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.5583333373069763,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.2428967408835193,
+            0.8719229840778377,
+            3.9590599133219366
+          ],
+          "distal_contact_centroid_m": [
+            -0.3229296545236034,
+            0.36275984043750853,
+            4.074561648678981
+          ],
+          "target_foot_world_m": [
+            -0.2428967897476864,
+            0.8719230864247387,
+            3.959059649541729
+          ],
+          "foot_target_residual_m": 2.8712818183436263e-07,
+          "minimum_toe_joint_height_m": 0.15553994927139358,
+          "solved_foot_pitch_degrees": 50.02253605769232,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7182033937846757,
+            0.2155777807606825,
+            6.1319132749901195
+          ],
+          "distal_contact_centroid_m": [
+            0.8007294566406563,
+            0.114566073981758,
+            6.636386585893224
+          ],
+          "target_foot_world_m": [
+            0.7182033719546885,
+            0.2155779505252408,
+            6.131913062809926
+          ],
+          "foot_target_residual_m": 2.7261142322264645e-07,
+          "minimum_toe_joint_height_m": 0.0025902442761904926,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.5666666626930237,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.23800605632891755,
+            0.8678127967325293,
+            4.0845855788849965
+          ],
+          "distal_contact_centroid_m": [
+            -0.31736615368289267,
+            0.3627598506678791,
+            4.217355533267358
+          ],
+          "target_foot_world_m": [
+            -0.2380061452656722,
+            0.8678128771465252,
+            4.084585812326259
+          ],
+          "foot_target_residual_m": 2.624328108820301e-07,
+          "minimum_toe_joint_height_m": 0.15757064073482036,
+          "solved_foot_pitch_degrees": 47.7839543269231,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7182033770056704,
+            0.21557776771205908,
+            6.131912786020762
+          ],
+          "distal_contact_centroid_m": [
+            0.8007294342383204,
+            0.1145660334509895,
+            6.636386092245704
+          ],
+          "target_foot_world_m": [
+            0.7182033719546886,
+            0.2155779505252408,
+            6.131913062809926
+          ],
+          "foot_target_residual_m": 3.317505284963467e-07,
+          "minimum_toe_joint_height_m": 0.0025902197035753832,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.574999988079071,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.23284290030473406,
+            0.8627500974188171,
+            4.217107882094392
+          ],
+          "distal_contact_centroid_m": [
+            -0.3114881369905749,
+            0.3627598829965928,
+            4.368226184658958
+          ],
+          "target_foot_world_m": [
+            -0.23284292297657885,
+            0.8627501373141744,
+            4.217108117102438
+          ],
+          "foot_target_residual_m": 2.394460977319523e-07,
+          "minimum_toe_joint_height_m": 0.15988003658160765,
+          "solved_foot_pitch_degrees": 45.4281850961539,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.718203315732282,
+            0.21557779064845486,
+            6.131912951343316
+          ],
+          "distal_contact_centroid_m": [
+            0.8007293836561512,
+            0.11456612917539107,
+            6.6363862724471865
+          ],
+          "target_foot_world_m": [
+            0.7182033719546886,
+            0.2155779505252408,
+            6.131913062809926
+          ],
+          "foot_target_residual_m": 2.0284563311281116e-07,
+          "minimum_toe_joint_height_m": 0.0025902944903000297,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.5833333134651184,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.22741277431535836,
+            0.8566759604575765,
+            4.356481050722765
+          ],
+          "distal_contact_centroid_m": [
+            -0.30531141430869396,
+            0.36275988712120805,
+            4.526761411821404
+          ],
+          "target_foot_world_m": [
+            -0.22741278499394893,
+            0.8566759950705054,
+            4.356481236685252
+          ],
+          "foot_target_residual_m": 1.8945747222339535e-07,
+          "minimum_toe_joint_height_m": 0.16246474745955214,
+          "solved_foot_pitch_degrees": 42.982271634615415,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7182033950724951,
+            0.21557777075244747,
+            6.13191287050098
+          ],
+          "distal_contact_centroid_m": [
+            0.8007294673673063,
+            0.11456605490374427,
+            6.636386184812124
+          ],
+          "target_foot_world_m": [
+            0.7182033719546885,
+            0.2155779505252408,
+            6.131913062809926
+          ],
+          "foot_target_residual_m": 2.6426392259851576e-07,
+          "minimum_toe_joint_height_m": 0.0025902436250556937,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.5916666388511658,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.2217240099121178,
+            0.8495506100825614,
+            4.502490478746372
+          ],
+          "distal_contact_centroid_m": [
+            -0.29885386337530023,
+            0.36275982280373653,
+            4.692502994761509
+          ],
+          "target_foot_world_m": [
+            -0.22172409563132606,
+            0.8495507437370127,
+            4.502490487638035
+          ],
+          "foot_target_residual_m": 1.590294207843506e-07,
+          "minimum_toe_joint_height_m": 0.16531826027867486,
+          "solved_foot_pitch_degrees": 40.47025240384619,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7182032740942418,
+            0.21557782000136255,
+            6.131913046428525
+          ],
+          "distal_contact_centroid_m": [
+            0.8007293532693875,
+            0.11456616283945727,
+            6.636386375103861
+          ],
+          "target_foot_world_m": [
+            0.7182033719546885,
+            0.2155779505252408,
+            6.131913062809927
+          ],
+          "foot_target_residual_m": 1.6395578722809296e-07,
+          "minimum_toe_joint_height_m": 0.0025903521630066817,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.6000000238418579,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.21578583857930878,
+            0.8413742733979969,
+            4.654904505258833
+          ],
+          "distal_contact_centroid_m": [
+            -0.2921352424141641,
+            0.36275987868736764,
+            4.86494932020809
+          ],
+          "target_foot_world_m": [
+            -0.21578586764662722,
+            0.8413743388630863,
+            4.6549045431729965
+          ],
+          "foot_target_residual_m": 8.104363468556915e-08,
+          "minimum_toe_joint_height_m": 0.16842361632202618,
+          "solved_foot_pitch_degrees": 37.91917067307696,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.718203310219696,
+            0.21557778225750632,
+            6.131913164097172
+          ],
+          "distal_contact_centroid_m": [
+            0.800729375145783,
+            0.11456614396193802,
+            6.636386507664176
+          ],
+          "target_foot_world_m": [
+            0.7182033719546885,
+            0.2155779505252408,
+            6.131913062809927
+          ],
+          "foot_target_residual_m": 2.0587458762805886e-07,
+          "minimum_toe_joint_height_m": 0.0025903481912546433,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.6083333492279053,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.2096164562817712,
+            0.8320872642462863,
+            4.813252031725487
+          ],
+          "distal_contact_centroid_m": [
+            -0.2851763408498346,
+            0.362759893234254,
+            5.043560787669889
+          ],
+          "target_foot_world_m": [
+            -0.20961646464211248,
+            0.8320873010640842,
+            4.813252072234113
+          ],
+          "foot_target_residual_m": 5.537503330267979e-08,
+          "minimum_toe_joint_height_m": 0.1717891292556572,
+          "solved_foot_pitch_degrees": 35.332031250000014,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7182034677182337,
+            0.21557774638616142,
+            6.1319131397104485
+          ],
+          "distal_contact_centroid_m": [
+            0.8007295212553277,
+            0.11456608852585726,
+            6.636386488418768
+          ],
+          "target_foot_world_m": [
+            0.7182033719546885,
+            0.2155779505252408,
+            6.131913062809926
+          ],
+          "foot_target_residual_m": 2.3823750894672339e-07,
+          "minimum_toe_joint_height_m": 0.0025902817720926397,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.6166666746139526,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.20324003773212215,
+            0.8215688386179278,
+            4.976915183391448
+          ],
+          "distal_contact_centroid_m": [
+            -0.27799972114966837,
+            0.36275984559895386,
+            5.227762399275458
+          ],
+          "target_foot_world_m": [
+            -0.2032399626949656,
+            0.8215689402028159,
+            4.976915124027356
+          ],
+          "foot_target_residual_m": 1.3954984662805336e-07,
+          "minimum_toe_joint_height_m": 0.1754440089934559,
+          "solved_foot_pitch_degrees": 32.69681490384619,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7182033110588403,
+            0.21557779257793738,
+            6.1319131711983905
+          ],
+          "distal_contact_centroid_m": [
+            0.8007293814467116,
+            0.11456610790762106,
+            6.6363865198218575
+          ],
+          "target_foot_world_m": [
+            0.7182033719546885,
+            0.2155779505252408,
+            6.131913062809927
+          ],
+          "foot_target_residual_m": 2.0100675118902934e-07,
+          "minimum_toe_joint_height_m": 0.0025903486685209254,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.625,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.1966853684095412,
+            0.8096113756933018,
+            5.145148486570823
+          ],
+          "distal_contact_centroid_m": [
+            -0.2706287397771938,
+            0.36275988991424307,
+            5.41694738862246
+          ],
+          "target_foot_world_m": [
+            -0.19668539844620703,
+            0.8096114203223848,
+            5.145148427013209
+          ],
+          "foot_target_residual_m": 8.025625035682618e-08,
+          "minimum_toe_joint_height_m": 0.17944349907525808,
+          "solved_foot_pitch_degrees": 29.986478365384663,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7182033472569254,
+            0.21557784057445312,
+            6.131913141933172
+          ],
+          "distal_contact_centroid_m": [
+            0.8007293897273575,
+            0.1145661318107603,
+            6.636386497076316
+          ],
+          "target_foot_world_m": [
+            0.7182033719546885,
+            0.2155779505252408,
+            6.131913062809925
+          ],
+          "foot_target_residual_m": 1.3769402084520823e-07,
+          "minimum_toe_joint_height_m": 0.0025903934951241325,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.6333333253860474,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.18999983460224487,
+            0.7956488402530211,
+            5.31674154417784
+          ],
+          "distal_contact_centroid_m": [
+            -0.2630883297867039,
+            0.36275981823162295,
+            5.610482103761573
+          ],
+          "target_foot_world_m": [
+            -0.18999993862093445,
+            0.7956489747457269,
+            5.316741372252586
+          ],
+          "foot_target_residual_m": 2.4179840536812464e-07,
+          "minimum_toe_joint_height_m": 0.18395076055829263,
+          "solved_foot_pitch_degrees": 27.11087740384617,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7182033709252136,
+            0.2155777387512654,
+            6.1319133408293975
+          ],
+          "distal_contact_centroid_m": [
+            0.8007294298217693,
+            0.11456607155405411,
+            6.6363867072643
+          ],
+          "target_foot_world_m": [
+            0.7182033719546885,
+            0.2155779505252408,
+            6.131913062809925
+          ],
+          "foot_target_residual_m": 3.494912065796554e-07,
+          "minimum_toe_joint_height_m": 0.0025903241524505294,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.6416666507720947,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.18322958814740603,
+            0.7789283564113882,
+            5.490512318748516
+          ],
+          "distal_contact_centroid_m": [
+            -0.25540424884984886,
+            0.36275979020429117,
+            5.807708092038321
+          ],
+          "target_foot_world_m": [
+            -0.183229610948561,
+            0.7789285279856857,
+            5.49051258494435
+          ],
+          "foot_target_residual_m": 3.1751827335634727e-07,
+          "minimum_toe_joint_height_m": 0.1891695125684265,
+          "solved_foot_pitch_degrees": 23.97085336538464,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7182033147575447,
+            0.2155778117135543,
+            6.131912819088049
+          ],
+          "distal_contact_centroid_m": [
+            0.8007293791209107,
+            0.11456607530319977,
+            6.636386165649193
+          ],
+          "target_foot_world_m": [
+            0.7182033719546884,
+            0.2155779505252408,
+            6.131913062809926
+          ],
+          "foot_target_residual_m": 2.862526000827872e-07,
+          "minimum_toe_joint_height_m": 0.0025903602665217074,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.6499999761581421,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.1763869083761092,
+            0.7591361054983077,
+            5.666139752328219
+          ],
+          "distal_contact_centroid_m": [
+            -0.24760262253725163,
+            0.36275982514019534,
+            6.007948696106699
+          ],
+          "target_foot_world_m": [
+            -0.17638696337419468,
+            0.7591362280188634,
+            5.666140002132614
+          ],
+          "foot_target_residual_m": 2.8361648702097593e-07,
+          "minimum_toe_joint_height_m": 0.1951508246218286,
+          "solved_foot_pitch_degrees": 20.569411057692346,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7182032612854304,
+            0.21557785206738314,
+            6.131912785993685
+          ],
+          "distal_contact_centroid_m": [
+            0.8007293150619174,
+            0.1145660838478992,
+            6.63638613180373
+          ],
+          "target_foot_world_m": [
+            0.7182033719546884,
+            0.2155779505252408,
+            6.131913062809927
+          ],
+          "foot_target_residual_m": 3.13956790330735e-07,
+          "minimum_toe_joint_height_m": 0.002590396776811818,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.6583333611488342,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.16947492699401356,
+            0.7361579728341617,
+            5.8435486046620815
+          ],
+          "distal_contact_centroid_m": [
+            -0.23971068713272192,
+            0.3627598444954987,
+            6.210509759555452
+          ],
+          "target_foot_world_m": [
+            -0.16947491122312566,
+            0.7361580746640379,
+            5.8435487973536056
+          ],
+          "foot_target_residual_m": 2.1851331318746858e-07,
+          "minimum_toe_joint_height_m": 0.2018846493912443,
+          "solved_foot_pitch_degrees": 16.939603365384617,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7182033399389065,
+            0.21557779559331422,
+            6.131913006266042
+          ],
+          "distal_contact_centroid_m": [
+            0.8007293900513309,
+            0.11456608512171379,
+            6.636386368982883
+          ],
+          "target_foot_world_m": [
+            0.7182033719546884,
+            0.2155779505252408,
+            6.131913062809927
+          ],
+          "foot_target_residual_m": 1.6800631867633478e-07,
+          "minimum_toe_joint_height_m": 0.0025903749726577663,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.6666666865348816,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.1624905612490763,
+            0.710119376852977,
+            6.022813675543426
+          ],
+          "distal_contact_centroid_m": [
+            -0.23175577144136028,
+            0.3627597531186939,
+            6.41468511824301
+          ],
+          "target_foot_world_m": [
+            -0.16249053986728051,
+            0.7101195666107901,
+            6.022813779161413
+          ],
+          "foot_target_residual_m": 2.1725997348969988e-07,
+          "minimum_toe_joint_height_m": 0.20929681454564103,
+          "solved_foot_pitch_degrees": 13.1385216346154,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7182034474549771,
+            0.2155778004203834,
+            6.131913001327959
+          ],
+          "distal_contact_centroid_m": [
+            0.8007294883595405,
+            0.11456605689543799,
+            6.636386359413912
+          ],
+          "target_foot_world_m": [
+            0.7182033719546885,
+            0.2155779505252408,
+            6.131913062809926
+          ],
+          "foot_target_residual_m": 1.7891840058207994e-07,
+          "minimum_toe_joint_height_m": 0.0025903429060620264,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.675000011920929,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.15543311626638415,
+            0.6812762871476489,
+            6.203952434441914
+          ],
+          "distal_contact_centroid_m": [
+            -0.223765744100072,
+            0.3627597888753226,
+            6.6197600069602345
+          ],
+          "target_foot_world_m": [
+            -0.15543316567544213,
+            0.6812764387910877,
+            6.203952494037416
+          ],
+          "foot_target_residual_m": 1.7026042256609212e-07,
+          "minimum_toe_joint_height_m": 0.2172869472604536,
+          "solved_foot_pitch_degrees": 9.22325721153849,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7182033308251659,
+            0.2155777820679142,
+            6.131913143972307
+          ],
+          "distal_contact_centroid_m": [
+            0.8007293819206397,
+            0.11456606160816522,
+            6.636386505086705
+          ],
+          "target_foot_world_m": [
+            0.7182033719546885,
+            0.2155779505252408,
+            6.131913062809927
+          ],
+          "foot_target_residual_m": 1.914597619389768e-07,
+          "minimum_toe_joint_height_m": 0.0025903470732907136,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.6833333373069763,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.14830296648671568,
+            0.6501080779124047,
+            6.386958803516312
+          ],
+          "distal_contact_centroid_m": [
+            -0.21576876741765197,
+            0.36275979387495433,
+            6.825015131032146
+          ],
+          "target_foot_world_m": [
+            -0.14830302969029507,
+            0.6501082386613339,
+            6.386958755243839
+          ],
+          "foot_target_residual_m": 1.79346431174561e-07,
+          "minimum_toe_joint_height_m": 0.22570437649334602,
+          "solved_foot_pitch_degrees": 5.262920673076912,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.718203287052368,
+            0.21557784695895862,
+            6.1319131669807065
+          ],
+          "distal_contact_centroid_m": [
+            0.8007293390457751,
+            0.11456609862079403,
+            6.636386524560938
+          ],
+          "target_foot_world_m": [
+            0.7182033719546885,
+            0.2155779505252408,
+            6.131913062809927
+          ],
+          "foot_target_residual_m": 1.6966416872080365e-07,
+          "minimum_toe_joint_height_m": 0.0025904029506976928,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.6916666626930237,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.14110419062708404,
+            0.6173074297380373,
+            6.571729537100394
+          ],
+          "distal_contact_centroid_m": [
+            -0.20779291862267088,
+            0.3627597565584139,
+            7.029729957484554
+          ],
+          "target_foot_world_m": [
+            -0.14110414979277333,
+            0.6173076166559138,
+            6.571729437495729
+          ],
+          "foot_target_residual_m": 2.1570077137586467e-07,
+          "minimum_toe_joint_height_m": 0.23435563413300753,
+          "solved_foot_pitch_degrees": 1.335637019230772,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.718203353994215,
+            0.21557787864164654,
+            6.131913164815689
+          ],
+          "distal_contact_centroid_m": [
+            0.8007293871554032,
+            0.11456609283794138,
+            6.636386516805607
+          ],
+          "target_foot_world_m": [
+            0.7182033719546885,
+            0.2155779505252408,
+            6.131913062809926
+          ],
+          "foot_target_residual_m": 1.2607539573655044e-07,
+          "minimum_toe_joint_height_m": 0.0025903917030906665,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.699999988079071,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.13384763688305026,
+            0.5836969561870227,
+            6.757979862279543
+          ],
+          "distal_contact_centroid_m": [
+            -0.19986598968946367,
+            0.36275975675570943,
+            7.233187008120651
+          ],
+          "target_foot_world_m": [
+            -0.1338476220998891,
+            0.5836971394248113,
+            6.757979741342083
+          ],
+          "foot_target_residual_m": 2.2004658204778711e-07,
+          "minimum_toe_joint_height_m": 0.24302838717784292,
+          "solved_foot_pitch_degrees": -2.4804687499999325,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7182036219554695,
+            0.21560991821902414,
+            6.131919324711405
+          ],
+          "distal_contact_centroid_m": [
+            0.8007294059388451,
+            0.11456613057513294,
+            6.636386630558761
+          ],
+          "target_foot_world_m": [
+            0.7182036078561407,
+            0.2156099774104329,
+            6.131919117602771
+          ],
+          "foot_target_residual_m": 2.158619936910666e-07,
+          "minimum_toe_joint_height_m": 0.0025904509742536025,
+          "solved_foot_pitch_degrees": 0.003155202030529347,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.7083333134651184,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.1265517811087273,
+            0.5502193871520152,
+            6.945239120262829
+          ],
+          "distal_contact_centroid_m": [
+            -0.19201576942027235,
+            0.36275976406806093,
+            7.434675020224655
+          ],
+          "target_foot_world_m": [
+            -0.12655176947966912,
+            0.550219571500025,
+            6.945239381294142
+          ],
+          "foot_target_residual_m": 3.197761249109424e-07,
+          "minimum_toe_joint_height_m": 0.2514937621836455,
+          "solved_foot_pitch_degrees": -6.104266826923045,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7182141256137984,
+            0.21704626494201754,
+            6.132192657027846
+          ],
+          "distal_contact_centroid_m": [
+            0.8007292780676437,
+            0.11456609838980558,
+            6.636386241215206
+          ],
+          "target_foot_world_m": [
+            0.7182142717292985,
+            0.21704634050610652,
+            6.132192823176432
+          ],
+          "foot_target_residual_m": 2.3380552476131167e-07,
+          "minimum_toe_joint_height_m": 0.002590439536848607,
+          "solved_foot_pitch_degrees": 0.14469887000808548,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.7166666388511658,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.11924420502388366,
+            0.5177444745794165,
+            7.13279669358744
+          ],
+          "distal_contact_centroid_m": [
+            -0.18426942908160163,
+            0.36275978996903263,
+            7.633494351003663
+          ],
+          "target_foot_world_m": [
+            -0.11924430952333383,
+            0.517744612467435,
+            7.132796941376
+          ],
+          "foot_target_residual_m": 3.022125267912552e-07,
+          "minimum_toe_joint_height_m": 0.25955408824468224,
+          "solved_foot_pitch_degrees": -9.469651442307647,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.718257042312018,
+            0.2225927790436039,
+            6.1332892630910125
+          ],
+          "distal_contact_centroid_m": [
+            0.8007294206693221,
+            0.11456609573654807,
+            6.636386239158836
+          ],
+          "target_foot_world_m": [
+            0.7182569968439463,
+            0.22259283641485994,
+            6.133289432386074
+          ],
+          "foot_target_residual_m": 1.844440956673651e-07,
+          "minimum_toe_joint_height_m": 0.0025904099453197688,
+          "solved_foot_pitch_degrees": 0.6919676878524549,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.7250000238418579,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.11195974830630659,
+            0.4870440536980094,
+            7.319765538464254
+          ],
+          "distal_contact_centroid_m": [
+            -0.17665397357933635,
+            0.36275976236988333,
+            7.82895861000322
+          ],
+          "target_foot_world_m": [
+            -0.11195979415823498,
+            0.48704427033757636,
+            7.31976559152518
+          ],
+          "foot_target_residual_m": 2.277071874326837e-07,
+          "minimum_toe_joint_height_m": 0.26459453820475365,
+          "solved_foot_pitch_degrees": -12.522536057692252,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7183540709040928,
+            0.23416670975134563,
+            6.135782170341071
+          ],
+          "distal_contact_centroid_m": [
+            0.800729343556651,
+            0.11456609755641393,
+            6.636386227370963
+          ],
+          "target_foot_world_m": [
+            0.7183541231004915,
+            0.23416673103857086,
+            6.135782334708191
+          ],
+          "foot_target_residual_m": 1.7376466876367893e-07,
+          "minimum_toe_joint_height_m": 0.002590405106193114,
+          "solved_foot_pitch_degrees": 1.8378021234207367,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.7333333492279053,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.104737868629623,
+            0.4586784317609686,
+            7.50512648344583
+          ],
+          "distal_contact_centroid_m": [
+            -0.16919523129817202,
+            0.3627597449551816,
+            8.020399211457388
+          ],
+          "target_foot_world_m": [
+            -0.10473791644569835,
+            0.45867861234834334,
+            7.505126546315248
+          ],
+          "foot_target_residual_m": 1.9710591240385688e-07,
+          "minimum_toe_joint_height_m": 0.2591738582028396,
+          "solved_foot_pitch_degrees": -15.229867788461508,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7185333794927727,
+            0.25279606325009074,
+            6.1403849781191155
+          ],
+          "distal_contact_centroid_m": [
+            0.8007293274238955,
+            0.11456609405770161,
+            6.636386325474329
+          ],
+          "target_foot_world_m": [
+            0.7185334498982388,
+            0.2527960949599779,
+            6.140385046138533
+          ],
+          "foot_target_residual_m": 1.029032932718009e-07,
+          "minimum_toe_joint_height_m": 0.002590444754848778,
+          "solved_foot_pitch_degrees": 3.6945632337836383,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.7416666746139526,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.0976202408227714,
+            0.43300033401068827,
+            7.687812752959194
+          ],
+          "distal_contact_centroid_m": [
+            -0.16191844274281766,
+            0.3627598575033584,
+            8.207170165706563
+          ],
+          "target_foot_world_m": [
+            -0.09762025023093923,
+            0.43300044651829983,
+            7.687812747019001
+          ],
+          "foot_target_residual_m": 1.130564556579261e-07,
+          "minimum_toe_joint_height_m": 0.25435265228218806,
+          "solved_foot_pitch_degrees": -17.576622596153808,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7188307861205181,
+            0.2786689042601444,
+            6.148019612034803
+          ],
+          "distal_contact_centroid_m": [
+            0.8007292714785557,
+            0.11456609690337081,
+            6.636386299581694
+          ],
+          "target_foot_world_m": [
+            0.7188309043526869,
+            0.27866890142904915,
+            6.148019693248918
+          ],
+          "foot_target_residual_m": 1.4346634933947994e-07,
+          "minimum_toe_joint_height_m": 0.002590446686476164,
+          "solved_foot_pitch_degrees": 6.30381439885384,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.75,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.09064767092616012,
+            0.4101770605024602,
+            7.866774159737509
+          ],
+          "distal_contact_centroid_m": [
+            -0.15484772733703914,
+            0.362759868657253,
+            8.38865069832964
+          ],
+          "target_foot_world_m": [
+            -0.09064771055322021,
+            0.4101771655685087,
+            7.866774044215205
+          ],
+          "foot_target_residual_m": 1.6110425534604997e-07,
+          "minimum_toe_joint_height_m": 0.24328766992999123,
+          "solved_foot_pitch_degrees": -19.562800480769187,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7199247659366755,
+            0.31073545648642303,
+            6.160624371050289
+          ],
+          "distal_contact_centroid_m": [
+            0.80072934118951,
+            0.11456609129634943,
+            6.636386531665127
+          ],
+          "target_foot_world_m": [
+            0.7199248092114598,
+            0.31073551778066494,
+            6.160624250551588
+          ],
+          "foot_target_residual_m": 1.4194938513838604e-07,
+          "minimum_toe_joint_height_m": 0.002590432536998491,
+          "solved_foot_pitch_degrees": 9.646003055014544,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.7583333253860474,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.08385877176855733,
+            0.3902122916242071,
+            8.041022158237315
+          ],
+          "distal_contact_centroid_m": [
+            -0.14800618890889264,
+            0.3627597827849515,
+            8.564249400158218
+          ],
+          "target_foot_world_m": [
+            -0.08385880494496777,
+            0.3902124292176458,
+            8.041022080973956
+          ],
+          "foot_target_residual_m": 1.6125214767625633e-07,
+          "minimum_toe_joint_height_m": 0.2330285855994108,
+          "solved_foot_pitch_degrees": -21.20158159246043,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7223996451619762,
+            0.34651975606226826,
+            6.180597072531738
+          ],
+          "distal_contact_centroid_m": [
+            0.8007294544449893,
+            0.11456607487387095,
+            6.636386449433311
+          ],
+          "target_foot_world_m": [
+            0.7223995698836089,
+            0.3465198034230011,
+            6.180597020545588
+          ],
+          "foot_target_residual_m": 1.0301665570040471e-07,
+          "minimum_toe_joint_height_m": 0.002590381697967492,
+          "solved_foot_pitch_degrees": 13.650142428747909,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.7666666507720947,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.07728844517128344,
+            0.3729978486676801,
+            8.209660015986632
+          ],
+          "distal_contact_centroid_m": [
+            -0.14141553801385162,
+            0.36275987958053285,
+            8.733408606579419
+          ],
+          "target_foot_world_m": [
+            -0.07728848548416446,
+            0.3729979405464747,
+            8.209659756754972
+          ],
+          "foot_target_residual_m": 2.7797103247690367e-07,
+          "minimum_toe_joint_height_m": 0.22413806130769665,
+          "solved_foot_pitch_degrees": -22.51468255399888,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7241971563361157,
+            0.38403708814787646,
+            6.207602887004191
+          ],
+          "distal_contact_centroid_m": [
+            0.8007293925471367,
+            0.11456608196631816,
+            6.636386615333222
+          ],
+          "target_foot_world_m": [
+            0.7241971633907558,
+            0.38403716283714123,
+            6.207602697670598
+          ],
+          "foot_target_residual_m": 2.0365525629117378e-07,
+          "minimum_toe_joint_height_m": 0.0025904132522433093,
+          "solved_foot_pitch_degrees": 18.203493270263284,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.7749999761581421,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.07096762722530563,
+            0.3583971017417342,
+            8.371892746998661
+          ],
+          "distal_contact_centroid_m": [
+            -0.13509606233971694,
+            0.36275984363233915,
+            8.895606841612242
+          ],
+          "target_foot_world_m": [
+            -0.07096770754165717,
+            0.35839719672434006,
+            8.371892552858315
+          ],
+          "foot_target_residual_m": 2.3057078275913447e-07,
+          "minimum_toe_joint_height_m": 0.21653287762687928,
+          "solved_foot_pitch_degrees": -23.524297938614264,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7264569073194573,
+            0.421036932556351,
+            6.24072737793885
+          ],
+          "distal_contact_centroid_m": [
+            0.800729268761421,
+            0.11456606921534136,
+            6.636386627155094
+          ],
+          "target_foot_world_m": [
+            0.7264570061426913,
+            0.421037013273552,
+            6.240727180392269
+          ],
+          "foot_target_residual_m": 2.3517217036038376e-07,
+          "minimum_toe_joint_height_m": 0.0025904189162021113,
+          "solved_foot_pitch_degrees": 23.16124558712597,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.7833333611488342,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.06492336640883853,
+            0.3461598828178854,
+            8.527028303191315
+          ],
+          "distal_contact_centroid_m": [
+            -0.12906657076522984,
+            0.36275983789453653,
+            9.05036382222297
+          ],
+          "target_foot_world_m": [
+            -0.0649234296316405,
+            0.346159970412382,
+            8.527028536261497
+          ],
+          "foot_target_residual_m": 2.568883574185042e-07,
+          "minimum_toe_joint_height_m": 0.21008027775816468,
+          "solved_foot_pitch_degrees": -24.26348063092197,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7290181952331068,
+            0.45412149550039904,
+            6.277651303526477
+          ],
+          "distal_contact_centroid_m": [
+            0.8007292333558219,
+            0.11456610779998051,
+            6.636386088797504
+          ],
+          "target_foot_world_m": [
+            0.7290183310757113,
+            0.45412151484490193,
+            6.277651623168062
+          ],
+          "foot_target_residual_m": 3.4784790557144946e-07,
+          "minimum_toe_joint_height_m": 0.002590463601171683,
+          "solved_foot_pitch_degrees": 28.161245587126018,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.7916666865348816,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.05917862881891088,
+            0.33610942946579686,
+            8.674474666061553
+          ],
+          "distal_contact_centroid_m": [
+            -0.12334385178285766,
+            0.36275991004125124,
+            9.197244868228237
+          ],
+          "target_foot_world_m": [
+            -0.05917875088783521,
+            0.336109456733157,
+            8.67447483107441
+          ],
+          "foot_target_residual_m": 2.0705934921353425e-07,
+          "minimum_toe_joint_height_m": 0.20468693200385363,
+          "solved_foot_pitch_degrees": -24.756269092460425,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.731808666959091,
+            0.48256933961729115,
+            6.317382422280284
+          ],
+          "distal_contact_centroid_m": [
+            0.8007294417200482,
+            0.11456610765059631,
+            6.636386191223287
+          ],
+          "target_foot_world_m": [
+            0.7318085946978989,
+            0.4825693839934079,
+            6.317382664090032
+          ],
+          "foot_target_residual_m": 2.5624768085941173e-07,
+          "minimum_toe_joint_height_m": 0.0025904433407590716,
+          "solved_foot_pitch_degrees": 33.161245587126004,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.800000011920929,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.05375314325756167,
+            0.3280099874903273,
+            8.813732945600512
+          ],
+          "distal_contact_centroid_m": [
+            -0.11794331640668558,
+            0.36275989964889394,
+            9.335862358460213
+          ],
+          "target_foot_world_m": [
+            -0.053753090053820035,
+            0.3280100405015689,
+            8.813733024467549
+          ],
+          "foot_target_residual_m": 1.0890748110888214e-07,
+          "minimum_toe_joint_height_m": 0.20023468030229818,
+          "solved_foot_pitch_degrees": -25.03271140015273,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7347678528988977,
+            0.5061280645478443,
+            6.359113059592305
+          ],
+          "distal_contact_centroid_m": [
+            0.8007294040173326,
+            0.11456606046528217,
+            6.636386304292469
+          ],
+          "target_foot_world_m": [
+            0.7347678115053663,
+            0.5061281706219585,
+            6.359113210878293
+          ],
+          "foot_target_residual_m": 1.8934780789530887e-07,
+          "minimum_toe_joint_height_m": 0.0025904083269628203,
+          "solved_foot_pitch_degrees": 38.16124558712599,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.8083333373069763,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.04866270708139051,
+            0.32176056569491995,
+            8.94438394969939
+          ],
+          "distal_contact_centroid_m": [
+            -0.11287751738976944,
+            0.36275993121809796,
+            9.46588130775947
+          ],
+          "target_foot_world_m": [
+            -0.04866277605160903,
+            0.32176058074798086,
+            8.944384008790818
+          ],
+          "foot_target_residual_m": 9.206129818453444e-08,
+          "minimum_toe_joint_height_m": 0.19667220530693108,
+          "solved_foot_pitch_degrees": -25.107831592460425,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7378362952058377,
+            0.524722501682396,
+            6.402040888765927
+          ],
+          "distal_contact_centroid_m": [
+            0.8007294884109317,
+            0.11456600793753417,
+            6.636386428028896
+          ],
+          "target_foot_world_m": [
+            0.737836190816678,
+            0.5247226865250461,
+            6.4020409381549515
+          ],
+          "foot_target_residual_m": 2.179522371897903e-07,
+          "minimum_toe_joint_height_m": 0.002590341515424699,
+          "solved_foot_pitch_degrees": 43.16124558712604,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.8166666626930237,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.04392089858205389,
+            0.31725920078306763,
+            9.066089426734965
+          ],
+          "distal_contact_centroid_m": [
+            -0.10815768149551737,
+            0.36275995139789047,
+            9.587022975011513
+          ],
+          "target_foot_world_m": [
+            -0.04392099336490919,
+            0.317259198116951,
+            9.066089383398207
+          ],
+          "foot_target_residual_m": 1.0425436415996135e-07,
+          "minimum_toe_joint_height_m": 0.19394964535346354,
+          "solved_foot_pitch_degrees": -24.996653707845045,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.740820948641351,
+            0.5379500155820368,
+            6.443560557721844
+          ],
+          "distal_contact_centroid_m": [
+            0.8007293955843244,
+            0.11456606182433034,
+            6.636386402199078
+          ],
+          "target_foot_world_m": [
+            0.7408209216252448,
+            0.5379501342052015,
+            6.44356061356304
+          ],
+          "foot_target_residual_m": 1.338639769910118e-07,
+          "minimum_toe_joint_height_m": 0.0025904026751031317,
+          "solved_foot_pitch_degrees": 47.92262601852152,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.824999988079071,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.03953870563320611,
+            0.31467548733581224,
+            9.178566749085482
+          ],
+          "distal_contact_centroid_m": [
+            -0.10379231642445978,
+            0.36275999116643587,
+            9.699068168399135
+          ],
+          "target_foot_world_m": [
+            -0.03953874960506168,
+            0.3146754644317988,
+            9.17856662053044
+          ],
+          "foot_target_residual_m": 1.3778431253688062e-07,
+          "minimum_toe_joint_height_m": 0.1921468918537515,
+          "solved_foot_pitch_degrees": -24.684153707845052,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7432332141159398,
+            0.5455143342548355,
+            6.477079956518401
+          ],
+          "distal_contact_centroid_m": [
+            0.8007293832303285,
+            0.11456607046311884,
+            6.636386425979205
+          ],
+          "target_foot_world_m": [
+            0.7432331983127073,
+            0.5455144355956534,
+            6.477079979327936
+          ],
+          "foot_target_residual_m": 1.0507130147260515e-07,
+          "minimum_toe_joint_height_m": 0.002590414972146876,
+          "solved_foot_pitch_degrees": 51.689714195445944,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.8333333134651184,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.03552495558367603,
+            0.3144499555903733,
+            9.28158784499457
+          ],
+          "distal_contact_centroid_m": [
+            -0.09978744491101225,
+            0.3627599640921387,
+            9.801861384753552
+          ],
+          "target_foot_world_m": [
+            -0.03552492913608393,
+            0.3144499397665306,
+            9.28158768894231
+          ],
+          "foot_target_residual_m": 1.5906658120374895e-07,
+          "minimum_toe_joint_height_m": 0.19147272165951446,
+          "solved_foot_pitch_degrees": -24.12525947707582,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7452090917113823,
+            0.5497407219499396,
+            6.504481880786614
+          ],
+          "distal_contact_centroid_m": [
+            0.8007293651965078,
+            0.11456612439301188,
+            6.636386443242203
+          ],
+          "target_foot_world_m": [
+            0.7452091041498756,
+            0.5497407731575084,
+            6.504481872350218
+          ],
+          "foot_target_residual_m": 5.336763048421358e-08,
+          "minimum_toe_joint_height_m": 0.0025904610149821566,
+          "solved_foot_pitch_degrees": 54.76281873142565,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.8416666388511658,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.03188701161603956,
+            0.3155722519821355,
+            9.37496018960713
+          ],
+          "distal_contact_centroid_m": [
+            -0.0961463227964117,
+            0.36063021395887224,
+            9.895314599524555
+          ],
+          "target_foot_world_m": [
+            -0.03188703415280583,
+            0.3155722381427841,
+            9.374960032954522
+          ],
+          "foot_target_residual_m": 1.5886935785187868e-07,
+          "minimum_toe_joint_height_m": 0.1903292361002072,
+          "solved_foot_pitch_degrees": -23.199778707845056,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7467041738724252,
+            0.5518008528866454,
+            6.5251897512202985
+          ],
+          "distal_contact_centroid_m": [
+            0.8007292576711816,
+            0.11456610448797822,
+            6.636386559449576
+          ],
+          "target_foot_world_m": [
+            0.7467042660420314,
+            0.551800919438815,
+            6.525189651568034
+          ],
+          "foot_target_residual_m": 1.5117870674384168e-07,
+          "minimum_toe_joint_height_m": 0.0025904609647756788,
+          "solved_foot_pitch_degrees": 57.0891061034959,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.8500000238418579,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.028626018983263536,
+            0.3154316394791439,
+            9.458657779750558
+          ],
+          "distal_contact_centroid_m": [
+            -0.09286979697483759,
+            0.352772507341743,
+            9.979411052946096
+          ],
+          "target_foot_world_m": [
+            -0.028626081646696624,
+            0.31543157921629744,
+            9.45865754993022
+          ],
+          "foot_target_residual_m": 2.457146813165159e-07,
+          "minimum_toe_joint_height_m": 0.18559585478054524,
+          "solved_foot_pitch_degrees": -21.802543130921983,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7477187244335792,
+            0.5526505628596848,
+            6.539227751196496
+          ],
+          "distal_contact_centroid_m": [
+            0.8007293841626599,
+            0.11456602234763412,
+            6.63638668327181
+          ],
+          "target_foot_world_m": [
+            0.7477186954441072,
+            0.5526507038701859,
+            6.53922754269568
+          ],
+          "foot_target_residual_m": 2.533711527666425e-07,
+          "minimum_toe_joint_height_m": 0.0025903676071217657,
+          "solved_foot_pitch_degrees": 58.670807648703914,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.8583333492279053,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.025732035689124046,
+            0.31427209253642024,
+            9.532937098547626
+          ],
+          "distal_contact_centroid_m": [
+            -0.08995569789186476,
+            0.3394705179142379,
+            10.054208303466702
+          ],
+          "target_foot_world_m": [
+            -0.0257320553185066,
+            0.31427209595491945,
+            9.532937324160091
+          ],
+          "foot_target_residual_m": 2.2649058132675146e-07,
+          "minimum_toe_joint_height_m": 0.17756132460864915,
+          "solved_foot_pitch_degrees": -19.942567169383505,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.748297352544182,
+            0.5529386391437868,
+            6.5472301049116615
+          ],
+          "distal_contact_centroid_m": [
+            0.8007294158253534,
+            0.11456608089056508,
+            6.636386153527624
+          ],
+          "target_foot_world_m": [
+            0.7482972978209554,
+            0.5529387050565984,
+            6.547230398764343
+          ],
+          "foot_target_residual_m": 3.0608581935822504e-07,
+          "minimum_toe_joint_height_m": 0.00259042166372514,
+          "solved_foot_pitch_degrees": 59.57490129773705,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.8666666746139526,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.023187093874940008,
+            0.31188118246028596,
+            9.598258394965804
+          ],
+          "distal_contact_centroid_m": [
+            -0.08739842773453897,
+            0.3213176356802158,
+            10.119844837635492
+          ],
+          "target_foot_world_m": [
+            -0.023187083160370422,
+            0.3118811830318513,
+            9.598258069170058
+          ],
+          "foot_target_residual_m": 3.259723864975268e-07,
+          "minimum_toe_joint_height_m": 0.16652087447315395,
+          "solved_foot_pitch_degrees": -17.71299986169121,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": true,
+          "foot_world_m": [
+            0.7485323263303982,
+            0.5530150554127886,
+            6.550482029766896
+          ],
+          "distal_contact_centroid_m": [
+            0.8007292392661082,
+            0.11456612638466328,
+            6.636386663941835
+          ],
+          "target_foot_world_m": [
+            0.7485324290136426,
+            0.5530150584561658,
+            6.550481791751507
+          ],
+          "foot_target_residual_m": 2.5923818490211737e-07,
+          "minimum_toe_joint_height_m": 0.0025904807503988325,
+          "solved_foot_pitch_degrees": 59.94279330855146,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.875,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.02097079618189939,
+            0.30783865499773533,
+            9.655143457157843
+          ],
+          "distal_contact_centroid_m": [
+            -0.0851896126405791,
+            0.2991231818269081,
+            10.176538265570812
+          ],
+          "target_foot_world_m": [
+            -0.02097076036225487,
+            0.30783863435878944,
+            9.655143506872196
+          ],
+          "foot_target_residual_m": 6.465701792604919e-08,
+          "minimum_toe_joint_height_m": 0.15280258490601642,
+          "solved_foot_pitch_degrees": -15.252062361691218,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.7485688153466571,
+            0.5530249440167327,
+            6.550986859158673
+          ],
+          "distal_contact_centroid_m": [
+            0.8007291777521254,
+            0.11456623839261022,
+            6.636386158284345
+          ],
+          "target_foot_world_m": [
+            0.7485689740542155,
+            0.5530248171767486,
+            6.550987096110078
+          ],
+          "foot_target_residual_m": 3.121256783714311e-07,
+          "minimum_toe_joint_height_m": 0.002590599352927339,
+          "solved_foot_pitch_degrees": 60.0,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.8833333253860474,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.01906401444232425,
+            0.3019966359495648,
+            9.704085753363286
+          ],
+          "distal_contact_centroid_m": [
+            -0.08331730682234786,
+            0.27387673253007017,
+            10.224596372619041
+          ],
+          "target_foot_world_m": [
+            -0.01906393149299357,
+            0.30199661591907534,
+            9.704085291880656
+          ],
+          "foot_target_residual_m": 4.693059020037694e-07,
+          "minimum_toe_joint_height_m": 0.13679697240362568,
+          "solved_foot_pitch_degrees": -12.685956592460423,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.7486774643674996,
+            0.556641767005368,
+            6.551276790380869
+          ],
+          "distal_contact_centroid_m": [
+            0.8008084518478444,
+            0.11775650000816003,
+            6.636638359205068
+          ],
+          "target_foot_world_m": [
+            0.7486775555784705,
+            0.5566416013757614,
+            6.551276506590463
+          ],
+          "foot_target_residual_m": 3.4101261343900056e-07,
+          "minimum_toe_joint_height_m": 0.0060029407997816975,
+          "solved_foot_pitch_degrees": 59.98798076923077,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.8916666507720947,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.017449853794105095,
+            0.2943088848334433,
+            9.74551201248693
+          ],
+          "distal_contact_centroid_m": [
+            -0.08176580662821296,
+            0.2467039860762065,
+            10.264413458713122
+          ],
+          "target_foot_world_m": [
+            -0.01744989915771175,
+            0.2943088882848026,
+            9.745511989398565
+          ],
+          "foot_target_residual_m": 5.101804865113796e-08,
+          "minimum_toe_joint_height_m": 0.11895421014074445,
+          "solved_foot_pitch_degrees": -10.143889284768125,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.7492768533349948,
+            0.5674493450249085,
+            6.5523268993433375
+          ],
+          "distal_contact_centroid_m": [
+            0.8013095722697555,
+            0.12604200579873528,
+            6.638339663971144
+          ],
+          "target_foot_world_m": [
+            0.7492769659574366,
+            0.5674493991076867,
+            6.552326821659779
+          ],
+          "foot_target_residual_m": 1.471172882956428e-07,
+          "minimum_toe_joint_height_m": 0.01561779250690308,
+          "solved_foot_pitch_degrees": 59.86778846153846,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.8999999761581421,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.01611594955530541,
+            0.2846335528827999,
+            9.779751474311531
+          ],
+          "distal_contact_centroid_m": [
+            -0.08051655764322141,
+            0.21881663564458695,
+            10.29648062396526
+          ],
+          "target_foot_world_m": [
+            -0.016115873180273257,
+            0.2846335543183193,
+            9.779751879648323
+          ],
+          "foot_target_residual_m": 4.1247196383180987e-07,
+          "minimum_toe_joint_height_m": 0.09975494073603008,
+          "solved_foot_pitch_degrees": -7.7761008232296716,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.7506076999412618,
+            0.5849947891735069,
+            6.554841299175985
+          ],
+          "distal_contact_centroid_m": [
+            0.8025758438590018,
+            0.13804262232340506,
+            6.642782651744629
+          ],
+          "target_foot_world_m": [
+            0.7506076833294703,
+            0.5849947352495555,
+            6.554841733466113
+          ],
+          "foot_target_residual_m": 4.3794024671774137e-07,
+          "minimum_toe_joint_height_m": 0.030593206150982044,
+          "solved_foot_pitch_degrees": 59.57632211538462,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.9083333611488342,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.015049482131614332,
+            0.2733406203276597,
+            9.807121101683975
+          ],
+          "distal_contact_centroid_m": [
+            -0.07954607254161518,
+            0.19145803387136917,
+            10.321386671345046
+          ],
+          "target_foot_world_m": [
+            -0.015049537493073833,
+            0.27334066623137665,
+            9.807121074097457
+          ],
+          "foot_target_residual_m": 7.702634873890315e-08,
+          "minimum_toe_joint_height_m": 0.08000378697097887,
+          "solved_foot_pitch_degrees": -5.6817498616911895,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.7527335162397794,
+            0.6083563153566609,
+            6.5602106340854
+          ],
+          "distal_contact_centroid_m": [
+            0.8049391860581564,
+            0.15298386515031934,
+            6.651095717676154
+          ],
+          "target_foot_world_m": [
+            0.7527335413971911,
+            0.608356290993474,
+            6.56021047279247
+          ],
+          "foot_target_residual_m": 1.6505111192641115e-07,
+          "minimum_toe_joint_height_m": 0.05018200339710502,
+          "solved_foot_pitch_degrees": 59.14963942307693,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.9166666865348816,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.014234608476061587,
+            0.26127890850480007,
+            9.828037976960983
+          ],
+          "distal_contact_centroid_m": [
+            -0.07882798547671829,
+            0.1658483164544719,
+            10.339819549746798
+          ],
+          "target_foot_world_m": [
+            -0.014234581246410152,
+            0.2612788743771169,
+            9.82803821663427
+          ],
+          "foot_target_residual_m": 2.436173996006215e-07,
+          "minimum_toe_joint_height_m": 0.06076853365721491,
+          "solved_foot_pitch_degrees": -3.9059085155373494,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.7555809849928395,
+            0.6362395795635236,
+            6.570133863066934
+          ],
+          "distal_contact_centroid_m": [
+            0.8086673613403962,
+            0.17043359647414033,
+            6.664227702008517
+          ],
+          "target_foot_world_m": [
+            0.7555810805814245,
+            0.6362395250896242,
+            6.57013413626944
+          ],
+          "foot_target_residual_m": 2.9452367059917675e-07,
+          "minimum_toe_joint_height_m": 0.059411368805316805,
+          "solved_foot_pitch_degrees": 58.67487980769232,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.925000011920929,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.01364887715349448,
+            0.24946767112432275,
+            9.843069317067041
+          ],
+          "distal_contact_centroid_m": [
+            -0.07833090009148762,
+            0.1431289896440294,
+            10.352575540766079
+          ],
+          "target_foot_world_m": [
+            -0.013648959246839648,
+            0.24946771229318232,
+            9.843069132179988
+          ],
+          "foot_target_residual_m": 2.0643985751013695e-07,
+          "minimum_toe_joint_height_m": 0.04215367073195894,
+          "solved_foot_pitch_degrees": -2.4666056309219706,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.7589490085494326,
+            0.6670707925989323,
+            6.5858750672557
+          ],
+          "distal_contact_centroid_m": [
+            0.8138076765910632,
+            0.1900292446867491,
+            6.682992561294745
+          ],
+          "target_foot_world_m": [
+            0.7589490532949156,
+            0.6670708524471993,
+            6.585874708892188
+          ],
+          "foot_target_residual_m": 3.6607155063834436e-07,
+          "minimum_toe_joint_height_m": 0.058776359979621134,
+          "solved_foot_pitch_degrees": 58.19411057692309,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.9333333373069763,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.013264701912772976,
+            0.23887693463662846,
+            9.85293257229729
+          ],
+          "distal_contact_centroid_m": [
+            -0.0780200352256205,
+            0.1243133437435413,
+            10.36055716741487
+          ],
+          "target_foot_world_m": [
+            -0.013264657285027528,
+            0.2388770331952017,
+            9.852932849921977
+          ],
+          "foot_target_residual_m": 2.9796123109479524e-07,
+          "minimum_toe_joint_height_m": 0.025980868315854305,
+          "solved_foot_pitch_degrees": -1.3728556309219606,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.7611005060537415,
+            0.6983501589505203,
+            6.608149845272944
+          ],
+          "distal_contact_centroid_m": [
+            0.8191256327007798,
+            0.21086277425327263,
+            6.708343952460094
+          ],
+          "target_foot_world_m": [
+            0.7611004140105783,
+            0.6983502252297031,
+            6.6081499196589775
+          ],
+          "foot_target_residual_m": 1.3563980212719458e-07,
+          "minimum_toe_joint_height_m": 0.05935379399428892,
+          "solved_foot_pitch_degrees": 57.65625000000001,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.9416666626930237,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.013045350912369058,
+            0.23055992688170357,
+            9.858561193811887
+          ],
+          "distal_contact_centroid_m": [
+            -0.07785534682316153,
+            0.11024045549298604,
+            10.364783531855004
+          ],
+          "target_foot_world_m": [
+            -0.01304538575976627,
+            0.2305599658900626,
+            9.858560800116306
+          ],
+          "foot_target_residual_m": 3.971551380582241e-07,
+          "minimum_toe_joint_height_m": 0.011686772474891624,
+          "solved_foot_pitch_degrees": -0.6036248616911939,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.7629443549126587,
+            0.7295660308818256,
+            6.637434444080919
+          ],
+          "distal_contact_centroid_m": [
+            0.8242800379851417,
+            0.23292669698014357,
+            6.740873028083321
+          ],
+          "target_foot_world_m": [
+            0.7629443474986802,
+            0.7295659703574043,
+            6.637434054475275
+          ],
+          "foot_target_residual_m": 3.9434848925240963e-07,
+          "minimum_toe_joint_height_m": 0.06331826379841893,
+          "solved_foot_pitch_degrees": 57.0673076923077,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.949999988079071,
+      "flight": true,
+      "feet": {
+        "left": {
+          "contact": false,
+          "foot_world_m": [
+            -0.01294921884503071,
+            0.22526643910098137,
+            9.861027669463448
+          ],
+          "distal_contact_centroid_m": [
+            -0.07779287670700473,
+            0.10153756712076668,
+            10.366386164523481
+          ],
+          "target_foot_world_m": [
+            -0.012949269471769914,
+            0.22526649684380884,
+            9.861027776257574
+          ],
+          "foot_target_residual_m": 1.3153815452704732e-07,
+          "minimum_toe_joint_height_m": 0.002946073769777499,
+          "solved_foot_pitch_degrees": -0.14689409246043167,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.7620843904571422,
+            0.7633856393419651,
+            6.6749158741290975
+          ],
+          "distal_contact_centroid_m": [
+            0.8265085500846165,
+            0.25923466236009884,
+            6.780991618671762
+          ],
+          "target_foot_world_m": [
+            0.76208451439407,
+            0.7633856162674033,
+            6.67491588336659
+          ],
+          "foot_target_residual_m": 1.2640462314317997e-07,
+          "minimum_toe_joint_height_m": 0.07538952608702096,
+          "solved_foot_pitch_degrees": 56.5174278846154,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    },
+    {
+      "time_s": 0.9583333134651184,
+      "flight": false,
+      "feet": {
+        "left": {
+          "contact": true,
+          "foot_world_m": [
+            -0.012929192651995457,
+            0.2234123915890982,
+            9.861545106217347
+          ],
+          "distal_contact_centroid_m": [
+            -0.07778384236164244,
+            0.09859278478005562,
+            10.366621658338644
+          ],
+          "target_foot_world_m": [
+            -0.012929128560879216,
+            0.22341249811993036,
+            9.86154472437915
+          ],
+          "foot_target_residual_m": 4.015680487494631e-07,
+          "minimum_toe_joint_height_m": -6.304516055044562e-08,
+          "solved_foot_pitch_degrees": 0.0,
+          "articulation_envelope_violation_degrees": 0
+        },
+        "right": {
+          "contact": false,
+          "foot_world_m": [
+            0.7545047782355058,
+            0.8066122398884401,
+            6.72138414493799
+          ],
+          "distal_contact_centroid_m": [
+            0.8210036434087614,
+            0.2974786629222744,
+            6.828783139425799
+          ],
+          "target_foot_world_m": [
+            0.7545048338848829,
+            0.8066122209628097,
+            6.7213836138143295
+          ],
+          "foot_target_residual_m": 5.343663308213158e-07,
+          "minimum_toe_joint_height_m": 0.1042149027045938,
+          "solved_foot_pitch_degrees": 56.084735576923094,
+          "articulation_envelope_violation_degrees": 0
+        }
+      }
+    }
+  ],
+  "max_planted_distal_contact_velocity_mps": 0.00010928821513638119,
+  "maximum_articulation_envelope_violation_degrees": 0.0,
+  "articulation_limits_classification": "body-configurable engineering limits, not biologically certified; provisional-envelope consolidation deferred"
+}

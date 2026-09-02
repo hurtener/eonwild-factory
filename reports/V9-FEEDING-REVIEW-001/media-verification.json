@@ -1,0 +1,39 @@
+{
+  "status": "LOCAL_MEDIA_COMPLETE_NOT_VISUAL_ACCEPTANCE",
+  "candidate_sha256": "51ef2bc8f7d8990f54948a410c89eb777f57e71b97ba48eb2236524949be3682",
+  "profile_sha256": "5997f17d535522edf378ccb74d1e9c091b2423b3297918c75713413e3f5aca69",
+  "renderer_sha256": "25418c8befb09c77ce77b6ff63ce6ab3283ce1384be96eba34900463c1c4e1b1",
+  "source_time_mapping": "(scene_frame-1)/24; no speedup",
+  "media": [
+    {
+      "view": "side",
+      "path": "build/V9-FEEDING-REVIEW-001/feeding-side.mp4",
+      "sha256": "921ccd05b8cba8b3c8d42b979272dae6fdc2e7e37d5344cf760da1ab235cbb9a",
+      "width": 960,
+      "height": 540,
+      "avg_frame_rate": "24/1",
+      "duration": "6.000000",
+      "nb_read_frames": "144"
+    },
+    {
+      "view": "front",
+      "path": "build/V9-FEEDING-REVIEW-001/feeding-front.mp4",
+      "sha256": "d6823b7d0cfd53d057080cdf6c05b175922b4c3ce5434096c4e69ec86bd044c4",
+      "width": 960,
+      "height": 540,
+      "avg_frame_rate": "24/1",
+      "duration": "6.000000",
+      "nb_read_frames": "144"
+    },
+    {
+      "view": "rear",
+      "path": "build/V9-FEEDING-REVIEW-001/feeding-rear.mp4",
+      "sha256": "88c700bd6168b2ebf443276f34ab9de9608c5149ee22d75e483b0703ee51cb92",
+      "width": 960,
+      "height": 540,
+      "avg_frame_rate": "24/1",
+      "duration": "6.000000",
+      "nb_read_frames": "144"
+    }
+  ]
+}

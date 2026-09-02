@@ -1,0 +1,6 @@
+{
+  "build/V9-NARROW-GAUGE-WALK-002/sweep-run-016-v4-skinned-authority/sweep-0p34000000000000002-fa4aa9445c12/narrow-gauge-walk-root_motion.glb": "b54e3740ea451927b3b812c1be3f4ca6146cc369ad1313be7f08edd5ca741cd3",
+  "catalog/rigs/hero-theropod-v8_3.semantic-rig.json": "35bbcc97654057dc57d2cb7153457c4836bc78d21170f67c33e112f808c27b99",
+  "src/eonwild_motion/planning/airborne_gait.py": "565b51f108df0a445305ab663fd828b001e1b90d83edc87431261ba291f50f08",
+  "src/eonwild_motion/solve/airborne_gait.py": "6af02dbfa33f4cb7d4c74425d54dcac5987a43ce01f8ccebe4b95666dbb5469e"
+}

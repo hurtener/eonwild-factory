@@ -20,7 +20,7 @@ import json
 import math
 from pathlib import Path
 import struct
-from typing import Any, Iterable, Mapping, Sequence
+from typing import Any, Mapping, Sequence
 
 from .contracts.v9_models import CANONICAL_COORDINATE_SYSTEM, canonical_hash, ensure_finite
 from .errors import ContractError, ValidationFailure
@@ -32,6 +32,8 @@ Vec3 = tuple[float, float, float]
 Mat4 = tuple[tuple[float, float, float, float], ...]
 
 POLICY_SCHEMA = "eonwild.motion.family_narrow_gauge_contract.v1"
+POLICY_SCHEMA_V2 = "eonwild.motion.family_narrow_gauge_contract.v2"
+POLICY_SCHEMA_V3 = "eonwild.motion.family_narrow_gauge_contract.v3"
 REPORT_SCHEMA = "eonwild.motion.v9.contact-gauge-report.v1"
 SOURCE_SCHEMA = "eonwild.motion.v9.contact-gauge-source.v1"
 
@@ -49,6 +51,16 @@ _POLICY_KEYS = {
     "acceptanceGates",
     "primarySources",
     "recommendedEvidence",
+}
+_POLICY_V2_KEYS = _POLICY_KEYS | {
+    "predecessor",
+    "metricSemantics",
+    "plannerTargets",
+    "calibrationEvidence",
+}
+_POLICY_V3_KEYS = _POLICY_V2_KEYS | {
+    "laneExtensionEvidence",
+    "plannerRecommendation",
 }
 _SOURCE_KEYS = {
     "schema",
@@ -219,6 +231,15 @@ def _stats(values: Sequence[float], *, unit: str) -> dict[str, Any]:
     }
 
 
+def _stats_or_unevaluated(
+    values: Sequence[float],
+    *,
+    unit: str,
+    reason: str,
+) -> dict[str, Any] | None:
+    return _stats(values, unit=unit) if values else None
+
+
 def _point(value: Any, *, label: str) -> Vec3:
     if isinstance(value, Mapping):
         if set(value) != {"point_m", "weight"}:
@@ -279,16 +300,9 @@ class ContactGaugeResult:
         write_json(path, self.report)
 
 
-def _validate_narrow_gauge_policy(policy: Mapping[str, Any]) -> dict[str, Any]:
-    """Validate the accepted family policy without silently widening it."""
+def _validate_policy_common(policy: Mapping[str, Any]) -> None:
+    """Validate facts shared by the immutable V1 and additive V2 policies."""
 
-    if not isinstance(policy, Mapping):
-        raise ContractError("narrow-gauge policy must be an object")
-    _keys(policy, _POLICY_KEYS, label="narrow-gauge policy")
-    if policy["schema"] != POLICY_SCHEMA:
-        raise ContractError("narrow-gauge policy schema is not the accepted version")
-    if policy["status"] != "PROVISIONAL_ENGINEERING_CONTRACT":
-        raise ContractError("narrow-gauge policy must remain provisional")
     if policy["scientificClaim"] is not False or policy["speciesHardcode"] is not False:
         raise ContractError("narrow-gauge policy must remain non-scientific and species-neutral")
 
@@ -340,13 +354,321 @@ def _validate_narrow_gauge_policy(policy: Mapping[str, Any]) -> dict[str, Any]:
     gait_states = policy["gaitStates"]
     if not isinstance(gait_states, Mapping) or "straight_walk" not in gait_states:
         raise ContractError("narrow-gauge policy must include straight_walk")
+
+
+def _validate_policy_v2(policy: Mapping[str, Any]) -> None:
+    """Require planner inputs and observed metrics to remain disjoint."""
+
+    predecessor = policy["predecessor"]
+    if not isinstance(predecessor, Mapping):
+        raise ContractError("V2 narrow-gauge predecessor must be an object")
+    _keys(predecessor, {"path", "sha256", "schema"}, label="V2 narrow-gauge predecessor")
+    if predecessor["schema"] != POLICY_SCHEMA:
+        raise ContractError("V2 narrow-gauge predecessor must identify the V1 policy")
+    if not isinstance(predecessor["path"], str) or not predecessor["path"]:
+        raise ContractError("V2 narrow-gauge predecessor path is required")
+    predecessor_sha = predecessor["sha256"]
+    if not isinstance(predecessor_sha, str) or len(predecessor_sha) != 64:
+        raise ContractError("V2 narrow-gauge predecessor SHA-256 is malformed")
+    try:
+        int(predecessor_sha, 16)
+    except ValueError as exc:
+        raise ContractError("V2 narrow-gauge predecessor SHA-256 is malformed") from exc
+
+    semantics = policy["metricSemantics"]
+    if not isinstance(semantics, Mapping):
+        raise ContractError("V2 narrow-gauge metricSemantics must be an object")
+    required_semantics = {
+        "targetLaneCenterSeparationNormalized": "planner_input",
+        "stanceSupportWidthNormalized": "measured_simultaneous_support",
+        "stepWidthNormalized": "measured_successive_contralateral_footfalls",
+    }
+    _keys(semantics, set(required_semantics), label="V2 narrow-gauge metricSemantics")
+    observed_kinds: set[str] = set()
+    for name, expected_kind in required_semantics.items():
+        value = semantics[name]
+        if not isinstance(value, Mapping):
+            raise ContractError(f"V2 narrow-gauge semantic {name} must be an object")
+        _keys(
+            value,
+            {"kind", "normalizer", "definition", "admissionRole"},
+            label=f"V2 narrow-gauge semantic {name}",
+        )
+        if value["kind"] != expected_kind or value["normalizer"] != "H":
+            raise ContractError(f"V2 narrow-gauge semantic {name} has the wrong kind or normalizer")
+        if not isinstance(value["definition"], str) or not value["definition"].strip():
+            raise ContractError(f"V2 narrow-gauge semantic {name} requires a definition")
+        if name == "targetLaneCenterSeparationNormalized":
+            if value["admissionRole"] != "planner_domain_only_not_observed_metric":
+                raise ContractError("V2 planner semantic must be admitted only as a planner domain")
+        else:
+            if value["admissionRole"] != "measured_output_only_not_planner_domain":
+                raise ContractError(f"V2 observed semantic {name} must not admit planner targets")
+            observed_kinds.add(str(value["kind"]))
+    if len(observed_kinds) != 2:
+        raise ContractError("V2 stance-support and step-width semantics must remain distinct")
+
+    planner_targets = policy["plannerTargets"]
+    if not isinstance(planner_targets, Mapping) or set(planner_targets) != {"straight_walk"}:
+        raise ContractError("V2 narrow-gauge plannerTargets must define straight_walk only")
+    straight = planner_targets["straight_walk"]
+    if not isinstance(straight, Mapping):
+        raise ContractError("V2 straight-walk planner target must be an object")
+    _keys(
+        straight,
+        {
+            "semantic",
+            "targetLaneCenterSeparationHHardEnvelope",
+            "profileOwnsCandidateDomain",
+            "classification",
+            "observedMetricGateSeparationRequired",
+        },
+        label="V2 straight-walk planner target",
+    )
+    if straight["semantic"] != "targetLaneCenterSeparationNormalized":
+        raise ContractError("V2 planner target must use targetLaneCenterSeparationNormalized")
+    envelope = straight["targetLaneCenterSeparationHHardEnvelope"]
+    if not isinstance(envelope, list) or len(envelope) != 2:
+        raise ContractError("V2 planner target hard envelope must contain two values")
+    lower = _number(envelope[0], label="V2 planner target hard-envelope lower", minimum=0.0)
+    upper = _number(envelope[1], label="V2 planner target hard-envelope upper", minimum=0.0)
+    if upper <= lower:
+        raise ContractError("V2 planner target hard envelope must be increasing")
+    if straight["profileOwnsCandidateDomain"] is not True:
+        raise ContractError("V2 planner candidate domain must remain profile-owned")
+    if straight["observedMetricGateSeparationRequired"] is not True:
+        raise ContractError("V2 planner admission must remain separate from observed metrics")
+    if straight["classification"] not in {
+        "engineering_calibration",
+        "art_direction_calibration",
+    }:
+        raise ContractError("V2 planner target must be labeled engineering or art-direction calibration")
+
+    calibration = policy["calibrationEvidence"]
+    if not isinstance(calibration, Mapping):
+        raise ContractError("V2 calibrationEvidence must be an object")
+    _keys(
+        calibration,
+        {
+            "sourcePath",
+            "sourceSha256",
+            "plannerInputTargetLaneCenterSeparationH",
+            "observedStanceSupportWidthHApproxRange",
+            "observedStepWidthHApproxRange",
+            "classification",
+            "scientificClaim",
+        },
+        label="V2 calibrationEvidence",
+    )
+    if calibration["scientificClaim"] is not False:
+        raise ContractError("V2 calibration evidence must remain non-scientific")
+    if calibration["classification"] not in {
+        "engineering_measurement",
+        "art_direction_measurement",
+    }:
+        raise ContractError("V2 calibration evidence must retain an engineering or art-direction label")
+    _number(
+        calibration["plannerInputTargetLaneCenterSeparationH"],
+        label="V2 calibration planner input",
+        minimum=0.0,
+    )
+    for key in (
+        "observedStanceSupportWidthHApproxRange",
+        "observedStepWidthHApproxRange",
+    ):
+        observed = calibration[key]
+        if not isinstance(observed, list) or len(observed) != 2:
+            raise ContractError(f"V2 calibration {key} must contain two values")
+        observed_lower = _number(observed[0], label=f"V2 calibration {key} lower", minimum=0.0)
+        observed_upper = _number(observed[1], label=f"V2 calibration {key} upper", minimum=0.0)
+        if observed_upper < observed_lower:
+            raise ContractError(f"V2 calibration {key} must be ordered")
+
+
+def _validate_policy_v3(policy: Mapping[str, Any]) -> None:
+    """Validate the additive planner-envelope extension without gate drift."""
+
+    predecessor = policy["predecessor"]
+    if not isinstance(predecessor, Mapping):
+        raise ContractError("V3 narrow-gauge predecessor must be an object")
+    _keys(predecessor, {"path", "sha256", "schema"}, label="V3 narrow-gauge predecessor")
+    if predecessor.get("schema") != POLICY_SCHEMA_V2:
+        raise ContractError("V3 narrow-gauge predecessor must identify the V2 policy")
+    if not isinstance(predecessor.get("path"), str) or not predecessor["path"]:
+        raise ContractError("V3 narrow-gauge predecessor path is required")
+    predecessor_sha = predecessor.get("sha256")
+    if not isinstance(predecessor_sha, str) or len(predecessor_sha) != 64:
+        raise ContractError("V3 narrow-gauge predecessor SHA-256 is malformed")
+    try:
+        int(predecessor_sha, 16)
+    except ValueError as exc:
+        raise ContractError("V3 narrow-gauge predecessor SHA-256 is malformed") from exc
+
+    # Reuse the mature V2 semantic/planner/calibration validation while
+    # validating V3's own predecessor separately above.
+    v2_shape = {key: policy[key] for key in _POLICY_V2_KEYS}
+    v2_shape["predecessor"] = {
+        "path": "immutable-v1-placeholder.json",
+        "sha256": "0" * 64,
+        "schema": POLICY_SCHEMA,
+    }
+    _validate_policy_v2(v2_shape)
+
+    planner = policy["plannerTargets"]["straight_walk"]
+    if planner["targetLaneCenterSeparationHHardEnvelope"] != [0.0, 0.36]:
+        raise ContractError("V3 planner hard envelope must be exactly 0.0..0.36 H")
+    extension = policy["laneExtensionEvidence"]
+    if not isinstance(extension, Mapping):
+        raise ContractError("V3 lane-extension evidence must be an object")
+    _keys(
+        extension,
+        {"sourcePath", "sourceSha256", "classification", "scientificClaim", "fitDisposition"},
+        label="V3 lane-extension evidence",
+    )
+    if extension["scientificClaim"] is not False:
+        raise ContractError("V3 lane-extension evidence must remain non-scientific")
+    if extension["classification"] != "engineering_fit_evidence":
+        raise ContractError("V3 lane-extension evidence classification is unsupported")
+    if extension["fitDisposition"] != "planner_extension_only_not_candidate_acceptance":
+        raise ContractError("V3 lane-extension fit may not imply candidate acceptance")
+    recommendation = policy["plannerRecommendation"]
+    if recommendation != {
+        "gaitState": "straight_walk",
+        "targetLaneCenterSeparationH": 0.35,
+        "automaticSelection": False,
+        "classification": "engineering_art_direction_recommendation",
+    }:
+        raise ContractError("V3 planner recommendation must be 0.35 H with no auto-selection")
+
+
+def _validate_narrow_gauge_policy(policy: Mapping[str, Any]) -> dict[str, Any]:
+    """Validate immutable V1 or additive V2/V3 semantics without coercion."""
+
+    if not isinstance(policy, Mapping):
+        raise ContractError("narrow-gauge policy must be an object")
+    schema = policy.get("schema")
+    if schema == POLICY_SCHEMA:
+        _keys(policy, _POLICY_KEYS, label="narrow-gauge policy")
+        if policy["status"] != "PROVISIONAL_ENGINEERING_CONTRACT":
+            raise ContractError("V1 narrow-gauge policy must remain provisional")
+    elif schema == POLICY_SCHEMA_V2:
+        _keys(policy, _POLICY_V2_KEYS, label="narrow-gauge policy")
+        if policy["status"] != "PROVISIONAL_ENGINEERING_CALIBRATION_POLICY":
+            raise ContractError("V2 narrow-gauge policy must remain provisional calibration")
+    elif schema == POLICY_SCHEMA_V3:
+        _keys(policy, _POLICY_V3_KEYS, label="narrow-gauge policy")
+        if policy["status"] != "PROVISIONAL_ENGINEERING_CALIBRATION_POLICY":
+            raise ContractError("V3 narrow-gauge policy must remain provisional calibration")
+    else:
+        raise ContractError("narrow-gauge policy schema is not an accepted version")
+    _validate_policy_common(policy)
+    if schema == POLICY_SCHEMA_V2:
+        _validate_policy_v2(policy)
+    elif schema == POLICY_SCHEMA_V3:
+        _validate_policy_v3(policy)
     return dict(policy)
 
 
 def load_narrow_gauge_policy(path: Path) -> dict[str, Any]:
-    """Load the accepted family policy without silently widening its contract."""
+    """Load an accepted policy and verify additive predecessor bindings."""
 
-    return _validate_narrow_gauge_policy(_read_json(path))
+    resolved = Path(path).resolve(strict=False)
+    policy = _validate_narrow_gauge_policy(_read_json(resolved))
+    if policy["schema"] == POLICY_SCHEMA_V2:
+        predecessor = policy["predecessor"]
+        repository = Path(__file__).resolve().parents[2]
+        predecessor_path = _resolve_repository_path(
+            repository / predecessor["path"],
+            repository,
+            label="V2 narrow-gauge predecessor",
+        )
+        if (
+            not predecessor_path.is_file()
+            or sha256_file(predecessor_path) != predecessor["sha256"]
+        ):
+            raise ContractError("V2 narrow-gauge predecessor is missing or hash-mismatched")
+        predecessor_policy = _validate_narrow_gauge_policy(_read_json(predecessor_path))
+        if predecessor_policy["schema"] != POLICY_SCHEMA:
+            raise ContractError("V2 narrow-gauge predecessor is not the immutable V1 policy")
+        calibration = policy["calibrationEvidence"]
+        calibration_path = _resolve_repository_path(
+            repository / calibration["sourcePath"],
+            repository,
+            label="V2 narrow-gauge calibration evidence",
+        )
+        calibration_sha = calibration["sourceSha256"]
+        if (
+            not isinstance(calibration_sha, str)
+            or len(calibration_sha) != 64
+            or not calibration_path.is_file()
+            or sha256_file(calibration_path) != calibration_sha
+        ):
+            raise ContractError("V2 narrow-gauge calibration evidence is missing or hash-mismatched")
+    elif policy["schema"] == POLICY_SCHEMA_V3:
+        predecessor = policy["predecessor"]
+        repository = Path(__file__).resolve().parents[2]
+        predecessor_path = _resolve_repository_path(
+            repository / predecessor["path"],
+            repository,
+            label="V3 narrow-gauge predecessor",
+        )
+        if (
+            not predecessor_path.is_file()
+            or sha256_file(predecessor_path) != predecessor["sha256"]
+        ):
+            raise ContractError("V3 narrow-gauge predecessor is missing or hash-mismatched")
+        predecessor_policy = load_narrow_gauge_policy(predecessor_path)
+        if predecessor_policy["schema"] != POLICY_SCHEMA_V2:
+            raise ContractError("V3 narrow-gauge predecessor is not the immutable V2 policy")
+        unchanged_fields = (
+            "status",
+            "scientificClaim",
+            "speciesHardcode",
+            "purpose",
+            "evidenceBoundary",
+            "normalization",
+            "metrics",
+            "familyCalibration",
+            "gaitStates",
+            "acceptanceGates",
+            "primarySources",
+            "recommendedEvidence",
+            "metricSemantics",
+            "calibrationEvidence",
+        )
+        drift = [
+            field for field in unchanged_fields
+            if policy[field] != predecessor_policy[field]
+        ]
+        if drift:
+            raise ContractError(
+                f"V3 narrow-gauge policy changed predecessor semantics/gates: {drift}"
+            )
+        predecessor_planner = predecessor_policy["plannerTargets"]["straight_walk"]
+        current_planner = policy["plannerTargets"]["straight_walk"]
+        if {
+            key: value for key, value in current_planner.items()
+            if key != "targetLaneCenterSeparationHHardEnvelope"
+        } != {
+            key: value for key, value in predecessor_planner.items()
+            if key != "targetLaneCenterSeparationHHardEnvelope"
+        }:
+            raise ContractError("V3 planner extension changed non-envelope semantics")
+        extension = policy["laneExtensionEvidence"]
+        evidence_path = _resolve_repository_path(
+            repository / extension["sourcePath"],
+            repository,
+            label="V3 lane-extension evidence",
+        )
+        evidence_sha = extension["sourceSha256"]
+        if (
+            not isinstance(evidence_sha, str)
+            or len(evidence_sha) != 64
+            or not evidence_path.is_file()
+            or sha256_file(evidence_path) != evidence_sha
+        ):
+            raise ContractError("V3 lane-extension evidence is missing or hash-mismatched")
+    return policy
 
 
 def load_contact_gauge_source(path: Path) -> dict[str, Any]:
@@ -572,6 +894,17 @@ def _derive_travel_frame(
         raise ContractError("measured travel is zero; a tangent cannot be inferred")
     travel = _unit(average_velocity, label="measured travel tangent")
 
+    return travel, _derive_anatomical_lateral(frames, up=up, travel=travel), speed
+
+
+def _derive_anatomical_lateral(
+    frames: Sequence[_Frame],
+    *,
+    up: Vec3,
+    travel: Vec3,
+) -> Vec3:
+    """Derive the signed lateral axis from hip geometry for one clip."""
+
     # A hip-left minus hip-right vector supplies the anatomical sign.  Project
     # it onto the ground plane and remove any travel component before
     # aggregating over the whole window; foot positions are deliberately not
@@ -597,7 +930,36 @@ def _derive_travel_frame(
         _project_ground(_sub(anatomical_lateral, _scale(travel, _dot(anatomical_lateral, travel))), up),
         label="anatomical lateral axis",
     )
-    return travel, lateral, speed
+    return lateral
+
+
+def _orient_anatomical_lateral(
+    frames: Sequence[_Frame],
+    *,
+    up: Vec3,
+    travel: Vec3,
+    orientation_basis: Sequence[float] | None = None,
+) -> tuple[Vec3, str]:
+    """Derive hip geometry and stabilize only its sign when hash-bound.
+
+    A whole-leg retarget can move the named hip landmarks across the
+    midline.  Re-normalizing that reflected vector would silently swap the
+    meaning of the profile's left/right roles and make a valid narrow track
+    look like crossover.  The direction still comes from the current clip's
+    named hip geometry; an admitted source basis only fixes the handed sign
+    for comparisons across an animation patch.
+    """
+
+    derived = _derive_anatomical_lateral(frames, up=up, travel=travel)
+    if orientation_basis is None:
+        return derived, "clip-specific named hip left-right geometry"
+    reference = _unit(
+        _project_ground(_vec3(orientation_basis, label="anatomical lateral orientation basis"), up),
+        label="anatomical lateral orientation basis",
+    )
+    if _dot(derived, reference) < 0.0:
+        derived = _scale(derived, -1.0)
+    return derived, "clip-specific named hip geometry, sign-stabilized to hash-bound baseline basis"
 
 
 def _finite_difference(points: Sequence[Vec3], times: Sequence[float], *, label: str) -> tuple[Vec3, ...]:
@@ -739,6 +1101,107 @@ def _toe_off_payload(states: Sequence[bool], times: Sequence[float]) -> list[dic
     ]
 
 
+def _planted_window_metrics(
+    states: Sequence[bool],
+    times: Sequence[float],
+    *,
+    contact_centroids: Sequence[Vec3 | None],
+    sole_centroids: Sequence[Vec3],
+    toe_centroids: Sequence[Vec3],
+    hip_height_m: float,
+    up: Vec3,
+    minimum_frames: int = 3,
+) -> list[dict[str, Any]]:
+    """Persist dense, reproducible sole/toe/contact slide facts per plant.
+
+    The source animation may already contain contact drift.  This function
+    records that measured fact; the candidate pipeline compares candidate
+    windows with its hash-bound baseline using the policy's regression bound.
+    A foot-root residual is intentionally not used as a substitute for these
+    mask-centroid paths.
+    """
+
+    if not (
+        len(states)
+        == len(times)
+        == len(contact_centroids)
+        == len(sole_centroids)
+        == len(toe_centroids)
+    ):
+        raise ContractError("planted-window arrays must have one value per frame")
+    height = _number(hip_height_m, label="planted-window hip height")
+    if height <= 0.0:
+        raise ContractError("planted-window hip height must be positive")
+    if not isinstance(minimum_frames, int) or isinstance(minimum_frames, bool) or minimum_frames < 2:
+        raise ContractError("planted-window minimum frame count must be at least two")
+
+    def segment_slide(points: Sequence[Vec3], start: int, end: int, *, label: str) -> dict[str, Any]:
+        values = [
+            _norm(_project_ground(_sub(points[index], points[index - 1]), up))
+            for index in range(start + 1, end + 1)
+        ]
+        path_m = math.fsum(values)
+        net_m = _norm(_project_ground(_sub(points[end], points[start]), up))
+        step_stats = _stats(values, unit="m") if values else None
+        normalized = [value / height for value in values]
+        normalized_stats = _stats(normalized, unit="ratio") if normalized else None
+        return {
+            "label": label,
+            "step_count": len(values),
+            "step_slide_m": step_stats,
+            "step_slide_over_hip_height": normalized_stats,
+            "path_m": path_m,
+            "path_over_hip_height": path_m / height,
+            "net_displacement_m": net_m,
+            "net_displacement_over_hip_height": net_m / height,
+            "max_step_m": max(values) if values else 0.0,
+            "max_step_over_hip_height": max(normalized) if normalized else 0.0,
+        }
+
+    windows: list[dict[str, Any]] = []
+    start: int | None = None
+    for index, state in enumerate(tuple(states) + (False,)):
+        if state and start is None:
+            start = index
+            continue
+        if state or start is None:
+            continue
+        end = index - 1
+        frame_count = end - start + 1
+        window: dict[str, Any] = {
+            "start_frame": start,
+            "end_frame": end,
+            "start_time_s": times[start],
+            "end_time_s": times[end],
+            "duration_s": times[end] - times[start],
+            "frame_count": frame_count,
+            "state": "PLANTED" if frame_count >= minimum_frames else "SHORT_PLANT_UNEVALUATED",
+        }
+        if frame_count >= minimum_frames:
+            contact_points = [contact_centroids[item] for item in range(start, end + 1)]
+            if any(point is None for point in contact_points):
+                raise ContractError("a planted state window is missing a contact centroid")
+            window["slide"] = {
+                "contact": segment_slide(
+                    tuple(point for point in contact_points if point is not None),
+                    0,
+                    frame_count - 1,
+                    label="contact_centroid",
+                ),
+                "sole": segment_slide(sole_centroids, start, end, label="sole_centroid"),
+                "toe": segment_slide(toe_centroids, start, end, label="toe_centroid"),
+            }
+        else:
+            window["reason"] = "contact state did not persist for the minimum dense window"
+        windows.append(window)
+        start = None
+    # A short or synthetic probe may contain no qualifying planted window.
+    # Preserve its measured contact states and explicit short-window records;
+    # the candidate pipeline rejects such input at its planted-slide gate,
+    # while the generic frame analyzer can still report other valid metrics.
+    return windows
+
+
 def _engineering_envelope(policy: Mapping[str, Any], gait_state: str) -> dict[str, Any]:
     states = policy["gaitStates"]
     if gait_state not in states:
@@ -753,6 +1216,20 @@ def _engineering_envelope(policy: Mapping[str, Any], gait_state: str) -> dict[st
         "source_policy_status": policy["status"],
         "comparison": "informational_engineering_envelope_not_physical_acceptance",
     }
+    if policy["schema"] in {POLICY_SCHEMA_V2, POLICY_SCHEMA_V3}:
+        envelope["metric_semantics"] = dict(policy["metricSemantics"])
+        envelope["planner_target"] = dict(policy["plannerTargets"][gait_state])
+        envelope["planner_target"]["comparison"] = (
+            "planner_domain_only_never_compared_to_observed_stance_or_step_envelopes"
+        )
+        envelope["observed_metric_envelopes"] = {
+            key: state[key]
+            for key in (
+                "stanceSupportWidthHObservedCalibrationRange",
+                "stepWidthHObservedCalibrationRange",
+            )
+            if key in state
+        }
     for key in (
         "stanceSupportWidthHSoftBand",
         "stanceSupportWidthHHardEnvelope",
@@ -778,6 +1255,13 @@ def analyze_frame_sequence(
     policy_sha256: str | None = None,
     source_profile_sha256: str | None = None,
     ground_level_m: float = 0.0,
+    travel_tangent_basis: Sequence[float] | None = None,
+    travel_tangent_basis_source: str | None = None,
+    travel_tangent_basis_sha256: str | None = None,
+    lateral_axis_basis: Sequence[float] | None = None,
+    lateral_axis_basis_source: str | None = None,
+    lateral_axis_basis_sha256: str | None = None,
+    planted_window_min_frames: int = 3,
 ) -> ContactGaugeResult:
     """Analyze generic frame data with no source- or species-specific branch."""
 
@@ -803,6 +1287,7 @@ def analyze_frame_sequence(
                 "sha256": policy_sha256,
                 "scientific_claim": False,
                 "species_hardcode": False,
+                "metric_semantics": policy.get("metricSemantics"),
             },
             "coordinate_system": _COORDINATE_SYSTEM,
             "sampling": {
@@ -825,11 +1310,45 @@ def analyze_frame_sequence(
         ensure_finite(report, label="unsupported turn report")
         return ContactGaugeResult(report=report, report_sha256=canonical_hash(report))
     up = (0.0, 1.0, 0.0)
-    travel, lateral, travel_speed = _derive_travel_frame(
-        parsed_frames,
-        up=up,
-        travel_epsilon_mps=float(parsed_thresholds["travel_epsilon_mps"]),
-    )
+    if travel_tangent_basis is None:
+        travel, _measured_lateral, travel_speed = _derive_travel_frame(
+            parsed_frames,
+            up=up,
+            travel_epsilon_mps=float(parsed_thresholds["travel_epsilon_mps"]),
+        )
+        lateral, lateral_axis_derivation = _orient_anatomical_lateral(
+            parsed_frames,
+            up=up,
+            travel=travel,
+            orientation_basis=lateral_axis_basis,
+        )
+        tangent_basis = {
+            "source": "clip_root_ground_displacement",
+            "clip_motion_used": True,
+            "hash_sha256": None,
+        }
+    else:
+        if not isinstance(travel_tangent_basis_source, str) or not travel_tangent_basis_source:
+            raise ContractError("an explicit travel tangent requires a provenance source")
+        travel = _unit(
+            _project_ground(_vec3(travel_tangent_basis, label="travel tangent basis"), up),
+            label="explicit travel tangent basis",
+        )
+        lateral, lateral_axis_derivation = _orient_anatomical_lateral(
+            parsed_frames,
+            up=up,
+            travel=travel,
+            orientation_basis=lateral_axis_basis,
+        )
+        # A basis is not a measurement of this clip's travel speed.  Keep the
+        # speed fact honest while allowing headings/ground projections to be
+        # evaluated in a hash-bound external frame.
+        travel_speed = 0.0
+        tangent_basis = {
+            "source": travel_tangent_basis_source,
+            "clip_motion_used": False,
+            "hash_sha256": travel_tangent_basis_sha256,
+        }
 
     times = [frame.time_s for frame in parsed_frames]
     hip_heights = [_dot(frame.hip_center_m, up) - ground_level for frame in parsed_frames]
@@ -849,6 +1368,8 @@ def analyze_frame_sequence(
     contact_states: dict[str, list[bool]] = {"left": [], "right": []}
     contact_centroids: dict[str, list[Vec3 | None]] = {"left": [], "right": []}
     contact_speeds: dict[str, list[float]] = {"left": [], "right": []}
+    sole_centroids: dict[str, list[Vec3]] = {"left": [], "right": []}
+    toe_centroids: dict[str, list[Vec3]] = {"left": [], "right": []}
     floor_facts: dict[str, dict[str, list[float]]] = {
         side: {
             "sole_gap": [],
@@ -887,6 +1408,8 @@ def analyze_frame_sequence(
             toe_centroid = toe_centroids_for_velocity[side][frame_index]
             all_centroid = _weighted_centroid(all_points, label=f"frame {frame_index} {side} mask")
             geometric_centroids[side].append(all_centroid)
+            sole_centroids[side].append(sole_centroid)
+            toe_centroids[side].append(toe_centroid)
             sole_gaps = [_dot(point, up) - ground_level for point, _ in foot.sole_points]
             toe_gaps = [_dot(point, up) - ground_level for point, _ in foot.toe_points]
             floor_facts[side]["sole_gap"].append(min(sole_gaps))
@@ -932,6 +1455,7 @@ def analyze_frame_sequence(
                 "sole_centroid_m": list(sole_centroid),
                 "contact_centroid_m": None if not contact else list(candidate_centroid or all_centroid),
                 "contact": contact,
+                "contact_state": "PLANTED" if contact else "SWING",
                 "relative_contact_velocity_mps": relative_speed,
                 "foot_heading_degrees": math.degrees(heading_radians),
                 "sole_min_gap_m": min(sole_gaps),
@@ -943,18 +1467,38 @@ def analyze_frame_sequence(
 
         left_contact = contact_centroids["left"][-1]
         right_contact = contact_centroids["right"][-1]
-        if left_contact is not None and right_contact is not None:
-            hip_center = frame.hip_center_m
-            left_track_signed = _dot(_sub(left_contact, hip_center), lateral)
-            right_track_signed = _dot(_sub(right_contact, hip_center), lateral)
-            support_width = abs(left_track_signed - right_track_signed)
-            crossover = (
-                left_track_signed < -float(parsed_thresholds["crossover_epsilon_m"])
-                or right_track_signed > float(parsed_thresholds["crossover_epsilon_m"])
+        hip_center = frame.hip_center_m
+        # Track-to-midline and crossover are per-foot active-contact facts, not
+        # only simultaneous bilateral support facts.  Alternating gait clips
+        # otherwise produce null tracks and a vacuous ``crossover: false`` for
+        # every unilateral planted frame.  Support width remains defined only
+        # when both contacts are present; the pipeline uses the explicit
+        # touchdown-step fallback when support is unavailable.
+        left_track_signed = (
+            _dot(_sub(left_contact, hip_center), lateral)
+            if left_contact is not None
+            else None
+        )
+        right_track_signed = (
+            _dot(_sub(right_contact, hip_center), lateral)
+            if right_contact is not None
+            else None
+        )
+        support_width = (
+            abs(left_track_signed - right_track_signed)
+            if left_track_signed is not None and right_track_signed is not None
+            else None
+        )
+        crossover = (
+            (
+                left_track_signed is not None
+                and left_track_signed < -float(parsed_thresholds["crossover_epsilon_m"])
             )
-        else:
-            left_track_signed = right_track_signed = support_width = None
-            crossover = None
+            or (
+                right_track_signed is not None
+                and right_track_signed > float(parsed_thresholds["crossover_epsilon_m"])
+            )
+        )
         frame_facts.append(
             {
                 "frame": frame_index,
@@ -976,7 +1520,7 @@ def analyze_frame_sequence(
         for index in range(len(parsed_frames))
         if contact_centroids["left"][index] is not None and contact_centroids["right"][index] is not None
     ]
-    if not simultaneous_indices:
+    if not simultaneous_indices and travel_tangent_basis is None:
         raise ContractError("no simultaneous bilateral contact frames for support-width measurement")
     support_widths: list[float] = []
     left_tracks: list[float] = []
@@ -1076,18 +1620,24 @@ def analyze_frame_sequence(
                 "weight_threshold": "input-defined",
                 "proxy_forbidden": "ankle_or_toe_root_origin_alone",
             },
-            "track_to_midline_m": _stats(left_tracks if side == "left" else right_tracks, unit="m"),
-            "track_to_midline_over_hip_width": _stats(
+            "track_to_midline_m": _stats_or_unevaluated(
+                left_tracks if side == "left" else right_tracks,
+                unit="m",
+                reason="no simultaneous bilateral contact frames",
+            ),
+            "track_to_midline_over_hip_width": _stats_or_unevaluated(
                 left_tracks_over_width if side == "left" else right_tracks_over_width,
                 unit="ratio",
+                reason="no simultaneous bilateral contact frames",
             ),
-            "track_to_midline_over_hip_height": _stats(
+            "track_to_midline_over_hip_height": _stats_or_unevaluated(
                 [
                     (left_tracks[position] if side == "left" else right_tracks[position])
                     / canonical_hip_height
                     for position, index in enumerate(simultaneous_indices)
                 ],
                 unit="ratio",
+                reason="no simultaneous bilateral contact frames",
             ),
             "foot_heading_degrees": _stats(heading_values[side], unit="degrees"),
             "floor": {
@@ -1101,9 +1651,23 @@ def analyze_frame_sequence(
             "contact_occupancy": sum(contact_states[side]) / len(contact_states[side]),
         }
 
+    planted_windows = {
+        side: _planted_window_metrics(
+            contact_states[side],
+            times,
+            contact_centroids=contact_centroids[side],
+            sole_centroids=sole_centroids[side],
+            toe_centroids=toe_centroids[side],
+            hip_height_m=canonical_hip_height,
+            up=up,
+            minimum_frames=planted_window_min_frames,
+        )
+        for side in ("left", "right")
+    }
+
     report: dict[str, Any] = {
         "schema": REPORT_SCHEMA,
-        "status": "PASS",
+        "status": "PASS_EXPLICIT_BASIS" if travel_tangent_basis is not None else "PASS",
         "source": {
             "id": source_id,
             "clip": clip_name,
@@ -1117,6 +1681,7 @@ def analyze_frame_sequence(
             "sha256": policy_sha256,
             "scientific_claim": False,
             "species_hardcode": False,
+            "metric_semantics": policy.get("metricSemantics"),
         },
         "coordinate_system": _COORDINATE_SYSTEM,
         "sampling": {
@@ -1130,7 +1695,21 @@ def analyze_frame_sequence(
             "travel_tangent": list(travel),
             "lateral_axis": list(lateral),
             "travel_speed_mps": travel_speed,
-            "axis_derivation": "measured root ground displacement; static forward labels are not consumed",
+            "axis_derivation": (
+                "measured root ground displacement plus clip-specific named hip left-right geometry"
+                if travel_tangent_basis is None and lateral_axis_basis is None
+                else (
+                    "measured root ground displacement plus " + lateral_axis_derivation
+                    if travel_tangent_basis is None
+                    else "explicit hash-bound tangent basis plus " + lateral_axis_derivation
+                )
+            ),
+            "lateral_axis_basis": {
+                "source": lateral_axis_basis_source,
+                "hash_sha256": lateral_axis_basis_sha256,
+                "orientation_only": lateral_axis_basis is not None,
+            },
+            "travel_tangent_basis": tangent_basis,
             "normalization": {
                 "hip_height_H_m": canonical_hip_height,
                 "hip_width_W_m": canonical_hip_width,
@@ -1141,11 +1720,49 @@ def analyze_frame_sequence(
             "hip_height_m": hip_height,
             "hip_width_m": hip_width,
             "feet": per_foot,
-            "support_width_m": _stats(support_widths, unit="m"),
-            "support_width_over_hip_width": _stats(support_over_width, unit="ratio"),
-            "support_width_over_hip_height": _stats(support_over_height, unit="ratio"),
-            "left_track_to_midline_over_hip_width": _stats(left_tracks_over_width, unit="ratio"),
-            "right_track_to_midline_over_hip_width": _stats(right_tracks_over_width, unit="ratio"),
+            "stance_support_width_m": _stats_or_unevaluated(
+                support_widths,
+                unit="m",
+                reason="no simultaneous bilateral contact frames",
+            ),
+            "stance_support_width_over_hip_width": _stats_or_unevaluated(
+                support_over_width,
+                unit="ratio",
+                reason="no simultaneous bilateral contact frames",
+            ),
+            "stance_support_width_over_hip_height": _stats_or_unevaluated(
+                support_over_height,
+                unit="ratio",
+                reason="no simultaneous bilateral contact frames",
+            ),
+            # Explicit compatibility aliases for V1 report consumers. The
+            # semantic map below forbids treating these observed simultaneous
+            # support facts as planner lane-centre inputs.
+            "support_width_m": _stats_or_unevaluated(
+                support_widths,
+                unit="m",
+                reason="no simultaneous bilateral contact frames",
+            ),
+            "support_width_over_hip_width": _stats_or_unevaluated(
+                support_over_width,
+                unit="ratio",
+                reason="no simultaneous bilateral contact frames",
+            ),
+            "support_width_over_hip_height": _stats_or_unevaluated(
+                support_over_height,
+                unit="ratio",
+                reason="no simultaneous bilateral contact frames",
+            ),
+            "left_track_to_midline_over_hip_width": _stats_or_unevaluated(
+                left_tracks_over_width,
+                unit="ratio",
+                reason="no simultaneous bilateral contact frames",
+            ),
+            "right_track_to_midline_over_hip_width": _stats_or_unevaluated(
+                right_tracks_over_width,
+                unit="ratio",
+                reason="no simultaneous bilateral contact frames",
+            ),
             "step_width_m": None if not step_widths else _stats(step_widths, unit="m"),
             "step_width_over_hip_width": (
                 None
@@ -1157,6 +1774,28 @@ def analyze_frame_sequence(
             ),
             "step_width_over_hip_height": step_width_normalized["values"],
             "step_width_normalized": step_width_normalized,
+            "metric_semantics": {
+                "target_lane_center_separation_over_hip_height": {
+                    "kind": "planner_input",
+                    "measured_here": False,
+                    "value": None,
+                },
+                "stance_support_width_over_hip_height": {
+                    "kind": "measured_simultaneous_support",
+                    "measured_here": bool(support_widths),
+                    "value_key": "stance_support_width_over_hip_height",
+                },
+                "step_width_over_hip_height": {
+                    "kind": "measured_successive_contralateral_footfalls",
+                    "measured_here": bool(step_widths),
+                    "value_key": "step_width_over_hip_height",
+                },
+                "deprecated_aliases": {
+                    "support_width_m": "stance_support_width_m",
+                    "support_width_over_hip_width": "stance_support_width_over_hip_width",
+                    "support_width_over_hip_height": "stance_support_width_over_hip_height",
+                },
+            },
             "crossover": {
                 "observed": bool(crossovers),
                 "frame_count": len(crossovers),
@@ -1170,6 +1809,7 @@ def analyze_frame_sequence(
                 }
                 for side in ("left", "right")
             },
+            "planted_windows": planted_windows,
         },
         "engineering_envelopes": engineering_envelope,
         "thresholds": {
@@ -1177,11 +1817,13 @@ def analyze_frame_sequence(
             "classification": "engineering_envelope_input_not_measured_fact",
         },
         "frame_facts": frame_facts,
-        "limitations": [
+            "limitations": [
             "Contact/gauge values are measured bookkeeping from supplied geometry and animation samples.",
             "Engineering envelopes are provisional and are not scientific or physical feasibility claims.",
             "No support polygon, friction, impulse, whole-body solve, curve adjustment, promotion, or runtime mutation is performed.",
             "Ground level and mask membership are explicit input policy; inherited penetration is reported, not corrected.",
+            "Support-width statistics are unevaluated when this clip has no simultaneous bilateral contact frames; no proxy is substituted.",
+            "Planner target-lane separation is an input owned by a walk profile and is never inferred from or bounded against measured stance-support or step-width output here.",
         ],
     }
     ensure_finite(report, label="contact/gauge report")
@@ -1376,7 +2018,18 @@ def _animation_channels(glb: Glb, animation_name: str) -> tuple[dict[tuple[int, 
         if common_times is None:
             common_times = times
         elif common_times != times:
-            raise ContractError("animation channels do not share a common timeline")
+            # A V9 candidate may add dense contact-control channels while the
+            # immutable source channels retain their original key timeline.
+            # Admission still requires one exact clip domain; each channel's
+            # own strictly increasing samples are interpolated at the
+            # analyzer's requested times.  Different start/end domains would
+            # be ambiguous and remain fail-closed.
+            if (
+                len(times) < 2
+                or abs(times[0] - common_times[0]) > 1.0e-6
+                or abs(times[-1] - common_times[-1]) > 1.0e-6
+            ):
+                raise ContractError("animation channels do not share a common timeline domain")
         key = (node_index, path)
         if key in channels:
             raise ContractError("animation contains duplicate node/property channels")
@@ -1424,6 +2077,8 @@ def _source_frames(
     source: Mapping[str, Any],
     *,
     animation_name: str,
+    sample_count: int | None = None,
+    sample_times: Sequence[float] | None = None,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     geometry = source["geometry"]
     _validate_glb_document_tables(glb)
@@ -1441,10 +2096,51 @@ def _source_frames(
     for label, index in profile_accessor_indices.items():
         _validate_glb_accessor_index(glb, index, label=label)
     channels, timeline = _animation_channels(glb, animation_name)
-    count = int(source["sampling"]["count"])
     timeline_start = timeline[0]
     timeline_end = timeline[-1]
-    times = list(_uniform_times(timeline_start, timeline_end, count, label="animation timeline"))
+    if sample_count is not None and sample_times is not None:
+        raise ContractError("source frame sampling cannot specify count and exact times")
+    if sample_times is None:
+        count = int(
+            source["sampling"]["count"] if sample_count is None else sample_count
+        )
+        if count < 2:
+            raise ContractError("source frame sampling count must be at least two")
+        times = list(
+            _uniform_times(
+                timeline_start, timeline_end, count, label="animation timeline"
+            )
+        )
+    else:
+        times = []
+        for index, value in enumerate(sample_times):
+            if isinstance(value, bool) or not isinstance(value, (int, float)):
+                raise ContractError(
+                    f"source exact sample time {index} must be finite"
+                )
+            time_s = float(value)
+            if not math.isfinite(time_s):
+                raise ContractError(
+                    f"source exact sample time {index} must be finite"
+                )
+            if times and time_s <= times[-1]:
+                raise ContractError("source exact sample times must be strictly increasing")
+            times.append(time_s)
+        count = len(times)
+        if count < 2:
+            raise ContractError("source exact sample times must contain at least two values")
+        if (
+            abs(times[0] - timeline_start) > 1.0e-9
+            or abs(times[-1] - timeline_end) > 1.0e-9
+        ):
+            raise ContractError(
+                "source exact sample times must span the complete animation timeline"
+            )
+        if any(
+            value < timeline_start - 1.0e-9 or value > timeline_end + 1.0e-9
+            for value in times
+        ):
+            raise ContractError("source exact sample time is outside the animation timeline")
     name_to_index = glb.name_to_node
     mesh_index = name_to_index.get(geometry["mesh_node"])
     if mesh_index is None or glb.nodes[mesh_index].get("mesh") is None:
@@ -1591,6 +2287,10 @@ def _source_frames(
         "timeline_end_s": timeline_end,
         "timeline_count": len(timeline),
         "sample_count": len(times),
+        "requested_sample_count": count,
+        "sampling_grid": (
+            "explicit_exact_times" if sample_times is not None else "uniform_count"
+        ),
         "skin_weight_validation": "finite_nonnegative_positive_sum_normalized",
         "mask_counts": {
             side: {
@@ -1613,6 +2313,15 @@ def analyze_glb(
     repository: Path | None = None,
     clip_name: str | None = None,
     gait_state: str = "straight_walk",
+    sample_count: int | None = None,
+    sample_times: Sequence[float] | None = None,
+    travel_tangent_basis: Sequence[float] | None = None,
+    travel_tangent_basis_source: str | None = None,
+    travel_tangent_basis_sha256: str | None = None,
+    lateral_axis_basis: Sequence[float] | None = None,
+    lateral_axis_basis_source: str | None = None,
+    lateral_axis_basis_sha256: str | None = None,
+    planted_window_min_frames: int = 3,
 ) -> ContactGaugeResult:
     """Evaluate one immutable GLB clip through the generic frame analyzer."""
 
@@ -1651,7 +2360,13 @@ def analyze_glb(
     except _GLB_CONTAINER_ERRORS as exc:
         raise ContractError("GLB container is malformed") from exc
     try:
-        frames, extraction = _source_frames(glb, source_profile, animation_name=selected_clip)
+        frames, extraction = _source_frames(
+            glb,
+            source_profile,
+            animation_name=selected_clip,
+            sample_count=sample_count,
+            sample_times=sample_times,
+        )
     except ContractError:
         raise
     except _GLB_CONTAINER_ERRORS as exc:
@@ -1667,6 +2382,13 @@ def analyze_glb(
         policy_sha256=sha256_file(resolved_policy),
         source_profile_sha256=sha256_file(resolved_profile),
         ground_level_m=float(source_profile["geometry"]["ground"]["level_m"]),
+        travel_tangent_basis=travel_tangent_basis,
+        travel_tangent_basis_source=travel_tangent_basis_source,
+        travel_tangent_basis_sha256=travel_tangent_basis_sha256,
+        lateral_axis_basis=lateral_axis_basis,
+        lateral_axis_basis_source=lateral_axis_basis_source,
+        lateral_axis_basis_sha256=lateral_axis_basis_sha256,
+        planted_window_min_frames=planted_window_min_frames,
     )
     result.report["sampling"].update(
         {
@@ -1675,6 +2397,7 @@ def analyze_glb(
             "source_timeline_start_s": extraction["timeline_start_s"],
             "source_timeline_end_s": extraction["timeline_end_s"],
             "source_duration_s": extraction["duration_s"],
+            "sampling_grid": extraction["sampling_grid"],
             "skin_weight_validation": extraction["skin_weight_validation"],
             "mask_counts": extraction["mask_counts"],
         }
@@ -1700,6 +2423,7 @@ def analyze_glb(
 __all__ = [
     "ContactGaugeResult",
     "POLICY_SCHEMA",
+    "POLICY_SCHEMA_V2",
     "REPORT_SCHEMA",
     "SOURCE_SCHEMA",
     "analyze_frame_sequence",
