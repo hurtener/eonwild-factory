@@ -1,0 +1,26 @@
+name: chatgpt-babylon-export
+
+on:
+  push:
+    branches:
+      - chatgpt/babylon-playtest-staging
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke-artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build smoke artifact
+        run: |
+          mkdir -p artifact
+          printf 'Eonwild Babylon export transfer smoke test\n' > artifact/README.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: eonwild-babylon-transfer-smoke
+          path: artifact
+          if-no-files-found: error
+          compression-level: 0
