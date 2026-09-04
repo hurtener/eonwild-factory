@@ -52,6 +52,8 @@ class AirborneGait:
     tail_elevation_degrees: float = 0.0
     flight_foot_lift_body_heights: float = 0.0
     swing_approach_lift_body_heights: float = 0.0
+    stance_ground_offset_left_m: float = 0.0
+    stance_ground_offset_right_m: float = 0.0
     jaw_breathing_min_degrees: float = 0.0
     jaw_breathing_max_degrees: float = 0.0
     jaw_breathing_cycles_per_cycle: int = 1
@@ -103,6 +105,10 @@ class AirborneGait:
             raise ContractError("flight foot lift exceeds body-normalized engineering bounds")
         if not 0 <= self.swing_approach_lift_body_heights <= .15:
             raise ContractError("approach lift exceeds body-normalized engineering bounds")
+        if not 0 <= self.stance_ground_offset_left_m <= .05:
+            raise ContractError("left ground offset exceeds the 5 cm regrounding bound")
+        if not 0 <= self.stance_ground_offset_right_m <= .05:
+            raise ContractError("right ground offset exceeds the 5 cm regrounding bound")
         if not 0 <= self.jaw_breathing_min_degrees <= self.jaw_breathing_max_degrees <= 8:
             raise ContractError("subtle breathing gape must be ordered within zero to eight degrees")
         if self.jaw_breathing_cycles_per_cycle != int(self.jaw_breathing_cycles_per_cycle) or not 1 <= self.jaw_breathing_cycles_per_cycle <= 4:

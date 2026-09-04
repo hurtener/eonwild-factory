@@ -270,6 +270,17 @@ def solve_airborne_gait(source: Glb, *, source_clip: str, semantic_roles: Mappin
             foot_height = float(np.asarray(_world_position(base_w[foot])) @ up - ground)
             desired_foot = origin + forward * foot_plan["forward_m"] + lateral * side_lane
             desired_foot += up * (ground + foot_height + foot_plan["height_m"] - float(desired_foot @ up))
+            # Regrounding: lower this foot's targets by a constant per-side
+            # offset on EVERY frame (stance and swing). A constant shift
+            # preserves C1 continuity, loop closure and the pelvis/root
+            # motion exactly; only distal leg pose changes, bounded to 5 cm
+            # by the gait contract. Zero (default) reproduces legacy output.
+            ground_offset = (
+                gait.stance_ground_offset_left_m if side == "left"
+                else gait.stance_ground_offset_right_m
+            )
+            if ground_offset:
+                desired_foot -= up * ground_offset
             nominal_foot = desired_foot.copy()
             # Rock the articulated foot about the distal contact centroid,
             # not about the ankle: toe tips stay fixed during stance roll-off.

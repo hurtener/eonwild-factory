@@ -98,7 +98,39 @@ continuity/turning/braking, growth hysteresis and the runtime seam.
   is the claim, and conservation (`I·θ` sums to zero per sample) is
   asserted in tests.
 
+## Regrounding outcome: offsets work, the 1 mm gate needs attitude work
+
+`reports/V9-AIRBORNE-RUN-001/reground_run011.py` adds bounded per-side
+stance offsets (`stance_ground_offset_{left,right}_m`, 0–5 cm, default 0
+= byte-identical motion) and iterates solve → 120 Hz skin eval → adjust.
+Four evaluated rounds prove two things:
+
+1. **Bind asymmetry is real and fixable.** The source rig holds the left
+   foot ~5 mm higher than the right (identical flat-foot attitude,
+   `solved_foot_pitch` 0° both sides, yet 5.96 vs 0.75 mm sole gaps).
+   Per-side offsets equalize minima to +0.77/+0.75 mm with zero
+   penetration — the mechanism is shippable, tested
+   (`test_ground_offset_shifts_stance_targets_preserving_c1`: exact
+   per-frame drop, loop seam preserved, pelvis/root untouched).
+2. **Rigid shifts cannot pass the 1 mm gate.** The within-stance toe
+   curve has ~7 mm of shape (left: hover-then-touch-late; right:
+   touch-then-rock-up) that no constant shift fits inside a
+   [−0.5, +2.0] mm window — proven across offsets 7–14 mm, push-off
+   40–60°, recovery 15–30°. The residual blocker is early/late-stance
+   toe engagement (touchdown attitude + toe-curl program), i.e. stance
+   re-articulation with visual review — scoped, not guessed at here.
+
+No fake Run011 is shipped: the candidate directory holds the measured
+rounds with full receipts, and the bar for the re-articulation pass is
+quantified (every stance pair persistent at 1 mm, skate < 0.35 m/s).
+
+Side clarification from the data: the sole mask rides ~219 mm up — that
+is correct digitigrade anatomy (metatarsal pad never touches); the toe
+channel is the contact, and the gate already evaluates it as such.
+
 ## Real-artifact authority: Run010 + Sprint006 under the new gate
+
+## Calibration anchors (sourced, weak — labeled as such)
 
 `evaluate_real_artifacts.py` runs `evaluate_airborne_skin_with_authority`
 on the user-approved Run010/Sprint006 candidates (same floor binding as
@@ -147,6 +179,13 @@ whoever runs the calibration pass):
   is the first calibration datum: art built to 30 mm semantics fails
   1–5 mm and skates at 15 mm. The regrounding pass decides the release
   numbers, the gate enforces them.
+
+Applied so far (`dynamics/calibration.py`, all sourced 2026-09-04):
+Fr = v²/(gl), walk→run ≈ 0.5, amble→symmetric-run ≈ 1.0, ostrich
+70 km/h anchor. Run010 reports Fr 1.22 run-regime with flight, Sprint006
+Fr 2.82 — both PASS plausibility with zero flags. Capacity force/power
+priors stay provisional: no citable GRF/power numbers were found in
+reachable open sources, and none are claimed.
 
 ## Adversarial review fixes (P0, applied after first pass)
 

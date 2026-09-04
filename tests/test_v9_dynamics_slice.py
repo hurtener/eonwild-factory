@@ -38,6 +38,7 @@ from eonwild_motion.dynamics.contact_authority import (
     evaluate_contact_authority,
     ground_plane_witness,
 )
+from eonwild_motion.glb.container import Glb
 from eonwild_motion.dynamics.evidence import (
     figure_ballistic_vs_kinematic,
     figure_budgets_and_growth,
@@ -707,3 +708,111 @@ def test_bite_window_couples_tail_to_head_sweep():
     assert window["worst_residual_m"] == pytest.approx(0.0, abs=1e-3)
     assert len(window["tail_track"]["samples"]) == 3
     assert window["tail_track"]["body_counter_track"] is not None
+
+
+def test_froude_regimes_and_plausibility():
+    from eonwild_motion.dynamics.calibration import (
+        classify_gait,
+        froude_number,
+        plausibility_report,
+    )
+
+    assert froude_number(5.62148, 2.6416714066117652) == pytest.approx(1.2194, rel=1e-3)
+    assert classify_gait(0.49)["regime"] == "walk"
+    assert classify_gait(0.5)["regime"] == "walk_run_transition"
+    assert classify_gait(1.0)["regime"] == "run"
+    assert classify_gait(10.01)["regime"] == "extreme_sprint"
+    with pytest.raises(ContractError):
+        froude_number(5.0, 0.0)
+    # Real Run010 numbers: Fr 1.22 run regime with flight — consistent.
+    run = plausibility_report(speed_mps=5.62148, hip_height_m=2.6416714066117652,
+                              duty_factor=0.3667, has_flight=True, label="run010")
+    assert run["verdict"] == "PASS" and run["regime"] == "run"
+    assert run["flags"] == []
+    # Flight below the run transition is flagged, not silently accepted.
+    bad = plausibility_report(speed_mps=1.0, hip_height_m=2.64,
+                              duty_factor=0.4, has_flight=True, label="bad")
+    assert bad["verdict"] == "FAIL" and any("Fr" in flag for flag in bad["flags"])
+    stuck = plausibility_report(speed_mps=5.0, hip_height_m=2.64,
+                                duty_factor=0.6, has_flight=True, label="stuck")
+    assert stuck["verdict"] == "FAIL"
+
+
+def _offset_fixture():
+    from eonwild_motion.solve.whole_body_gait_transition import _build_glb, _encode
+
+    nodes = [{"name": "root", "children": [1]}, {"name": "pelvis", "translation": [0, 1.8, 0], "children": []}]
+    roles = {"root": "root", "pelvis": "pelvis", "legs": {}}
+    for side, sign in (("left", -1), ("right", 1)):
+        start = len(nodes)
+        nodes[1]["children"].append(start)
+        names = [side + part for part in ("hip", "knee", "ankle", "foot", "toe0", "toe1", "toe2")]
+        offsets = [(sign * .18, -.15, 0), (0, -.55, .3), (0, -.65, -.2), (0, -.25, .25),
+                   (0, 0, .15), (0, 0, .13), (0, 0, .1)]
+        for i, (name, offset) in enumerate(zip(names, offsets)):
+            node = {"name": name, "translation": list(offset)}
+            if i < 6:
+                node["children"] = [start + i + 1]
+            nodes.append(node)
+        roles["legs"][side] = {"contactChain": names[:4], "toeChains": [names[4:]]}
+    doc = {"asset": {"version": "2.0"}, "nodes": nodes, "scenes": [{"nodes": [0]}],
+           "scene": 0, "buffers": [{"byteLength": 4}], "bufferViews": [], "accessors": []}
+    base = Glb.from_bytes(_encode(doc, b"\0" * 4))
+    blob = _build_glb(base, "source", np.array([0., 1.]),
+                      {(0, "translation"): np.array([[0., 0., 0.], [0., 0., 2.]])},
+                      "fixture", {})
+    return Glb.from_bytes(blob), roles
+
+
+def test_ground_offset_bounds_reject():
+    from eonwild_motion.planning.airborne_gait import AirborneGait
+
+    with pytest.raises(ContractError):
+        AirborneGait(stance_ground_offset_left_m=-0.001)
+    with pytest.raises(ContractError):
+        AirborneGait(stance_ground_offset_right_m=0.06)
+
+
+def test_ground_offset_shifts_stance_targets_preserving_c1():
+    from dataclasses import replace
+
+    from eonwild_motion.glb.container import Glb
+    from eonwild_motion.layers.leg_contact_resolve_v3 import (
+        _clip_state,
+        _pose,
+        _world_matrices,
+        _world_position,
+    )
+    from eonwild_motion.planning.airborne_gait import AirborneGait
+    from eonwild_motion.solve.airborne_gait import solve_airborne_gait
+
+    source, roles = _offset_fixture()
+    base_gait = AirborneGait(cycles=1, sample_hz=24, step_length_body_heights=.38,
+                             touchdown_reach_body_heights=.17, swing_clearance_body_heights=.18)
+    shifted_gait = replace(base_gait, stance_ground_offset_left_m=0.01,
+                           stance_ground_offset_right_m=0.014)
+    outs = []
+    for gait in (base_gait, shifted_gait):
+        root, _, plan, _ = solve_airborne_gait(source, source_clip="source",
+                                                semantic_roles=roles, gait=gait)
+        outs.append((Glb.from_bytes(root), plan))
+    (base_glb, base_plan), (shift_glb, shift_plan) = outs
+    foot = roles["legs"]["left"]["contactChain"][-1]
+    foot_idx = base_glb.name_to_node[foot]
+    base_tracks, base_times = _clip_state(base_glb, "V9_AIRBORNE_RUN_ROOT_MOTION")
+    shift_tracks, shift_times = _clip_state(shift_glb, "V9_AIRBORNE_RUN_ROOT_MOTION")
+    assert list(base_times) == list(shift_times)
+    contacts = [s["feet"]["left"]["contact"] for s in base_plan["samples"]]
+    assert any(contacts) and not all(contacts)
+    drops = []
+    for i, t in enumerate(base_times):
+        base_w = _world_matrices(base_glb, *_pose(base_glb, base_tracks, i))
+        shift_w = _world_matrices(shift_glb, *_pose(shift_glb, shift_tracks, i))
+        base_y = float(np.asarray(_world_position(base_w[foot_idx]))[1])
+        shift_y = float(np.asarray(_world_position(shift_w[foot_idx]))[1])
+        if contacts[i]:
+            drops.append(base_y - shift_y)
+    # Left stance targets drop by exactly the left offset on every frame.
+    assert drops and all(d == pytest.approx(0.01, abs=2e-4) for d in drops)
+    # Loop seam preserved: first and last stance heights agree.
+    assert drops[0] == pytest.approx(drops[-1], abs=1e-6)
