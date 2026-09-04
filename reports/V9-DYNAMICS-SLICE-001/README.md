@@ -20,7 +20,7 @@ continuity/turning/braking, growth hysteresis and the runtime seam.
   re-accelerating the COM with no contact). The ballistic arc is
   asymmetric under gravity — the only force-free flight path.
 * Numeric facts (`summary.json`): flight 0.6991 s, takeoff impulse
-  (0, 4500, 0) N·s, landing impulse (−6000, 5787, 0) N·s for the
+  (−421, 4500, 0) N·s, landing impulse (−5579, 5787, 0) N·s for the
   1500 kg fixture; independent re-integration residual **0.0 m** (PASS).
 * Improvement claim: the old flight arc could never be validated against
   gravity because it was never gravity. Now `verify_ballistic_samples`
@@ -241,33 +241,64 @@ tests/test_v9_airborne_gait.py -q` — 60 passed.
   `I = diag·M·H²`, never COM/P). Forelimbs bind to chest as carried mass —
   the rig has no forelimb chain.
 * Synthetic running takeoff `(0,2,0) + (4.5,2.5,0)`, preload `(4.5,0,0)` →
-  `(2.4,1.7,0)` → `airborne`, physics evaluated, plan `380f5a4f…`, flight
-  0.60996 s, takeoff impulse `(0, 3750, 0)` N·s, landing impulse
-  `(-6750, 5225.51, 0)` N·s. Takeoff margin: required peak 20089.29 N vs
-  limit 36787.50 N, friction 0.0 vs 0.8, power 16741.07 W vs 37500.00 W.
-  Landing margin: work 33118.50 J vs budget 35316.00 J, decel 26.99 m/s²
-  vs allowed 39.24 m/s².
+  `(2.7448,1.7,0)` (landing XZ exactly on the ballistic arrival, per the
+  target-hit gate) → `airborne`, physics evaluated, plan `679b4f32…`,
+  flight 0.60996 s, takeoff impulse `(0, 3750, 0)` N·s, landing impulse
+  `(-6750, 5225.51, 0)` N·s. Takeoff margin: required peak 42161.79 N
+  (mean GRF includes body weight) vs limit 51502.50 N, friction 0.0 vs
+  0.8, power 35134.82 W vs 37500.00 W. Landing margin (vertical energy
+  only): work 17931.00 J vs budget 35316.00 J, decel 10.11 m/s² vs
+  allowed 39.24 m/s². Arrest: 1.29 m vs 6.0 m budget.
 * Tarbosaurus normalized, same request → `airborne_normalized`, physics
-  unevaluated, plan `c9e3ef6a…`, impulses `None` — trajectory bookkeeping
-  only, exactly like the stationary slice.
-* Absurd launch `(14,9,0)` → `(9,1.7,0)` → `grounded_lunge`, limited by
-  `takeoff.force_ok`, plan `85a1058d…`. Takeoff: required peak 133740.94 N
-  vs 36787.50 N, friction demand 1.1918 vs 0.8, power 741964.29 W vs
-  37500.00 W. Landing: work 220993.50 J vs 35316.00 J, decel 235.74 m/s²
-  vs 39.24 m/s². Behavior (committed bite) survives; unphysical flight
-  does not.
+  unevaluated, impulses `None` — trajectory bookkeeping only, exactly
+  like the stationary slice.
+* Absurd launch `(14,9,0)` → exactly-hit `(26.145,1.7,0)` →
+  `grounded_lunge`, limited by `takeoff.force_ok`, plan `c65a0f16…`.
+  Takeoff: required peak 146855.20 N vs 51502.50 N, friction demand
+  1.1918 vs 0.8, power 808181.80 W vs 37500.00 W. Landing: work
+  73993.50 J vs 35316.00 J, decel 72.41 m/s² vs 39.24 m/s². Arrest:
+  12.49 m vs 6.0 m. Behavior (committed bite) survives; unphysical
+  flight does not. A far off-target launch falls back earlier with
+  limiting factor `trajectory`.
 * Centroidal: 3-frame synthetic FK run translating all bound nodes rigidly
   at v=`(1.5, 0, -2.0)` m/s gives P=`(2250, 0, -3000)` kg·m/s = M·v on all
   three samples (M=1500 kg).
 * Contact authority wiring: `solve/airborne_gait.evaluate_airborne_skin`
   gains keyword-only `include_contact_authority=False` (default off, old
   receipts byte-identical) plus sibling
-  `evaluate_airborne_skin_with_authority`; when on, the persistent
-  ground-plane verdict from `dynamics.contact_authority` is appended under
-  `contact_authority_v1` (unloaded foot neutral, loaded-but-lifted FAILs as
-  unknown contact).
-* Capacity defaults: no adjustment. `CapacityProfile(profile_id=
-  "fixture_provisional_v1")` keeps first-pass priors (2.5 BW, mu 0.8,
-  0.6 m crouch, 4.0 BW absorb, 25 W/kg, `provisional`) — the feasible /
-  brutal split above lands on the intended side of the gate, so changing
-  thresholds would be tuning to the test.
+  `evaluate_airborne_skin_with_authority` with optional clip-name and
+  threshold overrides; when on, the persistent ground-plane verdict from
+  `dynamics.contact_authority` is appended under `contact_authority_v1`
+  (unloaded foot neutral, loaded-but-lifted FAILs as unknown contact).
+* Capacity defaults: bodyweight prior 2.5 → 3.5 BW when the force gate
+  was corrected to include body weight (mean GRF of a running takeoff is
+  ~1.9 BW, peak ~2.9 BW — the old 2.5 limit would fail honest running).
+  All priors remain `provisional`; the feasible/brutal split lands on
+  the intended side, so no further tuning.
+
+## Visual review: unified run, regrounded run, walk
+
+Rendered with `reports/V9-DYNAMICS-SLICE-001/render_reviews.sh` (Blender
+5.2 Workbench clay, fixed ortho cameras, source floor; each preview is
+the native cycle repeated twice). Outputs in
+`build/V9-DYNAMICS-SLICE-001-reviews/` (mp4 + render-receipt committed;
+PNG frames regenerable via the script):
+
+* `unified-run-side` / `unified-run-front` — iteration-012 (approved
+  legs + momentum-coupled axial overlay). Review verdict: no neck kink
+  (the 20° distributed bend reads as a natural forward-down gaze),
+  head centered and symmetric in front view, tail straight, planted
+  foot flat. The axial overlay is visually a posture refinement, not a
+  re-animation.
+* `regrounded-run-side` — iteration-011 round-0 (offsets + left lead
+  20°/engage 14°). Planted foot flat through stance; swing-foot toe
+  curl preserved. Stance attitude change vs Run010 is subtle at full
+  speed — the remaining 1 mm gap is sub-visual, which is why the gate
+  (not the eye) must own it.
+* `walk-side` — relaxed-walk baseline re-render for comparison: crouch,
+  double-support and foot spacing all read calmer than the run, as they
+  should at Fr ≪ 1.
+
+Reviewer note: these are engineering candidates (clay, no PBR), not
+art approval. Numeric PASS remains necessary but insufficient — the
+eye still rules on weight and character.

@@ -487,7 +487,7 @@ def ground_plane_velocity_witness(old: np.ndarray, new: np.ndarray, *, up_axis: 
     return {"persistent_point_count": int(len(ids)), "maximum_velocity_mps": float(speeds[local]), "maximum_tangential_velocity_mps": float(np.linalg.norm(tangential, axis=1).max()), "point_index": point, "previous_world_m": old[point].tolist(), "current_world_m": new[point].tolist(), "previous_ground_gap_m": float(old[point, up_axis] - ground_m), "current_ground_gap_m": float(new[point, up_axis] - ground_m)}
 
 
-def evaluate_airborne_skin(glb: Glb, *, contact_profile: Mapping[str, Any], gait: AirborneGait, body_height_m: float, sample_hz: int = 120, include_contact_authority: bool = False, authority_thresholds: Any = None) -> dict[str, Any]:
+def evaluate_airborne_skin(glb: Glb, *, contact_profile: Mapping[str, Any], gait: AirborneGait, body_height_m: float, sample_hz: int = 120, include_contact_authority: bool = False, authority_thresholds: Any = None, clip_name: str = "V9_AIRBORNE_RUN_ROOT_MOTION") -> dict[str, Any]:
     """Evaluate actual skinned foot vertices against the bound source floor.
 
     Reuses the existing normalized multi-influence skinning/mask adapter;
@@ -503,7 +503,7 @@ def evaluate_airborne_skin(glb: Glb, *, contact_profile: Mapping[str, Any], gait
     from ..contact_gauge import _source_frames
 
     duration = 2 * gait.cycles * gait.step_period_s
-    frames, metadata = _source_frames(glb, contact_profile, animation_name="V9_AIRBORNE_RUN_ROOT_MOTION", sample_count=int(math.ceil(duration * sample_hz)) + 1)
+    frames, metadata = _source_frames(glb, contact_profile, animation_name=clip_name, sample_count=int(math.ceil(duration * sample_hz)) + 1)
     ground = float(contact_profile["geometry"]["ground"]["level_m"])
     axis_name = contact_profile["geometry"]["ground"]["up_axis"]
     axis = {"X": 0, "Y": 1, "Z": 2}[axis_name]
@@ -651,7 +651,7 @@ def _contact_authority_from_skin_frames(
 
 
 def evaluate_airborne_skin_with_authority(
-    glb: Glb, *, contact_profile: Mapping[str, Any], gait: AirborneGait, body_height_m: float, sample_hz: int = 120, authority_thresholds: Any = None
+    glb: Glb, *, contact_profile: Mapping[str, Any], gait: AirborneGait, body_height_m: float, sample_hz: int = 120, authority_thresholds: Any = None, clip_name: str = "V9_AIRBORNE_RUN_ROOT_MOTION"
 ) -> dict[str, Any]:
     """Sibling of :func:`evaluate_airborne_skin` with authority verdict on."""
 
@@ -663,4 +663,5 @@ def evaluate_airborne_skin_with_authority(
         sample_hz=sample_hz,
         include_contact_authority=True,
         authority_thresholds=authority_thresholds,
+        clip_name=clip_name,
     )

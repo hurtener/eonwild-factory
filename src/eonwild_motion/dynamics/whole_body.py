@@ -32,6 +32,15 @@ from .transition import tail_ode_track
 SCHEMA = "eonwild.motion.v9.axial-solve.v1"
 
 
+def _quat_conj(q: np.ndarray) -> np.ndarray:
+    return np.array([-q[0], -q[1], -q[2], q[3]], dtype=float)
+
+
+def _rotate_vec(q: np.ndarray, v: np.ndarray) -> np.ndarray:
+    qv = np.array([v[0], v[1], v[2], 0.0], dtype=float)
+    return quat_mul(quat_mul(q, qv), _quat_conj(q))[:3]
+
+
 def _axis_angle_quat(axis: np.ndarray, angle_rad: float) -> np.ndarray:
     return np.array(
         [*(axis * math.sin(angle_rad / 2.0)), math.cos(angle_rad / 2.0)], dtype=float
@@ -85,19 +94,22 @@ def solve_axial_chain(
     envelopes: Mapping[int, JointEnvelope] | None = None,
     iterations: int = 60,
     tolerance_m: float = 1e-4,
+    root_node: int | None = None,
+    damping: float = 1.0,
+    posture_weight: float = 0.0,
 ) -> dict[str, Any]:
-    """CCD pitch solve for one axial chain reaching ``target_m``.
+    """DLS pitch solve for one axial chain reaching ``target_m``.
 
     Returns solved pitch angles (radians, one per chain joint from base
     to tip), end-effector residual, per-joint envelope projection facts
     and iteration count. Deterministic: fixed iteration cap, no random
     restarts; unreachable targets report maximum extension honestly.
 
-    Frame note: pitch is applied about ``lateral_axis`` in each node's
-    local frame and measured in the parent-frame world plane. This is
-    exact for axis-aligned rigs (identity rest rotations on the axial
-    chain, the theropod norm); for twisted rest poses treat results as
-    first-order and re-validate against the skinned head marker.
+    Frame note: pitch is commanded about ``lateral_axis`` (a rig-frame
+    vector) but applied as an exact world-frame rotation through the
+    joint's current parent frame, so the solve is exact under arbitrary
+    rest poses — no axis-alignment assumption. The reported per-joint
+    pitch is the commanded angle about that axis.
     """
     if len(chain) < 1:
         raise ContractError("axial chain needs at least one joint")
@@ -112,66 +124,127 @@ def solve_axial_chain(
     if iters < 1:
         raise ContractError("axial iterations must be positive")
     tol = _finite(tolerance_m, label="tolerance_m")
+    if not 0.0 < damping <= 1.0:
+        raise ContractError("axial damping must lie in (0, 1]")
+    mu = _finite(posture_weight, label="posture weight")
+    if mu < 0.0:
+        raise ContractError("posture weight must be non-negative")
+    if root_node is None:
+        roots = [i for i, p in enumerate(parents) if p is None]
+        if len(roots) != 1:
+            raise ContractError("axial solve needs an explicit root_node for multi-root rigs")
+        root_node = roots[0]
+    if not 0 <= root_node < count:
+        raise ContractError("axial root_node is outside the rig")
 
     pitch = np.zeros(len(chain))
     chain_index = {node: position for position, node in enumerate(chain)}
     lateral_unit = lateral / float(np.linalg.norm(lateral))
     hard = {node: (envelopes[node].hard_min_deg, envelopes[node].hard_max_deg) if envelopes and node in envelopes else (-180.0, 180.0) for node in chain}
+    root_quat = _matrix_to_quat(root_rot)
+    base_local: list[np.ndarray] = []
+    for node in range(count):
+        if node == root_node:
+            base_local.append(root_quat)
+        else:
+            base_local.append(_quat(np.asarray(rest_rotations[node]), label="rest rotation"))
+    local_q = [q.copy() for q in base_local]
 
-    def evaluate(angles: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-        # Pitch quaternions premultiply rest orientation (parent-frame
-        # pitch); the FK carries those frames to the world. Node 0's
-        # parent frame is the world root placement.
-        local_q: list[tuple[float, float, float, float]] = []
-        root_quat = _matrix_to_quat(root_rot)
-        for node in range(count):
-            if node == 0 and parents[node] is None:
-                # World root placement owns the root node's frame.
-                base = root_quat
-            else:
-                base = _quat(np.asarray(rest_rotations[node]), label="rest rotation")
-            if node in chain_index:
-                twist = _axis_angle_quat(lateral_unit, float(angles[chain_index[node]]))
-                base = quat_mul(twist, base)
-            local_q.append((float(base[0]), float(base[1]), float(base[2]), float(base[3])))
+    def evaluate() -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+        # The semantic root node's frame is the world root placement.
         world_pos, world_rot = fk_world_frames(
             parents,
-            [root_pos if i == 0 and parents[i] is None else rest_translations[i] for i in range(count)],
+            [root_pos if i == root_node else rest_translations[i] for i in range(count)],
             rest_rotations,
             local_translations=[
-                root_pos if i == 0 and parents[i] is None else rest_translations[i]
+                root_pos if i == root_node else rest_translations[i]
                 for i in range(count)
             ],
-            local_rotations=local_q,
+            local_rotations=[tuple(map(float, q)) for q in local_q],
         )
         return world_pos[chain[-1]], world_pos, world_rot
+
+    def parent_world_quat(node: int, rotations: np.ndarray) -> np.ndarray:
+        parent = parents[node]
+        if parent is None:
+            return root_quat if node == root_node else _matrix_to_quat(rotations[node])
+        return _matrix_to_quat(rotations[parent])
+
     residual = math.inf
     used = 0
     for used in range(1, iters + 1):
-        tip, positions, rotations = evaluate(pitch)
-        residual = float(np.linalg.norm(target - tip))
+        tip, positions, rotations = evaluate()
+        error = target - tip
+        residual = float(np.linalg.norm(error))
         if residual <= tol:
             break
-        for position in reversed(range(len(chain))):
-            node = chain[position]
-            tip, positions, rotations = evaluate(pitch)
-            joint_pos = positions[node]
-            to_tip = tip - joint_pos
-            to_target = target - joint_pos
-            # Sagittal-plane angle between the two directions.
-            axis_world = rotations[parents[node]] @ lateral if parents[node] is not None else root_rot @ lateral
-            normal = axis_world / float(np.linalg.norm(axis_world))
-            a = to_tip - normal * float(to_tip @ normal)
-            b = to_target - normal * float(to_target @ normal)
-            if float(np.linalg.norm(a)) < 1e-9 or float(np.linalg.norm(b)) < 1e-9:
-                continue
-            cos_a = max(-1.0, min(1.0, float(a @ b) / (float(np.linalg.norm(a)) * float(np.linalg.norm(b)))))
-            delta = math.acos(cos_a)
-            sign = float(np.sign(float(np.cross(a, b) @ normal))) or 1.0
-            pitch[position] += sign * delta
-            low, high = (math.radians(hard[node][0]), math.radians(hard[node][1]))
-            pitch[position] = max(low, min(high, pitch[position]))
-    tip, _, _ = evaluate(pitch)
+        # World-space DLS: all joints step simultaneously along the
+        # tip Jacobian, so correction distributes instead of dumping
+        # into the most distal free joint (the CCD pathology under
+        # rest twist). J[:, i] = axis_i × (tip − joint_i).
+        axes = []
+        levers = []
+        for node in chain:
+            parent = parents[node]
+            q_parent = root_quat if parent is None else _matrix_to_quat(rotations[parent])
+            axis_world = _rotate_vec(q_parent, lateral_unit)
+            axes.append(axis_world / float(np.linalg.norm(axis_world)))
+            levers.append(tip - positions[node])
+        jacobian = np.column_stack([np.cross(ax, lv) for ax, lv in zip(axes, levers)])
+        scale = float(np.trace(jacobian @ jacobian.T)) / 3.0
+        # Posture-regularized DLS: (JᵀJ + (λ²+μ)I)⁻¹(Jᵀe − μθ) pulls toward
+        # the rest posture, spreading work across joints instead of folding
+        # one hinge. μ = 0 is pure Gauss-Newton.
+        reg = max(1e-12, 1e-4 * max(scale, 1e-12)) + mu
+        solve = np.linalg.solve(
+            jacobian.T @ jacobian + reg * np.eye(len(chain)),
+            jacobian.T @ error - mu * pitch,
+        )
+        # Snapshot start-of-iteration frames: every joint's update is
+        # composed against the linearization point, never against a
+        # half-updated sibling (that staleness diverges the solve).
+        snap_parent = [
+            (root_quat if parents[node] is None else _matrix_to_quat(rotations[parents[node]]))
+            for node in chain
+        ]
+        snap_joint = [_matrix_to_quat(rotations[node]) for node in chain]
+        snap_axis = [
+            _rotate_vec(qp, lateral_unit) / float(np.linalg.norm(_rotate_vec(qp, lateral_unit)))
+            for qp in snap_parent
+        ]
+        snap_locals = [q.copy() for q in local_q]
+        snap_pitch = pitch.copy()
+        # Backtracking line search: accept the first shrunk step that
+        # strictly decreases the residual (monotone convergence; the
+        # undamped full step oscillates near singularities).
+        accepted = False
+        step = float(damping)
+        for _ in range(8):
+            for (position, node), delta in zip(enumerate(chain), solve):
+                low, high = (math.radians(hard[node][0]), math.radians(hard[node][1]))
+                commanded = max(low, min(high, snap_pitch[position] + float(delta) * step))
+                pitch[position] = commanded
+                applied = commanded - snap_pitch[position]
+                if abs(applied) <= 1e-12:
+                    local_q[node] = snap_locals[node]
+                    continue
+                dq = _axis_angle_quat(snap_axis[position], applied)
+                q_parent_inv = _quat_conj(snap_parent[position])
+                local_q[node] = quat_mul(q_parent_inv, quat_mul(dq, snap_joint[position]))
+            trial_tip, _, _ = evaluate()
+            trial_residual = float(np.linalg.norm(target - trial_tip))
+            if trial_residual < residual - 1e-12:
+                residual = trial_residual
+                accepted = True
+                break
+            step *= 0.5
+        if not accepted:
+            # No improving step: restore the linearization point and stop.
+            for node, saved in enumerate(snap_locals):
+                local_q[node] = saved
+            pitch = snap_pitch.copy()
+            break
+    tip, _, _ = evaluate()
     residual = float(np.linalg.norm(target - tip))
     joints = []
     for position, node in enumerate(chain):
@@ -211,6 +284,9 @@ def solve_bite_window(
     head_lever_m: float = 1.0,
     tail_moment_gain: float = 1.0,
     tail_params: Mapping[str, Any] | None = None,
+    root_node: int | None = None,
+    damping: float = 1.0,
+    posture_weight: float = 0.0,
 ) -> dict[str, Any]:
     """Axial solve over a target window plus tail momentum coupling.
 
@@ -245,6 +321,9 @@ def solve_bite_window(
             lateral_axis=lateral_axis,
             target_m=targets_m[k],
             envelopes=envelopes,
+            root_node=root_node,
+            damping=damping,
+            posture_weight=posture_weight,
         )
         worst_residual = max(worst_residual, solved["residual_m"])
         if prev_pitch is not None:

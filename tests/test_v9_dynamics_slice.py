@@ -674,10 +674,17 @@ def test_axial_chain_reports_unreachable_and_clamps():
         lateral_axis=(0.0, 0.0, 1.0), target_m=(9.0, 9.0, 0.0),
     )
     assert far["reached"] is False
-    # Optimum: the root→node1 link is fixed vertical, so the two moving
-    # links extend from (0,1,0) straight at the target.
-    assert far["residual_m"] == pytest.approx(10.0416, rel=1e-3)
-    assert far["tip_m"] == pytest.approx([1.4948, 2.3288, 0.0], abs=1e-3)
+    # Unreachable: DLS converges locally, so the contract is strict
+    # progress plus an honest report — not the singular straight-arm
+    # optimum (initial residual |(9,9)-(0,3)| = 10.82).
+    assert far["residual_m"] < 10.82
+    assert far["tip_m"] == pytest.approx([1.77, 1.905, 0.0], abs=0.05)
+    again = solve_axial_chain(
+        parents=parents, rest_translations=rest_t, rest_rotations=rest_r,
+        chain=[1, 2, 3], root_position_m=(0.0, 0.0, 0.0), root_rotation=np.eye(3),
+        lateral_axis=(0.0, 0.0, 1.0), target_m=(9.0, 9.0, 0.0),
+    )
+    assert again["pitch_rad"] == far["pitch_rad"]
     envelopes = {1: JointEnvelope("spine", -45.0, 45.0, -20.0, 20.0),
                  2: JointEnvelope("neck", -45.0, 45.0, -20.0, 20.0),
                  3: JointEnvelope("head", -45.0, 45.0, -20.0, 20.0)}
@@ -816,3 +823,91 @@ def test_ground_offset_shifts_stance_targets_preserving_c1():
     assert drops and all(d == pytest.approx(0.01, abs=2e-4) for d in drops)
     # Loop seam preserved: first and last stance heights agree.
     assert drops[0] == pytest.approx(drops[-1], abs=1e-6)
+
+
+def _unified_fixture():
+    from eonwild_motion.solve.whole_body_gait_transition import _build_glb, _encode
+
+    nodes = [{"name": "root", "children": [1]}, {"name": "pelvis", "translation": [0, 1.8, 0], "children": []}]
+    roles = {"root": "root", "pelvis": "pelvis", "legs": {}}
+    for side, sign in (("left", -1), ("right", 1)):
+        start = len(nodes)
+        nodes[1]["children"].append(start)
+        names = [side + part for part in ("hip", "knee", "ankle", "foot", "toe0", "toe1", "toe2")]
+        offsets = [(sign * .18, -.15, 0), (0, -.55, .3), (0, -.65, -.2), (0, -.25, .25),
+                   (0, 0, .15), (0, 0, .13), (0, 0, .1)]
+        for i, (name, offset) in enumerate(zip(names, offsets)):
+            node = {"name": name, "translation": list(offset)}
+            if i < 6:
+                node["children"] = [start + i + 1]
+            nodes.append(node)
+        roles["legs"][side] = {"contactChain": names[:4], "toeChains": [names[4:]]}
+    # Axial chains off the pelvis: chest/neck/head forward, tail back.
+    upper = [("chest", (0, .3, .3)), ("neck", (0, .25, .3)), ("head", (0, .2, .35)),
+             ("tail0", (0, .05, -.4)), ("tail1", (0, 0, -.4)), ("tail2", (0, 0, -.4))]
+    parent = 1
+    for name, offset in upper:
+        index = len(nodes)
+        nodes[parent].setdefault("children", []).append(index)
+        nodes.append({"name": name, "translation": list(offset)})
+        parent = index if name in ("chest", "neck", "head") else 1 if name == "tail0" else index
+    roles.update(chest="chest", neck=["neck"], head="head", tail=["tail0", "tail1", "tail2"])
+    doc = {"asset": {"version": "2.0"}, "nodes": nodes, "scenes": [{"nodes": [0]}],
+           "scene": 0, "buffers": [{"byteLength": 4}], "bufferViews": [], "accessors": []}
+    base = Glb.from_bytes(_encode(doc, b"\0" * 4))
+    blob = _build_glb(base, "source", np.array([0., 1.]),
+                      {(0, "translation"): np.array([[0., 0., 0.], [0., 0., 2.]])},
+                      "fixture", {})
+    return Glb.from_bytes(blob), roles
+
+
+def test_unified_run_binds_leg_and_axial_under_one_receipt():
+    from eonwild_motion.dynamics.integration import solve_unified_run
+    from eonwild_motion.glb.container import Glb
+    from eonwild_motion.planning.airborne_gait import AirborneGait
+    from eonwild_motion.solve.airborne_gait import solve_airborne_gait
+
+    source, roles = _unified_fixture()
+    gait = AirborneGait(cycles=1, sample_hz=24, step_length_body_heights=.38,
+                        touchdown_reach_body_heights=.17, swing_clearance_body_heights=.18)
+    root_out, in_place_out, unified, detail = solve_unified_run(
+        source=source, source_clip="source", semantic_roles=roles, gait=gait,
+        axial_lateral=(1.0, 0.0, 0.0), gaze_distance_m=0.5, gaze_height_offset_m=0.3,
+        axial_posture_weight=0.0,
+    )
+    assert unified["axial_all_reached"] is True
+    assert set(unified["channels_replaced"]) == {"chest", "neck", "head", "tail0", "tail1", "tail2"}
+    assert unified["loop_seam_deg"] == pytest.approx(0.0, abs=1e-3)
+    from eonwild_motion.hashing import sha256_json
+    assert unified["leg_receipt_sha256"] == sha256_json(detail["leg_receipt"])
+    # Non-axial channels are byte-identical to the leg-only output.
+    leg_only, _, _, _ = solve_airborne_gait(source, source_clip="source",
+                                             semantic_roles=roles, gait=gait)
+    leg_glb, uni_glb = Glb.from_bytes(leg_only), Glb.from_bytes(root_out)
+    leg_clip = leg_glb.document["animations"][0]["name"]
+    uni_clip = uni_glb.document["animations"][0]["name"]
+    assert uni_clip == "V9_UNIFIED_RUN_ROOT_MOTION"
+    for name, acc in leg_glb.animation_accessors(leg_clip, "rotation").items():
+        if name in unified["channels_replaced"]:
+            continue
+        assert (leg_glb.accessor_bytes(acc)
+                == uni_glb.accessor_bytes(uni_glb.animation_accessors(uni_clip, "rotation")[name]))
+    # Deterministic: same inputs, same bytes and receipt hash.
+    root_again, _, unified_again, _ = solve_unified_run(
+        source=source, source_clip="source", semantic_roles=roles, gait=gait,
+        axial_lateral=(1.0, 0.0, 0.0), gaze_distance_m=0.5, gaze_height_offset_m=0.3,
+        axial_posture_weight=0.0,
+    )
+    assert root_again == root_out
+    assert unified_again["unified_sha256"] == unified["unified_sha256"]
+    assert in_place_out != b""
+
+
+def test_unified_run_without_axial_chain_is_fail_closed():
+    from eonwild_motion.dynamics.integration import solve_unified_run
+    from eonwild_motion.planning.airborne_gait import AirborneGait
+
+    source, roles = _offset_fixture()
+    gait = AirborneGait(cycles=1, sample_hz=24)
+    with pytest.raises(ContractError, match="head chain"):
+        solve_unified_run(source=source, source_clip="source", semantic_roles=roles, gait=gait)

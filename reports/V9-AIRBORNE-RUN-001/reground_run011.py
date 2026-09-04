@@ -73,6 +73,10 @@ def main() -> None:
     parser.add_argument("--start-right", type=float, default=0.013)
     parser.add_argument("--push-off-pitch", type=float, default=None)
     parser.add_argument("--recovery-pitch", type=float, default=None)
+    parser.add_argument("--pitch-lead-left", type=float, default=None)
+    parser.add_argument("--pitch-lead-right", type=float, default=None)
+    parser.add_argument("--toe-engage-left", type=float, default=None)
+    parser.add_argument("--toe-engage-right", type=float, default=None)
     parser.add_argument("--damping", type=float, default=0.7)
     args = parser.parse_args()
 
@@ -93,6 +97,14 @@ def main() -> None:
             overrides["push_off_pitch_degrees"] = args.push_off_pitch
         if args.recovery_pitch is not None:
             overrides["foot_recovery_pitch_degrees"] = args.recovery_pitch
+        if args.pitch_lead_left is not None:
+            overrides["stance_pitch_lead_left_degrees"] = args.pitch_lead_left
+        if args.pitch_lead_right is not None:
+            overrides["stance_pitch_lead_right_degrees"] = args.pitch_lead_right
+        if args.toe_engage_left is not None:
+            overrides["toe_stance_engage_left_degrees"] = args.toe_engage_left
+        if args.toe_engage_right is not None:
+            overrides["toe_stance_engage_right_degrees"] = args.toe_engage_right
         gait = replace(load_airborne_gait(base), **overrides)
         print(f"[round {round_index}] offsets L={offsets['left']:.4f} R={offsets['right']:.4f}", flush=True)
         authority_glb, inplace, plan, receipt = solve_airborne_gait(

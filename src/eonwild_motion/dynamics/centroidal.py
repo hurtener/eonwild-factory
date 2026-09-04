@@ -135,12 +135,31 @@ def fk_world_frames(
 
     world_rot = np.zeros((count, 3, 3))
     world_pos = np.zeros((count, 3))
-    for node in range(count):
-        parent = parents[node]
-        if parent is not None and not 0 <= parent < count:
+    # Real rigs are not topologically sorted: evaluate parents first via
+    # an explicit order (single-parent chains, cycle-safe).
+    order: list[int] = []
+    placed = [False] * count
+    for node, parent in enumerate(parents):
+        if parent is not None and (not isinstance(parent, (int, np.integer)) or not 0 <= parent < count):
             raise ContractError(f"FK node {node} has an invalid parent")
-        if parent is not None and parent >= node:
-            raise ContractError("FK requires parents ordered before children")
+    for _ in range(count + 1):
+        if all(placed):
+            break
+        progressed = False
+        for node in range(count):
+            if placed[node]:
+                continue
+            parent = parents[node]
+            if parent is None or placed[parent]:
+                order.append(node)
+                placed[node] = True
+                progressed = True
+        if not progressed:
+            raise ContractError("FK node topology contains a cycle")
+    if len(order) != count:
+        raise ContractError("FK node topology contains a cycle")
+    for node in order:
+        parent = parents[node]
         local_r = quat_to_matrix(np.asarray(local_rotations[node], dtype=float))
         local_t = np.asarray(local_translations[node], dtype=float).reshape(3)
         if parent is None:

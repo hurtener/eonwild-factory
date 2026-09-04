@@ -54,6 +54,10 @@ class AirborneGait:
     swing_approach_lift_body_heights: float = 0.0
     stance_ground_offset_left_m: float = 0.0
     stance_ground_offset_right_m: float = 0.0
+    stance_pitch_lead_left_degrees: float = 0.0
+    stance_pitch_lead_right_degrees: float = 0.0
+    toe_stance_engage_left_degrees: float = 0.0
+    toe_stance_engage_right_degrees: float = 0.0
     jaw_breathing_min_degrees: float = 0.0
     jaw_breathing_max_degrees: float = 0.0
     jaw_breathing_cycles_per_cycle: int = 1
@@ -109,6 +113,10 @@ class AirborneGait:
             raise ContractError("left ground offset exceeds the 5 cm regrounding bound")
         if not 0 <= self.stance_ground_offset_right_m <= .05:
             raise ContractError("right ground offset exceeds the 5 cm regrounding bound")
+        for key, bound in (("stance_pitch_lead_left_degrees", 20), ("stance_pitch_lead_right_degrees", 20),
+                           ("toe_stance_engage_left_degrees", 15), ("toe_stance_engage_right_degrees", 15)):
+            if not 0 <= getattr(self, key) <= bound:
+                raise ContractError(f"{key} exceeds its engagement bound")
         if not 0 <= self.jaw_breathing_min_degrees <= self.jaw_breathing_max_degrees <= 8:
             raise ContractError("subtle breathing gape must be ordered within zero to eight degrees")
         if self.jaw_breathing_cycles_per_cycle != int(self.jaw_breathing_cycles_per_cycle) or not 1 <= self.jaw_breathing_cycles_per_cycle <= 4:
@@ -225,9 +233,18 @@ def sample_airborne_gait(gait: AirborneGait, time_s: float, body_height_m: float
         stance = local < contact_s - 1e-10
         if stance:
             load = _smooth((local / contact_s - gait.push_off_start_fraction) / (1 - gait.push_off_start_fraction))
+            # Toe-engagement ramp: zero at touchdown (continuity with the
+            # swing release), full by 15% of stance, so early-stance lead
+            # never steps the contact. Per-side: touchdown attitudes differ
+            # with bind asymmetry, so engagement is calibrated per foot.
+            engage = _smooth(local / contact_s / 0.15)
+            if side == "left":
+                lead_deg, curl_deg = gait.stance_pitch_lead_left_degrees, gait.toe_stance_engage_left_degrees
+            else:
+                lead_deg, curl_deg = gait.stance_pitch_lead_right_degrees, gait.toe_stance_engage_right_degrees
             x, y = anchor, 0.0
-            toe = gait.toe_flex_degrees * 0.55 * load
-            pitch = gait.push_off_pitch_degrees * load
+            toe = gait.toe_flex_degrees * 0.55 * load + curl_deg * (1 - load) * engage
+            pitch = gait.push_off_pitch_degrees * load + lead_deg * (1 - load) * engage
             swing_phase = 0.0
         else:
             swing_phase = (local - contact_s) / (cycle - contact_s)
