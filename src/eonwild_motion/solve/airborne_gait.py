@@ -476,7 +476,7 @@ def ground_plane_velocity_witness(old: np.ndarray, new: np.ndarray, *, up_axis: 
     return {"persistent_point_count": int(len(ids)), "maximum_velocity_mps": float(speeds[local]), "maximum_tangential_velocity_mps": float(np.linalg.norm(tangential, axis=1).max()), "point_index": point, "previous_world_m": old[point].tolist(), "current_world_m": new[point].tolist(), "previous_ground_gap_m": float(old[point, up_axis] - ground_m), "current_ground_gap_m": float(new[point, up_axis] - ground_m)}
 
 
-def evaluate_airborne_skin(glb: Glb, *, contact_profile: Mapping[str, Any], gait: AirborneGait, body_height_m: float, sample_hz: int = 120, include_contact_authority: bool = False) -> dict[str, Any]:
+def evaluate_airborne_skin(glb: Glb, *, contact_profile: Mapping[str, Any], gait: AirborneGait, body_height_m: float, sample_hz: int = 120, include_contact_authority: bool = False, authority_thresholds: Any = None) -> dict[str, Any]:
     """Evaluate actual skinned foot vertices against the bound source floor.
 
     Reuses the existing normalized multi-influence skinning/mask adapter;
@@ -579,13 +579,13 @@ def evaluate_airborne_skin(glb: Glb, *, contact_profile: Mapping[str, Any], gait
     result = {**extra_contact_evidence, "status": "PASS_FOCUSED_SKIN_FLOOR" if max_penetration <= .0005 and contact_misses == 0 and airborne_misses == 0 and flight_interior > 0 else "FAIL_FOCUSED_SKIN_FLOOR", "ground_level_m": ground, "source_floor_not_recalibrated": True, "maximum_foot_surface_penetration_m": max_penetration, "planned_stance_without_surface_contact_samples": contact_misses, "interior_flight_samples": flight_interior, "interior_flight_with_surface_ground_intersection_samples": airborne_misses, "maximum_planted_toe_surface_centroid_velocity_mps": max_surface_speed, "maximum_planted_distal_surface_point_velocity_mps": max_distal_patch_speed, "maximum_active_ground_surface_point_velocity_mps": max_active_surface_speed, "contact_band_sensitivity_max_velocity_mps": contact_band_scan, "active_ground_surface_point_pairs": active_surface_pairs, "distal_patch_vertex_indices": {s: [metadata["mask_counts"][s]["toe_vertex_indices"][i] for i in ids] for s, ids in patch_indices.items()}, "skin_adapter": metadata, "frames": facts, "acceptance": "focused ground/flight evidence only; visual review and contact-patch drift gate still required"}
     if include_contact_authority:
         result["contact_authority_v1"] = _contact_authority_from_skin_frames(
-            frames, facts, ground_m=ground, up_axis=axis
+            frames, facts, ground_m=ground, up_axis=axis, thresholds=authority_thresholds
         )
     return result
 
 
 def _contact_authority_from_skin_frames(
-    frames: Any, facts: Any, *, ground_m: float, up_axis: int
+    frames: Any, facts: Any, *, ground_m: float, up_axis: int, thresholds: Any = None
 ) -> dict[str, Any]:
     """Build the persistent ground-plane authority verdict from skin frames.
 
@@ -601,6 +601,8 @@ def _contact_authority_from_skin_frames(
     )
 
     per_foot: dict[str, Any] = {}
+    if thresholds is None:
+        thresholds = AuthorityThresholds(up_axis=up_axis, ground_m=ground_m)
     for side in ("left", "right"):
         patch_frames: list[PatchFrame] = []
         loaded: list[bool] = []
@@ -612,10 +614,13 @@ def _contact_authority_from_skin_frames(
             )
             loaded.append(bool(row["feet"][side]["planned_contact"]))
         try:
+            kwargs: dict[str, Any] = {}
+            if thresholds is not None:
+                kwargs["thresholds"] = thresholds
             per_foot[side] = evaluate_contact_authority(
                 patch_frames,
                 loaded,
-                thresholds=AuthorityThresholds(up_axis=up_axis, ground_m=ground_m),
+                **kwargs,
             )
         except ContractError as exc:
             per_foot[side] = {"verdict": "FAIL", "reasons": [str(exc)]}
@@ -635,7 +640,7 @@ def _contact_authority_from_skin_frames(
 
 
 def evaluate_airborne_skin_with_authority(
-    glb: Glb, *, contact_profile: Mapping[str, Any], gait: AirborneGait, body_height_m: float, sample_hz: int = 120
+    glb: Glb, *, contact_profile: Mapping[str, Any], gait: AirborneGait, body_height_m: float, sample_hz: int = 120, authority_thresholds: Any = None
 ) -> dict[str, Any]:
     """Sibling of :func:`evaluate_airborne_skin` with authority verdict on."""
 
@@ -646,4 +651,5 @@ def evaluate_airborne_skin_with_authority(
         body_height_m=body_height_m,
         sample_hz=sample_hz,
         include_contact_authority=True,
+        authority_thresholds=authority_thresholds,
     )

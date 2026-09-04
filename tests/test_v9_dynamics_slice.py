@@ -292,6 +292,36 @@ def test_contact_authority_fails_unknown_contact():
     assert any("no persistent ground points" in r for r in report["reasons"])
 
 
+def test_contact_authority_single_frame_phase_fails_closed():
+    frames = _stance_frames(count=2)
+    report = evaluate_contact_authority(frames, [True, False])
+    assert report["verdict"] == "FAIL"
+    assert any("single-frame" in r for r in report["reasons"])
+
+
+def test_contact_authority_yaw_measured_on_persistent_set():
+    import math as _math
+
+    def rotated(angle_deg: float):
+        # Elongated patch: the principal axis is defined (a square has
+        # isotropic covariance and no measurable yaw).
+        base = [(0.03, 0.0002, 0.005), (0.03, 0.0002, -0.005),
+                (-0.03, 0.0002, 0.005), (-0.03, 0.0002, -0.005)]
+        c, s = _math.cos(_math.radians(angle_deg)), _math.sin(_math.radians(angle_deg))
+        return [tuple([x * c - z * s, y, x * s + z * c]) for x, y, z in base]
+
+    frames = [
+        PatchFrame(time_s=0.0, sole_m=tuple(rotated(0.0)[:2]), toe_m=tuple(rotated(0.0)[2:])),
+        PatchFrame(time_s=1 / 120.0, sole_m=tuple(rotated(8.0)[:2]), toe_m=tuple(rotated(8.0)[2:])),
+    ]
+    thresholds = AuthorityThresholds(ground_tolerance_m=0.005, skate_velocity_mps=1.0)
+    report = evaluate_contact_authority(frames, [True, True], thresholds=thresholds)
+    assert report["phases"][0]["unknown_pairs"] == 0  # rotation kept points at the floor
+    assert report["phases"][0]["yaw_deg"] == pytest.approx(8.0, abs=0.5)
+    assert report["verdict"] == "FAIL"
+    assert any("yaw" in r for r in report["reasons"])
+
+
 def test_contact_authority_fails_penetration_and_skate():
     penetrated = _stance_frames(gap=-0.01)
     assert evaluate_contact_authority(penetrated, [True] * 12)["verdict"] == "FAIL"

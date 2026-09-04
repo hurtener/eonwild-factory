@@ -1,0 +1,177 @@
+{
+  "candidates": {
+    "run010": {
+      "artifact_sha256": "0804bff764ca1765f29ee0d5bb7cd86c74d336b960ea445a36a1d37921ec3b00",
+      "sweeps": {
+        "0.001": {
+          "authority_verdict": "FAIL",
+          "legacy_status": "PASS_FOCUSED_SKIN_FLOOR",
+          "per_foot": {
+            "left": {
+              "max_yaw_deg": 0.0,
+              "min_gap_m": 0.007767353290837111,
+              "persistent_point_total": 0,
+              "reasons": [
+                "phase 0-54: 54/54 pairs have no persistent ground points (unknown contact)",
+                "phase 150-150: single-frame phase cannot establish persistent contact"
+              ],
+              "unknown_pairs": 54,
+              "verdict": "FAIL"
+            },
+            "right": {
+              "max_yaw_deg": 0.0,
+              "min_gap_m": 0.013752010149425991,
+              "persistent_point_total": 0,
+              "reasons": [
+                "phase 75-129: 54/54 pairs have no persistent ground points (unknown contact)"
+              ],
+              "unknown_pairs": 54,
+              "verdict": "FAIL"
+            }
+          }
+        },
+        "0.005": {
+          "authority_verdict": "FAIL",
+          "legacy_status": "PASS_FOCUSED_SKIN_FLOOR",
+          "per_foot": {
+            "left": {
+              "max_yaw_deg": 0.0,
+              "min_gap_m": 0.007767353290837111,
+              "persistent_point_total": 0,
+              "reasons": [
+                "phase 0-54: 54/54 pairs have no persistent ground points (unknown contact)",
+                "phase 150-150: single-frame phase cannot establish persistent contact"
+              ],
+              "unknown_pairs": 54,
+              "verdict": "FAIL"
+            },
+            "right": {
+              "max_yaw_deg": 0.0,
+              "min_gap_m": 0.013752010149425991,
+              "persistent_point_total": 0,
+              "reasons": [
+                "phase 75-129: 54/54 pairs have no persistent ground points (unknown contact)"
+              ],
+              "unknown_pairs": 54,
+              "verdict": "FAIL"
+            }
+          }
+        },
+        "0.015": {
+          "authority_verdict": "FAIL",
+          "legacy_status": "PASS_FOCUSED_SKIN_FLOOR",
+          "per_foot": {
+            "left": {
+              "max_yaw_deg": 0.5091015797684666,
+              "min_gap_m": 0.007767353290837111,
+              "persistent_point_total": 426,
+              "reasons": [
+                "phase 0-54: 1/54 pairs have no persistent ground points (unknown contact)",
+                "phase 0-54: persistent skate 0.478 m/s exceeds threshold",
+                "phase 0-54: patch drift 0.0299 m exceeds threshold",
+                "phase 150-150: single-frame phase cannot establish persistent contact"
+              ],
+              "unknown_pairs": 1,
+              "verdict": "FAIL"
+            },
+            "right": {
+              "max_yaw_deg": 0.008852917810513975,
+              "min_gap_m": 0.013752010149425991,
+              "persistent_point_total": 144,
+              "reasons": [
+                "phase 75-129: 29/54 pairs have no persistent ground points (unknown contact)"
+              ],
+              "unknown_pairs": 29,
+              "verdict": "FAIL"
+            }
+          }
+        }
+      }
+    },
+    "sprint006": {
+      "artifact_sha256": "d4682e87dbb73c55b2336cf0076c821639bc5573d97bda664a3e426df5fc62d4",
+      "sweeps": {
+        "0.001": {
+          "authority_verdict": "FAIL",
+          "legacy_status": "PASS_FOCUSED_SKIN_FLOOR",
+          "per_foot": {
+            "left": {
+              "max_yaw_deg": 0.0,
+              "min_gap_m": 0.0077524105666520494,
+              "persistent_point_total": 0,
+              "reasons": [
+                "phase 0-44: 44/44 pairs have no persistent ground points (unknown contact)"
+              ],
+              "unknown_pairs": 44,
+              "verdict": "FAIL"
+            },
+            "right": {
+              "max_yaw_deg": 0.0,
+              "min_gap_m": 0.013751937211867692,
+              "persistent_point_total": 0,
+              "reasons": [
+                "phase 58-102: 44/44 pairs have no persistent ground points (unknown contact)"
+              ],
+              "unknown_pairs": 44,
+              "verdict": "FAIL"
+            }
+          }
+        },
+        "0.005": {
+          "authority_verdict": "FAIL",
+          "legacy_status": "PASS_FOCUSED_SKIN_FLOOR",
+          "per_foot": {
+            "left": {
+              "max_yaw_deg": 0.0,
+              "min_gap_m": 0.0077524105666520494,
+              "persistent_point_total": 0,
+              "reasons": [
+                "phase 0-44: 44/44 pairs have no persistent ground points (unknown contact)"
+              ],
+              "unknown_pairs": 44,
+              "verdict": "FAIL"
+            },
+            "right": {
+              "max_yaw_deg": 0.0,
+              "min_gap_m": 0.013751937211867692,
+              "persistent_point_total": 0,
+              "reasons": [
+                "phase 58-102: 44/44 pairs have no persistent ground points (unknown contact)"
+              ],
+              "unknown_pairs": 44,
+              "verdict": "FAIL"
+            }
+          }
+        },
+        "0.015": {
+          "authority_verdict": "FAIL",
+          "legacy_status": "PASS_FOCUSED_SKIN_FLOOR",
+          "per_foot": {
+            "left": {
+              "max_yaw_deg": 0.5064952050918292,
+              "min_gap_m": 0.0077524105666520494,
+              "persistent_point_total": 338,
+              "reasons": [
+                "phase 0-44: persistent skate 0.487 m/s exceeds threshold",
+                "phase 0-44: patch drift 0.0319 m exceeds threshold"
+              ],
+              "unknown_pairs": 0,
+              "verdict": "FAIL"
+            },
+            "right": {
+              "max_yaw_deg": 0.009114893254911402,
+              "min_gap_m": 0.013751937211867692,
+              "persistent_point_total": 114,
+              "reasons": [
+                "phase 58-102: 24/44 pairs have no persistent ground points (unknown contact)"
+              ],
+              "unknown_pairs": 24,
+              "verdict": "FAIL"
+            }
+          }
+        }
+      }
+    }
+  },
+  "contact_profile_sha256": "38fc7b763c257844f141fbfe877040d29129a34d3d02cdbcd5ddba2b8eeba80e"
+}

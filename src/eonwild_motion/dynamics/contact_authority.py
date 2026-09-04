@@ -93,6 +93,7 @@ def ground_plane_witness(
     tangential[:, up_axis] = 0.0
     return {
         "persistent_point_count": int(len(ids)),
+        "persistent_indices": sorted(int(i) for i in ids),
         "maximum_velocity_mps": float(speeds[local]),
         "maximum_tangential_velocity_mps": float(np.linalg.norm(tangential, axis=1).max()),
         "point_index": int(ids[local]),
@@ -171,10 +172,32 @@ def evaluate_contact_authority(
         if is_loaded or start is None:
             continue
         end = index - 1
+        frame_count = end - start + 1
+        if frame_count < 2:
+            # A single frame cannot establish persistent contact — there is
+            # no pair to witness. Fail closed, never vacuous PASS.
+            phases.append(
+                {
+                    "start_frame": start,
+                    "end_frame": end,
+                    "start_time_s": times[start],
+                    "end_time_s": times[end],
+                    "minimum_gap_m": None,
+                    "max_persistent_velocity_mps": None,
+                    "persistent_point_total": 0,
+                    "unknown_pairs": 0,
+                    "drift_m": 0.0,
+                    "yaw_deg": None,
+                    "verdict": "FAIL",
+                    "reasons": ["single-frame phase cannot establish persistent contact"],
+                }
+            )
+            start = None
+            continue
         worst_pen = 0.0
         worst_speed: float | None = 0.0
         total_drift = 0.0
-        total_yaw = 0.0
+        max_pair_yaw = 0.0
         persistent_total = 0
         unknown_pairs = 0
         pair_count = 0
@@ -202,7 +225,14 @@ def evaluate_contact_authority(
                     speed = float(witness["maximum_tangential_velocity_mps"] or 0.0)
                     worst_speed = max(float(worst_speed or 0.0), speed)
                     total_drift += speed * (times[k] - times[k - 1])
-                total_yaw += patch_heading_yaw_deg(prev, verts, up_axis=up)
+                    # Yaw is measured on the persistent set only: witness
+                    # motion of points that actually stayed at the floor.
+                    ids = witness["persistent_indices"]
+                    if len(ids) >= 2:
+                        max_pair_yaw = max(
+                            max_pair_yaw,
+                            patch_heading_yaw_deg(prev[ids], verts[ids], up_axis=up),
+                        )
         reasons: list[str] = []
         if unknown_pairs > 0:
             reasons.append(f"{unknown_pairs}/{pair_count} pairs have no persistent ground points (unknown contact)")
@@ -212,8 +242,8 @@ def evaluate_contact_authority(
             reasons.append(f"persistent skate {worst_speed:.3f} m/s exceeds threshold")
         if total_drift > thresholds.drift_per_phase_m:
             reasons.append(f"patch drift {total_drift:.4f} m exceeds threshold")
-        if total_yaw > thresholds.yaw_per_phase_deg:
-            reasons.append(f"patch yaw {total_yaw:.2f} deg exceeds threshold")
+        if max_pair_yaw > thresholds.yaw_per_phase_deg:
+            reasons.append(f"persistent patch yaw {max_pair_yaw:.2f} deg exceeds threshold")
         phases.append(
             {
                 "start_frame": start,
@@ -229,7 +259,7 @@ def evaluate_contact_authority(
                 "persistent_point_total": persistent_total,
                 "unknown_pairs": unknown_pairs,
                 "drift_m": total_drift,
-                "yaw_deg": total_yaw,
+                "yaw_deg": max_pair_yaw,
                 "verdict": "PASS" if not reasons else "FAIL",
                 "reasons": reasons,
             }

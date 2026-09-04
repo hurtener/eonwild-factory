@@ -98,6 +98,56 @@ continuity/turning/braking, growth hysteresis and the runtime seam.
   is the claim, and conservation (`I·θ` sums to zero per sample) is
   asserted in tests.
 
+## Real-artifact authority: Run010 + Sprint006 under the new gate
+
+`evaluate_real_artifacts.py` runs `evaluate_airborne_skin_with_authority`
+on the user-approved Run010/Sprint006 candidates (same floor binding as
+the legacy evaluation — apples to apples). `real-artifact-authority.json`
+holds the full sweep; headline table (stance phases only):
+
+| artifact | tol 1 mm | tol 5 mm | tol 15 mm |
+|---|---|---|---|
+| Run010 left | 0 persistent / 54 unknown (min gap 7.8 mm) | same | 426 persistent, 1 unknown — but skate 0.48 m/s, FAIL |
+| Run010 right | 0 / 54 (min gap 13.8 mm) | same | 144 persistent, 29 unknown, FAIL |
+| Sprint006 left | 0 / 44 (min gap 7.8 mm) | same | 338 persistent, 0 unknown — but skate 0.49 m/s + drift 32 mm, FAIL |
+| Sprint006 right | 0 / 44 (min gap 13.8 mm) | same | 114 persistent, 24 unknown, FAIL |
+
+What this means, carefully:
+
+1. Under persistent-point semantics the approved skins never touch the
+   floor during planned stance: they hover 8–14 mm and, where the
+   15 mm tolerance does find persistent points, slide ~0.5 m/s (~9% of
+   travel speed — slow-mo visible, full-speed borderline).
+2. This does **not** un-approve Run010/Sprint006. They were built and
+   accepted under 30 mm floor semantics, and that visual acceptance
+   stands. It sets the regrounding bar for the next gait pass instead:
+   sole to ≤2 mm with persistent skate < 0.35 m/s — now verifiable
+   frame-by-frame instead of arguable.
+3. The gate itself was hardened by this exercise: single-frame loaded
+   blips (e.g. Run010 left phase 150–150) now fail closed instead of
+   passing vacuously, and yaw is measured on the persistent set only
+   (the earlier 68° phantom is gone — max persistent yaw is 0.5°).
+4. The systematic left/right asymmetry (left 7.8 mm vs right 13.8 mm
+   hover on both gaits) is a real regrounding lead, not noise.
+
+## Calibration backlog (not fabricated)
+
+No biomechanics literature lives in this repo's references and none was
+pulled for this slice, so the capacity priors stay `provisional` point
+values and no citation is claimed. What would graduate each (owner:
+whoever runs the calibration pass):
+
+* `bodyweight_multiple` 3.5 — needs ratite peak-GRF literature
+  (running birds, per-leg, at matched Froude numbers).
+* `peak_power_w_per_kg` 25 — needs muscle-physiology sourcing; the
+  demo's 6% power margin is the thinnest gate and must not be tuned.
+* `friction_coefficient` 0.8, `arrest_distance_m` 6.0 — needs
+  substrate/trackway grounding (mud vs packed earth changes both).
+* Contact thresholds (1 mm / 0.35 m/s / 20 mm / 6°) — the sweep above
+  is the first calibration datum: art built to 30 mm semantics fails
+  1–5 mm and skates at 15 mm. The regrounding pass decides the release
+  numbers, the gate enforces them.
+
 ## Adversarial review fixes (P0, applied after first pass)
 
 An independent review of the slice found five load-bearing bugs; all
