@@ -1,0 +1,50 @@
+{
+  "engine_head": "392e067",
+  "facts": {
+    "01-ballistic-vs-kinematic": {
+      "flight_time_s": 0.6991,
+      "landing_impulse_ns": [
+        -6000.0,
+        5787.4,
+        0.0
+      ],
+      "takeoff_impulse_ns": [
+        0.0,
+        4500.0,
+        0.0
+      ],
+      "verification": {
+        "max_position_residual_m": 0.0,
+        "tolerance_m": 1e-06,
+        "verdict": "PASS"
+      }
+    },
+    "02-contact-authority": {
+      "phases": 1,
+      "reasons": [],
+      "verdict": "PASS"
+    },
+    "03-budgets-and-growth": {
+      "capacity_status": "provisional",
+      "mass_ratios": {
+        "adult": 1.0,
+        "heavy": 1.405,
+        "juvenile": 0.238,
+        "subadult": 0.551
+      }
+    },
+    "power_attack": {
+      "brutal_limiting_factor": "takeoff.force_ok",
+      "brutal_plan_sha256": "e235ade297aa3ff65b82090ff151f69cb67dae746a8406ae781bbf43fed0b282",
+      "brutal_variant": "grounded_lunge",
+      "feasible_physics_evaluated": true,
+      "feasible_plan_sha256": "8018253f52b2116ca6f43383c357696aadff23f477ca32383407711d1c91f2d5",
+      "feasible_variant": "airborne"
+    }
+  },
+  "figures": {
+    "01-ballistic-vs-kinematic": "01-ballistic-vs-kinematic.svg",
+    "02-contact-authority": "02-contact-authority.svg",
+    "03-budgets-and-growth": "03-budgets-and-growth.svg"
+  }
+}

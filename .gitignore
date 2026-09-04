@@ -1,3 +1,5 @@
+# macOS metadata.
+.DS_Store
 
 # Procedural engine local environments and generated runs.
 .venv/
