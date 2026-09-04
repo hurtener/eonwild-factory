@@ -112,7 +112,7 @@ def patch_heading_yaw_deg(previous: np.ndarray, current: np.ndarray, *, up_axis:
         _, _, curr_vt = np.linalg.svd(curr, full_matrices=False)
     except Exception as exc:
         raise ContractError(f"patch yaw SVD failed: {exc}") from exc
-    dot = float(np.clip(prev_vt[0] @ curr_vt[0], -1.0, 1.0))
+    dot = float(np.clip(abs(prev_vt[0] @ curr_vt[0]), -1.0, 1.0))
     return math.degrees(math.acos(dot))
 
 
@@ -125,6 +125,21 @@ class AuthorityThresholds:
     ground_tolerance_m: float = 0.001
     up_axis: int = 1
     ground_m: float = 0.0
+
+    def __post_init__(self) -> None:
+        for key in (
+            "penetration_tolerance_m",
+            "skate_velocity_mps",
+            "drift_per_phase_m",
+            "yaw_per_phase_deg",
+            "ground_tolerance_m",
+        ):
+            value = float(getattr(self, key))
+            if not math.isfinite(value) or value < 0.0:
+                raise ContractError(f"authority threshold {key} must be non-negative and finite")
+        if self.up_axis not in (0, 1, 2):
+            raise ContractError("authority up axis must be 0, 1 or 2")
+        _finite(float(self.ground_m), label="authority ground_m")
 
 
 def evaluate_contact_authority(

@@ -59,6 +59,7 @@ from eonwild_motion.dynamics.transition import (
     ContinuityPacket,
     blend_packets,
     brake_plan,
+    bridge_impulse,
     capture_step_target,
     continuity_error,
     redistribute_tail_head,
@@ -168,8 +169,10 @@ def test_solve_root_from_com_identity():
 
 
 def test_ballistic_plan_matches_analytic_flight():
+    # Landing XZ is exactly vx*T analytic so the target-hit gate passes;
+    # the miss path is covered separately below.
     request = BallisticRequest(launch_com_m=(0.0, 2.0, 0.0), launch_velocity_mps=(4.0, 3.0, 0.0),
-                               landing_com_m=(2.6, 1.7, 0.0), total_mass_kg=1500.0,
+                               landing_com_m=(2.7962, 1.7, 0.0), total_mass_kg=1500.0,
                                preload_velocity_mps=(4.0, 0.0, 0.0))
     plan = plan_ballistic_com(request)
     assert plan.variant == "airborne"
@@ -179,6 +182,14 @@ def test_ballistic_plan_matches_analytic_flight():
     assert plan.takeoff_impulse_ns == pytest.approx((0.0, 4500.0, 0.0))
     landing = np.asarray(plan.landing_impulse_ns)
     assert landing[1] > 0  # arrest upward impulse against downward impact
+
+
+def test_ballistic_off_target_arrival_falls_back():
+    request = BallisticRequest(launch_com_m=(0.0, 2.0, 0.0), launch_velocity_mps=(4.0, 3.0, 0.0),
+                               landing_com_m=(9.0, 1.7, 0.0))
+    plan = plan_ballistic_com(request)
+    assert plan.variant == "grounded_fallback"
+    assert any("misses landing" in reason for reason in plan.infeasibility)
 
 
 def test_ballistic_negative_discriminant_falls_back():
@@ -196,7 +207,7 @@ def test_horizontal_launch_velocity():
 def test_ballistic_verification_catches_tampering():
     plan = plan_ballistic_com(BallisticRequest(launch_com_m=(0.0, 2.0, 0.0),
                                               launch_velocity_mps=(4.0, 3.0, 0.0),
-                                              landing_com_m=(2.6, 1.7, 0.0)))
+                                              landing_com_m=(2.7962, 1.7, 0.0)))
     tampered = [dict(s) for s in plan.samples]
     tampered[-1] = {**tampered[-1], "com_m": [0.0, 99.0, 0.0]}
     assert verify_ballistic_samples(tampered)["verdict"] == "FAIL"
@@ -206,8 +217,11 @@ def test_ballistic_verification_catches_tampering():
 
 
 def test_takeoff_gentle_passes_brutal_fails():
-    gentle = assess_takeoff(total_mass_kg=1500.0, takeoff_impulse_ns=(0.0, 4500.0, 0.0),
-                            stance_time_s=0.28, capacity=CapacityProfile(profile_id="t"))
+    # Running takeoff: stance generates only the vertical impulse on top
+    # of body weight; the gated mean GRF includes that weight.
+    gentle = assess_takeoff(total_mass_kg=1500.0, takeoff_impulse_ns=(0.0, 3750.0, 0.0),
+                            stance_time_s=0.28, capacity=CapacityProfile(profile_id="t"),
+                            preload_velocity_mps=(4.5, 0.0, 0.0))
     assert gentle["verdict"] == "PASS"
     brutal = assess_takeoff(total_mass_kg=1500.0, takeoff_impulse_ns=(60000.0, 60000.0, 0.0),
                             stance_time_s=0.1, capacity=CapacityProfile(profile_id="t"))
@@ -320,9 +334,49 @@ def test_blend_endpoints_match_packets():
     assert samples[-1]["root_orientation"] == pytest.approx([0, 0, 0, 1])
 
 
+def test_blend_conserves_angular_momentum_in_flight():
+    free = {"left": "swing", "right": "swing"}
+    leaving = _packet(contacts=free, angular_momentum_kg_m2ps=(0.0, 5.0, 0.0))
+    entering = _packet(contacts=free, angular_momentum_kg_m2ps=(0.0, 5.0, 0.0),
+                       root_position_m=(1.0, 1.0, 0.0))
+    samples = blend_packets(leaving, entering, duration_s=0.3)
+    for sample in samples:
+        assert sample["angular_momentum"] == pytest.approx([0.0, 5.0, 0.0])
+    assert bridge_impulse(leaving, entering) == {"flight": True, "delivered_kg_m2ps": [0.0, 0.0, 0.0]}
+    mismatched = _packet(contacts=free, angular_momentum_kg_m2ps=(0.0, 9.0, 0.0))
+    with pytest.raises(ContractError):
+        blend_packets(leaving, mismatched, duration_s=0.3)
+
+
+def test_blend_reports_delivered_impulse_on_ground():
+    leaving = _packet(angular_momentum_kg_m2ps=(0.0, 5.0, 0.0))
+    entering = _packet(angular_momentum_kg_m2ps=(0.0, 8.0, 0.0))
+    assert bridge_impulse(leaving, entering) == {"flight": False, "delivered_kg_m2ps": [0.0, 3.0, 0.0]}
+    samples = blend_packets(leaving, entering, duration_s=0.3)
+    assert samples[-1]["angular_momentum"] == pytest.approx([0.0, 8.0, 0.0])
+
+
+def test_blend_carries_endpoint_spin():
+    spin = (0.0, 2.0, 0.0)
+    leaving = _packet(angular_velocity_radps=spin)
+    entering = _packet(angular_velocity_radps=spin, root_position_m=(0.5, 1.0, 0.0))
+    samples = blend_packets(leaving, entering, duration_s=0.3, sample_hz=240)
+    q0 = np.asarray(samples[0]["root_orientation"])
+    q1 = np.asarray(samples[1]["root_orientation"])
+    dt = samples[1]["time_s"] - samples[0]["time_s"]
+    # Finite-difference spin at the seam must match the packet (not zero).
+    dq = q1 - q0
+    spin_est = 2.0 * dq[:3] / dt
+    assert float(np.linalg.norm(spin_est)) == pytest.approx(2.0, rel=0.2)
+
+
 def test_capture_turn_brake_formulas():
     capture = capture_step_target((0.0, 1.0, 0.0), (2.0, 0.0, 0.0), com_height_m=1.0)
     assert capture["displacement_m"] == pytest.approx(2.0 * math.sqrt(1.0 / 9.81))
+    # Vertical velocity must not move the foot target or lift it off the floor.
+    falling = capture_step_target((0.0, 1.0, 0.0), (2.0, -3.0, 1.0), com_height_m=1.0)
+    assert falling["capture_point_m"][1] == pytest.approx(0.0)
+    assert falling["displacement_m"] == pytest.approx(math.hypot(2.0, 1.0) * math.sqrt(1.0 / 9.81))
     turn = turn_plan(entry_speed_mps=5.0, heading_change_deg=90.0)
     assert turn["duration_s"] == pytest.approx(1.0) and turn["steps_required"] >= 1
     brake = brake_plan(entry_speed_mps=6.0, friction_coefficient=0.8)
@@ -392,11 +446,12 @@ def test_runtime_interpolation_preserves_grid():
 def test_power_attack_feasible_airborne():
     # Running takeoff: horizontal speed carried in (preload), stance only
     # generates the vertical impulse — the economical predator launch.
+    # Landing XZ is exactly vx*T analytic so the target-hit gate passes.
     request = PowerAttackRequest(body=_body(True), capacity=CapacityProfile(profile_id="t"),
                                  launch_com_m=(0.0, 2.0, 0.0),
                                  launch_velocity_mps=(4.5, 2.5, 0.0),
                                  preload_velocity_mps=(4.5, 0.0, 0.0),
-                                 landing_com_m=(2.4, 1.7, 0.0))
+                                 landing_com_m=(2.7448, 1.7, 0.0))
     receipt = plan_power_attack(request)
     assert receipt["variant"] == "airborne"
     assert receipt["physics_evaluated"] is True
@@ -404,13 +459,25 @@ def test_power_attack_feasible_airborne():
 
 
 def test_power_attack_brutal_falls_back_to_grounded():
+    # Consistent target (arrival exact) but far beyond the force envelope:
+    # the fallback must name the capacity limit, not the trajectory.
+    request = PowerAttackRequest(body=_body(True), capacity=CapacityProfile(profile_id="t"),
+                                 launch_com_m=(0.0, 2.0, 0.0),
+                                 launch_velocity_mps=(14.0, 9.0, 0.0),
+                                 landing_com_m=(26.145, 1.7, 0.0))
+    receipt = plan_power_attack(request)
+    assert receipt["variant"] == "grounded_lunge"
+    assert receipt["limiting_factor"] == "takeoff.force_ok"
+
+
+def test_power_attack_missed_target_falls_back():
     request = PowerAttackRequest(body=_body(True), capacity=CapacityProfile(profile_id="t"),
                                  launch_com_m=(0.0, 2.0, 0.0),
                                  launch_velocity_mps=(14.0, 9.0, 0.0),
                                  landing_com_m=(9.0, 1.7, 0.0))
     receipt = plan_power_attack(request)
     assert receipt["variant"] == "grounded_lunge"
-    assert receipt["limiting_factor"] is not None
+    assert receipt["limiting_factor"] == "trajectory"
 
 
 def test_power_attack_impossible_trajectory_falls_back():
@@ -425,7 +492,8 @@ def test_power_attack_normalized_profile_marks_physics_unevaluated():
     request = PowerAttackRequest(body=_body(False), capacity=CapacityProfile(profile_id="t"),
                                  launch_com_m=(0.0, 2.0, 0.0),
                                  launch_velocity_mps=(4.5, 2.5, 0.0),
-                                 landing_com_m=(2.4, 1.7, 0.0))
+                                 preload_velocity_mps=(4.5, 0.0, 0.0),
+                                 landing_com_m=(2.7448, 1.7, 0.0))
     receipt = plan_power_attack(request)
     assert receipt["variant"] == "airborne_normalized"
     assert receipt["physics_evaluated"] is False
@@ -434,7 +502,7 @@ def test_power_attack_normalized_profile_marks_physics_unevaluated():
 def test_attack_root_track_and_entry_packet():
     receipt_plan = plan_ballistic_com(BallisticRequest(launch_com_m=(0.0, 2.0, 0.0),
                                                        launch_velocity_mps=(4.0, 3.0, 0.0),
-                                                       landing_com_m=(2.6, 1.7, 0.0)))
+                                                       landing_com_m=(2.7962, 1.7, 0.0)))
     track = solve_attack_root_track(receipt_plan.samples,
                                     root_rotations=[np.eye(3)] * len(receipt_plan.samples),
                                     com_relative_to_root=(0.0, 0.5, 0.0))

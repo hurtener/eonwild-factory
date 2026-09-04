@@ -1,15 +1,15 @@
 {
-  "engine_head": "392e067",
+  "engine_head": "b189b60",
   "facts": {
     "01-ballistic-vs-kinematic": {
       "flight_time_s": 0.6991,
       "landing_impulse_ns": [
-        -6000.0,
+        -5578.9,
         5787.4,
         0.0
       ],
       "takeoff_impulse_ns": [
-        0.0,
+        -421.0,
         4500.0,
         0.0
       ],
@@ -34,12 +34,12 @@
       }
     },
     "power_attack": {
-      "brutal_limiting_factor": "takeoff.force_ok",
-      "brutal_plan_sha256": "e235ade297aa3ff65b82090ff151f69cb67dae746a8406ae781bbf43fed0b282",
+      "brutal_limiting_factor": "trajectory",
+      "brutal_plan_sha256": "1ea35d1ae31a6bb4176750ce18220a79de53a730d2afe496ced626fb6ec4308c",
       "brutal_variant": "grounded_lunge",
-      "feasible_physics_evaluated": true,
-      "feasible_plan_sha256": "8018253f52b2116ca6f43383c357696aadff23f477ca32383407711d1c91f2d5",
-      "feasible_variant": "airborne"
+      "feasible_physics_evaluated": false,
+      "feasible_plan_sha256": "b028bffc2e9a1d2dabe7ba19e1200ec095b2d6e229910ce3d64f337f9fa826a8",
+      "feasible_variant": "grounded_lunge"
     }
   },
   "figures": {

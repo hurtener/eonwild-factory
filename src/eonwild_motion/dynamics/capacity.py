@@ -42,11 +42,12 @@ class CapacityProfile:
     """
 
     profile_id: str
-    bodyweight_multiple: float = 2.5
+    bodyweight_multiple: float = 3.5
     friction_coefficient: float = 0.8
     absorb_distance_m: float = 0.6
     absorb_load_multiple: float = 4.0
     peak_power_w_per_kg: float = 25.0
+    arrest_distance_m: float = 6.0
     provenance: str = "v9_first_pass_engineering_prior"
     status: str = "provisional"
 
@@ -57,6 +58,7 @@ class CapacityProfile:
             "absorb_distance_m",
             "absorb_load_multiple",
             "peak_power_w_per_kg",
+            "arrest_distance_m",
         ):
             value = float(getattr(self, key))
             if not math.isfinite(value) or value <= 0.0:
@@ -71,40 +73,51 @@ class FeasibilityVerdict:
     limiting_factor: str | None
 
 
+def _positive_finite(value: float, *, label: str) -> float:
+    result = _finite(value, label=label)
+    if result <= 0.0:
+        raise ContractError(f"{label} must be positive")
+    return result
+
+
 def assess_takeoff(
     *,
     total_mass_kg: float,
     takeoff_impulse_ns: tuple[float, float, float] | list[float],
     stance_time_s: float,
     capacity: CapacityProfile,
+    preload_velocity_mps: tuple[float, float, float] | list[float] = (0.0, 0.0, 0.0),
     gravity_mps2: float = 9.81,
 ) -> dict[str, Any]:
-    """Can the fixture produce the takeoff impulse inside the stance time?"""
-    mass = _finite(total_mass_kg, label="total_mass_kg")
-    stance = _finite(stance_time_s, label="stance_time_s")
-    if mass <= 0.0 or stance <= 0.0:
-        raise ContractError("takeoff assessment needs positive mass and stance time")
+    """Can the fixture produce the takeoff impulse inside the stance time?
+
+    The gated mean ground-reaction force includes body weight
+    (``J/stance + W``) — the impulse alone is not the force.
+    """
+    mass = _positive_finite(total_mass_kg, label="total_mass_kg")
+    stance = _positive_finite(stance_time_s, label="stance_time_s")
+    gravity = _positive_finite(gravity_mps2, label="gravity_mps2")
     impulse = _vec3(takeoff_impulse_ns, label="takeoff_impulse_ns")
-    horizontal = float(np.linalg.norm(impulse[[0, 2]]))
-    vertical = float(impulse[1])
-    avg_force = np.asarray(impulse, dtype=float) / stance
-    avg_horizontal = float(np.linalg.norm(avg_force[[0, 2]]))
-    avg_vertical = float(avg_force[1])
-    weight = mass * gravity_mps2
-    normal = weight + max(0.0, avg_vertical)
+    preload = _vec3(preload_velocity_mps, label="preload_velocity_mps")
+    weight = mass * gravity
+    impulse_mean = np.asarray(impulse, dtype=float) / stance
+    mean_grf = impulse_mean + np.array([0.0, weight, 0.0])
+    avg_horizontal = float(np.linalg.norm(impulse_mean[[0, 2]]))
+    normal = weight + max(0.0, float(impulse_mean[1]))
     friction_demand = avg_horizontal / normal if normal > 0 else math.inf
     force_limit = capacity.bodyweight_multiple * weight
-    required_peak = float(np.linalg.norm(avg_force)) * 1.5  # shape factor: peak vs average
-    power_w = float(np.linalg.norm(avg_force)) * float(np.linalg.norm(impulse / mass)) / 2.0
+    required_peak = float(np.linalg.norm(mean_grf)) * 1.5  # shape factor: peak vs mean
+    average_velocity = preload + np.asarray(impulse, dtype=float) / mass / 2.0
+    power_w = max(0.0, float(mean_grf @ average_velocity))
     power_limit = capacity.peak_power_w_per_kg * mass
     ok_force = required_peak <= force_limit
     ok_friction = friction_demand <= capacity.friction_coefficient
     ok_power = power_w <= power_limit
     return {
         "impulse_magnitude_ns": float(np.linalg.norm(impulse)),
-        "horizontal_impulse_ns": horizontal,
-        "vertical_impulse_ns": vertical,
-        "average_force_n": [float(v) for v in avg_force],
+        "horizontal_impulse_ns": float(np.linalg.norm(impulse[[0, 2]])),
+        "vertical_impulse_ns": float(impulse[1]),
+        "mean_grf_n": [float(v) for v in mean_grf],
         "required_peak_force_n": required_peak,
         "force_limit_n": force_limit,
         "friction_demand": friction_demand,
@@ -125,25 +138,36 @@ def assess_landing(
     capacity: CapacityProfile,
     gravity_mps2: float = 9.81,
 ) -> dict[str, Any]:
-    """Can the fixture absorb the landing energy inside its crouch travel?"""
-    mass = _finite(total_mass_kg, label="total_mass_kg")
-    if mass <= 0.0:
-        raise ContractError("landing assessment needs positive mass")
+    """Can the fixture absorb the landing inside its crouch travel?
+
+    Only the *vertical* energy goes into the crouch-travel work budget;
+    horizontal energy must be arrested by friction over distance (see
+    :func:`assess_arrest`, wired into the attack verdict separately).
+    """
+    mass = _positive_finite(total_mass_kg, label="total_mass_kg")
+    gravity = _positive_finite(gravity_mps2, label="gravity_mps2")
     velocity = _vec3(impact_velocity_mps, label="impact_velocity_mps")
+    vertical_speed = abs(float(velocity[1]))
     speed = float(np.linalg.norm(velocity))
-    kinetic = 0.5 * mass * speed * speed
-    weight = mass * gravity_mps2
+    kinetic_vertical = 0.5 * mass * vertical_speed * vertical_speed
+    weight = mass * gravity
     # Constant-deceleration absorption over the available crouch travel.
-    required_decel = speed * speed / (2.0 * capacity.absorb_distance_m) if capacity.absorb_distance_m > 0 else math.inf
-    allowed_decel = capacity.absorb_load_multiple * gravity_mps2
+    required_decel = (
+        vertical_speed * vertical_speed / (2.0 * capacity.absorb_distance_m)
+        if capacity.absorb_distance_m > 0
+        else math.inf
+    )
+    allowed_decel = capacity.absorb_load_multiple * gravity
     settle_work = weight * capacity.absorb_distance_m
     budget = (capacity.absorb_load_multiple * weight) * capacity.absorb_distance_m
-    required_work = kinetic + settle_work
+    required_work = kinetic_vertical + settle_work
     ok_decel = required_decel <= allowed_decel
     ok_work = required_work <= budget
     return {
         "impact_speed_mps": speed,
-        "kinetic_energy_j": kinetic,
+        "vertical_impact_speed_mps": vertical_speed,
+        "horizontal_impact_speed_mps": float(np.linalg.norm(velocity[[0, 2]])),
+        "vertical_kinetic_energy_j": kinetic_vertical,
         "required_work_j": required_work,
         "absorption_budget_j": budget,
         "required_deceleration_mps2": required_decel,
@@ -151,6 +175,34 @@ def assess_landing(
         "deceleration_ok": bool(ok_decel),
         "work_ok": bool(ok_work),
         "verdict": "PASS" if (ok_decel and ok_work) else "FAIL",
+    }
+
+
+def assess_arrest(
+    *,
+    horizontal_speed_mps: float,
+    capacity: CapacityProfile,
+    gravity_mps2: float = 9.81,
+) -> dict[str, Any]:
+    """Can remaining horizontal speed be braked inside the arrest budget?
+
+    Friction-limited stop (``d = v²/2μg``) against the review-labeled
+    ``arrest_distance_m``. Landing crouch absorbs vertical energy; this
+    gate owns the horizontal remainder.
+    """
+    speed = _finite(horizontal_speed_mps, label="horizontal_speed_mps")
+    gravity = _positive_finite(gravity_mps2, label="gravity_mps2")
+    if speed < 0.0:
+        raise ContractError("horizontal speed must be non-negative")
+    decel = capacity.friction_coefficient * gravity
+    distance = speed * speed / (2.0 * decel) if speed > 0 else 0.0
+    ok = distance <= capacity.arrest_distance_m
+    return {
+        "horizontal_speed_mps": speed,
+        "required_arrest_distance_m": distance,
+        "arrest_budget_m": capacity.arrest_distance_m,
+        "arrest_ok": bool(ok),
+        "verdict": "PASS" if ok else "FAIL",
     }
 
 
@@ -182,18 +234,23 @@ def friction_cone_ok(
 def decide_attack_variant(
     takeoff: Mapping[str, Any],
     landing: Mapping[str, Any],
+    arrest: Mapping[str, Any] | None = None,
 ) -> FeasibilityVerdict:
-    """Combine takeoff/landing assessments; infeasible airborne falls back.
+    """Combine takeoff/landing/arrest assessments; infeasible airborne falls back.
 
     The grounded lunge is the mandatory fallback: it keeps the behavior
     (committed forward bite with body weight behind it) while refusing an
     unphysical flight.
     """
     checks = {"takeoff": dict(takeoff), "landing": dict(landing)}
-    if takeoff.get("verdict") == "PASS" and landing.get("verdict") == "PASS":
+    sections = ["takeoff", "landing"]
+    if arrest is not None:
+        checks["arrest"] = dict(arrest)
+        sections.append("arrest")
+    if all(checks[section].get("verdict") == "PASS" for section in sections):
         return FeasibilityVerdict(feasible=True, variant="airborne", checks=checks, limiting_factor=None)
     limiting: str | None = None
-    for section in ("takeoff", "landing"):
+    for section in sections:
         for key, value in checks[section].items():
             if key.endswith("_ok") and value is False:
                 limiting = f"{section}.{key}"
@@ -276,6 +333,7 @@ __all__ = [
     "CapacityProfile",
     "FeasibilityVerdict",
     "JointEnvelope",
+    "assess_arrest",
     "assess_landing",
     "assess_takeoff",
     "contracted_preferred_envelope",

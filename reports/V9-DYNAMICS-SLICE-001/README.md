@@ -82,6 +82,32 @@ continuity/turning/braking, growth hysteresis and the runtime seam.
 * `src/eonwild_motion/planning/power_attack.py` — the vertical slice.
 * `tests/test_v9_dynamics_slice.py` — 32 tests, all passing.
 
+## Adversarial review fixes (P0, applied after first pass)
+
+An independent review of the slice found five load-bearing bugs; all
+are fixed and covered by tests in `test_v9_dynamics_slice.py`:
+
+1. Takeoff force gate omitted body weight (`J/stance` vs `J/stance + W`).
+   The gated mean GRF now includes weight; the bodyweight prior moved
+   2.5 → 3.5 BW (provisional running-takeoff prior, still labeled).
+2. Blends silently changed angular momentum and zeroed endpoint spin.
+   Flight boundaries now hold `L` constant (mismatch raises); ground
+   boundaries return the delivered impulse via `bridge_impulse`; endpoint
+   spin is carried by an exact Hermite corrective rotation.
+3. Landing absorbed horizontal KE with vertical crouch. Horizontal energy
+   is now owned by a separate `assess_arrest` friction/distance gate
+   wired into every attack verdict.
+4. Capture point ingested vertical velocity and left the floor. It is
+   horizontal-only with the target projected to the ground plane.
+5. The planner never enforced horizontal target arrival (the demo missed
+   by ~20 cm and still passed). Arrival miss beyond `target_tolerance_m`
+   now selects the grounded fallback with the miss distance named.
+
+Remaining review notes (P1, open): capacity priors need ratite/trackway
+calibration; inertia still needs volumetric segmentation; tail is a
+static redistribution angle, not yet the spec's damped ODE; runtime
+blends lerp COM velocity independently of position.
+
 ## Honest limitations (not yet real life)
 
 * Capacity numbers are first-pass engineering priors (`provisional`),
@@ -94,3 +120,49 @@ continuity/turning/braking, growth hysteresis and the runtime seam.
   seam it will hang from).
 * No new GLB artifacts or perceptual review in this slice — that gate
   re-opens once the IK lands on top of these plans.
+
+## Fixture proof — real profiles, 17 segments each (tests/test_v9_dynamics_fixtures.py)
+
+Proves the slice on admitted fixture documents, not 2-segment toys.
+Reproduce: `uv run --frozen --group test python -m pytest
+tests/test_v9_dynamics_fixtures.py tests/test_v9_dynamics_slice.py
+tests/test_v9_airborne_gait.py -q` — 60 passed.
+
+* Binding: `catalog/rigs/hero-theropod-v8_3.semantic-rig.json` supplies the
+  Bone vocabulary; the segment-role → node map is explicit data in the test
+  (no species branching). Synthetic 17/17 bound, mass sum 1500.0 kg at
+  H=2.15 m; Tarbosaurus provisional 17/17 bound, mass-fraction sum 1.0 at
+  provisional H=2.15 m (its dimensions are null; height only scales
+  `I = diag·M·H²`, never COM/P). Forelimbs bind to chest as carried mass —
+  the rig has no forelimb chain.
+* Synthetic running takeoff `(0,2,0) + (4.5,2.5,0)`, preload `(4.5,0,0)` →
+  `(2.4,1.7,0)` → `airborne`, physics evaluated, plan `380f5a4f…`, flight
+  0.60996 s, takeoff impulse `(0, 3750, 0)` N·s, landing impulse
+  `(-6750, 5225.51, 0)` N·s. Takeoff margin: required peak 20089.29 N vs
+  limit 36787.50 N, friction 0.0 vs 0.8, power 16741.07 W vs 37500.00 W.
+  Landing margin: work 33118.50 J vs budget 35316.00 J, decel 26.99 m/s²
+  vs allowed 39.24 m/s².
+* Tarbosaurus normalized, same request → `airborne_normalized`, physics
+  unevaluated, plan `c9e3ef6a…`, impulses `None` — trajectory bookkeeping
+  only, exactly like the stationary slice.
+* Absurd launch `(14,9,0)` → `(9,1.7,0)` → `grounded_lunge`, limited by
+  `takeoff.force_ok`, plan `85a1058d…`. Takeoff: required peak 133740.94 N
+  vs 36787.50 N, friction demand 1.1918 vs 0.8, power 741964.29 W vs
+  37500.00 W. Landing: work 220993.50 J vs 35316.00 J, decel 235.74 m/s²
+  vs 39.24 m/s². Behavior (committed bite) survives; unphysical flight
+  does not.
+* Centroidal: 3-frame synthetic FK run translating all bound nodes rigidly
+  at v=`(1.5, 0, -2.0)` m/s gives P=`(2250, 0, -3000)` kg·m/s = M·v on all
+  three samples (M=1500 kg).
+* Contact authority wiring: `solve/airborne_gait.evaluate_airborne_skin`
+  gains keyword-only `include_contact_authority=False` (default off, old
+  receipts byte-identical) plus sibling
+  `evaluate_airborne_skin_with_authority`; when on, the persistent
+  ground-plane verdict from `dynamics.contact_authority` is appended under
+  `contact_authority_v1` (unloaded foot neutral, loaded-but-lifted FAILs as
+  unknown contact).
+* Capacity defaults: no adjustment. `CapacityProfile(profile_id=
+  "fixture_provisional_v1")` keeps first-pass priors (2.5 BW, mu 0.8,
+  0.6 m crouch, 4.0 BW absorb, 25 W/kg, `provisional`) — the feasible /
+  brutal split above lands on the intended side of the gate, so changing
+  thresholds would be tuning to the test.

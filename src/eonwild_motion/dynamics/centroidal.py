@@ -219,7 +219,7 @@ def bind_profile_segments(
         )
     total = math.fsum(b.mass_kg for b in bound)
     expected = mass_scale if total_mass_kg is not None else 1.0
-    if abs(total - expected) > 1e-9:
+    if abs(total - expected) > 1e-9 * max(1.0, abs(expected)):
         raise ContractError(f"segment masses sum to {total}, expected {expected}")
     return tuple(bound)
 
@@ -286,6 +286,8 @@ def compute_centroidal_series(
         pos, rot = world_positions[k], world_rotations[k]
         for j, binding in enumerate(bindings):
             seg_pos[k, j] = pos[binding.node_index] + rot[binding.node_index] @ binding.com_local_m
+    if not bool(np.all(np.isfinite(seg_pos))):
+        raise ContractError("FK segment positions must be finite")
     com = (seg_pos * masses[None, :, None]).sum(axis=1) / total
     com_vel = _finite_diff(com, times)
     seg_vel = np.zeros_like(seg_pos)

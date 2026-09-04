@@ -33,6 +33,7 @@ class BallisticRequest:
     post_landing_velocity_mps: tuple[float, float, float] = (0.0, 0.0, 0.0)
     gravity_mps2: float = 9.81
     sample_hz: int = 120
+    target_tolerance_m: float = 0.05
 
 
 @dataclass(frozen=True)
@@ -95,6 +96,19 @@ def plan_ballistic_com(request: BallisticRequest) -> BallisticPlan:
 
     count = max(2, int(math.ceil(duration * sample_hz)) + 1)
     g_vec = np.array([0.0, -gravity, 0.0])
+    # Horizontal target hit: the arc must arrive at the requested landing
+    # XZ, not merely share its height. A target-directed bite that misses
+    # is a miss, not a plan.
+    arrival = c0 + v0 * duration + 0.5 * g_vec * duration * duration
+    miss_m = float(np.linalg.norm((arrival - c_land)[[0, 2]]))
+    tolerance = _finite(request.target_tolerance_m, label="target_tolerance_m")
+    if tolerance < 0.0:
+        raise ContractError("target tolerance must be non-negative")
+    if miss_m > tolerance:
+        return _fallback(
+            request,
+            [f"ballistic arrival misses landing XZ by {miss_m:.3f} m (tolerance {tolerance:.3f} m)"],
+        )
     samples: list[dict[str, Any]] = []
     for i in range(count):
         t = duration * i / (count - 1)
@@ -109,6 +123,8 @@ def plan_ballistic_com(request: BallisticRequest) -> BallisticPlan:
         )
     impact_vel = v0 + g_vec * duration
     mass = request.total_mass_kg
+    if mass is not None and (not math.isfinite(mass) or mass <= 0.0):
+        raise ContractError("ballistic total mass must be a positive finite number")
     takeoff_j: tuple[float, float, float] | None = None
     landing_j: tuple[float, float, float] | None = None
     if mass is not None:

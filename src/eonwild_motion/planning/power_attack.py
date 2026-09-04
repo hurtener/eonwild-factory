@@ -39,11 +39,12 @@ from ..dynamics.ballistic import (
 )
 from ..dynamics.capacity import (
     CapacityProfile,
+    assess_arrest,
     assess_landing,
     assess_takeoff,
     decide_attack_variant,
 )
-from ..dynamics.centroidal import _finite, _vec3, solve_root_from_com
+from ..dynamics.centroidal import _finite, _quat, _vec3, solve_root_from_com
 from ..dynamics.transition import ContinuityPacket
 from ..errors import ContractError
 
@@ -83,21 +84,22 @@ def plan_power_attack(request: PowerAttackRequest) -> dict[str, Any]:
         )
     )
     if ballistic.variant != "airborne":
-        return _receipt(request, ballistic, None, None, "grounded_lunge", "trajectory")
+        return _receipt(request, ballistic, None, None, None, "grounded_lunge", "trajectory")
 
     verification = verify_ballistic_samples(ballistic.samples, gravity_mps2=request.gravity_mps2)
     if verification["verdict"] != "PASS":
-        return _receipt(request, ballistic, None, None, "grounded_lunge", "integration")
+        return _receipt(request, ballistic, None, None, None, "grounded_lunge", "integration")
 
     if mass is None:
         # Normalized profile: trajectory bookkeeping only, no force claims.
-        return _receipt(request, ballistic, None, None, "airborne_normalized", None)
+        return _receipt(request, ballistic, None, None, None, "airborne_normalized", None)
 
     takeoff = assess_takeoff(
         total_mass_kg=mass,
         takeoff_impulse_ns=ballistic.takeoff_impulse_ns or (0.0, 0.0, 0.0),
         stance_time_s=request.stance_time_s,
         capacity=request.capacity,
+        preload_velocity_mps=request.preload_velocity_mps,
         gravity_mps2=request.gravity_mps2,
     )
     impact = np.asarray(ballistic.samples[-1]["com_velocity_mps"], dtype=float)
@@ -107,8 +109,13 @@ def plan_power_attack(request: PowerAttackRequest) -> dict[str, Any]:
         capacity=request.capacity,
         gravity_mps2=request.gravity_mps2,
     )
-    verdict = decide_attack_variant(takeoff, landing)
-    return _receipt(request, ballistic, takeoff, landing, verdict.variant, verdict.limiting_factor)
+    arrest = assess_arrest(
+        horizontal_speed_mps=float(np.linalg.norm(impact[[0, 2]])),
+        capacity=request.capacity,
+        gravity_mps2=request.gravity_mps2,
+    )
+    verdict = decide_attack_variant(takeoff, landing, arrest)
+    return _receipt(request, ballistic, takeoff, landing, arrest, verdict.variant, verdict.limiting_factor)
 
 
 def _receipt(
@@ -116,6 +123,7 @@ def _receipt(
     ballistic: Any,
     takeoff: Mapping[str, Any] | None,
     landing: Mapping[str, Any] | None,
+    arrest: Mapping[str, Any] | None,
     variant: str,
     limiting_factor: str | None,
 ) -> dict[str, Any]:
@@ -134,8 +142,9 @@ def _receipt(
         "landing_impulse_ns": list(ballistic.landing_impulse_ns) if ballistic.landing_impulse_ns else None,
         "takeoff": dict(takeoff) if takeoff else None,
         "landing": dict(landing) if landing else None,
+        "arrest": dict(arrest) if arrest else None,
         "limiting_factor": limiting_factor,
-        "physics_evaluated": bool(takeoff and landing),
+        "physics_evaluated": bool(takeoff and landing and arrest),
     }
     return {**body, "plan_sha256": canonical_hash(body)}
 
@@ -151,11 +160,15 @@ def solve_attack_root_track(
         raise ContractError("root solve needs one rotation per COM sample")
     track = []
     for sample, rotation in zip(com_samples, root_rotations):
+        try:
+            rot = np.asarray(rotation, dtype=float).reshape(3, 3)
+        except (TypeError, ValueError) as exc:
+            raise ContractError(f"root rotation must be a 3x3 matrix: {exc}") from exc
         track.append(
             {
                 "time_s": float(sample["time_s"]),
                 "root_position_m": list(
-                    solve_root_from_com(sample["com_m"], np.asarray(rotation), com_relative_to_root)
+                    solve_root_from_com(sample["com_m"], rot, com_relative_to_root)
                 ),
             }
         )
@@ -177,9 +190,10 @@ def attack_entry_packet(
     _vec3(root_position_m, label="root_position_m")
     _vec3(linear_velocity_mps, label="linear_velocity_mps")
     _vec3(angular_momentum, label="angular_momentum")
+    orientation = _quat(np.asarray(root_orientation, dtype=float), label="root_orientation")
     return ContinuityPacket(
         root_position_m=tuple(float(v) for v in root_position_m),
-        root_orientation=tuple(float(v) for v in root_orientation),
+        root_orientation=tuple(float(v) for v in orientation),
         linear_velocity_mps=tuple(float(v) for v in linear_velocity_mps),
         angular_momentum_kg_m2ps=tuple(float(v) for v in angular_momentum),
         contacts=dict(contacts),

@@ -44,6 +44,45 @@ class ContinuityPacket:
     gaze_mode: str = "forward"
     event_cursor: int = 0
     interruptible: bool = True
+    angular_velocity_radps: tuple[float, float, float] = (0.0, 0.0, 0.0)
+
+
+def _quat_conj(q: np.ndarray) -> np.ndarray:
+    return np.array([-q[0], -q[1], -q[2], q[3]])
+
+
+def _quat_rotate(q: np.ndarray, v: np.ndarray) -> np.ndarray:
+    """Rotate vector v by unit quaternion q (x, y, z, w)."""
+    qv = np.array([v[0], v[1], v[2], 0.0])
+    return quat_mul(quat_mul(q, qv), _quat_conj(q))[:3]
+
+
+def _exp_rotvec(v: np.ndarray) -> np.ndarray:
+    """Rotation vector to unit quaternion."""
+    angle = float(np.linalg.norm(v))
+    if angle < 1e-12:
+        return np.array([0.0, 0.0, 0.0, 1.0])
+    axis = v / angle
+    return np.array([*(axis * math.sin(angle / 2.0)), math.cos(angle / 2.0)])
+
+
+def bridge_impulse(leaving: ContinuityPacket, entering: ContinuityPacket) -> dict[str, Any]:
+    """Angular-momentum accounting for a clip boundary (the audit surface).
+
+    Flight (no loaded contact either side) conserves total L: a mismatch
+    is a hard error, never a silent blend. On the ground the boundary
+    delivers ``entering.L − leaving.L`` through contact reactions, which
+    is returned (not hidden) for the receipt.
+    """
+    l0 = np.asarray(leaving.angular_momentum_kg_m2ps, dtype=float)
+    l1 = np.asarray(entering.angular_momentum_kg_m2ps, dtype=float)
+    flight = "loaded" not in leaving.contacts.values() and "loaded" not in entering.contacts.values()
+    if flight:
+        scale = max(1.0, float(np.linalg.norm(l0)), float(np.linalg.norm(l1)))
+        if float(np.linalg.norm(l1 - l0)) > 1e-6 * scale:
+            raise ContractError("flight boundary would change angular momentum without contact")
+        return {"flight": True, "delivered_kg_m2ps": [0.0, 0.0, 0.0]}
+    return {"flight": False, "delivered_kg_m2ps": [float(v) for v in l1 - l0]}
 
 
 def packet_from_mapping(value: Mapping[str, Any]) -> ContinuityPacket:
@@ -62,6 +101,7 @@ def packet_from_mapping(value: Mapping[str, Any]) -> ContinuityPacket:
             gaze_mode=str(value.get("gaze_mode", "forward")),
             event_cursor=int(value.get("event_cursor", 0)),
             interruptible=bool(value.get("interruptible", True)),
+            angular_velocity_radps=tuple(float(v) for v in value.get("angular_velocity_radps", (0.0, 0.0, 0.0))),
         )
     except (KeyError, TypeError, ValueError) as exc:
         raise ContractError(f"continuity packet is malformed: {exc}") from exc
@@ -76,8 +116,9 @@ def continuity_error(leaving: ContinuityPacket, entering: ContinuityPacket) -> d
     b = _quat(np.asarray(entering.root_orientation), label="entering orientation")
     angle = 2.0 * math.acos(max(-1.0, min(1.0, abs(float(a @ b)))))
     contact_breaks = sorted(
-        key for key, state in leaving.contacts.items()
-        if entering.contacts.get(key) != state
+        key
+        for key in set(leaving.contacts) | set(entering.contacts)
+        if leaving.contacts.get(key) != entering.contacts.get(key)
     )
     return {
         "position_error_m": float(np.linalg.norm(dp)),
@@ -116,24 +157,31 @@ def blend_packets(
     duration_s: float,
     sample_hz: int = 120,
 ) -> list[dict[str, Any]]:
-    """C1-continuous bridge: min-jerk position, slerp orientation.
+    """C1-continuous bridge: min-jerk position, spin-matching orientation.
 
-    Endpoint velocities match the packets (cubic Hermite); the bridge
-    carries angular momentum, tail state and target commitment by linear
-    interpolation and reports the residual seam error (expect ~0 — the
-    bridge is constructed from the endpoints, so this verifies the
-    construction rather than discovering continuity).
+    Position uses cubic Hermite (endpoint velocities exact). Orientation
+    is ``slerp(q0, q1, min_jerk(t))`` corrected by a Hermite rotation
+    vector that is exactly zero at both ends with the packets' endpoint
+    angular velocities — incoming/outgoing spin is carried, never zeroed
+    (with zero spin this reduces to the plain slerp bridge).
+
+    Angular momentum follows :func:`bridge_impulse`: constant in flight
+    (mismatch raises), linearly interpolated on the ground with the
+    delivered impulse returned by ``bridge_impulse`` for the receipt.
     """
     duration = _finite(duration_s, label="blend duration")
     if duration <= 0.0:
         raise ContractError("blend duration must be positive")
     count = max(2, int(math.ceil(duration * sample_hz)) + 1)
+    impulse = bridge_impulse(leaving, entering)
     p0 = np.asarray(leaving.root_position_m, dtype=float)
     p1 = np.asarray(entering.root_position_m, dtype=float)
     v0 = np.asarray(leaving.linear_velocity_mps, dtype=float)
     v1 = np.asarray(entering.linear_velocity_mps, dtype=float)
     q0 = _quat(np.asarray(leaving.root_orientation), label="leaving orientation")
     q1 = _quat(np.asarray(entering.root_orientation), label="entering orientation")
+    w0 = _quat_rotate(_quat_conj(q0), np.asarray(leaving.angular_velocity_radps, dtype=float))
+    w1 = _quat_rotate(_quat_conj(q1), np.asarray(entering.angular_velocity_radps, dtype=float))
     l0 = np.asarray(leaving.angular_momentum_kg_m2ps, dtype=float)
     l1 = np.asarray(entering.angular_momentum_kg_m2ps, dtype=float)
     samples = []
@@ -145,13 +193,18 @@ def blend_packets(
         h01 = -2 * t**3 + 3 * t**2
         h11 = t**3 - t**2
         pos = h00 * p0 + h10 * duration * v0 + h01 * p1 + h11 * duration * v1
-        quat = _slerp(q0, q1, _min_jerk(t))
+        base = _slerp(q0, q1, _min_jerk(t))
+        # Corrective rotation: zero at both ends, endpoint spin exact
+        # (the exp Jacobian at the identity is the identity).
+        u = h10 * duration * w0 + h11 * duration * w1
+        quat = quat_mul(base, _exp_rotvec(u))
+        quat = quat / float(np.linalg.norm(quat))
         samples.append(
             {
                 "time_s": t * duration,
                 "root_position_m": [float(v) for v in pos],
                 "root_orientation": [float(v) for v in quat],
-                "angular_momentum": [float(v) for v in (1 - t) * l0 + t * l1],
+                "angular_momentum": [float(v) for v in (l0 if impulse["flight"] else (1 - t) * l0 + t * l1)],
                 "tail_angle_rad": (1 - t) * leaving.tail_angle_rad + t * entering.tail_angle_rad,
                 "tail_angular_velocity_radps": (1 - t) * leaving.tail_angular_velocity_radps
                 + t * entering.tail_angular_velocity_radps,
@@ -166,23 +219,30 @@ def capture_step_target(
     *,
     com_height_m: float,
     gravity_mps2: float = 9.81,
+    ground_m: float = 0.0,
 ) -> dict[str, Any]:
     """Linear inverted-pendulum capture point: where to step to stop.
 
-    ``x_capture = x_com + v · √(h/g)``. When upper-body compensation is
-    insufficient, the planner must schedule this step instead of hiding
-    imbalance in spine offsets.
+    ``x_capture = x_com + v_horizontal · √(h/g)``. Only the horizontal
+    velocity counts — vertical motion does not move the foot target, and
+    the target lives on the ground plane. When upper-body compensation
+    is insufficient, the planner must schedule this step instead of
+    hiding imbalance in spine offsets.
     """
     com = _vec3(com_m, label="com_m")
     vel = _vec3(com_velocity_mps, label="com_velocity_mps")
     height = _finite(com_height_m, label="com_height_m")
     if height <= 0.0:
         raise ContractError("capture height must be positive")
+    if not math.isfinite(gravity_mps2) or gravity_mps2 <= 0.0:
+        raise ContractError("capture gravity must be positive")
+    ground = _finite(ground_m, label="ground_m")
     tau = math.sqrt(height / gravity_mps2)
-    capture = com + vel * tau
+    horizontal = np.array([vel[0], 0.0, vel[2]])
+    capture = np.array([com[0], ground, com[2]]) + horizontal * tau
     return {
         "capture_point_m": [float(v) for v in capture],
-        "displacement_m": float(np.linalg.norm(capture - com)),
+        "displacement_m": float(np.linalg.norm(horizontal * tau)),
         "time_constant_s": tau,
     }
 
@@ -291,6 +351,7 @@ __all__ = [
     "ContinuityPacket",
     "blend_packets",
     "brake_plan",
+    "bridge_impulse",
     "capture_step_target",
     "continuity_error",
     "packet_from_mapping",

@@ -88,7 +88,7 @@ def figure_ballistic_vs_kinematic() -> tuple[str, dict[str, Any]]:
 
     request = BallisticRequest(
         launch_com_m=(0.0, 2.0, 0.0),
-        launch_velocity_mps=(4.0, 3.0, 0.0),
+        launch_velocity_mps=(3.7193, 3.0, 0.0),  # vx = 2.6 m / T analytic: hits the target
         landing_com_m=(2.6, 1.7, 0.0),
         total_mass_kg=1500.0,
         preload_velocity_mps=(4.0, 0.0, 0.0),
