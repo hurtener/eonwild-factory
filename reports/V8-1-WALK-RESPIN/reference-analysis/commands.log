@@ -1,0 +1,29 @@
+# Read-only commands used for V8.1 walk reference analysis
+# Working directory: /Volumes/m2-extended-disk/Repos/eonwild
+
+ffprobe -v error -select_streams v:0 -show_entries stream=codec_name,width,height,avg_frame_rate,nb_frames,duration -of default=noprint_wrappers=1 '/Volumes/m2-extended-disk/Repos/eonwild-factory/procedural-animation-toolkit(v8.1)/inputs/v8/tarbosaurus-relaxed-walk-reference.mp4'
+ffprobe -v error -select_streams v:0 -show_entries stream=codec_name,width,height,avg_frame_rate,nb_frames,duration -of default=noprint_wrappers=1 '/Volumes/m2-extended-disk/Repos/eonwild-factory/procedural-animation-toolkit(v8.1)/inputs/v8/tarbosaurus-walk-reference-older.mp4'
+ffprobe -v error -select_streams v:0 -show_entries stream=codec_name,width,height,avg_frame_rate,nb_frames,duration -of default=noprint_wrappers=1 '/Volumes/m2-extended-disk/Repos/eonwild-factory/showcase/v8.1/site/v8_1_walk_side_20fps.mp4'
+ffprobe -v error -select_streams v:0 -show_entries stream=codec_name,width,height,avg_frame_rate,nb_frames,duration -of default=noprint_wrappers=1 '/Volumes/m2-extended-disk/Repos/eonwild-factory/procedural-animation-toolkit(v5.5)/validated_result/v5/showcase/v5_walk_side_60fps.mp4'
+
+shasum -a 256 '/Volumes/m2-extended-disk/Repos/eonwild-factory/procedural-animation-toolkit(v8.1)/inputs/v8/tarbosaurus-relaxed-walk-reference.mp4' '/Volumes/m2-extended-disk/Repos/eonwild-factory/procedural-animation-toolkit(v8.1)/inputs/v8/tarbosaurus-walk-reference-older.mp4' '/Volumes/m2-extended-disk/Repos/eonwild-factory/procedural-animation-toolkit(v8.1)/reproduced_result/v8.1-final/resolved-profile-v8.1.json'
+shasum -a 256 /var/folders/qf/9hz3q9b55xb9hjwg0w478_h00000gn/T/codex-clipboard-7ef6cc22-6ee4-4b26-8546-467effc3f044.png /var/folders/qf/9hz3q9b55xb9hjwg0w478_h00000gn/T/codex-clipboard-746b7f42-f1b3-4358-b8c5-e5b117c56a37.png /var/folders/qf/9hz3q9b55xb9hjwg0w478_h00000gn/T/codex-clipboard-dd138643-625f-432f-b6a5-cfea59a62ea9.png /var/folders/qf/9hz3q9b55xb9hjwg0w478_h00000gn/T/codex-clipboard-b47a569f-bee0-4c49-9b95-084dad087791.png
+
+# Native-rate frame extraction was written only to the disposable directory
+# below, then inspected with contact sheets and close crops. No repository
+# engine, source, or generated media file was edited.
+# /tmp/eonwild-v81-walk-analysis.SAdMIJ/{relaxed,older,v81,v55}-frames/
+
+jq '.' '/Volumes/m2-extended-disk/Repos/eonwild-factory/procedural-animation-toolkit(v8.1)/reproduced_result/v8.1-final/procedural-v8.1-report.json'
+jq '.' '/Volumes/m2-extended-disk/Repos/eonwild-factory/procedural-animation-toolkit(v8.1)/reproduced_result/v8.1-final/v8-to-v8.1-walk-preservation.json'
+jq '.' '/Volumes/m2-extended-disk/Repos/eonwild-factory/procedural-animation-toolkit(v5.5)/validated_result/v5.5/constrained-solve-report.json'
+rg -n 'contact_lead_stride|toe_off_window_fraction|load_ramp_fraction|toe_push_deg|toe_off_foot_deg|foot_pivot_gap_fraction' '/Volumes/m2-extended-disk/Repos/eonwild-factory/procedural-animation-toolkit(v8.1)'
+
+# Iteration-2 addendum inspection (read-only; repository media/engine untouched)
+ffprobe -v error -select_streams v:0 -show_entries stream=codec_name,width,height,avg_frame_rate,nb_frames,duration -of default=noprint_wrappers=1 '/Volumes/m2-extended-disk/Repos/eonwild-factory/showcase/v8.1-walk-respin/iteration-3/walk-relaxed-v8-1-respin-side.mp4'
+sha256sum '/Volumes/m2-extended-disk/Repos/eonwild-factory/showcase/v8.1-walk-respin/iteration-3/walk-relaxed-v8-1-respin-side.mp4' '/Volumes/m2-extended-disk/Repos/eonwild-factory/procedural-animation-toolkit(v8.1)/inputs/v8/tarbosaurus-relaxed-walk-reference.mp4'
+jq '.' '/Volumes/m2-extended-disk/Repos/eonwild-factory/showcase/v8.1-walk-respin/iteration-3/render-run.json'
+jq '.' '/Volumes/m2-extended-disk/Repos/eonwild-factory/candidates/v8.1-walk-respin/generated/iteration-3/generation-report.json'
+jq '.' '/Volumes/m2-extended-disk/Repos/eonwild-factory/candidates/v8.1-walk-respin/generated/iteration-15/walk-respin-validation.json'
+# Native-rate frames/contact sheets were written only below /tmp and visually inspected:
+# /tmp/eonwild-v81-iter3-analysis.qOGDxY/{reference,iter3}/*

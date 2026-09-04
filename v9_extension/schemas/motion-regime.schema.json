@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eonwild.dev/schemas/motion-regime.schema.json",
+  "title": "MotionRegime",
+  "type": "object",
+  "required": [
+    "id",
+    "selector",
+    "hysteresis",
+    "character"
+  ],
+  "properties": {
+    "id": {
+      "enum": [
+        "juvenile",
+        "subadult",
+        "adult",
+        "heavy_adult"
+      ]
+    },
+    "selector": {
+      "type": "object",
+      "required": [
+        "primary_trait",
+        "enter_at_or_above",
+        "nominal_range"
+      ],
+      "properties": {
+        "primary_trait": {
+          "const": "structural_mass_ratio_to_reference_adult"
+        },
+        "enter_at_or_above": {
+          "type": "number",
+          "minimum": 0
+        },
+        "nominal_range": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "secondary_traits": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "hysteresis": {
+      "type": "object",
+      "required": [
+        "leave_below",
+        "leave_above"
+      ],
+      "properties": {
+        "leave_below": {
+          "type": "number",
+          "minimum": 0
+        },
+        "leave_above": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "age_fraction_guidance": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      }
+    },
+    "trait_curves": {
+      "type": "object"
+    },
+    "character": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": true
+}

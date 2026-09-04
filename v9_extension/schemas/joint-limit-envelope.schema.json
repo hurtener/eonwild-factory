@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eonwild.dev/schemas/joint-limit-envelope.schema.json",
+  "title": "JointLimitEnvelope",
+  "type": "object",
+  "required": [
+    "schema",
+    "id",
+    "articulation",
+    "frame",
+    "parameterization",
+    "hard_envelope",
+    "preferred_envelope",
+    "rate_limits",
+    "provenance"
+  ],
+  "properties": {
+    "schema": {
+      "const": "eonwild.joint_limit_envelope.v1"
+    },
+    "id": {
+      "type": "string"
+    },
+    "articulation": {
+      "type": "string"
+    },
+    "frame": {
+      "type": "object",
+      "required": [
+        "parent_role",
+        "child_role",
+        "neutral_definition"
+      ],
+      "properties": {
+        "parent_role": {
+          "type": "string"
+        },
+        "child_role": {
+          "type": "string"
+        },
+        "neutral_definition": {
+          "type": "string"
+        }
+      }
+    },
+    "parameterization": {
+      "enum": [
+        "swing_twist",
+        "sampled_orientation_surface",
+        "six_dof_articulation_score",
+        "hinge",
+        "custom"
+      ]
+    },
+    "hard_envelope": {
+      "type": "object",
+      "description": "Collision/bony/non-interpenetration boundary. It is not the habitual animation range."
+    },
+    "preferred_envelope": {
+      "type": "object",
+      "description": "Soft-tissue, load, behavior, and performance envelope used by normal motion."
+    },
+    "load_conditioning": {
+      "type": "object",
+      "description": "Optional pose/load/contact dependent contraction of the envelope."
+    },
+    "couplings": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "rate_limits": {
+      "type": "object",
+      "required": [
+        "angular_velocity",
+        "angular_acceleration"
+      ],
+      "properties": {
+        "angular_velocity": {
+          "type": "object"
+        },
+        "angular_acceleration": {
+          "type": "object"
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "status",
+        "note"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "supported",
+            "plausible_inference",
+            "disputed",
+            "speculative",
+            "gameplay_only",
+            "gameplay_hypothesis",
+            "synthetic_test_fixture"
+          ]
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "uncertainty": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "reviewed_by": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reviewed_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

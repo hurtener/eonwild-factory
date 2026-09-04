@@ -1,0 +1,19 @@
+schema: eonwild.schema_policy.v1
+mode_by_environment:
+  development: reject_unknown_top_level_fields_and_report_all_errors
+  migration: warn_unknown_fields_but_require_versioned_upgrade
+  release: reject_unknown_fields_unless_schema_explicitly_allows_extension
+unit_policy:
+  require_units_at_contract_boundary: true
+  canonical_length: metres
+  canonical_time: seconds
+  canonical_mass: kilograms
+  canonical_angle_internal: radians
+coordinate_policy:
+  require_handedness_and_axes: true
+provenance_policy:
+  require_status_note_sources_when_source_backed: true
+  forbid_unreviewed_absolute_claims: true
+compatibility:
+  never_silently_coerce_schema_versions: true
+  migrations_must_be_deterministic_and_tested: true

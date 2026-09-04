@@ -1,0 +1,752 @@
+schema: eonwild.joint_limit_catalog.v1
+id: tarbosaurus_joint_limits_provisional_v1
+family: heavy_predatory_biped
+envelopes:
+- schema: eonwild.joint_limit_envelope.v1
+  id: tarbosaurus_pelvis_to_abdomen
+  articulation: pelvis_to_abdomen
+  frame:
+    parent_role: pelvis
+    child_role: spine_01
+    neutral_definition: Resolved rest-pose relative orientation from the pinned semantic rig.
+  parameterization: swing_twist
+  hard_envelope:
+    status: unresolved
+    meaning: Articulation/non-interpenetration boundary only; never use as the habitual animation range.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - collision_or_articular_test
+    - uncertainty
+  preferred_envelope:
+    status: unresolved
+    meaning: Loaded, soft-tissue, behavioral, and performance envelope used for normal motion.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - load_and_speed_conditioning
+    - uncertainty
+  load_conditioning:
+    status: required
+    note: Preferred range contracts under high axial load, acceleration, feeding descent, and turning.
+  couplings:
+  - status: required
+    note: Couple pitch/roll/yaw with adjacent trunk articulations; do not solve each axis independently.
+  rate_limits:
+    angular_velocity:
+      status: unresolved
+      units: rad_s
+    angular_acceleration:
+      status: unresolved
+      units: rad_s2
+  provenance:
+    status: gameplay_hypothesis
+    note: Contract placeholder. No exact Tarbosaurus range is asserted; calibrate from anatomy, collision, comparative
+      motion, and perceptual review.
+    sources:
+    - doi:10.1038/s41467-024-44832-z
+    uncertainty:
+      numerical_limits: unresolved
+      soft_tissue: unresolved
+    reviewed_by: null
+    reviewed_at: null
+- schema: eonwild.joint_limit_envelope.v1
+  id: tarbosaurus_abdomen_to_thorax
+  articulation: abdomen_to_thorax
+  frame:
+    parent_role: spine_03
+    child_role: chest
+    neutral_definition: Resolved rest-pose relative orientation from the pinned semantic rig.
+  parameterization: swing_twist
+  hard_envelope:
+    status: unresolved
+    meaning: Articulation/non-interpenetration boundary only; never use as the habitual animation range.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - collision_or_articular_test
+    - uncertainty
+  preferred_envelope:
+    status: unresolved
+    meaning: Loaded, soft-tissue, behavioral, and performance envelope used for normal motion.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - load_and_speed_conditioning
+    - uncertainty
+  load_conditioning:
+    status: required
+    note: Preferred range contracts under loaded support, braking, bite delivery, and body pressure.
+  couplings:
+  - status: required
+    note: Distribute trunk curvature across the chain; preserve thorax/neck continuity.
+  rate_limits:
+    angular_velocity:
+      status: unresolved
+      units: rad_s
+    angular_acceleration:
+      status: unresolved
+      units: rad_s2
+  provenance:
+    status: gameplay_hypothesis
+    note: Contract placeholder. No exact Tarbosaurus range is asserted; calibrate from anatomy, collision, comparative
+      motion, and perceptual review.
+    sources:
+    - doi:10.1038/s41467-024-44832-z
+    uncertainty:
+      numerical_limits: unresolved
+      soft_tissue: unresolved
+    reviewed_by: null
+    reviewed_at: null
+- schema: eonwild.joint_limit_envelope.v1
+  id: tarbosaurus_thorax_to_neck
+  articulation: thorax_to_neck
+  frame:
+    parent_role: chest
+    child_role: neck_01
+    neutral_definition: Resolved rest-pose relative orientation from the pinned semantic rig.
+  parameterization: swing_twist
+  hard_envelope:
+    status: unresolved
+    meaning: Articulation/non-interpenetration boundary only; never use as the habitual animation range.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - collision_or_articular_test
+    - uncertainty
+  preferred_envelope:
+    status: unresolved
+    meaning: Loaded, soft-tissue, behavioral, and performance envelope used for normal motion.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - load_and_speed_conditioning
+    - uncertainty
+  load_conditioning:
+    status: required
+    note: Large target changes require thorax participation; loaded bite contact contracts the range.
+  couplings:
+  - status: required
+    note: Couple with distal neck and head targeting rather than treating the head as a gimbal.
+  rate_limits:
+    angular_velocity:
+      status: unresolved
+      units: rad_s
+    angular_acceleration:
+      status: unresolved
+      units: rad_s2
+  provenance:
+    status: gameplay_hypothesis
+    note: Contract placeholder. No exact Tarbosaurus range is asserted; calibrate from anatomy, collision, comparative
+      motion, and perceptual review.
+    sources:
+    - doi:10.1038/s41467-024-44832-z
+    uncertainty:
+      numerical_limits: unresolved
+      soft_tissue: unresolved
+    reviewed_by: null
+    reviewed_at: null
+- schema: eonwild.joint_limit_envelope.v1
+  id: tarbosaurus_neck_base_to_distal
+  articulation: neck_base_to_distal
+  frame:
+    parent_role: neck_02
+    child_role: neck_03
+    neutral_definition: Resolved rest-pose cervical chain orientation.
+  parameterization: sampled_orientation_surface
+  hard_envelope:
+    status: unresolved
+    meaning: Articulation/non-interpenetration boundary only; never use as the habitual animation range.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - collision_or_articular_test
+    - uncertainty
+  preferred_envelope:
+    status: unresolved
+    meaning: Loaded, soft-tissue, behavioral, and performance envelope used for normal motion.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - load_and_speed_conditioning
+    - uncertainty
+  load_conditioning:
+    status: required
+    note: Range contracts during high-speed locomotion, jaw contact, and target resistance.
+  couplings:
+  - status: required
+    note: Distribute curvature and angular rate across all cervical segments.
+  rate_limits:
+    angular_velocity:
+      status: unresolved
+      units: rad_s
+    angular_acceleration:
+      status: unresolved
+      units: rad_s2
+  provenance:
+    status: gameplay_hypothesis
+    note: Contract placeholder. No exact Tarbosaurus range is asserted; calibrate from anatomy, collision, comparative
+      motion, and perceptual review.
+    sources:
+    - doi:10.1038/s41467-024-44832-z
+    uncertainty:
+      numerical_limits: unresolved
+      soft_tissue: unresolved
+    reviewed_by: null
+    reviewed_at: null
+- schema: eonwild.joint_limit_envelope.v1
+  id: tarbosaurus_atlanto_occipital
+  articulation: atlanto_occipital
+  frame:
+    parent_role: neck_05
+    child_role: head
+    neutral_definition: Resolved rest-pose terminal-neck to head orientation.
+  parameterization: sampled_orientation_surface
+  hard_envelope:
+    status: unresolved
+    meaning: Articulation/non-interpenetration boundary only; never use as the habitual animation range.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - collision_or_articular_test
+    - uncertainty
+  preferred_envelope:
+    status: unresolved
+    meaning: Loaded, soft-tissue, behavioral, and performance envelope used for normal motion.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - load_and_speed_conditioning
+    - uncertainty
+  load_conditioning:
+    status: required
+    note: Loaded bite contact and high angular speed use a smaller preferred envelope than low-load attention.
+  couplings:
+  - status: required
+    note: Couple skull orientation to the complete cervical chain and thorax.
+  rate_limits:
+    angular_velocity:
+      status: unresolved
+      units: rad_s
+    angular_acceleration:
+      status: unresolved
+      units: rad_s2
+  provenance:
+    status: gameplay_hypothesis
+    note: Contract placeholder. No exact Tarbosaurus range is asserted; calibrate from anatomy, collision, comparative
+      motion, and perceptual review.
+    sources:
+    - doi:10.1038/s41467-024-44832-z
+    uncertainty:
+      numerical_limits: unresolved
+      soft_tissue: unresolved
+    reviewed_by: null
+    reviewed_at: null
+- schema: eonwild.joint_limit_envelope.v1
+  id: tarbosaurus_pelvis_to_tail
+  articulation: pelvis_to_tail
+  frame:
+    parent_role: pelvis
+    child_role: tail_01
+    neutral_definition: Resolved rest-pose pelvis-to-tail-base orientation.
+  parameterization: swing_twist
+  hard_envelope:
+    status: unresolved
+    meaning: Articulation/non-interpenetration boundary only; never use as the habitual animation range.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - collision_or_articular_test
+    - uncertainty
+  preferred_envelope:
+    status: unresolved
+    meaning: Loaded, soft-tissue, behavioral, and performance envelope used for normal motion.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - load_and_speed_conditioning
+    - uncertainty
+  load_conditioning:
+    status: required
+    note: Proximal tail remains muscular and load-bearing in the inertial model; avoid whip-like range.
+  couplings:
+  - status: required
+    note: Couple tail-base response to pelvis angular acceleration and the downstream damped tail state.
+  rate_limits:
+    angular_velocity:
+      status: unresolved
+      units: rad_s
+    angular_acceleration:
+      status: unresolved
+      units: rad_s2
+  provenance:
+    status: gameplay_hypothesis
+    note: Contract placeholder. No exact Tarbosaurus range is asserted; calibrate from anatomy, collision, comparative
+      motion, and perceptual review.
+    sources:
+    - doi:10.1038/s41467-024-44832-z
+    uncertainty:
+      numerical_limits: unresolved
+      soft_tissue: unresolved
+    reviewed_by: null
+    reviewed_at: null
+- schema: eonwild.joint_limit_envelope.v1
+  id: tarbosaurus_tail_base_to_mid
+  articulation: tail_base_to_mid
+  frame:
+    parent_role: tail_03
+    child_role: tail_mid
+    neutral_definition: Resolved rest-pose proximal-to-mid tail orientation.
+  parameterization: swing_twist
+  hard_envelope:
+    status: unresolved
+    meaning: Articulation/non-interpenetration boundary only; never use as the habitual animation range.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - collision_or_articular_test
+    - uncertainty
+  preferred_envelope:
+    status: unresolved
+    meaning: Loaded, soft-tissue, behavioral, and performance envelope used for normal motion.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - load_and_speed_conditioning
+    - uncertainty
+  load_conditioning:
+    status: required
+    note: Preferred range and rate depend on body size, tail frequency, and action momentum.
+  couplings:
+  - status: required
+    note: Lag pelvis/tail-base input; preserve angular-momentum accounting.
+  rate_limits:
+    angular_velocity:
+      status: unresolved
+      units: rad_s
+    angular_acceleration:
+      status: unresolved
+      units: rad_s2
+  provenance:
+    status: gameplay_hypothesis
+    note: Contract placeholder. No exact Tarbosaurus range is asserted; calibrate from anatomy, collision, comparative
+      motion, and perceptual review.
+    sources:
+    - doi:10.1038/s41467-024-44832-z
+    uncertainty:
+      numerical_limits: unresolved
+      soft_tissue: unresolved
+    reviewed_by: null
+    reviewed_at: null
+- schema: eonwild.joint_limit_envelope.v1
+  id: tarbosaurus_tail_mid_to_distal
+  articulation: tail_mid_to_distal
+  frame:
+    parent_role: tail_mid
+    child_role: tail_tip
+    neutral_definition: Resolved rest-pose mid-to-distal tail orientation.
+  parameterization: swing_twist
+  hard_envelope:
+    status: unresolved
+    meaning: Articulation/non-interpenetration boundary only; never use as the habitual animation range.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - collision_or_articular_test
+    - uncertainty
+  preferred_envelope:
+    status: unresolved
+    meaning: Loaded, soft-tissue, behavioral, and performance envelope used for normal motion.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - load_and_speed_conditioning
+    - uncertainty
+  load_conditioning:
+    status: required
+    note: Distal range remains damped and speed-dependent; larger corrections are reserved for failure events.
+  couplings:
+  - status: required
+    note: Lag and damp proximal input; prevent endless oscillation.
+  rate_limits:
+    angular_velocity:
+      status: unresolved
+      units: rad_s
+    angular_acceleration:
+      status: unresolved
+      units: rad_s2
+  provenance:
+    status: gameplay_hypothesis
+    note: Contract placeholder. No exact Tarbosaurus range is asserted; calibrate from anatomy, collision, comparative
+      motion, and perceptual review.
+    sources:
+    - doi:10.1038/s41467-024-44832-z
+    uncertainty:
+      numerical_limits: unresolved
+      soft_tissue: unresolved
+    reviewed_by: null
+    reviewed_at: null
+- schema: eonwild.joint_limit_envelope.v1
+  id: tarbosaurus_hip_l
+  articulation: hip_l
+  frame:
+    parent_role: pelvis
+    child_role: thigh_l
+    neutral_definition: Resolved rest-pose left hip orientation.
+  parameterization: sampled_orientation_surface
+  hard_envelope:
+    status: unresolved
+    meaning: Articulation/non-interpenetration boundary only; never use as the habitual animation range.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - collision_or_articular_test
+    - uncertainty
+  preferred_envelope:
+    status: unresolved
+    meaning: Loaded, soft-tissue, behavioral, and performance envelope used for normal motion.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - load_and_speed_conditioning
+    - uncertainty
+  load_conditioning:
+    status: required
+    note: Loaded stance, swing, preload, landing, and injury have distinct preferred surfaces.
+  couplings:
+  - status: required
+    note: Couple hip orientation with knee flexion, pelvis pose, foot target, and collision clearance.
+  rate_limits:
+    angular_velocity:
+      status: unresolved
+      units: rad_s
+    angular_acceleration:
+      status: unresolved
+      units: rad_s2
+  provenance:
+    status: gameplay_hypothesis
+    note: Contract placeholder. No exact Tarbosaurus range is asserted; calibrate from anatomy, collision, comparative
+      motion, and perceptual review.
+    sources:
+    - doi:10.1038/s41467-024-44832-z
+    uncertainty:
+      numerical_limits: unresolved
+      soft_tissue: unresolved
+    reviewed_by: null
+    reviewed_at: null
+- schema: eonwild.joint_limit_envelope.v1
+  id: tarbosaurus_hip_r
+  articulation: hip_r
+  frame:
+    parent_role: pelvis
+    child_role: thigh_r
+    neutral_definition: Resolved rest-pose right hip orientation.
+  parameterization: sampled_orientation_surface
+  hard_envelope:
+    status: unresolved
+    meaning: Articulation/non-interpenetration boundary only; never use as the habitual animation range.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - collision_or_articular_test
+    - uncertainty
+  preferred_envelope:
+    status: unresolved
+    meaning: Loaded, soft-tissue, behavioral, and performance envelope used for normal motion.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - load_and_speed_conditioning
+    - uncertainty
+  load_conditioning:
+    status: required
+    note: Loaded stance, swing, preload, landing, and injury have distinct preferred surfaces.
+  couplings:
+  - status: required
+    note: Couple hip orientation with knee flexion, pelvis pose, foot target, and collision clearance.
+  rate_limits:
+    angular_velocity:
+      status: unresolved
+      units: rad_s
+    angular_acceleration:
+      status: unresolved
+      units: rad_s2
+  provenance:
+    status: gameplay_hypothesis
+    note: Contract placeholder. No exact Tarbosaurus range is asserted; calibrate from anatomy, collision, comparative
+      motion, and perceptual review.
+    sources:
+    - doi:10.1038/s41467-024-44832-z
+    uncertainty:
+      numerical_limits: unresolved
+      soft_tissue: unresolved
+    reviewed_by: null
+    reviewed_at: null
+- schema: eonwild.joint_limit_envelope.v1
+  id: tarbosaurus_knee_l
+  articulation: knee_l
+  frame:
+    parent_role: thigh_l
+    child_role: shin_l
+    neutral_definition: Resolved rest-pose left knee flexion axis and signed bend direction.
+  parameterization: hinge
+  hard_envelope:
+    status: unresolved
+    meaning: Articulation/non-interpenetration boundary only; never use as the habitual animation range.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - collision_or_articular_test
+    - uncertainty
+  preferred_envelope:
+    status: unresolved
+    meaning: Loaded, soft-tissue, behavioral, and performance envelope used for normal motion.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - load_and_speed_conditioning
+    - uncertainty
+  load_conditioning:
+    status: required
+    note: Compression and landing may use more flexion but remain capacity/rate limited; loaded hyperextension is
+      forbidden.
+  couplings:
+  - status: required
+    note: Couple with hip/ankle and keep the signed anatomical bend direction.
+  rate_limits:
+    angular_velocity:
+      status: unresolved
+      units: rad_s
+    angular_acceleration:
+      status: unresolved
+      units: rad_s2
+  provenance:
+    status: gameplay_hypothesis
+    note: Contract placeholder. No exact Tarbosaurus range is asserted; calibrate from anatomy, collision, comparative
+      motion, and perceptual review.
+    sources:
+    - doi:10.1038/s41467-024-44832-z
+    uncertainty:
+      numerical_limits: unresolved
+      soft_tissue: unresolved
+    reviewed_by: null
+    reviewed_at: null
+- schema: eonwild.joint_limit_envelope.v1
+  id: tarbosaurus_knee_r
+  articulation: knee_r
+  frame:
+    parent_role: thigh_r
+    child_role: shin_r
+    neutral_definition: Resolved rest-pose right knee flexion axis and signed bend direction.
+  parameterization: hinge
+  hard_envelope:
+    status: unresolved
+    meaning: Articulation/non-interpenetration boundary only; never use as the habitual animation range.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - collision_or_articular_test
+    - uncertainty
+  preferred_envelope:
+    status: unresolved
+    meaning: Loaded, soft-tissue, behavioral, and performance envelope used for normal motion.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - load_and_speed_conditioning
+    - uncertainty
+  load_conditioning:
+    status: required
+    note: Compression and landing may use more flexion but remain capacity/rate limited; loaded hyperextension is
+      forbidden.
+  couplings:
+  - status: required
+    note: Couple with hip/ankle and keep the signed anatomical bend direction.
+  rate_limits:
+    angular_velocity:
+      status: unresolved
+      units: rad_s
+    angular_acceleration:
+      status: unresolved
+      units: rad_s2
+  provenance:
+    status: gameplay_hypothesis
+    note: Contract placeholder. No exact Tarbosaurus range is asserted; calibrate from anatomy, collision, comparative
+      motion, and perceptual review.
+    sources:
+    - doi:10.1038/s41467-024-44832-z
+    uncertainty:
+      numerical_limits: unresolved
+      soft_tissue: unresolved
+    reviewed_by: null
+    reviewed_at: null
+- schema: eonwild.joint_limit_envelope.v1
+  id: tarbosaurus_ankle_l
+  articulation: ankle_metatarsal_l
+  frame:
+    parent_role: shin_l
+    child_role: foot_l
+    neutral_definition: Resolved rest-pose left ankle/metatarsal chain.
+  parameterization: custom
+  hard_envelope:
+    status: unresolved
+    meaning: Articulation/non-interpenetration boundary only; never use as the habitual animation range.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - collision_or_articular_test
+    - uncertainty
+  preferred_envelope:
+    status: unresolved
+    meaning: Loaded, soft-tissue, behavioral, and performance envelope used for normal motion.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - load_and_speed_conditioning
+    - uncertainty
+  load_conditioning:
+    status: required
+    note: Loaded stance contracts twist/yaw freedom; toe-off progressively transfers authority to toe contacts.
+  couplings:
+  - status: required
+    note: Couple ankle, metatarsal, toe witnesses, substrate normal, and contact phase.
+  rate_limits:
+    angular_velocity:
+      status: unresolved
+      units: rad_s
+    angular_acceleration:
+      status: unresolved
+      units: rad_s2
+  provenance:
+    status: gameplay_hypothesis
+    note: Contract placeholder. No exact Tarbosaurus range is asserted; calibrate from anatomy, collision, comparative
+      motion, and perceptual review.
+    sources:
+    - doi:10.1038/s41467-024-44832-z
+    uncertainty:
+      numerical_limits: unresolved
+      soft_tissue: unresolved
+    reviewed_by: null
+    reviewed_at: null
+- schema: eonwild.joint_limit_envelope.v1
+  id: tarbosaurus_ankle_r
+  articulation: ankle_metatarsal_r
+  frame:
+    parent_role: shin_r
+    child_role: foot_r
+    neutral_definition: Resolved rest-pose right ankle/metatarsal chain.
+  parameterization: custom
+  hard_envelope:
+    status: unresolved
+    meaning: Articulation/non-interpenetration boundary only; never use as the habitual animation range.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - collision_or_articular_test
+    - uncertainty
+  preferred_envelope:
+    status: unresolved
+    meaning: Loaded, soft-tissue, behavioral, and performance envelope used for normal motion.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - load_and_speed_conditioning
+    - uncertainty
+  load_conditioning:
+    status: required
+    note: Loaded stance contracts twist/yaw freedom; toe-off progressively transfers authority to toe contacts.
+  couplings:
+  - status: required
+    note: Couple ankle, metatarsal, toe witnesses, substrate normal, and contact phase.
+  rate_limits:
+    angular_velocity:
+      status: unresolved
+      units: rad_s
+    angular_acceleration:
+      status: unresolved
+      units: rad_s2
+  provenance:
+    status: gameplay_hypothesis
+    note: Contract placeholder. No exact Tarbosaurus range is asserted; calibrate from anatomy, collision, comparative
+      motion, and perceptual review.
+    sources:
+    - doi:10.1038/s41467-024-44832-z
+    uncertainty:
+      numerical_limits: unresolved
+      soft_tissue: unresolved
+    reviewed_by: null
+    reviewed_at: null
+- schema: eonwild.joint_limit_envelope.v1
+  id: tarbosaurus_shoulder_l
+  articulation: shoulder_l
+  frame:
+    parent_role: chest
+    child_role: arm_l
+    neutral_definition: Resolved rest-pose left shoulder orientation.
+  parameterization: sampled_orientation_surface
+  hard_envelope:
+    status: unresolved
+    meaning: Articulation/non-interpenetration boundary only; never use as the habitual animation range.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - collision_or_articular_test
+    - uncertainty
+  preferred_envelope:
+    status: unresolved
+    meaning: Loaded, soft-tissue, behavioral, and performance envelope used for normal motion.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - load_and_speed_conditioning
+    - uncertainty
+  load_conditioning:
+    status: required
+    note: Forelimb range stays close to the torso and is primarily inertia/presentation driven.
+  couplings:
+  - status: required
+    note: Couple subtly to thorax motion; prohibit human-like running-arm synchronization.
+  rate_limits:
+    angular_velocity:
+      status: unresolved
+      units: rad_s
+    angular_acceleration:
+      status: unresolved
+      units: rad_s2
+  provenance:
+    status: gameplay_hypothesis
+    note: Contract placeholder. No exact Tarbosaurus range is asserted; calibrate from anatomy, collision, comparative
+      motion, and perceptual review.
+    sources:
+    - doi:10.1038/s41467-024-44832-z
+    uncertainty:
+      numerical_limits: unresolved
+      soft_tissue: unresolved
+    reviewed_by: null
+    reviewed_at: null
+- schema: eonwild.joint_limit_envelope.v1
+  id: tarbosaurus_shoulder_r
+  articulation: shoulder_r
+  frame:
+    parent_role: chest
+    child_role: arm_r
+    neutral_definition: Resolved rest-pose right shoulder orientation.
+  parameterization: sampled_orientation_surface
+  hard_envelope:
+    status: unresolved
+    meaning: Articulation/non-interpenetration boundary only; never use as the habitual animation range.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - collision_or_articular_test
+    - uncertainty
+  preferred_envelope:
+    status: unresolved
+    meaning: Loaded, soft-tissue, behavioral, and performance envelope used for normal motion.
+    required_when_calibrated:
+    - orientation_surface_or_axis_bounds
+    - load_and_speed_conditioning
+    - uncertainty
+  load_conditioning:
+    status: required
+    note: Forelimb range stays close to the torso and is primarily inertia/presentation driven.
+  couplings:
+  - status: required
+    note: Couple subtly to thorax motion; prohibit human-like running-arm synchronization.
+  rate_limits:
+    angular_velocity:
+      status: unresolved
+      units: rad_s
+    angular_acceleration:
+      status: unresolved
+      units: rad_s2
+  provenance:
+    status: gameplay_hypothesis
+    note: Contract placeholder. No exact Tarbosaurus range is asserted; calibrate from anatomy, collision, comparative
+      motion, and perceptual review.
+    sources:
+    - doi:10.1038/s41467-024-44832-z
+    uncertainty:
+      numerical_limits: unresolved
+      soft_tissue: unresolved
+    reviewed_by: null
+    reviewed_at: null
+provenance:
+  status: gameplay_hypothesis
+  note: All articulation entries are intentionally unresolved contracts. They separate hard non-interpenetration
+    bounds from preferred loaded motion and prevent accidental false precision.
+  sources:
+  - doi:10.1038/s41467-024-44832-z
+  uncertainty:
+    numerical_limits: must be calibrated before release motion solving
+  reviewed_by: null
+  reviewed_at: null

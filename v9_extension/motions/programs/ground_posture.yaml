@@ -1,0 +1,33 @@
+id: ground_posture
+version: 1
+purpose: Transition between standing and supported rest through explicit contacts and effort rather than pelvis
+  teleport or reversed playback.
+phase_template:
+- assess
+- reposition
+- lower_or_engage
+- transfer_support
+- settle_or_extend
+- correct
+- final_state
+inputs:
+- direction
+- rest_pose_variant
+- terrain
+- body_profile
+- fatigue
+- injury
+outputs:
+- body_contact_schedule
+- foot_repositioning
+- root_com_path
+- tail_ground_contact
+- final_support_state
+invariants:
+- lie and rise are separate programs
+- first major support transfer is explicit
+- ground penetration is forbidden
+branches:
+- lie_down
+- rest_loop
+- rise

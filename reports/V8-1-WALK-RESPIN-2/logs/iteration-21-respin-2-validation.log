@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "checks": {
+    "accepted_v8_1_immutable": true,
+    "all_exported_keys_ground_support_and_joint_continuity": true,
+    "physical_stride_and_speed": true,
+    "front_reach_derived_from_2_60m_stride": true,
+    "bilateral_phase_causal_rocker": true,
+    "dense_distal_toe_contact_lock": true
+  },
+  "physical": {
+    "referenceStrideM": 2.5999999689258293,
+    "referenceSpeedKmh": 4.599999855972266,
+    "worldHipHeightM": 2.756361830245109
+  }
+}

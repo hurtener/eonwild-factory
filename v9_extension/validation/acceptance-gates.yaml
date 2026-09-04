@@ -1,0 +1,57 @@
+schema: eonwild.v9_acceptance_gates.v1
+release_blocking:
+  contracts:
+  - All profiles, programs, animation specs, plans, and manifests validate against versioned schemas.
+  - Units, coordinate conventions, provenance status, uncertainty, and unknown-field policy are explicit.
+  - Generic solver code resolves semantic roles and does not branch on Tarbosaurus or literal Bone_### names.
+  mass_and_inertia:
+  - Segment fractions sum to 1 within 1e-8.
+  - Segment COM and inertia are deterministic for a pinned input and seed.
+  - Resolved inertia tensors are symmetric positive definite.
+  - Absolute force/impulse claims are disabled when absolute mass is not reviewed.
+  - Uncertainty alternatives are evaluated rather than collapsed into false precision.
+  actuation_and_joint_limits:
+  - Passive mass/inertia is never treated as proof that required force, power, work, or impulse is producible.
+  - Positive production and negative braking/landing absorption are separately bounded by a resolved capacity profile.
+  - Absolute capability export remains disabled while capacity values are unresolved or only gameplay hypotheses.
+  - Every referenced articulation resolves to a hard envelope, preferred loaded envelope, and angular rate/acceleration
+    policy.
+  - Multi-axis articulations do not default to independent Euler min/max boxes.
+  - Preferred envelopes contract under configured load, speed, injury, and target-resistance conditions without
+    exceeding hard bounds.
+  contacts:
+  - Loaded sole/toe witnesses remain within skate and penetration tolerance.
+  - No loaded foot rotates arbitrarily.
+  - Contact events match measured contact-state transitions.
+  - Contact phase and foot identity survive compatible transitions.
+  centroidal:
+  - Whole-body COM reconstructed from transformed physical segments is reproducible.
+  - Quasi-static support margin and dynamic feasibility use the appropriate model.
+  - Linear and angular momentum remain continuous except for measured external impulses.
+  - Compensation authority is bounded and schedules a step when insufficient.
+  power_attack:
+  - Takeoff impulse is measurable and supported by current contacts.
+  - Airborne whole-body COM matches ballistic integration within tolerance.
+  - Root path is solved from COM and pose; it is not assumed to be the ballistic object.
+  - Landing begins at measured impact velocity and absorbs momentum without snap or reset.
+  - Infeasible airborne requests select the grounded fallback.
+  - Hit, miss, yield, resist, and landing-failure branches preserve continuity.
+  growth:
+  - Juvenile, subadult, adult, and heavy-adult fixtures differ in more than uniform scale/playback rate.
+  - Mass, inertia, cadence, stride, turning, jump, landing, and braking trends are monotonic where the profile declares
+    monotonicity.
+  - Hysteresis prevents regime chatter.
+  - Phase, contacts, velocities, target commitment, and tail state do not snap at a switch.
+  regression_and_reuse:
+  - Pinned adult walk remains inside approved mechanical tolerances and passes fixed-camera perceptual review.
+  - No new foot slide, penetration, jaw regression, or transition discontinuity.
+  - The synthetic second profile uses the same planner and solver without per-frame patches.
+  - All accepted assets are reproducible, inventory-hashed, benchmarked, and independently reviewed.
+perceptual_review:
+- Side, front-three-quarter, and rear-three-quarter fixed-camera captures.
+- COM/support/contact debug overlay capture.
+- Normal-speed and limited slow-motion review; never approve from slow motion alone.
+- Reviewer checks mass, anticipation, chain propagation, contact, recovery, loop seam, and species character.
+- Numeric PASS cannot override visibly poor motion.
+scope_truth: This specification pack validates contracts and internal consistency. It does not claim that any new
+  V9 GLB animation has been implemented or perceptually approved.

@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "checks": {
+    "same_duration": true,
+    "same_samples": true,
+    "same_timeline": true,
+    "same_root_delivery_track": true,
+    "same_phase_cycles": true,
+    "same_mean_speed": true,
+    "v8_1_contact_gates_pass": true
+  },
+  "maximumRootTrackErrorM": 0.0,
+  "allowedRotationDifferences": [
+    "pelvis/spine/neck/head from accepted neutral-chain correction",
+    "foot/ankle/toe and upstream IK from accepted 90% foot-pivot calibration"
+  ],
+  "forbiddenDifferences": [
+    "timeline",
+    "cycle phase count",
+    "root delivery",
+    "mean speed",
+    "contact gate regression"
+  ]
+}

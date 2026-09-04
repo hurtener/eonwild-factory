@@ -1,0 +1,29 @@
+id: body_pressure
+version: 1
+purpose: Apply mass through a grounded body shove using support, pelvis drive, torso rotation, target contact, and
+  follow-through.
+phase_template:
+- align
+- establish_stance
+- load
+- drive
+- contact
+- pressure
+- recover
+inputs:
+- target_pose
+- contact_region
+- desired_impulse
+- body_profile
+- terrain
+- friction
+outputs:
+- support_plan
+- pelvis_torso_drive
+- contact_wrench_window
+- target_interaction_request
+- recovery_step
+invariants:
+- force originates at ground contacts
+- not a shoulder-first superhero tackle
+- target simulation owns resulting displacement

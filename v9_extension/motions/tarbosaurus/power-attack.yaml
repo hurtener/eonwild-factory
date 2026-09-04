@@ -1,0 +1,300 @@
+schema: eonwild.dynamic_action_spec.v1
+id: tarbosaurus_power_attack_v9
+intent: power_attack
+family: heavy_predatory_biped
+program: dynamic_launch_attack
+status: P0 V9 benchmark specification; no V9 animation artifact is claimed by this pack
+mission: Select and execute a physically coherent grounded lunge or airborne forward bite from current gait/support, body
+  profile, target geometry, terrain, fatigue, injury, and authored style.
+authored_inputs:
+  style:
+  - cautious
+  - decisive
+  - explosive
+  launch_leg:
+  - planner
+  - left
+  - right
+  desired_attack_distance_m: range or preference, not a guaranteed command
+  desired_apex_m: range or preference
+  bite_timing: normalized phase or time-to-contact preference
+  target_height_m: runtime
+  continuation:
+  - stop
+  - continue_running
+  - begin_eating
+  - hold_target
+  emotional_intention:
+  - focused
+  - desperate
+  - territorial
+  - feeding_opportunity
+required_state:
+- body profile and resolved mass/inertia/capacities
+- current COM/root pose, velocity, and angular momentum
+- current left/right contact states and gait phase
+- target pose, velocity, size/contact region, and uncertainty
+- terrain height/normal/collision corridor/friction
+- fatigue, injury, pain, and confidence
+- tail angle and angular velocity
+selection:
+  variants:
+  - power_attack_airborne
+  - power_attack_grounded
+  airborne_required_margins:
+    reach: target enters solved bite corridor during committed flight window
+    takeoff: available launch impulse and power meet required values with reserve
+    friction: required horizontal ground impulse lies inside contact friction cone
+    angular_momentum: required pitch/yaw redistribution lies inside whole-body budget
+    collision: body, tail, limbs, and head have a clear swept corridor
+    landing: impact velocity and arrest distance lie inside landing tolerance
+    condition: fatigue/injury modifiers do not invalidate launch or landing contacts
+  fallback_rule: Any blocking airborne margin selects power_attack_grounded before commitment. Never begin an infeasible air
+    launch and repair it with animation cheating.
+centroidal_math:
+  whole_body_com: c = sum(m_i * p_i) / M
+  linear_momentum: P = M * c_dot
+  angular_momentum_about_com: L_c = sum(I_i*w_i + (p_i-c) x m_i(v_i-c_dot))
+  apex_to_vertical_launch_speed: 'For gravity magnitude g and desired apex rise h_apex: v_y0 = sqrt(2*g*h_apex).'
+  flight_time_to_landing_height: 'For vertical displacement delta_y = y_land-y_takeoff: T = (v_y0 + sqrt(v_y0^2 - 2*g*delta_y))
+    / g, provided the discriminant is non-negative.'
+  horizontal_launch_velocity: v_horizontal = horizontal_displacement / T after target-motion prediction and collision-corridor
+    solve.
+  takeoff_impulse: J_takeoff = M * (v_takeoff - v_preload)
+  ballistic_com: c(t) = c_takeoff + v_takeoff*t + 0.5*g*t^2
+  root_from_com: p_root(t) = c_plan(t) - R_root(t) * c_relative_to_root(q(t))
+  landing_impulse: J_land = M * (v_post_contact - v_impact)
+  critical_rule: The whole-body COM is ballistic during flight; the pelvis/root is solved from COM and changing pose, not
+    assumed to be the ballistic object.
+phase_graph:
+- id: acquire
+  range:
+  - 0.0
+  - 0.07
+  goal: Perceive/lock target and freeze major action-choice changes only after confidence threshold.
+  support: Preserve current contacts and gait phase.
+  centroidal: Capture initial COM, momentum, and support state.
+  pose: Head/gaze leads within bounded cone; torso begins alignment.
+  interruptibility: 'true'
+- id: align
+  range:
+  - 0.07
+  - 0.16
+  goal: Align pelvis/body and choose launch leg from current support without foot teleport.
+  support: Use existing support foot when feasible; otherwise schedule one preparatory adjustment.
+  centroidal: Move COM toward launch support while retaining dynamic capture margin.
+  pose: Pelvis yaw/translation leads; chest/neck/head retain target; tail opposes yaw.
+  interruptibility: partial
+- id: shift_com
+  range:
+  - 0.16
+  - 0.25
+  goal: Place COM and pressure over launch support.
+  support: Launch foot fully loaded; opposite foot unloads only after measurable transfer.
+  centroidal: Reduce lateral balance error and create launch-ready ground-reaction geometry.
+  pose: Pelvis shifts/rolls; launch ankle/knee accept load; tail/chest make bounded corrections.
+  interruptibility: 'false'
+- id: preload
+  range:
+  - 0.25
+  - 0.38
+  goal: Coil pelvis down/back and store visual/physical launch preparation.
+  support: Launch foot principal; optional second contact remains until release schedule.
+  centroidal: COM moves down/back; required takeoff velocity, impulse, power, and friction demand finalized.
+  pose: Hip/knee/ankle flex; thorax/head lag; jaw begins opening late; tail adjusts vertical posture.
+  interruptibility: 'false'
+- id: launch
+  range:
+  - 0.38
+  - 0.47
+  goal: Create measurable takeoff impulse and leave support at solved velocity.
+  support: Launch chain extends; toes leave last; TAKEOFF occurs at last support loss.
+  centroidal: Ground impulse changes COM velocity exactly; no velocity reset.
+  pose: Leg→pelvis→thorax→neck propagation; head remains aimed; tail manages pitch within momentum budget.
+  interruptibility: 'false'
+- id: committed_flight
+  range:
+  - 0.47
+  - 0.61
+  goal: Follow ballistic COM while arranging limbs, head, and tail for bite and landing.
+  support: No ground contact.
+  centroidal: COM integrates gravity; total angular momentum changes only through external forces/torques.
+  pose: Pelvis/root solved from COM; lead leg prepares landing, second leg remains catch-ready; tail redistributes orientation
+    with damping.
+  interruptibility: 'false'
+- id: bite_window
+  range:
+  - 0.61
+  - 0.7
+  goal: Reach maximum gape before target and close during the committed contact corridor.
+  support: Airborne or grounded-lunge support depending variant.
+  centroidal: Body continues along plan; target interaction may add external impulse after contact.
+  pose: Thorax/cervical chain/skull align; jaw closes; hit/miss/yield/resist branch opens.
+  interruptibility: 'false'
+- id: lead_landing
+  range:
+  - 0.7
+  - 0.78
+  goal: Place the leading foot at a reachable, terrain-aware contact and begin impact absorption.
+  support: Lead foot approaching→contact→loading.
+  centroidal: Impact velocity is the ballistic/contact-result velocity; contact impulse begins continuously.
+  pose: Foot/ankle/knee/hip compress; pelvis continues; head/neck and tail lag.
+  interruptibility: 'false'
+- id: catch_landing
+  range:
+  - 0.78
+  - 0.85
+  goal: Place second foot to broaden capture and absorb residual forward/lateral momentum.
+  support: Lead remains loaded; catch foot contacts and loads.
+  centroidal: New support/wrench reduces velocity within friction and capacity limits.
+  pose: Catch leg compresses; pelvis/chest counter-rotate; neck/head target branch remains coherent.
+  interruptibility: 'false'
+- id: momentum_arrest
+  range:
+  - 0.85
+  - 0.94
+  goal: Distribute remaining momentum through legs, pelvis, torso, tail, and optional extra step.
+  support: One/two contacts plus optional third arrest step based on incoming state.
+  centroidal: COM velocity approaches requested continuation (zero/run/feed) without snap.
+  pose: Pelvis rises/recenters; chest/neck/head settle after legs; tail damps last.
+  interruptibility: partial
+- id: recovery
+  range:
+  - 0.94
+  - 1.0
+  goal: Enter the selected continuation with exact phase/contact/velocity/tail/target state.
+  support: Continuation-specific.
+  centroidal: State handoff exact.
+  pose: Grounded ready, running continuation, hold, or eating posture selected.
+  interruptibility: partial
+events:
+- name: TARGET_LOCK
+  kind: point
+  phase: acquire
+- name: HEAD_TARGET_WINDOW
+  kind: window
+  range:
+  - 0.0
+  - 0.7
+- name: ANTICIPATION_START
+  kind: point
+  phase: shift_com
+- name: COMMIT_START
+  kind: point
+  phase: preload
+- name: JAW_OPEN
+  kind: point
+  phase: preload
+- name: TAKEOFF
+  kind: point
+  phase: launch
+- name: APEX
+  kind: point
+  phase: committed_flight
+  trigger: vertical COM velocity crosses zero
+- name: CONTACT_BEGIN
+  kind: point
+  phase: bite_window
+- name: JAW_CONTACT
+  kind: point
+  phase: bite_window
+  trigger: target contact solver
+- name: CONTACT_PEAK
+  kind: point
+  phase: bite_window
+  trigger: peak resolved contact load/impulse rate
+- name: JAW_CLOSE
+  kind: point
+  phase: bite_window
+- name: CONTACT_END
+  kind: point
+  phase: bite_window
+  trigger: branch-dependent contact release
+- name: CONTACT_CONFIRMED
+  kind: condition
+  phase: bite_window
+- name: CONTACT_MISSED
+  kind: condition
+  phase: bite_window
+- name: TARGET_YIELDED
+  kind: condition
+  phase: bite_window
+- name: TARGET_RESISTED
+  kind: condition
+  phase: bite_window
+- name: LANDING_LEAD_CONTACT
+  kind: point
+  phase: lead_landing
+- name: LANDING_CATCH_CONTACT
+  kind: point
+  phase: catch_landing
+- name: SUPPORT_FAILED
+  kind: condition
+  phase: lead_landing
+- name: FALL_TRIGGERED
+  kind: condition
+  phase: catch_landing
+- name: RECOVERY_START
+  kind: point
+  phase: momentum_arrest
+- name: RECOVERY_END
+  kind: point
+  phase: recovery
+- name: NON_INTERRUPTIBLE
+  kind: window
+  range:
+  - 0.25
+  - 0.85
+- name: PARTIALLY_INTERRUPTIBLE
+  kind: window
+  range:
+  - 0.85
+  - 1.0
+branches:
+  hit_target_yields:
+    effect: Target/contact impulse reduces relative speed; attacker preserves forward follow-through, stabilizes or enters
+      eating/hold.
+    required_continuity:
+    - COM/root velocity
+    - jaw/target constraint
+    - landing plan recomputed if airborne
+  hit_target_resists:
+    effect: Higher contact reaction is absorbed through neck/torso/support; hold may break; landing/arrest demand increases.
+    required_continuity:
+    - reaction impulse
+    - neck stiffness envelope
+    - support/friction feasibility
+  miss:
+    effect: No expected target impulse; head/torso continue into overextension, landing remains required, and recovery vulnerability
+      increases.
+    next_program: recovery_failure / bite_miss branch
+  landing_failure:
+    effect: Lead or catch support cannot supply required wrench; preserve state into stumble/fall rather than snapping to
+      a safe pose.
+    next_program: recovery_failure / stumble or terminal_fall
+growth_response:
+  juvenile: Higher cadence and redirection authority; shorter absolute distance/impulse; faster recovery; target size/reach
+    limits remain strict.
+  subadult: Largest practical airborne attack envelope when strength, proportions, condition, and gameplay balance support
+    it.
+  adult: Airborne or low launch selected from speed/target; stronger momentum and longer landing arrest.
+  heavy_adult: Often selects grounded lunge; if airborne, lower apex, stronger forward drive, larger preload, longer braking,
+    and stricter landing rejection.
+required_outputs:
+- selected variant and fallback reason
+- launch foot and complete contact schedule
+- whole-body COM position/velocity/acceleration
+- root path derived from COM and pose
+- linear/angular momentum and external impulses
+- bite target/contact window and branch result
+- landing contacts, velocities, impulses, friction/capacity margins
+- continuation handoff state
+- debug overlay and fixed-camera evidence
+acceptance:
+- No airborne plan without measured whole-body COM ballistic residual below tolerance.
+- No takeoff before launch-foot load and no foot release before contact state says toe-off.
+- No jaw contact before gape and connected body delivery.
+- No root/COM velocity reset at target contact, takeoff, lead landing, catch landing, or continuation.
+- No tail behavior that changes total airborne angular momentum without external torque.
+- Mass/strength/fatigue/injury changes produce explainable plan/variant changes.
+- Grounded fallback is a complete authored program, not a failed jump with vertical displacement removed.

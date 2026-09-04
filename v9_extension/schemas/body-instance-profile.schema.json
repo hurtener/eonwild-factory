@@ -1,0 +1,331 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eonwild.dev/schemas/body-instance-profile.schema.json",
+  "title": "BodyInstanceProfile",
+  "type": "object",
+  "required": [
+    "schema",
+    "profile_id",
+    "family",
+    "coordinate_system",
+    "dimensions",
+    "mass",
+    "segments",
+    "provenance",
+    "actuation_capacity_profile",
+    "joint_limit_catalog"
+  ],
+  "properties": {
+    "schema": {
+      "const": "eonwild.body_instance_profile.v1"
+    },
+    "profile_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "species": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "family": {
+      "type": "string",
+      "minLength": 1
+    },
+    "age_fraction": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "condition_factor": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "coordinate_system": {
+      "type": "object",
+      "required": [
+        "handedness",
+        "up_axis",
+        "forward_axis",
+        "units"
+      ],
+      "properties": {
+        "handedness": {
+          "enum": [
+            "right",
+            "left"
+          ]
+        },
+        "up_axis": {
+          "type": "string"
+        },
+        "forward_axis": {
+          "type": "string"
+        },
+        "units": {
+          "const": "metres"
+        }
+      }
+    },
+    "dimensions": {
+      "type": "object",
+      "required": [
+        "body_length_m",
+        "hip_height_m"
+      ],
+      "properties": {
+        "body_length_m": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "hip_height_m": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "body_width_m": {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      }
+    },
+    "mass": {
+      "type": "object",
+      "required": [
+        "normalization",
+        "absolute_dynamics_enabled"
+      ],
+      "properties": {
+        "normalization": {
+          "const": 1.0
+        },
+        "mass_kg": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "range_kg": {
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "absolute_dynamics_enabled": {
+          "type": "boolean"
+        }
+      }
+    },
+    "segments": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "parent_articulation",
+          "bone_roles",
+          "mass_fraction",
+          "com",
+          "inertia",
+          "provenance"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "parent_articulation": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "bone_roles": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          },
+          "mass_fraction": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 1
+          },
+          "com": {
+            "type": "object",
+            "required": [
+              "mode"
+            ],
+            "properties": {
+              "mode": {
+                "enum": [
+                  "derive_from_partition",
+                  "explicit_local"
+                ]
+              },
+              "local_m": {
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "prefixItems": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ],
+                    "items": false
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          "inertia": {
+            "type": "object",
+            "required": [
+              "mode"
+            ],
+            "properties": {
+              "mode": {
+                "enum": [
+                  "derive_from_partition",
+                  "primitive",
+                  "explicit_tensor"
+                ]
+              },
+              "tensor_kg_m2": {
+                "type": [
+                  "array",
+                  "null"
+                ]
+              }
+            }
+          },
+          "provenance": {
+            "type": "object",
+            "required": [
+              "status",
+              "note"
+            ],
+            "properties": {
+              "status": {
+                "enum": [
+                  "supported",
+                  "plausible_inference",
+                  "disputed",
+                  "speculative",
+                  "gameplay_only",
+                  "gameplay_hypothesis",
+                  "synthetic_test_fixture"
+                ]
+              },
+              "note": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sources": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "uncertainty": {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "reviewed_by": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "reviewed_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "status",
+        "note"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "supported",
+            "plausible_inference",
+            "disputed",
+            "speculative",
+            "gameplay_only",
+            "gameplay_hypothesis",
+            "synthetic_test_fixture"
+          ]
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "uncertainty": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "reviewed_by": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reviewed_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "actuation_capacity_profile": {
+      "type": "string",
+      "minLength": 1
+    },
+    "joint_limit_catalog": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,31 @@
+schema: eonwild.pinned_regressions.v1
+review_repo_commit: aca1eab3f6e9f6970cf8a8281f4440a74f8551d3
+historical_inputs:
+- id: v8_2_approved_walk
+  path: procedural-animation-toolkit(v8.2)/asset/tarbosaurus_v8_2_approved.glb
+  sha256: a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5
+  role: adult relaxed-walk perceptual and mechanical regression fixture
+  immutable: true
+- id: v8_2_iteration_b_base
+  path: procedural-animation-toolkit(v8.2)/input/tarbosaurus_v8_2_iteration_b_base.glb
+  sha256: bfe8e833721f1dc0b8b4a1df72a6ea933debb1c6d76ac6d7970ae3ed6c8f4bc2
+  role: deterministic reproduction base
+  immutable: true
+- id: v8_1_iteration_38_source
+  path: null
+  sha256: 1b9a7d071c1b375e128beeb5bda68298e32b39aac3ea76a90afe7ca3f744b73e
+  role: approved source referenced by V8.2 manifest; not duplicated
+  immutable: true
+- id: v5_5_validated_animation_pack
+  path: procedural-animation-toolkit(v5.5)/validated_result/v5.5/tarbosaurus_procedural_v5_5_animation_pack.glb
+  sha256: 4e6e85dc82e941a3fc10109ca781dd3dcbb084699dc19834bf8683c04b22fe65
+  role: historical 37-clip capability, posture, action, jaw, transition, and runtime reference; not authoritative relaxed
+    walk or COM truth
+  immutable: true
+- id: v5_5_release_validation
+  path: procedural-animation-toolkit(v5.5)/validated_result/v5.5/v5.5-release-validation.json
+  sha256: null
+  role: records historical proxy metrics and explicit measurement boundary
+  immutable: true
+rule: Do not rewrite historical version packages. Copy only audited generic code into the canonical engine with tests and
+  provenance.

@@ -1,0 +1,42 @@
+schema: eonwild.v8_3_acceptance_gates.v1
+release_blocking: true
+gates:
+  - id: immutable_historical_inputs
+    requirement: No file under any historical procedural-animation-toolkit(v*) release directory is modified.
+    evidence: git diff plus pinned SHA checks
+  - id: v8_2_compatibility
+    requirement: The compatibility walk reproduces the approved V8.2 artifact exactly or proves accessor/sample equivalence when intentionally repackaged.
+    evidence: SHA or exact channel equality, root/contact/timeline report, fixed-camera comparison
+  - id: semantic_rig_only
+    requirement: Generic engine code contains no Tarbosaurus species-name branch or literal Bone_### dependency.
+    evidence: static scan and second-fixture resolution test
+  - id: skin_and_rig_integrity
+    requirement: Joint order, skin weights, rest deformation, mesh/material/accessor inventory, jaw/toe/tail chains remain valid.
+    evidence: rig-resolution and skin-integrity reports
+  - id: loaded_contact_preservation
+    requirement: Balanced pelvis/body corrections preserve loaded sole and toe patches within configured translation/rotation/gap tolerances.
+    evidence: contact witness report and debug media
+  - id: one_world_plan
+    requirement: Root-motion and in-place outputs are derived from one authoritative world-space plan.
+    evidence: reconstruction equivalence report
+  - id: typed_animation_metadata
+    requirement: Every clip exposes validated phases, contact state, point/window/condition events, entry/exit, interruption, and procedural authority.
+    evidence: AnimationSpec/manifest schema and GLB cross-check
+  - id: state_exact_transitions
+    requirement: Authored bridges preserve pose, root position/orientation, linear/angular velocity, support/contact, tail state, and event cursor within tolerance.
+    evidence: transition-state report
+  - id: p0_clip_set
+    requirement: Relaxed walk, idle, alert idle, alert walk, walk start/stop, grounded committed bite, feeding, threat call, and their bridges are complete.
+    evidence: clip matrix coverage and fixed-camera media
+  - id: v5_5_recovery_accounting
+    requirement: Every recovery matrix item has implemented, deferred, reference-only, or rejected evidence; no item is silently omitted.
+    evidence: recovery closeout report
+  - id: proxy_truthfulness
+    requirement: V8.3 support-phase body balance is never reported as physical COM or biological validation.
+    evidence: terminology/provenance scan and reviewer record
+  - id: independent_perceptual_review
+    requirement: An independent reviewer approves every P0 clip in fixed side and three-quarter views.
+    evidence: signed review records
+  - id: exact_release_inventory
+    requirement: Every shipped file is inventoried and hashed; no temporary, rejected, or cache output ships.
+    evidence: manifest and SHA256SUMS

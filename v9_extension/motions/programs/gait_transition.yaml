@@ -1,0 +1,33 @@
+id: gait_transition
+version: 1
+purpose: Create starts, stops, and acceleration/deceleration horizons without velocity or contact discontinuity.
+phase_template:
+- incoming_state
+- support_selection
+- load_or_brake
+- first_step
+- second_step
+- handoff
+inputs:
+- incoming_pose
+- incoming_velocity
+- incoming_phase
+- desired_velocity
+- friction
+- body_profile
+- fatigue
+- injury
+outputs:
+- transition_contact_schedule
+- root_com_velocity_curve
+- step_plan
+- handoff_state
+invariants:
+- position and velocity continuous
+- first step is phase-appropriate
+- braking distance scales with incoming state
+branches:
+- walk_start
+- walk_stop
+- run_start
+- run_stop

@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eonwild.dev/schemas/actuation-capacity-profile.schema.json",
+  "title": "ActuationCapacityProfile",
+  "type": "object",
+  "required": [
+    "schema",
+    "id",
+    "family",
+    "mode",
+    "capacity_groups",
+    "condition_modifiers",
+    "provenance"
+  ],
+  "properties": {
+    "schema": {
+      "const": "eonwild.actuation_capacity_profile.v1"
+    },
+    "id": {
+      "type": "string"
+    },
+    "family": {
+      "type": "string"
+    },
+    "mode": {
+      "enum": [
+        "normalized",
+        "absolute"
+      ]
+    },
+    "normalization": {
+      "type": "object",
+      "description": "Definitions for dimensionless force, torque, work, power, and impulse when mode is normalized."
+    },
+    "capacity_groups": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "articulations",
+          "positive",
+          "negative_absorption",
+          "rate_limit",
+          "provenance"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "articulations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "positive": {
+            "type": "object",
+            "description": "Peak force/torque, power, work, and impulse production envelope."
+          },
+          "negative_absorption": {
+            "type": "object",
+            "description": "Peak braking/landing force, torque, negative work, and impulse absorption envelope."
+          },
+          "rate_limit": {
+            "type": "object"
+          },
+          "fatigue_sensitivity": {
+            "type": "object"
+          },
+          "injury_sensitivity": {
+            "type": "object"
+          },
+          "growth_curve": {
+            "type": "object"
+          },
+          "provenance": {
+            "type": "object",
+            "required": [
+              "status",
+              "note"
+            ],
+            "properties": {
+              "status": {
+                "enum": [
+                  "supported",
+                  "plausible_inference",
+                  "disputed",
+                  "speculative",
+                  "gameplay_only",
+                  "gameplay_hypothesis",
+                  "synthetic_test_fixture"
+                ]
+              },
+              "note": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sources": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "uncertainty": {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "reviewed_by": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "reviewed_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "aggregate_capabilities": {
+      "type": "object"
+    },
+    "condition_modifiers": {
+      "type": "object"
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "status",
+        "note"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "supported",
+            "plausible_inference",
+            "disputed",
+            "speculative",
+            "gameplay_only",
+            "gameplay_hypothesis",
+            "synthetic_test_fixture"
+          ]
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "uncertainty": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "reviewed_by": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reviewed_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

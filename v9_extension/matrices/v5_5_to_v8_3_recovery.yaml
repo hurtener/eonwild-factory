@@ -1,0 +1,1220 @@
+schema: eonwild.v5_5_to_v8_3_recovery_matrix.v1
+repository: hurtener/eonwild-factory
+review_pin: aca1eab3f6e9f6970cf8a8281f4440a74f8551d3
+baselines:
+  v8_2_approved_sha256: a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5
+  v8_2_base_sha256: bfe8e833721f1dc0b8b4a1df72a6ea933debb1c6d76ac6d7970ae3ed6c8f4bc2
+  v8_1_approved_source_sha256: 1b9a7d071c1b375e128beeb5bda68298e32b39aac3ea76a90afe7ca3f744b73e
+  v5_5_validated_generated_sha256: 4e6e85dc82e941a3fc10109ca781dd3dcbb084699dc19834bf8683c04b22fe65
+items:
+- id: R001
+  category: release discipline
+  capability: Immutable historical baselines
+  v5_5_source:
+  - procedural-animation-toolkit(v5.5)/
+  - procedural-animation-toolkit(v8.2)/
+  what_v5_5_proved_or_attempted: Both versions are reproducible release packages with their own artifacts and evidence.
+  disposition_for_v8_3: restore_contract
+  priority: P0
+  v8_3_target: repository/versioning policy
+  recovery_method: Never edit historical release directories. Consume their artifacts by pinned path and SHA. Build V8.3 in
+    a new canonical directory.
+  preserved_invariants:
+  - V8.2 and V5.5 bytes remain unchanged
+  - all migrations are additive
+  - every source artifact is SHA-pinned
+  required_evidence:
+  - git diff proves no historical file changed
+  - input SHA checks fail closed
+  v9_disposition: Remain permanent regression fixtures.
+  disposition_class: restore_contract
+- id: R002
+  category: release discipline
+  capability: Deterministic input/output hashing
+  v5_5_source:
+  - procedural-animation-toolkit(v8.2)/config/release.json
+  - procedural-animation-toolkit(v8.2)/scripts/verify_release.py
+  - procedural-animation-toolkit(v5.5)/validated_result/v5.5/v5.5-release-validation.json
+  what_v5_5_proved_or_attempted: V8.2 binds the base and approved output hashes; V5.5 records a generated artifact hash and
+    validation result.
+  disposition_for_v8_3: restore_contract
+  priority: P0
+  v8_3_target: src/eonmotion/release + artifacts/v8.3/manifest.json
+  recovery_method: Every V8.3 build records source/config/tool hashes, output hashes, changed-channel scope, evidence hashes,
+    and build environment facts.
+  preserved_invariants:
+  - same inputs produce same binary where deterministic mode is declared
+  - non-deterministic render media is separated from deterministic mechanical output
+  required_evidence:
+  - two clean rebuilds
+  - manifest inventory exactness
+  - hash mismatch negative test
+  v9_disposition: Use the same release protocol for every V9 plan family.
+  disposition_class: restore_contract
+- id: R003
+  category: release discipline
+  capability: Fail-closed package inventory
+  v5_5_source:
+  - procedural-animation-toolkit(v8.2)/scripts/verify_release.py
+  what_v5_5_proved_or_attempted: V8.2 rejects forbidden cache/temp/rejected paths, oversized files, missing inventory entries,
+    and mismatched media facts.
+  disposition_for_v8_3: restore_contract
+  priority: P0
+  v8_3_target: scripts/verify_v8_3_release.py
+  recovery_method: Port the inventory and forbidden-path behavior. Extend it to schemas, configs, animation specs, resolved
+    profiles, reports, and media.
+  preserved_invariants:
+  - no hidden production debt
+  - no rejected candidate accidentally ships
+  - every file is represented exactly once
+  required_evidence:
+  - inject a .tmp file and confirm failure
+  - remove an inventory entry and confirm failure
+  - corrupt media metadata and confirm failure
+  v9_disposition: Generalize as the canonical Eonwild factory release verifier.
+  disposition_class: restore_contract
+- id: R004
+  category: release discipline
+  capability: Changed-versus-unchanged channel accounting
+  v5_5_source:
+  - procedural-animation-toolkit(v8.2)/config/release.json
+  - procedural-animation-toolkit(v8.2)/scripts/verify_release.py
+  what_v5_5_proved_or_attempted: V8.2 permits changes only on a declared set of chest/neck/head rotation accessors.
+  disposition_for_v8_3: restore_contract
+  priority: P0
+  v8_3_target: validation/channel-scope-report.json
+  recovery_method: Every V8.3 operation declares which nodes, paths, clips, and channel types it may modify. The verifier
+    compares all other binary accessors or sampled tracks.
+  preserved_invariants:
+  - no accidental root/foot/toe changes
+  - no silent edit to non-target clips
+  - no JSON/schema drift unless declared
+  required_evidence:
+  - byte or sample equivalence outside scope
+  - negative test with one forbidden accessor edit
+  v9_disposition: Required for isolated solver-layer audits in V9.
+  disposition_class: restore_contract
+- id: R005
+  category: configuration
+  capability: Externalized reusable profile
+  v5_5_source:
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/examples/profiles/tarbosaurus-v5.5.json
+  what_v5_5_proved_or_attempted: V5.5 exposed gait, contact, terrain, tail, idle, action, jaw, and transition parameters instead
+    of burying all values in code.
+  disposition_for_v8_3: restructure_and_restore
+  priority: P0
+  v8_3_target: profiles/ + motions/ + config/v8_3/
+  recovery_method: Do not copy the monolithic JSON as the new canonical shape. Split it into versioned family, species, rig,
+    contact, gait, action, transition, and release configs with units, ranges, provenance, uncertainty, and unknown-field
+    rejection.
+  preserved_invariants:
+  - generic code has no species-name branches
+  - units are explicit
+  - all references resolve fail closed
+  - derived values are exported
+  required_evidence:
+  - schema validation
+  - unknown field test
+  - missing reference test
+  - resolved-profile snapshot
+  v9_disposition: Becomes the BodyInstanceProfile, GrowthProfile, MotionProgram, and capacity stack.
+  disposition_class: restructure_and_restore
+- id: R006
+  category: configuration
+  capability: Semantic bone-role resolution
+  v5_5_source:
+  - assets/examples/tarbosaurus/bone-map.edited-2.yml
+  - procedural-animation-toolkit(v5.5)/inputs/tarbosaurus_bone_map.edited.yml
+  what_v5_5_proved_or_attempted: The rig is addressed through roles such as pelvis, chest, neck chain, foot, toes, tail, jaw,
+    and limbs.
+  disposition_for_v8_3: restore_contract
+  priority: P0
+  v8_3_target: src/eonmotion/rig/semantic_map.py
+  recovery_method: Port role-based resolution, hierarchy validation, confidence/evidence fields, and required/optional role
+    sets. Generic solvers may not reference Bone_### literals.
+  preserved_invariants:
+  - same semantic contract can resolve a second digitigrade biped
+  - hierarchy mismatch fails
+  - left/right completeness is checked
+  required_evidence:
+  - Tarbosaurus resolution report
+  - synthetic second-fixture resolution
+  - broken-parent negative test
+  v9_disposition: Foundation of species-family reuse.
+  disposition_class: restore_contract
+- id: R007
+  category: rig and skin
+  capability: 75-joint skin order and deformation preservation
+  v5_5_source:
+  - procedural-animation-toolkit(v5.5)/validated_result/v5.5/v5.5-release-validation.json
+  - procedural-animation-toolkit(v8.2)/asset/tarbosaurus_v8_2_approved.glb
+  what_v5_5_proved_or_attempted: V5.5 validated 75 skin joints and rest-skinned-mesh preservation; V8.2 preserves the existing
+    GLB structure and JSON.
+  disposition_for_v8_3: restore_contract
+  priority: P0
+  v8_3_target: validation/skin-integrity-report.json
+  recovery_method: V8.3 must preserve joint count/order, mesh primitives, weights, materials, morph targets, inverse-bind
+    behavior, and rest-pose skin unless a migration is explicitly approved.
+  preserved_invariants:
+  - no deformation regression
+  - no lost jaw/toe/tail bones
+  - no hidden re-rig
+  required_evidence:
+  - joint-order equality
+  - rest-skinned vertex error
+  - mesh/material/accessor inventory
+  v9_disposition: Required for every baked V9 output.
+  disposition_class: restore_contract
+- id: R008
+  category: rig and skin
+  capability: Foot-pivot calibration tooling
+  v5_5_source:
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/scripts/eonproc_v5_5/pivots.py
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/scripts/adjust_v5_5_foot_pivots.py
+  what_v5_5_proved_or_attempted: V5.5 lowered foot pivots while preserving toe-root world positions and the rest-skinned mesh;
+    it intentionally changed inverse-bind slots 43 and 56.
+  disposition_for_v8_3: port_tooling_not_mutation
+  priority: P1
+  v8_3_target: tools/rig/inspect_and_propose_foot_pivots.py
+  recovery_method: Keep the diagnostic and migration capability, but do not reapply V5.5 inverse-bind changes to the V8.2
+    artifact by default. Produce a proposal report and require explicit approval before any structural mutation.
+  preserved_invariants:
+  - V8.2 rig is authoritative until a need is demonstrated
+  - toe world origins remain stable
+  - rest mesh remains equivalent
+  required_evidence:
+  - before/after pivot visualization
+  - rest-skinned error
+  - contact comparison
+  - explicit migration flag test
+  v9_disposition: A general rig-import calibration tool, separate from motion solving.
+  disposition_class: port_and_revalidate
+- id: R009
+  category: contacts
+  capability: Skinned-vertex sole witness extraction
+  v5_5_source:
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/scripts/eonproc_v4/sole.py
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/examples/profiles/tarbosaurus-v5.5.json
+  what_v5_5_proved_or_attempted: V5.5 inherits V4 vertex-level sole witnesses, thresholds, height bands, padding, contact
+    quantiles, and minimum witness counts.
+  disposition_for_v8_3: port_and_revalidate
+  priority: P0
+  v8_3_target: src/eonmotion/contacts/sole_witnesses.py
+  recovery_method: Recover the vertex-based contact-patch method, but resolve witness sets against the V8.2 mesh/skin and
+    freeze the resolved witness IDs in the V8.3 profile.
+  preserved_invariants:
+  - support uses patches rather than ankle points
+  - left/right witness sets are deterministic
+  - witnesses belong to the intended foot/toe region
+  required_evidence:
+  - witness visualization
+  - stable ID/hash across rebuilds
+  - minimum witness count
+  - bad-weight negative fixture
+  v9_disposition: Feeds physical contact patches and support regions in V9.
+  disposition_class: port_and_revalidate
+- id: R010
+  category: contacts
+  capability: Contact phase schedule and loaded-foot locking
+  v5_5_source:
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/scripts/eonproc_v4/locomotion.py
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/examples/profiles/tarbosaurus-v5.5.json
+  what_v5_5_proved_or_attempted: V5.5 models stance fraction, contact lead, load ramp, pre-contact, toe-off, and sole/loaded-gap
+    gates.
+  disposition_for_v8_3: reimplement_against_v8_2
+  priority: P0
+  v8_3_target: src/eonmotion/contacts/contact_schedule.py
+  recovery_method: Recover the semantics, not the exact old phase curves. Infer or bind the approved V8.2 contact phases,
+    expose CONTACT/LOAD/UNLOAD/TOE_OFF states, and keep loaded witnesses fixed in world space within tolerance.
+  preserved_invariants:
+  - no foot skate while loaded
+  - no arbitrary loaded-foot yaw
+  - toe-off releases progressively
+  - markers match measured contact
+  required_evidence:
+  - per-foot world-space drift
+  - loaded yaw drift
+  - penetration/gap report
+  - event-versus-geometry consistency
+  v9_disposition: Becomes the ContactState contract used by centroidal planning.
+  disposition_class: reimplement_against_v8_2
+- id: R011
+  category: contacts
+  capability: Metatarsal, foot, and toe articulation sequence
+  v5_5_source:
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/scripts/eonproc_v4/locomotion.py
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/examples/profiles/tarbosaurus-v5.5.json
+  what_v5_5_proved_or_attempted: V5.5 parameterizes ankle swing, foot contact angle, toe-off foot rotation, toe push, and
+    multiple toe branches.
+  disposition_for_v8_3: reimplement_against_v8_2
+  priority: P0
+  v8_3_target: src/eonmotion/solve/foot_toe_solver.py
+  recovery_method: Use the V8.2 tracks as the reference contact behavior. Recover heel/metatarsal/toe sequencing and all toe
+    branches through semantic roles, with contact-state-conditioned limits.
+  preserved_invariants:
+  - foot is not a rigid board
+  - toes are last to leave
+  - loaded toes do not rotate freely
+  - all branches remain anatomically coherent
+  required_evidence:
+  - toe witness trajectories
+  - toe-off ordering
+  - joint/rate limits
+  - side and three-quarter video
+  v9_disposition: Primary pose/contact solver component.
+  disposition_class: reimplement_against_v8_2
+- id: R012
+  category: contacts
+  capability: Terrain probing and substrate adaptation
+  v5_5_source:
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/scripts/eonproc_v4/terrain.py
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/runtime/terrain-contact-adapter.ts
+  what_v5_5_proved_or_attempted: V5.5 inherits terrain probes, normal blending, foot roll/pitch limits, pelvis height/roll/pitch
+    response, and uneven/slope fixtures.
+  disposition_for_v8_3: port_and_revalidate
+  priority: P1
+  v8_3_target: src/eonmotion/contacts/terrain_adapter.py + runtime adapter
+  recovery_method: Port terrain interfaces and bounded adaptation. Separate terrain query, planned contact patch, foot orientation
+    solve, pelvis response, and final penetration correction.
+  preserved_invariants:
+  - flat-terrain V8.2 regression is unchanged when adaptation is zero
+  - terrain corrections never exceed declared limits
+  - support remains valid
+  required_evidence:
+  - flat no-op equivalence
+  - slope fixture
+  - uneven fixture
+  - edge/step negative cases
+  v9_disposition: Runtime receives a bounded version; full planning remains offline.
+  disposition_class: port_and_revalidate
+- id: R013
+  category: constraints
+  capability: Signed knee/ankle and hip envelopes
+  v5_5_source:
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/scripts/eonproc_v3/rig.py
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/examples/profiles/tarbosaurus-v5.5.json
+  what_v5_5_proved_or_attempted: The inherited solver uses signed anatomical bases and explicit hip, knee, and ankle limits
+    with velocity/acceleration gates.
+  disposition_for_v8_3: port_and_revalidate
+  priority: P0
+  v8_3_target: src/eonmotion/solve/joint_constraints.py
+  recovery_method: Recover anatomical coordinate construction, hinge sign, hard ranges, continuity, velocity, and acceleration
+    checks. Keep V8.3 values as animation-engineering constraints, not biological certainty.
+  preserved_invariants:
+  - no knee inversion
+  - no snapping to a straight leg
+  - no discontinuous quaternion sign
+  - rates stay bounded
+  required_evidence:
+  - range sweep
+  - joint-rate report
+  - broken-axis negative fixture
+  - visual pose grid
+  v9_disposition: Expand into hard versus preferred coupled envelopes in V9.
+  disposition_class: port_and_revalidate
+- id: R014
+  category: walk baseline
+  capability: Approved V8.2 relaxed walk
+  v5_5_source:
+  - procedural-animation-toolkit(v8.2)/asset/tarbosaurus_v8_2_approved.glb
+  - procedural-animation-toolkit(v8.2)/config/release.json
+  what_v5_5_proved_or_attempted: V8.2 is the approved Candidate-A walk with bounded world-relative chest balance and preserved
+    root, pelvis, legs, feet, toes, tail, and non-walk data.
+  disposition_for_v8_3: authoritative_baseline
+  priority: P0
+  v8_3_target: fixtures/v8.2/tarbosaurus_v8_2_approved.glb
+  recovery_method: Pin the exact SHA. V8.3 first reproduces it as compatibility mode before any whole-body balance migration.
+    Any balanced variant must report every changed channel and prove contact/root equivalence.
+  preserved_invariants:
+  - approved perceptual target is never overwritten
+  - compatibility output remains byte-identical where feasible
+  - root trajectory and contacts remain authoritative
+  required_evidence:
+  - exact SHA reproduction
+  - fixed-camera side/3Q comparison
+  - channel diff
+  v9_disposition: Remains the adult-walk regression for V9.
+  disposition_class: authoritative_baseline
+- id: R015
+  category: body balance
+  capability: Pelvis support shift and load response
+  v5_5_source:
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/examples/profiles/tarbosaurus-v5.5.json
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/README.md
+  what_v5_5_proved_or_attempted: V5.5 adds a principal support leg, pelvis translations, support shift, loading drop, roll/yaw/pitch,
+    and less extreme rear stance.
+  disposition_for_v8_3: recover_as_legacy_proxy
+  priority: P0
+  v8_3_target: src/eonmotion/legacy_balance/support_phase_balance.py
+  recovery_method: Recreate the intended behavior from measured foot phases and configured bounded gains. When the pelvis
+    changes, counter-solve the loaded leg/foot/toe chains to preserve world contacts. Label the result a support-phase balance
+    proxy, not physical COM.
+  preserved_invariants:
+  - feet remain planted
+  - root displacement remains aligned
+  - pelvis responds to the loaded side
+  - no body sway is added without support reason
+  required_evidence:
+  - pelvis/load phase correlation
+  - foot drift after counter-solve
+  - before/after V8.2 video
+  - gain sweep
+  v9_disposition: Replace the proxy with segment-level COM/support solving in V9.
+  disposition_class: recover_as_legacy_proxy
+- id: R016
+  category: body balance
+  capability: Exported pelvis translations in root-motion and in-place clips
+  v5_5_source:
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/README.md
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/scripts/build_v5_5.py
+  what_v5_5_proved_or_attempted: V5.5 explicitly exports pelvis translations for locomotion and actions, including in-place
+    views.
+  disposition_for_v8_3: restore_behavior
+  priority: P0
+  v8_3_target: src/eonmotion/bake/world_plan_views.py
+  recovery_method: Use one authoritative world-space solve. Derive root-motion and in-place views from it by factoring root
+    displacement, never by solving the body twice.
+  preserved_invariants:
+  - same relative body/contact motion in both views
+  - no independent phase drift
+  - pelvis translation is not discarded
+  required_evidence:
+  - root-motion versus in-place reconstruction equivalence
+  - contact comparison
+  - phase equality
+  v9_disposition: Required for V9 plan baking and runtime previews.
+  disposition_class: restore_contract
+- id: R017
+  category: body balance
+  capability: Hip-led leg recovery and shortened rear stance
+  v5_5_source:
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/README.md
+  - procedural-animation-toolkit(v5.5)/validated_result/v5.5/v5.5-release-validation.json
+  what_v5_5_proved_or_attempted: V5.5 reduced excessive rear reach and specified hip-led recovery with delayed knee, ankle,
+    foot, and toe response.
+  disposition_for_v8_3: recover_intent_not_curve
+  priority: P0
+  v8_3_target: motions/programs/alternating_gait.yaml
+  recovery_method: Encode the sequencing and reach limits in the gait program. Fit against the V8.2 approved leg trajectories
+    rather than importing V5.5 samples.
+  preserved_invariants:
+  - economical swing
+  - no piston legs
+  - no overextended rear foot
+  - toe clearance remains sufficient
+  required_evidence:
+  - rear reach metrics
+  - phase ordering
+  - joint velocity
+  - side-video review
+  v9_disposition: Continuous parameter inside growth-aware gait regimes.
+  disposition_class: reimplement_from_spec
+- id: R018
+  category: body balance
+  capability: Chest counter-rotation and neck/head stabilization
+  v5_5_source:
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/examples/profiles/tarbosaurus-v5.5.json
+  - procedural-animation-toolkit(v8.2)/scripts/release_generate.py
+  what_v5_5_proved_or_attempted: V5.5 has spine/neck/head gains; V8.2 provides the approved bounded world-relative chest solve
+    and neck reconstruction.
+  disposition_for_v8_3: merge_with_v8_2_authority
+  priority: P0
+  v8_3_target: src/eonmotion/solve/trunk_stabilization.py
+  recovery_method: Use V8.2 as the authoritative adult-walk reference. Productize its world-relative basis, allowed nodes,
+    residual fractions, and limits; make gains profile-driven and clip/program-scoped.
+  preserved_invariants:
+  - head is not a gimbal
+  - large orientation changes involve the chain
+  - V8.2 local-delta bounds are honored for compatibility mode
+  required_evidence:
+  - exact V8.2 reproduction
+  - gain/limit negative tests
+  - head world-pose comparison
+  v9_disposition: Driven by measured balance/momentum error in V9.
+  disposition_class: reimplement_against_v8_2
+- id: R019
+  category: body balance
+  capability: Damped segmented tail response
+  v5_5_source:
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/examples/profiles/tarbosaurus-v5.5.json
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/scripts/eonproc_v4/locomotion.py
+  what_v5_5_proved_or_attempted: V5.5 exposes tail stiffness root/tip, damping, coupling, parent follow, lag, dynamic limits,
+    COM/velocity gains, sag, and warmup.
+  disposition_for_v8_3: port_stateful_solver_relabel_gains
+  priority: P0
+  v8_3_target: src/eonmotion/solve/tail_response.py
+  recovery_method: Recover the stateful damped chain, proximal-to-distal stiffness gradient, lag, limits, and warmup. Treat
+    old COM gain as a tuned presentation proxy until V9 supplies real COM/momentum requests.
+  preserved_invariants:
+  - tail base remains muscular and pelvis-coupled
+  - no endless oscillation
+  - state carries across transitions
+  - no decorative wag
+  required_evidence:
+  - impulse response/damping plot
+  - loop seam state
+  - turn/start/stop review
+  - limit checks
+  v9_disposition: Connect input torque to centroidal angular-momentum and balance requests.
+  disposition_class: port_and_revalidate
+- id: R020
+  category: presentation
+  capability: Breathing, micro-attention, forelimb inertia, and asymmetry
+  v5_5_source:
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/examples/profiles/tarbosaurus-v5.5.json
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/scripts/build_v5_5.py
+  what_v5_5_proved_or_attempted: V5.5 includes breathing, head micro-motion, arm inertia, asymmetry, and secondary residual
+    detail.
+  disposition_for_v8_3: restore_as_bounded_overlays
+  priority: P0
+  v8_3_target: src/eonmotion/overlays/
+  recovery_method: Recover as separate seeded, aperiodic, masked overlays with per-channel authority. They may not move root,
+    invalidate COM/support, rotate loaded feet, or erase action beats.
+  preserved_invariants:
+  - forelimbs never become human running arms
+  - breathing is not torso bob
+  - micro-attention is non-rhythmic
+  - variation is reproducible from seed
+  required_evidence:
+  - mask audit
+  - COM/contact authority audit
+  - loop seam
+  - seed determinism
+  - visual repetition review
+  v9_disposition: Remain final bounded presentation layers.
+  disposition_class: restore_contract
+- id: R021
+  category: presentation
+  capability: Quaternion-space smoothing with protected contact bones
+  v5_5_source:
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/scripts/eonproc_v5_5/polish.py
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/scripts/build_v5_5.py
+  what_v5_5_proved_or_attempted: V5.5 applies sign-continuous zero-phase smoothing to expressive bones while protecting root,
+    legs, feet, toes, and jaw/action beats.
+  disposition_for_v8_3: restore_tooling
+  priority: P0
+  v8_3_target: src/eonmotion/bake/polish.py
+  recovery_method: Port smoothing as an explicit post-process with masks, loop/cyclic support, endpoint restoration, delta
+    reports, and a no-op threshold. Never run it implicitly over contact-critical tracks.
+  preserved_invariants:
+  - contacts and sharp action beats survive
+  - quaternion signs are continuous
+  - loops remain exact
+  - maximum change is reported
+  required_evidence:
+  - protected-track equality
+  - loop derivative test
+  - maximum angular delta
+  - action contact timing
+  v9_disposition: Reusable V9 bake refinement after constraint solve.
+  disposition_class: restore_contract
+- id: R022
+  category: jaw and mouth
+  capability: Mesh-witness jaw calibration
+  v5_5_source:
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/scripts/eonproc_v5_5/jaw.py
+  - procedural-animation-toolkit(v5.5)/validated_result/v5.5/animation-manifest.v5.5.json
+  what_v5_5_proved_or_attempted: V5.5 discovers the mandible/skull chains, samples weighted mesh witnesses, and calibrates
+    a living-neutral close near 50 degrees for this fixture.
+  disposition_for_v8_3: restore_tooling_and_resolve
+  priority: P0
+  v8_3_target: tools/rig/calibrate_jaw.py + profiles/species/tarbosaurus/jaw.yaml
+  recovery_method: Run calibration against the V8.2 source mesh/rig and write the resolved result with witness IDs, gaps,
+    candidate search, and uncertainty. Do not hard-code 50 degrees as a family-wide value.
+  preserved_invariants:
+  - neutral mouth is closed without intersection
+  - jaw chain is complete
+  - calibration result is fixture-specific
+  required_evidence:
+  - witness-gap report
+  - mesh intersection checks
+  - jaw pose images
+  - calibration determinism
+  v9_disposition: Used by all bite, feeding, vocal, and breathing programs.
+  disposition_class: restore_contract
+- id: R023
+  category: jaw and mouth
+  capability: Action-specific jaw staging
+  v5_5_source:
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/scripts/build_v5_5.py
+  what_v5_5_proved_or_attempted: V5.5 separates locomotion breathing-scale jaw motion from feeding, bite, and roar curves
+    and ensures bite closure at contact/recovery.
+  disposition_for_v8_3: recover_semantics_reauthor_curves
+  priority: P0
+  v8_3_target: motions/programs/bite_action.yaml + feeding_interaction.yaml + vocal_display.yaml
+  recovery_method: 'Keep the staging rules: open before arrival, maximum gape before contact, close at contact, bounded rebound,
+    closed recovery. Re-author timing from the new animation specs rather than copying numeric curves blindly.'
+  preserved_invariants:
+  - no permanently open running mouth
+  - bite contact closes
+  - feeding has acquisition/processing cycles
+  - call jaw follows respiration
+  required_evidence:
+  - event-to-jaw timing
+  - contact closure
+  - neutral recovery
+  - range limits
+  v9_disposition: Feeds target- and resistance-aware jaw contact in V9.
+  disposition_class: reimplement_from_spec
+- id: R024
+  category: clip recovery
+  capability: Neutral idle
+  v5_5_source:
+  - PROC_IDLE_BREATH_V5_5
+  - procedural-animation-toolkit(v5.5)/validated_result/v5.5/animation-manifest.v5.5.json
+  what_v5_5_proved_or_attempted: V5.5 provides a six-second breathing idle and improved asymmetric stance.
+  disposition_for_v8_3: reimplement_from_spec
+  priority: P0
+  v8_3_target: tarbosaurus_neutral_idle V8.3
+  recovery_method: Generate from the global contract and animation 01 spec using V8.3 support/contact, calibrated jaw, breathing,
+    gaze, and tail overlays. Preserve two planted feet and an asymmetric load bias.
+  preserved_invariants:
+  - no frozen statue
+  - no rhythmic head bob
+  - no tail wag
+  - loop-safe pose and derivatives
+  required_evidence:
+  - support/load visualization
+  - loop seam
+  - fixed camera
+  - overlay authority
+  v9_disposition: Becomes a stationary_support motion program instance.
+  disposition_class: reimplement_from_spec
+- id: R025
+  category: clip recovery
+  capability: Alert idle
+  v5_5_source:
+  - PROC_ALERT_IDLE_V5_5
+  - procedural-animation-toolkit(v5.5)/validated_result/v5.5/animation-manifest.v5.5.json
+  what_v5_5_proved_or_attempted: V5.5 provides an alert idle with raised head/neck and scan controls.
+  disposition_for_v8_3: reimplement_from_spec
+  priority: P0
+  v8_3_target: tarbosaurus_alert_idle V8.3
+  recovery_method: Keep head-led recognition, posture elevation, ready bilateral support, optional bounded adjustment step,
+    and low-amplitude vigilance. Remove automatic aggression or generic roar behavior.
+  preserved_invariants:
+  - alert is distinct from threat
+  - mouth remains neutral
+  - body does not spin over loaded feet
+  required_evidence:
+  - target azimuth sweep
+  - adjustment-step threshold
+  - loop seam
+  - entry/exit tests
+  v9_disposition: Stationary support plus attention system.
+  disposition_class: reimplement_from_spec
+- id: R026
+  category: clip recovery
+  capability: Alert walk
+  v5_5_source:
+  - PROC_ALERT_WALK_V5_5_ROOTMOTION
+  - PROC_ALERT_WALK_V5_5_INPLACE
+  what_v5_5_proved_or_attempted: V5.5 provides an alert gait variant with shorter stride, raised head/neck, scan, and increased
+    step height.
+  disposition_for_v8_3: reimplement_from_v8_2_gait
+  priority: P0
+  v8_3_target: tarbosaurus_alert_walk V8.3 root/in-place views
+  recovery_method: Use the approved V8.2 alternating support and foot trajectories as the base. Change posture, attention
+    authority, stride/cadence envelope, and readiness without creating a separate disconnected gait.
+  preserved_invariants:
+  - contact phase aligns with relaxed walk for transitions
+  - head target does not break balance
+  - no excessive high stepping
+  required_evidence:
+  - phase mapping
+  - foot contact equivalence
+  - walk↔alert transition
+  - target sweep
+  v9_disposition: Continuous attention-conditioned gait program.
+  disposition_class: reimplement_against_v8_2
+- id: R027
+  category: clip recovery
+  capability: Walk start
+  v5_5_source:
+  - PROC_START_WALK_V5_5_ROOTMOTION
+  - PROC_START_WALK_V5_5_INPLACE
+  what_v5_5_proved_or_attempted: V5.5 includes intention, load, first propulsion, and speed-building parameters.
+  disposition_for_v8_3: reimplement_from_spec
+  priority: P0
+  v8_3_target: tarbosaurus_walk_start V8.3
+  recovery_method: Build support shift before foot release, shorter first step, first/second contact, and exact handoff into
+    V8.2 walk phase. Root velocity must ramp rather than jump.
+  preserved_invariants:
+  - support leg loaded before swing
+  - first step shorter than mature stride
+  - root/COM velocity continuous
+  - no foot slide
+  required_evidence:
+  - velocity curve
+  - contact markers
+  - endpoint phase/pose/velocity
+  - left/right launch variants
+  v9_disposition: Gait-transition planner input for V9.
+  disposition_class: reimplement_from_spec
+- id: R028
+  category: clip recovery
+  capability: Walk stop / brake to idle
+  v5_5_source:
+  - PROC_BRAKE_TO_IDLE_V5_5_ROOTMOTION
+  - PROC_BRAKE_TO_IDLE_V5_5_INPLACE
+  what_v5_5_proved_or_attempted: V5.5 provides braking duration, lean, shortened steps, and exact idle transitions.
+  disposition_for_v8_3: reimplement_from_spec
+  priority: P0
+  v8_3_target: tarbosaurus_walk_stop V8.3
+  recovery_method: Use incoming speed to create one or more braking/support steps, pelvis continuation, torso/head lag, tail
+    compensation, and final load settle. The root may not stop before the body resolves momentum.
+  preserved_invariants:
+  - no walk→freeze
+  - foot placement explains deceleration
+  - final support is stable
+  - head/tail settle after pelvis
+  required_evidence:
+  - incoming-speed sweep
+  - braking distance
+  - contact impulses proxy
+  - idle handoff
+  v9_disposition: Becomes momentum-aware braking in V9.
+  disposition_class: reimplement_from_spec
+- id: R029
+  category: clip recovery
+  capability: 35-degree left/right turns
+  v5_5_source:
+  - PROC_TURN_LEFT_35_V5_5_ROOTMOTION
+  - PROC_TURN_LEFT_35_V5_5_INPLACE
+  - PROC_TURN_RIGHT_35_V5_5_ROOTMOTION
+  - PROC_TURN_RIGHT_35_V5_5_INPLACE
+  what_v5_5_proved_or_attempted: V5.5 includes eased arc paths, inside/outside stride scaling, body lean, and loaded-slide
+    limits.
+  disposition_for_v8_3: port_program_rebuild_clips
+  priority: P1
+  v8_3_target: tarbosaurus_walk_turn V8.3 parameterized curvature
+  recovery_method: Recover the arc/path, inside/outside contact planning, and no-pivot-loaded-foot rules. Replace fixed left/right
+    algorithms with signed curvature and generate review presets at ±35 degrees.
+  preserved_invariants:
+  - inside/outside stride differ appropriately
+  - heading change matches root path
+  - tail opposes turn
+  - loaded foot does not twist
+  required_evidence:
+  - curvature sweep
+  - turn radius
+  - foot slide/yaw
+  - phase continuity
+  v9_disposition: Continuous turning-authority model by growth/mass.
+  disposition_class: port_and_revalidate
+- id: R030
+  category: clip recovery
+  capability: Uneven-terrain walk
+  v5_5_source:
+  - PROC_WALK_UNEVEN_TERRAIN_V5_5_ROOTMOTION
+  - PROC_WALK_UNEVEN_TERRAIN_V5_5_INPLACE
+  what_v5_5_proved_or_attempted: V5.5 contains terrain-aware walk clips and sole-collision tags.
+  disposition_for_v8_3: recover_as_fixture_not_unique_gait
+  priority: P1
+  v8_3_target: terrain adaptation test plan
+  recovery_method: Do not maintain a special hand-authored uneven animation as the main solution. Reuse V8.3 walk with terrain/contact
+    adaptation and bake a deterministic showcase fixture for validation.
+  preserved_invariants:
+  - same gait identity
+  - terrain height/normal drive corrections
+  - no penetration
+  - pelvis response remains bounded
+  required_evidence:
+  - known terrain fixture
+  - flat equivalence
+  - contact patch video
+  - stress terrain failures
+  v9_disposition: Runtime terrain adaptation and offline contact planning.
+  disposition_class: reimplement_from_spec
+- id: R031
+  category: clip recovery
+  capability: Upslope walk
+  v5_5_source:
+  - PROC_WALK_UPSLOPE_V5_5_ROOTMOTION
+  - PROC_WALK_UPSLOPE_V5_5_INPLACE
+  what_v5_5_proved_or_attempted: V5.5 contains slope-aware root/in-place examples.
+  disposition_for_v8_3: recover_as_parameterized_fixture
+  priority: P1
+  v8_3_target: slope-conditioned walk plan
+  recovery_method: Generate from the common gait with slope-adjusted foot placement, pelvis height/pitch, torso bias, step
+    clearance, effort, and root path. Preserve contact phase and avoid a separately maintained unrelated clip family.
+  preserved_invariants:
+  - feet match slope
+  - root vertical path matches terrain
+  - body remains horizontally balanced
+  - no downhill-style braking on ascent
+  required_evidence:
+  - slope sweep
+  - joint/capacity margin
+  - foot penetration
+  - visual review
+  v9_disposition: Growth and fatigue affect slope authority.
+  disposition_class: reimplement_from_spec
+- id: R032
+  category: clip recovery
+  capability: Bite attack body mechanics
+  v5_5_source:
+  - PROC_BITE_ATTACK_V5_5
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/README.md
+  - procedural-animation-toolkit(v5.5)/validated_result/v5.5/v5.5-release-validation.json
+  what_v5_5_proved_or_attempted: V5.5 changed bite delivery from head-first to rear-loaded and leg-driven, with preload before
+    drive and full jaw closure at contact.
+  disposition_for_v8_3: recover_intent_reimplement_from_spec
+  priority: P0
+  v8_3_target: tarbosaurus_committed_power_bite V8.3
+  recovery_method: Recover rear load, crouch, hindlimb extension, pelvis/torso/neck/skull force chain, contact/follow-through/recovery,
+    and commitment windows. Do not call it an airborne attack in V8.3.
+  preserved_invariants:
+  - attack begins in support/legs
+  - jaw opens before target
+  - miss cannot instantly reset
+  - root and feet explain lunge
+  required_evidence:
+  - preload-before-drive metric
+  - contact window
+  - hit/miss branch
+  - recovery vulnerability
+  v9_disposition: Grounded benchmark before V9 airborne power attack.
+  disposition_class: reimplement_from_spec
+- id: R033
+  category: clip recovery
+  capability: Head-down feeding
+  v5_5_source:
+  - PROC_EAT_LOOP_V5_5
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/README.md
+  what_v5_5_proved_or_attempted: V5.5 adds pelvis-and-knee descent, bounded torso pitch, neck lowering, tail counterbalance,
+    multiple bites, and jaw processing.
+  disposition_for_v8_3: recover_intent_modularize
+  priority: P0
+  v8_3_target: FEED_SEARCH / FEED_BITE / FEED_PROCESS V8.3 modules
+  recovery_method: Recover the stable stance and whole-chain lowering, but split the old repeated loop into modular search/acquire/bite/process
+    clips or segments with target-relative carcass points.
+  preserved_invariants:
+  - head does not lower via final neck bone alone
+  - COM/support remains valid
+  - jaw endpoint follows target
+  - feeding remains interruptible only at safe phases
+  required_evidence:
+  - target height sweep
+  - support margin proxy
+  - ground/carcass penetration
+  - modular loop variation
+  v9_disposition: Target/contact-aware feeding program.
+  disposition_class: reimplement_from_spec
+- id: R034
+  category: clip recovery
+  capability: Roar/display animation
+  v5_5_source:
+  - PROC_ROAR_V5_5
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/examples/profiles/tarbosaurus-v5.5.json
+  what_v5_5_proved_or_attempted: V5.5 provides inhale, peak, release, neck/head raise, jaw opening, chest expansion, head
+    shake, and tail brace.
+  disposition_for_v8_3: split_semantics_and_reauthor
+  priority: P0
+  v8_3_target: threat_call V8.3; contact_call deferred or authored separately
+  recovery_method: Recover respiratory generation, body resonance, jaw/throat/chest staging, post-call hold, and tail brace.
+    Replace the generic monster-roar semantic with an explicit threat/territorial call. Do not reuse the same performance
+    for long-distance contact calling.
+  preserved_invariants:
+  - call begins with inhalation
+  - audio markers drive sound
+  - post-call hold waits for response
+  - no automatic combat outcome
+  required_evidence:
+  - respiration/jaw timing
+  - VOCAL_START/END
+  - throat/chest review
+  - threat versus contact readability
+  v9_disposition: 'Two vocal_display program instances: animations 27 and 28.'
+  disposition_class: reimplement_from_spec
+- id: R035
+  category: transitions
+  capability: Endpoint-exact derivative-aware pose transitions
+  v5_5_source:
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/scripts/eonproc_v5_5/transitions.py
+  - procedural-animation-toolkit(v5.5)/validated_result/v5.5/v5.5-release-validation.json
+  what_v5_5_proved_or_attempted: V5.5 uses RotationSpline and Hermite translations, exact endpoint restoration, and records
+    source/target phase metadata with near-zero endpoint errors.
+  disposition_for_v8_3: restore_algorithm_generalize
+  priority: P0
+  v8_3_target: src/eonmotion/transitions/pose_bridge.py
+  recovery_method: Port as a generic bridge generator, then add velocity/contact/tail-state validation and target-phase search.
+    Exact pose endpoints alone are insufficient when root/COM/contact velocity is discontinuous.
+  preserved_invariants:
+  - exact source/target poses
+  - no root pop
+  - derivatives remain bounded
+  - contact states are compatible
+  required_evidence:
+  - endpoint rotation/position
+  - velocity/acceleration mismatch
+  - contact state mismatch
+  - tail-state mismatch
+  v9_disposition: Extended into plan-state transitions.
+  disposition_class: restore_contract
+- id: R036
+  category: transitions
+  capability: Phase-matched loop-to-loop transitions
+  v5_5_source:
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/scripts/eonproc_v5_5/transitions.py
+  what_v5_5_proved_or_attempted: V5.5 provides phase-matched minimum-jerk loop blending for relaxed↔alert walking.
+  disposition_for_v8_3: restore_algorithm
+  priority: P0
+  v8_3_target: src/eonmotion/transitions/phase_match.py
+  recovery_method: Recover phase mapping and C2 blend behavior. Match foot contacts, support foot, root velocity, and gait
+    phase—not normalized time alone.
+  preserved_invariants:
+  - no contact phase swap
+  - no double support glitch
+  - root speed remains continuous
+  - loop identity preserved
+  required_evidence:
+  - phase-map table
+  - foot marker comparison
+  - root velocity
+  - blend duration sweep
+  v9_disposition: Supports walk/fast-walk/run regime blending.
+  disposition_class: restore_contract
+- id: R037
+  category: runtime
+  capability: Snapshot blend for arbitrary non-authored changes
+  v5_5_source:
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/runtime/animation-controller-v5.ts
+  what_v5_5_proved_or_attempted: V5 runtime uses minimum-jerk snapshot blending with root offsets for arbitrary selections.
+  disposition_for_v8_3: restore_with_constraints
+  priority: P1
+  v8_3_target: runtime/motion_controller.ts
+  recovery_method: Retain as a fallback presentation bridge only when source/target states are mechanically compatible. It
+    may not bypass authored commitment, contact, or momentum requirements.
+  preserved_invariants:
+  - no teleport
+  - no cancellation through NON_INTERRUPTIBLE windows
+  - no loaded-foot crossfade failure
+  required_evidence:
+  - compatibility predicate tests
+  - forbidden transition tests
+  - root offset continuity
+  v9_disposition: Runtime plan selection uses compatible state manifolds.
+  disposition_class: restore_contract
+- id: R038
+  category: runtime
+  capability: Contact-phase queued authored handoff
+  v5_5_source:
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/runtime/animation-controller-v5.ts
+  what_v5_5_proved_or_attempted: V5 queues authored transitions until a declared source phase is crossed.
+  disposition_for_v8_3: restore_and_expand
+  priority: P0
+  v8_3_target: runtime/motion_controller.ts
+  recovery_method: Keep source-phase scheduling, but use typed support/contact windows and an explicit latest-start deadline.
+    Do not wait indefinitely when gameplay requires a response; choose a compatible alternate or authored emergency transition.
+  preserved_invariants:
+  - action starts from a valid support phase
+  - player input is acknowledged predictably
+  - commitment rules survive
+  required_evidence:
+  - phase-crossing tests
+  - deadline/fallback tests
+  - left/right support selection
+  v9_disposition: Motion query selects launch/support leg from live state.
+  disposition_class: restore_contract
+- id: R039
+  category: runtime
+  capability: Exact authored sequence handoffs and root continuity offsets
+  v5_5_source:
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/runtime/animation-controller-v5.ts
+  - procedural-animation-toolkit(v5.5)/toolkit/v5.5/scripts/build_v5_5.py
+  what_v5_5_proved_or_attempted: V5 chains transition→action→recovery→return and computes root offsets at exact handoffs.
+  disposition_for_v8_3: restore_contract
+  priority: P0
+  v8_3_target: runtime/action_sequence.ts
+  recovery_method: Use explicit state packets containing pose, root/COM velocity, angular state, contacts, tail state, target
+    commitment, and event cursor. Root offsets alone are necessary but not sufficient.
+  preserved_invariants:
+  - no root reset
+  - events fire once
+  - recovery is not skipped
+  - return gait phase is valid
+  required_evidence:
+  - bite/roar/eat sequence tests
+  - cancel-window tests
+  - root/velocity continuity
+  v9_disposition: Becomes DynamicActionPlan execution.
+  disposition_class: restore_contract
+- id: R040
+  category: metadata
+  capability: Animation manifest and clip taxonomy
+  v5_5_source:
+  - procedural-animation-toolkit(v5.5)/validated_result/v5.5/animation-manifest.v5.5.json
+  what_v5_5_proved_or_attempted: V5.5 records clip names, durations, loops, root motion, tags, terrain/path, transition endpoints,
+    and sequences.
+  disposition_for_v8_3: restore_and_version
+  priority: P0
+  v8_3_target: artifacts/v8.3/animation-manifest.v8.3.json
+  recovery_method: 'Adopt the expanded V9 AnimationSpec vocabulary: semantic ID, family, program, entry/exit, phases, point/window/condition
+    events, procedural authority, growth response, validation, and provenance.'
+  preserved_invariants:
+  - manifest is generated from specs
+  - GLB clip facts match manifest
+  - runtime never infers critical semantics from string names alone
+  required_evidence:
+  - schema validation
+  - GLB cross-check
+  - event range/ordering
+  - missing semantic negative test
+  v9_disposition: Canonical runtime metadata contract.
+  disposition_class: restore_contract
+- id: R041
+  category: metadata
+  capability: Standard event vocabulary
+  v5_5_source:
+  - V5.5 transition metadata
+  - project global animation contract
+  what_v5_5_proved_or_attempted: V5.5 has transition/source phase metadata but not the complete standardized gameplay event
+    model.
+  disposition_for_v8_3: add_in_v8_3
+  priority: P0
+  v8_3_target: motions/contracts/global-animation-contract.yaml
+  recovery_method: Emit foot contact/load/toe-off, anticipation, commit, contact begin/peak/end, recovery, jaw, head-target,
+    loop-safe, interruption windows, vocal, water, tear, and failure conditions as typed events.
+  preserved_invariants:
+  - events are measured or authored explicitly
+  - windows are not collapsed into points
+  - conditions come from interaction simulation where appropriate
+  required_evidence:
+  - event schema
+  - ordering checks
+  - geometry/contact correlation
+  - runtime dispatch test
+  v9_disposition: Core interface between animation, gameplay, audio, particles, AI, and networking.
+  disposition_class: add_new_contract
+- id: R042
+  category: validation
+  capability: Skeleton-based balance proxy metrics
+  v5_5_source:
+  - procedural-animation-toolkit(v5.5)/validated_result/v5.5/v5.5-release-validation.json
+  - procedural-animation-toolkit(v5.5)/validated_result/v5.5/constrained-solve-report.json
+  what_v5_5_proved_or_attempted: V5.5 measures torso/head pitch, foot spread, rear reach, preload/drive, pelvis drop, feeding
+    excursion, and explicitly says they are visual proxies, not physical COM validation.
+  disposition_for_v8_3: restore_as_labeled_visual_metrics
+  priority: P0
+  v8_3_target: validation/posture-proxy-report.json
+  recovery_method: Keep the useful posture and action-sequencing metrics with their measurement boundary clearly labeled.
+    Never rename them COM, force, impulse, or biological validation.
+  preserved_invariants:
+  - metrics remain comparable to V5.5
+  - labels state proxy boundary
+  - numeric pass cannot override poor perceptual review
+  required_evidence:
+  - regression report
+  - measurement-boundary assertion
+  - visual reviewer sign-off
+  v9_disposition: Superseded or supplemented by real segment COM and momentum metrics.
+  disposition_class: restore_contract
+- id: R043
+  category: validation
+  capability: Fixed-camera perceptual evidence
+  v5_5_source:
+  - procedural-animation-toolkit(v8.2)/media/
+  - procedural-animation-toolkit(v5.5)/validated_result/v5/showcase/
+  what_v5_5_proved_or_attempted: The repository uses fixed-camera side and three-quarter media plus keyframe sheets for review.
+  disposition_for_v8_3: restore_contract
+  priority: P0
+  v8_3_target: artifacts/v8.3/evidence/media/
+  recovery_method: Generate fixed camera, identical lighting, identical playback, contact-debug, COM/support-proxy, and side-by-side
+    baseline media. Do not accept only free-camera beauty renders.
+  preserved_invariants:
+  - comparisons are reproducible
+  - camera does not hide foot defects
+  - all P0 clips receive side and 3Q review
+  required_evidence:
+  - media facts/hash
+  - frame count/duration
+  - review checklist
+  - independent reviewer verdict
+  v9_disposition: Required for every motion family and growth tier.
+  disposition_class: restore_contract
+- id: R044
+  category: validation
+  capability: Automated quality gates and independent review
+  v5_5_source:
+  - procedural-animation-toolkit(v5.5)/tests/
+  - procedural-animation-toolkit(v8.2)/evidence/
+  what_v5_5_proved_or_attempted: Both lines include automated validation, while documentation acknowledges that animation
+    taste remains perceptual.
+  disposition_for_v8_3: restore_and_strengthen
+  priority: P0
+  v8_3_target: tests/ + validation/review-records/
+  recovery_method: Separate author and reviewer roles. A numeric PASS is necessary but insufficient. Require mechanical, schema/provenance,
+    perceptual, and scientific-honesty reviews.
+  preserved_invariants:
+  - reviewers do not approve their own work
+  - failed perceptual review blocks release
+  - all waivers are explicit and temporary
+  required_evidence:
+  - review record schema
+  - author/reviewer identity check
+  - waiver expiry test
+  v9_disposition: Permanent factory governance.
+  disposition_class: restore_contract
+- id: R045
+  category: do not restore as authority
+  capability: V5.5 relaxed-walk sampled curves
+  v5_5_source:
+  - PROC_WALK_RELAXED_V5_5_ROOTMOTION
+  - PROC_WALK_RELAXED_V5_5_INPLACE
+  what_v5_5_proved_or_attempted: V5.5 has a valid historical walk, but V8.2 is the later approved walk baseline.
+  disposition_for_v8_3: reference_only
+  priority: P0
+  v8_3_target: none
+  recovery_method: Use V5.5 only to understand body-balance intentions and regression metrics. Do not overwrite or average
+    its leg/root/foot curves into V8.2.
+  preserved_invariants:
+  - V8.2 remains perceptual and contact authority
+  required_evidence:
+  - test that compatibility walk uses V8.2 source SHA/track lineage
+  v9_disposition: Historical comparison only.
+  disposition_class: reference_only
+- id: R046
+  category: do not restore as authority
+  capability: Skeleton proxy treated as physical center of mass
+  v5_5_source:
+  - V5.5 balance gains
+  - v5.5-release-validation measurementBoundary
+  what_v5_5_proved_or_attempted: V5.5 explicitly does not validate physical COM.
+  disposition_for_v8_3: reject_as_authority
+  priority: P0
+  v8_3_target: none
+  recovery_method: V8.3 may call the method legacy support-phase balance or posture proxy. It may not claim segment COM, angular
+    momentum, force, or biological correctness.
+  preserved_invariants:
+  - scientific honesty
+  - no misleading variable/report names
+  required_evidence:
+  - terminology scan
+  - report schema check
+  v9_disposition: V9 introduces actual segment mass properties and centroidal calculations.
+  disposition_class: reject_as_authority
+- id: R047
+  category: do not restore as authority
+  capability: Monolithic parameter bag
+  v5_5_source:
+  - tarbosaurus-v5.5.json
+  what_v5_5_proved_or_attempted: The old profile usefully exposed values but mixes unrelated concerns and does not consistently
+    attach units/provenance/uncertainty.
+  disposition_for_v8_3: reject_shape_keep_values_as_migration_inputs
+  priority: P0
+  v8_3_target: modular versioned configs
+  recovery_method: Write a one-time migration loader that maps old keys to new modules and emits warnings. New code reads
+    only the resolved modular profile.
+  preserved_invariants:
+  - no duplicated conflicting setting
+  - all old keys accounted for
+  - unknown/unmapped keys fail or require explicit waiver
+  required_evidence:
+  - migration coverage report
+  - round-trip snapshot where meaningful
+  v9_disposition: Replaced by typed V9 schemas.
+  disposition_class: reject_as_authority
+- id: R048
+  category: do not restore as authority
+  capability: Independent root-motion and in-place generation
+  v5_5_source:
+  - paired V5.5 clip outputs
+  what_v5_5_proved_or_attempted: The historical pack exports both views, but future architecture should not solve them independently.
+  disposition_for_v8_3: reject_implementation_pattern
+  priority: P0
+  v8_3_target: one world-space plan with derived views
+  recovery_method: The in-place representation is a presentation/export transform over the same plan. It must preserve body-relative
+    trajectories, phases, and events.
+  preserved_invariants:
+  - no divergence between views
+  required_evidence:
+  - view equivalence report
+  v9_disposition: Required for plan interpolation.
+  disposition_class: reject_as_authority
+- id: R049
+  category: do not restore as authority
+  capability: Old 33-degree neutral jaw profile value
+  v5_5_source:
+  - tarbosaurus-v5.5.json
+  - build_v5_5.py
+  what_v5_5_proved_or_attempted: The profile still contains 33 degrees, while the mesh-based calibration resolves approximately
+    50 degrees.
+  disposition_for_v8_3: reject_literal_value
+  priority: P0
+  v8_3_target: resolved jaw calibration
+  recovery_method: Use the calibration output; preserve the old value only as provenance showing why calibration was needed.
+  preserved_invariants:
+  - fixture-specific resolved neutral pose
+  required_evidence:
+  - assert runtime/export uses resolved calibration
+  v9_disposition: Per-instance jaw profiles.
+  disposition_class: reject_as_authority
+- id: R050
+  category: do not restore as authority
+  capability: Generic roar as a universal call
+  v5_5_source:
+  - PROC_ROAR_V5_5
+  what_v5_5_proved_or_attempted: V5.5 has one display clip, but Eonwild requires calls with distinct ecological meanings.
+  disposition_for_v8_3: reject_semantic_collapse
+  priority: P0
+  v8_3_target: threat_call and contact_call specs
+  recovery_method: Migrate body mechanics into explicit call semantics. Audio and body language must communicate intention
+    and remain distinguishable.
+  preserved_invariants:
+  - threat is not contact
+  - no generic victory roar
+  required_evidence:
+  - blind semantic review with/without audio
+  v9_disposition: Vocal-display family with compact species vocabulary.
+  disposition_class: reject_as_authority
+- id: R051
+  category: do not restore as authority
+  capability: Blind inverse-bind/pivot mutation
+  v5_5_source:
+  - V5.5 intentionalChangedInverseBindSlots 43 and 56
+  what_v5_5_proved_or_attempted: V5.5 performed a controlled rig correction that was valid for its source package.
+  disposition_for_v8_3: reject_default_behavior
+  priority: P0
+  v8_3_target: explicit migration lane only
+  recovery_method: The V8.2 artifact must not inherit those changes automatically. First prove that its pivot/contact geometry
+    needs the same migration.
+  preserved_invariants:
+  - rig integrity
+  - baseline preservation
+  required_evidence:
+  - migration disabled by default
+  - explicit approval required
+  v9_disposition: Rig-import tooling remains available.
+  disposition_class: reject_as_authority
+- id: R052
+  category: do not restore as authority
+  capability: Absolute Tarbosaurus force/jump/injury numbers
+  v5_5_source:
+  - V5.5 normalized/tuned animation parameters
+  - V9 provisional profiles
+  what_v5_5_proved_or_attempted: Neither historical animation package establishes authoritative biological capacities.
+  disposition_for_v8_3: reject_unproven_claims
+  priority: P0
+  v8_3_target: provisional normalized capacity profile
+  recovery_method: Keep absolute dynamics disabled until geometry, mass range, actuation, and uncertainty are reviewed. V8.3
+    is animation-engineering, not a biological simulator.
+  preserved_invariants:
+  - all provisional values are labeled
+  - no marketing/scientific claim from tuning values
+  required_evidence:
+  - provenance gate
+  - absolute_dynamics_enabled false
+  v9_disposition: V9 enables absolute outputs only after reviewed evidence and calibration.
+  disposition_class: reject_as_authority
+disposition_class_definitions:
+  authoritative_baseline: The later approved artifact remains the source of truth.
+  restore_contract: Restore the capability and its release/behavior contract, adapting interfaces where necessary.
+  restructure_and_restore: Restore the capability but replace the old package/data shape with modular typed contracts.
+  port_and_revalidate: Port tooling or algorithmic ideas and prove them against the V8.2 fixture before use.
+  reimplement_against_v8_2: Keep the intended behavior but rebuild/fit it around the approved V8.2 motion and contacts.
+  recover_as_legacy_proxy: Use only as a clearly labeled interim proxy that V9 will replace with measured biomechanics.
+  reimplement_from_spec: Re-author from the detailed semantic animation specification, not historical sampled curves.
+  add_new_contract: Add a missing contract required to productize the system.
+  reference_only: Retain for comparison/provenance; do not feed it directly into the release output.
+  reject_as_authority: Do not treat the historical implementation, value, or semantic collapse as canonical truth.

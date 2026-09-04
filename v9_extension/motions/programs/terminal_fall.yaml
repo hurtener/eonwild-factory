@@ -1,0 +1,32 @@
+id: terminal_fall
+version: 1
+purpose: Author irreversible support failure through first major contact, then hand off to constrained physical
+  settling.
+phase_template:
+- fatal_impairment
+- support_failure
+- correction_attempt
+- irreversible_fall
+- first_contact
+- secondary_contact
+- physical_settle
+- stillness
+inputs:
+- cause_direction
+- failing_side
+- terrain
+- incoming_motion
+- body_profile
+outputs:
+- fall_direction
+- authored_contact_sequence
+- ragdoll_handoff_state
+- final_pose_constraints
+invariants:
+- animal attempts to avoid falling
+- pure standing ragdoll is forbidden
+- head and tail contacts are terrain-aware
+branches:
+- lateral_diagonal
+- forward_diagonal
+- moving_collapse

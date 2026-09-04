@@ -1,0 +1,107 @@
+{
+  "schema": "eonwild.procedural-animation.release-summary.v8",
+  "version": "8.0.0",
+  "status": "PASS_WITH_PERCEPTUAL_REVIEW_REQUIRED",
+  "asset": {
+    "glb": "tarbosaurus_procedural_v8_animation_pack.glb",
+    "sha256": "1f7af87879d1789030f9b17b90073e52f95eb1665e74fc7d3ede9b9c25819c8d",
+    "bytes": 53615860,
+    "clipCount": 40,
+    "skinJointCount": 75
+  },
+  "implementation": {
+    "preservesV7ContactArchitecture": true,
+    "powerAttack": "reference-staged target lock, pelvis coil, two catch steps, late gape, snap, clamped tear, recoil",
+    "feeding": "three unequal late-gape bite/clamp/pull/chew events in exact loop",
+    "turning": "pronounced head/neck prediction, chest follow, later pelvis, delayed tail countershape",
+    "solveHz": 120,
+    "exportHz": 60
+  },
+  "attack": {
+    "reference_section_seconds": [
+      0,
+      4.0
+    ],
+    "lead_side": "l",
+    "phase_sequence": [
+      "target acquisition",
+      "pelvis coil",
+      "first catch step",
+      "second drive step",
+      "late gape",
+      "snap contact",
+      "clamped side pull",
+      "recoil",
+      "grounded recovery"
+    ],
+    "maximum_pelvis_preload_back_m": 0.15780469242034115,
+    "maximum_pelvis_preload_down_m": 0.10703274790249223,
+    "root_delivery_distance_m": 0.4185254885930786,
+    "maximum_head_yaw_deg": 8.233502948196033,
+    "head_yaw_at_contact_deg": -5.8,
+    "jaw_additive_at_contact_deg": 0.00497079630468189,
+    "jaw_additive_at_end_deg": 0.0,
+    "sequential_catch_steps": true,
+    "jaw_clamped_during_tear": true
+  },
+  "feeding": {
+    "reference_section_seconds": [
+      8.0,
+      12.04
+    ],
+    "bite_event_count": 3,
+    "bite_contact_phases": [
+      0.165,
+      0.485,
+      0.785
+    ],
+    "tear_directions": [
+      -1.0,
+      1.0,
+      -1.0
+    ],
+    "head_yaw_span_deg": 11.532913718366695,
+    "maximum_gape_additive_deg": 31.406405113677987,
+    "pelvis_lowest_delta_m": -0.10135177897535995,
+    "late_gape_then_contact_closure": true,
+    "asymmetric_braced_pulls": true,
+    "irregular_event_strengths": [
+      1.0,
+      0.78,
+      1.08
+    ]
+  },
+  "turning": {
+    "PROC_TURN_LEFT_35_V8_ROOTMOTION": {
+      "finalRootHeadingDeg": -32.768818782031204,
+      "peakHeadRelativeYawDeg": 41.74122980747311,
+      "peakNeckRelativeYawDeg": 21.163651834292764,
+      "peakChestRelativeYawDeg": 6.447738110763064,
+      "peakTailGeometryOppositionDeg": 15.522956637220833,
+      "rootHeadingAtPeakHeadLeadDeg": -5.193967140020404
+    },
+    "PROC_TURN_RIGHT_35_V8_ROOTMOTION": {
+      "finalRootHeadingDeg": 37.2311813998734,
+      "peakHeadRelativeYawDeg": 42.37244305227288,
+      "peakNeckRelativeYawDeg": 21.196944038104323,
+      "peakChestRelativeYawDeg": 6.45566463761914,
+      "peakTailGeometryOppositionDeg": 19.188534889322383,
+      "rootHeadingAtPeakHeadLeadDeg": 3.267738836541468
+    }
+  },
+  "ground": {
+    "status": "PASS",
+    "powerAttackBoundedTransferFrames": 2,
+    "powerAttackMaxLowestSoleQuantileM": 0.018493114632737718,
+    "powerAttackPenetrationM": 0.0,
+    "walkMaxLowestSoleQuantileM": 0.0029066248502368818
+  },
+  "validation": {
+    "release": "PASS",
+    "fixture": "PASS",
+    "bakedGround": "PASS",
+    "browserContract": "PASS",
+    "unitBrowserTests": 10,
+    "perceptualReviewStillRequired": true
+  }
+}

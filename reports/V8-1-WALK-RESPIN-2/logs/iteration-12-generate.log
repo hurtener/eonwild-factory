@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/Volumes/m2-extended-disk/Repos/eonwild-factory/candidates/v8.1-walk-respin-2/scripts/generate_walk_respin_2.py", line 153, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/Volumes/m2-extended-disk/Repos/eonwild-factory/candidates/v8.1-walk-respin-2/scripts/generate_walk_respin_2.py", line 149, in main
+    return int(PARENT_MODULE.main())
+               ~~~~~~~~~~~~~~~~~~^^
+  File "/Volumes/m2-extended-disk/Repos/eonwild-factory/candidates/v8.1-walk-respin/scripts/generate_walk_respin.py", line 225, in main
+    "sourceGlbSha256": sha256_file(args.source),
+                       ~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Volumes/m2-extended-disk/Repos/eonwild-factory/procedural-animation-toolkit(v8.1)/toolkit/v8/scripts/eonproc_v3/gltf_io.py", line 42, in sha256_file
+    with Path(path).open("rb") as fh:
+         ~~~~~~~~~~~~~~~^^^^^^
+  File "/Applications/Blender.app/Contents/Resources/5.2/python/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'procedural-animation-toolkit(v8.1)/validated_result/tarbosaurus_procedural_v8_1.glb'

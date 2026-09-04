@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/Volumes/m2-extended-disk/Repos/eonwild-factory/candidates/v8.1-walk-respin-2/scripts/generate_walk_respin_2.py", line 153, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/Volumes/m2-extended-disk/Repos/eonwild-factory/candidates/v8.1-walk-respin-2/scripts/generate_walk_respin_2.py", line 149, in main
+    return int(PARENT_MODULE.main())
+               ~~~~~~~~~~~~~~~~~~^^
+  File "/Volumes/m2-extended-disk/Repos/eonwild-factory/candidates/v8.1-walk-respin/scripts/generate_walk_respin.py", line 258, in main
+    output.mkdir(parents=True)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Applications/Blender.app/Contents/Resources/5.2/python/lib/python3.13/pathlib/_local.py", line 722, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+FileExistsError: [Errno 17] File exists: 'candidates/v8.1-walk-respin-2/generated/iteration-13'

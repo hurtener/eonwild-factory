@@ -1,0 +1,19 @@
+effector: left_foot
+state: loaded
+patch:
+  witness_ids: [left_toe_medial, left_toe_central, left_toe_lateral, left_sole_rear]
+  centroid_world_m: [-0.21, 0.0, -0.04]
+  normal_world: [0.0, 1.0, 0.0]
+  polygon_world_m:
+    - [-0.36, 0.0, -0.18]
+    - [-0.08, 0.0, -0.18]
+    - [-0.02, 0.0, 0.22]
+    - [-0.40, 0.0, 0.20]
+time_s: 0.42
+load_fraction: 0.83
+friction:
+  coefficient: 0.72
+  source: flat_dry_test_fixture
+position_error_m: 0.0012
+slip_velocity_mps: 0.004
+normal_force_n: null

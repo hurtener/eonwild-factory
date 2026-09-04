@@ -1,0 +1,479 @@
+Eonwild Procedural Animation V8 final validation
+UTC 2026-08-27T21:01:59Z
+
+== unit/browser tests ==
+test_late_gape_is_closed_at_contact (tests.test_v8_core.TestV8Core.test_late_gape_is_closed_at_contact) ... ok
+test_minimum_jerk_helpers_close (tests.test_v8_core.TestV8Core.test_minimum_jerk_helpers_close) ... ok
+test_profile_action_and_turn_hierarchy (tests.test_v8_core.TestV8Core.test_profile_action_and_turn_hierarchy) ... ok
+test_transition_keeps_root_and_pelvis_endpoints (tests.test_v8_core.TestV8Core.test_transition_keeps_root_and_pelvis_endpoints) ... ok
+test_turn_envelope_exact_ends (tests.test_v8_core.TestV8Core.test_turn_envelope_exact_ends) ... ok
+test_controls_and_v8_clips (tests.test_browser_contract_v8.TestBrowserV8.test_controls_and_v8_clips) ... ok
+test_exact_handoff_and_button_state (tests.test_browser_contract_v8.TestBrowserV8.test_exact_handoff_and_button_state) ... ok
+test_javascript_syntax (tests.test_browser_contract_v8.TestBrowserV8.test_javascript_syntax) ... ok
+test_root_motion_loop_accumulation (tests.test_browser_contract_v8.TestBrowserV8.test_root_motion_loop_accumulation) ... ok
+test_v8_embed_contract (tests.test_browser_contract_v8.TestBrowserV8.test_v8_embed_contract) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.096s
+
+OK
+
+== fixture ==
+{
+  "status": "PASS",
+  "version": "8.0.0",
+  "input": {
+    "sha256": "fbb42c2edad4eadebbcf808d32028d7c73b3fbfd6172610eddd5df84990a65c7",
+    "nodeCount": 77
+  },
+  "boneMap": {
+    "sha256": "8f795733d8157d6a2c745acbf572ca4db90b34b83d8c539e711dca1809044782",
+    "tagCount": 68,
+    "uniqueBoneCount": 63,
+    "missingBones": []
+  },
+  "skin": {
+    "jointCount": 75,
+    "primitiveVertexCount": 59169,
+    "jointWeightSets": 3
+  },
+  "sole": {
+    "l": {
+      "selectedVertexCount": 64,
+      "candidateVertexCount": 4627,
+      "allIndicesInPrimitive": true,
+      "uniqueIndices": true,
+      "restMinHeight": -7.353215258909529e-10,
+      "restContactQuantile": 0.0008802124089561402,
+      "influencingBones": [
+        "Bone_042",
+        "Bone_043",
+        "Bone_044",
+        "Bone_045",
+        "Bone_046",
+        "Bone_047",
+        "Bone_048",
+        "Bone_049",
+        "Bone_050",
+        "Bone_008",
+        "Bone_009"
+      ]
+    },
+    "r": {
+      "selectedVertexCount": 64,
+      "candidateVertexCount": 4518,
+      "allIndicesInPrimitive": true,
+      "uniqueIndices": true,
+      "restMinHeight": 0.0008440606179647148,
+      "restContactQuantile": 0.0013348930515348911,
+      "influencingBones": [
+        "Bone_051",
+        "Bone_052",
+        "Bone_053",
+        "Bone_054",
+        "Bone_055",
+        "Bone_056",
+        "Bone_057",
+        "Bone_058",
+        "Bone_059",
+        "Bone_012",
+        "Bone_013"
+      ]
+    }
+  },
+  "leftRightSelectionOverlap": 0,
+  "anatomicalConstraints": {
+    "leftExpectedKneeSign": 1.0,
+    "rightExpectedKneeSign": 1.0,
+    "leftExpectedAnkleSign": -1.0,
+    "rightExpectedAnkleSign": -1.0
+  },
+  "v8Invariants": {
+    "pelvisMustBeSolvedBeforeLegIK": true,
+    "exportedPelvisMustMatchSolvedPose": true,
+    "postSolveBalanceTransformForbidden": true,
+    "turnHeadNeckLeadRequired": true,
+    "powerAttackRequiresTwoSupportChanges": true,
+    "feedingRequiresLateGapeClampPull": true
+  }
+}
+
+== release ==
+{
+  "status": "PASS",
+  "checks": {
+    "animation_count_40": true,
+    "unique_names": true,
+    "required_base_present": true,
+    "all_base_pelvis_channels": true,
+    "all_report_gates": true,
+    "skin_joint_count_75": true,
+    "all_channel_targets_valid": true,
+    "manifest_count_matches": true,
+    "turn_head_authored_ge_12": true,
+    "turn_neck_authored_ge_7": true,
+    "attack_two_step_both_sides": true,
+    "attack_closed_at_contact": true,
+    "attack_closed_at_end": true,
+    "attack_delivery_both_sides": true,
+    "feeding_three_events": true,
+    "feeding_head_expression": true,
+    "feeding_late_gape": true
+  },
+  "animation_count": 40,
+  "unique_animation_count": 40,
+  "skin_joint_count": 75,
+  "required_base_missing": [],
+  "base_clips_without_pelvis_translation": [],
+  "failed_quality_gates": [],
+  "action_diagnostics": {
+    "bite_left": {
+      "reference_section_seconds": [
+        0,
+        4.0
+      ],
+      "lead_side": "l",
+      "phase_sequence": [
+        "target acquisition",
+        "pelvis coil",
+        "first catch step",
+        "second drive step",
+        "late gape",
+        "snap contact",
+        "clamped side pull",
+        "recoil",
+        "grounded recovery"
+      ],
+      "maximum_pelvis_preload_back_m": 0.15780469242034115,
+      "maximum_pelvis_preload_down_m": 0.10703274790249223,
+      "root_delivery_distance_m": 0.4185254885930786,
+      "maximum_head_yaw_deg": 8.233502948196033,
+      "head_yaw_at_contact_deg": -5.8,
+      "jaw_additive_at_contact_deg": 0.00497079630468189,
+      "jaw_additive_at_end_deg": 0.0,
+      "sequential_catch_steps": true,
+      "jaw_clamped_during_tear": true
+    },
+    "bite_right": {
+      "reference_section_seconds": [
+        0,
+        4.0
+      ],
+      "lead_side": "r",
+      "phase_sequence": [
+        "target acquisition",
+        "pelvis coil",
+        "first catch step",
+        "second drive step",
+        "late gape",
+        "snap contact",
+        "clamped side pull",
+        "recoil",
+        "grounded recovery"
+      ],
+      "maximum_pelvis_preload_back_m": 0.15780469242034115,
+      "maximum_pelvis_preload_down_m": 0.10703274790249223,
+      "root_delivery_distance_m": 0.4185254885930786,
+      "maximum_head_yaw_deg": 8.233502948196033,
+      "head_yaw_at_contact_deg": 5.8,
+      "jaw_additive_at_contact_deg": 0.00497079630468189,
+      "jaw_additive_at_end_deg": 0.0,
+      "sequential_catch_steps": true,
+      "jaw_clamped_during_tear": true
+    },
+    "eat": {
+      "reference_section_seconds": [
+        8.0,
+        12.04
+      ],
+      "bite_event_count": 3,
+      "bite_contact_phases": [
+        0.165,
+        0.485,
+        0.785
+      ],
+      "tear_directions": [
+        -1.0,
+        1.0,
+        -1.0
+      ],
+      "head_yaw_span_deg": 11.532913718366695,
+      "maximum_gape_additive_deg": 31.406405113677987,
+      "pelvis_lowest_delta_m": -0.10135177897535995,
+      "late_gape_then_contact_closure": true,
+      "asymmetric_braced_pulls": true,
+      "irregular_event_strengths": [
+        1.0,
+        0.78,
+        1.08
+      ]
+    }
+  },
+  "report_status": "PASS_WITH_PERCEPTUAL_REVIEW_REQUIRED"
+}
+
+== baked ground ==
+{
+  "status": "PASS",
+  "scope": "actual baked GLB; selected weighted sole vertices sampled at every exported key",
+  "sourceSha256": "fbb42c2edad4eadebbcf808d32028d7c73b3fbfd6172610eddd5df84990a65c7",
+  "animatedGlbSha256": "1f7af87879d1789030f9b17b90073e52f95eb1665e74fc7d3ede9b9c25819c8d",
+  "groundHeightM": -7.353215258909529e-10,
+  "clips": {
+    "PROC_WALK_RELAXED_V8_INPLACE": {
+      "sampleCount": 189,
+      "durationSeconds": 3.125,
+      "worstSelectedSolePenetrationM": 0.0,
+      "maximumLowestFootContactQuantileM": 0.0029066248502368818,
+      "framesWithBothFeetAbove12mm": 0,
+      "boundedImpactTransfer": null,
+      "noV6StyleFlight": true,
+      "noGroundPenetration": true,
+      "status": "PASS"
+    },
+    "PROC_TURN_LEFT_35_V8_ROOTMOTION": {
+      "sampleCount": 219,
+      "durationSeconds": 3.633720874786377,
+      "worstSelectedSolePenetrationM": 0.0,
+      "maximumLowestFootContactQuantileM": 0.0032139132653268244,
+      "framesWithBothFeetAbove12mm": 0,
+      "boundedImpactTransfer": null,
+      "noV6StyleFlight": true,
+      "noGroundPenetration": true,
+      "status": "PASS"
+    },
+    "PROC_TURN_RIGHT_35_V8_ROOTMOTION": {
+      "sampleCount": 219,
+      "durationSeconds": 3.633720874786377,
+      "worstSelectedSolePenetrationM": 0.0,
+      "maximumLowestFootContactQuantileM": 0.003075365824751921,
+      "framesWithBothFeetAbove12mm": 0,
+      "boundedImpactTransfer": null,
+      "noV6StyleFlight": true,
+      "noGroundPenetration": true,
+      "status": "PASS"
+    },
+    "PROC_IDLE_BREATH_V8": {
+      "sampleCount": 421,
+      "durationSeconds": 7.0,
+      "worstSelectedSolePenetrationM": 0.0,
+      "maximumLowestFootContactQuantileM": 0.0031582747421445494,
+      "framesWithBothFeetAbove12mm": 0,
+      "boundedImpactTransfer": null,
+      "noV6StyleFlight": true,
+      "noGroundPenetration": true,
+      "status": "PASS"
+    },
+    "PROC_EAT_LOOP_V8": {
+      "sampleCount": 649,
+      "durationSeconds": 10.800000190734863,
+      "worstSelectedSolePenetrationM": 0.0,
+      "maximumLowestFootContactQuantileM": 0.0029175747427708314,
+      "framesWithBothFeetAbove12mm": 0,
+      "boundedImpactTransfer": null,
+      "noV6StyleFlight": true,
+      "noGroundPenetration": true,
+      "status": "PASS"
+    },
+    "PROC_BITE_ATTACK_V8": {
+      "sampleCount": 277,
+      "durationSeconds": 4.599999904632568,
+      "worstSelectedSolePenetrationM": 0.0,
+      "maximumLowestFootContactQuantileM": 0.018493114632737718,
+      "framesWithBothFeetAbove12mm": 2,
+      "boundedImpactTransfer": true,
+      "noV6StyleFlight": true,
+      "noGroundPenetration": true,
+      "status": "PASS"
+    },
+    "PROC_BITE_ATTACK_MIRRORED_V8": {
+      "sampleCount": 277,
+      "durationSeconds": 4.599999904632568,
+      "worstSelectedSolePenetrationM": 0.0,
+      "maximumLowestFootContactQuantileM": 0.018506528480279495,
+      "framesWithBothFeetAbove12mm": 2,
+      "boundedImpactTransfer": true,
+      "noV6StyleFlight": true,
+      "noGroundPenetration": true,
+      "status": "PASS"
+    }
+  }
+}
+
+== turn kinematics ==
+{
+  "PROC_TURN_LEFT_35_V8_ROOTMOTION": {
+    "sample_count": 219,
+    "duration_seconds": 3.633720874786377,
+    "final_root_heading_deg": -32.768818782031204,
+    "peak_head_relative": {
+      "time": 1.2167965173721313,
+      "root_heading_deg": -5.193967140020404,
+      "head_relative_yaw_deg": -41.74122980747311,
+      "neck_relative_yaw_deg": -21.074958868200056,
+      "chest_relative_yaw_deg": -6.328988175112009,
+      "tail_root_relative_yaw_deg": 0.42990049760509286,
+      "tail_geometry_relative_yaw_deg": 12.21553685250749
+    },
+    "peak_neck_relative": {
+      "time": 1.3001387119293213,
+      "root_heading_deg": -6.427831539051077,
+      "head_relative_yaw_deg": -41.53271231578898,
+      "neck_relative_yaw_deg": -21.163651834292764,
+      "chest_relative_yaw_deg": -6.424659444467944,
+      "tail_root_relative_yaw_deg": 0.2659748394055976,
+      "tail_geometry_relative_yaw_deg": 12.384816928879955
+    },
+    "peak_chest_relative": {
+      "time": 1.3668124675750732,
+      "root_heading_deg": -7.467310551303654,
+      "head_relative_yaw_deg": -41.091362627724635,
+      "neck_relative_yaw_deg": -21.081768240128934,
+      "chest_relative_yaw_deg": -6.447738110763064,
+      "tail_root_relative_yaw_deg": 0.229058722604392,
+      "tail_geometry_relative_yaw_deg": 12.516239963749923
+    },
+    "peak_tail_root_relative": {
+      "time": 2.2669084072113037,
+      "root_heading_deg": -23.070326390479376,
+      "head_relative_yaw_deg": -35.69875772102988,
+      "neck_relative_yaw_deg": -16.783495613851432,
+      "chest_relative_yaw_deg": -4.671558304336914,
+      "tail_root_relative_yaw_deg": 3.3459897169498607,
+      "tail_geometry_relative_yaw_deg": 15.361149410984407
+    },
+    "peak_tail_geometry_relative": {
+      "time": 2.383587598800659,
+      "root_heading_deg": -24.859381060044527,
+      "head_relative_yaw_deg": -35.77252406408692,
+      "neck_relative_yaw_deg": -16.90029764705092,
+      "chest_relative_yaw_deg": -4.737488223478851,
+      "tail_root_relative_yaw_deg": 3.2278669172805063,
+      "tail_geometry_relative_yaw_deg": 15.522956637220833
+    }
+  },
+  "PROC_TURN_RIGHT_35_V8_ROOTMOTION": {
+    "sample_count": 219,
+    "duration_seconds": 3.633720874786377,
+    "final_root_heading_deg": 37.2311813998734,
+    "peak_head_relative": {
+      "time": 0.5667271018028259,
+      "root_heading_deg": 3.267738836541468,
+      "head_relative_yaw_deg": 42.37244305227288,
+      "neck_relative_yaw_deg": 21.157090554069878,
+      "chest_relative_yaw_deg": 6.369208244702523,
+      "tail_root_relative_yaw_deg": 1.961996967876971,
+      "tail_geometry_relative_yaw_deg": -2.7318023605616313
+    },
+    "peak_neck_relative": {
+      "time": 0.53339022397995,
+      "root_heading_deg": 3.1087567401474603,
+      "head_relative_yaw_deg": 42.308587333224956,
+      "neck_relative_yaw_deg": 21.196944038104323,
+      "chest_relative_yaw_deg": 6.404219498075295,
+      "tail_root_relative_yaw_deg": 2.106770592686083,
+      "tail_geometry_relative_yaw_deg": -2.3206708983426685
+    },
+    "peak_chest_relative": {
+      "time": 2.2669084072113037,
+      "root_heading_deg": 27.53268946571065,
+      "head_relative_yaw_deg": 36.42311162555598,
+      "neck_relative_yaw_deg": 19.991021784155702,
+      "chest_relative_yaw_deg": 6.45566463761914,
+      "tail_root_relative_yaw_deg": -0.23876630708066277,
+      "tail_geometry_relative_yaw_deg": -17.791174372936243
+    },
+    "peak_tail_root_relative": {
+      "time": 1.3668124675750732,
+      "root_heading_deg": 11.929673548259405,
+      "head_relative_yaw_deg": 39.98169928209974,
+      "neck_relative_yaw_deg": 17.905928175192724,
+      "chest_relative_yaw_deg": 4.677179720199234,
+      "tail_root_relative_yaw_deg": -3.365290005531413,
+      "tail_geometry_relative_yaw_deg": -17.49210933814515
+    },
+    "peak_tail_geometry_relative": {
+      "time": 1.6668444871902466,
+      "root_heading_deg": 17.03418130811428,
+      "head_relative_yaw_deg": 36.69369111888531,
+      "neck_relative_yaw_deg": 17.84559742229589,
+      "chest_relative_yaw_deg": 5.121816772872006,
+      "tail_root_relative_yaw_deg": -2.5688709982262496,
+      "tail_geometry_relative_yaw_deg": -19.188534889322383
+    }
+  }
+}
+
+== action kinematics ==
+{
+  "PROC_BITE_ATTACK_V8": {
+    "sample_count": 277,
+    "duration_seconds": 4.599999904632568,
+    "root_forward_displacement_m": 0.41852547560888625,
+    "pelvis_vertical_span_m": 0.10703275736552897,
+    "pelvis_forward_span_m": 0.5763301671644582,
+    "head_vertical_span_m": 0.7316279921402258,
+    "head_relative_yaw_span_deg": 16.876619453827885,
+    "maximum_abs_head_relative_yaw_deg": 16.876623228688622,
+    "jaw_delta_min_deg": 1.5012508576131576e-05,
+    "jaw_delta_max_deg": 49.99998572814322,
+    "left_foot_height_min_m": 0.21318683119841017,
+    "right_foot_height_min_m": 0.21170166869209445
+  },
+  "PROC_BITE_ATTACK_MIRRORED_V8": {
+    "sample_count": 277,
+    "duration_seconds": 4.599999904632568,
+    "root_forward_displacement_m": 0.41852547560888625,
+    "pelvis_vertical_span_m": 0.1070327570502363,
+    "pelvis_forward_span_m": 0.57633016734528,
+    "head_vertical_span_m": 0.7306126907509167,
+    "head_relative_yaw_span_deg": 16.87662671508781,
+    "maximum_abs_head_relative_yaw_deg": 16.876622940227072,
+    "jaw_delta_min_deg": 1.5012508576131576e-05,
+    "jaw_delta_max_deg": 49.99998572814322,
+    "left_foot_height_min_m": 0.2118082388688972,
+    "right_foot_height_min_m": 0.2132076491133408
+  },
+  "PROC_EAT_LOOP_V8": {
+    "sample_count": 649,
+    "duration_seconds": 10.800000190734863,
+    "root_forward_displacement_m": 0.0,
+    "pelvis_vertical_span_m": 0.00666897554658985,
+    "pelvis_forward_span_m": 1.1300322566576426e-08,
+    "head_vertical_span_m": 0.12062124868426594,
+    "head_relative_yaw_span_deg": 26.71993097673778,
+    "maximum_abs_head_relative_yaw_deg": 17.07352706065891,
+    "jaw_delta_min_deg": 18.53888611520621,
+    "jaw_delta_max_deg": 53.21164262916652,
+    "left_foot_height_min_m": 0.21445979605188648,
+    "right_foot_height_min_m": 0.21453239443334202
+  }
+}
+
+== browser contract ==
+{
+  "status": "PASS",
+  "checks": {
+    "embedded_glb_present": true,
+    "embedded_hash_matches_standalone": true,
+    "embedded_size_matches": true,
+    "manifest_clip_count_40": true,
+    "all_html_clip_references_exist": true,
+    "all_action_queue_references_exist": true,
+    "no_external_urls": true,
+    "viewer_javascript_syntax": true,
+    "active_button_state_present": true,
+    "root_cycle_accumulation_present": true,
+    "authored_handoff_without_second_crossfade": true
+  },
+  "standaloneGlbSha256": "1f7af87879d1789030f9b17b90073e52f95eb1665e74fc7d3ede9b9c25819c8d",
+  "embeddedGlbSha256": "1f7af87879d1789030f9b17b90073e52f95eb1665e74fc7d3ede9b9c25819c8d",
+  "embeddedGlbBytes": 53615860,
+  "clipCount": 40,
+  "htmlClipReferences": 15,
+  "queueClipReferences": 15,
+  "missingHtmlClipReferences": [],
+  "missingQueueClipReferences": [],
+  "externalUrls": [],
+  "nodeSyntaxStderr": ""
+}

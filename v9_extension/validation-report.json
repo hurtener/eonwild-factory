@@ -1,0 +1,119 @@
+{
+  "schema": "eonwild.spec_pack_validation.v1",
+  "status": "PASS",
+  "scope": "Structural and internal-consistency validation only. No V9 motion GLB, biomechanics truth, or perceptual approval is claimed.",
+  "root": "/Volumes/m2-extended-disk/Repos/eonwild-factory/v9_extension",
+  "checks": [
+    {
+      "id": "required_schemas",
+      "expected": 15,
+      "found": 15
+    },
+    {
+      "id": "motion_programs",
+      "expected": 12,
+      "found": 12
+    },
+    {
+      "id": "actuation_capacity",
+      "mode": "normalized",
+      "groups": [
+        "hindlimb_hip",
+        "hindlimb_knee",
+        "ankle_metatarsal_toe",
+        "pelvis_trunk",
+        "neck_head",
+        "tail",
+        "jaw"
+      ],
+      "provenance": "gameplay_hypothesis"
+    },
+    {
+      "id": "joint_limit_catalog",
+      "envelopes": 16,
+      "provenance": "gameplay_hypothesis"
+    },
+    {
+      "id": "body_profiles",
+      "profiles": [
+        {
+          "profile_id": "tarbosaurus_solver_template_provisional_v1",
+          "segments": 17,
+          "mass_fraction_sum": 1.0,
+          "absolute_dynamics_enabled": false,
+          "joint_limit_references": 16
+        },
+        {
+          "profile_id": "synthetic_gracile_heavy_biped_v1",
+          "segments": 17,
+          "mass_fraction_sum": 1.0,
+          "absolute_dynamics_enabled": true,
+          "joint_limit_references": 0
+        }
+      ]
+    },
+    {
+      "id": "growth_regimes",
+      "expected": [
+        "juvenile",
+        "subadult",
+        "adult",
+        "heavy_adult"
+      ],
+      "found": [
+        "juvenile",
+        "subadult",
+        "adult",
+        "heavy_adult"
+      ]
+    },
+    {
+      "id": "animation_catalog",
+      "expected": 29,
+      "found": 29,
+      "loop_count": 9,
+      "loop_ids": [
+        "tarbosaurus_neutral_idle",
+        "tarbosaurus_alert_idle",
+        "tarbosaurus_walk",
+        "tarbosaurus_fast_walk",
+        "tarbosaurus_run",
+        "tarbosaurus_sprint",
+        "tarbosaurus_head_down_feeding",
+        "tarbosaurus_rest_lying_loop",
+        "tarbosaurus_wounded_idle"
+      ]
+    },
+    {
+      "id": "power_attack",
+      "variants": [
+        "power_attack_airborne",
+        "power_attack_grounded"
+      ],
+      "phases": 11,
+      "branches": [
+        "hit_target_resists",
+        "hit_target_yields",
+        "landing_failure",
+        "miss"
+      ]
+    },
+    {
+      "id": "pinned_regressions",
+      "review_repo_commit": "aca1eab3f6e9f6970cf8a8281f4440a74f8551d3",
+      "verified_hash_contracts": 3
+    },
+    {
+      "id": "examples",
+      "expected": 3,
+      "found": 3
+    },
+    {
+      "id": "required_files",
+      "expected": 9,
+      "found": 9
+    }
+  ],
+  "error_count": 0,
+  "errors": []
+}

@@ -1,0 +1,264 @@
+schema: eonwild.actuation_capacity_profile.v1
+id: heavy_predatory_biped_capacity_provisional_v1
+family: heavy_predatory_biped
+mode: normalized
+normalization:
+  force: body_weight = structural_mass * gravity
+  torque: body_weight * hip_height
+  work: body_weight * hip_height
+  power: body_weight * sqrt(gravity * hip_height)
+  impulse: structural_mass * sqrt(gravity * hip_height)
+  absolute_export_enabled: false
+capacity_groups:
+- id: hindlimb_hip
+  articulations:
+  - hip_l
+  - hip_r
+  positive:
+    status: unresolved
+    required_fields_when_calibrated:
+    - peak_normalized_torque_or_force
+    - peak_normalized_power
+    - positive_work_budget
+    - impulse_budget
+    - duration_curve
+  negative_absorption:
+    status: unresolved
+    required_fields_when_calibrated:
+    - peak_normalized_force_or_torque
+    - negative_work_budget
+    - impulse_budget
+    - rate_limit
+  rate_limit:
+    status: unresolved
+  fatigue_sensitivity:
+    status: profile_curve
+  injury_sensitivity:
+    status: site_specific
+  growth_curve:
+    status: profile_curve
+  provenance:
+    status: gameplay_hypothesis
+    note: Contract placeholder; numerical capability must be calibrated and reviewed before use.
+    reviewed_by: null
+    reviewed_at: null
+- id: hindlimb_knee
+  articulations:
+  - knee_l
+  - knee_r
+  positive:
+    status: unresolved
+    required_fields_when_calibrated:
+    - peak_normalized_torque_or_force
+    - peak_normalized_power
+    - positive_work_budget
+    - impulse_budget
+    - duration_curve
+  negative_absorption:
+    status: unresolved
+    required_fields_when_calibrated:
+    - peak_normalized_force_or_torque
+    - negative_work_budget
+    - impulse_budget
+    - rate_limit
+  rate_limit:
+    status: unresolved
+  fatigue_sensitivity:
+    status: profile_curve
+  injury_sensitivity:
+    status: site_specific
+  growth_curve:
+    status: profile_curve
+  provenance:
+    status: gameplay_hypothesis
+    note: Contract placeholder; numerical capability must be calibrated and reviewed before use.
+    reviewed_by: null
+    reviewed_at: null
+- id: ankle_metatarsal_toe
+  articulations:
+  - ankle_l
+  - ankle_r
+  - toe_l
+  - toe_r
+  positive:
+    status: unresolved
+    required_fields_when_calibrated:
+    - peak_normalized_torque_or_force
+    - peak_normalized_power
+    - positive_work_budget
+    - impulse_budget
+    - duration_curve
+  negative_absorption:
+    status: unresolved
+    required_fields_when_calibrated:
+    - peak_normalized_force_or_torque
+    - negative_work_budget
+    - impulse_budget
+    - rate_limit
+  rate_limit:
+    status: unresolved
+  fatigue_sensitivity:
+    status: profile_curve
+  injury_sensitivity:
+    status: site_specific
+  growth_curve:
+    status: profile_curve
+  provenance:
+    status: gameplay_hypothesis
+    note: Contract placeholder; numerical capability must be calibrated and reviewed before use.
+    reviewed_by: null
+    reviewed_at: null
+- id: pelvis_trunk
+  articulations:
+  - pelvis_to_abdomen
+  - abdomen_to_thorax
+  positive:
+    status: unresolved
+    required_fields_when_calibrated:
+    - peak_normalized_torque_or_force
+    - peak_normalized_power
+    - positive_work_budget
+    - impulse_budget
+    - duration_curve
+  negative_absorption:
+    status: unresolved
+    required_fields_when_calibrated:
+    - peak_normalized_force_or_torque
+    - negative_work_budget
+    - impulse_budget
+    - rate_limit
+  rate_limit:
+    status: unresolved
+  fatigue_sensitivity:
+    status: profile_curve
+  injury_sensitivity:
+    status: site_specific
+  growth_curve:
+    status: profile_curve
+  provenance:
+    status: gameplay_hypothesis
+    note: Contract placeholder; numerical capability must be calibrated and reviewed before use.
+    reviewed_by: null
+    reviewed_at: null
+- id: neck_head
+  articulations:
+  - thorax_to_neck
+  - neck_base_to_distal
+  - atlanto_occipital
+  positive:
+    status: unresolved
+    required_fields_when_calibrated:
+    - peak_normalized_torque_or_force
+    - peak_normalized_power
+    - positive_work_budget
+    - impulse_budget
+    - duration_curve
+  negative_absorption:
+    status: unresolved
+    required_fields_when_calibrated:
+    - peak_normalized_force_or_torque
+    - negative_work_budget
+    - impulse_budget
+    - rate_limit
+  rate_limit:
+    status: unresolved
+  fatigue_sensitivity:
+    status: profile_curve
+  injury_sensitivity:
+    status: site_specific
+  growth_curve:
+    status: profile_curve
+  provenance:
+    status: gameplay_hypothesis
+    note: Contract placeholder; numerical capability must be calibrated and reviewed before use.
+    reviewed_by: null
+    reviewed_at: null
+- id: tail
+  articulations:
+  - pelvis_to_tail
+  - tail_base_to_mid
+  - tail_mid_to_distal
+  positive:
+    status: unresolved
+    required_fields_when_calibrated:
+    - peak_normalized_torque_or_force
+    - peak_normalized_power
+    - positive_work_budget
+    - impulse_budget
+    - duration_curve
+  negative_absorption:
+    status: unresolved
+    required_fields_when_calibrated:
+    - peak_normalized_force_or_torque
+    - negative_work_budget
+    - impulse_budget
+    - rate_limit
+  rate_limit:
+    status: unresolved
+  fatigue_sensitivity:
+    status: profile_curve
+  injury_sensitivity:
+    status: site_specific
+  growth_curve:
+    status: profile_curve
+  provenance:
+    status: gameplay_hypothesis
+    note: Contract placeholder; numerical capability must be calibrated and reviewed before use.
+    reviewed_by: null
+    reviewed_at: null
+- id: jaw
+  articulations:
+  - jaw
+  positive:
+    status: unresolved
+    required_fields_when_calibrated:
+    - peak_normalized_torque_or_force
+    - peak_normalized_power
+    - positive_work_budget
+    - impulse_budget
+    - duration_curve
+  negative_absorption:
+    status: unresolved
+    required_fields_when_calibrated:
+    - peak_normalized_force_or_torque
+    - negative_work_budget
+    - impulse_budget
+    - rate_limit
+  rate_limit:
+    status: unresolved
+  fatigue_sensitivity:
+    status: profile_curve
+  injury_sensitivity:
+    status: site_specific
+  growth_curve:
+    status: profile_curve
+  provenance:
+    status: gameplay_hypothesis
+    note: Contract placeholder; numerical capability must be calibrated and reviewed before use.
+    reviewed_by: null
+    reviewed_at: null
+aggregate_capabilities:
+  launch_impulse_budget: derived from loaded hindlimb groups, contact duration, posture, fatigue, and injury
+  landing_absorption_budget: derived from negative work/impulse of lead leg, catch leg, pelvis/trunk, and allowed extra
+    steps
+  turning_moment_budget: derived from stance, friction, hindlimb moment, trunk/tail redistribution, and yaw inertia
+  bite_delivery_budget: derived separately from jaw/neck/trunk capacities and target reaction; no exact biological value
+    supplied here
+condition_modifiers:
+  fatigue: reduces positive power first, then impulse/work envelope; configured curve
+  injury: site-specific reduction and range/load restriction; never a universal scalar
+  pain_confidence: may reject or soften intent before physical capacity is fully exhausted
+  condition_factor: affects reserve and endurance inside the structural mass tier; does not change ontogenetic tier
+provenance:
+  status: gameplay_hypothesis
+  note: The schema is required because passive mass/inertia can calculate required dynamics but cannot determine whether
+    the animal can produce or absorb them. Numerical capacities remain intentionally unresolved until calibrated and
+    reviewed.
+  sources:
+  - doi:10.1371/journal.pone.0026037
+  - doi:10.1242/jeb.152538
+  uncertainty:
+    absolute_capacity: not enabled
+    calibration: requires gameplay, comparative biomechanics, and perceptual sweeps
+  reviewed_by: null
+  reviewed_at: null

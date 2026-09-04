@@ -1,0 +1,16 @@
+```text
+python3 procedural-animation-toolkit(v8.1)/approved_snapshots/v8.1-walk-iteration-38/reproduction/verify_snapshot.py
+python3 procedural-animation-toolkit(v8.1)/scripts/write_package_manifest_v8_1.py
+procedural-animation-toolkit(v8.1)/scripts/verify_package_v8_1.sh
+
+PYTHONPATH=/Users/santiagobenvenuto/.local/lib/python3.13/site-packages \
+  /Applications/Blender.app/Contents/Resources/5.2/python/bin/python3.13 \
+  candidates/v8.1-walk-respin-2/scripts/validate_walk_respin_2.py \
+  --glb procedural-animation-toolkit(v8.1)/approved_snapshots/v8.1-walk-iteration-38/asset/tarbosaurus_procedural_v8_1_walk_iteration_38.glb \
+  --profile procedural-animation-toolkit(v8.1)/approved_snapshots/v8.1-walk-iteration-38/config/resolved-profile-v8.1-walk-iteration-38.json \
+  --overlay procedural-animation-toolkit(v8.1)/approved_snapshots/v8.1-walk-iteration-38/config/profile-overlay-v8.1-walk-iteration-38.json
+```
+
+The full authoritative rerun command, including bone map, copied evidence, and
+respin-1 provenance inputs, is preserved in the task transcript and the
+snapshot reproduction guide.

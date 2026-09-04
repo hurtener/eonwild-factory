@@ -1,0 +1,93 @@
+{
+  "analysis_id": "V8-1-WALK-RESPIN-ITERATION-2-ADDENDUM",
+  "scope": "read_only_motion_direction_handoff",
+  "status": "bounded_candidate_for_walk_only_mp4",
+  "not_a_v55_rollback": true,
+  "files_edited": [],
+  "targets": {
+    "body_length_m": 12.0,
+    "hip_height_m": 2.75,
+    "same_foot_stride_m": 2.6,
+    "speed_kmh_center": 4.6,
+    "speed_mps_center": 1.2777777778,
+    "cycle_hz_center": 0.4914529915,
+    "cycle_period_s": 2.0347826087,
+    "alternate_contact_spacing_s": 1.0173913043,
+    "two_cycle_duration_s": 4.0695652174,
+    "accepted_speed_kmh": [4.5, 4.8]
+  },
+  "phase_convention": {
+    "phi_0": "receiving contact of measured foot",
+    "phi_1": "next receiving contact of same foot",
+    "opposite_foot_phase_offset": 0.5
+  },
+  "phase_targets": {
+    "stance_fraction": {"center": 0.72, "bounds": [0.70, 0.74]},
+    "loaded_micro_sample_window": {"bounds": [0.40, 0.72], "knots_center": 18, "knots_bounds": [15, 20]},
+    "rocker_onset": {"center": 0.46, "bounds": [0.44, 0.48]},
+    "rear_extension_peak": {"center": 0.56, "bounds": [0.54, 0.58]},
+    "toe_only_dwell": {"duration_bounds": [0.08, 0.12]},
+    "toe_patch_release": {"center": 0.72, "bounds": [0.70, 0.74]},
+    "passive_unloaded_lag": {"center": 0.75, "bounds": [0.72, 0.80], "duration_bounds": [0.05, 0.08]},
+    "receiving_toe_ankle_arm_start": {"center": 0.82, "bounds": [0.80, 0.86], "minimum": 0.78},
+    "receiving_flatten_start": {"center": 0.90, "bounds": [0.88, 1.0]}
+  },
+  "ordering_gates": {
+    "rocker_before_rear_extension_peak_min_lead_fraction": 0.06,
+    "rear_extent_second_peak_max_fraction_of_first": 0.05,
+    "active_receiving_arm_before_passive_lag": false
+  },
+  "angles_deg": {
+    "loaded_bead_pitch_center": 9.0,
+    "loaded_bead_pitch_bounds": [8.0, 10.0],
+    "loaded_bead_pitch_hard_max": 12.0,
+    "toe_push_center": 12.0,
+    "toe_push_bounds": [10.0, 14.0],
+    "contact_foot_pitch_bounds": [0.0, 2.0],
+    "receiving_ankle_arm_bounds": [8.0, 10.0],
+    "passive_residual_excursion_max": 4.0
+  },
+  "passive_response": {
+    "damping_ratio_bounds": [0.85, 1.0],
+    "natural_frequency_per_second_starting_band": [18.0, 28.0],
+    "residual_at_active_arm_max_fraction": 0.30,
+    "allowed_rebound_lobes_max": 1,
+    "implementation_note": "If no dynamics state exists, use an equivalent C2 phase-keyed decay with zero active target arm during the lag."
+  },
+  "measurable_gates": {
+    "stride_tolerance_fraction": 0.01,
+    "metatarsal_lift_while_toe_loaded_min_m": 0.004,
+    "metatarsal_lift_preferred_m": [0.006, 0.012],
+    "toe_patch_contact_quantile_max_m": 0.008,
+    "sole_penetration_max_m": 0.002,
+    "loaded_samples_per_side": [15, 20],
+    "loaded_samples_center": 18,
+    "receiving_arm_first_phase_min": 0.80,
+    "receiving_flatten_first_phase_min": 0.88
+  },
+  "provenance": {
+    "iteration_3_side_mp4": {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-factory/showcase/v8.1-walk-respin/iteration-3/walk-relaxed-v8-1-respin-side.mp4",
+      "sha256": "4a654cad0878dcb710090b44d7647644215b0c3b9a696566c1638ecf347145dc",
+      "fps": 24,
+      "frames": 240,
+      "duration_s": 10.0
+    },
+    "relaxed_source_mp4": {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-factory/procedural-animation-toolkit(v8.1)/inputs/v8/tarbosaurus-relaxed-walk-reference.mp4",
+      "sha256": "b0401fc76a202d6ed5dc9a5515f1054eab8bed8075c04f6167ff426fd603f5ae",
+      "fps": 24,
+      "frames": 241,
+      "duration_s": 10.041667
+    },
+    "render_run_input_glb_sha256": "96bf5c37402bd784b23785173fbb9a45cd8cbbed33ea2fd0675bdfd11c48a5a1",
+    "still_capture_observations": "reports/V8-1-WALK-RESPIN/reference-analysis/metrics.json"
+  },
+  "uncertainties": [
+    "Speed range is user-specified tuning input, not independently established here.",
+    "Still captures have no temporal order, metric floor, camera calibration, or rig scale.",
+    "Exact per-digit release order is unresolved.",
+    "15-20 is interpreted as underlying loaded control/validation samples; 24 fps display frames are not the same count.",
+    "Passive spring numbers are bounded starting values for an existing rig, not a requirement to add a dynamics subsystem."
+  ]
+}

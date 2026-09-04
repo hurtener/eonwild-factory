@@ -1,0 +1,40 @@
+id: alternating_gait
+version: 1
+purpose: Generate phase-coherent alternating hindlimb locomotion from walk through sprint with physical contact,
+  speed, curvature, and growth parameterization.
+phase_template:
+- left_contact
+- left_load
+- right_toe_off
+- right_swing
+- right_contact
+- right_load
+- left_toe_off
+- left_swing
+inputs:
+- body_profile
+- speed
+- curvature
+- slope
+- substrate
+- gait_regime
+- fatigue
+- injury
+- head_target
+outputs:
+- root_com_plan
+- contact_schedule
+- foot_placements
+- gait_phase
+- pelvis_spine_neck_tail_plan
+- events
+invariants:
+- stride matches root displacement
+- loaded contacts remain planted
+- regime-specific duty factor
+- joint limits and clearance hold
+branches:
+- walk
+- fast_walk
+- run
+- sprint

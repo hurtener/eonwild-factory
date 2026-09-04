@@ -1,0 +1,27 @@
+id: attention_reaction
+version: 1
+purpose: Orient senses and posture toward uncertain visual, acoustic, airborne, or ground evidence without conflating
+  attention with aggression.
+phase_template:
+- recognize
+- orient_head
+- sample_or_freeze
+- body_catch_up
+- decision_ready
+inputs:
+- stimulus_modality
+- target_direction
+- target_height
+- uncertainty
+- distance
+- wind
+- current_behavior
+outputs:
+- gaze_window
+- head_neck_torso_orientation
+- support_preparation
+- exit_options
+invariants:
+- head may lead only within bounds
+- large turns recruit torso and possibly a step
+- alert does not imply open jaw or threat

@@ -1,0 +1,48 @@
+id: dynamic_launch_attack
+version: 1
+purpose: Plan grounded or airborne power attack from current support through preload, impulse, ballistic COM, bite,
+  landing, momentum arrest, and continuation.
+phase_template:
+- acquire
+- align
+- shift_com
+- preload
+- launch
+- flight
+- bite
+- lead_land
+- catch
+- arrest
+- recover
+inputs:
+- body_profile
+- current_state
+- target_state
+- terrain
+- friction
+- style
+- continuation_intent
+- fatigue
+- injury
+outputs:
+- variant
+- launch_foot
+- centroidal_plan
+- root_from_com_curve
+- contact_schedule
+- bite_window
+- landing_plan
+- fallback
+invariants:
+- whole-body COM is ballistic in flight
+- takeoff and landing velocities are continuous
+- infeasible airborne plan falls back
+- tail cannot violate angular momentum
+branches:
+- airborne
+- grounded_lunge
+- hit
+- miss
+- target_yields
+- target_resists
+- landing_failure

@@ -1,0 +1,43 @@
+{
+  "status": "LOCKED_AFTER_REFERENCE_REVIEW",
+  "candidate": "v8.1 relaxed-walk respin / iteration 1",
+  "referenceScale": {
+    "bodyLengthM": 12.0,
+    "acceptedRawBodyLengthM": 5.974026,
+    "hipHeightM": 2.75,
+    "targetSpeedKmh": [4.5, 4.8],
+    "targetCadenceHz": 0.465,
+    "targetSameFootStrideM": 2.75,
+    "targetSpeedMps": 1.27875
+  },
+  "profileOverrides": {
+    "name": "tarbosaurus_v8_1_relaxed_walk_respin",
+    "cycle_hz": 0.465,
+    "stride_length_m": 2.75,
+    "stance_fraction": 0.72,
+    "contact_lead_stride": 0.54,
+    "toe_off_window_fraction": 0.2,
+    "load_ramp_fraction": 0.2,
+    "precontact_window_fraction": 0.25,
+    "toe_off_foot_deg": 9.0,
+    "toe_push_deg": 12.0,
+    "contact_foot_deg": 1.0,
+    "swing_ankle_deg": 10.0,
+    "swing_lift_hip_fraction": 0.055,
+    "swing_advance_start_fraction": 0.08,
+    "swing_advance_end_fraction": 0.89
+  },
+  "toeGroundLock": {
+    "enabled": true,
+    "counterArticulationDegrees": 12.0,
+    "purpose": "keep the distal toe patch loaded as the metatarsal begins its late-stance rise"
+  },
+  "intent": {
+    "preserve": [
+      "accepted V8.1 posture, pivots, contact solver and non-walk motion",
+      "contact lead at +0.54 hip heights; target rear reach approximately -0.46 hip heights",
+      "no old rear-overextension"
+    ],
+    "lateStance": "During the final 20% of stance, raise the rear/metatarsal foot through the existing foot-pivot rocker while toe branches counter-articulate and their selected ground patch remains loaded; release toe contact only after rocker completion."
+  }
+}

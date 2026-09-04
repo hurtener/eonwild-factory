@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+INPUT="${1:-$ROOT/inputs/tarbosaurus.glb}"
+MAP="${2:-$ROOT/inputs/bone-map.yml}"
+REFERENCE="${3:-$ROOT/inputs/tarbosaurus-attack-eat-reference.mp4}"
+OUT="${4:-$ROOT/validated_result/v8}"
+export PYTHONPATH="$ROOT/scripts"
+mkdir -p "$OUT" "$OUT/showcase" "$OUT/reference-analysis"
+python3 "$ROOT/scripts/analyze_attack_eat_reference_v8.py" --video "$REFERENCE" --output-dir "$OUT/reference-analysis"
+python3 "$ROOT/scripts/run_pipeline_v8.py" --input "$INPUT" --bone-map "$MAP" --output-dir "$OUT"
+python3 "$ROOT/tests/validate_fixture_v8.py" --input "$INPUT" --bone-map "$MAP" --profile "$OUT/resolved-profile-v8.json" --output "$OUT/v8-fixture-validation.json"
+python3 "$ROOT/tests/validate_v8_release.py" --glb "$OUT/tarbosaurus_procedural_v8_animation_pack.glb" --report "$OUT/procedural-v8-report.json" --manifest "$OUT/animation-manifest.v8.json" --output "$OUT/v8-release-validation.json"
+python3 "$ROOT/tests/validate_baked_ground_v8.py" --source "$INPUT" --glb "$OUT/tarbosaurus_procedural_v8_animation_pack.glb" --bone-map "$MAP" --output "$OUT/v8-baked-ground-regression.json"
+python3 "$ROOT/scripts/analyze_turn_v8.py" --glb "$OUT/tarbosaurus_procedural_v8_animation_pack.glb" --bone-map "$MAP" --output "$OUT/turn-kinematics-v8.json"
+python3 "$ROOT/scripts/analyze_actions_v8.py" --glb "$OUT/tarbosaurus_procedural_v8_animation_pack.glb" --bone-map "$MAP" --output "$OUT/action-kinematics-v8.json"
+python3 "$ROOT/scripts/build_v8_browser_html.py" --output-dir "$OUT" --glb "$OUT/tarbosaurus_procedural_v8_animation_pack.glb" --manifest "$OUT/animation-manifest.v8.json"
+
+python3 "$ROOT/tests/validate_browser_contract_v8.py" --html "$OUT/OPEN_ME_tarbosaurus_v8_3d_browser.html" --glb "$OUT/tarbosaurus_procedural_v8_animation_pack.glb" --manifest "$OUT/animation-manifest.v8.json" --viewer-js "$ROOT/browser_demo/v8-viewer.js" --output "$OUT/v8-browser-contract-validation.json"
+python3 "$ROOT/scripts/render_v8_validation.py" --input "$INPUT" --animated-glb "$OUT/tarbosaurus_procedural_v8_animation_pack.glb" --bone-map "$MAP" --report "$OUT/procedural-v8-report.json" --output-dir "$OUT/showcase" --reference-video "$REFERENCE"

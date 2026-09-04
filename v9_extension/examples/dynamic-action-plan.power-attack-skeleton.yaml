@@ -1,0 +1,23 @@
+schema: eonwild.dynamic_action_plan.v1
+intent: power_attack
+variant: power_attack_grounded
+support:
+  launch_foot: left
+  reason: airborne variant rejected because Tarbosaurus template has absolute_dynamics_enabled=false
+launch:
+  status: dimensionless_only
+  preload_phase: [0.25, 0.38]
+  takeoff_impulse: null
+flight:
+  enabled: false
+  com_ballistic_curve: null
+contact:
+  bite_window: [0.61, 0.70]
+  branches: [hit_target_yields, hit_target_resists, miss]
+landing:
+  required: false
+  note: grounded plan still requires braking contacts and momentum arrest
+recovery:
+  continuation: begin_eating
+  preserve: [COM_velocity, root_velocity, contact_state, angular_momentum, tail_state]
+fallback: power_attack_grounded

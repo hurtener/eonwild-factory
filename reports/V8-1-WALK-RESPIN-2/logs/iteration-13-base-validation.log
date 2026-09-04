@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "/Volumes/m2-extended-disk/Repos/eonwild-factory/candidates/v8.1-walk-respin/scripts/validate_walk_respin.py", line 210, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/Volumes/m2-extended-disk/Repos/eonwild-factory/candidates/v8.1-walk-respin/scripts/validate_walk_respin.py", line 72, in main
+    profile = BipedV8Profile.from_json(args.profile)
+  File "/Volumes/m2-extended-disk/Repos/eonwild-factory/procedural-animation-toolkit(v8.1)/toolkit/v8/scripts/eonproc_v8/profile.py", line 125, in from_json
+    payload = json.loads(Path(path).read_text(encoding="utf-8"))
+                         ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Applications/Blender.app/Contents/Resources/5.2/python/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Applications/Blender.app/Contents/Resources/5.2/python/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Applications/Blender.app/Contents/Resources/5.2/python/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'candidates/v8.1-walk-respin-2/generated/iteration-13/resolved-profile-v8.1-walk-respin.json'

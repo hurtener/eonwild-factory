@@ -1,0 +1,143 @@
+schema: eonwild.global_animation_contract.v1
+family: heavy_predatory_biped
+purpose: Shared anatomical, dynamical, contact, event, layering, and validation contract for every Tarbosaurus animation.
+anatomical_character:
+- Read as a heavy horizontally balanced biped, never an upright human analogue.
+- Pelvis carries the primary locomotor load; hindlimbs produce and absorb meaningful force.
+- Head and neck materially influence balance and inertia.
+- Tail is a muscular pelvis-coupled counterbalance with lag and damping, not decorative rope.
+- Forelimbs remain flexed and close to the thorax, with bounded inertial response and no human running-arm swing.
+- Large motion propagates through connected chains rather than isolated bones.
+action_grammar:
+- anticipation
+- weight_shift
+- force_production
+- movement_or_contact
+- momentum_continuation
+- force_absorption
+- recovery
+contact_contract:
+  loaded_foot:
+  - plant remains world-stable within substrate tolerance
+  - toe patch, metatarsal chain, and ankle share load
+  - loaded foot cannot arbitrarily yaw or pivot
+  - pelvis and opposite limb move relative to the planted support
+  contact_state_machine:
+  - approaching
+  - contact
+  - loading
+  - loaded
+  - unloading
+  - toe_off
+  support_geometry: Use skinned sole/toe witness patches, not ankle points.
+  terrain_authority: Foot/toe contact and collision outrank cosmetic overlays.
+tail_contract:
+  response: pelvis-driven, phase-lagged, frequency-limited, damped
+  airborne_rule: Tail may redistribute internal angular momentum but may not create or destroy total angular momentum.
+  transition_rule: Carry tail angle and angular velocity across handoffs.
+  reject:
+  - free sine-wave wag
+  - endless oscillation
+  - uniform chain rotation
+  - distal whip without a causal impulse
+head_neck_contract:
+  large_orientation_chain:
+  - thorax
+  - cervical_base
+  - middle_neck
+  - upper_neck
+  - skull
+  attention_exception: Small eye/skull attention can lead briefly before the neck and torso catch up.
+  reject:
+  - camera-gimbal head
+  - large skull-only turns
+  - locked neck during impacts
+forelimb_contract:
+  default: flexed, close to body, low-amplitude, slightly delayed from thorax
+  reject:
+  - human reciprocal arm swing
+  - bilaterally synchronized pumping
+  - weight-bearing unless a specific program declares it
+breathing_contract:
+  always_available:
+  - thorax
+  - throat
+  - abdomen
+  - cervical_base
+  authority: Breathing yields to contact, impact, vocalization, swallow, and non-interruptible action constraints.
+  style: Volume change and tissue motion, not a uniform vertical body bob.
+loop_contract:
+  pose: end leads naturally to start
+  derivatives:
+  - root velocity
+  - joint angular velocity
+  - COM velocity
+  - tail state
+  - breathing phase
+  contacts: support/contact state must be continuous across the seam
+  required_event: LOOP_SAFE
+event_vocabulary:
+  point:
+  - ANTICIPATION_START
+  - COMMIT_START
+  - CONTACT_BEGIN
+  - CONTACT_PEAK
+  - CONTACT_END
+  - RECOVERY_START
+  - RECOVERY_END
+  - L_FOOT_CONTACT
+  - L_FOOT_LOAD
+  - L_TOE_OFF
+  - R_FOOT_CONTACT
+  - R_FOOT_LOAD
+  - R_TOE_OFF
+  - JAW_OPEN
+  - JAW_CONTACT
+  - JAW_CLOSE
+  - TARGET_LOCK
+  - TAKEOFF
+  - APEX
+  - LANDING_LEAD_CONTACT
+  - LANDING_CATCH_CONTACT
+  - VOCAL_START
+  - VOCAL_END
+  - TEAR_RELEASE
+  - SNOUT_WATER_ENTER
+  - DRINK_START
+  - DRINK_STOP
+  - SNOUT_WATER_EXIT
+  - LOOP_SAFE
+  window:
+  - HEAD_TARGET_WINDOW
+  - CONTACT_WINDOW
+  - INTERRUPTIBLE
+  - PARTIALLY_INTERRUPTIBLE
+  - NON_INTERRUPTIBLE
+  condition:
+  - CONTACT_CONFIRMED
+  - CONTACT_MISSED
+  - TARGET_YIELDED
+  - TARGET_RESISTED
+  - SUPPORT_FAILED
+  - RECOVERY_FEASIBLE
+  - FALL_TRIGGERED
+ordered_pose_authority:
+- motion_program_performance_and_phase
+- centroidal_and_contact_plan
+- root_pelvis_and_primary_limbs
+- foot_toe_and_terrain_contacts
+- spine_neck_tail_inertial_compensation
+- target_water_carcass_and_jaw_contacts
+- injury_fatigue_and_exertion_within_remaining_capacity
+- gaze_breathing_throat_and_biological_variation
+- final_joint_limit_collision_contact_and_continuity_projection
+global_reject_conditions:
+- pose teleport or velocity reset
+- loaded foot sliding
+- pelvis static while support changes
+- head-only substantial action
+- tail used as uncoupled decoration
+- unbounded additive overlays
+- large action without anticipation and recovery
+- loop seam visible in pose or derivatives
+- scientific hypothesis exported without status, source, and uncertainty

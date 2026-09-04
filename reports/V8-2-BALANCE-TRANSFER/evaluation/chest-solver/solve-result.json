@@ -1,0 +1,742 @@
+{
+  "schema": "eonwild.v8_2.candidate_a_chest_solve.v1",
+  "status": "PASS",
+  "inputs": {
+    "candidate": "candidates/v8.2-balance-transfer/generated/iteration-b/tarbosaurus_procedural_v8_2_balance_transfer.glb",
+    "candidate_sha256": "bfe8e833721f1dc0b8b4a1df72a6ea933debb1c6d76ac6d7970ae3ed6c8f4bc2",
+    "approved": "candidates/v8.1-walk-respin-2/generated/iteration-38/tarbosaurus_procedural_v8_1_walk_respin.glb",
+    "approved_sha256": "1b9a7d071c1b375e128beeb5bda68298e32b39aac3ea76a90afe7ca3f744b73e"
+  },
+  "method": {
+    "target_roll_degrees": 5.618,
+    "gain_driver": "negative existing official pelvis world-roll Z signal",
+    "relative_parameterization": "per-key log(R_chest R_pelvis^-1) + [0,0,-gain*pelvis_roll_z]",
+    "head_rule": "root-to-tip neck reconstruction exactly cancels the chest world delta at Bone_036",
+    "channels_changed_in_temporary_variants": [
+      "Bone_002",
+      "Bone_041",
+      "Bone_040",
+      "Bone_039",
+      "Bone_038",
+      "Bone_037",
+      "Bone_036"
+    ]
+  },
+  "best": {
+    "gain": 0.3984375,
+    "gate": {
+      "status": "PASS",
+      "checks": {
+        "pelvis_exact_to_approved": true,
+        "protected_lower_leg_exact": true,
+        "chest_roll_safe_improvement": true,
+        "chest_counterphase": true,
+        "chest_pitch_no_unintended_change": true,
+        "chest_yaw_non_regression": true,
+        "head_caps": true,
+        "tail_base_yaw_improves": true,
+        "tail_mid_yaw_improves_at_least_1_5": true,
+        "tail_tip_yaw_safe_improvement": true,
+        "tail_base_to_tip_phase_monotonic": true,
+        "seam_exact": true
+      },
+      "measured": {
+        "chest": {
+          "pitch_x": 4.0816448900811935,
+          "yaw_y": 2.6479633860853653,
+          "roll_z": 5.617932748884961
+        },
+        "tail_yaw": {
+          "base": 5.587139999796207,
+          "mid": 18.7181856297902,
+          "tip": 22.991999383345856
+        },
+        "tail_yaw_peak_phase": {
+          "base": 0.3416666666666667,
+          "mid": 0.8416666666666667,
+          "tip": 0.85
+        },
+        "head": {
+          "pitch_x": 2.580076144284219,
+          "yaw_y": 1.5288220576108507,
+          "roll_z": 0.9661369943508731
+        }
+      }
+    },
+    "local_delta_degrees": {
+      "Bone_002": 0.965347702150647,
+      "Bone_041": 0.10618824723656664,
+      "Bone_040": 0.14480215532258445,
+      "Bone_039": 0.18341606340861805,
+      "Bone_038": 0.23168344851615705,
+      "Bone_037": 0.299257787666703,
+      "Bone_036": 5.6505719037341925e-15
+    },
+    "local_bounds_pass": true,
+    "chest": {
+      "pitch_x": 4.0816448900811935,
+      "yaw_y": 2.6479633860853653,
+      "roll_z": 5.617932748884961
+    },
+    "head": {
+      "pitch_x": 2.580076144284219,
+      "yaw_y": 1.5288220576108507,
+      "roll_z": 0.9661369943508731
+    },
+    "counterphase": {
+      "chest_roll_z_vs_pelvis_roll_z": -0.9014861618364692
+    }
+  },
+  "search": [
+    {
+      "gain": 0.0,
+      "gate": {
+        "status": "FAIL",
+        "checks": {
+          "pelvis_exact_to_approved": true,
+          "protected_lower_leg_exact": true,
+          "chest_roll_safe_improvement": false,
+          "chest_counterphase": true,
+          "chest_pitch_no_unintended_change": true,
+          "chest_yaw_non_regression": true,
+          "head_caps": true,
+          "tail_base_yaw_improves": true,
+          "tail_mid_yaw_improves_at_least_1_5": true,
+          "tail_tip_yaw_safe_improvement": true,
+          "tail_base_to_tip_phase_monotonic": true,
+          "seam_exact": true
+        },
+        "measured": {
+          "chest": {
+            "pitch_x": 4.081644256274771,
+            "yaw_y": 2.6479625083807647,
+            "roll_z": 4.572282870774625
+          },
+          "tail_yaw": {
+            "base": 5.587139999796207,
+            "mid": 18.7181856297902,
+            "tip": 22.991999383345856
+          },
+          "tail_yaw_peak_phase": {
+            "base": 0.3416666666666667,
+            "mid": 0.8416666666666667,
+            "tip": 0.85
+          },
+          "head": {
+            "pitch_x": 2.580078235736219,
+            "yaw_y": 1.5288228856153339,
+            "roll_z": 0.9661403614817781
+          }
+        }
+      },
+      "local_delta_degrees": {
+        "Bone_002": 1.3102598947109878e-14,
+        "Bone_041": 1.1283392810820253e-14,
+        "Bone_040": 4.02694411783151e-15,
+        "Bone_039": 4.967853463320693e-15,
+        "Bone_038": 4.325833239873141e-15,
+        "Bone_037": 4.344416707191073e-15,
+        "Bone_036": 5.6505719037341925e-15
+      },
+      "local_bounds_pass": true,
+      "chest": {
+        "pitch_x": 4.081644256274771,
+        "yaw_y": 2.6479625083807647,
+        "roll_z": 4.572282870774625
+      },
+      "head": {
+        "pitch_x": 2.580078235736219,
+        "yaw_y": 1.5288228856153339,
+        "roll_z": 0.9661403614817781
+      },
+      "counterphase": {
+        "chest_roll_z_vs_pelvis_roll_z": -0.8291492317196454
+      }
+    },
+    {
+      "gain": 1.5,
+      "gate": {
+        "status": "FAIL",
+        "checks": {
+          "pelvis_exact_to_approved": true,
+          "protected_lower_leg_exact": true,
+          "chest_roll_safe_improvement": false,
+          "chest_counterphase": false,
+          "chest_pitch_no_unintended_change": true,
+          "chest_yaw_non_regression": true,
+          "head_caps": true,
+          "tail_base_yaw_improves": true,
+          "tail_mid_yaw_improves_at_least_1_5": true,
+          "tail_tip_yaw_safe_improvement": true,
+          "tail_base_to_tip_phase_monotonic": true,
+          "seam_exact": true
+        },
+        "measured": {
+          "chest": {
+            "pitch_x": 4.081642613632162,
+            "yaw_y": 2.647966227645739,
+            "roll_z": 8.508848522307858
+          },
+          "tail_yaw": {
+            "base": 5.587139999796207,
+            "mid": 18.7181856297902,
+            "tip": 22.991999383345856
+          },
+          "tail_yaw_peak_phase": {
+            "base": 0.3416666666666667,
+            "mid": 0.8416666666666667,
+            "tip": 0.85
+          },
+          "head": {
+            "pitch_x": 2.580076126583183,
+            "yaw_y": 1.528823172046639,
+            "roll_z": 0.9661431867877689
+          }
+        }
+      },
+      "local_delta_degrees": {
+        "Bone_002": 3.634002283131191,
+        "Bone_041": 0.3997402511444311,
+        "Bone_040": 0.5451003424696746,
+        "Bone_039": 0.6904604337949203,
+        "Bone_038": 0.8721605479514831,
+        "Bone_037": 1.126540707770673,
+        "Bone_036": 5.6505719037341925e-15
+      },
+      "local_bounds_pass": false,
+      "chest": {
+        "pitch_x": 4.081642613632162,
+        "yaw_y": 2.647966227645739,
+        "roll_z": 8.508848522307858
+      },
+      "head": {
+        "pitch_x": 2.580076126583183,
+        "yaw_y": 1.528823172046639,
+        "roll_z": 0.9661431867877689
+      },
+      "counterphase": {
+        "chest_roll_z_vs_pelvis_roll_z": -0.9660772367919107
+      }
+    },
+    {
+      "gain": 0.75,
+      "gate": {
+        "status": "FAIL",
+        "checks": {
+          "pelvis_exact_to_approved": true,
+          "protected_lower_leg_exact": true,
+          "chest_roll_safe_improvement": false,
+          "chest_counterphase": true,
+          "chest_pitch_no_unintended_change": true,
+          "chest_yaw_non_regression": true,
+          "head_caps": true,
+          "tail_base_yaw_improves": true,
+          "tail_mid_yaw_improves_at_least_1_5": true,
+          "tail_tip_yaw_safe_improvement": true,
+          "tail_base_to_tip_phase_monotonic": true,
+          "seam_exact": true
+        },
+        "measured": {
+          "chest": {
+            "pitch_x": 4.08164353035729,
+            "yaw_y": 2.6479639353995807,
+            "roll_z": 6.540565604018255
+          },
+          "tail_yaw": {
+            "base": 5.587139999796207,
+            "mid": 18.7181856297902,
+            "tip": 22.991999383345856
+          },
+          "tail_yaw_peak_phase": {
+            "base": 0.3416666666666667,
+            "mid": 0.8416666666666667,
+            "tip": 0.85
+          },
+          "head": {
+            "pitch_x": 2.580076410362177,
+            "yaw_y": 1.5288231330049173,
+            "roll_z": 0.9661423415052204
+          }
+        }
+      },
+      "local_delta_degrees": {
+        "Bone_002": 1.8170869655558437,
+        "Bone_041": 0.19987956621115593,
+        "Bone_040": 0.2725630448333624,
+        "Bone_039": 0.34524652345560325,
+        "Bone_038": 0.43610087173340656,
+        "Bone_037": 0.5632969593223055,
+        "Bone_036": 5.6505719037341925e-15
+      },
+      "local_bounds_pass": false,
+      "chest": {
+        "pitch_x": 4.08164353035729,
+        "yaw_y": 2.6479639353995807,
+        "roll_z": 6.540565604018255
+      },
+      "head": {
+        "pitch_x": 2.580076410362177,
+        "yaw_y": 1.5288231330049173,
+        "roll_z": 0.9661423415052204
+      },
+      "counterphase": {
+        "chest_roll_z_vs_pelvis_roll_z": -0.9338976906458007
+      }
+    },
+    {
+      "gain": 0.375,
+      "gate": {
+        "status": "PASS",
+        "checks": {
+          "pelvis_exact_to_approved": true,
+          "protected_lower_leg_exact": true,
+          "chest_roll_safe_improvement": true,
+          "chest_counterphase": true,
+          "chest_pitch_no_unintended_change": true,
+          "chest_yaw_non_regression": true,
+          "head_caps": true,
+          "tail_base_yaw_improves": true,
+          "tail_mid_yaw_improves_at_least_1_5": true,
+          "tail_tip_yaw_safe_improvement": true,
+          "tail_base_to_tip_phase_monotonic": true,
+          "seam_exact": true
+        },
+        "measured": {
+          "chest": {
+            "pitch_x": 4.081645191994873,
+            "yaw_y": 2.6479638745353355,
+            "roll_z": 5.556424767015555
+          },
+          "tail_yaw": {
+            "base": 5.587139999796207,
+            "mid": 18.7181856297902,
+            "tip": 22.991999383345856
+          },
+          "tail_yaw_peak_phase": {
+            "base": 0.3416666666666667,
+            "mid": 0.8416666666666667,
+            "tip": 0.85
+          },
+          "head": {
+            "pitch_x": 2.580078493492108,
+            "yaw_y": 1.5288231505626628,
+            "roll_z": 0.9661368131681054
+          }
+        }
+      },
+      "local_delta_degrees": {
+        "Bone_002": 0.9085637899845974,
+        "Bone_041": 0.09994201689830012,
+        "Bone_040": 0.13628456849768253,
+        "Bone_039": 0.17262712009706727,
+        "Bone_038": 0.21805530959630856,
+        "Bone_037": 0.28165477489522095,
+        "Bone_036": 5.6505719037341925e-15
+      },
+      "local_bounds_pass": true,
+      "chest": {
+        "pitch_x": 4.081645191994873,
+        "yaw_y": 2.6479638745353355,
+        "roll_z": 5.556424767015555
+      },
+      "head": {
+        "pitch_x": 2.580078493492108,
+        "yaw_y": 1.5288231505626628,
+        "roll_z": 0.9661368131681054
+      },
+      "counterphase": {
+        "chest_roll_z_vs_pelvis_roll_z": -0.8985661726100069
+      }
+    },
+    {
+      "gain": 0.5625,
+      "gate": {
+        "status": "PASS",
+        "checks": {
+          "pelvis_exact_to_approved": true,
+          "protected_lower_leg_exact": true,
+          "chest_roll_safe_improvement": true,
+          "chest_counterphase": true,
+          "chest_pitch_no_unintended_change": true,
+          "chest_yaw_non_regression": true,
+          "head_caps": true,
+          "tail_base_yaw_improves": true,
+          "tail_mid_yaw_improves_at_least_1_5": true,
+          "tail_tip_yaw_safe_improvement": true,
+          "tail_base_to_tip_phase_monotonic": true,
+          "seam_exact": true
+        },
+        "measured": {
+          "chest": {
+            "pitch_x": 4.081643679375041,
+            "yaw_y": 2.6479636765066346,
+            "roll_z": 6.0484951722773435
+          },
+          "tail_yaw": {
+            "base": 5.587139999796207,
+            "mid": 18.7181856297902,
+            "tip": 22.991999383345856
+          },
+          "tail_yaw_peak_phase": {
+            "base": 0.3416666666666667,
+            "mid": 0.8416666666666667,
+            "tip": 0.85
+          },
+          "head": {
+            "pitch_x": 2.580079057769091,
+            "yaw_y": 1.5288234123876436,
+            "roll_z": 0.9661423587714943
+          }
+        }
+      },
+      "local_delta_degrees": {
+        "Bone_002": 1.362830598056052,
+        "Bone_041": 0.14991136578616523,
+        "Bone_040": 0.20442458970839916,
+        "Bone_039": 0.2589378136306484,
+        "Bone_038": 0.327079343533451,
+        "Bone_037": 0.42247748539737734,
+        "Bone_036": 5.6505719037341925e-15
+      },
+      "local_bounds_pass": false,
+      "chest": {
+        "pitch_x": 4.081643679375041,
+        "yaw_y": 2.6479636765066346,
+        "roll_z": 6.0484951722773435
+      },
+      "head": {
+        "pitch_x": 2.580079057769091,
+        "yaw_y": 1.5288234123876436,
+        "roll_z": 0.9661423587714943
+      },
+      "counterphase": {
+        "chest_roll_z_vs_pelvis_roll_z": -0.9189289274672469
+      }
+    },
+    {
+      "gain": 0.46875,
+      "gate": {
+        "status": "PASS",
+        "checks": {
+          "pelvis_exact_to_approved": true,
+          "protected_lower_leg_exact": true,
+          "chest_roll_safe_improvement": true,
+          "chest_counterphase": true,
+          "chest_pitch_no_unintended_change": true,
+          "chest_yaw_non_regression": true,
+          "head_caps": true,
+          "tail_base_yaw_improves": true,
+          "tail_mid_yaw_improves_at_least_1_5": true,
+          "tail_tip_yaw_safe_improvement": true,
+          "tail_base_to_tip_phase_monotonic": true,
+          "seam_exact": true
+        },
+        "measured": {
+          "chest": {
+            "pitch_x": 4.081644504082817,
+            "yaw_y": 2.6479642821049154,
+            "roll_z": 5.802459113416996
+          },
+          "tail_yaw": {
+            "base": 5.587139999796207,
+            "mid": 18.7181856297902,
+            "tip": 22.991999383345856
+          },
+          "tail_yaw_peak_phase": {
+            "base": 0.3416666666666667,
+            "mid": 0.8416666666666667,
+            "tip": 0.85
+          },
+          "head": {
+            "pitch_x": 2.580076210109161,
+            "yaw_y": 1.5288226247183467,
+            "roll_z": 0.9661388245396081
+          }
+        }
+      },
+      "local_delta_degrees": {
+        "Bone_002": 1.1356984811494637,
+        "Bone_041": 0.12492683292644696,
+        "Bone_040": 0.17035477217241465,
+        "Bone_039": 0.21578271141838795,
+        "Bone_038": 0.2725676354758652,
+        "Bone_037": 0.3520665291563346,
+        "Bone_036": 5.6505719037341925e-15
+      },
+      "local_bounds_pass": false,
+      "chest": {
+        "pitch_x": 4.081644504082817,
+        "yaw_y": 2.6479642821049154,
+        "roll_z": 5.802459113416996
+      },
+      "head": {
+        "pitch_x": 2.580076210109161,
+        "yaw_y": 1.5288226247183467,
+        "roll_z": 0.9661388245396081
+      },
+      "counterphase": {
+        "chest_roll_z_vs_pelvis_roll_z": -0.9095609429111083
+      }
+    },
+    {
+      "gain": 0.421875,
+      "gate": {
+        "status": "PASS",
+        "checks": {
+          "pelvis_exact_to_approved": true,
+          "protected_lower_leg_exact": true,
+          "chest_roll_safe_improvement": true,
+          "chest_counterphase": true,
+          "chest_pitch_no_unintended_change": true,
+          "chest_yaw_non_regression": true,
+          "head_caps": true,
+          "tail_base_yaw_improves": true,
+          "tail_mid_yaw_improves_at_least_1_5": true,
+          "tail_tip_yaw_safe_improvement": true,
+          "tail_base_to_tip_phase_monotonic": true,
+          "seam_exact": true
+        },
+        "measured": {
+          "chest": {
+            "pitch_x": 4.081644754213144,
+            "yaw_y": 2.6479637425907896,
+            "roll_z": 5.6794425438451785
+          },
+          "tail_yaw": {
+            "base": 5.587139999796207,
+            "mid": 18.7181856297902,
+            "tip": 22.991999383345856
+          },
+          "tail_yaw_peak_phase": {
+            "base": 0.3416666666666667,
+            "mid": 0.8416666666666667,
+            "tip": 0.85
+          },
+          "head": {
+            "pitch_x": 2.5800794853290827,
+            "yaw_y": 1.5288231959890175,
+            "roll_z": 0.9661375296897263
+          }
+        }
+      },
+      "local_delta_degrees": {
+        "Bone_002": 1.0221314551071188,
+        "Bone_041": 0.1124344600617866,
+        "Bone_040": 0.1533197182660631,
+        "Bone_039": 0.19420497647034565,
+        "Bone_038": 0.24531154922570922,
+        "Bone_037": 0.3168607510831996,
+        "Bone_036": 5.6505719037341925e-15
+      },
+      "local_bounds_pass": false,
+      "chest": {
+        "pitch_x": 4.081644754213144,
+        "yaw_y": 2.6479637425907896,
+        "roll_z": 5.6794425438451785
+      },
+      "head": {
+        "pitch_x": 2.5800794853290827,
+        "yaw_y": 1.5288231959890175,
+        "roll_z": 0.9661375296897263
+      },
+      "counterphase": {
+        "chest_roll_z_vs_pelvis_roll_z": -0.9042880677345818
+      }
+    },
+    {
+      "gain": 0.3984375,
+      "gate": {
+        "status": "PASS",
+        "checks": {
+          "pelvis_exact_to_approved": true,
+          "protected_lower_leg_exact": true,
+          "chest_roll_safe_improvement": true,
+          "chest_counterphase": true,
+          "chest_pitch_no_unintended_change": true,
+          "chest_yaw_non_regression": true,
+          "head_caps": true,
+          "tail_base_yaw_improves": true,
+          "tail_mid_yaw_improves_at_least_1_5": true,
+          "tail_tip_yaw_safe_improvement": true,
+          "tail_base_to_tip_phase_monotonic": true,
+          "seam_exact": true
+        },
+        "measured": {
+          "chest": {
+            "pitch_x": 4.0816448900811935,
+            "yaw_y": 2.6479633860853653,
+            "roll_z": 5.617932748884961
+          },
+          "tail_yaw": {
+            "base": 5.587139999796207,
+            "mid": 18.7181856297902,
+            "tip": 22.991999383345856
+          },
+          "tail_yaw_peak_phase": {
+            "base": 0.3416666666666667,
+            "mid": 0.8416666666666667,
+            "tip": 0.85
+          },
+          "head": {
+            "pitch_x": 2.580076144284219,
+            "yaw_y": 1.5288220576108507,
+            "roll_z": 0.9661369943508731
+          }
+        }
+      },
+      "local_delta_degrees": {
+        "Bone_002": 0.965347702150647,
+        "Bone_041": 0.10618824723656664,
+        "Bone_040": 0.14480215532258445,
+        "Bone_039": 0.18341606340861805,
+        "Bone_038": 0.23168344851615705,
+        "Bone_037": 0.299257787666703,
+        "Bone_036": 5.6505719037341925e-15
+      },
+      "local_bounds_pass": true,
+      "chest": {
+        "pitch_x": 4.0816448900811935,
+        "yaw_y": 2.6479633860853653,
+        "roll_z": 5.617932748884961
+      },
+      "head": {
+        "pitch_x": 2.580076144284219,
+        "yaw_y": 1.5288220576108507,
+        "roll_z": 0.9661369943508731
+      },
+      "counterphase": {
+        "chest_roll_z_vs_pelvis_roll_z": -0.9014861618364692
+      }
+    },
+    {
+      "gain": 0.41015625,
+      "gate": {
+        "status": "PASS",
+        "checks": {
+          "pelvis_exact_to_approved": true,
+          "protected_lower_leg_exact": true,
+          "chest_roll_safe_improvement": true,
+          "chest_counterphase": true,
+          "chest_pitch_no_unintended_change": true,
+          "chest_yaw_non_regression": true,
+          "head_caps": true,
+          "tail_base_yaw_improves": true,
+          "tail_mid_yaw_improves_at_least_1_5": true,
+          "tail_tip_yaw_safe_improvement": true,
+          "tail_base_to_tip_phase_monotonic": true,
+          "seam_exact": true
+        },
+        "measured": {
+          "chest": {
+            "pitch_x": 4.0816444765398145,
+            "yaw_y": 2.6479631394721963,
+            "roll_z": 5.648687665295872
+          },
+          "tail_yaw": {
+            "base": 5.587139999796207,
+            "mid": 18.7181856297902,
+            "tip": 22.991999383345856
+          },
+          "tail_yaw_peak_phase": {
+            "base": 0.3416666666666667,
+            "mid": 0.8416666666666667,
+            "tip": 0.85
+          },
+          "head": {
+            "pitch_x": 2.5800768232304794,
+            "yaw_y": 1.5288232955990253,
+            "roll_z": 0.9661414118321232
+          }
+        }
+      },
+      "local_delta_degrees": {
+        "Bone_002": 0.9937395985651123,
+        "Bone_041": 0.10931135584214748,
+        "Bone_040": 0.14906093978476445,
+        "Bone_039": 0.18881052372736676,
+        "Bone_038": 0.23849750365561978,
+        "Bone_037": 0.30805927555518403,
+        "Bone_036": 5.6505719037341925e-15
+      },
+      "local_bounds_pass": true,
+      "chest": {
+        "pitch_x": 4.0816444765398145,
+        "yaw_y": 2.6479631394721963,
+        "roll_z": 5.648687665295872
+      },
+      "head": {
+        "pitch_x": 2.5800768232304794,
+        "yaw_y": 1.5288232955990253,
+        "roll_z": 0.9661414118321232
+      },
+      "counterphase": {
+        "chest_roll_z_vs_pelvis_roll_z": -0.9029015069816934
+      }
+    },
+    {
+      "gain": 0.404296875,
+      "gate": {
+        "status": "PASS",
+        "checks": {
+          "pelvis_exact_to_approved": true,
+          "protected_lower_leg_exact": true,
+          "chest_roll_safe_improvement": true,
+          "chest_counterphase": true,
+          "chest_pitch_no_unintended_change": true,
+          "chest_yaw_non_regression": true,
+          "head_caps": true,
+          "tail_base_yaw_improves": true,
+          "tail_mid_yaw_improves_at_least_1_5": true,
+          "tail_tip_yaw_safe_improvement": true,
+          "tail_base_to_tip_phase_monotonic": true,
+          "seam_exact": true
+        },
+        "measured": {
+          "chest": {
+            "pitch_x": 4.0816450079583575,
+            "yaw_y": 2.647963729723209,
+            "roll_z": 5.633310157422859
+          },
+          "tail_yaw": {
+            "base": 5.587139999796207,
+            "mid": 18.7181856297902,
+            "tip": 22.991999383345856
+          },
+          "tail_yaw_peak_phase": {
+            "base": 0.3416666666666667,
+            "mid": 0.8416666666666667,
+            "tip": 0.85
+          },
+          "head": {
+            "pitch_x": 2.5800778093701107,
+            "yaw_y": 1.5288234193009274,
+            "roll_z": 0.9661368300116813
+          }
+        }
+      },
+      "local_delta_degrees": {
+        "Bone_002": 0.9795436553375576,
+        "Bone_041": 0.10774980208713755,
+        "Bone_040": 0.14693154830062508,
+        "Bone_039": 0.1861132945141313,
+        "Bone_038": 0.2350904772810096,
+        "Bone_037": 0.30365853315463465,
+        "Bone_036": 5.6505719037341925e-15
+      },
+      "local_bounds_pass": true,
+      "chest": {
+        "pitch_x": 4.0816450079583575,
+        "yaw_y": 2.647963729723209,
+        "roll_z": 5.633310157422859
+      },
+      "head": {
+        "pitch_x": 2.5800778093701107,
+        "yaw_y": 1.5288234193009274,
+        "roll_z": 0.9661368300116813
+      },
+      "counterphase": {
+        "chest_roll_z_vs_pelvis_roll_z": -0.902197483263299
+      }
+    }
+  ]
+}

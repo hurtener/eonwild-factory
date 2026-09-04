@@ -1,0 +1,46 @@
+{
+  "schema": "eonwild.v8_2.threeq_review_render.v1",
+  "status": "PASS",
+  "blenderVersion": "5.2.0 LTS",
+  "inputGlb": "/Volumes/m2-extended-disk/Repos/eonwild-factory/candidates/v8.2-balance-transfer/generated/iteration-g-official-chest-solver/tarbosaurus_v8_2_balance_transfer.glb",
+  "inputSha256": "a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5",
+  "manifest": "/Volumes/m2-extended-disk/Repos/eonwild-factory/procedural-animation-toolkit(v8.1)/approved_snapshots/v8.1-walk-iteration-38/evidence/animation-manifest.v8.1-walk-iteration-38.json",
+  "clip": "PROC_WALK_RELAXED_V8_1_RESPIN_ROOTMOTION",
+  "durationSeconds": 10.0,
+  "fps": 24,
+  "frameCount": 240,
+  "resolution": [
+    960,
+    540
+  ],
+  "bounds": {
+    "min": [
+      -1.455668330192566,
+      -11.17465591430664,
+      -1.0
+    ],
+    "max": [
+      1.7228431701660156,
+      6.029777526855469,
+      3.4242465496063232
+    ],
+    "policy": "locked-from-approved-threeq"
+  },
+  "stage": {
+    "view": "threeq",
+    "ground": [
+      0.115,
+      0.135,
+      0.135,
+      1.0
+    ],
+    "roughness": 0.91,
+    "lights": [
+      1325,
+      775,
+      925
+    ]
+  },
+  "onlyEditorialMedia": "/Volumes/m2-extended-disk/Repos/eonwild-factory/showcase/v8.2-balance-transfer/iteration-g/threeq/v8-2-candidate/walk-relaxed-threeq.mp4",
+  "animationDataPolicy": "import read-only; no action channels changed"
+}

@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eonwild.dev/schemas/dynamic-action-plan.schema.json",
+  "title": "DynamicActionPlan",
+  "type": "object",
+  "required": [
+    "schema",
+    "intent",
+    "variant",
+    "support",
+    "launch",
+    "flight",
+    "contact",
+    "landing",
+    "recovery",
+    "fallback"
+  ],
+  "properties": {
+    "schema": {
+      "const": "eonwild.dynamic_action_plan.v1"
+    },
+    "intent": {
+      "type": "string"
+    },
+    "variant": {
+      "type": "string"
+    },
+    "support": {
+      "type": "object"
+    },
+    "launch": {
+      "type": "object"
+    },
+    "flight": {
+      "type": "object"
+    },
+    "contact": {
+      "type": "object"
+    },
+    "landing": {
+      "type": "object"
+    },
+    "recovery": {
+      "type": "object"
+    },
+    "fallback": {
+      "type": "string"
+    }
+  }
+}

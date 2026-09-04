@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eonwild.dev/schemas/segment-mass-properties.schema.json",
+  "title": "SegmentMassProperties",
+  "type": "object",
+  "required": [
+    "id",
+    "parent_articulation",
+    "bone_roles",
+    "mass_fraction",
+    "com",
+    "inertia",
+    "provenance"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "parent_articulation": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "bone_roles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "mesh_regions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "mass_fraction": {
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "maximum": 1
+    },
+    "com": {
+      "type": "object",
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "derive_from_partition",
+            "explicit_local"
+          ]
+        },
+        "local_m": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3
+        }
+      }
+    },
+    "inertia": {
+      "type": "object",
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "derive_from_partition",
+            "primitive",
+            "explicit_tensor"
+          ]
+        },
+        "tensor_kg_m2": {
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "inertia_frame": {
+          "type": [
+            "array",
+            "null"
+          ]
+        }
+      }
+    },
+    "contact_proxy": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "collision_proxy": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "joint_limit_profile": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "capacity_profile": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "status",
+        "note"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "supported",
+            "plausible_inference",
+            "disputed",
+            "speculative",
+            "gameplay_only",
+            "gameplay_hypothesis",
+            "synthetic_test_fixture"
+          ]
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "uncertainty": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "reviewed_by": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reviewed_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

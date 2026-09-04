@@ -1,0 +1,33 @@
+id: stationary_support
+version: 1
+purpose: Maintain or redistribute support during standing states while preserving asymmetry, breathing, attention,
+  injury, and bounded biological variation.
+phase_template:
+- settle
+- hold
+- redistribute
+- recover
+inputs:
+- body_profile
+- support_bias
+- gaze_target
+- alertness
+- breathing
+- fatigue
+- injury
+- terrain
+outputs:
+- contact_schedule
+- quasi_static_com_target
+- pelvis_compensation
+- spine_neck_tail_request
+- overlay_masks
+invariants:
+- at least one support patch remains loaded
+- COM margin is auditable
+- feet do not slide
+- variation is aperiodic and bounded
+branches:
+- neutral
+- alert
+- wounded

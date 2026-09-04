@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eonwild.dev/schemas/motion-intent.schema.json",
+  "title": "MotionIntent",
+  "type": "object",
+  "required": [
+    "intent",
+    "desired_motion",
+    "style",
+    "current_state",
+    "environment",
+    "condition"
+  ],
+  "properties": {
+    "intent": {
+      "type": "string"
+    },
+    "desired_motion": {
+      "type": "object"
+    },
+    "style": {
+      "type": "object"
+    },
+    "current_state": {
+      "type": "object"
+    },
+    "target": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "environment": {
+      "type": "object"
+    },
+    "condition": {
+      "type": "object"
+    },
+    "continuation": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

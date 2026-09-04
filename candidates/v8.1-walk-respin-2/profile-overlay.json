@@ -1,0 +1,53 @@
+{
+  "status": "LOCKED_AFTER_REFERENCE_REVIEW",
+  "lockSource": "reference addendum",
+  "candidate": "v8.1 relaxed-walk respin 2",
+  "parentCandidate": {
+    "glb": "../v8.1-walk-respin/generated/iteration-15/tarbosaurus_procedural_v8_1_walk_respin.glb",
+    "glbSha256": "96bf5c37402bd784b23785173fbb9a45cd8cbbed33ea2fd0675bdfd11c48a5a1"
+  },
+  "referenceScale": {
+    "bodyLengthM": 12.0,
+    "acceptedRawBodyLengthM": 5.974026,
+    "hipHeightM": 2.75,
+    "targetSpeedKmh": [4.5, 4.8],
+    "targetSameFootStrideM": 2.6,
+    "targetCycleHz": 0.4914529915,
+    "targetSpeedMps": 1.2777777779
+  },
+  "phaseLock": {
+    "rockerOnset": "measured_relative_to_rear_extension_peak",
+    "rearExtensionPeak": "superseded_by_iteration_17_causal_order",
+    "minimumOnsetLead": 0.04,
+    "maximumOnsetLead": 0.10,
+    "targetOnsetLead": [0.04, 0.10],
+    "extensionPeakBeforeReleaseMinimum": 0.02,
+    "loadedRockerSamplesAt60Hz": [15, 20],
+    "toeOnlyDwell": [0.08, 0.12],
+    "release": [0.76, 0.80],
+    "passiveLag": [0.05, 0.08],
+    "receivingArm": [0.8, 0.86],
+    "flatten": [0.88, 1.0]
+  },
+  "profileOverrides": {
+    "name": "tarbosaurus_v8_1_relaxed_walk_respin_2",
+    "cycle_hz": 0.4914529915,
+    "stride_length_m": 2.6,
+    "stance_fraction": 0.72,
+    "contact_lead_stride": 0.55,
+    "load_ramp_fraction": 0.2,
+    "toe_off_window_fraction": 0.106,
+    "toe_off_foot_deg": 9.0,
+    "toe_push_deg": 12.0,
+    "contact_foot_deg": 1.0,
+    "swing_lift_hip_fraction": 0.055,
+    "swing_advance_start_fraction": 0.08,
+    "swing_advance_end_fraction": 0.89,
+    "precontact_window_fraction": 0.65
+  },
+  "toeGroundLock": {
+    "enabled": true,
+    "counterArticulationDegrees": 12.0,
+    "purpose": "prototype contact solve; respin-2 phase validator governs final timing"
+  }
+}

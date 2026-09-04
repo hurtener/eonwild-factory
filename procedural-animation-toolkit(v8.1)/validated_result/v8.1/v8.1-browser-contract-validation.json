@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "checks": {
+    "embedded_glb_present": true,
+    "embedded_hash_matches_standalone": true,
+    "embedded_size_matches": true,
+    "manifest_clip_count_47": true,
+    "all_html_clip_references_exist": true,
+    "all_action_queue_references_exist": true,
+    "no_external_urls": true,
+    "viewer_javascript_syntax": true,
+    "active_button_state_present": true,
+    "root_cycle_accumulation_present": true,
+    "authored_handoff_without_second_crossfade": true
+  },
+  "standaloneGlbSha256": "ba321da21c20fce9fc2192efbcc40ae192303b06c2ccb856e0b8d7edeba2cc8a",
+  "embeddedGlbSha256": "ba321da21c20fce9fc2192efbcc40ae192303b06c2ccb856e0b8d7edeba2cc8a",
+  "embeddedGlbBytes": 54350188,
+  "clipCount": 47,
+  "htmlClipReferences": 17,
+  "queueClipReferences": 21,
+  "missingHtmlClipReferences": [],
+  "missingQueueClipReferences": [],
+  "externalUrls": [],
+  "nodeSyntaxStderr": ""
+}

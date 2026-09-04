@@ -1,0 +1,38 @@
+id: feeding_interaction
+version: 1
+purpose: Coordinate carcass or water targets, stance, lowering, jaw/throat behavior, resistance response, and safe
+  recovery.
+phase_template:
+- assess
+- establish_support
+- approach_target
+- acquire_or_contact
+- process
+- release_or_swallow
+- reset
+inputs:
+- interaction_type
+- target_point
+- target_normal
+- water_height
+- resistance
+- body_profile
+- alertness
+outputs:
+- target_ik
+- stance_plan
+- jaw_throat_curve
+- resistance_branch
+- interaction_events
+invariants:
+- terrain/water/carcass target is runtime-relative
+- head lowering is shared by torso and neck
+- external simulation owns release conditions
+branches:
+- feed_search
+- feed_bite
+- feed_process
+- tear_release
+- tear_hold
+- swallow
+- drink

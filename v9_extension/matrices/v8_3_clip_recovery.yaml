@@ -1,0 +1,211 @@
+schema: eonwild.v8_3_clip_recovery.v1
+review_pin: aca1eab3f6e9f6970cf8a8281f4440a74f8551d3
+principles:
+- Final V8.3 compatibility scope recovers the 21 V5.5 base/action clips and 16 authored bridges semantically, not necessarily
+  sample-for-sample.
+- The relaxed walk uses V8.2 as the authoritative source and later body-balance corrections must prove contact/root equivalence.
+- Root-motion and in-place outputs are derived views of one world-space plan.
+- Generic roar is migrated to threat_call; long-distance contact_call is a separate later animation contract.
+base_clips:
+- v5_5: PROC_WALK_RELAXED_V5_5_ROOTMOTION
+  v8_3: PROC_WALK_RELAXED_V8_3_ROOTMOTION
+  family: relaxed_walk
+  priority: P0
+  migration: V8.2 authoritative trajectory; V5.5 name is historical
+- v5_5: PROC_WALK_RELAXED_V5_5_INPLACE
+  v8_3: PROC_WALK_RELAXED_V8_3_INPLACE
+  family: relaxed_walk
+  priority: P0
+  migration: derive in-place from same world plan
+- v5_5: PROC_WALK_UNEVEN_TERRAIN_V5_5_ROOTMOTION
+  v8_3: PROC_WALK_UNEVEN_TERRAIN_V8_3_ROOTMOTION
+  family: terrain_fixture
+  priority: P1
+  migration: parameterized terrain adaptation fixture
+- v5_5: PROC_WALK_UNEVEN_TERRAIN_V5_5_INPLACE
+  v8_3: PROC_WALK_UNEVEN_TERRAIN_V8_3_INPLACE
+  family: terrain_fixture
+  priority: P1
+  migration: derived view
+- v5_5: PROC_WALK_UPSLOPE_V5_5_ROOTMOTION
+  v8_3: PROC_WALK_UPSLOPE_V8_3_ROOTMOTION
+  family: slope_fixture
+  priority: P1
+  migration: parameterized slope fixture
+- v5_5: PROC_WALK_UPSLOPE_V5_5_INPLACE
+  v8_3: PROC_WALK_UPSLOPE_V8_3_INPLACE
+  family: slope_fixture
+  priority: P1
+  migration: derived view
+- v5_5: PROC_TURN_LEFT_35_V5_5_ROOTMOTION
+  v8_3: PROC_WALK_TURN_LEFT_35_V8_3_ROOTMOTION
+  family: turn
+  priority: P1
+  migration: signed-curvature program preset
+- v5_5: PROC_TURN_LEFT_35_V5_5_INPLACE
+  v8_3: PROC_WALK_TURN_LEFT_35_V8_3_INPLACE
+  family: turn
+  priority: P1
+  migration: derived view
+- v5_5: PROC_TURN_RIGHT_35_V5_5_ROOTMOTION
+  v8_3: PROC_WALK_TURN_RIGHT_35_V8_3_ROOTMOTION
+  family: turn
+  priority: P1
+  migration: signed-curvature program preset
+- v5_5: PROC_TURN_RIGHT_35_V5_5_INPLACE
+  v8_3: PROC_WALK_TURN_RIGHT_35_V8_3_INPLACE
+  family: turn
+  priority: P1
+  migration: derived view
+- v5_5: PROC_START_WALK_V5_5_ROOTMOTION
+  v8_3: PROC_START_WALK_V8_3_ROOTMOTION
+  family: gait_transition
+  priority: P0
+  migration: support transfer and acceleration
+- v5_5: PROC_START_WALK_V5_5_INPLACE
+  v8_3: PROC_START_WALK_V8_3_INPLACE
+  family: gait_transition
+  priority: P0
+  migration: derived view
+- v5_5: PROC_BRAKE_TO_IDLE_V5_5_ROOTMOTION
+  v8_3: PROC_BRAKE_TO_IDLE_V8_3_ROOTMOTION
+  family: gait_transition
+  priority: P0
+  migration: momentum-resolving braking
+- v5_5: PROC_BRAKE_TO_IDLE_V5_5_INPLACE
+  v8_3: PROC_BRAKE_TO_IDLE_V8_3_INPLACE
+  family: gait_transition
+  priority: P0
+  migration: derived view
+- v5_5: PROC_ALERT_WALK_V5_5_ROOTMOTION
+  v8_3: PROC_ALERT_WALK_V8_3_ROOTMOTION
+  family: alert_gait
+  priority: P0
+  migration: V8.2 gait plus attention posture
+- v5_5: PROC_ALERT_WALK_V5_5_INPLACE
+  v8_3: PROC_ALERT_WALK_V8_3_INPLACE
+  family: alert_gait
+  priority: P0
+  migration: derived view
+- v5_5: PROC_IDLE_BREATH_V5_5
+  v8_3: PROC_NEUTRAL_IDLE_V8_3
+  family: state
+  priority: P0
+  migration: animation 01 specification
+- v5_5: PROC_ALERT_IDLE_V5_5
+  v8_3: PROC_ALERT_IDLE_V8_3
+  family: state
+  priority: P0
+  migration: animation 02 specification
+- v5_5: PROC_EAT_LOOP_V5_5
+  v8_3: PROC_FEED_LOOP_V8_3
+  family: feeding
+  priority: P0
+  migration: modular feed search/bite/process under one compatibility sequence
+- v5_5: PROC_BITE_ATTACK_V5_5
+  v8_3: PROC_COMMITTED_POWER_BITE_V8_3
+  family: combat
+  priority: P0
+  migration: grounded committed bite, not airborne
+- v5_5: PROC_ROAR_V5_5
+  v8_3: PROC_THREAT_CALL_V8_3
+  family: vocal
+  priority: P0
+  migration: explicit threat/territorial semantics
+transitions:
+- v5_5: PROC_IDLE_TO_WALK_V5_5
+  v8_3: PROC_IDLE_TO_WALK_V8_3
+  source_semantic: idle
+  target_semantic: walk
+  priority: P0
+  migration: regenerate endpoint- and state-exact bridge against V8.3 endpoints
+- v5_5: PROC_WALK_TO_IDLE_V5_5
+  v8_3: PROC_WALK_TO_IDLE_V8_3
+  source_semantic: walk
+  target_semantic: idle
+  priority: P0
+  migration: regenerate endpoint- and state-exact bridge against V8.3 endpoints
+- v5_5: PROC_WALK_TO_ALERT_WALK_V5_5
+  v8_3: PROC_WALK_TO_ALERT_WALK_V8_3
+  source_semantic: walk
+  target_semantic: alert_walk
+  priority: P0
+  migration: regenerate endpoint- and state-exact bridge against V8.3 endpoints
+- v5_5: PROC_ALERT_WALK_TO_WALK_V5_5
+  v8_3: PROC_ALERT_WALK_TO_WALK_V8_3
+  source_semantic: alert_walk
+  target_semantic: walk
+  priority: P0
+  migration: regenerate endpoint- and state-exact bridge against V8.3 endpoints
+- v5_5: PROC_IDLE_TO_ALERT_IDLE_V5_5
+  v8_3: PROC_IDLE_TO_ALERT_IDLE_V8_3
+  source_semantic: idle
+  target_semantic: alert_idle
+  priority: P0
+  migration: regenerate endpoint- and state-exact bridge against V8.3 endpoints
+- v5_5: PROC_ALERT_IDLE_TO_IDLE_V5_5
+  v8_3: PROC_ALERT_IDLE_TO_IDLE_V8_3
+  source_semantic: alert_idle
+  target_semantic: idle
+  priority: P0
+  migration: regenerate endpoint- and state-exact bridge against V8.3 endpoints
+- v5_5: PROC_IDLE_TO_EAT_V5_5
+  v8_3: PROC_IDLE_TO_FEED_V8_3
+  source_semantic: idle
+  target_semantic: feeding
+  priority: P0
+  migration: regenerate endpoint- and state-exact bridge against V8.3 endpoints
+- v5_5: PROC_EAT_TO_IDLE_V5_5
+  v8_3: PROC_FEED_TO_IDLE_V8_3
+  source_semantic: feeding
+  target_semantic: idle
+  priority: P0
+  migration: regenerate endpoint- and state-exact bridge against V8.3 endpoints
+- v5_5: PROC_IDLE_TO_ROAR_READY_V5_5
+  v8_3: PROC_IDLE_TO_THREAT_READY_V8_3
+  source_semantic: idle
+  target_semantic: threat_call
+  priority: P0
+  migration: regenerate endpoint- and state-exact bridge against V8.3 endpoints
+- v5_5: PROC_ROAR_TO_IDLE_V5_5
+  v8_3: PROC_THREAT_TO_IDLE_V8_3
+  source_semantic: threat_call
+  target_semantic: idle
+  priority: P0
+  migration: regenerate endpoint- and state-exact bridge against V8.3 endpoints
+- v5_5: PROC_WALK_TO_BITE_READY_V5_5
+  v8_3: PROC_WALK_TO_BITE_READY_V8_3
+  source_semantic: walk
+  target_semantic: committed_bite
+  priority: P0
+  migration: regenerate endpoint- and state-exact bridge against V8.3 endpoints
+- v5_5: PROC_BITE_TO_WALK_V5_5
+  v8_3: PROC_BITE_TO_WALK_V8_3
+  source_semantic: committed_bite
+  target_semantic: walk
+  priority: P0
+  migration: regenerate endpoint- and state-exact bridge against V8.3 endpoints
+- v5_5: PROC_WALK_TO_ROAR_READY_V5_5
+  v8_3: PROC_WALK_TO_THREAT_READY_V8_3
+  source_semantic: walk
+  target_semantic: threat_call
+  priority: P0
+  migration: regenerate endpoint- and state-exact bridge against V8.3 endpoints
+- v5_5: PROC_ROAR_TO_WALK_V5_5
+  v8_3: PROC_THREAT_TO_WALK_V8_3
+  source_semantic: threat_call
+  target_semantic: walk
+  priority: P0
+  migration: regenerate endpoint- and state-exact bridge against V8.3 endpoints
+- v5_5: PROC_WALK_TO_EAT_V5_5
+  v8_3: PROC_WALK_TO_FEED_V8_3
+  source_semantic: walk
+  target_semantic: feeding
+  priority: P0
+  migration: regenerate endpoint- and state-exact bridge against V8.3 endpoints
+- v5_5: PROC_EAT_TO_WALK_V5_5
+  v8_3: PROC_FEED_TO_WALK_V8_3
+  source_semantic: feeding
+  target_semantic: walk
+  priority: P0
+  migration: regenerate endpoint- and state-exact bridge against V8.3 endpoints

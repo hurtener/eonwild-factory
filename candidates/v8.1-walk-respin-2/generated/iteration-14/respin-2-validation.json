@@ -1,0 +1,93 @@
+{
+  "status": "FAIL",
+  "candidateGlbSha256": "46981c1cb3f46d5469ec2b06030348cc8e99244e5f0b3743b0b8629e9da65866",
+  "checks": {
+    "accepted_v8_1_immutable": true,
+    "all_exported_keys_ground_support_and_joint_continuity": true,
+    "physical_stride_and_speed": true,
+    "front_reach_derived_from_2_60m_stride": true,
+    "bilateral_phase_causal_rocker": false
+  },
+  "method": "base validator skins selected sole/toe vertices at every baked key; this validator adds bilateral per-cycle causal ordering and actual exported toe/ankle lag-channel motion.",
+  "physical": {
+    "referenceStrideM": 2.5999999689258293,
+    "referenceSpeedKmh": 4.599999855972266,
+    "worldHipHeightM": 2.756361830245109
+  },
+  "derivedFrontReach": {
+    "formula": "respin-1 front extrema * (2.60 / 2.75); this preserves the prior materially-long reach at the newly locked stride rather than retaining an obsolete absolute 2.75m gate.",
+    "sides": {
+      "l": {
+        "actualFrontM": 1.1417546861196255,
+        "derivedMinimumM": 1.1390201011426107
+      },
+      "r": {
+        "actualFrontM": 1.2109881665499218,
+        "derivedMinimumM": 1.2040809825676249
+      }
+    }
+  },
+  "causalCycles": {
+    "l": [
+      {
+        "rockerOnsetPhase": 0.4672130941050187,
+        "rearExtensionPeakPhase": 0.5573770194072363,
+        "rearExtensionAtOnsetM": 0.18730163233699415,
+        "rearExtensionAtPeakM": 0.4264378897745104,
+        "loadedRockerSamples": 15,
+        "toeOnlyDwellPhase": 0.07377049180327869,
+        "releasePhase": 0.7049179934095706,
+        "passiveLagSamples": 7,
+        "passiveLagMaxExportedAngularVelocityRadS": 4.259992754242079,
+        "receivingArmProfilePhase": 0.818,
+        "flattenSamples": 14,
+        "passes": false
+      },
+      {
+        "rockerOnsetPhase": 0.4672131233978991,
+        "rearExtensionPeakPhase": 0.5573769608214756,
+        "rearExtensionAtOnsetM": 0.1872840601372342,
+        "rearExtensionAtPeakM": 0.426414549217254,
+        "loadedRockerSamples": 15,
+        "toeOnlyDwellPhase": 0.07377049180327869,
+        "releasePhase": 0.7049180519953313,
+        "passiveLagSamples": 7,
+        "passiveLagMaxExportedAngularVelocityRadS": 4.262617471893536,
+        "receivingArmProfilePhase": 0.818,
+        "flattenSamples": 14,
+        "passes": false
+      }
+    ],
+    "r": [
+      {
+        "rockerOnsetPhase": 0.4672131233978991,
+        "rearExtensionPeakPhase": 0.5573770487001167,
+        "rearExtensionAtOnsetM": 0.11812560931712063,
+        "rearExtensionAtPeakM": 0.3573314049412913,
+        "loadedRockerSamples": 18,
+        "toeOnlyDwellPhase": 0.09836065573770492,
+        "releasePhase": 0.7131147564994165,
+        "passiveLagSamples": 7,
+        "passiveLagMaxExportedAngularVelocityRadS": 4.257914519686525,
+        "receivingArmProfilePhase": 0.818,
+        "flattenSamples": 14,
+        "passes": true
+      },
+      {
+        "rockerOnsetPhase": 0.4672130648121384,
+        "rearExtensionPeakPhase": 0.5573770194072363,
+        "rearExtensionAtOnsetM": 0.11812376951698084,
+        "rearExtensionAtPeakM": 0.357328079477512,
+        "loadedRockerSamples": 18,
+        "toeOnlyDwellPhase": 0.09836065573770492,
+        "releasePhase": 0.7131147272065361,
+        "passiveLagSamples": 7,
+        "passiveLagMaxExportedAngularVelocityRadS": 4.261701267831887,
+        "receivingArmProfilePhase": 0.818,
+        "flattenSamples": 15,
+        "passes": true
+      }
+    ]
+  },
+  "baseValidation": "candidates/v8.1-walk-respin-2/generated/iteration-14/base-validation.json"
+}

@@ -1,0 +1,87 @@
+{
+  "schema": "eonwild.v8_2_balance_transfer_metrics.v1",
+  "status": "COMPARATIVE_EVALUATION_ONLY",
+  "inputs": {
+    "v5_5_glb": {
+      "path": "procedural-animation-toolkit(v5.5)/validated_result/v5.5/tarbosaurus_procedural_v5_5_animation_pack.glb",
+      "sha256": "4e6e85dc82e941a3fc10109ca781dd3dcbb084699dc19834bf8683c04b22fe65",
+      "clip": "PROC_WALK_RELAXED_V5_5_INPLACE",
+      "duration_seconds": 4.444444656,
+      "render": "reports/V5-5-BALANCE-001/render-candidate-5/films/walk-relaxed-inplace.mp4",
+      "render_facts": {"width": 960, "height": 540, "fps": 24, "frames": 107, "duration_seconds": 4.458333}
+    },
+    "v8_1_iteration_38_glb": {
+      "path": "candidates/v8.1-walk-respin-2/generated/iteration-38/tarbosaurus_procedural_v8_1_walk_respin.glb",
+      "sha256": "1b9a7d071c1b375e128beeb5bda68298e32b39aac3ea76a90afe7ca3f744b73e",
+      "clip": "PROC_WALK_RELAXED_V8_1_RESPIN_INPLACE",
+      "duration_seconds": 4.069565296,
+      "render": "showcase/v8.1-walk-respin-2/iteration-4/walk-relaxed-v8-1-respin-side.mp4",
+      "render_facts": {"width": 960, "height": 540, "fps": 24, "frames": 240, "duration_seconds": 10.0},
+      "reference_scale_wrapper": {"node": "RESPIN_REFERENCE_SCALE_ROOT", "uniform_scale": 2.008695643, "normalization_effect": "removed by per-asset hip-height normalization"}
+    }
+  },
+  "method": {
+    "phase_samples": 120,
+    "coordinate_basis": {"x": "lateral", "y": "vertical/up", "z": "sagittal/fore-aft"},
+    "rotation_basis": {"x": "pitch about lateral axis", "y": "yaw about vertical axis", "z": "roll about fore-aft axis"},
+    "normalization": "all translation envelopes are divided by each asset's median pelvis-to-lowest-distal-foot height. Static pose and uniform-wrapper differences are not compared as movement.",
+    "support_proxy": "weighted pelvis/chest/head/tail geometric centroid relative to the lowest foot-side support midpoint; not a physical mass or center-of-mass calculation"
+  },
+  "semantic_nodes": {"pelvis": "Bone_001", "chest": "Bone_002", "head": "Bone_036", "tail_base": "Bone_024", "tail_mid": "Bone_020", "tail_tip": "Bone_016", "ankle_left_right": ["Bone_009", "Bone_013"], "foot_left_right": ["Bone_008", "Bone_012"]},
+  "per_asset": {
+    "v5_5": {
+      "raw_body_coordinate_hip_height_m": 1.305988456,
+      "pelvis_translation_peak_to_peak_by_hip_height": {"lateral_x": 0.101657394, "vertical_y": 0.038807519, "sagittal_z": 0.019595081},
+      "pelvis_rotation_peak_to_peak_degrees": {"pitch_x": 2.887903, "yaw_y": 6.628085, "roll_z": 7.362114},
+      "chest_relative_to_pelvis_peak_to_peak_degrees": {"pitch_x": 9.21943, "yaw_y": 6.531839, "roll_z": 9.800129},
+      "head_relative_to_chest_peak_to_peak_degrees": {"pitch_x": 6.067502, "yaw_y": 5.31196, "roll_z": 2.904462},
+      "head_world_rotation_peak_to_peak_degrees": {"pitch_x": 4.435805, "yaw_y": 2.719797, "roll_z": 2.432572},
+      "tail_relative_to_pelvis_peak_to_peak_degrees": {
+        "base": {"pitch_x": 13.663449, "yaw_y": 12.071827, "roll_z": 10.166716},
+        "mid": {"pitch_x": 14.339949, "yaw_y": 32.337633, "roll_z": 14.002775},
+        "tip": {"pitch_x": 14.977855, "yaw_y": 42.480735, "roll_z": 14.900254}
+      },
+      "counterphase_zero_lag_pearson": {"chest_roll_z_vs_pelvis_roll_z": -0.870202},
+      "support_proxy": {"single_support_phase_fraction": 0.516667, "double_support_phase_fraction": 0.483333, "mean_abs_lateral_offset_by_hip_height": 0.174859, "mean_abs_sagittal_offset_by_hip_height": 0.108265},
+      "lower_leg_local_rotation_envelope_degrees": {"ankle_left": 27.209123, "ankle_right": 25.878413, "foot_left": 56.116043, "foot_right": 37.891159, "toe_tip_left": 2.519965, "toe_tip_right": 2.429968},
+      "loop_seam": {"max_local_translation_m": 0.0, "max_local_rotation_degrees": 0.000002958}
+    },
+    "v8_1_iteration_38": {
+      "raw_body_coordinate_hip_height_m": 1.312797113,
+      "pelvis_translation_peak_to_peak_by_hip_height": {"lateral_x": 0.014856922, "vertical_y": 0.012369211, "sagittal_z": 0.00412513},
+      "pelvis_rotation_peak_to_peak_degrees": {"pitch_x": 1.13842, "yaw_y": 3.139441, "roll_z": 2.695763},
+      "chest_relative_to_pelvis_peak_to_peak_degrees": {"pitch_x": 4.102972, "yaw_y": 2.612022, "roll_z": 4.673977},
+      "head_relative_to_chest_peak_to_peak_degrees": {"pitch_x": 3.547739, "yaw_y": 3.273096, "roll_z": 1.340202},
+      "head_world_rotation_peak_to_peak_degrees": {"pitch_x": 2.57968, "yaw_y": 1.858646, "roll_z": 1.030051},
+      "tail_relative_to_pelvis_peak_to_peak_degrees": {
+        "base": {"pitch_x": 5.229939, "yaw_y": 5.438844, "roll_z": 4.509553},
+        "mid": {"pitch_x": 5.528114, "yaw_y": 17.055548, "roll_z": 7.212394},
+        "tip": {"pitch_x": 5.395561, "yaw_y": 20.323431, "roll_z": 6.954998}
+      },
+      "counterphase_zero_lag_pearson": {"chest_roll_z_vs_pelvis_roll_z": -0.828681},
+      "support_proxy": {"single_support_phase_fraction": 0.225, "double_support_phase_fraction": 0.775, "mean_abs_lateral_offset_by_hip_height": 0.088489, "mean_abs_sagittal_offset_by_hip_height": 0.26045},
+      "lower_leg_local_rotation_envelope_degrees": {"ankle_left": 21.600099, "ankle_right": 31.18359, "foot_left": 74.117508, "foot_right": 46.184995, "toe_tip_left": 2.156439, "toe_tip_right": 2.156439},
+      "loop_seam": {"max_local_translation_m": 0.0, "max_local_rotation_degrees": 0.000002415},
+      "validated_distal_contact": {"skinned_rocker_lead_phase": [0.09596, 0.09954], "loaded_keys_left_right": [15, 16], "passive_toe_down_keys_left_right": [8, 7], "max_dense_witness_adjacent_m": 0.000789, "metatarsal_reversals_over_1mm": 0}
+    }
+  },
+  "comparative_ratios_v5_5_over_v8_1": {
+    "pelvis_lateral_translation": 6.843,
+    "pelvis_vertical_bob": 3.137,
+    "pelvis_sagittal_translation": 4.75,
+    "pelvis_roll": 2.731,
+    "pelvis_yaw": 2.111,
+    "chest_roll_relative_to_pelvis": 2.097,
+    "tail_mid_yaw": 1.896,
+    "tail_tip_yaw": 2.09,
+    "head_world_roll": 2.362
+  },
+  "v8_2_overlay_target_envelopes": {
+    "invariant_channels": ["Bone_000 root motion", "Bone_008/Bone_012 foot translations", "Bone_008..Bone_015 leg and ankle contact solve", "all toe and distal-contact channels", "V8.1 timing, 15/16 loaded keys, passive-lag sequence, and seam keys"],
+    "pelvis_Bone_001": {"lateral_x_peak_to_peak_by_hip_height": [0.045, 0.06], "vertical_y_peak_to_peak_by_hip_height": [0.018, 0.026], "sagittal_z_peak_to_peak_by_hip_height": [0.009, 0.014], "pitch_x_degrees": [1.6, 2.2], "yaw_y_degrees": [3.8, 4.8], "roll_z_degrees": [4.2, 5.2]},
+    "chest_Bone_002_relative_to_pelvis": {"pitch_x_degrees": [5.5, 6.8], "yaw_y_degrees": [3.8, 4.8], "roll_z_degrees": [6.5, 7.8], "roll_correlation_with_pelvis": [-0.95, -0.7]},
+    "neck_head_Bone_041_to_Bone_036": {"strategy": "solve relative neck/head motion to counteract the chest overlay", "head_world_pitch_x_max_degrees": 2.9, "head_world_yaw_y_max_degrees": 2.1, "head_world_roll_z_max_degrees": 1.2},
+    "tail_Bone_024_to_Bone_016_relative_to_pelvis": {"base_yaw_y_degrees": [7.0, 9.0], "mid_yaw_y_degrees": [22.0, 27.0], "tip_yaw_y_degrees": [28.0, 34.0], "base_pitch_x_degrees": [7.0, 9.0], "mid_pitch_x_degrees": [8.0, 10.0], "tip_pitch_x_degrees": [8.0, 11.0], "phase_rule": "preserve V8.1 phase ordering; use smooth tail-base-to-tip lag and no new high-frequency reversal"},
+    "post_overlay_gates": {"all_v8_1_contact_validation_unchanged": true, "max_loop_local_translation_m": 0.0, "max_loop_local_rotation_degrees": 0.00001, "no_new_leg_or_foot_channel_delta": true, "head_world_rotation_caps_enforced": true}
+  }
+}

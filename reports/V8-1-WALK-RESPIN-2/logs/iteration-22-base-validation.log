@@ -1,0 +1,15 @@
+{
+  "status": "FAIL",
+  "checks": {
+    "immutable_v8_1_unchanged": true,
+    "both_clips_all_exported_keys_measured": true,
+    "reference_scale_speed_4_5_to_4_8_kmh": true,
+    "reference_scale_same_foot_stride_matches_target_within_1pct": true,
+    "long_front_reach": false,
+    "rear_reach_bounded": true,
+    "no_selected_sole_penetration_any_key": true,
+    "always_supported": true,
+    "joint_continuity_and_constraints": true,
+    "progressive_toe_contact_before_release": false
+  }
+}

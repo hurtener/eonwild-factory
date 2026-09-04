@@ -1,0 +1,349 @@
+schema: eonwild.body_instance_profile.v1
+profile_id: synthetic_gracile_heavy_biped_v1
+species: null
+family: heavy_predatory_biped
+age_fraction: 0.68
+condition_factor: 1.0
+coordinate_system:
+  handedness: right
+  up_axis: +Y
+  forward_axis: -Z
+  units: metres
+dimensions:
+  body_length_m: 7.0
+  hip_height_m: 2.15
+  body_width_m: 0.95
+mass:
+  normalization: 1.0
+  mass_kg: 1500.0
+  range_kg:
+  - 1500.0
+  - 1500.0
+  absolute_dynamics_enabled: true
+segments:
+- id: pelvis
+  parent_articulation: null
+  bone_roles:
+  - pelvis
+  mass_fraction: 0.15
+  com:
+    mode: derive_from_partition
+    local_m: null
+  inertia:
+    mode: derive_from_partition
+    tensor_kg_m2: null
+  provenance:
+    status: synthetic_test_fixture
+    note: Fictional deterministic fixture used only to prove family-level reuse and detect Tarbosaurus-specific
+      branching.
+    reviewed_by: null
+    reviewed_at: null
+- id: abdomen
+  parent_articulation: pelvis_to_abdomen
+  bone_roles:
+  - spine_01
+  - spine_02
+  - spine_03
+  mass_fraction: 0.18
+  com:
+    mode: derive_from_partition
+    local_m: null
+  inertia:
+    mode: derive_from_partition
+    tensor_kg_m2: null
+  provenance:
+    status: synthetic_test_fixture
+    note: Fictional deterministic fixture used only to prove family-level reuse and detect Tarbosaurus-specific
+      branching.
+    reviewed_by: null
+    reviewed_at: null
+- id: thorax
+  parent_articulation: abdomen_to_thorax
+  bone_roles:
+  - spine_04
+  - spine_05
+  - chest
+  mass_fraction: 0.12
+  com:
+    mode: derive_from_partition
+    local_m: null
+  inertia:
+    mode: derive_from_partition
+    tensor_kg_m2: null
+  provenance:
+    status: synthetic_test_fixture
+    note: Fictional deterministic fixture used only to prove family-level reuse and detect Tarbosaurus-specific
+      branching.
+    reviewed_by: null
+    reviewed_at: null
+- id: neck_base
+  parent_articulation: thorax_to_neck
+  bone_roles:
+  - neck_01
+  - neck_02
+  mass_fraction: 0.025
+  com:
+    mode: derive_from_partition
+    local_m: null
+  inertia:
+    mode: derive_from_partition
+    tensor_kg_m2: null
+  provenance:
+    status: synthetic_test_fixture
+    note: Fictional deterministic fixture used only to prove family-level reuse and detect Tarbosaurus-specific
+      branching.
+    reviewed_by: null
+    reviewed_at: null
+- id: neck_distal
+  parent_articulation: neck_base_to_distal
+  bone_roles:
+  - neck_03
+  - neck_04
+  - neck_05
+  mass_fraction: 0.02
+  com:
+    mode: derive_from_partition
+    local_m: null
+  inertia:
+    mode: derive_from_partition
+    tensor_kg_m2: null
+  provenance:
+    status: synthetic_test_fixture
+    note: Fictional deterministic fixture used only to prove family-level reuse and detect Tarbosaurus-specific
+      branching.
+    reviewed_by: null
+    reviewed_at: null
+- id: head
+  parent_articulation: atlanto_occipital
+  bone_roles:
+  - head
+  - skull
+  - snout
+  - snout_tip
+  - jaw
+  mass_fraction: 0.055
+  com:
+    mode: derive_from_partition
+    local_m: null
+  inertia:
+    mode: derive_from_partition
+    tensor_kg_m2: null
+  provenance:
+    status: synthetic_test_fixture
+    note: Fictional deterministic fixture used only to prove family-level reuse and detect Tarbosaurus-specific
+      branching.
+    reviewed_by: null
+    reviewed_at: null
+- id: tail_base
+  parent_articulation: pelvis_to_tail
+  bone_roles:
+  - tail_01
+  - tail_02
+  - tail_03
+  mass_fraction: 0.08
+  com:
+    mode: derive_from_partition
+    local_m: null
+  inertia:
+    mode: derive_from_partition
+    tensor_kg_m2: null
+  provenance:
+    status: synthetic_test_fixture
+    note: Fictional deterministic fixture used only to prove family-level reuse and detect Tarbosaurus-specific
+      branching.
+    reviewed_by: null
+    reviewed_at: null
+- id: tail_mid
+  parent_articulation: tail_base_to_mid
+  bone_roles:
+  - tail_04
+  - tail_05
+  - tail_06
+  mass_fraction: 0.055
+  com:
+    mode: derive_from_partition
+    local_m: null
+  inertia:
+    mode: derive_from_partition
+    tensor_kg_m2: null
+  provenance:
+    status: synthetic_test_fixture
+    note: Fictional deterministic fixture used only to prove family-level reuse and detect Tarbosaurus-specific
+      branching.
+    reviewed_by: null
+    reviewed_at: null
+- id: tail_distal
+  parent_articulation: tail_mid_to_distal
+  bone_roles:
+  - tail_07
+  - tail_08
+  - tail_09
+  - tail_tip
+  mass_fraction: 0.025
+  com:
+    mode: derive_from_partition
+    local_m: null
+  inertia:
+    mode: derive_from_partition
+    tensor_kg_m2: null
+  provenance:
+    status: synthetic_test_fixture
+    note: Fictional deterministic fixture used only to prove family-level reuse and detect Tarbosaurus-specific
+      branching.
+    reviewed_by: null
+    reviewed_at: null
+- id: thigh_l
+  parent_articulation: hip_l
+  bone_roles:
+  - thigh_l
+  mass_fraction: 0.06
+  com:
+    mode: derive_from_partition
+    local_m: null
+  inertia:
+    mode: derive_from_partition
+    tensor_kg_m2: null
+  provenance:
+    status: synthetic_test_fixture
+    note: Fictional deterministic fixture used only to prove family-level reuse and detect Tarbosaurus-specific
+      branching.
+    reviewed_by: null
+    reviewed_at: null
+- id: thigh_r
+  parent_articulation: hip_r
+  bone_roles:
+  - thigh_r
+  mass_fraction: 0.06
+  com:
+    mode: derive_from_partition
+    local_m: null
+  inertia:
+    mode: derive_from_partition
+    tensor_kg_m2: null
+  provenance:
+    status: synthetic_test_fixture
+    note: Fictional deterministic fixture used only to prove family-level reuse and detect Tarbosaurus-specific
+      branching.
+    reviewed_by: null
+    reviewed_at: null
+- id: lower_leg_l
+  parent_articulation: knee_l
+  bone_roles:
+  - shin_l
+  - ankle_l
+  mass_fraction: 0.035
+  com:
+    mode: derive_from_partition
+    local_m: null
+  inertia:
+    mode: derive_from_partition
+    tensor_kg_m2: null
+  provenance:
+    status: synthetic_test_fixture
+    note: Fictional deterministic fixture used only to prove family-level reuse and detect Tarbosaurus-specific
+      branching.
+    reviewed_by: null
+    reviewed_at: null
+- id: lower_leg_r
+  parent_articulation: knee_r
+  bone_roles:
+  - shin_r
+  - ankle_r
+  mass_fraction: 0.035
+  com:
+    mode: derive_from_partition
+    local_m: null
+  inertia:
+    mode: derive_from_partition
+    tensor_kg_m2: null
+  provenance:
+    status: synthetic_test_fixture
+    note: Fictional deterministic fixture used only to prove family-level reuse and detect Tarbosaurus-specific
+      branching.
+    reviewed_by: null
+    reviewed_at: null
+- id: foot_l
+  parent_articulation: ankle_l
+  bone_roles:
+  - foot_l
+  - toe_l
+  - toe_2_l
+  - toe_3_l
+  mass_fraction: 0.025
+  com:
+    mode: derive_from_partition
+    local_m: null
+  inertia:
+    mode: derive_from_partition
+    tensor_kg_m2: null
+  provenance:
+    status: synthetic_test_fixture
+    note: Fictional deterministic fixture used only to prove family-level reuse and detect Tarbosaurus-specific
+      branching.
+    reviewed_by: null
+    reviewed_at: null
+- id: foot_r
+  parent_articulation: ankle_r
+  bone_roles:
+  - foot_r
+  - toe_r
+  - toe_2_r
+  - toe_3_r
+  mass_fraction: 0.025
+  com:
+    mode: derive_from_partition
+    local_m: null
+  inertia:
+    mode: derive_from_partition
+    tensor_kg_m2: null
+  provenance:
+    status: synthetic_test_fixture
+    note: Fictional deterministic fixture used only to prove family-level reuse and detect Tarbosaurus-specific
+      branching.
+    reviewed_by: null
+    reviewed_at: null
+- id: forelimb_l
+  parent_articulation: shoulder_l
+  bone_roles:
+  - arm_l
+  - forearm_l
+  - hand_l
+  mass_fraction: 0.025
+  com:
+    mode: derive_from_partition
+    local_m: null
+  inertia:
+    mode: derive_from_partition
+    tensor_kg_m2: null
+  provenance:
+    status: synthetic_test_fixture
+    note: Fictional deterministic fixture used only to prove family-level reuse and detect Tarbosaurus-specific
+      branching.
+    reviewed_by: null
+    reviewed_at: null
+- id: forelimb_r
+  parent_articulation: shoulder_r
+  bone_roles:
+  - arm_r
+  - forearm_r
+  - hand_r
+  mass_fraction: 0.025
+  com:
+    mode: derive_from_partition
+    local_m: null
+  inertia:
+    mode: derive_from_partition
+    tensor_kg_m2: null
+  provenance:
+    status: synthetic_test_fixture
+    note: Fictional deterministic fixture used only to prove family-level reuse and detect Tarbosaurus-specific
+      branching.
+    reviewed_by: null
+    reviewed_at: null
+provenance:
+  status: synthetic_test_fixture
+  note: Fictional body with exact deterministic values. It must never be described as a reconstructed animal.
+  reviewed_by: null
+  reviewed_at: null
+actuation_capacity_profile: profiles/families/heavy-predatory-biped-capacity-provisional.yaml
+joint_limit_catalog: null

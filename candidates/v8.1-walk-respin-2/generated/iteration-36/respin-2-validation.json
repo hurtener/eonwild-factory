@@ -1,0 +1,528 @@
+{
+  "status": "FAIL",
+  "candidateGlbSha256": "228abe2e6887550b31f75d5e74f8cb84a414b09a307fbb00f33113241ec02324",
+  "checks": {
+    "accepted_v8_1_immutable": true,
+    "all_exported_keys_ground_support_and_joint_continuity": true,
+    "physical_stride_and_speed": true,
+    "front_reach_derived_from_2_60m_stride": true,
+    "bilateral_phase_causal_rocker": false,
+    "dense_distal_toe_contact_lock": false
+  },
+  "method": "base validator skins selected sole/toe vertices at every baked key; this validator derives bilateral causal ordering, zero passive foot translation, exported toe/ankle angular-velocity decay, and later receiving-arm motion directly from the final GLB channels.",
+  "physical": {
+    "referenceStrideM": 2.5999999689258293,
+    "referenceSpeedKmh": 4.599999855972266,
+    "worldHipHeightM": 2.756361830245109
+  },
+  "derivedFrontReach": {
+    "formula": "respin-1 front extrema * (2.60 / 2.75); this preserves the prior materially-long reach at the newly locked stride rather than retaining an obsolete absolute 2.75m gate.",
+    "sides": {
+      "l": {
+        "actualFrontM": 1.1417546861196255,
+        "derivedMinimumM": 1.1390201011426107
+      },
+      "r": {
+        "actualFrontM": 1.2109881665499218,
+        "derivedMinimumM": 1.2040809825676249
+      }
+    }
+  },
+  "causalCycles": {
+    "l": [
+      {
+        "rockerOnsetPhase": 0.5819672207981326,
+        "rockerOnsetMeasurement": "baked_ankle_rotation_change_from_pre_rocker",
+        "rearExtensionPeakPhase": 0.7540983376056023,
+        "rearExtensionAtOnsetM": -0.19379734046996236,
+        "rearExtensionAtPeakM": -0.06948686771430565,
+        "compensatedFootOriginRearDiagnosticM": 0.8956479495823156,
+        "loadedRockerSamples": 22,
+        "toeOnlyDwellPhase": 0.11475409836065574,
+        "releasePhase": 0.7622950714025677,
+        "passiveLagSamples": 5,
+        "passiveLagMaxExportedAngularVelocityRadS": 0.473677242752792,
+        "passiveAnkleTranslationDeviationM": 0.02084340966410398,
+        "passivePivotTranslationDecay": [
+          {
+            "anchorOffsetM": 0.02584065539933769,
+            "finalOffsetM": 0.011502226463208977,
+            "offsetsM": [
+              0.02584065539933769,
+              0.02084340966410398,
+              0.016796972761938145,
+              0.01382127589958668,
+              0.012053118022747023,
+              0.011502226463208977
+            ],
+            "stepSpeedsMps": [
+              0.3492421948595094,
+              0.3124760195242389,
+              0.2788141615532148,
+              0.248019877425978,
+              0.21988886363769558
+            ],
+            "monotonicOffsetDecay": true,
+            "monotonicSpeedDecay": true,
+            "mechanicalEnergies": [
+              0.06402618942012342,
+              0.05079559944661331,
+              0.04020586201375855,
+              0.03177387337769046,
+              0.025101664671215156
+            ],
+            "monotonicEnergyDecay": true,
+            "activeTarget": null
+          }
+        ],
+        "passiveAngularDecay": [
+          {
+            "bone": "Bone_044",
+            "initialRadS": 0.03703111583249492,
+            "finalRadS": 0.02141182503948831,
+            "strictlyDecayingSteps": 4,
+            "stepCount": 4
+          },
+          {
+            "bone": "Bone_050",
+            "initialRadS": 0.0660636729229698,
+            "finalRadS": 0.0381975282974257,
+            "strictlyDecayingSteps": 4,
+            "stepCount": 4
+          },
+          {
+            "bone": "Bone_047",
+            "initialRadS": 0.10463131785139128,
+            "finalRadS": 0.0604925064384866,
+            "strictlyDecayingSteps": 4,
+            "stepCount": 4
+          },
+          {
+            "bone": "Bone_008",
+            "initialRadS": 0.5386630973044458,
+            "finalRadS": 0.3114438808830733,
+            "strictlyDecayingSteps": 4,
+            "stepCount": 4
+          }
+        ],
+        "receivingArmActualPhase": 0.803278681801634,
+        "receivingArmMaxAngularVelocityRadS": 5.567997516007038,
+        "flattenMaxAngularVelocityRadS": 2.1592459081772746,
+        "flattenSamples": 14,
+        "rockerToExtensionLeadCycle": 0.17213111680746973,
+        "extensionToReleaseLeadCycle": 0.008196733796965394,
+        "targetRockerToExtensionLeadRange": [
+          0.04,
+          0.1
+        ],
+        "passes": false,
+        "effectiveSkinnedMetatarsalOnsetPhase": 0.6571136131013307,
+        "effectiveSkinnedRockerToPeakLeadCycle": 0.09698472450427165,
+        "ankleVsSkinnedOnsetDeltaCycle": -0.07514639230319808
+      },
+      {
+        "rockerOnsetPhase": 0.5819671622123717,
+        "rockerOnsetMeasurement": "baked_ankle_rotation_change_from_pre_rocker",
+        "rearExtensionPeakPhase": 0.7540983376056023,
+        "rearExtensionAtOnsetM": -0.195580394225537,
+        "rearExtensionAtPeakM": -0.069535874288047,
+        "compensatedFootOriginRearDiagnosticM": 0.8956513253690235,
+        "loadedRockerSamples": 22,
+        "toeOnlyDwellPhase": 0.11475409836065574,
+        "releasePhase": 0.7622950714025678,
+        "passiveLagSamples": 5,
+        "passiveLagMaxExportedAngularVelocityRadS": 0.4757438455541221,
+        "passiveAnkleTranslationDeviationM": 0.020841329833665823,
+        "passivePivotTranslationDecay": [
+          {
+            "anchorOffsetM": 0.025838163704410395,
+            "finalOffsetM": 0.011507820183334298,
+            "offsetsM": [
+              0.025838163704410395,
+              0.020841329833665823,
+              0.01679589636418905,
+              0.013821952097705084,
+              0.012056217023074403,
+              0.011507820183334298
+            ],
+            "stepSpeedsMps": [
+              0.3492829659081633,
+              0.31251135565291344,
+              0.27884217343123785,
+              0.24804639537462975,
+              0.21990834523632782
+            ],
+            "monotonicOffsetDecay": true,
+            "monotonicSpeedDecay": true,
+            "mechanicalEnergies": [
+              0.06403982234145114,
+              0.050806388648746925,
+              0.04021380336046704,
+              0.031780973711525856,
+              0.025106849629893666
+            ],
+            "monotonicEnergyDecay": true,
+            "activeTarget": null
+          }
+        ],
+        "passiveAngularDecay": [
+          {
+            "bone": "Bone_044",
+            "initialRadS": 0.03703103259848838,
+            "finalRadS": 0.021411825611206737,
+            "strictlyDecayingSteps": 4,
+            "stepCount": 4
+          },
+          {
+            "bone": "Bone_050",
+            "initialRadS": 0.06606043958434035,
+            "finalRadS": 0.03819841037301661,
+            "strictlyDecayingSteps": 4,
+            "stepCount": 4
+          },
+          {
+            "bone": "Bone_047",
+            "initialRadS": 0.10462471709897261,
+            "finalRadS": 0.06049788946067658,
+            "strictlyDecayingSteps": 4,
+            "stepCount": 4
+          },
+          {
+            "bone": "Bone_008",
+            "initialRadS": 0.5410115730231928,
+            "finalRadS": 0.3128012737534757,
+            "strictlyDecayingSteps": 4,
+            "stepCount": 4
+          }
+        ],
+        "receivingArmActualPhase": 0.8032786232158733,
+        "receivingArmMaxAngularVelocityRadS": 5.570701561989801,
+        "flattenMaxAngularVelocityRadS": 2.1591632694362093,
+        "flattenSamples": 14,
+        "rockerToExtensionLeadCycle": 0.17213117539323064,
+        "extensionToReleaseLeadCycle": 0.008196733796965505,
+        "targetRockerToExtensionLeadRange": [
+          0.04,
+          0.1
+        ],
+        "passes": false,
+        "effectiveSkinnedMetatarsalOnsetPhase": 0.6581371545547596,
+        "effectiveSkinnedRockerToPeakLeadCycle": 0.09596118305084267,
+        "ankleVsSkinnedOnsetDeltaCycle": -0.07616999234238797
+      }
+    ],
+    "r": [
+      {
+        "rockerOnsetPhase": 0.5819672134749125,
+        "rockerOnsetMeasurement": "baked_ankle_rotation_change_from_pre_rocker",
+        "rearExtensionPeakPhase": 0.7540983668984826,
+        "rearExtensionAtOnsetM": -0.2504818878185556,
+        "rearExtensionAtPeakM": -0.13633806874477403,
+        "compensatedFootOriginRearDiagnosticM": 0.8477994305038765,
+        "loadedRockerSamples": 22,
+        "toeOnlyDwellPhase": 0.11475409836065574,
+        "releasePhase": 0.7622950714025678,
+        "passiveLagSamples": 5,
+        "passiveLagMaxExportedAngularVelocityRadS": 0.48496805773100987,
+        "passiveAnkleTranslationDeviationM": 0.028018729967060688,
+        "passivePivotTranslationDecay": [
+          {
+            "anchorOffsetM": 0.0054308176883194675,
+            "finalOffsetM": 0.028018729967060688,
+            "offsetsM": [
+              0.0054308176883194675,
+              0.008640200167705052,
+              0.0141152172072388,
+              0.01932363870149616,
+              0.023965898957756863,
+              0.028018729967060688
+            ],
+            "stepSpeedsMps": [
+              0.4301432442586359,
+              0.3783534229672651,
+              0.3311418304309849,
+              0.2881562168808091,
+              0.24907617723007253
+            ],
+            "monotonicOffsetDecay": false,
+            "monotonicSpeedDecay": true,
+            "mechanicalEnergies": [
+              0.09303417670323834,
+              0.0729703318331758,
+              0.05744127701925329,
+              0.04553755285350383,
+              0.0365148156345427
+            ],
+            "monotonicEnergyDecay": true,
+            "activeTarget": null
+          }
+        ],
+        "passiveAngularDecay": [
+          {
+            "bone": "Bone_053",
+            "initialRadS": 0.5451938660679043,
+            "finalRadS": 0.31521883793122063,
+            "strictlyDecayingSteps": 4,
+            "stepCount": 4
+          },
+          {
+            "bone": "Bone_059",
+            "initialRadS": 0.4353146131858493,
+            "finalRadS": 0.25169075948375375,
+            "strictlyDecayingSteps": 4,
+            "stepCount": 4
+          },
+          {
+            "bone": "Bone_056",
+            "initialRadS": 0.5068892146547399,
+            "finalRadS": 0.2930731242132059,
+            "strictlyDecayingSteps": 4,
+            "stepCount": 4
+          },
+          {
+            "bone": "Bone_012",
+            "initialRadS": 0.5515065065194008,
+            "finalRadS": 0.31886847949959274,
+            "strictlyDecayingSteps": 4,
+            "stepCount": 4
+          }
+        ],
+        "receivingArmActualPhase": 0.803278681801634,
+        "receivingArmMaxAngularVelocityRadS": 5.558895727709629,
+        "flattenMaxAngularVelocityRadS": 2.1050329643060004,
+        "flattenSamples": 14,
+        "rockerToExtensionLeadCycle": 0.1721311534235701,
+        "extensionToReleaseLeadCycle": 0.008196704504085162,
+        "targetRockerToExtensionLeadRange": [
+          0.04,
+          0.1
+        ],
+        "passes": false,
+        "effectiveSkinnedMetatarsalOnsetPhase": 0.6555783009211873,
+        "effectiveSkinnedRockerToPeakLeadCycle": 0.09852006597729535,
+        "ankleVsSkinnedOnsetDeltaCycle": -0.07361108744627476
+      },
+      {
+        "rockerOnsetPhase": 0.5819672207981326,
+        "rockerOnsetMeasurement": "baked_ankle_rotation_change_from_pre_rocker",
+        "rearExtensionPeakPhase": 0.7540982790198414,
+        "rearExtensionAtOnsetM": -0.25093625160323096,
+        "rearExtensionAtPeakM": -0.13641566369289038,
+        "compensatedFootOriginRearDiagnosticM": 0.8485486200085445,
+        "loadedRockerSamples": 22,
+        "toeOnlyDwellPhase": 0.11475409836065574,
+        "releasePhase": 0.7622950128168069,
+        "passiveLagSamples": 5,
+        "passiveLagMaxExportedAngularVelocityRadS": 0.48657348843902004,
+        "passiveAnkleTranslationDeviationM": 0.02805142982530377,
+        "passivePivotTranslationDecay": [
+          {
+            "anchorOffsetM": 0.005067507386380613,
+            "finalOffsetM": 0.02805142982530377,
+            "offsetsM": [
+              0.005067507386380613,
+              0.008511050241252593,
+              0.014083910648055954,
+              0.01932927168396878,
+              0.023989127896142087,
+              0.02805142982530377
+            ],
+            "stepSpeedsMps": [
+              0.4299143980011815,
+              0.3781229598437978,
+              0.3309143558710686,
+              0.2879291524168393,
+              0.24884922270598595
+            ],
+            "monotonicOffsetDecay": false,
+            "monotonicSpeedDecay": true,
+            "mechanicalEnergies": [
+              0.09292026063782302,
+              0.07287698215451413,
+              0.05736750066761086,
+              0.04547994620626198,
+              0.03647114682739429
+            ],
+            "monotonicEnergyDecay": true,
+            "activeTarget": null
+          }
+        ],
+        "passiveAngularDecay": [
+          {
+            "bone": "Bone_053",
+            "initialRadS": 0.5436799288104961,
+            "finalRadS": 0.3143429100959303,
+            "strictlyDecayingSteps": 4,
+            "stepCount": 4
+          },
+          {
+            "bone": "Bone_059",
+            "initialRadS": 0.4349394050686119,
+            "finalRadS": 0.25147332155476554,
+            "strictlyDecayingSteps": 4,
+            "stepCount": 4
+          },
+          {
+            "bone": "Bone_056",
+            "initialRadS": 0.5061852885445931,
+            "finalRadS": 0.29266402034142236,
+            "strictlyDecayingSteps": 4,
+            "stepCount": 4
+          },
+          {
+            "bone": "Bone_012",
+            "initialRadS": 0.5533304437964529,
+            "finalRadS": 0.31992422799354003,
+            "strictlyDecayingSteps": 4,
+            "stepCount": 4
+          }
+        ],
+        "receivingArmActualPhase": 0.803278681801634,
+        "receivingArmMaxAngularVelocityRadS": 5.565645096387038,
+        "flattenMaxAngularVelocityRadS": 2.110758204049339,
+        "flattenSamples": 15,
+        "rockerToExtensionLeadCycle": 0.17213105822170882,
+        "extensionToReleaseLeadCycle": 0.008196733796965505,
+        "targetRockerToExtensionLeadRange": [
+          0.04,
+          0.1
+        ],
+        "passes": false,
+        "effectiveSkinnedMetatarsalOnsetPhase": 0.6545547594677583,
+        "effectiveSkinnedRockerToPeakLeadCycle": 0.09954351955208307,
+        "ankleVsSkinnedOnsetDeltaCycle": -0.07258753866962575
+      }
+    ]
+  },
+  "denseDistalToeContact": {
+    "thresholds": {
+      "xDriftM": 0.01375,
+      "zDriftM": 0.00825,
+      "yDriftM": 0.00825,
+      "twoPixelsM": 0.025,
+      "metatarsalReversalM": 0.001,
+      "seamPixelsM": 0.0125,
+      "seamOrientationDegrees": 1.0
+    },
+    "sides": {
+      "l": {
+        "groups": [
+          {
+            "anchorPhase": 0.4012282497441147,
+            "sampleCount": 168,
+            "maxXDriftM": 0.0010660778188973374,
+            "maxZDriftM": 0.007965119173482194,
+            "maxYDriftM": 0.006819725448453776,
+            "maxHorizontalDriftM": 0.008036146176104474,
+            "maxAdjacentWitnessJumpM": 0.0007637385542674371,
+            "metatarsalNetRiseM": 0.032729220378210105,
+            "metatarsalReversalsOver1mm": 0,
+            "metatarsalLoadedBaselineM": 0.01999605861829394,
+            "metatarsalPeakM": 0.05270286048103759,
+            "effectiveRockerRiseThresholdM": 0.0016353400931371825,
+            "effectiveRockerOnsetPhase": 0.6571136131013307,
+            "clipCycleIndex": 0,
+            "toeDownLoadedDeltaRad": 0.10892931032871186,
+            "toeDownPassiveMeanRad": 0.013109946470185417,
+            "passiveToeDownBakedKeyCount": 5,
+            "passiveTerminalToePitchDegrees": {
+              "minimum": -36.139800131045114,
+              "maximum": -19.78111825835477
+            },
+            "passes": true
+          },
+          {
+            "anchorPhase": 0.4002047082906859,
+            "sampleCount": 169,
+            "maxXDriftM": 0.001149313210460745,
+            "maxZDriftM": 0.00826026619932918,
+            "maxYDriftM": 0.0067995368749036705,
+            "maxHorizontalDriftM": 0.008339839239429003,
+            "maxAdjacentWitnessJumpM": 0.0007783495794252667,
+            "metatarsalNetRiseM": 0.03294820484381522,
+            "metatarsalReversalsOver1mm": 0,
+            "metatarsalLoadedBaselineM": 0.01999649248060096,
+            "metatarsalPeakM": 0.05281658087253552,
+            "effectiveRockerRiseThresholdM": 0.001641004419596728,
+            "effectiveRockerOnsetPhase": 0.6581371545547596,
+            "clipCycleIndex": 1,
+            "toeDownLoadedDeltaRad": 0.11036503612875063,
+            "toeDownPassiveMeanRad": 0.011505421444786557,
+            "passiveToeDownBakedKeyCount": 5,
+            "passiveTerminalToePitchDegrees": {
+              "minimum": -36.13664366248135,
+              "maximum": -19.776911181959484
+            },
+            "passes": false
+          }
+        ],
+        "seamToeDriftM": 0.0,
+        "startupToeJumpM": 0.021216180246334614,
+        "seamOrientationDegrees": 1.194453718822872e-15,
+        "seamPasses": true
+      },
+      "r": {
+        "groups": [
+          {
+            "anchorPhase": 0.5,
+            "sampleCount": 120,
+            "maxXDriftM": 0.0009857906966650454,
+            "maxZDriftM": 0.007524388708915586,
+            "maxYDriftM": 0.0030760709256535948,
+            "maxHorizontalDriftM": 0.007540458484785524,
+            "maxAdjacentWitnessJumpM": 0.0006756397830324363,
+            "metatarsalNetRiseM": 0.04602767279968899,
+            "metatarsalReversalsOver1mm": 0,
+            "metatarsalLoadedBaselineM": 0.11968666589686071,
+            "metatarsalPeakM": 0.16551618022005102,
+            "effectiveRockerRiseThresholdM": 0.0022914757161595157,
+            "effectiveRockerOnsetPhase": 0.6555783009211873,
+            "clipCycleIndex": 0,
+            "toeDownLoadedDeltaRad": 0.08653546766569838,
+            "toeDownPassiveMeanRad": -0.026570169788963077,
+            "passiveToeDownBakedKeyCount": 5,
+            "passiveTerminalToePitchDegrees": {
+              "minimum": -36.723836247885366,
+              "maximum": -14.849072793386958
+            },
+            "passes": true
+          },
+          {
+            "anchorPhase": 0.40071647901740026,
+            "sampleCount": 169,
+            "maxXDriftM": 0.0010771316399522668,
+            "maxZDriftM": 0.007508492005605216,
+            "maxYDriftM": 0.0034706785017938778,
+            "maxHorizontalDriftM": 0.007531193670166308,
+            "maxAdjacentWitnessJumpM": 0.0007046545758078786,
+            "metatarsalNetRiseM": 0.04744535380768475,
+            "metatarsalReversalsOver1mm": 0,
+            "metatarsalLoadedBaselineM": 0.11842197944388538,
+            "metatarsalPeakM": 0.16556883622778656,
+            "effectiveRockerRiseThresholdM": 0.002357342839195059,
+            "effectiveRockerOnsetPhase": 0.6545547594677583,
+            "clipCycleIndex": 0,
+            "toeDownLoadedDeltaRad": 0.09964003159802078,
+            "toeDownPassiveMeanRad": -0.02039612063745998,
+            "passiveToeDownBakedKeyCount": 5,
+            "passiveTerminalToePitchDegrees": {
+              "minimum": -36.72214631739904,
+              "maximum": -14.89444429269025
+            },
+            "passes": true
+          },
+          {
+            "anchorPhase": 0.40174002047082924,
+            "sampleCount": 48,
+            "ignoredIncompleteBoundaryFragment": true
+          }
+        ],
+        "seamToeDriftM": 0.0,
+        "startupToeJumpM": 0.00253152952299088,
+        "seamOrientationDegrees": 2.859632167146791e-15,
+        "seamPasses": true
+      }
+    }
+  },
+  "baseValidation": "candidates/v8.1-walk-respin-2/generated/iteration-36/base-validation.json"
+}

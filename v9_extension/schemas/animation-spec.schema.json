@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eonwild.dev/schemas/animation-spec.schema.json",
+  "title": "AnimationSpec",
+  "type": "object",
+  "required": [
+    "id",
+    "display_name",
+    "program",
+    "category",
+    "duration_s",
+    "loop",
+    "root_motion",
+    "phases",
+    "events",
+    "procedural_channels",
+    "validation"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+    },
+    "display_name": {
+      "type": "string"
+    },
+    "program": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "priority": {
+      "enum": [
+        "P0",
+        "P1",
+        "P2"
+      ]
+    },
+    "duration_s": {
+      "type": "object",
+      "required": [
+        "target",
+        "min",
+        "max"
+      ],
+      "properties": {
+        "target": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "min": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "max": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      }
+    },
+    "loop": {
+      "type": "boolean"
+    },
+    "root_motion": {
+      "type": "boolean"
+    },
+    "entry": {
+      "type": "object"
+    },
+    "exit": {
+      "type": "object"
+    },
+    "performance": {
+      "type": "object"
+    },
+    "phases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "range",
+          "goal",
+          "support",
+          "com",
+          "dynamics",
+          "interruptibility",
+          "body"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "range": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            ],
+            "items": false
+          },
+          "goal": {
+            "type": "string"
+          },
+          "support": {
+            "type": "string"
+          },
+          "com": {
+            "type": "string"
+          },
+          "dynamics": {
+            "type": "string"
+          },
+          "interruptibility": {
+            "enum": [
+              "true",
+              "false",
+              "partial",
+              "conditional"
+            ]
+          },
+          "body": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "kind"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "point",
+              "window",
+              "condition"
+            ]
+          },
+          "at": {
+            "type": "number"
+          },
+          "range": {
+            "type": "array"
+          },
+          "phase": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "procedural_channels": {
+      "type": "object"
+    },
+    "validation": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": true
+}

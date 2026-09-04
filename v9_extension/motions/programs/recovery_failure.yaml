@@ -1,0 +1,33 @@
+id: recovery_failure
+version: 1
+purpose: Respond to absent expected resistance, failed support, collision, fatigue, or injury with emergency whole-body
+  recovery or fall escalation.
+phase_template:
+- disturbance
+- uncontrolled_response
+- emergency_counteraction
+- catch_step
+- absorb
+- recover_or_fall
+inputs:
+- incoming_momentum
+- failure_type
+- available_support
+- terrain
+- fatigue
+- injury
+outputs:
+- emergency_foot_placement
+- tail_counter_request
+- absorption_plan
+- continue_stop_fall_branch
+invariants:
+- disturbance precedes polished correction
+- pelvis responds immediately
+- recovery contact is physically reachable
+branches:
+- bite_miss
+- stumble
+- recover
+- stop
+- fall

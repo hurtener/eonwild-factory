@@ -1,0 +1,15 @@
+{
+  "schema": "eonwild.v8_2.balance_transfer_comparison_render.v1",
+  "status": "PASS",
+  "composition": "left approved V8.1 iteration-38 side review; right V8.2 Candidate-A iteration-g side review",
+  "approvedInput": "procedural-animation-toolkit(v8.1)/approved_snapshots/v8.1-walk-iteration-38/media/walk-relaxed-v8-1-iteration-38-side.mp4",
+  "candidateInput": "showcase/v8.2-balance-transfer/iteration-g/side/walk-relaxed-v8-1-respin-side.mp4",
+  "output": "showcase/v8.2-balance-transfer/iteration-g/comparison/v8-1-approved-vs-v8-2-balance-transfer-side-by-side.mp4",
+  "command": "ffmpeg -i approved.mp4 -i candidate.mp4 -filter_complex [0:v][1:v]hstack=inputs=2 -an -c:v libx264 -pix_fmt yuv420p -r 24",
+  "durationSeconds": 10.0,
+  "fps": 24,
+  "frameCount": 240,
+  "resolution": [1920, 540],
+  "candidateInputSha256": "a29a14dcbcab3b6963c03966755e274419acb43704f26a71da2b055f0eaa8bac",
+  "outputSha256": "76910cd426c11d00e66a5bba98ba05a9a9f555638142fff48587825a4d2be5d2"
+}

@@ -1,0 +1,35 @@
+schema: eonwild.v8_3.package_layout.v1
+release:
+  id: v8.3-candidate
+  review_pin: aca1eab3f6e9f6970cf8a8281f4440a74f8551d3
+  historical_inputs_immutable: true
+  deterministic_mechanical_build: true
+inputs:
+  v8_2_approved:
+    path: procedural-animation-toolkit(v8.2)/asset/tarbosaurus_v8_2_approved.glb
+    sha256: a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5
+  v5_5_reference:
+    path: procedural-animation-toolkit(v5.5)/validated_result/v5.5/tarbosaurus_procedural_v5_5_animation_pack.glb
+    sha256: 4e6e85dc82e941a3fc10109ca781dd3dcbb084699dc19834bf8683c04b22fe65
+    authority: reference_capabilities_not_walk
+  semantic_map:
+    path: assets/examples/tarbosaurus/bone-map.edited-2.yml
+modules:
+  rig: config/v8_3/rig.yaml
+  body_posture: config/v8_3/body-posture.yaml
+  contact: config/v8_3/contact.yaml
+  terrain: config/v8_3/terrain.yaml
+  tail: config/v8_3/tail.yaml
+  jaw: config/v8_3/jaw.yaml
+  transitions: config/v8_3/transitions.yaml
+  clips: config/v8_3/clips/
+products:
+  compatibility_walk: artifacts/v8.3/compatibility/tarbosaurus_v8_2_compatible.glb
+  balanced_pack: artifacts/v8.3/balanced/tarbosaurus_v8_3_animation_pack.glb
+  manifest: artifacts/v8.3/animation-manifest.v8.3.json
+  evidence: artifacts/v8.3/evidence/
+rules:
+- root_motion_and_inplace_are_derived_from_one_world_plan
+- balanced_walk_must_lock_loaded_contact_patches
+- generic_code_must_not_reference_species_name_or_literal_bone_ids
+- legacy_balance_is_not_physical_com

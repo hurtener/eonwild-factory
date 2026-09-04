@@ -1,0 +1,270 @@
+{
+  "schema": "eonwild.v9_spec_pack_manifest.v1",
+  "pack": "eonwild-v9-biomechanics-spec-pack",
+  "version": "0.1.0",
+  "prepared_date": "2026-08-28",
+  "review_repo": "hurtener/eonwild-factory",
+  "review_repo_commit": "aca1eab3f6e9f6970cf8a8281f4440a74f8551d3",
+  "scope": "Architecture, data contracts, 29 animation specifications, reusable motion programs, provisional profiles, power-attack benchmark, implementation handoff, and structural validation. No V9 GLB implementation or perceptual approval is claimed.",
+  "validation_status": "PASS",
+  "validation_error_count": 0,
+  "inventory_policy": "manifest.json and SHA256SUMS.txt are excluded from this embedded inventory to avoid self-reference; SHA256SUMS.txt binds manifest.json and every other file.",
+  "file_count_excluding_manifest_and_checksums": 51,
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 6590,
+      "sha256": "f619bc1aab83544ff8f6343f6c6b4485f43535b108a63c56d6c193811d703c25"
+    },
+    {
+      "path": "docs/ANIMATION_CATALOG.md",
+      "bytes": 200432,
+      "sha256": "66666691162c59733c34bdfe76c1fa803d2b9b1d5f00657a990e1a0500dcd600"
+    },
+    {
+      "path": "docs/IMPLEMENTATION_HANDOFF.md",
+      "bytes": 6855,
+      "sha256": "e03cbeddeeba1f0705eaa768dc932653a844545d3e596967a740136dafd8a32a"
+    },
+    {
+      "path": "docs/RESEARCH_NOTES.md",
+      "bytes": 2865,
+      "sha256": "cd201175bb4753bde38edb45634ab94fa87b41b79d42540a750881f26d124e17"
+    },
+    {
+      "path": "docs/V9_ANIMATION_SYSTEM.md",
+      "bytes": 3891,
+      "sha256": "7c5634e29dc2ffba6fcd7e0a207499da09bf82ac0c681d79b406bae949fb5ff8"
+    },
+    {
+      "path": "docs/V9_ARCHITECTURE.md",
+      "bytes": 12486,
+      "sha256": "1227c5717db75bc19a6d1ee7c0d28fe3907b4e842df6a699ac4ad13f71a2a1b6"
+    },
+    {
+      "path": "examples/contact-state.left-foot-loaded.yaml",
+      "bytes": 485,
+      "sha256": "60c2c3a5f062c8acab66bb0ba7c6a44b1a5f44d2c9628692365f9275863dbf0c"
+    },
+    {
+      "path": "examples/dynamic-action-plan.power-attack-skeleton.yaml",
+      "bytes": 719,
+      "sha256": "a811921aa224829d19d06dedca5abdf2029abd5bb3020d912c633b5cc36c28a4"
+    },
+    {
+      "path": "examples/motion-intent.power-attack.yaml",
+      "bytes": 930,
+      "sha256": "bb5e159f07b509c512a2c5095ef4a20df41953c344e0d18f9cf79c49af309c14"
+    },
+    {
+      "path": "motions/contracts/global-animation-contract.yaml",
+      "bytes": 4457,
+      "sha256": "2ebfc8bf39a1509dbaabee9c9483e5fff3e198a793520f0e76bfbd66dfb2b187"
+    },
+    {
+      "path": "motions/programs/alternating_gait.yaml",
+      "bytes": 736,
+      "sha256": "a717496b688a6546f1fbbe446ae57f3f2da67f12e1fa03ca257ade051040b1bc"
+    },
+    {
+      "path": "motions/programs/attention_reaction.yaml",
+      "bytes": 616,
+      "sha256": "2fffe1ffa2508e5188c5fb2d4bc40256f41ad30c3b687385c941f6d372ce2645"
+    },
+    {
+      "path": "motions/programs/bite_action.yaml",
+      "bytes": 734,
+      "sha256": "10fd899867ae7b5fde2825f1c9ad9aa210d6dd8e54ff2dab509c7e7d2ce6ad26"
+    },
+    {
+      "path": "motions/programs/body_pressure.yaml",
+      "bytes": 596,
+      "sha256": "413d0ebac6eca8acb83399edeb351cf61020dfa52e44feca10b1fdbeaa57f731"
+    },
+    {
+      "path": "motions/programs/dynamic_launch_attack.yaml",
+      "bytes": 854,
+      "sha256": "6fc26fd3a6c9757005370d3c12111a4e0dabb34181460d26b6186df5427c7599"
+    },
+    {
+      "path": "motions/programs/feeding_interaction.yaml",
+      "bytes": 742,
+      "sha256": "2d0b6c17f7426c983675bdbd28599abc4c2e92fc92fd952137b89891575d6130"
+    },
+    {
+      "path": "motions/programs/gait_transition.yaml",
+      "bytes": 653,
+      "sha256": "9bf91940b6f11138a0b597401d4048afb9bae43e7064778a5ab41b7a1f412704"
+    },
+    {
+      "path": "motions/programs/ground_posture.yaml",
+      "bytes": 657,
+      "sha256": "f7fccdca3b0015c2313b712101ed451f15bd3f8d2317d99dd59c1acf256b6b11"
+    },
+    {
+      "path": "motions/programs/recovery_failure.yaml",
+      "bytes": 684,
+      "sha256": "e7e9611688f8209c70e0eb5d4c127be507505c0ac0160799f9bd7c62441e9ef6"
+    },
+    {
+      "path": "motions/programs/stationary_support.yaml",
+      "bytes": 650,
+      "sha256": "098e6a6a845ca4d93d43cdd9d1eb51e6822e2f49cf6ebbc093f801d166bc71ae"
+    },
+    {
+      "path": "motions/programs/terminal_fall.yaml",
+      "bytes": 693,
+      "sha256": "8180594e85abb70b5fe36bbebf954ed4b6c12850afcb1fcbf7e6c62101ca8931"
+    },
+    {
+      "path": "motions/programs/vocal_display.yaml",
+      "bytes": 652,
+      "sha256": "52a3bb1f5cddf7aa43c2063d69715d57af2816e1735d8cc7a58479c6b3ecf755"
+    },
+    {
+      "path": "motions/tarbosaurus/catalog.yaml",
+      "bytes": 226526,
+      "sha256": "18db8c9343e8c9a45b949bdded0d2add7b44cb13b9ead7c2408d08e1ca8a8f45"
+    },
+    {
+      "path": "motions/tarbosaurus/power-attack.yaml",
+      "bytes": 11860,
+      "sha256": "8d00e6cda7926624ca001d3597294e25bb12654ebf61ecf893c0b26332503670"
+    },
+    {
+      "path": "profiles/families/heavy-predatory-biped-capacity-provisional.yaml",
+      "bytes": 7692,
+      "sha256": "9706fcfbafa79cad5f9d81a1d2f4fa67885efea947c5a0d52287fa7f7787e2ea"
+    },
+    {
+      "path": "profiles/families/heavy-predatory-biped.yaml",
+      "bytes": 1841,
+      "sha256": "89e68082c1cd2b5843c09d6dff7ff44b4f7748d83650fee652439bdc77c194bb"
+    },
+    {
+      "path": "profiles/fixtures/synthetic-heavy-biped.yaml",
+      "bytes": 8665,
+      "sha256": "49d398ad10458ac22a52164f00fdf30cec52f16ea1412351ff9f78663e3535a4"
+    },
+    {
+      "path": "profiles/species/tarbosaurus/body-template-provisional.yaml",
+      "bytes": 15322,
+      "sha256": "b4fe5daadcb6328f85d9950469d9aa1121b1a02881072fffa2dbe2f464308e15"
+    },
+    {
+      "path": "profiles/species/tarbosaurus/growth-profile.yaml",
+      "bytes": 5143,
+      "sha256": "2f0a25e6e0bae27011b83790e698c1fdc1aa907e192e5baa77b0962093c3a2af"
+    },
+    {
+      "path": "profiles/species/tarbosaurus/joint-limits-provisional.yaml",
+      "bytes": 26227,
+      "sha256": "ed485dcc238fb2c2eb63dba29f3b26ec31f4d725c3a86b28740ee2d26342c97c"
+    },
+    {
+      "path": "schemas/actuation-capacity-profile.schema.json",
+      "bytes": 4416,
+      "sha256": "f3ac7ac8a444a4bfaafe68ee158a30389e13e258679ce9ec2d967076126662f0"
+    },
+    {
+      "path": "schemas/animation-catalog.schema.json",
+      "bytes": 863,
+      "sha256": "65ea2b659397a556b584bc5fff5cbd2d0c34296a4fea269f27d69f066af4d5ce"
+    },
+    {
+      "path": "schemas/animation-spec.schema.json",
+      "bytes": 3388,
+      "sha256": "51fec239500e3cd009e874efe8961b4b6ce91ef2ae55f6d6714311471a9e5e94"
+    },
+    {
+      "path": "schemas/biomechanical-plan.schema.json",
+      "bytes": 1468,
+      "sha256": "9d98d2d040fda5e5beceefed7e118e35bd6f867bec110fd39b12499e10b4dcfb"
+    },
+    {
+      "path": "schemas/body-instance-profile.schema.json",
+      "bytes": 7133,
+      "sha256": "9ebf71309eb557333edaecfc14bdbb9d405285e3422886c21c6cd89b4eeebedd"
+    },
+    {
+      "path": "schemas/contact-state.schema.json",
+      "bytes": 2145,
+      "sha256": "3a42447cc21ae712ecc3332338a11e721b644fab2290020e0516dafe569b0713"
+    },
+    {
+      "path": "schemas/dynamic-action-plan.schema.json",
+      "bytes": 871,
+      "sha256": "d2e80413bcd58e7df57796c7c5b6aa7343ba0966d50a863ef3774f4ea34e0321"
+    },
+    {
+      "path": "schemas/dynamic-action-spec.schema.json",
+      "bytes": 1123,
+      "sha256": "cd67a23cf110886433211ab702e2224ecb27facf37ddafe5ee2f9fc26d65fc75"
+    },
+    {
+      "path": "schemas/growth-profile.schema.json",
+      "bytes": 2318,
+      "sha256": "868f877123bd6f37fc907486da0b41853321617e2bf79cfb1919ef43ebe5d195"
+    },
+    {
+      "path": "schemas/joint-limit-catalog.schema.json",
+      "bytes": 1640,
+      "sha256": "e65861c9d246f28806d8e92c6d6b1accdc54a32aa6402fc513408214ba529fa8"
+    },
+    {
+      "path": "schemas/joint-limit-envelope.schema.json",
+      "bytes": 3018,
+      "sha256": "d9942616a331460b75b861e6c557d86e0f7ace8abc35b259f36af2118a93685b"
+    },
+    {
+      "path": "schemas/motion-intent.schema.json",
+      "bytes": 820,
+      "sha256": "d6f6ae982bb349a3d564d81994e76789682381acca2dd18646c4f7079647bb85"
+    },
+    {
+      "path": "schemas/motion-program.schema.json",
+      "bytes": 1036,
+      "sha256": "1cf51c127da1b1b72ffd21c3e1c1f2811d3f250512b6f279d7ae6fe2c88c53cc"
+    },
+    {
+      "path": "schemas/motion-regime.schema.json",
+      "bytes": 1826,
+      "sha256": "e02d28d4f1c6dfc2d80055bd4702a81d7d23ffed765cf4409ae3cafe7c552090"
+    },
+    {
+      "path": "schemas/schema-policy.yaml",
+      "bytes": 718,
+      "sha256": "4189171aae2c94f44e799298165ec973db7cc03e4d70b097715e88ea8b0b7485"
+    },
+    {
+      "path": "schemas/segment-mass-properties.schema.json",
+      "bytes": 3167,
+      "sha256": "34c4ff8786438c3ca1e4010b30d74374914e05cef10620e6f37635c6f27f13b0"
+    },
+    {
+      "path": "scripts/render_animation_catalog.py",
+      "bytes": 4574,
+      "sha256": "dea5097a6f7a7bc86979bc8acc30d53223037efe49a169ed3364ebb897b2fd01"
+    },
+    {
+      "path": "scripts/validate_spec_pack.py",
+      "bytes": 18346,
+      "sha256": "c9e1c859e0a861fa933f32b07918bccfb733d5e0064046b2dbe4849daba72501"
+    },
+    {
+      "path": "validation/acceptance-gates.yaml",
+      "bytes": 3936,
+      "sha256": "e240d606b47947875bf77bc7f6e52be9b01b59a630c96a6fa765c22f2b837c45"
+    },
+    {
+      "path": "validation/pinned-regressions.yaml",
+      "bytes": 1218,
+      "sha256": "6cf6acf2d2dd9bc1fda0fe2200311d46a50fdd6991ca8242d4076bf72bc223e4"
+    },
+    {
+      "path": "validation-report.json",
+      "bytes": 2725,
+      "sha256": "319c8f32a7ad5a67913c7a709af25dd1be5cc40180f0580ac1718cbd887eaf4f"
+    }
+  ]
+}

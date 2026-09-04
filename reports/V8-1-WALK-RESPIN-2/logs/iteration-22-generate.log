@@ -1,0 +1,4846 @@
+{
+  "status": "CANDIDATE_READY_FOR_VALIDATION",
+  "candidateOnly": true,
+  "input": {
+    "sourceGlb": "/Volumes/m2-extended-disk/Repos/eonwild-factory/procedural-animation-toolkit(v8.1)/inputs/v8/tarbosaurus.glb",
+    "sourceGlbSha256": "fbb42c2edad4eadebbcf808d32028d7c73b3fbfd6172610eddd5df84990a65c7",
+    "canonicalProfileSha256": "f128bd39cca62a674855ffbcce2e88226cec3b17048bf9a830bd158238240143",
+    "overlaySha256": "e1e4732818b60b0b7a1ee688b80ccbc96871b2dfb2f422e3d9e718331feecf90"
+  },
+  "immutableBefore": {
+    "toolkitTreeSha256": "d7f2426cb6626f7e7c94e96228afdee9ba05492197cefa7c5066a2a05c329d10",
+    "showcaseTreeSha256": "336b22f38b74e7d011484ea737c48a66f9b3e4c36eb996a54086bed740bcf753",
+    "sourceGlbSha256": "fbb42c2edad4eadebbcf808d32028d7c73b3fbfd6172610eddd5df84990a65c7",
+    "canonicalProfileSha256": "f128bd39cca62a674855ffbcce2e88226cec3b17048bf9a830bd158238240143"
+  },
+  "profile": {
+    "name": "tarbosaurus_v8_1_relaxed_walk_respin_2",
+    "reference_hip_height_m": 2.75,
+    "cycle_hz": 0.4914529915,
+    "stride_length_m": 2.6,
+    "stance_fraction": 0.74,
+    "contact_lead_stride": 0.55,
+    "swing_lift_hip_fraction": 0.055,
+    "swing_outward_hip_fraction": 0.0035,
+    "load_ramp_fraction": 0.2,
+    "toe_off_window_fraction": 0.126,
+    "precontact_window_fraction": 0.65,
+    "pelvis_support_shift_gain": 0.022,
+    "pelvis_vertical_bob_hip_fraction": 0.0045,
+    "pelvis_loading_drop_hip_fraction": 0.0035,
+    "pelvis_forward_sway_hip_fraction": 0.0018,
+    "pelvis_roll_deg": 1.35,
+    "pelvis_yaw_deg": 1.55,
+    "pelvis_pitch_deg": 0.5,
+    "body_lean_deg": -1.0,
+    "pelvis_neutral_pitch_deg": -1.1,
+    "neck_relaxed_pitch_deg": -0.6,
+    "head_horizon_pitch_deg": 0.35,
+    "hip_swing_deg": 16.0,
+    "hip_extension_limit_deg": 28.0,
+    "hip_flexion_limit_deg": 34.0,
+    "hip_abduction_limit_deg": 9.0,
+    "knee_min_flex_deg": 18.0,
+    "knee_max_flex_deg": 112.0,
+    "knee_stance_flex_deg": 45.0,
+    "knee_loading_flex_deg": 4.0,
+    "knee_swing_flex_deg": 80.0,
+    "ankle_min_flex_deg": 16.0,
+    "ankle_max_flex_deg": 104.0,
+    "ankle_stance_flex_deg": 46.0,
+    "ankle_swing_flex_deg": 68.0,
+    "leg_position_scale_hip_fraction": 0.0025,
+    "leg_preference_weight": 0.17,
+    "leg_continuity_weight": 0.22,
+    "leg_max_solver_evaluations": 12,
+    "swing_ankle_deg": 9.0,
+    "toe_off_foot_deg": 9.0,
+    "contact_foot_deg": 1.0,
+    "toe_push_deg": 12.0,
+    "spine_counter_gain": 0.44,
+    "neck_stabilize_gain": 0.45,
+    "head_stabilize_gain": 0.58,
+    "arm_inertia_deg": 2.4,
+    "breathing_chest_deg": 0.85,
+    "breathing_neck_deg": 0.32,
+    "neutral_jaw_close_deg": 50.0,
+    "jaw_breath_deg": 0.28,
+    "head_micro_yaw_deg": 0.35,
+    "asymmetry_fraction": 0.008,
+    "internal_sample_hz": 120,
+    "export_sample_hz": 60,
+    "supercycle_count": 2,
+    "ik_tolerance_hip_fraction": 0.00035,
+    "tail_root_yaw_gain": 0.62,
+    "tail_com_gain": 0.72,
+    "tail_velocity_gain": 0.11,
+    "tail_pitch_gain": 0.24,
+    "tail_neutral_sag_deg": 4.7,
+    "tail_stiffness_root": 20.0,
+    "tail_stiffness_tip": 4.6,
+    "tail_damping_ratio": 0.75,
+    "tail_coupling": 8.0,
+    "tail_parent_follow": 0.28,
+    "tail_phase_lag_seconds_per_bone": 0.028,
+    "tail_dynamic_limit_root_deg": 2.4,
+    "tail_dynamic_limit_tip_deg": 5.8,
+    "tail_warmup_supercycles": 28,
+    "max_joint_velocity_deg_s": 390.0,
+    "max_joint_acceleration_deg_s2": 9000.0,
+    "anatomical_margin_deg": 1.0,
+    "sole_weight_threshold": 0.28,
+    "sole_height_band_hip_fraction": 0.115,
+    "sole_forward_padding_hip_fraction": 0.12,
+    "sole_contact_quantile": 0.08,
+    "sole_clearance_m": 0.0025,
+    "sole_max_vertical_correction_hip_fraction": 0.06,
+    "sole_penetration_gate_hip_fraction": 0.002,
+    "sole_loaded_gap_gate_hip_fraction": 0.009,
+    "sole_min_vertices_per_side": 48,
+    "sole_max_vertices_per_side": 64,
+    "terrain_normal_blend": 0.88,
+    "terrain_foot_roll_limit_deg": 10.0,
+    "terrain_foot_pitch_limit_deg": 14.0,
+    "terrain_pelvis_height_blend": 0.72,
+    "terrain_pelvis_roll_gain": 0.58,
+    "terrain_pelvis_pitch_gain": 0.46,
+    "terrain_probe_radius_hip_fraction": 0.045,
+    "swing_advance_start_fraction": 0.08,
+    "swing_advance_end_fraction": 0.89,
+    "swing_lift_rise_fraction": 0.38,
+    "swing_lift_fall_start_fraction": 0.58,
+    "swing_turn_lift_scale": 1.08,
+    "uneven_terrain_amplitude_hip_fraction": 0.016,
+    "uneven_terrain_wavelength_m": 2.4,
+    "turn_default_degrees": 35.0,
+    "turn_duration_seconds": 5.42,
+    "turn_inside_stride_scale": 0.8,
+    "turn_outside_stride_scale": 1.1,
+    "turn_body_lean_deg": 2.1,
+    "start_duration_seconds": 3.65,
+    "stop_duration_seconds": 3.35,
+    "start_cycles": 1.65,
+    "stop_cycles": 1.5,
+    "minimum_active_speed_fraction": 0.1,
+    "acceleration_lean_deg": 2.6,
+    "braking_lean_deg": -2.7,
+    "alert_cycle_hz": 0.7,
+    "alert_stride_scale": 0.88,
+    "alert_head_raise_deg": 4.2,
+    "alert_neck_raise_deg": 3.8,
+    "alert_scan_yaw_deg": 7.0,
+    "alert_scan_period_seconds": 5.2,
+    "alert_tail_raise_deg": 2.0,
+    "alert_step_height_scale": 1.08,
+    "idle_duration_seconds": 7.0,
+    "idle_weight_shift_hip_fraction": 0.004,
+    "idle_head_scan_yaw_deg": 3.0,
+    "idle_head_scan_pitch_deg": 0.9,
+    "idle_tail_tip_deg": 2.4,
+    "idle_breath_cycles": 2.0,
+    "eating_duration_seconds": 10.8,
+    "eating_body_lower_deg": 7.8,
+    "eating_neck_lower_deg": 29.0,
+    "eating_head_lower_deg": 14.5,
+    "eating_pelvis_back_hip_fraction": 0.062,
+    "eating_knee_flex_deg": 7.0,
+    "eating_jaw_open_deg": 29.0,
+    "eating_bite_count": 3,
+    "eating_chew_deg": 3.2,
+    "bite_duration_seconds": 4.6,
+    "bite_anticipation_fraction": 0.28,
+    "bite_contact_fraction": 0.67,
+    "bite_recovery_fraction": 0.84,
+    "bite_lunge_hip_fraction": 0.305,
+    "bite_body_crouch_deg": 6.2,
+    "bite_neck_retract_deg": 15.0,
+    "bite_neck_thrust_deg": 18.5,
+    "bite_jaw_open_deg": 50.0,
+    "bite_snap_close_deg": 0.8,
+    "bite_head_yaw_deg": 3.0,
+    "roar_duration_seconds": 5.6,
+    "roar_inhale_fraction": 0.24,
+    "roar_peak_fraction": 0.54,
+    "roar_release_fraction": 0.82,
+    "roar_neck_raise_deg": 15.0,
+    "roar_head_raise_deg": 10.0,
+    "roar_jaw_open_deg": 50.0,
+    "roar_chest_expand_deg": 4.4,
+    "roar_head_shake_deg": 2.3,
+    "roar_tail_brace_deg": 2.7,
+    "transition_short_seconds": 0.75,
+    "transition_medium_seconds": 1.25,
+    "transition_long_seconds": 1.8,
+    "transition_match_velocity": true,
+    "max_transition_endpoint_position_error": 1e-06,
+    "max_transition_endpoint_rotation_error": 1e-06,
+    "max_turn_loaded_slide_hip_fraction": 0.008,
+    "turn_cycle_hz_scale": 0.86,
+    "turn_stride_scale": 0.84,
+    "turn_inside_contact_lag_cycles": 0.025,
+    "turn_head_lead_deg": 18.5,
+    "turn_neck_lead_deg": 12.2,
+    "turn_chest_lead_deg": 4.8,
+    "turn_pelvis_lead_deg": 1.35,
+    "turn_head_lookahead_fraction": 0.205,
+    "turn_lead_rise_fraction": 0.13,
+    "turn_lead_fall_start_fraction": 0.72,
+    "turn_support_shift_hip_fraction": 0.0045,
+    "turn_tail_counter_root_deg": 3.8,
+    "turn_tail_counter_tip_deg": 9.6,
+    "turn_tail_release_lag_fraction": 0.13,
+    "turn_head_roll_deg": 2.0,
+    "turn_step_yaw_deg": 3.0,
+    "eating_pelvis_down_hip_fraction": 0.069,
+    "bite_preload_back_hip_fraction": 0.115,
+    "bite_preload_down_hip_fraction": 0.078,
+    "bite_catch_step_hip_fraction": 0.115,
+    "max_relaxed_pelvis_lateral_hip_fraction": 0.018,
+    "max_relaxed_pelvis_vertical_hip_fraction": 0.02,
+    "max_relaxed_mesh_hover_hip_fraction": 0.006,
+    "max_turn_head_lead_error_deg": 1.0,
+    "minimum_turn_head_lead_deg": 12.0,
+    "minimum_turn_neck_lead_deg": 7.0,
+    "minimum_turn_tail_counter_deg": 4.0,
+    "foot_pivot_gap_fraction": 0.9,
+    "turn_head_overshoot_fraction": 0.22,
+    "turn_neck_overshoot_fraction": 0.11,
+    "turn_head_pitch_deg": 1.25,
+    "turn_neck_roll_deg": 0.85,
+    "bite_focus_fraction": 0.09,
+    "bite_first_catch_fraction": 0.49,
+    "bite_hold_end_fraction": 0.8,
+    "bite_first_catch_step_hip_fraction": 0.205,
+    "bite_second_catch_step_hip_fraction": 0.15,
+    "bite_first_step_height_hip_fraction": 0.038,
+    "bite_second_step_height_hip_fraction": 0.03,
+    "bite_target_head_yaw_deg": 4.6,
+    "bite_contact_head_yaw_deg": 5.8,
+    "bite_contact_head_roll_deg": 2.7,
+    "bite_tear_head_yaw_deg": 7.5,
+    "bite_tear_neck_yaw_deg": 4.2,
+    "bite_tear_chest_yaw_deg": 1.8,
+    "bite_tail_preload_deg": 4.8,
+    "bite_tail_delivery_deg": 6.0,
+    "bite_tail_tear_deg": 5.2,
+    "eating_target_search_yaw_deg": 2.4,
+    "eating_bite_retract_deg": 4.8,
+    "eating_bite_thrust_deg": 5.4,
+    "eating_pull_head_yaw_deg": 5.8,
+    "eating_pull_neck_yaw_deg": 3.4,
+    "eating_pull_head_roll_deg": 2.4,
+    "eating_pull_head_raise_deg": 4.0,
+    "eating_pull_pelvis_shift_hip_fraction": 0.0065,
+    "eating_tail_counter_deg": 3.6,
+    "eating_swallow_head_raise_deg": 2.2,
+    "eating_bite_times": [
+      0.165,
+      0.485,
+      0.785
+    ],
+    "eating_bite_directions": [
+      -1.0,
+      1.0,
+      -1.0
+    ],
+    "eating_bite_strengths": [
+      1.0,
+      0.78,
+      1.08
+    ],
+    "minimum_attack_preload_back_hip_fraction": 0.085,
+    "minimum_attack_preload_down_hip_fraction": 0.055,
+    "minimum_attack_root_delivery_hip_fraction": 0.22,
+    "minimum_attack_head_tear_deg": 4.0,
+    "minimum_eating_head_yaw_span_deg": 6.0,
+    "minimum_eating_jaw_events": 3,
+    "minimum_eating_pelvis_down_hip_fraction": 0.055,
+    "power_duration_seconds": 2.8,
+    "power_coil_start_fraction": 0.12,
+    "power_coil_end_fraction": 0.27,
+    "power_takeoff_fraction": 0.38,
+    "power_apex_fraction": 0.415,
+    "power_bite_contact_fraction": 0.44,
+    "power_land_fraction": 0.45,
+    "power_catch_fraction": 0.55,
+    "power_arrest_end_fraction": 0.76,
+    "power_preload_back_hip_fraction": 0.08,
+    "power_preload_down_hip_fraction": 0.06,
+    "power_root_rise_hip_fraction": 0.088,
+    "power_forward_hip_fraction": 0.39,
+    "power_sole_clearance_hip_fraction": 0.05,
+    "power_landing_absorb_hip_fraction": 0.038,
+    "power_launch_load": 0.72,
+    "power_jaw_open_deg": 52.0
+  },
+  "footPivotCalibration": {
+    "gapFraction": 0.9,
+    "adjustments": [
+      {
+        "joint": "Bone_008",
+        "oldWorldPosition": [
+          -0.4283853018498213,
+          0.21173757875848223,
+          0.47466855061040986
+        ],
+        "newWorldPosition": [
+          -0.4283853018498213,
+          0.1072946756740088,
+          0.4746685506104099
+        ],
+        "preservedChildWorldPositions": {
+          "Bone_044": [
+            -0.5212234441869362,
+            0.09568990877284307,
+            0.4746685767159377
+          ],
+          "Bone_047": [
+            -0.3819662072199686,
+            0.09568990789082905,
+            0.52108763198559
+          ],
+          "Bone_050": [
+            -0.4515948608043609,
+            0.09568990933019644,
+            0.5210876275913037
+          ]
+        },
+        "skinJointSlot": 43,
+        "side": "l",
+        "toeRootCentroid": [
+          -0.4515948374037552,
+          0.09568990866462285,
+          0.5056146120976105
+        ],
+        "originalVerticalGapM": 0.11604767009385938,
+        "movementDownM": 0.10444290308447345,
+        "remainingVerticalGapM": 0.011604767009385952
+      },
+      {
+        "joint": "Bone_012",
+        "oldWorldPosition": [
+          0.45357702353903057,
+          0.2117374147414137,
+          0.4746687236750882
+        ],
+        "newWorldPosition": [
+          0.45357702353903057,
+          0.10729446530694686,
+          0.47466872367508817
+        ],
+        "preservedChildWorldPositions": {
+          "Bone_053": [
+            0.383948423336095,
+            0.09568968586739188,
+            0.521087782647882
+          ],
+          "Bone_056": [
+            0.5232056753720299,
+            0.09568970126058214,
+            0.47466867246724426
+          ],
+          "Bone_059": [
+            0.47678660924250243,
+            0.095689692314711,
+            0.5210877861042715
+          ]
+        },
+        "skinJointSlot": 56,
+        "side": "r",
+        "toeRootCentroid": [
+          0.4613135693168758,
+          0.09568969314756166,
+          0.5056147470731326
+        ],
+        "originalVerticalGapM": 0.11604772159385203,
+        "movementDownM": 0.10444294943446683,
+        "remainingVerticalGapM": 0.011604772159385199
+      }
+    ],
+    "maximumToeRootOriginErrorM": 1.716587549445839e-16,
+    "maximumRestSkinnedVertexErrorM": 2.241232429242919e-08,
+    "bilateralMovementDifferenceM": 4.6349993385041977e-08,
+    "inverseBindSlotsChanged": 2,
+    "changedInverseBindSlots": [
+      43,
+      56
+    ]
+  },
+  "toeGroundLock": {
+    "policy": "candidate-local world-space distal witness lock; no post-solve foot translation; spring-damper after release",
+    "sides": {
+      "PROC_WALK_RELAXED_V8_1_RESPIN_ROOTMOTION": {
+        "l": {
+          "activeToeContactKeys": 32,
+          "rockerOnset": 0.614,
+          "release": 0.745,
+          "passiveLagEnd": 0.8,
+          "receivingArm": 0.818,
+          "flatten": 0.88,
+          "witnessVertexIndices": [
+            51119,
+            49877,
+            50149
+          ],
+          "contactLock": [
+            {
+              "key": 49,
+              "phase": 0.4016393442622951,
+              "maxWitnessErrorM": 0.0,
+              "toeDownDegrees": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "key": 50,
+              "phase": 0.40983606557377045,
+              "maxWitnessErrorM": 1.2832391721229186e-05,
+              "toeDownDegrees": [
+                0.00021614209056046904,
+                0.00015404162153790057,
+                0.0001953924126505877
+              ]
+            },
+            {
+              "key": 51,
+              "phase": 0.41803278688524587,
+              "maxWitnessErrorM": 2.7572079278614936e-05,
+              "toeDownDegrees": [
+                0.00044708408967738796,
+                0.0003176475001802834,
+                0.0004038158162489107
+              ]
+            },
+            {
+              "key": 52,
+              "phase": 0.4262295081967213,
+              "maxWitnessErrorM": 4.439526428301477e-05,
+              "toeDownDegrees": [
+                0.0006926697165372328,
+                0.000490532148076234,
+                0.000625067342890843
+              ]
+            },
+            {
+              "key": 53,
+              "phase": 0.4344262295081967,
+              "maxWitnessErrorM": 6.347637207548829e-05,
+              "toeDownDegrees": [
+                0.000952671917367992,
+                0.0006723507648068535,
+                0.0008588764689417537
+              ]
+            },
+            {
+              "key": 54,
+              "phase": 0.44262295081967207,
+              "maxWitnessErrorM": 8.498742383555857e-05,
+              "toeDownDegrees": [
+                0.0012267783600339265,
+                0.0008626988425952433,
+                0.0011048961901380528
+              ]
+            },
+            {
+              "key": 55,
+              "phase": 0.45081967213114754,
+              "maxWitnessErrorM": 0.00010909755296628632,
+              "toeDownDegrees": [
+                0.0015146486164527126,
+                0.0010611523641550962,
+                0.0013627544439373013
+              ]
+            },
+            {
+              "key": 56,
+              "phase": 0.4590163934426229,
+              "maxWitnessErrorM": 0.00013597269465881467,
+              "toeDownDegrees": [
+                0.0018159624369892898,
+                0.0012673059377842587,
+                0.0016320992819749119
+              ]
+            },
+            {
+              "key": 57,
+              "phase": 0.4672131147540984,
+              "maxWitnessErrorM": 0.00016577526569894196,
+              "toeDownDegrees": [
+                0.0021304832704247844,
+                0.001480821902368484,
+                0.0019126565300458455
+              ]
+            },
+            {
+              "key": 58,
+              "phase": 0.47540983606557374,
+              "maxWitnessErrorM": 0.00019866354386488538,
+              "toeDownDegrees": [
+                0.002458128423784404,
+                0.001701483504135233,
+                0.0022042943397513268
+              ]
+            },
+            {
+              "key": 59,
+              "phase": 0.48360655737704916,
+              "maxWitnessErrorM": 0.0002347903276551655,
+              "toeDownDegrees": [
+                0.0027990367634203595,
+                0.0019292518544729033,
+                0.0025070910358991976
+              ]
+            },
+            {
+              "key": 60,
+              "phase": 0.4918032786885246,
+              "maxWitnessErrorM": 0.0002743004305507668,
+              "toeDownDegrees": [
+                0.0031536343402050714,
+                0.0021643151083702607,
+                0.0028213897953846337
+              ]
+            },
+            {
+              "key": 61,
+              "phase": 0.5,
+              "maxWitnessErrorM": 0.00031732662254269073,
+              "toeDownDegrees": [
+                0.0035226818130093744,
+                0.0024071305024040745,
+                0.003147848181210828
+              ]
+            },
+            {
+              "key": 62,
+              "phase": 0.5081967213114754,
+              "maxWitnessErrorM": 0.0003637060868197928,
+              "toeDownDegrees": [
+                0.003908810201175255,
+                0.002659884543887698,
+                0.00348895556971954
+              ]
+            },
+            {
+              "key": 63,
+              "phase": 0.5163934426229507,
+              "maxWitnessErrorM": 0.00041236328696725444,
+              "toeDownDegrees": [
+                0.0043207433924283755,
+                0.00293034346562219,
+                0.0038531478589969264
+              ]
+            },
+            {
+              "key": 64,
+              "phase": 0.5245901639344263,
+              "maxWitnessErrorM": 0.0004625197130514458,
+              "toeDownDegrees": [
+                0.0047681269357714206,
+                0.0032266965804164526,
+                0.004249608876582956
+              ]
+            },
+            {
+              "key": 65,
+              "phase": 0.5327868852459017,
+              "maxWitnessErrorM": 0.0005139930264883574,
+              "toeDownDegrees": [
+                0.00525940374358668,
+                0.003555616349465723,
+                0.00468620623355769
+              ]
+            },
+            {
+              "key": 66,
+              "phase": 0.540983606557377,
+              "maxWitnessErrorM": 0.0005672436737740316,
+              "toeDownDegrees": [
+                0.0058088278723885944,
+                0.003927622276878558,
+                0.005175953233172289
+              ]
+            },
+            {
+              "key": 67,
+              "phase": 0.5491803278688524,
+              "maxWitnessErrorM": 0.0006226472596413402,
+              "toeDownDegrees": [
+                0.0073559895580473005,
+                0.005065263837912566,
+                0.006587097369639431
+              ]
+            },
+            {
+              "key": 68,
+              "phase": 0.5573770491803278,
+              "maxWitnessErrorM": 0.0006781151997909962,
+              "toeDownDegrees": [
+                0.01316297429593189,
+                0.00948048208990068,
+                0.011935234850212044
+              ]
+            },
+            {
+              "key": 69,
+              "phase": 0.5655737704918032,
+              "maxWitnessErrorM": 0.0007314398909372688,
+              "toeDownDegrees": [
+                0.0264145015711374,
+                0.0196254683931412,
+                0.024164367872688188
+              ]
+            },
+            {
+              "key": 70,
+              "phase": 0.5737704918032787,
+              "maxWitnessErrorM": 0.0007806363028590724,
+              "toeDownDegrees": [
+                0.04975095714806576,
+                0.037532590011176335,
+                0.04571500862488151
+              ]
+            },
+            {
+              "key": 71,
+              "phase": 0.5819672131147541,
+              "maxWitnessErrorM": 0.0008238948323229245,
+              "toeDownDegrees": [
+                0.0852473152928381,
+                0.06479811741589307,
+                0.07850470063857723
+              ]
+            },
+            {
+              "key": 72,
+              "phase": 0.5901639344262295,
+              "maxWitnessErrorM": 0.0008596312394053562,
+              "toeDownDegrees": [
+                0.13437578617572318,
+                0.10255274078194,
+                0.12389316664829673
+              ]
+            },
+            {
+              "key": 73,
+              "phase": 0.5983606557377049,
+              "maxWitnessErrorM": 0.0008865798033699246,
+              "toeDownDegrees": [
+                0.19796325437057172,
+                0.1514287517849654,
+                0.18264297253176695
+              ]
+            },
+            {
+              "key": 74,
+              "phase": 0.6065573770491802,
+              "maxWitnessErrorM": 0.0009038985595521964,
+              "toeDownDegrees": [
+                0.2761575522768037,
+                0.2115340810712482,
+                0.25488834555207857
+              ]
+            },
+            {
+              "key": 75,
+              "phase": 0.6147540983606558,
+              "maxWitnessErrorM": 0.000911270703298106,
+              "toeDownDegrees": [
+                0.36840832763329096,
+                0.282441793275374,
+                0.34012305461590836
+              ]
+            },
+            {
+              "key": 76,
+              "phase": 0.6229508196721312,
+              "maxWitnessErrorM": 0.0009135983418742111,
+              "toeDownDegrees": [
+                0.46827174825686463,
+                0.3650237051746597,
+                0.4405778337737895
+              ]
+            },
+            {
+              "key": 77,
+              "phase": 0.6311475409836066,
+              "maxWitnessErrorM": 0.0008931462940320323,
+              "toeDownDegrees": [
+                0.5829988345165974,
+                0.4843676870000473,
+                0.5903263987018017
+              ]
+            },
+            {
+              "key": 78,
+              "phase": 0.6393442622950819,
+              "maxWitnessErrorM": 0.0008473478790116395,
+              "toeDownDegrees": [
+                0.7079917960408876,
+                0.6505178837979831,
+                0.8041956524271788
+              ]
+            },
+            {
+              "key": 79,
+              "phase": 0.6475409836065573,
+              "maxWitnessErrorM": 0.0009053074272415973,
+              "toeDownDegrees": [
+                0.8238928020596544,
+                0.8536478603817347,
+                1.071424305992323
+              ]
+            },
+            {
+              "key": 80,
+              "phase": 0.6557377049180327,
+              "maxWitnessErrorM": 0.0009654842949513576,
+              "toeDownDegrees": [
+                1.0232860594066417,
+                1.163122329077605,
+                1.475104626419461
+              ]
+            },
+            {
+              "key": 81,
+              "phase": 0.6639344262295082,
+              "maxWitnessErrorM": 0.0010451427320887774,
+              "toeDownDegrees": [
+                1.2423908904159915,
+                1.5224311384950098,
+                1.9459181395008032
+              ]
+            },
+            {
+              "key": 82,
+              "phase": 0.6721311475409836,
+              "maxWitnessErrorM": 0.0011338021420945754,
+              "toeDownDegrees": [
+                1.4749900122134043,
+                1.9153267207655746,
+                2.462099947444957
+              ]
+            },
+            {
+              "key": 83,
+              "phase": 0.680327868852459,
+              "maxWitnessErrorM": 0.0012328564547883225,
+              "toeDownDegrees": [
+                1.7060035073383757,
+                2.3161843814296774,
+                2.9900326046928605
+              ]
+            },
+            {
+              "key": 84,
+              "phase": 0.6885245901639344,
+              "maxWitnessErrorM": 0.0017301092245087801,
+              "toeDownDegrees": [
+                1.934085056117945,
+                2.7089842720630304,
+                3.5074228177467788
+              ]
+            },
+            {
+              "key": 85,
+              "phase": 0.6967213114754097,
+              "maxWitnessErrorM": 0.0022346258501027005,
+              "toeDownDegrees": [
+                2.1460463025530636,
+                3.06914408796712,
+                3.9816956765319924
+              ]
+            },
+            {
+              "key": 86,
+              "phase": 0.7049180327868853,
+              "maxWitnessErrorM": 0.0026666990113057842,
+              "toeDownDegrees": [
+                2.3278021261352357,
+                3.3735291860359498,
+                4.3823725880939275
+              ]
+            },
+            {
+              "key": 87,
+              "phase": 0.7131147540983607,
+              "maxWitnessErrorM": 0.0030957819052612745,
+              "toeDownDegrees": [
+                2.5251367921442776,
+                3.6490882488560343,
+                4.740298109153908
+              ]
+            },
+            {
+              "key": 88,
+              "phase": 0.7213114754098361,
+              "maxWitnessErrorM": 0.0032152606383051285,
+              "toeDownDegrees": [
+                2.5839306538693165,
+                3.773175338168075,
+                4.9061865820893855
+              ]
+            },
+            {
+              "key": 89,
+              "phase": 0.7295081967213114,
+              "maxWitnessErrorM": 0.0032316696758032393,
+              "toeDownDegrees": [
+                2.618873384699249,
+                3.8381384913209295,
+                4.992474419331038
+              ]
+            },
+            {
+              "key": 90,
+              "phase": 0.7377049180327868,
+              "maxWitnessErrorM": 0.003174690822164594,
+              "toeDownDegrees": [
+                2.6367077027495887,
+                3.8610706280804723,
+                5.0221798981536985
+              ]
+            },
+            {
+              "key": 171,
+              "phase": 0.401639344262295,
+              "maxWitnessErrorM": 0.0,
+              "toeDownDegrees": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "key": 172,
+              "phase": 0.4098360655737705,
+              "maxWitnessErrorM": 1.3384176778430401e-05,
+              "toeDownDegrees": [
+                0.00021597008208980542,
+                0.0001533813757316401,
+                0.00019504600853365123
+              ]
+            },
+            {
+              "key": 173,
+              "phase": 0.4180327868852458,
+              "maxWitnessErrorM": 2.8680662628843834e-05,
+              "toeDownDegrees": [
+                0.00044655034504620893,
+                0.0003161761434819955,
+                0.00040294604495490064
+              ]
+            },
+            {
+              "key": 174,
+              "phase": 0.42622950819672134,
+              "maxWitnessErrorM": 4.6062853825024064e-05,
+              "toeDownDegrees": [
+                0.000691577022850312,
+                0.000488095797958502,
+                0.000623491116817285
+              ]
+            },
+            {
+              "key": 175,
+              "phase": 0.43442622950819665,
+              "maxWitnessErrorM": 6.570192156640786e-05,
+              "toeDownDegrees": [
+                0.0009508170412041176,
+                0.0006687939163456394,
+                0.0008564061486693915
+              ]
+            },
+            {
+              "key": 176,
+              "phase": 0.4426229508196722,
+              "maxWitnessErrorM": 8.776613453820303e-05,
+              "toeDownDegrees": [
+                0.0012239540095073246,
+                0.0008578662541355135,
+                0.0011013416042306885
+              ]
+            },
+            {
+              "key": 177,
+              "phase": 0.45081967213114726,
+              "maxWitnessErrorM": 0.00011242033103542326,
+              "toeDownDegrees": [
+                0.001510645796615513,
+                0.0010548925194149585,
+                0.0013579270052560533
+              ]
+            },
+            {
+              "key": 178,
+              "phase": 0.4590163934426228,
+              "maxWitnessErrorM": 0.00013982557592306932,
+              "toeDownDegrees": [
+                0.001810578029187896,
+                0.0012594748291499653,
+                0.0016258134707230639
+              ]
+            },
+            {
+              "key": 179,
+              "phase": 0.4672131147540983,
+              "maxWitnessErrorM": 0.0001701388216353017,
+              "toeDownDegrees": [
+                0.002123520325660009,
+                0.0014712869265545506,
+                0.0019047383633088498
+              ]
+            },
+            {
+              "key": 180,
+              "phase": 0.47540983606557363,
+              "maxWitnessErrorM": 0.00020351228580128833,
+              "toeDownDegrees": [
+                0.002449404967922776,
+                0.001690129175721123,
+                0.0021945843315284755
+              ]
+            },
+            {
+              "key": 181,
+              "phase": 0.48360655737704916,
+              "maxWitnessErrorM": 0.00024009214407705315,
+              "toeDownDegrees": [
+                0.0027883905132531075,
+                0.0019159839538936967,
+                0.002495449404344941
+              ]
+            },
+            {
+              "key": 182,
+              "phase": 0.49180327868852447,
+              "maxWitnessErrorM": 0.00028001609648864445,
+              "toeDownDegrees": [
+                0.003140928046309668,
+                0.002149065629929706,
+                0.002807704408447081
+              ]
+            },
+            {
+              "key": 183,
+              "phase": 0.5,
+              "maxWitnessErrorM": 0.0003234094409636512,
+              "toeDownDegrees": [
+                0.0035078102663316365,
+                0.0023898625458061975,
+                0.0031320359169825663
+              ]
+            },
+            {
+              "key": 184,
+              "phase": 0.5081967213114755,
+              "maxWitnessErrorM": 0.0003701038778545218,
+              "toeDownDegrees": [
+                0.003891696962423214,
+                0.002640588856029347,
+                0.0034709646142599016
+              ]
+            },
+            {
+              "key": 185,
+              "phase": 0.5163934426229506,
+              "maxWitnessErrorM": 0.0004190262283705337,
+              "toeDownDegrees": [
+                0.004301344619824751,
+                0.00290903575777597,
+                0.0038329531639798883
+              ]
+            },
+            {
+              "key": 186,
+              "phase": 0.5245901639344261,
+              "maxWitnessErrorM": 0.0004694001342451237,
+              "toeDownDegrees": [
+                0.004746409194539122,
+                0.003203394869901343,
+                0.004227197356812433
+              ]
+            },
+            {
+              "key": 187,
+              "phase": 0.5327868852459015,
+              "maxWitnessErrorM": 0.0005210420435353136,
+              "toeDownDegrees": [
+                0.005235338392329515,
+                0.0035303461099197406,
+                0.004661566789145306
+              ]
+            },
+            {
+              "key": 188,
+              "phase": 0.540983606557377,
+              "maxWitnessErrorM": 0.0005744081877643303,
+              "toeDownDegrees": [
+                0.005782359531877105,
+                0.0039003948771729816,
+                0.005149054429735629
+              ]
+            },
+            {
+              "key": 189,
+              "phase": 0.5491803278688525,
+              "maxWitnessErrorM": 0.0006298686556736044,
+              "toeDownDegrees": [
+                0.007327586733127424,
+                0.005036491472627299,
+                0.006558389224988871
+              ]
+            },
+            {
+              "key": 190,
+              "phase": 0.5573770491803278,
+              "maxWitnessErrorM": 0.0006853274977896007,
+              "toeDownDegrees": [
+                0.013133959389147173,
+                0.00945124552355687,
+                0.011905967928209277
+              ]
+            },
+            {
+              "key": 191,
+              "phase": 0.5655737704918034,
+              "maxWitnessErrorM": 0.0007385711983278753,
+              "toeDownDegrees": [
+                0.026384410997193547,
+                0.019595477288504918,
+                0.0241341287678626
+              ]
+            },
+            {
+              "key": 192,
+              "phase": 0.5737704918032784,
+              "maxWitnessErrorM": 0.0007876116009191136,
+              "toeDownDegrees": [
+                0.04971509129728493,
+                0.03749829740418079,
+                0.04567948480129543
+              ]
+            },
+            {
+              "key": 193,
+              "phase": 0.581967213114754,
+              "maxWitnessErrorM": 0.0008306395520909504,
+              "toeDownDegrees": [
+                0.0851950922965427,
+                0.06475145150550463,
+                0.07845412919126103
+              ]
+            },
+            {
+              "key": 194,
+              "phase": 0.5901639344262295,
+              "maxWitnessErrorM": 0.0008660750275764073,
+              "toeDownDegrees": [
+                0.13429007836846443,
+                0.10248060216968168,
+                0.12381175490650347
+              ]
+            },
+            {
+              "key": 195,
+              "phase": 0.5983606557377048,
+              "maxWitnessErrorM": 0.0008926599559933024,
+              "toeDownDegrees": [
+                0.1978207795513593,
+                0.15131329939404708,
+                0.18250922990579535
+              ]
+            },
+            {
+              "key": 196,
+              "phase": 0.6065573770491803,
+              "maxWitnessErrorM": 0.0009095626373154531,
+              "toeDownDegrees": [
+                0.2759301797817988,
+                0.21135376841381373,
+                0.25467630406681985
+              ]
+            },
+            {
+              "key": 197,
+              "phase": 0.6147540983606556,
+              "maxWitnessErrorM": 0.0009164780600370293,
+              "toeDownDegrees": [
+                0.368065190594816,
+                0.28217297325871654,
+                0.33980422877382516
+              ]
+            },
+            {
+              "key": 198,
+              "phase": 0.6229508196721312,
+              "maxWitnessErrorM": 0.0009183197264461818,
+              "toeDownDegrees": [
+                0.46778160215314285,
+                0.36464245596122635,
+                0.44012338084448893
+              ]
+            },
+            {
+              "key": 199,
+              "phase": 0.6311475409836065,
+              "maxWitnessErrorM": 0.0008973644975318606,
+              "toeDownDegrees": [
+                0.5823330282929464,
+                0.48385202558211454,
+                0.5897097499017809
+              ]
+            },
+            {
+              "key": 200,
+              "phase": 0.6393442622950818,
+              "maxWitnessErrorM": 0.0008510556725065399,
+              "toeDownDegrees": [
+                0.7071265441775307,
+                0.6498494359215402,
+                0.803394504515336
+              ]
+            },
+            {
+              "key": 201,
+              "phase": 0.6475409836065573,
+              "maxWitnessErrorM": 0.0009089343887582757,
+              "toeDownDegrees": [
+                0.822811066352745,
+                0.8528132290458186,
+                1.0704222713892402
+              ]
+            },
+            {
+              "key": 202,
+              "phase": 0.6557377049180326,
+              "maxWitnessErrorM": 0.0009686968670963303,
+              "toeDownDegrees": [
+                1.0219808891318891,
+                1.1621159299054529,
+                1.473894441173621
+              ]
+            },
+            {
+              "key": 203,
+              "phase": 0.6639344262295082,
+              "maxWitnessErrorM": 0.0010479464314854248,
+              "toeDownDegrees": [
+                1.2408631729040556,
+                1.5212532084575485,
+                1.9444995514248555
+              ]
+            },
+            {
+              "key": 204,
+              "phase": 0.6721311475409835,
+              "maxWitnessErrorM": 0.0011361987088873704,
+              "toeDownDegrees": [
+                1.4732496265010764,
+                1.9139843991599483,
+                2.4604810048372783
+              ]
+            },
+            {
+              "key": 205,
+              "phase": 0.680327868852459,
+              "maxWitnessErrorM": 0.0012348415606373564,
+              "toeDownDegrees": [
+                1.704068568972563,
+                2.314691193201774,
+                2.988229152255013
+              ]
+            },
+            {
+              "key": 206,
+              "phase": 0.6885245901639345,
+              "maxWitnessErrorM": 0.0017285883764674992,
+              "toeDownDegrees": [
+                1.931980884253503,
+                2.7073594637400746,
+                3.505457718055846
+              ]
+            },
+            {
+              "key": 207,
+              "phase": 0.6967213114754098,
+              "maxWitnessErrorM": 0.0022335037329459517,
+              "toeDownDegrees": [
+                2.1438035412915473,
+                3.0674112271303233,
+                3.9795972689455112
+              ]
+            },
+            {
+              "key": 208,
+              "phase": 0.7049180327868851,
+              "maxWitnessErrorM": 0.0026659944835980554,
+              "toeDownDegrees": [
+                2.3254547327652055,
+                3.3717145870760814,
+                4.38017280347381
+              ]
+            },
+            {
+              "key": 209,
+              "phase": 0.7131147540983604,
+              "maxWitnessErrorM": 0.0030952817749967387,
+              "toeDownDegrees": [
+                2.5226725650713746,
+                3.647182833250877,
+                4.737986090554964
+              ]
+            },
+            {
+              "key": 210,
+              "phase": 0.721311475409836,
+              "maxWitnessErrorM": 0.00321524483361868,
+              "toeDownDegrees": [
+                2.58145888551505,
+                3.771263665517688,
+                4.903865621128994
+              ]
+            },
+            {
+              "key": 211,
+              "phase": 0.7295081967213115,
+              "maxWitnessErrorM": 0.003232160155123065,
+              "toeDownDegrees": [
+                2.6164074128069434,
+                3.8362313432942114,
+                4.990157952809477
+              ]
+            },
+            {
+              "key": 212,
+              "phase": 0.7377049180327868,
+              "maxWitnessErrorM": 0.0031756791452939304,
+              "toeDownDegrees": [
+                2.634261079816361,
+                3.859178808765075,
+                5.019881359798392
+              ]
+            }
+          ],
+          "passiveIntegration": [
+            {
+              "cycle": 0,
+              "bone": "Bone_044",
+              "anchorKey": 90,
+              "lagKeys": [
+                91,
+                92,
+                93,
+                94,
+                95,
+                96,
+                97
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.04880580269209479,
+              "finalAngularSpeedRadS": 0.018128959345170323,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            },
+            {
+              "cycle": 0,
+              "bone": "Bone_050",
+              "anchorKey": 90,
+              "lagKeys": [
+                91,
+                92,
+                93,
+                94,
+                95,
+                96,
+                97
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.05676155849456108,
+              "finalAngularSpeedRadS": 0.021084131999801723,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            },
+            {
+              "cycle": 0,
+              "bone": "Bone_047",
+              "anchorKey": 90,
+              "lagKeys": [
+                91,
+                92,
+                93,
+                94,
+                95,
+                96,
+                97
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.062211324435347055,
+              "finalAngularSpeedRadS": 0.023108452464409214,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            },
+            {
+              "cycle": 0,
+              "bone": "Bone_008",
+              "anchorKey": 90,
+              "lagKeys": [
+                91,
+                92,
+                93,
+                94,
+                95,
+                96,
+                97
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.8936207661768425,
+              "finalAngularSpeedRadS": 0.3319362380376126,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            },
+            {
+              "cycle": 1,
+              "bone": "Bone_044",
+              "anchorKey": 212,
+              "lagKeys": [
+                213,
+                214,
+                215,
+                216,
+                217,
+                218,
+                219
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.0488260504429153,
+              "finalAngularSpeedRadS": 0.018136480390439705,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            },
+            {
+              "cycle": 1,
+              "bone": "Bone_050",
+              "anchorKey": 212,
+              "lagKeys": [
+                213,
+                214,
+                215,
+                216,
+                217,
+                218,
+                219
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.05677759925034906,
+              "finalAngularSpeedRadS": 0.021090090352979127,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            },
+            {
+              "cycle": 1,
+              "bone": "Bone_047",
+              "anchorKey": 212,
+              "lagKeys": [
+                213,
+                214,
+                215,
+                216,
+                217,
+                218,
+                219
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.062230085395120434,
+              "finalAngularSpeedRadS": 0.02311542123980573,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            },
+            {
+              "cycle": 1,
+              "bone": "Bone_008",
+              "anchorKey": 212,
+              "lagKeys": [
+                213,
+                214,
+                215,
+                216,
+                217,
+                218,
+                219
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.8901670562743615,
+              "finalAngularSpeedRadS": 0.3306533543852917,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            }
+          ]
+        },
+        "r": {
+          "activeToeContactKeys": 32,
+          "rockerOnset": 0.614,
+          "release": 0.745,
+          "passiveLagEnd": 0.8,
+          "receivingArm": 0.818,
+          "flatten": 0.88,
+          "witnessVertexIndices": [
+            41588,
+            41368,
+            41936
+          ],
+          "contactLock": [
+            {
+              "key": 0,
+              "phase": 0.5,
+              "maxWitnessErrorM": 0.0,
+              "toeDownDegrees": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "key": 1,
+              "phase": 0.5081967213114754,
+              "maxWitnessErrorM": 3.5991076442476455e-05,
+              "toeDownDegrees": [
+                0.0011182187675773004,
+                0.0009596509506953316,
+                0.0016873595204567227
+              ]
+            },
+            {
+              "key": 2,
+              "phase": 0.5163934426229508,
+              "maxWitnessErrorM": 7.933345177368878e-05,
+              "toeDownDegrees": [
+                0.0015136979987945378,
+                0.0012841220921015696,
+                0.002361874654936321
+              ]
+            },
+            {
+              "key": 3,
+              "phase": 0.5245901639344261,
+              "maxWitnessErrorM": 0.00012496608536449738,
+              "toeDownDegrees": [
+                0.0018361764953686126,
+                0.001543662736454395,
+                0.002938114240391698
+              ]
+            },
+            {
+              "key": 4,
+              "phase": 0.5327868852459017,
+              "maxWitnessErrorM": 0.00017096525083259984,
+              "toeDownDegrees": [
+                0.0021558204116322137,
+                0.0018004846564021377,
+                0.0035115729488230277
+              ]
+            },
+            {
+              "key": 5,
+              "phase": 0.540983606557377,
+              "maxWitnessErrorM": 0.00021788351340812362,
+              "toeDownDegrees": [
+                0.0025102358595646104,
+                0.002087211330605329,
+                0.004137176266400848
+              ]
+            },
+            {
+              "key": 6,
+              "phase": 0.5491803278688525,
+              "maxWitnessErrorM": 0.0002660051980349909,
+              "toeDownDegrees": [
+                0.003693562563826184,
+                0.0030976768547497603,
+                0.005949209764769545
+              ]
+            },
+            {
+              "key": 7,
+              "phase": 0.5573770491803278,
+              "maxWitnessErrorM": 0.0003134053023773342,
+              "toeDownDegrees": [
+                0.008420928034626133,
+                0.007205454527323045,
+                0.012818496206857039
+              ]
+            },
+            {
+              "key": 8,
+              "phase": 0.5655737704918034,
+              "maxWitnessErrorM": 0.0003581191164108155,
+              "toeDownDegrees": [
+                0.019338340164851284,
+                0.01672359993348938,
+                0.028518032274797753
+              ]
+            },
+            {
+              "key": 9,
+              "phase": 0.5737704918032787,
+              "maxWitnessErrorM": 0.00039842478201812526,
+              "toeDownDegrees": [
+                0.03864719012431282,
+                0.0335762459286414,
+                0.05618860336305543
+              ]
+            },
+            {
+              "key": 10,
+              "phase": 0.5819672131147541,
+              "maxWitnessErrorM": 0.0004327708557951837,
+              "toeDownDegrees": [
+                0.06809448637188188,
+                0.059289920563916645,
+                0.09832588931043604
+              ]
+            },
+            {
+              "key": 11,
+              "phase": 0.5901639344262295,
+              "maxWitnessErrorM": 0.00045980714709970005,
+              "toeDownDegrees": [
+                0.10894208167318574,
+                0.09496649476501984,
+                0.1567376217410979
+              ]
+            },
+            {
+              "key": 12,
+              "phase": 0.5983606557377049,
+              "maxWitnessErrorM": 0.0004784640963294562,
+              "toeDownDegrees": [
+                0.1619272147861748,
+                0.14124858854444622,
+                0.23248797102438762
+              ]
+            },
+            {
+              "key": 13,
+              "phase": 0.6065573770491803,
+              "maxWitnessErrorM": 0.0004880502309728696,
+              "toeDownDegrees": [
+                0.22722613822698193,
+                0.1982877777630966,
+                0.3258456130133499
+              ]
+            },
+            {
+              "key": 14,
+              "phase": 0.6147540983606558,
+              "maxWitnessErrorM": 0.0004883517902933843,
+              "toeDownDegrees": [
+                0.3044330243570144,
+                0.26572605923303844,
+                0.4362468250523414
+              ]
+            },
+            {
+              "key": 15,
+              "phase": 0.6229508196721312,
+              "maxWitnessErrorM": 0.00048559294538130793,
+              "toeDownDegrees": [
+                0.39582207644014367,
+                0.34518291736029455,
+                0.5581607352449397
+              ]
+            },
+            {
+              "key": 16,
+              "phase": 0.6311475409836066,
+              "maxWitnessErrorM": 0.0004927257360946014,
+              "toeDownDegrees": [
+                0.5158765432207731,
+                0.4480938509623059,
+                0.6828492604166922
+              ]
+            },
+            {
+              "key": 17,
+              "phase": 0.639344262295082,
+              "maxWitnessErrorM": 0.0005018504163172288,
+              "toeDownDegrees": [
+                0.6849003800244513,
+                0.5913413531827892,
+                0.8187888685244479
+              ]
+            },
+            {
+              "key": 18,
+              "phase": 0.6475409836065573,
+              "maxWitnessErrorM": 0.000481050962726437,
+              "toeDownDegrees": [
+                0.9270615782803855,
+                0.7956877965464453,
+                0.9927746062757786
+              ]
+            },
+            {
+              "key": 19,
+              "phase": 0.6557377049180328,
+              "maxWitnessErrorM": 0.00036195845559461315,
+              "toeDownDegrees": [
+                1.280476982597563,
+                1.0944642888725076,
+                1.261999235750913
+              ]
+            },
+            {
+              "key": 20,
+              "phase": 0.6639344262295082,
+              "maxWitnessErrorM": 0.0003707688444732904,
+              "toeDownDegrees": [
+                1.6738333036459414,
+                1.4257657131604262,
+                1.535767452583719
+              ]
+            },
+            {
+              "key": 21,
+              "phase": 0.6721311475409836,
+              "maxWitnessErrorM": 0.00039248095977728603,
+              "toeDownDegrees": [
+                2.1399563402195603,
+                1.8188681306367545,
+                1.8780746326454456
+              ]
+            },
+            {
+              "key": 22,
+              "phase": 0.680327868852459,
+              "maxWitnessErrorM": 0.0007971940252653464,
+              "toeDownDegrees": [
+                2.6542713241491342,
+                2.253104462471381,
+                2.2748546607978035
+              ]
+            },
+            {
+              "key": 23,
+              "phase": 0.6885245901639344,
+              "maxWitnessErrorM": 0.0012642163342198032,
+              "toeDownDegrees": [
+                3.1814276523996265,
+                2.698539735636418,
+                2.6982938897414854
+              ]
+            },
+            {
+              "key": 24,
+              "phase": 0.6967213114754098,
+              "maxWitnessErrorM": 0.001740970917516238,
+              "toeDownDegrees": [
+                3.680157297177397,
+                3.1201486700876724,
+                3.111423628199199
+              ]
+            },
+            {
+              "key": 25,
+              "phase": 0.7049180327868853,
+              "maxWitnessErrorM": 0.00216732808204656,
+              "toeDownDegrees": [
+                4.110452198700034,
+                3.483974458796834,
+                3.475936168668381
+              ]
+            },
+            {
+              "key": 26,
+              "phase": 0.7131147540983607,
+              "maxWitnessErrorM": 0.002667822119981844,
+              "toeDownDegrees": [
+                4.531889600544654,
+                3.842484147748778,
+                3.889807082168977
+              ]
+            },
+            {
+              "key": 27,
+              "phase": 0.721311475409836,
+              "maxWitnessErrorM": 0.002752926182610027,
+              "toeDownDegrees": [
+                4.691392514694469,
+                3.97600080871383,
+                3.9976103945144246
+              ]
+            },
+            {
+              "key": 28,
+              "phase": 0.7295081967213115,
+              "maxWitnessErrorM": 0.002754359671202078,
+              "toeDownDegrees": [
+                4.77296556041615,
+                4.044385273425344,
+                4.0562382141833435
+              ]
+            },
+            {
+              "key": 29,
+              "phase": 0.7377049180327868,
+              "maxWitnessErrorM": 0.0026965146250843564,
+              "toeDownDegrees": [
+                4.7992208559687235,
+                4.066552214991985,
+                4.079871414628889
+              ]
+            },
+            {
+              "key": 110,
+              "phase": 0.4016393442622951,
+              "maxWitnessErrorM": 0.0,
+              "toeDownDegrees": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "key": 111,
+              "phase": 0.4098360655737705,
+              "maxWitnessErrorM": 1.7996282303034405e-05,
+              "toeDownDegrees": [
+                0.00015933699741711444,
+                0.00013046469215340732,
+                0.0002731391624487515
+              ]
+            },
+            {
+              "key": 112,
+              "phase": 0.4180327868852458,
+              "maxWitnessErrorM": 3.737330129283123e-05,
+              "toeDownDegrees": [
+                0.00032745695421385453,
+                0.0002679312158687147,
+                0.0005623220235685424
+              ]
+            },
+            {
+              "key": 113,
+              "phase": 0.42622950819672123,
+              "maxWitnessErrorM": 5.828216166525735e-05,
+              "toeDownDegrees": [
+                0.0005039610583240278,
+                0.00041197945768591904,
+                0.0008673499746470813
+              ]
+            },
+            {
+              "key": 114,
+              "phase": 0.43442622950819676,
+              "maxWitnessErrorM": 8.087676460588611e-05,
+              "toeDownDegrees": [
+                0.0006883610333574118,
+                0.0005621063484589173,
+                0.0011879275051950675
+              ]
+            },
+            {
+              "key": 115,
+              "phase": 0.44262295081967207,
+              "maxWitnessErrorM": 0.00010531243526434864,
+              "toeDownDegrees": [
+                0.0008800739030804461,
+                0.0007177269691563883,
+                0.0015236116266825295
+              ]
+            },
+            {
+              "key": 116,
+              "phase": 0.4508196721311475,
+              "maxWitnessErrorM": 0.00013174460170306546,
+              "toeDownDegrees": [
+                0.0010784648332968977,
+                0.0008782109252757905,
+                0.001873891157342898
+              ]
+            },
+            {
+              "key": 117,
+              "phase": 0.4590163934426229,
+              "maxWitnessErrorM": 0.00016032767948059856,
+              "toeDownDegrees": [
+                0.0012828850166037894,
+                0.001042916718674559,
+                0.0022382312401245854
+              ]
+            },
+            {
+              "key": 118,
+              "phase": 0.4672131147540983,
+              "maxWitnessErrorM": 0.0001912141417403923,
+              "toeDownDegrees": [
+                0.0014927218797452103,
+                0.0012112342135212433,
+                0.002616144946614522
+              ]
+            },
+            {
+              "key": 119,
+              "phase": 0.47540983606557363,
+              "maxWitnessErrorM": 0.00022455363709683596,
+              "toeDownDegrees": [
+                0.0017074464752500306,
+                0.0013826286902501198,
+                0.0030072566077287036
+              ]
+            },
+            {
+              "key": 120,
+              "phase": 0.48360655737704916,
+              "maxWitnessErrorM": 0.0002604918494886199,
+              "toeDownDegrees": [
+                0.0019266653710065746,
+                0.0015566846914330603,
+                0.0034113734789878183
+              ]
+            },
+            {
+              "key": 121,
+              "phase": 0.4918032786885246,
+              "maxWitnessErrorM": 0.00029916867364043753,
+              "toeDownDegrees": [
+                0.0021501596479434307,
+                0.0017331437932905167,
+                0.003828539796952014
+              ]
+            },
+            {
+              "key": 122,
+              "phase": 0.5,
+              "maxWitnessErrorM": 0.0003407152436678551,
+              "toeDownDegrees": [
+                0.0023779183928285905,
+                0.0019119310178937038,
+                0.004259073638801035
+              ]
+            },
+            {
+              "key": 123,
+              "phase": 0.5081967213114755,
+              "maxWitnessErrorM": 0.00038499445540685073,
+              "toeDownDegrees": [
+                0.0026122924241840507,
+                0.002095166788174795,
+                0.0047059845311333585
+              ]
+            },
+            {
+              "key": 124,
+              "phase": 0.5163934426229508,
+              "maxWitnessErrorM": 0.00043103329247440314,
+              "toeDownDegrees": [
+                0.002863668575748029,
+                0.0022924008964122626,
+                0.0051816613159061465
+              ]
+            },
+            {
+              "key": 125,
+              "phase": 0.5245901639344261,
+              "maxWitnessErrorM": 0.00047771937726270863,
+              "toeDownDegrees": [
+                0.0031405108914519895,
+                0.0025115396368564605,
+                0.005695487536975423
+              ]
+            },
+            {
+              "key": 126,
+              "phase": 0.5327868852459015,
+              "maxWitnessErrorM": 0.0005242380372716404,
+              "toeDownDegrees": [
+                0.0034457656831571094,
+                0.002755528679436196,
+                0.006249790290800781
+              ]
+            },
+            {
+              "key": 127,
+              "phase": 0.540983606557377,
+              "maxWitnessErrorM": 0.0005715063834741407,
+              "toeDownDegrees": [
+                0.0037955357295657937,
+                0.0030380163561148543,
+                0.006869719496624755
+              ]
+            },
+            {
+              "key": 128,
+              "phase": 0.5491803278688525,
+              "maxWitnessErrorM": 0.0006199250656382382,
+              "toeDownDegrees": [
+                0.0049774218421468,
+                0.004047053206913926,
+                0.008680633617689818
+              ]
+            },
+            {
+              "key": 129,
+              "phase": 0.5573770491803278,
+              "maxWitnessErrorM": 0.0006676028433587611,
+              "toeDownDegrees": [
+                0.009705217718190525,
+                0.00815500839201009,
+                0.01555170779538285
+              ]
+            },
+            {
+              "key": 130,
+              "phase": 0.5655737704918034,
+              "maxWitnessErrorM": 0.0007125814990116552,
+              "toeDownDegrees": [
+                0.02062513422409932,
+                0.017675071211649625,
+                0.031256514490238974
+              ]
+            },
+            {
+              "key": 131,
+              "phase": 0.5737704918032787,
+              "maxWitnessErrorM": 0.0007531368469408939,
+              "toeDownDegrees": [
+                0.03993882926974805,
+                0.03453157996409671,
+                0.05893641136158489
+              ]
+            },
+            {
+              "key": 132,
+              "phase": 0.581967213114754,
+              "maxWitnessErrorM": 0.0007877124554909187,
+              "toeDownDegrees": [
+                0.06939318447512592,
+                0.060250935045797246,
+                0.10108705714760949
+              ]
+            },
+            {
+              "key": 133,
+              "phase": 0.5901639344262295,
+              "maxWitnessErrorM": 0.0008149528125929173,
+              "toeDownDegrees": [
+                0.11024936623895883,
+                0.09593439093813946,
+                0.15951530775256342
+              ]
+            },
+            {
+              "key": 134,
+              "phase": 0.5983606557377048,
+              "maxWitnessErrorM": 0.000833783746573058,
+              "toeDownDegrees": [
+                0.1632433593402671,
+                0.1422234607217226,
+                0.23528361641769419
+              ]
+            },
+            {
+              "key": 135,
+              "phase": 0.6065573770491803,
+              "maxWitnessErrorM": 0.0008435103590316295,
+              "toeDownDegrees": [
+                0.22854974989349253,
+                0.19926827004791686,
+                0.328658299841808
+              ]
+            },
+            {
+              "key": 136,
+              "phase": 0.6147540983606556,
+              "maxWitnessErrorM": 0.000843916941673406,
+              "toeDownDegrees": [
+                0.305760842431981,
+                0.2667091814038672,
+                0.43907294597924923
+              ]
+            },
+            {
+              "key": 137,
+              "phase": 0.6229508196721312,
+              "maxWitnessErrorM": 0.0008412271045457054,
+              "toeDownDegrees": [
+                0.397148891204541,
+                0.3461640224027003,
+                0.560992630303426
+              ]
+            },
+            {
+              "key": 138,
+              "phase": 0.6311475409836065,
+              "maxWitnessErrorM": 0.0008483926602500524,
+              "toeDownDegrees": [
+                0.5171957311651408,
+                0.4490670952950969,
+                0.6856735689947226
+              ]
+            },
+            {
+              "key": 139,
+              "phase": 0.639344262295082,
+              "maxWitnessErrorM": 0.0008575138124036208,
+              "toeDownDegrees": [
+                0.6862050646236489,
+                0.5923006387248583,
+                0.8215902795437865
+              ]
+            },
+            {
+              "key": 140,
+              "phase": 0.6475409836065573,
+              "maxWitnessErrorM": 0.0008366734561096045,
+              "toeDownDegrees": [
+                0.9283468348486054,
+                0.7966284333469134,
+                0.9955414195078675
+              ]
+            },
+            {
+              "key": 141,
+              "phase": 0.6557377049180326,
+              "maxWitnessErrorM": 0.0007174998236632035,
+              "toeDownDegrees": [
+                1.2817419982269715,
+                1.0953846581943625,
+                1.2647296451695886
+              ]
+            },
+            {
+              "key": 142,
+              "phase": 0.6639344262295082,
+              "maxWitnessErrorM": 0.0007232183240721834,
+              "toeDownDegrees": [
+                1.6750725323880773,
+                1.426660890097456,
+                1.5384481918256183
+              ]
+            },
+            {
+              "key": 143,
+              "phase": 0.6721311475409835,
+              "maxWitnessErrorM": 0.0007403645658601299,
+              "toeDownDegrees": [
+                2.141169742713155,
+                1.8197374053674782,
+                1.8807062275645596
+              ]
+            },
+            {
+              "key": 144,
+              "phase": 0.680327868852459,
+              "maxWitnessErrorM": 0.0006779629492363881,
+              "toeDownDegrees": [
+                2.655459661600723,
+                2.2539479428456923,
+                2.27744006503452
+              ]
+            },
+            {
+              "key": 145,
+              "phase": 0.6885245901639345,
+              "maxWitnessErrorM": 0.0009099176792433106,
+              "toeDownDegrees": [
+                3.1825916771646168,
+                2.6993577851641746,
+                2.700836649618791
+              ]
+            },
+            {
+              "key": 146,
+              "phase": 0.6967213114754098,
+              "maxWitnessErrorM": 0.0013868953059352762,
+              "toeDownDegrees": [
+                3.6812970514446306,
+                3.1209414027797107,
+                3.113926242689448
+              ]
+            },
+            {
+              "key": 147,
+              "phase": 0.7049180327868851,
+              "maxWitnessErrorM": 0.0018134874098896248,
+              "toeDownDegrees": [
+                4.111566670499984,
+                3.484741486883992,
+                3.4783992021079344
+              ]
+            },
+            {
+              "key": 148,
+              "phase": 0.7131147540983604,
+              "maxWitnessErrorM": 0.002314148316256315,
+              "toeDownDegrees": [
+                4.5329772912288995,
+                3.8432236512710594,
+                3.89223843008421
+              ]
+            },
+            {
+              "key": 149,
+              "phase": 0.721311475409836,
+              "maxWitnessErrorM": 0.002399460678655707,
+              "toeDownDegrees": [
+                4.692450579388137,
+                3.9767135194339014,
+                3.999993167580245
+              ]
+            },
+            {
+              "key": 150,
+              "phase": 0.7295081967213115,
+              "maxWitnessErrorM": 0.002401123305251218,
+              "toeDownDegrees": [
+                4.773992642318716,
+                4.0450705393317365,
+                4.058573771567064
+              ]
+            },
+            {
+              "key": 151,
+              "phase": 0.7377049180327868,
+              "maxWitnessErrorM": 0.0023435156532651824,
+              "toeDownDegrees": [
+                4.800217285720813,
+                4.067210747793275,
+                4.082162666888041
+              ]
+            },
+            {
+              "key": 232,
+              "phase": 0.401639344262295,
+              "maxWitnessErrorM": 0.0,
+              "toeDownDegrees": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "key": 233,
+              "phase": 0.4098360655737705,
+              "maxWitnessErrorM": 1.799716718542399e-05,
+              "toeDownDegrees": [
+                0.00015840559983397735,
+                0.00012965038741331576,
+                0.0002718112434547382
+              ]
+            },
+            {
+              "key": 234,
+              "phase": 0.4180327868852458,
+              "maxWitnessErrorM": 3.7357102730339875e-05,
+              "toeDownDegrees": [
+                0.0003256119099742277,
+                0.0002663270045834577,
+                0.0005596462543178511
+              ]
+            },
+            {
+              "key": 235,
+              "phase": 0.42622950819672134,
+              "maxWitnessErrorM": 5.8230058816111097e-05,
+              "toeDownDegrees": [
+                0.0005012272109970136,
+                0.00040961587477401744,
+                0.000863314043029078
+              ]
+            },
+            {
+              "key": 236,
+              "phase": 0.43442622950819665,
+              "maxWitnessErrorM": 8.076914951615777e-05,
+              "toeDownDegrees": [
+                0.000684770307218801,
+                0.0005590211453114038,
+                0.0011825272187040844
+              ]
+            },
+            {
+              "key": 237,
+              "phase": 0.4426229508196722,
+              "maxWitnessErrorM": 0.00010512902082027153,
+              "toeDownDegrees": [
+                0.0008756676873178231,
+                0.0007139664774657947,
+                0.00151685539037442
+              ]
+            },
+            {
+              "key": 238,
+              "phase": 0.45081967213114726,
+              "maxWitnessErrorM": 0.00013146457982626814,
+              "toeDownDegrees": [
+                0.001073294914978854,
+                0.0008738300989631216,
+                0.0018658000855588657
+              ]
+            },
+            {
+              "key": 239,
+              "phase": 0.4590163934426228,
+              "maxWitnessErrorM": 0.0001599299279937405,
+              "toeDownDegrees": [
+                0.0012770157515786652,
+                0.0010379817139280988,
+                0.00222884245709778
+              ]
+            },
+            {
+              "key": 240,
+              "phase": 0.4672131147540983,
+              "maxWitnessErrorM": 0.00019067749369261477,
+              "toeDownDegrees": [
+                0.0014862280714589633,
+                0.0012058216921797212,
+                0.002605512949390679
+              ]
+            },
+            {
+              "key": 241,
+              "phase": 0.4754098360655734,
+              "maxWitnessErrorM": 0.00022385720809348086,
+              "toeDownDegrees": [
+                0.001700419207851254,
+                0.001376827320763526,
+                0.002995457464255312
+              ]
+            },
+            {
+              "key": 242,
+              "phase": 0.48360655737704916,
+              "maxWitnessErrorM": 0.0002596154359566505,
+              "toeDownDegrees": [
+                0.0019192061488951103,
+                0.0015505932682778484,
+                0.0033985029941204174
+              ]
+            },
+            {
+              "key": 243,
+              "phase": 0.49180327868852425,
+              "maxWitnessErrorM": 0.00029809321677998213,
+              "toeDownDegrees": [
+                0.002142382120375214,
+                0.0017268707379921426,
+                0.0038147091945409245
+              ]
+            }
+          ],
+          "passiveIntegration": [
+            {
+              "cycle": 0,
+              "bone": "Bone_053",
+              "anchorKey": 29,
+              "lagKeys": [
+                30,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.05761794878103936,
+              "finalAngularSpeedRadS": 0.02140223894264025,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            },
+            {
+              "cycle": 0,
+              "bone": "Bone_059",
+              "anchorKey": 29,
+              "lagKeys": [
+                30,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.05596081869629543,
+              "finalAngularSpeedRadS": 0.020786696480906548,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            },
+            {
+              "cycle": 0,
+              "bone": "Bone_056",
+              "anchorKey": 29,
+              "lagKeys": [
+                30,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.055856978501291614,
+              "finalAngularSpeedRadS": 0.020748124946995,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            },
+            {
+              "cycle": 0,
+              "bone": "Bone_012",
+              "anchorKey": 29,
+              "lagKeys": [
+                30,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.8977524336098399,
+              "finalAngularSpeedRadS": 0.3334709496249439,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            },
+            {
+              "cycle": 1,
+              "bone": "Bone_053",
+              "anchorKey": 151,
+              "lagKeys": [
+                152,
+                153,
+                154,
+                155,
+                156,
+                157,
+                158
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.0575858727865512,
+              "finalAngularSpeedRadS": 0.0213903242856127,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            },
+            {
+              "cycle": 1,
+              "bone": "Bone_059",
+              "anchorKey": 151,
+              "lagKeys": [
+                152,
+                153,
+                154,
+                155,
+                156,
+                157,
+                158
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.05593284379344586,
+              "finalAngularSpeedRadS": 0.020776305178059968,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            },
+            {
+              "cycle": 1,
+              "bone": "Bone_056",
+              "anchorKey": 151,
+              "lagKeys": [
+                152,
+                153,
+                154,
+                155,
+                156,
+                157,
+                158
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.05581061532908543,
+              "finalAngularSpeedRadS": 0.020730903304942705,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            },
+            {
+              "cycle": 1,
+              "bone": "Bone_012",
+              "anchorKey": 151,
+              "lagKeys": [
+                152,
+                153,
+                154,
+                155,
+                156,
+                157,
+                158
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.8953602686636088,
+              "finalAngularSpeedRadS": 0.3325823778022295,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            }
+          ]
+        }
+      },
+      "PROC_WALK_RELAXED_V8_1_RESPIN_INPLACE": {
+        "l": {
+          "activeToeContactKeys": 32,
+          "rockerOnset": 0.614,
+          "release": 0.745,
+          "passiveLagEnd": 0.8,
+          "receivingArm": 0.818,
+          "flatten": 0.88,
+          "witnessVertexIndices": [
+            51119,
+            49877,
+            50149
+          ],
+          "contactLock": [
+            {
+              "key": 49,
+              "phase": 0.4016393442622951,
+              "maxWitnessErrorM": 0.0,
+              "toeDownDegrees": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "key": 50,
+              "phase": 0.40983606557377045,
+              "maxWitnessErrorM": 0.010563527267696271,
+              "toeDownDegrees": [
+                -0.05304714637665895,
+                -0.030769157044887623,
+                -0.04546344571666955
+              ]
+            },
+            {
+              "key": 51,
+              "phase": 0.41803278688524587,
+              "maxWitnessErrorM": 0.021125405192193636,
+              "toeDownDegrees": [
+                -0.10580089439554494,
+                -0.06141623460830759,
+                -0.09070001201656287
+              ]
+            },
+            {
+              "key": 52,
+              "phase": 0.4262295081967213,
+              "maxWitnessErrorM": 0.03168545551096813,
+              "toeDownDegrees": [
+                -0.15826416040883498,
+                -0.09194224111900576,
+                -0.1357116591399195
+              ]
+            },
+            {
+              "key": 53,
+              "phase": 0.4344262295081967,
+              "maxWitnessErrorM": 0.04224350161173607,
+              "toeDownDegrees": [
+                -0.21044005851586237,
+                -0.12234833182756424,
+                -0.1805007381100081
+              ]
+            },
+            {
+              "key": 54,
+              "phase": 0.44262295081967207,
+              "maxWitnessErrorM": 0.05279936943727426,
+              "toeDownDegrees": [
+                -0.26233165946178705,
+                -0.15263563688385612,
+                -0.22506945552975152
+              ]
+            },
+            {
+              "key": 55,
+              "phase": 0.45081967213114754,
+              "maxWitnessErrorM": 0.06335288757061719,
+              "toeDownDegrees": [
+                -0.313942310861203,
+                -0.18280547037473602,
+                -0.26942009963327945
+              ]
+            },
+            {
+              "key": 56,
+              "phase": 0.4590163934426229,
+              "maxWitnessErrorM": 0.07390388818184168,
+              "toeDownDegrees": [
+                -0.3652747880226418,
+                -0.21285889342703612,
+                -0.31355504649803523
+              ]
+            },
+            {
+              "key": 57,
+              "phase": 0.4672131147540984,
+              "maxWitnessErrorM": 0.08445220711201051,
+              "toeDownDegrees": [
+                -0.4163311840966975,
+                -0.24279681108236317,
+                -0.3574754548549598
+              ]
+            },
+            {
+              "key": 58,
+              "phase": 0.47540983606557374,
+              "maxWitnessErrorM": 0.09499768348425253,
+              "toeDownDegrees": [
+                -0.46711594425953396,
+                -0.27262055316619155,
+                -0.40118465065665126
+              ]
+            },
+            {
+              "key": 59,
+              "phase": 0.48360655737704916,
+              "maxWitnessErrorM": 0.10554016261551002,
+              "toeDownDegrees": [
+                -0.5176306854308916,
+                -0.302330828001137,
+                -0.44468393380478766
+              ]
+            },
+            {
+              "key": 60,
+              "phase": 0.4918032786885246,
+              "maxWitnessErrorM": 0.11607949767210868,
+              "toeDownDegrees": [
+                -0.5678777821159773,
+                -0.3319282048284383,
+                -0.4879748028138443
+              ]
+            },
+            {
+              "key": 61,
+              "phase": 0.5,
+              "maxWitnessErrorM": 0.12661555412383618,
+              "toeDownDegrees": [
+                -0.6178591591938245,
+                -0.3614128194618776,
+                -0.5310581376926778
+              ]
+            },
+            {
+              "key": 62,
+              "phase": 0.5081967213114754,
+              "maxWitnessErrorM": 0.13714849236103432,
+              "toeDownDegrees": [
+                -0.6675746592717342,
+                -0.3907834680643347,
+                -0.5739336402122528
+              ]
+            },
+            {
+              "key": 63,
+              "phase": 0.5163934426229507,
+              "maxWitnessErrorM": 0.147679385771174,
+              "toeDownDegrees": [
+                -0.7170181041054133,
+                -0.4200330624566257,
+                -0.6165943909941329
+              ]
+            },
+            {
+              "key": 64,
+              "phase": 0.5245901639344263,
+              "maxWitnessErrorM": 0.15820900991094067,
+              "toeDownDegrees": [
+                -0.7661827785891226,
+                -0.4491545511158841,
+                -0.659033652857502
+              ]
+            },
+            {
+              "key": 65,
+              "phase": 0.5327868852459017,
+              "maxWitnessErrorM": 0.16873754485295056,
+              "toeDownDegrees": [
+                -0.8150634466711323,
+                -0.4781419585966638,
+                -0.7012451645578164
+              ]
+            },
+            {
+              "key": 66,
+              "phase": 0.540983606557377,
+              "maxWitnessErrorM": 0.1792645266687205,
+              "toeDownDegrees": [
+                -0.8636482196673404,
+                -0.5069861009097643,
+                -0.7432185385805601
+              ]
+            },
+            {
+              "key": 67,
+              "phase": 0.5491803278688524,
+              "maxWitnessErrorM": 0.18978950746463108,
+              "toeDownDegrees": [
+                -0.9110463549526117,
+                -0.5349895315332648,
+                -0.7841250592371566
+              ]
+            },
+            {
+              "key": 68,
+              "phase": 0.5573770491803278,
+              "maxWitnessErrorM": 0.2003143084038047,
+              "toeDownDegrees": [
+                -0.9541689426097988,
+                -0.5597325683636504,
+                -0.8210923098287978
+              ]
+            },
+            {
+              "key": 69,
+              "phase": 0.5655737704918032,
+              "maxWitnessErrorM": 0.21084082421427752,
+              "toeDownDegrees": [
+                -0.9900324626437715,
+                -0.5788713413814233,
+                -0.8513435053638538
+              ]
+            },
+            {
+              "key": 70,
+              "phase": 0.5737704918032787,
+              "maxWitnessErrorM": 0.22137073509633465,
+              "toeDownDegrees": [
+                -1.0161985452602473,
+                -0.5904756959681841,
+                -0.8726010353972335
+              ]
+            },
+            {
+              "key": 71,
+              "phase": 0.5819672131147541,
+              "maxWitnessErrorM": 0.231905520484192,
+              "toeDownDegrees": [
+                -1.0307677591028201,
+                -0.593070115845891,
+                -0.8831094804147864
+              ]
+            },
+            {
+              "key": 72,
+              "phase": 0.5901639344262295,
+              "maxWitnessErrorM": 0.24244647612283277,
+              "toeDownDegrees": [
+                -1.0324981489466918,
+                -0.5856240629242228,
+                -0.8816888608427926
+              ]
+            },
+            {
+              "key": 73,
+              "phase": 0.5983606557377049,
+              "maxWitnessErrorM": 0.2529946830647253,
+              "toeDownDegrees": [
+                -1.0206738622884044,
+                -0.5675492089418989,
+                -0.8676560258431707
+              ]
+            },
+            {
+              "key": 74,
+              "phase": 0.6065573770491802,
+              "maxWitnessErrorM": 0.26355072947616165,
+              "toeDownDegrees": [
+                -0.9952701340670235,
+                -0.5388406158684972,
+                -0.8410004889992371
+              ]
+            },
+            {
+              "key": 75,
+              "phase": 0.6147540983606558,
+              "maxWitnessErrorM": 0.2741148265745531,
+              "toeDownDegrees": [
+                -0.956914378007026,
+                -0.49995253524219446,
+                -0.8022852984696547
+              ]
+            },
+            {
+              "key": 76,
+              "phase": 0.6229508196721312,
+              "maxWitnessErrorM": 0.284682160544541,
+              "toeDownDegrees": [
+                -0.9115101403942377,
+                -0.4499877325532461,
+                -0.7492697949498396
+              ]
+            },
+            {
+              "key": 77,
+              "phase": 0.6311475409836066,
+              "maxWitnessErrorM": 0.29526793523802397,
+              "toeDownDegrees": [
+                -0.8516893235872621,
+                -0.36474423711303994,
+                -0.6493532435345946
+              ]
+            },
+            {
+              "key": 78,
+              "phase": 0.6393442622950819,
+              "maxWitnessErrorM": 0.3058736979499119,
+              "toeDownDegrees": [
+                -0.7812412011221069,
+                -0.23453622318137254,
+                -0.4883553931128132
+              ]
+            },
+            {
+              "key": 79,
+              "phase": 0.6475409836065573,
+              "maxWitnessErrorM": 0.3164841244294815,
+              "toeDownDegrees": [
+                -0.7177807110643241,
+                -0.06870023512730894,
+                -0.2763419125468526
+              ]
+            },
+            {
+              "key": 80,
+              "phase": 0.6557377049180327,
+              "maxWitnessErrorM": 0.3272153080062944,
+              "toeDownDegrees": [
+                -0.5760136688260966,
+                0.19802539466463934,
+                0.0633907279425851
+              ]
+            },
+            {
+              "key": 81,
+              "phase": 0.6639344262295082,
+              "maxWitnessErrorM": 0.33800035771221204,
+              "toeDownDegrees": [
+                -0.4151912076549345,
+                0.5117602686578344,
+                0.46560301175034563
+              ]
+            },
+            {
+              "key": 82,
+              "phase": 0.6721311475409836,
+              "maxWitnessErrorM": 0.34883561112797223,
+              "toeDownDegrees": [
+                -0.24151920430231952,
+                0.856698928811533,
+                0.9092244958937233
+              ]
+            },
+            {
+              "key": 83,
+              "phase": 0.680327868852459,
+              "maxWitnessErrorM": 0.3597009385402131,
+              "toeDownDegrees": [
+                -0.06936004498487743,
+                1.2082888487418328,
+                1.3623639109711978
+              ]
+            },
+            {
+              "key": 84,
+              "phase": 0.6885245901639344,
+              "maxWitnessErrorM": 0.37063709659092736,
+              "toeDownDegrees": [
+                0.09947027254685288,
+                1.551098210832291,
+                1.8037343377233825
+              ]
+            },
+            {
+              "key": 85,
+              "phase": 0.6967213114754097,
+              "maxWitnessErrorM": 0.3816011555466341,
+              "toeDownDegrees": [
+                0.2523877936386527,
+                1.8618112014154786,
+                2.202860424271345
+              ]
+            },
+            {
+              "key": 86,
+              "phase": 0.7049180327868853,
+              "maxWitnessErrorM": 0.3925016136625711,
+              "toeDownDegrees": [
+                0.37616585326018803,
+                2.118685849449355,
+                2.5315776495643756
+              ]
+            },
+            {
+              "key": 87,
+              "phase": 0.7131147540983607,
+              "maxWitnessErrorM": 0.40339878246633254,
+              "toeDownDegrees": [
+                0.5118263709515839,
+                2.346740268057325,
+                2.8177956362241248
+              ]
+            },
+            {
+              "key": 88,
+              "phase": 0.7213114754098361,
+              "maxWitnessErrorM": 0.4140307425031218,
+              "toeDownDegrees": [
+                0.5203709455465081,
+                2.4323511359167767,
+                2.9265859206405085
+              ]
+            },
+            {
+              "key": 89,
+              "phase": 0.7295081967213114,
+              "maxWitnessErrorM": 0.424574020999378,
+              "toeDownDegrees": [
+                0.5056551635714659,
+                2.4617097007128335,
+                2.960604350408744
+              ]
+            },
+            {
+              "key": 90,
+              "phase": 0.7377049180327868,
+              "maxWitnessErrorM": 0.435055014370798,
+              "toeDownDegrees": [
+                0.47437448371651053,
+                2.4512545766153324,
+                2.9418015310557477
+              ]
+            },
+            {
+              "key": 171,
+              "phase": 0.401639344262295,
+              "maxWitnessErrorM": 0.0,
+              "toeDownDegrees": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "key": 172,
+              "phase": 0.4098360655737705,
+              "maxWitnessErrorM": 0.010562975487922843,
+              "toeDownDegrees": [
+                -0.05304731885237653,
+                -0.030769815020418336,
+                -0.04546380083413903
+              ]
+            },
+            {
+              "key": 173,
+              "phase": 0.4180327868852458,
+              "maxWitnessErrorM": 0.021124296607820003,
+              "toeDownDegrees": [
+                -0.10580147423472688,
+                -0.06141771119280516,
+                -0.09070088683720565
+              ]
+            },
+            {
+              "key": 174,
+              "phase": 0.42622950819672134,
+              "maxWitnessErrorM": 0.03168378793021476,
+              "toeDownDegrees": [
+                -0.15826533828139733,
+                -0.09194468342182979,
+                -0.135713258630055
+              ]
+            },
+            {
+              "key": 175,
+              "phase": 0.43442622950819665,
+              "maxWitnessErrorM": 0.04224127611747985,
+              "toeDownDegrees": [
+                -0.21044198050600837,
+                -0.12235187644412568,
+                -0.18050325632973982
+              ]
+            },
+            {
+              "key": 176,
+              "phase": 0.4426229508196722,
+              "maxWitnessErrorM": 0.05279659076271437,
+              "toeDownDegrees": [
+                -0.2623347229029492,
+                -0.1526404847493929,
+                -0.2250731114550283
+              ]
+            },
+            {
+              "key": 177,
+              "phase": 0.45081967213114726,
+              "maxWitnessErrorM": 0.06334956486143861,
+              "toeDownDegrees": [
+                -0.3139464534356552,
+                -0.18281174597099015,
+                -0.26942512115526696
+              ]
+            },
+            {
+              "key": 178,
+              "phase": 0.4590163934426228,
+              "maxWitnessErrorM": 0.07390003538772649,
+              "toeDownDegrees": [
+                -0.3652804754449929,
+                -0.21286675587089446,
+                -0.313561462435856
+              ]
+            },
+            {
+              "key": 179,
+              "phase": 0.4672131147540983,
+              "maxWitnessErrorM": 0.0844478437397127,
+              "toeDownDegrees": [
+                -0.4163383312375763,
+                -0.24280635033160972,
+                -0.35748357660351754
+              ]
+            },
+            {
+              "key": 180,
+              "phase": 0.47540983606557363,
+              "maxWitnessErrorM": 0.09499283485527887,
+              "toeDownDegrees": [
+                -0.4671249451775955,
+                -0.27263199682966294,
+                -0.40119462410857687
+              ]
+            },
+            {
+              "key": 181,
+              "phase": 0.48360655737704916,
+              "maxWitnessErrorM": 0.10553486104968712,
+              "toeDownDegrees": [
+                -0.5176416316167233,
+                -0.3023441461790026,
+                -0.4446958542734679
+              ]
+            },
+            {
+              "key": 182,
+              "phase": 0.49180327868852447,
+              "maxWitnessErrorM": 0.11607378244473532,
+              "toeDownDegrees": [
+                -0.5678909972254128,
+                -0.33194344063182546,
+                -0.4879886318667805
+              ]
+            },
+            {
+              "key": 183,
+              "phase": 0.5,
+              "maxWitnessErrorM": 0.12660947186190163,
+              "toeDownDegrees": [
+                -0.6178743372097295,
+                -0.3614300606770134,
+                -0.5310741637944567
+              ]
+            },
+            {
+              "key": 184,
+              "phase": 0.5081967213114755,
+              "maxWitnessErrorM": 0.1371420953350866,
+              "toeDownDegrees": [
+                -0.6675921116809486,
+                -0.39080267275361114,
+                -0.573951841149493
+              ]
+            },
+            {
+              "key": 185,
+              "phase": 0.5163934426229506,
+              "maxWitnessErrorM": 0.14767272376383356,
+              "toeDownDegrees": [
+                -0.7170378880933682,
+                -0.4200542456730474,
+                -0.6166148291323017
+              ]
+            },
+            {
+              "key": 186,
+              "phase": 0.5245901639344261,
+              "maxWitnessErrorM": 0.15820213072971523,
+              "toeDownDegrees": [
+                -0.766204982549986,
+                -0.44917761333051404,
+                -0.6590561800619675
+              ]
+            },
+            {
+              "key": 187,
+              "phase": 0.5327868852459015,
+              "maxWitnessErrorM": 0.16873049716489552,
+              "toeDownDegrees": [
+                -0.8150876890079594,
+                -0.47816701746793494,
+                -0.7012698036011993
+              ]
+            },
+            {
+              "key": 188,
+              "phase": 0.540983606557377,
+              "maxWitnessErrorM": 0.1792573635108312,
+              "toeDownDegrees": [
+                -0.8636751840231214,
+                -0.507013190249546,
+                -0.7432455514763157
+              ]
+            },
+            {
+              "key": 189,
+              "phase": 0.5491803278688525,
+              "maxWitnessErrorM": 0.1897822879919726,
+              "toeDownDegrees": [
+                -0.9110750638053959,
+                -0.535017888587863,
+                -0.784153416835242
+              ]
+            },
+            {
+              "key": 190,
+              "phase": 0.5573770491803278,
+              "maxWitnessErrorM": 0.20030709797057433,
+              "toeDownDegrees": [
+                -0.9541980522935326,
+                -0.5597614844582066,
+                -0.8211214682840271
+              ]
+            },
+            {
+              "key": 191,
+              "phase": 0.5655737704918034,
+              "maxWitnessErrorM": 0.21083369508180816,
+              "toeDownDegrees": [
+                -0.990062643958579,
+                -0.5789008817983212,
+                -0.8513736800514231
+              ]
+            },
+            {
+              "key": 192,
+              "phase": 0.5737704918032784,
+              "maxWitnessErrorM": 0.22136376226848564,
+              "toeDownDegrees": [
+                -1.016234155062287,
+                -0.5905095367554817,
+                -0.8726360357734199
+              ]
+            },
+            {
+              "key": 193,
+              "phase": 0.581967213114754,
+              "maxWitnessErrorM": 0.23189878024658683,
+              "toeDownDegrees": [
+                -1.0308186504110028,
+                -0.5931155219571747,
+                -0.8831587702102626
+              ]
+            },
+            {
+              "key": 194,
+              "phase": 0.5901639344262295,
+              "maxWitnessErrorM": 0.24244004005250686,
+              "toeDownDegrees": [
+                -1.0325802250732607,
+                -0.5856938639487633,
+                -0.8817670619243617
+              ]
+            },
+            {
+              "key": 195,
+              "phase": 0.5983606557377048,
+              "maxWitnessErrorM": 0.25298861654264826,
+              "toeDownDegrees": [
+                -1.0208090922079716,
+                -0.5676602912086844,
+                -0.8677833991253824
+              ]
+            },
+            {
+              "key": 196,
+              "phase": 0.6065573770491803,
+              "maxWitnessErrorM": 0.26354508813833755,
+              "toeDownDegrees": [
+                -0.9954839593660441,
+                -0.5390134804764898,
+                -0.8412012928212046
+              ]
+            },
+            {
+              "key": 197,
+              "phase": 0.6147540983606556,
+              "maxWitnessErrorM": 0.2741096551332769,
+              "toeDownDegrees": [
+                -0.9572354672262031,
+                -0.5002094359902076,
+                -0.8025857952930011
+              ]
+            },
+            {
+              "key": 198,
+              "phase": 0.6229508196721312,
+              "maxWitnessErrorM": 0.2846774933661055,
+              "toeDownDegrees": [
+                -0.91196737641686,
+                -0.4503506805765358,
+                -0.7496963661896013
+              ]
+            },
+            {
+              "key": 199,
+              "phase": 0.6311475409836065,
+              "maxWitnessErrorM": 0.29526379346089704,
+              "toeDownDegrees": [
+                -0.8523077017926373,
+                -0.36523416272102804,
+                -0.6499306118175882
+              ]
+            },
+            {
+              "key": 200,
+              "phase": 0.6393442622950818,
+              "maxWitnessErrorM": 0.30587009396799314,
+              "toeDownDegrees": [
+                -0.7820419664459756,
+                -0.23516969795316564,
+                -0.4891028195226149
+              ]
+            },
+            {
+              "key": 201,
+              "phase": 0.6475409836065573,
+              "maxWitnessErrorM": 0.3164810627017507,
+              "toeDownDegrees": [
+                -0.7187788337024364,
+                -0.06948965432696275,
+                -0.27727418662563913
+              ]
+            },
+            {
+              "key": 202,
+              "phase": 0.6557377049180326,
+              "maxWitnessErrorM": 0.3272127768664297,
+              "toeDownDegrees": [
+                -0.5772147955364034,
+                0.19707575327114163,
+                0.062268279977337346
+              ]
+            },
+            {
+              "key": 203,
+              "phase": 0.6639344262295082,
+              "maxWitnessErrorM": 0.33799834781717575,
+              "toeDownDegrees": [
+                -0.41659278689511264,
+                0.5106515593435539,
+                0.46429195006566437
+              ]
+            },
+            {
+              "key": 204,
+              "phase": 0.6721311475409835,
+              "maxWitnessErrorM": 0.34883411123008123,
+              "toeDownDegrees": [
+                -0.24311126004541425,
+                0.8554381952712822,
+                0.9077331427455401
+              ]
+            },
+            {
+              "key": 205,
+              "phase": 0.680327868852459,
+              "maxWitnessErrorM": 0.3596999417702913,
+              "toeDownDegrees": [
+                -0.07112433912780707,
+                1.2068902408135924,
+                1.3607084458232224
+              ]
+            },
+            {
+              "key": 206,
+              "phase": 0.6885245901639345,
+              "maxWitnessErrorM": 0.3706360855520071,
+              "toeDownDegrees": [
+                0.09755749826241773,
+                1.5495796239014785,
+                1.801936696704497
+              ]
+            },
+            {
+              "key": 207,
+              "phase": 0.6967213114754098,
+              "maxWitnessErrorM": 0.3816006012192391,
+              "toeDownDegrees": [
+                0.2503549706580098,
+                1.86019573855304,
+                2.2009469844241405
+              ]
+            },
+            {
+              "key": 208,
+              "phase": 0.7049180327868851,
+              "maxWitnessErrorM": 0.39250152871284616,
+              "toeDownDegrees": [
+                0.3740445260035699,
+                2.1169981065272028,
+                2.529578587896213
+              ]
+            },
+            {
+              "key": 209,
+              "phase": 0.7131147540983604,
+              "maxWitnessErrorM": 0.4033989587525987,
+              "toeDownDegrees": [
+                0.509605766059422,
+                2.3449725085330018,
+                2.815701540875537
+              ]
+            },
+            {
+              "key": 210,
+              "phase": 0.721311475409836,
+              "maxWitnessErrorM": 0.4140314253073456,
+              "toeDownDegrees": [
+                0.5181498338138789,
+                2.4305814146647586,
+                2.924489634142196
+              ]
+            },
+            {
+              "key": 211,
+              "phase": 0.7295081967213115,
+              "maxWitnessErrorM": 0.42457522623355926,
+              "toeDownDegrees": [
+                0.5034451964208029,
+                2.4599472625110215,
+                2.9585175543423996
+              ]
+            },
+            {
+              "key": 212,
+              "phase": 0.7377049180327868,
+              "maxWitnessErrorM": 0.4350567283747385,
+              "toeDownDegrees": [
+                0.4721870537834636,
+                2.449509676190277,
+                2.939736290246941
+              ]
+            }
+          ],
+          "passiveIntegration": [
+            {
+              "cycle": 0,
+              "bone": "Bone_044",
+              "anchorKey": 90,
+              "lagKeys": [
+                91,
+                92,
+                93,
+                94,
+                95,
+                96,
+                97
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.0025906695802316404,
+              "finalAngularSpeedRadS": 0.0009623065477088466,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            },
+            {
+              "cycle": 0,
+              "bone": "Bone_050",
+              "anchorKey": 90,
+              "lagKeys": [
+                91,
+                92,
+                93,
+                94,
+                95,
+                96,
+                97
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.021823403143396335,
+              "finalAngularSpeedRadS": 0.008106322743135141,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            },
+            {
+              "cycle": 0,
+              "bone": "Bone_047",
+              "anchorKey": 90,
+              "lagKeys": [
+                91,
+                92,
+                93,
+                94,
+                95,
+                96,
+                97
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.011449734116843642,
+              "finalAngularSpeedRadS": 0.004253014044801049,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            },
+            {
+              "cycle": 0,
+              "bone": "Bone_008",
+              "anchorKey": 90,
+              "lagKeys": [
+                91,
+                92,
+                93,
+                94,
+                95,
+                96,
+                97
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.8936207661768425,
+              "finalAngularSpeedRadS": 0.3319362380376126,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            },
+            {
+              "cycle": 1,
+              "bone": "Bone_044",
+              "anchorKey": 212,
+              "lagKeys": [
+                213,
+                214,
+                215,
+                216,
+                217,
+                218,
+                219
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.002567085470881766,
+              "finalAngularSpeedRadS": 0.0009535462090603199,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            },
+            {
+              "cycle": 1,
+              "bone": "Bone_050",
+              "anchorKey": 212,
+              "lagKeys": [
+                213,
+                214,
+                215,
+                216,
+                217,
+                218,
+                219
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.02184175557941814,
+              "finalAngularSpeedRadS": 0.008113139772016383,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            },
+            {
+              "cycle": 1,
+              "bone": "Bone_047",
+              "anchorKey": 212,
+              "lagKeys": [
+                213,
+                214,
+                215,
+                216,
+                217,
+                218,
+                219
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.011472290652404378,
+              "finalAngularSpeedRadS": 0.004261392690240574,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            },
+            {
+              "cycle": 1,
+              "bone": "Bone_008",
+              "anchorKey": 212,
+              "lagKeys": [
+                213,
+                214,
+                215,
+                216,
+                217,
+                218,
+                219
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.8901670562743615,
+              "finalAngularSpeedRadS": 0.3306533543852917,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            }
+          ]
+        },
+        "r": {
+          "activeToeContactKeys": 32,
+          "rockerOnset": 0.614,
+          "release": 0.745,
+          "passiveLagEnd": 0.8,
+          "receivingArm": 0.818,
+          "flatten": 0.88,
+          "witnessVertexIndices": [
+            41588,
+            41368,
+            41936
+          ],
+          "contactLock": [
+            {
+              "key": 0,
+              "phase": 0.5,
+              "maxWitnessErrorM": 0.0,
+              "toeDownDegrees": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "key": 1,
+              "phase": 0.5081967213114754,
+              "maxWitnessErrorM": 0.01053740387271307,
+              "toeDownDegrees": [
+                -0.04219545506589052,
+                -0.03177097490402451,
+                -0.08672184598410695
+              ]
+            },
+            {
+              "key": 2,
+              "phase": 0.5163934426229508,
+              "maxWitnessErrorM": 0.021067736805940762,
+              "toeDownDegrees": [
+                -0.08491880111667974,
+                -0.06405459895191087,
+                -0.17377836142469436
+              ]
+            },
+            {
+              "key": 3,
+              "phase": 0.5245901639344261,
+              "maxWitnessErrorM": 0.03159605886130523,
+              "toeDownDegrees": [
+                -0.12752125089062577,
+                -0.09628096988471026,
+                -0.26026385768914
+              ]
+            },
+            {
+              "key": 4,
+              "phase": 0.5327868852459017,
+              "maxWitnessErrorM": 0.04212429127526207,
+              "toeDownDegrees": [
+                -0.16993431532807016,
+                -0.12838876603795477,
+                -0.3460946879671702
+              ]
+            },
+            {
+              "key": 5,
+              "phase": 0.540983606557377,
+              "maxWitnessErrorM": 0.05265187828150897,
+              "toeDownDegrees": [
+                -0.21212256959213488,
+                -0.160346543974551,
+                -0.43122414929397174
+              ]
+            },
+            {
+              "key": 6,
+              "phase": 0.5491803278688525,
+              "maxWitnessErrorM": 0.06317850905737188,
+              "toeDownDegrees": [
+                -0.2533048947428681,
+                -0.1914696300204959,
+                -0.5145578059638872
+              ]
+            },
+            {
+              "key": 7,
+              "phase": 0.5573770491803278,
+              "maxWitnessErrorM": 0.07370599932250199,
+              "toeDownDegrees": [
+                -0.2908190269860082,
+                -0.21942215843458424,
+                -0.5923605345041655
+              ]
+            },
+            {
+              "key": 8,
+              "phase": 0.5655737704918034,
+              "maxWitnessErrorM": 0.08423615431565623,
+              "toeDownDegrees": [
+                -0.3220952199959289,
+                -0.24194612441240237,
+                -0.6610530869496934
+              ]
+            },
+            {
+              "key": 9,
+              "phase": 0.5737704918032787,
+              "maxWitnessErrorM": 0.09477050544489296,
+              "toeDownDegrees": [
+                -0.3450232707132742,
+                -0.257183029344515,
+                -0.7177221783851891
+              ]
+            },
+            {
+              "key": 10,
+              "phase": 0.5819672131147541,
+              "maxWitnessErrorM": 0.10531039347042415,
+              "toeDownDegrees": [
+                -0.35795640557203007,
+                -0.2636789170887221,
+                -0.7601207709985706
+              ]
+            },
+            {
+              "key": 11,
+              "phase": 0.5901639344262295,
+              "maxWitnessErrorM": 0.1158569487562775,
+              "toeDownDegrees": [
+                -0.3597352683959113,
+                -0.2604078239781947,
+                -0.7867055194808313
+              ]
+            },
+            {
+              "key": 12,
+              "phase": 0.5983606557377049,
+              "maxWitnessErrorM": 0.1264110347600701,
+              "toeDownDegrees": [
+                -0.34972472375302416,
+                -0.2467956929614669,
+                -0.7966186660266767
+              ]
+            },
+            {
+              "key": 13,
+              "phase": 0.6065573770491803,
+              "maxWitnessErrorM": 0.13697314561425955,
+              "toeDownDegrees": [
+                -0.32783528539885576,
+                -0.22275928340868614,
+                -0.7898428969855403
+              ]
+            },
+            {
+              "key": 14,
+              "phase": 0.6147540983606558,
+              "maxWitnessErrorM": 0.1475433410206246,
+              "toeDownDegrees": [
+                -0.2945448008670944,
+                -0.18870719640020917,
+                -0.7671041204328032
+              ]
+            },
+            {
+              "key": 15,
+              "phase": 0.6229508196721312,
+              "maxWitnessErrorM": 0.15811536812077864,
+              "toeDownDegrees": [
+                -0.24758460581761316,
+                -0.14303060341955776,
+                -0.733502231714602
+              ]
+            },
+            {
+              "key": 16,
+              "phase": 0.6311475409836066,
+              "maxWitnessErrorM": 0.1686761159863639,
+              "toeDownDegrees": [
+                -0.17252322367668985,
+                -0.07435671307998702,
+                -0.696237842337982
+              ]
+            },
+            {
+              "key": 17,
+              "phase": 0.639344262295082,
+              "maxWitnessErrorM": 0.17923245343108196,
+              "toeDownDegrees": [
+                -0.04951800228854883,
+                0.03383973777871138,
+                -0.6464162057489587
+              ]
+            },
+            {
+              "key": 18,
+              "phase": 0.6475409836065573,
+              "maxWitnessErrorM": 0.18981412471763803,
+              "toeDownDegrees": [
+                0.14460499391744686,
+                0.20158664996081627,
+                -0.5586087090339754
+              ]
+            },
+            {
+              "key": 19,
+              "phase": 0.6557377049180328,
+              "maxWitnessErrorM": 0.20048501007131347,
+              "toeDownDegrees": [
+                0.4459072738465155,
+                0.4607236402533909,
+                -0.3800638040621419
+              ]
+            },
+            {
+              "key": 20,
+              "phase": 0.6639344262295082,
+              "maxWitnessErrorM": 0.21116926763866006,
+              "toeDownDegrees": [
+                0.7855721210004263,
+                0.751159246540768,
+                -0.1955184842421831
+              ]
+            },
+            {
+              "key": 21,
+              "phase": 0.6721311475409836,
+              "maxWitnessErrorM": 0.2219392079629533,
+              "toeDownDegrees": [
+                1.1942303195235924,
+                1.1006030955870332,
+                0.053147815818568256
+              ]
+            },
+            {
+              "key": 22,
+              "phase": 0.680327868852459,
+              "maxWitnessErrorM": 0.2328411157831416,
+              "toeDownDegrees": [
+                1.6476247719363917,
+                1.488639515071187,
+                0.3515762546737575
+              ]
+            },
+            {
+              "key": 23,
+              "phase": 0.6885245901639344,
+              "maxWitnessErrorM": 0.24380245409884138,
+              "toeDownDegrees": [
+                2.1113721066459292,
+                1.8860657194316928,
+                0.6727367438868511
+              ]
+            },
+            {
+              "key": 24,
+              "phase": 0.6967213114754098,
+              "maxWitnessErrorM": 0.25477029577877375,
+              "toeDownDegrees": [
+                2.5458165630062943,
+                2.259045626701592,
+                0.9816531100971346
+              ]
+            },
+            {
+              "key": 25,
+              "phase": 0.7049180327868853,
+              "maxWitnessErrorM": 0.2656904525330607,
+              "toeDownDegrees": [
+                2.9129261489300946,
+                2.575063167648726,
+                1.2427439263626716
+              ]
+            },
+            {
+              "key": 26,
+              "phase": 0.7131147540983607,
+              "maxWitnessErrorM": 0.27667554718694665,
+              "toeDownDegrees": [
+                3.2684387862614694,
+                2.8838581125775766,
+                1.5433606577039618
+              ]
+            },
+            {
+              "key": 27,
+              "phase": 0.721311475409836,
+              "maxWitnessErrorM": 0.2872870646312934,
+              "toeDownDegrees": [
+                3.375733045183845,
+                2.977518082951227,
+                1.565137312312744
+              ]
+            },
+            {
+              "key": 28,
+              "phase": 0.7295081967213115,
+              "maxWitnessErrorM": 0.2978236013740996,
+              "toeDownDegrees": [
+                3.4080409013542114,
+                3.0082100666403555,
+                1.5396510368242406
+              ]
+            },
+            {
+              "key": 29,
+              "phase": 0.7377049180327868,
+              "maxWitnessErrorM": 0.3083077252464723,
+              "toeDownDegrees": [
+                3.3873700815723624,
+                2.994395134743797,
+                1.4808523056002216
+              ]
+            },
+            {
+              "key": 110,
+              "phase": 0.4016393442622951,
+              "maxWitnessErrorM": 0.0,
+              "toeDownDegrees": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "key": 111,
+              "phase": 0.4098360655737705,
+              "maxWitnessErrorM": 0.010555403633221938,
+              "toeDownDegrees": [
+                -0.043151858566631306,
+                -0.032598415325095706,
+                -0.08812954121417554
+              ]
+            },
+            {
+              "key": 112,
+              "phase": 0.4180327868852458,
+              "maxWitnessErrorM": 0.021109709443489555,
+              "toeDownDegrees": [
+                -0.08609858284357687,
+                -0.06506630278560073,
+                -0.1755601437245136
+              ]
+            },
+            {
+              "key": 113,
+              "phase": 0.42622950819672123,
+              "maxWitnessErrorM": 0.03166276420492531,
+              "toeDownDegrees": [
+                -0.12884208851264387,
+                -0.09740478666241617,
+                -0.26230255765105825
+              ]
+            },
+            {
+              "key": 114,
+              "phase": 0.43442622950819676,
+              "maxWitnessErrorM": 0.0422144114109263,
+              "toeDownDegrees": [
+                -0.17138463060738918,
+                -0.1296153866898216,
+                -0.34836773631894863
+              ]
+            },
+            {
+              "key": 115,
+              "phase": 0.44262295081967207,
+              "maxWitnessErrorM": 0.052764493545599866,
+              "toeDownDegrees": [
+                -0.21372846699351059,
+                -0.16169945763857793,
+                -0.4337662540853249
+              ]
+            },
+            {
+              "key": 116,
+              "phase": 0.4508196721311475,
+              "maxWitnessErrorM": 0.06331285280362964,
+              "toeDownDegrees": [
+                -0.25587580579718155,
+                -0.19365852792052096,
+                -0.5185089010101896
+              ]
+            },
+            {
+              "key": 117,
+              "phase": 0.4590163934426229,
+              "maxWitnessErrorM": 0.07385933260146849,
+              "toeDownDegrees": [
+                -0.2978289843970364,
+                -0.22549401772604402,
+                -0.6026058087511905
+              ]
+            },
+            {
+              "key": 118,
+              "phase": 0.4672131147540983,
+              "maxWitnessErrorM": 0.08440377854733694,
+              "toeDownDegrees": [
+                -0.33958953653875906,
+                -0.25720716986733794,
+                -0.6860636484716529
+              ]
+            },
+            {
+              "key": 119,
+              "phase": 0.47540983606557363,
+              "maxWitnessErrorM": 0.09494603822028758,
+              "toeDownDegrees": [
+                -0.3811607232621969,
+                -0.28879969811950035,
+                -0.7688973599542019
+              ]
+            },
+            {
+              "key": 120,
+              "phase": 0.48360655737704916,
+              "maxWitnessErrorM": 0.10548596395378451,
+              "toeDownDegrees": [
+                -0.42254390089308574,
+                -0.32027270991029677,
+                -0.8511140152532776
+              ]
+            },
+            {
+              "key": 121,
+              "phase": 0.4918032786885246,
+              "maxWitnessErrorM": 0.11602341365837876,
+              "toeDownDegrees": [
+                -0.46374092038566855,
+                -0.3516272958039213,
+                -0.9327230430172058
+              ]
+            },
+            {
+              "key": 122,
+              "phase": 0.5,
+              "maxWitnessErrorM": 0.12655825417335764,
+              "toeDownDegrees": [
+                -0.5047533226299895,
+                -0.38286426181518396,
+                -1.013732636528379
+              ]
+            },
+            {
+              "key": 123,
+              "phase": 0.5081967213114755,
+              "maxWitnessErrorM": 0.13709062034488007,
+              "toeDownDegrees": [
+                -0.5455803369813768,
+                -0.4139823260492022,
+                -1.0941485069985382
+              ]
+            },
+            {
+              "key": 124,
+              "phase": 0.5163934426229508,
+              "maxWitnessErrorM": 0.1476214823711941,
+              "toeDownDegrees": [
+                -0.5862132189532859,
+                -0.4449729584572586,
+                -1.1739672457301742
+              ]
+            },
+            {
+              "key": 125,
+              "phase": 0.5245901639344261,
+              "maxWitnessErrorM": 0.15815194998573479,
+              "toeDownDegrees": [
+                -0.6266452820173612,
+                -0.4758291498410348,
+                -1.2531874796731133
+              ]
+            },
+            {
+              "key": 126,
+              "phase": 0.5327868852459015,
+              "maxWitnessErrorM": 0.1686828350543338,
+              "toeDownDegrees": [
+                -0.666875128923402,
+                -0.5065490412932452,
+                -1.3318149733104683
+              ]
+            },
+            {
+              "key": 127,
+              "phase": 0.540983606557377,
+              "maxWitnessErrorM": 0.17921321699230508,
+              "toeDownDegrees": [
+                -0.7068890206409861,
+                -0.5371201935175202,
+                -1.409835034583799
+              ]
+            },
+            {
+              "key": 128,
+              "phase": 0.5491803278688525,
+              "maxWitnessErrorM": 0.18974262404096576,
+              "toeDownDegrees": [
+                -0.745933708864691,
+                -0.5668792836959736,
+                -1.4862094316591357
+              ]
+            },
+            {
+              "key": 129,
+              "phase": 0.5573770491803278,
+              "maxWitnessErrorM": 0.20027268597436965,
+              "toeDownDegrees": [
+                -0.781420421880362,
+                -0.5935445859816297,
+                -1.5573720337396333
+              ]
+            },
+            {
+              "key": 130,
+              "phase": 0.5655737704918034,
+              "maxWitnessErrorM": 0.21080505594564403,
+              "toeDownDegrees": [
+                -0.8108485975351081,
+                -0.6149089527250723,
+                -1.6198995004769154
+              ]
+            },
+            {
+              "key": 131,
+              "phase": 0.5737704918032787,
+              "maxWitnessErrorM": 0.22134115091674744,
+              "toeDownDegrees": [
+                -0.8321624340389601,
+                -0.6291543954104315,
+                -1.670997798029504
+              ]
+            },
+            {
+              "key": 132,
+              "phase": 0.581967213114754,
+              "maxWitnessErrorM": 0.2318822366061808,
+              "toeDownDegrees": [
+                -0.8437441708539656,
+                -0.6348521389071441,
+                -1.7085055378069325
+              ]
+            },
+            {
+              "key": 133,
+              "phase": 0.5901639344262295,
+              "maxWitnessErrorM": 0.24242934762507273,
+              "toeDownDegrees": [
+                -0.8445020032921906,
+                -0.6310233320448165,
+                -1.7308661251907118
+              ]
+            },
+            {
+              "key": 134,
+              "phase": 0.5983606557377048,
+              "maxWitnessErrorM": 0.25298337444136076,
+              "toeDownDegrees": [
+                -0.8337800585924899,
+                -0.6170705289294599,
+                -1.7374537256310296
+              ]
+            },
+            {
+              "key": 135,
+              "phase": 0.6065573770491803,
+              "maxWitnessErrorM": 0.2635447746387328,
+              "toeDownDegrees": [
+                -0.8115014079781732,
+                -0.5929360910537858,
+                -1.728034400968227
+              ]
+            },
+            {
+              "key": 136,
+              "phase": 0.6147540983606556,
+              "maxWitnessErrorM": 0.27411364701672514,
+              "toeDownDegrees": [
+                -0.7781312556388307,
+                -0.5590137227492149,
+                -1.7033677177836215
+              ]
+            },
+            {
+              "key": 137,
+              "phase": 0.6229508196721312,
+              "maxWitnessErrorM": 0.28468385509672334,
+              "toeDownDegrees": [
+                -0.7313423374444976,
+                -0.5136573692029132,
+                -1.6681140275519606
+              ]
+            },
+            {
+              "key": 138,
+              "phase": 0.6311475409836065,
+              "maxWitnessErrorM": 0.29524228731460833,
+              "toeDownDegrees": [
+                -0.6566892592389473,
+                -0.4455017480856135,
+                -1.628449628642525
+              ]
+            },
+            {
+              "key": 139,
+              "phase": 0.639344262295082,
+              "maxWitnessErrorM": 0.3057952492790156,
+              "toeDownDegrees": [
+                -0.5345824134023751,
+                -0.33821970492812486,
+                -1.575372376801545
+              ]
+            },
+            {
+              "key": 140,
+              "phase": 0.6475409836065573,
+              "maxWitnessErrorM": 0.31637136070839134,
+              "toeDownDegrees": [
+                -0.3423610164173578,
+                -0.17216740421664709,
+                -1.484364107870867
+              ]
+            },
+            {
+              "key": 141,
+              "phase": 0.6557377049180326,
+              "maxWitnessErrorM": 0.32703226035499644,
+              "toeDownDegrees": [
+                -0.04501507184745474,
+                0.0837307771957683,
+                -1.3051288328838437
+              ]
+            },
+            {
+              "key": 142,
+              "phase": 0.6639344262295082,
+              "maxWitnessErrorM": 0.3377057654244746,
+              "toeDownDegrees": [
+                0.29039400234548,
+                0.370669800159894,
+                -1.118838095234403
+              ]
+            },
+            {
+              "key": 143,
+              "phase": 0.6721311475409835,
+              "maxWitnessErrorM": 0.34846183902398875,
+              "toeDownDegrees": [
+                0.6934205597723416,
+                0.7155792102150751,
+                -0.8702986924098419
+              ]
+            },
+            {
+              "key": 144,
+              "phase": 0.680327868852459,
+              "maxWitnessErrorM": 0.35929476238443436,
+              "toeDownDegrees": [
+                1.1401314492905654,
+                1.098302332051131,
+                -0.5738271883938743
+              ]
+            },
+            {
+              "key": 145,
+              "phase": 0.6885245901639345,
+              "maxWitnessErrorM": 0.3701798123914427,
+              "toeDownDegrees": [
+                1.5967687223985467,
+                1.4901081199339197,
+                -0.2557945489490487
+              ]
+            },
+            {
+              "key": 146,
+              "phase": 0.6967213114754098,
+              "maxWitnessErrorM": 0.3810768297318876,
+              "toeDownDegrees": [
+                2.024456170279562,
+                1.8577467348944101,
+                0.04980042240312785
+              ]
+            },
+            {
+              "key": 147,
+              "phase": 0.7049180327868851,
+              "maxWitnessErrorM": 0.3919417712161902,
+              "toeDownDegrees": [
+                2.385957911220018,
+                2.1692968229262055,
+                0.3084537178101556
+              ]
+            },
+            {
+              "key": 148,
+              "phase": 0.7131147540983604,
+              "maxWitnessErrorM": 0.4029074616578613,
+              "toeDownDegrees": [
+                2.735314392686135,
+                2.4732542407033136,
+                0.6035212540039184
+              ]
+            },
+            {
+              "key": 149,
+              "phase": 0.721311475409836,
+              "maxWitnessErrorM": 0.4135174338132511,
+              "toeDownDegrees": [
+                2.842401565967653,
+                2.5664784428424205,
+                0.6300516725354648
+              ]
+            },
+            {
+              "key": 150,
+              "phase": 0.7295081967213115,
+              "maxWitnessErrorM": 0.42405588387813653,
+              "toeDownDegrees": [
+                2.8756487157178183,
+                2.59762700661188,
+                0.6096963987128791
+              ]
+            },
+            {
+              "key": 151,
+              "phase": 0.7377049180327868,
+              "maxWitnessErrorM": 0.4345444175120441,
+              "toeDownDegrees": [
+                2.856768102171923,
+                2.584920005607088,
+                0.5564266344868743
+              ]
+            },
+            {
+              "key": 232,
+              "phase": 0.401639344262295,
+              "maxWitnessErrorM": 0.0,
+              "toeDownDegrees": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "key": 233,
+              "phase": 0.4098360655737705,
+              "maxWitnessErrorM": 0.010555402750069498,
+              "toeDownDegrees": [
+                -0.04315279024842071,
+                -0.03259922986675684,
+                -0.08813083832942557
+              ]
+            },
+            {
+              "key": 234,
+              "phase": 0.4180327868852458,
+              "maxWitnessErrorM": 0.021109725697487813,
+              "toeDownDegrees": [
+                -0.08610041516260909,
+                -0.06506787766087475,
+                -0.17556279396791166
+              ]
+            },
+            {
+              "key": 235,
+              "phase": 0.42622950819672134,
+              "maxWitnessErrorM": 0.031662816328859256,
+              "toeDownDegrees": [
+                -0.12884481722857957,
+                -0.09740714855465965,
+                -0.262306528298829
+              ]
+            },
+            {
+              "key": 236,
+              "phase": 0.43442622950819665,
+              "maxWitnessErrorM": 0.04221451909014384,
+              "toeDownDegrees": [
+                -0.17138821084955452,
+                -0.12961845178391404,
+                -0.34837300437579755
+              ]
+            },
+            {
+              "key": 237,
+              "phase": 0.4426229508196722,
+              "maxWitnessErrorM": 0.0527646770886262,
+              "toeDownDegrees": [
+                -0.21373281436500577,
+                -0.1617031680792244,
+                -0.4337729039693899
+              ]
+            },
+            {
+              "key": 238,
+              "phase": 0.45081967213114726,
+              "maxWitnessErrorM": 0.06331313303341668,
+              "toeDownDegrees": [
+                -0.25588091687928927,
+                -0.1936628209521868,
+                -0.5185166529613984
+              ]
+            },
+            {
+              "key": 239,
+              "phase": 0.4590163934426228,
+              "maxWitnessErrorM": 0.07385973052252293,
+              "toeDownDegrees": [
+                -0.29783480505550836,
+                -0.22549890214495225,
+                -0.6026148590712818
+              ]
+            },
+            {
+              "key": 240,
+              "phase": 0.4672131147540983,
+              "maxWitnessErrorM": 0.08440431556278238,
+              "toeDownDegrees": [
+                -0.3395958561062746,
+                -0.2572124214175139,
+                -0.6860739215650195
+              ]
+            },
+            {
+              "key": 241,
+              "phase": 0.4754098360655734,
+              "maxWitnessErrorM": 0.09494673497257222,
+              "toeDownDegrees": [
+                -0.381167506644461,
+                -0.2888053803274756,
+                -0.7689084601970372
+              ]
+            },
+            {
+              "key": 242,
+              "phase": 0.48360655737704916,
+              "maxWitnessErrorM": 0.10548684074139802,
+              "toeDownDegrees": [
+                -0.42255104134070615,
+                -0.32027866386749215,
+                -0.8511261965572674
+              ]
+            },
+            {
+              "key": 243,
+              "phase": 0.49180327868852425,
+              "maxWitnessErrorM": 0.11602448967710755,
+              "toeDownDegrees": [
+                -0.46374847450565526,
+                -0.3516333254698414,
+                -0.9327358584478028
+              ]
+            }
+          ],
+          "passiveIntegration": [
+            {
+              "cycle": 0,
+              "bone": "Bone_053",
+              "anchorKey": 29,
+              "lagKeys": [
+                30,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.008512036361285929,
+              "finalAngularSpeedRadS": 0.0031618035689710867,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            },
+            {
+              "cycle": 0,
+              "bone": "Bone_059",
+              "anchorKey": 29,
+              "lagKeys": [
+                30,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.018307526613838533,
+              "finalAngularSpeedRadS": 0.006800347241223849,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            },
+            {
+              "cycle": 0,
+              "bone": "Bone_056",
+              "anchorKey": 29,
+              "lagKeys": [
+                30,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.030404055217533275,
+              "finalAngularSpeedRadS": 0.011293613680412892,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            },
+            {
+              "cycle": 0,
+              "bone": "Bone_012",
+              "anchorKey": 29,
+              "lagKeys": [
+                30,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.8977524336098399,
+              "finalAngularSpeedRadS": 0.3334709496249439,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            },
+            {
+              "cycle": 1,
+              "bone": "Bone_053",
+              "anchorKey": 151,
+              "lagKeys": [
+                152,
+                153,
+                154,
+                155,
+                156,
+                157,
+                158
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.01038540069176751,
+              "finalAngularSpeedRadS": 0.003857666435939032,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            },
+            {
+              "cycle": 1,
+              "bone": "Bone_059",
+              "anchorKey": 151,
+              "lagKeys": [
+                152,
+                153,
+                154,
+                155,
+                156,
+                157,
+                158
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.019466922761394414,
+              "finalAngularSpeedRadS": 0.007231005983926841,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            },
+            {
+              "cycle": 1,
+              "bone": "Bone_056",
+              "anchorKey": 151,
+              "lagKeys": [
+                152,
+                153,
+                154,
+                155,
+                156,
+                157,
+                158
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.024618258391127832,
+              "finalAngularSpeedRadS": 0.009144474240845621,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            },
+            {
+              "cycle": 1,
+              "bone": "Bone_012",
+              "anchorKey": 151,
+              "lagKeys": [
+                152,
+                153,
+                154,
+                155,
+                156,
+                157,
+                158
+              ],
+              "restOrientation": "release_orientation",
+              "activeTarget": null,
+              "translationCorrection": false,
+              "initialAngularSpeedRadS": 0.8953602686636088,
+              "finalAngularSpeedRadS": 0.3325823778022295,
+              "mechanics": {
+                "springK": 14.0,
+                "dampingC": 7.0
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "referenceScaleWrapper": {
+    "wrapperNode": "RESPIN_REFERENCE_SCALE_ROOT",
+    "wrapperNodeIndex": 77,
+    "acceptedRawBodyLengthM": 5.974026,
+    "directGlbMeshLengthM": 5.941640538153674,
+    "referenceLengthM": 12.0,
+    "uniformScaleFactor": 2.0086956434404537
+  },
+  "clips": {
+    "PROC_WALK_RELAXED_V8_1_RESPIN_ROOTMOTION": {
+      "clip": "PROC_WALK_RELAXED_V8_1_RESPIN_ROOTMOTION",
+      "duration_seconds": 4.069565217002042,
+      "phase_advance_cycles": 2.0,
+      "distance_m": 2.5947332824846594,
+      "mean_speed_mps": 0.6375947169108505,
+      "peak_speed_mps": 0.6375947169108502,
+      "terrain": "flat",
+      "path": "StraightPath",
+      "sole": {
+        "l": {
+          "selected_vertex_count": 64,
+          "candidate_vertex_count": 4627,
+          "rest_min_height": -7.353215258909529e-10,
+          "rest_contact_quantile": 0.0008802124089561402,
+          "influencing_bones": [
+            "Bone_042",
+            "Bone_043",
+            "Bone_044",
+            "Bone_045",
+            "Bone_046",
+            "Bone_047",
+            "Bone_048",
+            "Bone_049",
+            "Bone_050",
+            "Bone_008",
+            "Bone_009"
+          ]
+        },
+        "r": {
+          "selected_vertex_count": 64,
+          "candidate_vertex_count": 4518,
+          "rest_min_height": 0.0008440606179647148,
+          "rest_contact_quantile": 0.0013348930515348911,
+          "influencing_bones": [
+            "Bone_051",
+            "Bone_052",
+            "Bone_053",
+            "Bone_054",
+            "Bone_055",
+            "Bone_056",
+            "Bone_057",
+            "Bone_058",
+            "Bone_059",
+            "Bone_012",
+            "Bone_013"
+          ]
+        }
+      },
+      "loaded_max_penetration_m": {
+        "l": 0.0,
+        "r": 0.0
+      },
+      "loaded_max_contact_quantile_error_m": {
+        "l": 0.0013340174565755376,
+        "r": 0.0012301757165550952
+      },
+      "max_leg_target_error_m": {
+        "l": 0.00660445281625897,
+        "r": 0.006080358580188302
+      },
+      "max_sole_vertical_correction_m": {
+        "l": 0.003935081779903916,
+        "r": 0.0036181425244293693
+      },
+      "joint_constraints": {
+        "l": {
+          "knee": {
+            "expected_sign": 1.0,
+            "min_flex_deg": 38.86624525299621,
+            "max_flex_deg": 74.07788191332283,
+            "reverse_sample_count": 0,
+            "max_velocity_deg_s": 248.03639686251756,
+            "max_acceleration_deg_s2": 3762.044280537566
+          },
+          "ankle": {
+            "expected_sign": -1.0,
+            "min_flex_deg": 30.38795686448248,
+            "max_flex_deg": 70.26704896444379,
+            "reverse_sample_count": 0,
+            "max_velocity_deg_s": 249.71429981714067,
+            "max_acceleration_deg_s2": 3253.1204159051895
+          }
+        },
+        "r": {
+          "knee": {
+            "expected_sign": 1.0,
+            "min_flex_deg": 38.426739557002975,
+            "max_flex_deg": 74.34216303226336,
+            "reverse_sample_count": 0,
+            "max_velocity_deg_s": 250.94356106092533,
+            "max_acceleration_deg_s2": 3739.561935435188
+          },
+          "ankle": {
+            "expected_sign": -1.0,
+            "min_flex_deg": 31.196277482829863,
+            "max_flex_deg": 70.0145532440713,
+            "reverse_sample_count": 0,
+            "max_velocity_deg_s": 243.92440227996275,
+            "max_acceleration_deg_s2": 3183.0186105288703
+          }
+        }
+      },
+      "anatomical_reverse_sample_count": 0,
+      "max_joint_velocity_deg_s": 250.94356106092533,
+      "max_joint_acceleration_deg_s2": 3762.044280537566,
+      "quality_gates": {
+        "zero_anatomical_reversals": true,
+        "vertex_penetration_within_gate": true,
+        "loaded_sole_gap_within_gate": true,
+        "velocity_within_gate": true,
+        "acceleration_within_gate": true,
+        "relaxed_pelvis_lateral_within_gate": true,
+        "relaxed_pelvis_vertical_within_gate": true,
+        "v8_1_jaw_off_hinge_le_0_25deg": true
+      },
+      "v7_contact_locked": true,
+      "pelvis_translation": {
+        "axis_range_xyz_m": [
+          0.017996350620371082,
+          0.022010474806196723,
+          0.01752873936286692
+        ],
+        "max_abs_lateral_m": 0.00873486485806437,
+        "vertical_peak_to_peak_m": 0.022010474806196723,
+        "forward_peak_to_peak_m": 0.018173525756444497,
+        "solved_before_leg_ik": true
+      },
+      "turn_mass_lead": {
+        "active": false
+      },
+      "jaw_hinge_v8_1": {
+        "space": "jaw rest-local",
+        "axis_local": [
+          0.9992418837319629,
+          -0.017410932717563995,
+          0.03482121792388913
+        ],
+        "maximum_off_hinge_degrees": 1.2774911780784758e-14
+      }
+    },
+    "PROC_WALK_RELAXED_V8_1_RESPIN_INPLACE": {
+      "clip": "PROC_WALK_RELAXED_V8_1_RESPIN_ROOTMOTION",
+      "duration_seconds": 4.069565217002042,
+      "phase_advance_cycles": 2.0,
+      "distance_m": 2.5947332824846594,
+      "mean_speed_mps": 0.6375947169108505,
+      "peak_speed_mps": 0.6375947169108502,
+      "terrain": "flat",
+      "path": "StraightPath",
+      "sole": {
+        "l": {
+          "selected_vertex_count": 64,
+          "candidate_vertex_count": 4627,
+          "rest_min_height": -7.353215258909529e-10,
+          "rest_contact_quantile": 0.0008802124089561402,
+          "influencing_bones": [
+            "Bone_042",
+            "Bone_043",
+            "Bone_044",
+            "Bone_045",
+            "Bone_046",
+            "Bone_047",
+            "Bone_048",
+            "Bone_049",
+            "Bone_050",
+            "Bone_008",
+            "Bone_009"
+          ]
+        },
+        "r": {
+          "selected_vertex_count": 64,
+          "candidate_vertex_count": 4518,
+          "rest_min_height": 0.0008440606179647148,
+          "rest_contact_quantile": 0.0013348930515348911,
+          "influencing_bones": [
+            "Bone_051",
+            "Bone_052",
+            "Bone_053",
+            "Bone_054",
+            "Bone_055",
+            "Bone_056",
+            "Bone_057",
+            "Bone_058",
+            "Bone_059",
+            "Bone_012",
+            "Bone_013"
+          ]
+        }
+      },
+      "loaded_max_penetration_m": {
+        "l": 0.0,
+        "r": 0.0
+      },
+      "loaded_max_contact_quantile_error_m": {
+        "l": 0.0013340174565755376,
+        "r": 0.0012301757165550952
+      },
+      "max_leg_target_error_m": {
+        "l": 0.00660445281625897,
+        "r": 0.006080358580188302
+      },
+      "max_sole_vertical_correction_m": {
+        "l": 0.003935081779903916,
+        "r": 0.0036181425244293693
+      },
+      "joint_constraints": {
+        "l": {
+          "knee": {
+            "expected_sign": 1.0,
+            "min_flex_deg": 38.86624525299621,
+            "max_flex_deg": 74.07788191332283,
+            "reverse_sample_count": 0,
+            "max_velocity_deg_s": 248.03639686251756,
+            "max_acceleration_deg_s2": 3762.044280537566
+          },
+          "ankle": {
+            "expected_sign": -1.0,
+            "min_flex_deg": 30.38795686448248,
+            "max_flex_deg": 70.26704896444379,
+            "reverse_sample_count": 0,
+            "max_velocity_deg_s": 249.71429981714067,
+            "max_acceleration_deg_s2": 3253.1204159051895
+          }
+        },
+        "r": {
+          "knee": {
+            "expected_sign": 1.0,
+            "min_flex_deg": 38.426739557002975,
+            "max_flex_deg": 74.34216303226336,
+            "reverse_sample_count": 0,
+            "max_velocity_deg_s": 250.94356106092533,
+            "max_acceleration_deg_s2": 3739.561935435188
+          },
+          "ankle": {
+            "expected_sign": -1.0,
+            "min_flex_deg": 31.196277482829863,
+            "max_flex_deg": 70.0145532440713,
+            "reverse_sample_count": 0,
+            "max_velocity_deg_s": 243.92440227996275,
+            "max_acceleration_deg_s2": 3183.0186105288703
+          }
+        }
+      },
+      "anatomical_reverse_sample_count": 0,
+      "max_joint_velocity_deg_s": 250.94356106092533,
+      "max_joint_acceleration_deg_s2": 3762.044280537566,
+      "quality_gates": {
+        "zero_anatomical_reversals": true,
+        "vertex_penetration_within_gate": true,
+        "loaded_sole_gap_within_gate": true,
+        "velocity_within_gate": true,
+        "acceleration_within_gate": true,
+        "relaxed_pelvis_lateral_within_gate": true,
+        "relaxed_pelvis_vertical_within_gate": true,
+        "v8_1_jaw_off_hinge_le_0_25deg": true
+      },
+      "v7_contact_locked": true,
+      "pelvis_translation": {
+        "axis_range_xyz_m": [
+          0.017996350620371082,
+          0.022010474806196723,
+          0.01752873936286692
+        ],
+        "max_abs_lateral_m": 0.00873486485806437,
+        "vertical_peak_to_peak_m": 0.022010474806196723,
+        "forward_peak_to_peak_m": 0.018173525756444497,
+        "solved_before_leg_ik": true
+      },
+      "turn_mass_lead": {
+        "active": false
+      },
+      "in_place": true,
+      "jaw_hinge_v8_1": {
+        "space": "jaw rest-local",
+        "axis_local": [
+          0.9992418837319629,
+          -0.017410932717563995,
+          0.03482121792388913
+        ],
+        "maximum_off_hinge_degrees": 1.2774911780784758e-14
+      }
+    }
+  },
+  "output": {
+    "glb": "/Volumes/m2-extended-disk/Repos/eonwild-factory/candidates/v8.1-walk-respin-2/generated/iteration-22/tarbosaurus_procedural_v8_1_walk_respin.glb",
+    "glbSha256": "77b60d52a516828397ebbae6d0d58eb611afe3804e1ccb6632f7bf1d78fff10d"
+  },
+  "immutableAfter": {
+    "toolkitTreeSha256": "d7f2426cb6626f7e7c94e96228afdee9ba05492197cefa7c5066a2a05c329d10",
+    "showcaseTreeSha256": "336b22f38b74e7d011484ea737c48a66f9b3e4c36eb996a54086bed740bcf753",
+    "sourceGlbSha256": "fbb42c2edad4eadebbcf808d32028d7c73b3fbfd6172610eddd5df84990a65c7",
+    "canonicalProfileSha256": "f128bd39cca62a674855ffbcce2e88226cec3b17048bf9a830bd158238240143"
+  },
+  "immutableUnchanged": true
+}

@@ -1,0 +1,35 @@
+2026-08-27 20:55:27.051 (   1.373s) [    7FE715452780]vtkXOpenGLRenderWindow.:1460  WARN| bad X server connection. DISPLAY=:0
+[render-v8] walk_side: V8 relaxed walk regression · side
+[libx264 @ 0x55aa2cb47100] height not divisible by 2 (560x315)
+[vost#0:0/libx264 @ 0x55aa2cb48740] Error while opening encoder - maybe incorrect parameters such as bit_rate, rate, width or height.
+[vf#0:0 @ 0x55aa2cb48c00] Error sending frames to consumers: Generic error in an external library
+[vf#0:0 @ 0x55aa2cb48c00] Task finished with error code: -542398533 (Generic error in an external library)
+[vf#0:0 @ 0x55aa2cb48c00] Terminating thread with return code -542398533 (Generic error in an external library)
+[vost#0:0/libx264 @ 0x55aa2cb48740] Could not open encoder before EOF
+[vost#0:0/libx264 @ 0x55aa2cb48740] Task finished with error code: -22 (Invalid argument)
+[vost#0:0/libx264 @ 0x55aa2cb48740] Terminating thread with return code -22 (Invalid argument)
+[out#0/mp4 @ 0x55aa2cb47ec0] Nothing was written into output file, because at least one of its streams received no packets.
+Traceback (most recent call last):
+  File "/mnt/data/eonwild-v8-build/toolkit-v8/scripts/render_v8_validation.py", line 497, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/mnt/data/eonwild-v8-build/toolkit-v8/scripts/render_v8_validation.py", line 461, in main
+    video, montage = render_preview(spec, pack, renderer, terrain_for(spec.terrain, generator, profile), output)
+                     ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/data/eonwild-v8-build/toolkit-v8/scripts/render_v8_validation.py", line 376, in render_preview
+    encode_video(frame_dir, video, spec.fps)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/data/eonwild-v8-build/toolkit-v8/scripts/render_v8_validation.py", line 315, in encode_video
+    subprocess.run([
+    ~~~~~~~~~~~~~~^^
+        "ffmpeg", "-y", "-loglevel", "error", "-framerate", str(fps),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        "-pix_fmt", "yuv420p", "-movflags", "+faststart", str(destination),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ], check=True)
+    ^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/subprocess.py", line 577, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['ffmpeg', '-y', '-loglevel', 'error', '-framerate', '20', '-i', '/mnt/data/eonwild-v8-final/showcase/_frames/walk_side/frame_%04d.jpg', '-c:v', 'libx264', '-preset', 'medium', '-crf', '21', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', '/mnt/data/eonwild-v8-final/showcase/v8_walk_side_20fps.mp4']' returned non-zero exit status 187.

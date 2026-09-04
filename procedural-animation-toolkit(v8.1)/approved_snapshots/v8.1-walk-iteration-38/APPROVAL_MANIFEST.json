@@ -1,0 +1,80 @@
+{
+  "schema": "eonwild.approved-movement-snapshot.v1",
+  "snapshotId": "v8.1-walk-iteration-38",
+  "status": "APPROVED_WALK_BASE",
+  "scope": "Relaxed walk only; does not replace validated_result/v8.1 or approve unrelated clips.",
+  "approval": {
+    "source": "user approval relayed by integration task",
+    "candidate": "v8.1-walk-respin-2 iteration-38",
+    "approvalMedia": "media/walk-relaxed-v8-1-iteration-38-side.mp4",
+    "approvalMediaSha256": "8ef3d2c571e2ee317a431a66f8a031fabe53936d6bf256e9c091a9071ef48a20"
+  },
+  "v8_2Input": {
+    "asset": "asset/tarbosaurus_procedural_v8_1_walk_iteration_38.glb",
+    "assetSha256": "1b9a7d071c1b375e128beeb5bda68298e32b39aac3ea76a90afe7ca3f744b73e",
+    "preserve": [
+      "PROC_WALK_RELAXED_V8_1_RESPIN_ROOTMOTION",
+      "PROC_WALK_RELAXED_V8_1_RESPIN_INPLACE"
+    ],
+    "referenceScale": {
+      "bodyLengthM": 12.0,
+      "sameFootStrideM": 2.5999999689258293,
+      "rootSpeedKmh": 4.599999855972266,
+      "worldHipHeightM": 2.756361830245109
+    }
+  },
+  "validation": {
+    "authoritativeValidation": "evidence/authoritative-validation.json",
+    "status": "PASS",
+    "checks": [
+      "accepted_v8_1_immutable",
+      "all_exported_keys_ground_support_and_joint_continuity",
+      "physical_stride_and_speed",
+      "front_reach_derived_from_2_60m_stride",
+      "bilateral_phase_causal_rocker",
+      "dense_distal_toe_contact_lock"
+    ],
+    "toolVersions": {
+      "blender": "5.2.0 LTS",
+      "ffmpeg": "9.0.1",
+      "scipy": "1.16.3",
+      "pyyaml": "6.0.3"
+    }
+  },
+  "acceptedV8_1Preserved": {
+    "sourceGlbSha256": "fbb42c2edad4eadebbcf808d32028d7c73b3fbfd6172610eddd5df84990a65c7",
+    "canonicalProfileSha256": "f128bd39cca62a674855ffbcce2e88226cec3b17048bf9a830bd158238240143",
+    "validatedResultGlbSha256": "ba321da21c20fce9fc2192efbcc40ae192303b06c2ccb856e0b8d7edeba2cc8a"
+  },
+  "files": [
+    {"path":"asset/tarbosaurus_procedural_v8_1_walk_iteration_38.glb","bytes":45331840,"sha256":"1b9a7d071c1b375e128beeb5bda68298e32b39aac3ea76a90afe7ca3f744b73e"},
+    {"path":"config/profile-overlay-v8.1-walk-iteration-38.json","bytes":1783,"sha256":"3d5a56b183abc710dc0f73518bc4d3cfbc8569a3a5248fb15f4b17406c4addff"},
+    {"path":"config/resolved-profile-v8.1-walk-iteration-38.json","bytes":8733,"sha256":"eefc0c8ef7fd571c9f298cfce346a8af51106f37ef370c17d020b073ca8998d4"},
+    {"path":"evidence/animation-manifest.v8.1-walk-iteration-38.json","bytes":692,"sha256":"539fab5b890a3fc9c1deab7efd8447c6d9fd347275552afbefd326fae8ec3a02"},
+    {"path":"evidence/generation-report.json","bytes":372711,"sha256":"7b263b27b322fc3b938d4980de384264908c370afaf2b406e73eae37bfd22731"},
+    {"path":"evidence/base-validation.json","bytes":490628,"sha256":"5d66d11523911afd7b91d49861456ef7a9c8a97f35562d96ac665c15e6554174"},
+    {"path":"evidence/authoritative-validation.json","bytes":22170,"sha256":"b944c597355416fe7fdc3ab1439a721c2ecbe718ffa4f245140c12a8aa83618e"},
+    {"path":"media/walk-relaxed-v8-1-iteration-38-side.mp4","bytes":399152,"sha256":"8ef3d2c571e2ee317a431a66f8a031fabe53936d6bf256e9c091a9071ef48a20"},
+    {"path":"media/render-run.json","bytes":1516,"sha256":"6a5a6f0016ca8ec40887e63aa4c6645632853f9d161743ddf6f67f5a70b38d43"},
+    {"path":"reproduction/generate_walk_respin_2.py","bytes":18874,"sha256":"9de1aa0260b6b941ce11f51e857e1914e66440d8d7b2c98bd122212b0bd146a3"},
+    {"path":"reproduction/validate_walk_respin_2.py","bytes":33707,"sha256":"b28d5fdcd8c8951c1bc960b22f6f7e33f8843f1f4d126cddcc08413b23fbc395"},
+    {"path":"reproduction/render_walk_respin_2_blender.py","bytes":1544,"sha256":"7ce60913f505e566d5a7fa6a3b50ea8ab5b88b77e67f6e8f098a10af53e6c49f"},
+    {"path":"reproduction/commands.md","bytes":2410,"sha256":"9adcb2e98c90677ee3dab19594cf58fa2f2c2036827b251461e6f1e765e75e47"},
+    {"path":"reproduction/verify_snapshot.py","bytes":1669,"sha256":"8f93f83b5a6717edb2a4e1889a09a39e660739acb94e935a74077f596d77695e"}
+  ],
+  "externalSourceChecks": [
+    {"path":"candidates/v8.1-walk-respin-2/generated/iteration-38/tarbosaurus_procedural_v8_1_walk_respin.glb","sha256":"1b9a7d071c1b375e128beeb5bda68298e32b39aac3ea76a90afe7ca3f744b73e"},
+    {"path":"candidates/v8.1-walk-respin-2/generated/iteration-38/resolved-profile-v8.1-walk-respin.json","sha256":"eefc0c8ef7fd571c9f298cfce346a8af51106f37ef370c17d020b073ca8998d4"},
+    {"path":"candidates/v8.1-walk-respin-2/profile-overlay.json","sha256":"3d5a56b183abc710dc0f73518bc4d3cfbc8569a3a5248fb15f4b17406c4addff"},
+    {"path":"candidates/v8.1-walk-respin-2/scripts/generate_walk_respin_2.py","sha256":"9de1aa0260b6b941ce11f51e857e1914e66440d8d7b2c98bd122212b0bd146a3"},
+    {"path":"candidates/v8.1-walk-respin-2/scripts/validate_walk_respin_2.py","sha256":"b28d5fdcd8c8951c1bc960b22f6f7e33f8843f1f4d126cddcc08413b23fbc395"},
+    {"path":"candidates/v8.1-walk-respin-2/scripts/render_walk_respin_2_blender.py","sha256":"7ce60913f505e566d5a7fa6a3b50ea8ab5b88b77e67f6e8f098a10af53e6c49f"},
+    {"path":"candidates/v8.1-walk-respin/scripts/validate_walk_respin.py","sha256":"0ac593b83302a1514bba961ccbe81d346e8998fb69a1e7283fded34156f09e31"},
+    {"path":"showcase/v8.1-walk-respin-2/iteration-4/walk-relaxed-v8-1-respin-side.mp4","sha256":"8ef3d2c571e2ee317a431a66f8a031fabe53936d6bf256e9c091a9071ef48a20"},
+    {"path":"showcase/v8.1-walk-respin-2/iteration-4/render-run.json","sha256":"6a5a6f0016ca8ec40887e63aa4c6645632853f9d161743ddf6f67f5a70b38d43"},
+    {"path":"procedural-animation-toolkit(v8.1)/inputs/v8/tarbosaurus.glb","sha256":"fbb42c2edad4eadebbcf808d32028d7c73b3fbfd6172610eddd5df84990a65c7"},
+    {"path":"procedural-animation-toolkit(v8.1)/inputs/v8/bone-map.edited.yml","sha256":"8f795733d8157d6a2c745acbf572ca4db90b34b83d8c539e711dca1809044782"},
+    {"path":"procedural-animation-toolkit(v8.1)/validated_result/v8.1/resolved-profile-v8.1.json","sha256":"f128bd39cca62a674855ffbcce2e88226cec3b17048bf9a830bd158238240143"},
+    {"path":"procedural-animation-toolkit(v8.1)/validated_result/v8.1/tarbosaurus_procedural_v8_1_animation_pack.glb","sha256":"ba321da21c20fce9fc2192efbcc40ae192303b06c2ccb856e0b8d7edeba2cc8a"}
+  ]
+}

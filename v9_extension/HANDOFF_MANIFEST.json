@@ -1,0 +1,18 @@
+{
+  "schema": "eonwild.handoff_pack_manifest.v1",
+  "title": "Eonwild Factory V8.3 consolidation and V9 biomechanics complete handoff",
+  "review_pin": "aca1eab3f6e9f6970cf8a8281f4440a74f8551d3",
+  "baselines": {
+    "v8_2_sha256": "a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5",
+    "v5_5_sha256": "4e6e85dc82e941a3fc10109ca781dd3dcbb084699dc19834bf8683c04b22fe65"
+  },
+  "counts": {
+    "recovery_items": 52,
+    "v8_3_base_clips": 21,
+    "v8_3_transitions": 16,
+    "tarbosaurus_animation_specs": 29,
+    "motion_programs": 12
+  },
+  "goal_prompt_characters": 3222,
+  "status": "SPECIFICATION_ONLY"
+}

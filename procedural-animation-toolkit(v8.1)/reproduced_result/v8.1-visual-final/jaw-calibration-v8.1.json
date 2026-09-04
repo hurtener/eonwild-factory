@@ -1,0 +1,23 @@
+{
+  "close_degrees": 50.0,
+  "minimum_gap_m": 0.002044549991459421,
+  "median_gap_m": 0.012028303064748114,
+  "maximum_gap_m": 0.020358414630604393,
+  "target_minimum_gap_m": 0.002058322075047927,
+  "candidate_count": 41,
+  "witness_bin_count": 6,
+  "jaw_vertex_count": 4515,
+  "upper_vertex_count": 3036,
+  "jaw_chain": [
+    "Bone_074",
+    "Bone_073",
+    "Bone_072",
+    "Bone_071",
+    "Bone_070"
+  ],
+  "upper_chain": [
+    "Bone_035",
+    "Bone_069",
+    "Bone_068"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "status": "PASS",
+  "snapshotId": "v8.1-walk-iteration-38",
+  "snapshotVerifier": {
+    "status": "PASS",
+    "checkedSnapshotFiles": 14,
+    "checkedExternalSources": 13
+  },
+  "snapshotAuthoritativeValidator": {
+    "status": "PASS",
+    "checks": {
+      "accepted_v8_1_immutable": true,
+      "all_exported_keys_ground_support_and_joint_continuity": true,
+      "physical_stride_and_speed": true,
+      "front_reach_derived_from_2_60m_stride": true,
+      "bilateral_phase_causal_rocker": true,
+      "dense_distal_toe_contact_lock": true
+    }
+  },
+  "packageInventory": {
+    "preExistingFileCount": 285,
+    "currentFileCount": 301,
+    "addedSnapshotFiles": 16,
+    "changedPreExisting": [],
+    "removedPreExisting": [],
+    "verifyPackageV8_1": "PASS"
+  },
+  "media": {
+    "codec": "h264",
+    "width": 960,
+    "height": 540,
+    "fps": "24/1",
+    "frames": 240,
+    "durationSeconds": 10.0
+  }
+}

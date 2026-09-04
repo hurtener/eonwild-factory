@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eonwild.dev/schemas/biomechanical-plan.schema.json",
+  "title": "BiomechanicalPlan",
+  "type": "object",
+  "required": [
+    "schema",
+    "plan_id",
+    "body_profile_id",
+    "program_id",
+    "sample_hz",
+    "timeline",
+    "contacts",
+    "centroidal_state",
+    "landmarks",
+    "feasibility"
+  ],
+  "properties": {
+    "schema": {
+      "const": "eonwild.biomechanical_plan.v1"
+    },
+    "plan_id": {
+      "type": "string"
+    },
+    "body_profile_id": {
+      "type": "string"
+    },
+    "program_id": {
+      "type": "string"
+    },
+    "sample_hz": {
+      "type": "integer",
+      "minimum": 30
+    },
+    "timeline": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "number"
+      }
+    },
+    "contacts": {
+      "type": "array"
+    },
+    "centroidal_state": {
+      "type": "object",
+      "required": [
+        "com_world_m",
+        "linear_velocity_mps",
+        "linear_momentum",
+        "angular_momentum_about_com"
+      ]
+    },
+    "landmarks": {
+      "type": "array"
+    },
+    "feasibility": {
+      "type": "object",
+      "required": [
+        "status",
+        "margins"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "feasible",
+            "fallback_selected",
+            "infeasible"
+          ]
+        },
+        "margins": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

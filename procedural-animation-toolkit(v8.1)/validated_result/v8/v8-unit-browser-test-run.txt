@@ -1,0 +1,15 @@
+test_late_gape_is_closed_at_contact (tests.test_v8_core.TestV8Core.test_late_gape_is_closed_at_contact) ... ok
+test_minimum_jerk_helpers_close (tests.test_v8_core.TestV8Core.test_minimum_jerk_helpers_close) ... ok
+test_profile_action_and_turn_hierarchy (tests.test_v8_core.TestV8Core.test_profile_action_and_turn_hierarchy) ... ok
+test_transition_keeps_root_and_pelvis_endpoints (tests.test_v8_core.TestV8Core.test_transition_keeps_root_and_pelvis_endpoints) ... ok
+test_turn_envelope_exact_ends (tests.test_v8_core.TestV8Core.test_turn_envelope_exact_ends) ... ok
+test_controls_and_v8_clips (tests.test_browser_contract_v8.TestBrowserV8.test_controls_and_v8_clips) ... ok
+test_exact_handoff_and_button_state (tests.test_browser_contract_v8.TestBrowserV8.test_exact_handoff_and_button_state) ... ok
+test_javascript_syntax (tests.test_browser_contract_v8.TestBrowserV8.test_javascript_syntax) ... ok
+test_root_motion_loop_accumulation (tests.test_browser_contract_v8.TestBrowserV8.test_root_motion_loop_accumulation) ... ok
+test_v8_embed_contract (tests.test_browser_contract_v8.TestBrowserV8.test_v8_embed_contract) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.096s
+
+OK

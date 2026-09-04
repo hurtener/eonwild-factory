@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eonwild.dev/schemas/joint-limit-catalog.schema.json",
+  "title": "JointLimitCatalog",
+  "type": "object",
+  "required": [
+    "schema",
+    "id",
+    "family",
+    "envelopes",
+    "provenance"
+  ],
+  "properties": {
+    "schema": {
+      "const": "eonwild.joint_limit_catalog.v1"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "family": {
+      "type": "string",
+      "minLength": 1
+    },
+    "envelopes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object"
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "status",
+        "note"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "supported",
+            "plausible_inference",
+            "disputed",
+            "speculative",
+            "gameplay_only",
+            "gameplay_hypothesis",
+            "synthetic_test_fixture"
+          ]
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "uncertainty": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "reviewed_by": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reviewed_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,6 @@
+usage: Blender [-h] --source SOURCE --bone-map BONE_MAP
+               --canonical-profile CANONICAL_PROFILE --overlay OVERLAY
+               --immutable-toolkit IMMUTABLE_TOOLKIT
+               --immutable-showcase IMMUTABLE_SHOWCASE --output-dir OUTPUT_DIR
+Blender: error: the following arguments are required: --source, --bone-map, --canonical-profile, --overlay, --immutable-toolkit, --immutable-showcase, --output-dir
+Blender 5.2.0 LTS (hash fbe6228777e7 built 2026-07-14 01:31:22)

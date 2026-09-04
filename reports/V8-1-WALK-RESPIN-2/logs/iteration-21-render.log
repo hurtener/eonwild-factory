@@ -1,0 +1,148 @@
+11:04:40 | INFO: Data are loaded, start creating Blender stuff
+11:04:40 | INFO: Blender create Mesh node Mesh_0
+11:04:40 | INFO: glTF import finished in 0.39s
+/Volumes/m2-extended-disk/Repos/eonwild-factory/candidates/v8.1-walk-respin-2/scripts/render_walk_respin_2_blender.py:18: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  material.use_nodes = True
+00:05.848  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0001.png'
+00:06.595  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0002.png'
+00:07.260  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0003.png'
+00:07.935  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0004.png'
+00:08.621  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0005.png'
+00:09.306  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0006.png'
+00:09.965  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0007.png'
+00:10.636  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0008.png'
+00:11.304  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0009.png'
+00:11.963  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0010.png'
+00:12.639  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0011.png'
+00:13.396  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0012.png'
+00:14.228  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0013.png'
+00:14.925  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0014.png'
+00:15.774  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0015.png'
+00:16.690  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0016.png'
+00:17.511  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0017.png'
+00:18.286  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0018.png'
+00:19.235  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0019.png'
+00:19.965  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0020.png'
+00:20.630  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0021.png'
+00:21.292  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0022.png'
+00:22.012  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0023.png'
+00:22.675  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0024.png'
+00:23.373  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0025.png'
+00:24.117  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0026.png'
+00:24.800  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0027.png'
+00:25.480  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0028.png'
+00:26.197  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0029.png'
+00:26.910  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0030.png'
+00:27.615  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0031.png'
+00:28.392  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0032.png'
+00:29.184  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0033.png'
+00:29.867  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0034.png'
+00:30.523  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0035.png'
+00:31.197  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0036.png'
+00:31.909  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0037.png'
+00:32.573  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0038.png'
+00:33.236  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0039.png'
+00:33.919  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0040.png'
+00:34.598  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0041.png'
+00:35.284  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0042.png'
+00:35.949  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0043.png'
+00:36.607  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0044.png'
+00:37.248  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0045.png'
+00:37.894  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0046.png'
+00:38.590  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0047.png'
+00:39.271  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0048.png'
+00:39.974  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0049.png'
+00:40.691  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0050.png'
+00:41.405  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0051.png'
+00:42.124  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0052.png'
+00:42.823  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0053.png'
+00:43.539  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0054.png'
+00:44.205  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0055.png'
+00:44.900  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0056.png'
+00:45.616  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0057.png'
+00:46.372  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0058.png'
+00:47.080  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0059.png'
+00:47.781  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0060.png'
+00:48.458  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0061.png'
+00:49.161  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0062.png'
+00:49.888  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0063.png'
+00:50.692  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0064.png'
+00:51.506  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0065.png'
+00:52.388  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0066.png'
+00:53.311  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0067.png'
+00:54.586  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0068.png'
+00:55.402  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0069.png'
+00:56.130  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0070.png'
+00:56.952  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0071.png'
+00:57.817  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0072.png'
+00:58.725  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0073.png'
+00:59.601  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0074.png'
+01:00.417  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0075.png'
+01:01.172  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0076.png'
+01:01.976  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0077.png'
+01:02.795  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0078.png'
+01:03.660  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0079.png'
+01:04.535  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0080.png'
+01:05.386  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0081.png'
+01:06.338  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0082.png'
+01:07.221  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0083.png'
+01:08.119  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0084.png'
+01:08.950  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0085.png'
+01:09.805  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0086.png'
+01:10.740  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0087.png'
+01:11.734  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0088.png'
+01:12.625  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0089.png'
+01:13.518  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0090.png'
+01:14.408  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0091.png'
+01:15.226  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0092.png'
+01:16.012  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0093.png'
+01:16.752  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0094.png'
+01:17.573  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0095.png'
+01:18.427  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0096.png'
+01:19.268  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0097.png'
+01:20.105  render           | Saved: 'showcase/v8.1-walk-respin-2/iteration-3/.walk-relaxed-v8-1-respin-side.frames/frame_0098.png'
+{
+  "renderer": "Blender candidate-owned walk-only wrapper",
+  "blenderVersion": "5.2.0 LTS",
+  "acceptedRendererReadOnly": "/Volumes/m2-extended-disk/Repos/eonwild-factory/showcase/v8.1/render_v8_1_blender.py",
+  "inputGlb": "/Volumes/m2-extended-disk/Repos/eonwild-factory/candidates/v8.1-walk-respin-2/generated/iteration-21/tarbosaurus_procedural_v8_1_walk_respin.glb",
+  "inputGlbSha256": "c53e8f67df930a1a455bb7c35c041dd736753c90242321fc623489590781b329",
+  "manifest": "/Volumes/m2-extended-disk/Repos/eonwild-factory/candidates/v8.1-walk-respin-2/generated/iteration-21/animation-manifest.v8.1-walk-respin.json",
+  "clip": "PROC_WALK_RELAXED_V8_1_RESPIN_ROOTMOTION",
+  "durationSeconds": 10.0,
+  "fps": 24,
+  "frameCount": 240,
+  "resolution": [
+    960,
+    540
+  ],
+  "view": "side",
+  "targetProxyRendered": false,
+  "contactReadabilityStage": {
+    "groundBaseColor": [
+      0.32,
+      0.34,
+      0.34,
+      1.0
+    ],
+    "groundRoughness": 0.92,
+    "lighting": "lighter neutral floor retained solely to expose metatarsal rise and toe-only contact shadow"
+  },
+  "onlyEditorialMedia": "/Volumes/m2-extended-disk/Repos/eonwild-factory/showcase/v8.1-walk-respin-2/iteration-3/walk-relaxed-v8-1-respin-side.mp4",
+  "boundsM": {
+    "min": [
+      -1.455668330192566,
+      -11.17465591430664,
+      -1.0
+    ],
+    "max": [
+      1.7228491306304932,
+      6.029777526855469,
+      3.4242465496063232
+    ]
+  },
+  "animationDataPolicy": "candidate GLB imported read-only; no action channels changed"
+}
+Blender 5.2.0 LTS (hash fbe6228777e7 built 2026-07-14 01:31:22)
+
+Blender quit

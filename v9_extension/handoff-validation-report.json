@@ -1,0 +1,45 @@
+{
+  "schema": "eonwild.handoff_pack_validation.v1",
+  "status": "PASS",
+  "checks": [
+    {
+      "id": "required_files",
+      "found": 18,
+      "expected": 18
+    },
+    {
+      "id": "recovery_matrix",
+      "items": 52,
+      "unique_ids": 52
+    },
+    {
+      "id": "v8_3_clip_matrix",
+      "base_clips": 21,
+      "transitions": 16
+    },
+    {
+      "id": "animation_catalog",
+      "yaml": 29,
+      "markdown": 29
+    },
+    {
+      "id": "goal_prompt",
+      "characters": 3222
+    },
+    {
+      "id": "game_design_references",
+      "count": 12
+    },
+    {
+      "id": "structured_files_parse",
+      "count": 51
+    },
+    {
+      "id": "v9_spec_validator",
+      "returncode": 0
+    }
+  ],
+  "error_count": 0,
+  "errors": [],
+  "scope": "Structural completeness and internal consistency only; no generated V8.3/V9 animation or perceptual approval is claimed."
+}

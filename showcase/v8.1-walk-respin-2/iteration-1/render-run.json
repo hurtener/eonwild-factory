@@ -1,0 +1,42 @@
+{
+  "renderer": "Blender candidate-owned walk-only wrapper",
+  "blenderVersion": "5.2.0 LTS",
+  "acceptedRendererReadOnly": "/Volumes/m2-extended-disk/Repos/eonwild-factory/showcase/v8.1/render_v8_1_blender.py",
+  "inputGlb": "/Volumes/m2-extended-disk/Repos/eonwild-factory/candidates/v8.1-walk-respin-2/generated/iteration-15/tarbosaurus_procedural_v8_1_walk_respin.glb",
+  "inputGlbSha256": "4db8abd15c796c14057910b8c11a7f99209fe3e3b1d96fb9f956df8aee9c7e7a",
+  "manifest": "/Volumes/m2-extended-disk/Repos/eonwild-factory/candidates/v8.1-walk-respin-2/generated/iteration-15/animation-manifest.v8.1-walk-respin.json",
+  "clip": "PROC_WALK_RELAXED_V8_1_RESPIN_ROOTMOTION",
+  "durationSeconds": 10.0,
+  "fps": 24,
+  "frameCount": 240,
+  "resolution": [
+    960,
+    540
+  ],
+  "view": "side",
+  "targetProxyRendered": false,
+  "contactReadabilityStage": {
+    "groundBaseColor": [
+      0.32,
+      0.34,
+      0.34,
+      1.0
+    ],
+    "groundRoughness": 0.92,
+    "lighting": "lighter neutral floor retained solely to expose metatarsal rise and toe-only contact shadow"
+  },
+  "onlyEditorialMedia": "/Volumes/m2-extended-disk/Repos/eonwild-factory/showcase/v8.1-walk-respin-2/iteration-1/walk-relaxed-v8-1-respin-side.mp4",
+  "boundsM": {
+    "min": [
+      -1.455668330192566,
+      -11.17465591430664,
+      -1.0
+    ],
+    "max": [
+      1.7228491306304932,
+      6.029777526855469,
+      3.4242465496063232
+    ]
+  },
+  "animationDataPolicy": "candidate GLB imported read-only; no action channels changed"
+}

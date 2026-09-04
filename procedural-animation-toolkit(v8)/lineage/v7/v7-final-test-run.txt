@@ -1,0 +1,294 @@
+EONWILD PROCEDURAL ANIMATION V7 — FINAL TEST RUN
+UTC 2026-08-27T16:15:23Z
+
+=== Unit and browser-player tests ===
+test_pose_transition_preserves_pelvis_endpoints (tests.test_v7_core.TestV7Core.test_pose_transition_preserves_pelvis_endpoints) ... ok
+test_transition_handles_track_present_on_one_side (tests.test_v7_core.TestV7Core.test_transition_handles_track_present_on_one_side) ... ok
+test_turn_envelope_is_c2_like_at_ends (tests.test_v7_core.TestV7Core.test_turn_envelope_is_c2_like_at_ends) ... ok
+test_v7_profile_is_contact_conservative (tests.test_v7_core.TestV7Core.test_v7_profile_is_contact_conservative) ... ok
+test_controls_and_turns (tests.test_browser_contract_v7.TestBrowserV7.test_controls_and_turns) ... ok
+test_exact_handoff_player_contract (tests.test_browser_contract_v7.TestBrowserV7.test_exact_handoff_player_contract) ... ok
+test_javascript_syntax (tests.test_browser_contract_v7.TestBrowserV7.test_javascript_syntax) ... ok
+test_root_motion_loop_accumulation (tests.test_browser_contract_v7.TestBrowserV7.test_root_motion_loop_accumulation) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.136s
+
+OK
+
+=== Real-rig fixture ===
+{
+  "status": "PASS",
+  "version": "7.0.0",
+  "input": {
+    "sha256": "fbb42c2edad4eadebbcf808d32028d7c73b3fbfd6172610eddd5df84990a65c7",
+    "nodeCount": 77
+  },
+  "boneMap": {
+    "sha256": "8f795733d8157d6a2c745acbf572ca4db90b34b83d8c539e711dca1809044782",
+    "tagCount": 68,
+    "uniqueBoneCount": 63,
+    "missingBones": []
+  },
+  "skin": {
+    "jointCount": 75,
+    "primitiveVertexCount": 59169,
+    "jointWeightSets": 3
+  },
+  "sole": {
+    "l": {
+      "selectedVertexCount": 64,
+      "candidateVertexCount": 4627,
+      "allIndicesInPrimitive": true,
+      "uniqueIndices": true,
+      "restMinHeight": -7.353215258909529e-10,
+      "restContactQuantile": 0.0008802124089561402,
+      "influencingBones": [
+        "Bone_042",
+        "Bone_043",
+        "Bone_044",
+        "Bone_045",
+        "Bone_046",
+        "Bone_047",
+        "Bone_048",
+        "Bone_049",
+        "Bone_050",
+        "Bone_008",
+        "Bone_009"
+      ]
+    },
+    "r": {
+      "selectedVertexCount": 64,
+      "candidateVertexCount": 4518,
+      "allIndicesInPrimitive": true,
+      "uniqueIndices": true,
+      "restMinHeight": 0.0008440606179647148,
+      "restContactQuantile": 0.0013348930515348911,
+      "influencingBones": [
+        "Bone_051",
+        "Bone_052",
+        "Bone_053",
+        "Bone_054",
+        "Bone_055",
+        "Bone_056",
+        "Bone_057",
+        "Bone_058",
+        "Bone_059",
+        "Bone_012",
+        "Bone_013"
+      ]
+    }
+  },
+  "leftRightSelectionOverlap": 0,
+  "anatomicalConstraints": {
+    "leftExpectedKneeSign": 1.0,
+    "rightExpectedKneeSign": 1.0,
+    "leftExpectedAnkleSign": -1.0,
+    "rightExpectedAnkleSign": -1.0
+  },
+  "v7Invariants": {
+    "pelvisMustBeSolvedBeforeLegIK": true,
+    "exportedPelvisMustMatchSolvedPose": true,
+    "postSolveBalanceTransformForbidden": true,
+    "turnHeadNeckLeadRequired": true
+  }
+}
+
+=== Generated release ===
+{
+  "status": "PASS",
+  "animation_count": 40,
+  "unique_animation_count": 40,
+  "skin_joint_count": 75,
+  "required_base_missing": [],
+  "base_clips_without_pelvis_translation": [],
+  "turn_diagnostics": {
+    "PROC_TURN_LEFT_35_V7_ROOTMOTION": {
+      "active": true,
+      "direction": "left",
+      "peak_head_lead_deg": 11.5,
+      "peak_neck_lead_deg": 7.6,
+      "peak_chest_lead_deg": 3.2,
+      "peak_tail_counter_target_deg": 7.8,
+      "root_heading_at_peak_head_lead_deg": 1.5571820445350708,
+      "head_leads_before_half_turn": true
+    },
+    "PROC_TURN_RIGHT_35_V7_ROOTMOTION": {
+      "active": true,
+      "direction": "right",
+      "peak_head_lead_deg": 11.5,
+      "peak_neck_lead_deg": 7.6,
+      "peak_chest_lead_deg": 3.2,
+      "peak_tail_counter_target_deg": 7.8,
+      "root_heading_at_peak_head_lead_deg": 1.5571820445350708,
+      "head_leads_before_half_turn": true
+    }
+  },
+  "failed_quality_gates": [],
+  "manifest_clip_count": 40,
+  "all_channel_targets_valid": true,
+  "all_timelines_nonempty": true,
+  "report_status": "PASS_WITH_PERCEPTUAL_REVIEW_REQUIRED"
+}
+
+=== Baked ground/contact regression ===
+{
+  "status": "PASS",
+  "scope": "actual baked GLB; selected weighted sole vertices sampled at every exported key",
+  "sourceSha256": "fbb42c2edad4eadebbcf808d32028d7c73b3fbfd6172610eddd5df84990a65c7",
+  "animatedGlbSha256": "5037a0737aa37e205e84ba2b90e427d22c868840ff8987fbcf3ae84660d0d3dd",
+  "groundHeightM": -7.353215258909529e-10,
+  "clips": {
+    "PROC_WALK_RELAXED_V7_INPLACE": {
+      "sampleCount": 189,
+      "durationSeconds": 3.125,
+      "worstSelectedSolePenetrationM": 0.0,
+      "maximumLowestFootContactQuantileM": 0.0029066248502368818,
+      "framesWithBothFeetAbove12mm": 0,
+      "noV6StyleFlight": true,
+      "noGroundPenetration": true,
+      "status": "PASS"
+    },
+    "PROC_TURN_LEFT_35_V7_ROOTMOTION": {
+      "sampleCount": 219,
+      "durationSeconds": 3.633720874786377,
+      "worstSelectedSolePenetrationM": 0.0,
+      "maximumLowestFootContactQuantileM": 0.0032112580622039623,
+      "framesWithBothFeetAbove12mm": 0,
+      "noV6StyleFlight": true,
+      "noGroundPenetration": true,
+      "status": "PASS"
+    },
+    "PROC_TURN_RIGHT_35_V7_ROOTMOTION": {
+      "sampleCount": 219,
+      "durationSeconds": 3.633720874786377,
+      "worstSelectedSolePenetrationM": 0.0,
+      "maximumLowestFootContactQuantileM": 0.0030753295352753374,
+      "framesWithBothFeetAbove12mm": 0,
+      "noV6StyleFlight": true,
+      "noGroundPenetration": true,
+      "status": "PASS"
+    },
+    "PROC_IDLE_BREATH_V7": {
+      "sampleCount": 421,
+      "durationSeconds": 7.0,
+      "worstSelectedSolePenetrationM": 0.0,
+      "maximumLowestFootContactQuantileM": 0.0031582747421445494,
+      "framesWithBothFeetAbove12mm": 0,
+      "noV6StyleFlight": true,
+      "noGroundPenetration": true,
+      "status": "PASS"
+    }
+  }
+}
+
+=== Actual baked turn kinematics ===
+{
+  "PROC_TURN_LEFT_35_V7_ROOTMOTION": {
+    "sample_count": 219,
+    "duration_seconds": 3.633720874786377,
+    "final_root_heading_deg": -32.768818782031204,
+    "peak_head_relative": {
+      "time": 1.4334862232208252,
+      "root_heading_deg": -8.54785442806265,
+      "head_relative_yaw_deg": -23.427999882526922,
+      "neck_relative_yaw_deg": -13.610854528227932,
+      "chest_relative_yaw_deg": -4.764969591217548,
+      "tail_root_relative_yaw_deg": 0.2602596071713138,
+      "tail_geometry_relative_yaw_deg": 11.989885308880403
+    },
+    "peak_neck_relative": {
+      "time": 1.3668124675750732,
+      "root_heading_deg": -7.467310551303654,
+      "head_relative_yaw_deg": -23.407197647129298,
+      "neck_relative_yaw_deg": -13.656802406251096,
+      "chest_relative_yaw_deg": -4.7910217495434075,
+      "tail_root_relative_yaw_deg": 0.21109279182998208,
+      "tail_geometry_relative_yaw_deg": 11.840163487125801
+    },
+    "peak_chest_relative": {
+      "time": 1.3668124675750732,
+      "root_heading_deg": -7.467310551303654,
+      "head_relative_yaw_deg": -23.407197647129298,
+      "neck_relative_yaw_deg": -13.656802406251096,
+      "chest_relative_yaw_deg": -4.7910217495434075,
+      "tail_root_relative_yaw_deg": 0.21109279182998208,
+      "tail_geometry_relative_yaw_deg": 11.840163487125801
+    },
+    "peak_tail_root_relative": {
+      "time": 2.2669084072113037,
+      "root_heading_deg": -23.070326390479376,
+      "head_relative_yaw_deg": -22.485750128675665,
+      "neck_relative_yaw_deg": -10.477788607679058,
+      "chest_relative_yaw_deg": -3.0132046824558554,
+      "tail_root_relative_yaw_deg": 3.3268683748765904,
+      "tail_geometry_relative_yaw_deg": 14.703035627234
+    },
+    "peak_tail_geometry_relative": {
+      "time": 2.4002559185028076,
+      "root_heading_deg": -25.103117792808398,
+      "head_relative_yaw_deg": -22.568513616625783,
+      "neck_relative_yaw_deg": -10.632688041037138,
+      "chest_relative_yaw_deg": -3.1001879982689293,
+      "tail_root_relative_yaw_deg": 3.1718392240694673,
+      "tail_geometry_relative_yaw_deg": 14.866207035248337
+    }
+  },
+  "PROC_TURN_RIGHT_35_V7_ROOTMOTION": {
+    "sample_count": 219,
+    "duration_seconds": 3.633720874786377,
+    "final_root_heading_deg": 37.2311813998734,
+    "peak_head_relative": {
+      "time": 0.6334009170532227,
+      "root_heading_deg": 3.634024672842947,
+      "head_relative_yaw_deg": 23.716857406209748,
+      "neck_relative_yaw_deg": 13.335959481387395,
+      "chest_relative_yaw_deg": 4.609555161580411,
+      "tail_root_relative_yaw_deg": 1.5354839999645167,
+      "tail_geometry_relative_yaw_deg": -3.879120845704166
+    },
+    "peak_neck_relative": {
+      "time": 2.2669084072113037,
+      "root_heading_deg": 27.53268946571065,
+      "head_relative_yaw_deg": 23.2254672889456,
+      "neck_relative_yaw_deg": 13.66902628019041,
+      "chest_relative_yaw_deg": 4.796546121569617,
+      "tail_root_relative_yaw_deg": -0.22180108228688664,
+      "tail_geometry_relative_yaw_deg": -17.18166809399107
+    },
+    "peak_chest_relative": {
+      "time": 2.2669084072113037,
+      "root_heading_deg": 27.53268946571065,
+      "head_relative_yaw_deg": 23.2254672889456,
+      "neck_relative_yaw_deg": 13.66902628019041,
+      "chest_relative_yaw_deg": 4.796546121569617,
+      "tail_root_relative_yaw_deg": -0.22180108228688664,
+      "tail_geometry_relative_yaw_deg": -17.18166809399107
+    },
+    "peak_tail_root_relative": {
+      "time": 1.3668124675750732,
+      "root_heading_deg": 11.929673548259405,
+      "head_relative_yaw_deg": 22.27581364276791,
+      "neck_relative_yaw_deg": 10.481574273104433,
+      "chest_relative_yaw_deg": 3.02025366986209,
+      "tail_root_relative_yaw_deg": -3.3464534018223886,
+      "tail_geometry_relative_yaw_deg": -16.664267090915324
+    },
+    "peak_tail_geometry_relative": {
+      "time": 1.6668444871902466,
+      "root_heading_deg": 17.03418130811428,
+      "head_relative_yaw_deg": 22.437280090160264,
+      "neck_relative_yaw_deg": 11.27993657585936,
+      "chest_relative_yaw_deg": 3.465507419277087,
+      "tail_root_relative_yaw_deg": -2.548653891737496,
+      "tail_geometry_relative_yaw_deg": -18.514469750312955
+    }
+  }
+}
+
+=== Self-contained reviewer contracts ===
+OPEN_ME_tarbosaurus_v7_3d_browser.html {'exists': True, 'bytes': 70969059, 'no_external_urls': True}
+OPEN_ME_tarbosaurus_v7_validation.html {'exists': True, 'bytes': 13812571, 'no_external_urls': True}
+embedded WebGL player contract PASS
+
+FINAL STATUS: PASS_WITH_PERCEPTUAL_REVIEW_REQUIRED

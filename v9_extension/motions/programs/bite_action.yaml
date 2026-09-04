@@ -1,0 +1,41 @@
+id: bite_action
+version: 1
+purpose: Deliver target-relative quick, committed, or downward bites with body-chain force production, contact branching,
+  and readable recovery.
+phase_template:
+- acquire
+- align
+- anticipate
+- gape
+- commit
+- contact_window
+- follow_through
+- recover
+inputs:
+- target_pose
+- target_velocity
+- bite_variant
+- current_support
+- body_profile
+- style
+- fatigue
+- injury
+outputs:
+- target_lock_window
+- jaw_curve
+- head_neck_torso_path
+- contact_window
+- hit_miss_branch
+- recovery_state
+invariants:
+- substantial bite begins below the skull
+- jaw opens before target arrival
+- momentum continues through contact
+- miss cannot reset to neutral
+branches:
+- quick
+- committed
+- low_downward
+- hit
+- miss
+- hold

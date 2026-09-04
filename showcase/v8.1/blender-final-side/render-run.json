@@ -1,0 +1,68 @@
+{
+  "renderer": "Blender",
+  "blender_version": "5.2.0 LTS",
+  "source_glb": "/Volumes/m2-extended-disk/Repos/eonwild-factory/procedural-animation-toolkit(v8.1)/validated_result/v8.1/tarbosaurus_procedural_v8_1_animation_pack.glb",
+  "manifest": "/Volumes/m2-extended-disk/Repos/eonwild-factory/procedural-animation-toolkit(v8.1)/validated_result/v8.1/animation-manifest.v8.1.json",
+  "resolution": [
+    720,
+    406
+  ],
+  "fps": 24,
+  "view": "side",
+  "source_glb_sha256": "ba321da21c20fce9fc2192efbcc40ae192303b06c2ccb856e0b8d7edeba2cc8a",
+  "priority_clip_count": 24,
+  "priority_clips": [
+    "PROC_WALK_RELAXED_V8_1_ROOTMOTION",
+    "PROC_WALK_RELAXED_V8_1_INPLACE",
+    "PROC_WALK_UNEVEN_TERRAIN_V8_1_ROOTMOTION",
+    "PROC_WALK_UNEVEN_TERRAIN_V8_1_INPLACE",
+    "PROC_WALK_UPSLOPE_V8_1_ROOTMOTION",
+    "PROC_WALK_UPSLOPE_V8_1_INPLACE",
+    "PROC_TURN_LEFT_35_V8_1_ROOTMOTION",
+    "PROC_TURN_LEFT_35_V8_1_INPLACE",
+    "PROC_TURN_RIGHT_35_V8_1_ROOTMOTION",
+    "PROC_TURN_RIGHT_35_V8_1_INPLACE",
+    "PROC_START_WALK_V8_1_ROOTMOTION",
+    "PROC_START_WALK_V8_1_INPLACE",
+    "PROC_BRAKE_TO_IDLE_V8_1_ROOTMOTION",
+    "PROC_BRAKE_TO_IDLE_V8_1_INPLACE",
+    "PROC_ALERT_WALK_V8_1_ROOTMOTION",
+    "PROC_ALERT_WALK_V8_1_INPLACE",
+    "PROC_IDLE_BREATH_V8_1",
+    "PROC_ALERT_IDLE_V8_1",
+    "PROC_EAT_LOOP_V8_1",
+    "PROC_NORMAL_ATTACK_V8_1",
+    "PROC_NORMAL_ATTACK_MIRRORED_V8_1",
+    "PROC_POWER_ATTACK_V8_1",
+    "PROC_POWER_ATTACK_MIRRORED_V8_1",
+    "PROC_ROAR_V8_1"
+  ],
+  "film_clips": [],
+  "power_sequence_rendered": true,
+  "power_sequence_segments": [
+    {"clip": "PROC_WALK_RELAXED_V8_1_INPLACE", "duration_seconds": 1.0},
+    {"clip": "PROC_WALK_TO_POWER_ATTACK_V8_1", "duration_seconds": 0.42},
+    {"clip": "PROC_POWER_ATTACK_V8_1", "duration_seconds": 2.8},
+    {"clip": "PROC_POWER_ATTACK_TO_EAT_V8_1", "duration_seconds": 0.82},
+    {"clip": "PROC_EAT_LOOP_V8_1", "duration_seconds": 4.96}
+  ],
+  "power_sequence_duration_seconds": 10.0,
+  "review_proxy_policy": "project-owned abstract primitive at the contact/feeding point; evidence only; not part of the GLB",
+  "film_duration_policy_seconds_non_loop": 3.2,
+  "requested_film_duration_seconds": null,
+  "loop_duration_policy": "manifest durationSeconds rendered at the requested FPS",
+  "imported_actions": 47,
+  "bounds_m": {
+    "min": [
+      -1.7679775953292847,
+      -4.545978546142578,
+      -1.0
+    ],
+    "max": [
+      2.1599104404449463,
+      3.183009147644043,
+      1.93488609790802
+    ]
+  },
+  "animation_data_policy": "source GLB imported read-only; action selection only; no animation channels edited"
+}

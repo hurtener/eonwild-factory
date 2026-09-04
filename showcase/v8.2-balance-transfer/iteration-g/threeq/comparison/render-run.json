@@ -1,0 +1,18 @@
+{
+  "schema": "eonwild.v8_2.threeq_balance_comparison.v1",
+  "status": "PASS",
+  "purpose": "narrow visual review of lateral chest/tail balance with lower-body regression visibility",
+  "leftApprovedV8_1": "showcase/v8.2-balance-transfer/iteration-g/threeq/v8-1-approved/walk-relaxed-threeq.mp4",
+  "rightCandidateV8_2": "showcase/v8.2-balance-transfer/iteration-g/threeq/v8-2-candidate/walk-relaxed-threeq.mp4",
+  "output": "showcase/v8.2-balance-transfer/iteration-g/threeq/comparison/v8-1-approved-vs-v8-2-threeq-side-by-side.mp4",
+  "synchronization": "same root-motion clip, same source frame zero, 10.000 seconds at 24 fps",
+  "framing": "V8.1 sampled three-quarter bounds were locked for both renders",
+  "lighting": "identical neutral floor and key/fill/rim values",
+  "outputResolution": [1920, 540],
+  "fps": 24,
+  "frameCount": 240,
+  "durationSeconds": 10.0,
+  "leftSha256": "ec5092958858b56523a7f6e53ae6cbf18cb27fe40f4448db0a15dc1773046682",
+  "rightSha256": "5fdeed0aaf15c9852d1a4a537989b709b2875cf48947255c05108e41d6462cf7",
+  "outputSha256": "5e11692890b18166cea169c61894c0cb3824a69fea79c932ebfffbba00045d10"
+}

@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/Volumes/m2-extended-disk/Repos/eonwild-factory/candidates/v8.1-walk-respin/scripts/validate_walk_respin.py", line 10, in <module>
+    import numpy as np
+ModuleNotFoundError: No module named 'numpy'

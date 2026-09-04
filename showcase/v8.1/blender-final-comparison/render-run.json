@@ -1,0 +1,60 @@
+{
+  "renderer": "Blender",
+  "blender_version": "5.2.0 LTS",
+  "source_glb": "/Volumes/m2-extended-disk/Repos/eonwild-factory/procedural-animation-toolkit(v8.1)/validated_result/v8.1/tarbosaurus_procedural_v8_1_animation_pack.glb",
+  "manifest": "/Volumes/m2-extended-disk/Repos/eonwild-factory/procedural-animation-toolkit(v8.1)/validated_result/v8.1/animation-manifest.v8.1.json",
+  "resolution": [
+    720,
+    406
+  ],
+  "fps": 10,
+  "view": "side",
+  "source_glb_sha256": "c160df63e9f2d92028a62fc8a911a25aa08c163f647201533b2e9510390bd118",
+  "priority_clip_count": 24,
+  "priority_clips": [
+    "PROC_WALK_RELAXED_V8_1_ROOTMOTION",
+    "PROC_WALK_RELAXED_V8_1_INPLACE",
+    "PROC_WALK_UNEVEN_TERRAIN_V8_1_ROOTMOTION",
+    "PROC_WALK_UNEVEN_TERRAIN_V8_1_INPLACE",
+    "PROC_WALK_UPSLOPE_V8_1_ROOTMOTION",
+    "PROC_WALK_UPSLOPE_V8_1_INPLACE",
+    "PROC_TURN_LEFT_35_V8_1_ROOTMOTION",
+    "PROC_TURN_LEFT_35_V8_1_INPLACE",
+    "PROC_TURN_RIGHT_35_V8_1_ROOTMOTION",
+    "PROC_TURN_RIGHT_35_V8_1_INPLACE",
+    "PROC_START_WALK_V8_1_ROOTMOTION",
+    "PROC_START_WALK_V8_1_INPLACE",
+    "PROC_BRAKE_TO_IDLE_V8_1_ROOTMOTION",
+    "PROC_BRAKE_TO_IDLE_V8_1_INPLACE",
+    "PROC_ALERT_WALK_V8_1_ROOTMOTION",
+    "PROC_ALERT_WALK_V8_1_INPLACE",
+    "PROC_IDLE_BREATH_V8_1",
+    "PROC_ALERT_IDLE_V8_1",
+    "PROC_EAT_LOOP_V8_1",
+    "PROC_NORMAL_ATTACK_V8_1",
+    "PROC_NORMAL_ATTACK_MIRRORED_V8_1",
+    "PROC_POWER_ATTACK_V8_1",
+    "PROC_POWER_ATTACK_MIRRORED_V8_1",
+    "PROC_ROAR_V8_1"
+  ],
+  "film_clips": [
+    "PROC_IDLE_BREATH_V8_1"
+  ],
+  "film_duration_policy_seconds_non_loop": 3.0,
+  "requested_film_duration_seconds": null,
+  "loop_duration_policy": "manifest durationSeconds rendered at the requested FPS",
+  "imported_actions": 47,
+  "bounds_m": {
+    "min": [
+      -1.7688114643096924,
+      -4.545978546142578,
+      -1.0
+    ],
+    "max": [
+      2.1599104404449463,
+      3.18269681930542,
+      2.007145643234253
+    ]
+  },
+  "animation_data_policy": "source GLB imported read-only; action selection only; no animation channels edited"
+}

@@ -1,0 +1,32 @@
+{
+  "renderer": "Blender candidate-owned walk-only wrapper",
+  "blenderVersion": "5.2.0 LTS",
+  "acceptedRendererReadOnly": "/Volumes/m2-extended-disk/Repos/eonwild-factory/showcase/v8.1/render_v8_1_blender.py",
+  "inputGlb": "/Volumes/m2-extended-disk/Repos/eonwild-factory/candidates/v8.1-walk-respin/generated/iteration-15/tarbosaurus_procedural_v8_1_walk_respin.glb",
+  "inputGlbSha256": "96bf5c37402bd784b23785173fbb9a45cd8cbbed33ea2fd0675bdfd11c48a5a1",
+  "manifest": "/Volumes/m2-extended-disk/Repos/eonwild-factory/candidates/v8.1-walk-respin/generated/iteration-15/animation-manifest.v8.1-walk-respin.json",
+  "clip": "PROC_WALK_RELAXED_V8_1_RESPIN_INPLACE",
+  "durationSeconds": 10.0,
+  "fps": 24,
+  "frameCount": 240,
+  "resolution": [
+    960,
+    540
+  ],
+  "view": "side",
+  "targetProxyRendered": false,
+  "onlyEditorialMedia": "/Volumes/m2-extended-disk/Repos/eonwild-factory/showcase/v8.1-walk-respin/iteration-2/walk-relaxed-v8-1-respin-side.mp4",
+  "boundsM": {
+    "min": [
+      -1.5080351829528809,
+      -5.968878746032715,
+      -1.0
+    ],
+    "max": [
+      1.5721102952957153,
+      6.026123046875,
+      3.42864990234375
+    ]
+  },
+  "animationDataPolicy": "candidate GLB imported read-only; no action channels changed"
+}

@@ -1,0 +1,171 @@
+schema: eonwild.growth_profile.v1
+id: tarbosaurus_growth_provisional_v1
+species: Tarbosaurus bataar
+family: heavy_predatory_biped
+status: gameplay_hypothesis
+continuous_inputs:
+- age_fraction
+- body_length_m
+- hip_height_m
+- structural_mass_kg
+- condition_factor
+separation_of_concerns:
+  ontogeny:
+  - segment_proportions
+  - COM
+  - inertia
+  - strength_capacity
+  - cadence_preference
+  - turning_authority
+  - jump_authority
+  temporary_state:
+  - fatigue
+  - injury
+  - pain
+  - blood_loss
+  - alertness
+  rule: Temporary state may constrain capacity but may not silently rewrite morphology.
+baseline_scaling:
+  mass:
+    expression: M_ref * length_scale ^ mass_exponent
+    mass_exponent: 3.0
+  inertia:
+    expression: I_ref * mass_scale * segment_length_scale ^ 2
+  force_capacity:
+    expression: F_ref * length_scale ^ force_exponent
+    force_exponent: 2.0
+  note: Configurable engineering priors, not fixed paleobiological claims.
+continuous_traits:
+  preferred_cadence: curve(age_fraction, dimensions, inertia, strength)
+  stride_envelope: curve(leg_length, gait, speed, terrain)
+  turning_authority: decreases with normalized yaw inertia and speed; increases with available contact moment
+  jump_authority: available_takeoff_impulse / required_takeoff_impulse
+  landing_tolerance: available_absorption_impulse_and_energy / required_landing_demand
+  braking_horizon: minimum physically feasible steps and distance
+  tail_response_frequency: profile and segment inertia dependent
+regimes:
+- id: juvenile
+  selector:
+    primary_trait: structural_mass_ratio_to_reference_adult
+    enter_at_or_above: 0.0
+    nominal_range:
+    - 0.0
+    - 0.2
+    secondary_traits:
+    - age_fraction
+    - leg_length_ratio
+    - head_to_body_ratio
+  hysteresis:
+    leave_below: 0.0
+    leave_above: 0.22
+  age_fraction_guidance:
+  - 0.0
+  - 0.34
+  character: Faster cadence, shorter stride, rapid corrections, high agility envelope, and limited absolute bite/impact
+    capacity.
+- id: subadult
+  selector:
+    primary_trait: structural_mass_ratio_to_reference_adult
+    enter_at_or_above: 0.18
+    nominal_range:
+    - 0.18
+    - 0.58
+    secondary_traits:
+    - age_fraction
+    - segment_proportions
+    - relative_strength
+  hysteresis:
+    leave_below: 0.15
+    leave_above: 0.62
+  age_fraction_guidance:
+  - 0.3
+  - 0.68
+  character: Strong acceleration and attack mobility with transitional proportions and rapidly increasing momentum.
+- id: adult
+  selector:
+    primary_trait: structural_mass_ratio_to_reference_adult
+    enter_at_or_above: 0.55
+    nominal_range:
+    - 0.55
+    - 0.92
+    secondary_traits:
+    - yaw_inertia_ratio
+    - relative_strength
+  hysteresis:
+    leave_below: 0.5
+    leave_above: 0.96
+  age_fraction_guidance:
+  - 0.6
+  - 0.92
+  character: Longer stride, lower cadence, deliberate support transfer, stronger momentum, and costly redirection.
+- id: heavy_adult
+  selector:
+    primary_trait: structural_mass_ratio_to_reference_adult
+    enter_at_or_above: 0.9
+    nominal_range:
+    - 0.9
+    - 1.25
+    secondary_traits:
+    - yaw_inertia_ratio
+    - relative_strength
+  hysteresis:
+    leave_below: 0.86
+    leave_above: 1.5
+  age_fraction_guidance:
+  - 0.84
+  - 1.0
+  character: Reduced jump envelope, larger preload, longer braking and recovery, and strongest grounded body pressure.
+switch_contract:
+  preserve:
+  - motion_program
+  - phase
+  - contact_state
+  - COM_position
+  - COM_velocity
+  - root_velocity
+  - angular_momentum
+  - tail_angle
+  - tail_angular_velocity
+  - target_commitment
+  blend:
+  - cadence
+  - stride
+  - sway
+  - posture
+  - absorption
+  - overlay_amplitude
+  forbid:
+  - clip restart
+  - support-foot swap
+  - root speed snap
+  - tail reset
+  - airborne family switch
+capability_selection:
+  power_attack_airborne: requires jump_authority >= 1 and landing_tolerance >= 1 and collision corridor clear
+  fallback: power_attack_grounded
+provenance:
+  status: gameplay_hypothesis
+  note: Tier structure is a game motion architecture. Scientific analogues inform sensitivity and uncertainty but do
+    not establish exact Tarbosaurus thresholds.
+  sources:
+  - doi:10.1371/journal.pone.0026037
+  - doi:10.7717/peerj.6432
+  - doi:10.1242/jeb.152538
+  uncertainty:
+    thresholds: must be tuned and perceptually reviewed
+    species_specific_ontogeny: insufficiently constrained in this pack
+  reviewed_by: null
+  reviewed_at: null
+tier_selection:
+  primary_trait: structural_mass_ratio_to_reference_adult
+  reference_definition: Reviewed neutral-condition structural adult mass for the resolved morphology profile. Current
+    hunger, hydration, injury, and short-term condition do not move an adult into a juvenile/subadult family. Until the
+    reference is pinned, tier queries are dimensionless test inputs only.
+  secondary_traits:
+  - age_fraction
+  - segment_proportions
+  - leg_length_ratio
+  - yaw_inertia_ratio
+  - relative_strength
+  rule: Structural mass/weight selects the authored motion family; continuous morphology and capacity parameters remain
+    active inside the family. Age alone never selects a family, and temporary condition never changes ontogenetic tier.

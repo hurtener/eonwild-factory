@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eonwild.dev/schemas/contact-state.schema.json",
+  "title": "ContactState",
+  "type": "object",
+  "required": [
+    "effector",
+    "state",
+    "patch",
+    "time_s",
+    "load_fraction",
+    "friction"
+  ],
+  "properties": {
+    "effector": {
+      "enum": [
+        "left_foot",
+        "right_foot",
+        "left_toes",
+        "right_toes",
+        "tail",
+        "pelvis",
+        "thorax",
+        "head",
+        "other"
+      ]
+    },
+    "state": {
+      "enum": [
+        "approaching",
+        "contact",
+        "loading",
+        "loaded",
+        "unloading",
+        "toe_off",
+        "airborne",
+        "settling"
+      ]
+    },
+    "patch": {
+      "type": "object",
+      "required": [
+        "witness_ids",
+        "centroid_world_m",
+        "normal_world"
+      ],
+      "properties": {
+        "witness_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "centroid_world_m": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number"
+          }
+        },
+        "normal_world": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number"
+          }
+        },
+        "polygon_world_m": {
+          "type": "array"
+        }
+      }
+    },
+    "time_s": {
+      "type": "number",
+      "minimum": 0
+    },
+    "load_fraction": {
+      "type": "number",
+      "minimum": 0
+    },
+    "friction": {
+      "type": "object",
+      "required": [
+        "coefficient"
+      ],
+      "properties": {
+        "coefficient": {
+          "type": "number",
+          "minimum": 0
+        },
+        "source": {
+          "type": "string"
+        }
+      }
+    },
+    "position_error_m": {
+      "type": "number",
+      "minimum": 0
+    },
+    "slip_velocity_mps": {
+      "type": "number",
+      "minimum": 0
+    },
+    "normal_force_n": {
+      "type": [
+        "number",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

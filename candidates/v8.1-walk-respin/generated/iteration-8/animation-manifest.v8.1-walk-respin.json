@@ -1,0 +1,32 @@
+{
+  "schema": "eonwild.animation-manifest.v8.1-walk-respin",
+  "candidateOnly": true,
+  "clips": [
+    {
+      "name": "PROC_WALK_RELAXED_V8_1_RESPIN_ROOTMOTION",
+      "durationSeconds": 4.301075268817204,
+      "loop": true,
+      "rootMotion": true,
+      "tags": [
+        "walk",
+        "relaxed",
+        "respin",
+        "contact_locked",
+        "toe_progressive_lift"
+      ]
+    },
+    {
+      "name": "PROC_WALK_RELAXED_V8_1_RESPIN_INPLACE",
+      "durationSeconds": 4.301075268817204,
+      "loop": true,
+      "rootMotion": false,
+      "tags": [
+        "walk",
+        "relaxed",
+        "respin",
+        "contact_locked",
+        "toe_progressive_lift"
+      ]
+    }
+  ]
+}

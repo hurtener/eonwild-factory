@@ -1,0 +1,86 @@
+schema: eonwild.biomechanical_family.v1
+id: heavy_predatory_biped
+description: Large heavy-headed digitigrade biped whose locomotion and interaction are dominated by momentum, hindlimb
+  support, costly redirection, head/neck inertia, and tail counterbalance.
+required_roles:
+- root
+- pelvis
+- spine_01
+- chest
+- neck_01
+- head
+- skull
+- jaw
+- tail_01
+- tail_mid
+- tail_tip
+- thigh_l
+- shin_l
+- ankle_l
+- foot_l
+- toe_l
+- thigh_r
+- shin_r
+- ankle_r
+- foot_r
+- toe_r
+- arm_l
+- arm_r
+physical_segments:
+- pelvis
+- abdomen
+- thorax
+- neck_base
+- neck_distal
+- head
+- tail_base
+- tail_mid
+- tail_distal
+- thigh_l
+- thigh_r
+- lower_leg_l
+- lower_leg_r
+- foot_l
+- foot_r
+- forelimb_l
+- forelimb_r
+default_control_authority:
+  pelvis_translation_fraction_of_hip_height:
+    lateral: 0.05
+    vertical: 0.06
+    fore_aft: 0.08
+  pelvis_rotation_deg:
+    roll: 8
+    pitch: 10
+    yaw: 12
+  chest_rotation_deg:
+    roll: 7
+    pitch: 10
+    yaw: 12
+  head_target_deg:
+    yaw: 30
+    pitch: 20
+  tail_base_deg:
+    yaw: 14
+    pitch: 10
+  note: Gameplay starting envelopes. Resolve per profile and program; not scientific joint ranges.
+capability_dimensions:
+- sustainable_speed
+- acceleration
+- turning_authority
+- braking_authority
+- jump_authority
+- landing_tolerance
+- bite_reach
+- bite_commitment
+- fatigue_resistance
+- injury_tolerance
+provenance:
+  status: gameplay_hypothesis
+  note: Engineering reuse family derived from Eonwild heavy predatory biped role; numerical envelopes require fixture-specific
+    review.
+  reviewed_by: null
+  reviewed_at: null
+actuation_capacity_profile: heavy-predatory-biped-capacity-provisional.yaml
+joint_limit_policy: Use hard articulation/non-interpenetration envelopes separately from preferred loaded motion envelopes;
+  do not use independent Euler min/max boxes as the default multi-axis representation.

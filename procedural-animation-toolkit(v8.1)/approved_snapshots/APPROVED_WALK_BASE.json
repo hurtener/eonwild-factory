@@ -1,0 +1,13 @@
+{
+  "schema": "eonwild.approved-walk-base-pointer.v1",
+  "approvedWalkBase": {
+    "snapshotId": "v8.1-walk-iteration-38",
+    "status": "APPROVED_WALK_BASE",
+    "snapshotManifest": "v8.1-walk-iteration-38/APPROVAL_MANIFEST.json",
+    "asset": "v8.1-walk-iteration-38/asset/tarbosaurus_procedural_v8_1_walk_iteration_38.glb",
+    "assetSha256": "1b9a7d071c1b375e128beeb5bda68298e32b39aac3ea76a90afe7ca3f744b73e",
+    "v8_2Instruction": "Use this frozen walk-only asset/config/evidence bundle as the V8.2 walk baseline. Do not overwrite validated_result/v8.1.",
+    "approvalMedia": "v8.1-walk-iteration-38/media/walk-relaxed-v8-1-iteration-38-side.mp4",
+    "approvalMediaSha256": "8ef3d2c571e2ee317a431a66f8a031fabe53936d6bf256e9c091a9071ef48a20"
+  }
+}

@@ -1,0 +1,32 @@
+id: vocal_display
+version: 1
+purpose: Generate semantically distinct threat and long-distance calls from respiratory preparation, resonant posture,
+  call envelope, and post-call listening.
+phase_template:
+- orient
+- stabilize
+- inhale
+- prepare_resonance
+- vocalize
+- decay
+- post_call_hold
+- recover
+inputs:
+- call_semantic
+- audio_envelope
+- target_direction
+- distance
+- alertness
+- body_profile
+outputs:
+- jaw_throat_thorax_envelope
+- vocal_events
+- target_hold
+- listening_pause
+invariants:
+- call is physically breathed
+- threat and contact calls remain visually distinct
+- post-call hold is preserved
+branches:
+- threat
+- long_distance_contact

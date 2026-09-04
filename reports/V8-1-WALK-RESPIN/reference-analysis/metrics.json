@@ -1,0 +1,153 @@
+{
+  "analysis_id": "V8-1-WALK-RESPIN",
+  "scope": "read_only_reference_analysis",
+  "target": {
+    "body_length_m": 12.0,
+    "hip_height_m": 2.75,
+    "speed_kmh": [4.5, 4.8],
+    "speed_mps": [1.25, 1.3333333333333333],
+    "speed_source": "user_specified_tuning_envelope"
+  },
+  "source_videos": [
+    {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-factory/procedural-animation-toolkit(v8.1)/inputs/v8/tarbosaurus-relaxed-walk-reference.mp4",
+      "sha256": "b0401fc76a202d6ed5dc9a5515f1054eab8bed8075c04f6167ff426fd603f5ae",
+      "width": 672,
+      "height": 448,
+      "fps": 24.0,
+      "frames": 241,
+      "duration_s": 10.041667
+    },
+    {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-factory/procedural-animation-toolkit(v8.1)/inputs/v8/tarbosaurus-walk-reference-older.mp4",
+      "sha256": "7f981e34a38955b44df799069693c57a5b5c881083ae4cbd62419e5cdc7d3ea5",
+      "width": 736,
+      "height": 400,
+      "fps": 24.0,
+      "frames": 193,
+      "duration_s": 8.041667
+    }
+  ],
+  "user_captures": [
+    {
+      "path": "/var/folders/qf/9hz3q9b55xb9hjwg0w478_h00000gn/T/codex-clipboard-7ef6cc22-6ee4-4b26-8546-467effc3f044.png",
+      "sha256": "7bee3659aa3d22947c9a5d1080f0c12b085e89c4fcfef710cc0265383819cda2",
+      "observation": "forward planted foot broad/flat; rear foot behind hip with raised heel/metatarsal and distal digits on floor"
+    },
+    {
+      "path": "/var/folders/qf/9hz3q9b55xb9hjwg0w478_h00000gn/T/codex-clipboard-746b7f42-f1b3-4358-b8c5-e5b117c56a37.png",
+      "sha256": "31a21810c0784a3ba7574c0d06bd243460c6cb2e2e059cdcc239339e285015f3",
+      "observation": "long front/rear leg relation; rear foot rolls onto distal contact"
+    },
+    {
+      "path": "/var/folders/qf/9hz3q9b55xb9hjwg0w478_h00000gn/T/codex-clipboard-dd138643-625f-432f-b6a5-cfea59a62ea9.png",
+      "sha256": "b42e0cbfdf7cd775c8965227ebebf9408ba82a8a6015dd46e28052a197e0338d",
+      "observation": "side-view reach/rocker cue; exact temporal order unavailable"
+    },
+    {
+      "path": "/var/folders/qf/9hz3q9b55xb9hjwg0w478_h00000gn/T/codex-clipboard-b47a569f-bee0-4c49-9b95-084dad087791.png",
+      "sha256": "85c9dc0d02d5ec28cc328605a8c12c54f4f3100a08846963692e5d115527e385",
+      "observation": "extended support pose with visible raised rear bead and toe contact"
+    }
+  ],
+  "reference_estimates": {
+    "same_foot_cycle_s": {
+      "estimate": 2.0,
+      "plausible_range": [1.85, 2.15],
+      "confidence": "medium",
+      "basis": "native-rate frame review/contact sheets"
+    },
+    "alternate_contact_spacing_s": {
+      "estimate": 1.0,
+      "confidence": "medium"
+    },
+    "leading_toe_reach_hip_fraction": [0.5, 0.8],
+    "trailing_loaded_toe_hip_fraction_behind": [0.0, 0.3],
+    "apparent_support_span_hip_fraction": [0.8, 1.2],
+    "heel_metatarsal_rise_window_cycle_fraction": [0.18, 0.22],
+    "toe_only_contact_cycle_fraction": [0.08, 0.12],
+    "individual_digit_release_order": "unresolved"
+  },
+  "current_v81": {
+    "profile_path": "/Volumes/m2-extended-disk/Repos/eonwild-factory/procedural-animation-toolkit(v8.1)/reproduced_result/v8.1-final/resolved-profile-v8.1.json",
+    "profile_sha256": "f128bd39cca62a674855ffbcce2e88226cec3b17048bf9a830bd158238240143",
+    "cycle_hz": 0.64,
+    "stride_length_m": 1.58,
+    "stance_fraction": 0.66,
+    "contact_lead_stride": 0.54,
+    "load_ramp_fraction": 0.18,
+    "toe_off_window_fraction": 0.16,
+    "toe_off_foot_deg": 7.0,
+    "toe_push_deg": 8.0,
+    "contact_foot_deg": 1.0,
+    "swing_lift_hip_fraction": 0.058,
+    "supercycle_count": 2,
+    "profile_speed_mps": 1.0112,
+    "profile_speed_kmh": 3.64032,
+    "reported_asset_distance_m": 1.5767994562791392,
+    "reported_asset_speed_mps": 0.5045758260093247,
+    "reported_duration_s": 3.125,
+    "preview_path": "/Volumes/m2-extended-disk/Repos/eonwild-factory/showcase/v8.1/site/v8_1_walk_side_20fps.mp4",
+    "preview_fps": 20.0,
+    "preview_frames": 62,
+    "preview_duration_s": 3.1
+  },
+  "v55_comparison": {
+    "cycle_hz": 0.45,
+    "stride_length_m": 1.9,
+    "stance_fraction": 0.7,
+    "toe_off_window_fraction": 0.24,
+    "toe_off_foot_deg": 12.0,
+    "toe_push_deg": 14.0,
+    "profile_speed_mps": 0.855,
+    "profile_speed_kmh": 3.078,
+    "preview_fps": 60.0,
+    "preview_duration_s": 2.216667
+  },
+  "candidate_v81_center": {
+    "cycle_hz": 0.465,
+    "stride_length_m": 2.75,
+    "stance_fraction": 0.72,
+    "contact_lead_stride": 0.54,
+    "load_ramp_fraction": 0.20,
+    "toe_off_window_fraction": 0.20,
+    "toe_off_foot_deg": 9.0,
+    "toe_push_deg": 12.0,
+    "contact_foot_deg": 1.0,
+    "swing_lift_hip_fraction": 0.055,
+    "swing_advance_start_fraction": 0.08,
+    "swing_advance_end_fraction": 0.89,
+    "precontact_window_fraction": 0.25,
+    "supercycle_count": 2
+  },
+  "candidate_bounds": {
+    "cycle_hz": [0.46, 0.48],
+    "stride_length_m": [2.604166667, 2.898550725],
+    "speed_product_gate_mps": [1.25, 1.3333333333333333],
+    "stance_fraction": [0.70, 0.74],
+    "contact_lead_stride": [0.52, 0.55],
+    "load_ramp_fraction": [0.18, 0.22],
+    "toe_off_window_fraction": [0.18, 0.22],
+    "toe_off_foot_deg": [8.0, 10.0],
+    "toe_push_deg": [10.0, 14.0],
+    "contact_foot_deg": [0.0, 2.0],
+    "swing_lift_hip_fraction": [0.05, 0.06],
+    "precontact_window_fraction": [0.22, 0.28]
+  },
+  "derived_center_checks": {
+    "speed_mps": 1.27875,
+    "speed_kmh": 4.6035,
+    "two_cycle_duration_s": 4.301075268817204,
+    "toe_only_duration_s_at_0_08_to_0_12_cycle": [0.172043010753, 0.258064516129],
+    "approx_simultaneous_support_span_fraction_of_same_foot_stride": 0.5,
+    "approx_support_span_m_at_2_75m_stride": 1.375,
+    "approx_support_span_hip_fraction_at_2_75m_hip_height": 0.5
+  },
+  "limitations": [
+    "Videos and stills are not metric-calibrated; image-space reaches are visual estimates.",
+    "PNG captures have no known temporal ordering, frame rate, camera intrinsics, or rig scale.",
+    "User-supplied speed range is a tuning input, not independently validated here.",
+    "Exact per-digit release order is not observable and remains a tunable hypothesis.",
+    "Raw V8.1 report speed is in the half-scale asset coordinate system and requires scale conversion before physical comparison."
+  ]
+}

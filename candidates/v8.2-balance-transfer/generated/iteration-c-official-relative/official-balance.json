@@ -1,0 +1,250 @@
+{
+  "schema": "eonwild.v8_2.balance_evaluator.v1",
+  "basis": {
+    "translation": {
+      "x": "lateral",
+      "y": "vertical/up",
+      "z": "sagittal/fore-aft"
+    },
+    "rotation": "phase-zero-relative intrinsic XYZ: pitch, yaw, roll"
+  },
+  "normalization": "median sampled pelvis-to-lowest-distal-foot height",
+  "approved": {
+    "asset": "procedural-animation-toolkit(v8.1)/approved_snapshots/v8.1-walk-iteration-38/asset/tarbosaurus_procedural_v8_1_walk_iteration_38.glb",
+    "sha256": "1b9a7d071c1b375e128beeb5bda68298e32b39aac3ea76a90afe7ca3f744b73e",
+    "clip": "PROC_WALK_RELAXED_V8_1_RESPIN_INPLACE",
+    "duration_seconds": 4.069565296173096,
+    "phase_samples": 120,
+    "raw_body_coordinate_hip_height_m": 1.312797110592139,
+    "pelvis_translation_peak_to_peak_by_hip_height": {
+      "lateral_x": 0.014856915972896519,
+      "vertical_y": 0.012369209119135844,
+      "sagittal_z": 0.004125041073517263
+    },
+    "pelvis_rotation_peak_to_peak_degrees": {
+      "pitch_x": 1.1384197113107173,
+      "yaw_y": 3.139441418166644,
+      "roll_z": 2.6957625838620447
+    },
+    "chest_relative_to_pelvis_peak_to_peak_degrees": {
+      "pitch_x": 4.1029724608160265,
+      "yaw_y": 2.612021470328962,
+      "roll_z": 4.673977209793598
+    },
+    "head_relative_to_chest_peak_to_peak_degrees": {
+      "pitch_x": 3.547738947326393,
+      "yaw_y": 3.2730958694986754,
+      "roll_z": 1.340201697671887
+    },
+    "head_world_rotation_peak_to_peak_degrees": {
+      "pitch_x": 2.5796797773489484,
+      "yaw_y": 1.8586457166671893,
+      "roll_z": 1.0300505885014082
+    },
+    "tail_relative_to_pelvis_peak_to_peak_degrees": {
+      "base": {
+        "pitch_x": 5.229938839561143,
+        "yaw_y": 5.438844025554445,
+        "roll_z": 4.509553041068192
+      },
+      "mid": {
+        "pitch_x": 5.528114307700214,
+        "yaw_y": 17.055547721829413,
+        "roll_z": 7.212393958778706
+      },
+      "tip": {
+        "pitch_x": 5.395560696473282,
+        "yaw_y": 20.32343088435087,
+        "roll_z": 6.954998001203283
+      }
+    },
+    "tail_relative_to_pelvis_yaw_peak_phase": {
+      "base": 0.3416666666666667,
+      "mid": 0.8416666666666667,
+      "tip": 0.85
+    },
+    "counterphase_zero_lag_pearson": {
+      "chest_roll_z_vs_pelvis_roll_z": -0.8286812195683575
+    },
+    "lower_leg_local_rotation_envelope_degrees": {
+      "ankle_left": 21.600099407642603,
+      "ankle_right": 31.183589272702616,
+      "foot_left": 74.117507540582,
+      "foot_right": 46.184994732617064,
+      "toe_tip_left": 2.156439421163946,
+      "toe_tip_right": 2.156439371435573
+    },
+    "support_proxy": {
+      "single_support_phase_fraction": 0.225,
+      "double_support_phase_fraction": 0.775,
+      "mean_abs_lateral_offset_by_hip_height": 0.08848854146901522,
+      "mean_abs_sagittal_offset_by_hip_height": 0.26045047269620664
+    },
+    "loop_seam": {
+      "max_local_translation_m": 0.0,
+      "max_local_rotation_degrees": 2.4148365394514667e-06
+    }
+  },
+  "candidate": {
+    "asset": "candidates/v8.2-balance-transfer/generated/iteration-c-official-relative/tarbosaurus_procedural_v8_2_balance_transfer.glb",
+    "sha256": "32449c507dd8cbb3224b0330e6d46714e791da8e115d569011c26ae61b669163",
+    "clip": "PROC_WALK_RELAXED_V8_1_RESPIN_INPLACE",
+    "duration_seconds": 4.069565296173096,
+    "phase_samples": 120,
+    "raw_body_coordinate_hip_height_m": 1.312797110592139,
+    "pelvis_translation_peak_to_peak_by_hip_height": {
+      "lateral_x": 0.014856915972896519,
+      "vertical_y": 0.012369209119135844,
+      "sagittal_z": 0.004125041073517263
+    },
+    "pelvis_rotation_peak_to_peak_degrees": {
+      "pitch_x": 1.1384197113107173,
+      "yaw_y": 3.139441418166644,
+      "roll_z": 2.6957625838620447
+    },
+    "chest_relative_to_pelvis_peak_to_peak_degrees": {
+      "pitch_x": 3.5208707880130845,
+      "yaw_y": 2.5712097395552806,
+      "roll_z": 5.231791669826208
+    },
+    "head_relative_to_chest_peak_to_peak_degrees": {
+      "pitch_x": 4.9738237463188675,
+      "yaw_y": 4.479155733538139,
+      "roll_z": 4.579931614581824
+    },
+    "head_world_rotation_peak_to_peak_degrees": {
+      "pitch_x": 1.670056383749816,
+      "yaw_y": 3.969108755576242,
+      "roll_z": 1.1983526446247812
+    },
+    "tail_relative_to_pelvis_peak_to_peak_degrees": {
+      "base": {
+        "pitch_x": 5.267434901015278,
+        "yaw_y": 5.587139999796207,
+        "roll_z": 4.534780365316712
+      },
+      "mid": {
+        "pitch_x": 5.624408758677326,
+        "yaw_y": 18.7181856297902,
+        "roll_z": 8.135532826535059
+      },
+      "tip": {
+        "pitch_x": 5.800986843624102,
+        "yaw_y": 22.991999383345856,
+        "roll_z": 8.074417266474796
+      }
+    },
+    "tail_relative_to_pelvis_yaw_peak_phase": {
+      "base": 0.3416666666666667,
+      "mid": 0.8416666666666667,
+      "tip": 0.85
+    },
+    "counterphase_zero_lag_pearson": {
+      "chest_roll_z_vs_pelvis_roll_z": -0.6704969443350092
+    },
+    "lower_leg_local_rotation_envelope_degrees": {
+      "ankle_left": 21.600099407642603,
+      "ankle_right": 31.183589272702616,
+      "foot_left": 74.117507540582,
+      "foot_right": 46.184994732617064,
+      "toe_tip_left": 2.156439421163946,
+      "toe_tip_right": 2.156439371435573
+    },
+    "support_proxy": {
+      "single_support_phase_fraction": 0.225,
+      "double_support_phase_fraction": 0.775,
+      "mean_abs_lateral_offset_by_hip_height": 0.08766968505706245,
+      "mean_abs_sagittal_offset_by_hip_height": 0.28145838419342184
+    },
+    "loop_seam": {
+      "max_local_translation_m": 0.0,
+      "max_local_rotation_degrees": 2.4148365394514667e-06
+    }
+  },
+  "frozen_baseline_verification": {
+    "expected": "reports/V8-2-BALANCE-TRANSFER/evaluation/evaluation-metrics.json",
+    "tolerance": 2e-05,
+    "max_abs_delta": 7.272973832073149e-07,
+    "pass": true,
+    "deltas": {
+      "raw_body_coordinate_hip_height_m": 2.4078610216804464e-09,
+      "pelvis_translation_peak_to_peak_by_hip_height.lateral_x": 6.027103481229257e-09,
+      "pelvis_translation_peak_to_peak_by_hip_height.vertical_y": 1.8808641553957894e-09,
+      "pelvis_translation_peak_to_peak_by_hip_height.sagittal_z": 8.892648273740172e-08,
+      "pelvis_rotation_peak_to_peak_degrees.pitch_x": 2.8868928270142646e-07,
+      "pelvis_rotation_peak_to_peak_degrees.yaw_y": 4.1816664397842374e-07,
+      "pelvis_rotation_peak_to_peak_degrees.roll_z": 4.1613795520589747e-07,
+      "chest_relative_to_pelvis_peak_to_peak_degrees.pitch_x": 4.60816026226496e-07,
+      "chest_relative_to_pelvis_peak_to_peak_degrees.yaw_y": 5.296710381408332e-07,
+      "chest_relative_to_pelvis_peak_to_peak_degrees.roll_z": 2.0979359849349066e-07,
+      "head_relative_to_chest_peak_to_peak_degrees.pitch_x": 5.2673606809605644e-08,
+      "head_relative_to_chest_peak_to_peak_degrees.yaw_y": 1.3050132441350115e-07,
+      "head_relative_to_chest_peak_to_peak_degrees.roll_z": 3.0232811298880335e-07,
+      "head_world_rotation_peak_to_peak_degrees.pitch_x": 2.2265105181773492e-07,
+      "head_world_rotation_peak_to_peak_degrees.yaw_y": 2.8333281076875494e-07,
+      "head_world_rotation_peak_to_peak_degrees.roll_z": 4.114985918679537e-07,
+      "tail_relative_to_pelvis_peak_to_peak_degrees.base.pitch_x": 1.6043885686656267e-07,
+      "tail_relative_to_pelvis_peak_to_peak_degrees.base.yaw_y": 2.555444567065024e-08,
+      "tail_relative_to_pelvis_peak_to_peak_degrees.base.roll_z": 4.106819151417085e-08,
+      "tail_relative_to_pelvis_peak_to_peak_degrees.mid.pitch_x": 3.0770021375303713e-07,
+      "tail_relative_to_pelvis_peak_to_peak_degrees.mid.yaw_y": 2.7817058878554235e-07,
+      "tail_relative_to_pelvis_peak_to_peak_degrees.mid.roll_z": 4.122129393380192e-08,
+      "tail_relative_to_pelvis_peak_to_peak_degrees.tip.pitch_x": 3.0352671753774985e-07,
+      "tail_relative_to_pelvis_peak_to_peak_degrees.tip.yaw_y": 1.1564912938410998e-07,
+      "tail_relative_to_pelvis_peak_to_peak_degrees.tip.roll_z": 1.2032828067276569e-09,
+      "counterphase_zero_lag_pearson.chest_roll_z_vs_pelvis_roll_z": 2.1956835749570303e-07,
+      "support_proxy.single_support_phase_fraction": 0.0,
+      "support_proxy.double_support_phase_fraction": 0.0,
+      "support_proxy.mean_abs_lateral_offset_by_hip_height": 4.585309847787711e-07,
+      "support_proxy.mean_abs_sagittal_offset_by_hip_height": 4.7269620662149237e-07,
+      "lower_leg_local_rotation_envelope_degrees.ankle_left": 4.076426023402746e-07,
+      "lower_leg_local_rotation_envelope_degrees.ankle_right": 7.272973832073149e-07,
+      "lower_leg_local_rotation_envelope_degrees.foot_left": 4.5941800408400013e-07,
+      "lower_leg_local_rotation_envelope_degrees.foot_right": 2.6738293712469385e-07,
+      "lower_leg_local_rotation_envelope_degrees.toe_tip_left": 4.211639459406058e-07,
+      "lower_leg_local_rotation_envelope_degrees.toe_tip_right": 3.7143557296559493e-07,
+      "loop_seam.max_local_translation_m": 0.0,
+      "loop_seam.max_local_rotation_degrees": 1.634605485334815e-10
+    }
+  },
+  "candidate_gate": {
+    "mode": "candidate-a-upper-only",
+    "status": "FAIL",
+    "checks": {
+      "pelvis_exact_to_approved": true,
+      "protected_lower_leg_exact": true,
+      "chest_roll_safe_improvement": false,
+      "chest_counterphase": false,
+      "chest_pitch_no_unintended_change": false,
+      "chest_yaw_non_regression": false,
+      "head_caps": false,
+      "tail_base_yaw_improves": true,
+      "tail_mid_yaw_improves_at_least_1_5": true,
+      "tail_tip_yaw_safe_improvement": true,
+      "tail_base_to_tip_phase_monotonic": true,
+      "seam_exact": true
+    },
+    "measured": {
+      "chest": {
+        "pitch_x": 3.5208707880130845,
+        "yaw_y": 2.5712097395552806,
+        "roll_z": 5.231791669826208
+      },
+      "tail_yaw": {
+        "base": 5.587139999796207,
+        "mid": 18.7181856297902,
+        "tip": 22.991999383345856
+      },
+      "tail_yaw_peak_phase": {
+        "base": 0.3416666666666667,
+        "mid": 0.8416666666666667,
+        "tip": 0.85
+      },
+      "head": {
+        "pitch_x": 1.670056383749816,
+        "yaw_y": 3.969108755576242,
+        "roll_z": 1.1983526446247812
+      }
+    }
+  }
+}

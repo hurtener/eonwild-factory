@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eonwild.dev/schemas/dynamic-action-spec.schema.json",
+  "title": "DynamicActionSpec",
+  "type": "object",
+  "required": [
+    "schema",
+    "id",
+    "intent",
+    "family",
+    "program",
+    "selection",
+    "centroidal_math",
+    "phase_graph",
+    "branches",
+    "growth_response",
+    "acceptance"
+  ],
+  "properties": {
+    "schema": {
+      "const": "eonwild.dynamic_action_spec.v1"
+    },
+    "id": {
+      "type": "string"
+    },
+    "intent": {
+      "type": "string"
+    },
+    "family": {
+      "type": "string"
+    },
+    "program": {
+      "type": "string"
+    },
+    "selection": {
+      "type": "object"
+    },
+    "centroidal_math": {
+      "type": "object"
+    },
+    "phase_graph": {
+      "type": "array",
+      "minItems": 1
+    },
+    "events": {
+      "type": "array"
+    },
+    "branches": {
+      "type": "object"
+    },
+    "growth_response": {
+      "type": "object"
+    },
+    "required_outputs": {
+      "type": "array"
+    },
+    "acceptance": {
+      "type": "array"
+    }
+  },
+  "additionalProperties": true
+}
