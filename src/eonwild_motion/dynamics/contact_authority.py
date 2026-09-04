@@ -65,20 +65,27 @@ def ground_plane_witness(
     ground_m: float,
     tolerance_m: float,
     delta_time_s: float,
+    below_tolerance_m: float | None = None,
 ) -> dict[str, Any]:
     """Fixed-ground occupancy between two aligned vertex sets.
 
     Only vertices within ``tolerance_m`` of the *fixed floor* in both
     frames count. Empty occupancy is unknown velocity (``None``), never
-    a zero-skate pass.
+    a zero-skate pass. ``below_tolerance_m`` extends the band downward
+    (soft-substrate print volume) while keeping the above-surface bar
+    strict — hovering air never counts as mud.
     """
     if delta_time_s <= 0.0 or len(previous) != len(current) or len(previous) == 0:
         raise ContractError("ground-plane witness needs aligned points and positive dt")
     if tolerance_m <= 0.0:
         raise ContractError("ground-plane tolerance must be positive")
-    active = (np.abs(previous[:, up_axis] - ground_m) <= tolerance_m) & (
-        np.abs(current[:, up_axis] - ground_m) <= tolerance_m
-    )
+    below = tolerance_m if below_tolerance_m is None else float(below_tolerance_m)
+    if not math.isfinite(below) or below < 0.0:
+        raise ContractError("below-surface tolerance must be non-negative and finite")
+    def inside(points: np.ndarray) -> np.ndarray:
+        gap = points[:, up_axis] - ground_m
+        return (gap <= tolerance_m) & (gap >= -below)
+    active = inside(previous) & inside(current)
     ids = np.flatnonzero(active)
     if len(ids) == 0:
         return {
@@ -126,6 +133,12 @@ class AuthorityThresholds:
     ground_tolerance_m: float = 0.001
     up_axis: int = 1
     ground_m: float = 0.0
+    # Substrate: a multi-ton animal on soil does not tiptoe on concrete.
+    # On soft substrates penetration up to ``max_sink_m`` is CORRECT
+    # (the foot makes a print of ``print_depth_m``); only penetration
+    # past the sink allowance, or ANY penetration on hard ground, fails.
+    substrate: str = "hard"
+    max_sink_m: float = 0.0
 
     def __post_init__(self) -> None:
         for key in (
@@ -141,6 +154,32 @@ class AuthorityThresholds:
         if self.up_axis not in (0, 1, 2):
             raise ContractError("authority up axis must be 0, 1 or 2")
         _finite(float(self.ground_m), label="authority ground_m")
+        if self.substrate not in ("hard", "soft"):
+            raise ContractError("authority substrate must be 'hard' or 'soft'")
+        sink = float(self.max_sink_m)
+        if not math.isfinite(sink) or sink < 0.0:
+            raise ContractError("authority max_sink_m must be non-negative and finite")
+        if self.substrate == "hard" and sink > 0.0:
+            raise ContractError("hard substrate cannot allow sink")
+        if self.substrate == "soft" and sink <= 0.0:
+            raise ContractError("soft substrate must declare a positive sink allowance")
+
+
+#: Laboratory gate: 1 mm ground tolerance. At review distance (12.7 mm/px
+#: in the standard ortho previews) 1 mm is 0.08 px — invisible. Its job
+#: is bias detection during development (it caught the 8–14 mm systematic
+#: hover, the 0.5 m/s skate and the bind asymmetry), never visual approval.
+ENGINEERING_GATE = AuthorityThresholds()
+
+
+def release_gate() -> AuthorityThresholds:
+    """Release-review gate: 3 mm ground tolerance, same dynamics otherwise.
+
+    3 mm is sub-visual at review distance but still an order of magnitude
+    tighter than the 30 mm legacy floor semantics — and it never travels
+    alone: numeric PASS is necessary, human visual review is mandatory.
+    """
+    return AuthorityThresholds(ground_tolerance_m=0.003)
 
 
 def evaluate_contact_authority(
@@ -188,6 +227,8 @@ def evaluate_contact_authority(
                     "unknown_pairs": 0,
                     "drift_m": 0.0,
                     "yaw_deg": None,
+                    "print_depth_m": 0.0,
+                    "substrate": thresholds.substrate,
                     "verdict": "FAIL",
                     "reasons": ["single-frame phase cannot establish persistent contact"],
                 }
@@ -201,6 +242,15 @@ def evaluate_contact_authority(
         persistent_total = 0
         unknown_pairs = 0
         pair_count = 0
+        # On soft ground the witness band covers the print volume (surface
+        # down through the full sink allowance); on hard ground it is the
+        # bare tolerance. Presence in mud is contact with mud — but the
+        # above-surface bar stays strict so hovering air never counts.
+        witness_below = (
+            thresholds.max_sink_m + thresholds.ground_tolerance_m
+            if thresholds.substrate == "soft"
+            else thresholds.ground_tolerance_m
+        )
         for k in range(start, end + 1):
             verts = np.vstack(
                 [_as_array(frames[k].sole_m, label="sole"), _as_array(frames[k].toe_m, label="toe")]
@@ -215,6 +265,7 @@ def evaluate_contact_authority(
                 witness = ground_plane_witness(
                     prev, verts, up_axis=up, ground_m=ground,
                     tolerance_m=thresholds.ground_tolerance_m,
+                    below_tolerance_m=witness_below,
                     delta_time_s=times[k] - times[k - 1],
                 )
                 pair_count += 1
@@ -236,8 +287,17 @@ def evaluate_contact_authority(
         reasons: list[str] = []
         if unknown_pairs > 0:
             reasons.append(f"{unknown_pairs}/{pair_count} pairs have no persistent ground points (unknown contact)")
-        if worst_pen > thresholds.penetration_tolerance_m:
-            reasons.append(f"penetration {worst_pen:.6f} m exceeds tolerance")
+        sink_allowance = thresholds.max_sink_m if thresholds.substrate == "soft" else 0.0
+        penetration_limit = sink_allowance + thresholds.penetration_tolerance_m
+        print_depth = max(0.0, min(worst_pen, sink_allowance))
+        if worst_pen > penetration_limit:
+            if thresholds.substrate == "soft":
+                reasons.append(
+                    f"sink {worst_pen:.6f} m exceeds allowance {sink_allowance:.6f} m "
+                    f"(print would be {print_depth:.6f} m deep)"
+                )
+            else:
+                reasons.append(f"penetration {worst_pen:.6f} m exceeds tolerance")
         if worst_speed is not None and worst_speed > thresholds.skate_velocity_mps:
             reasons.append(f"persistent skate {worst_speed:.3f} m/s exceeds threshold")
         if total_drift > thresholds.drift_per_phase_m:
@@ -254,7 +314,18 @@ def evaluate_contact_authority(
                     float(np.vstack([_as_array(frames[k].sole_m, label="sole"), _as_array(frames[k].toe_m, label="toe")])[:, up].min() - ground)
                     for k in range(start, end + 1)
                 ),
+                "contact_centroid_m": [
+                    float(v)
+                    for v in np.vstack(
+                        [
+                            _as_array(frames[(start + end) // 2].sole_m, label="sole"),
+                            _as_array(frames[(start + end) // 2].toe_m, label="toe"),
+                        ]
+                    ).mean(axis=0)
+                ],
                 "max_penetration_m": worst_pen,
+                "print_depth_m": print_depth,
+                "substrate": thresholds.substrate,
                 "max_persistent_velocity_mps": worst_speed,
                 "persistent_point_total": persistent_total,
                 "unknown_pairs": unknown_pairs,
@@ -283,9 +354,11 @@ def evaluate_contact_authority(
 
 
 __all__ = [
+    "ENGINEERING_GATE",
     "AuthorityThresholds",
     "PatchFrame",
     "evaluate_contact_authority",
     "ground_plane_witness",
     "patch_heading_yaw_deg",
+    "release_gate",
 ]

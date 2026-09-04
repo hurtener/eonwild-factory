@@ -323,6 +323,52 @@ def test_contact_authority_yaw_measured_on_persistent_set():
     assert any("yaw" in r for r in report["reasons"])
 
 
+def test_two_tier_gates_and_substrate_prints():
+    from eonwild_motion.dynamics.contact_authority import (
+        ENGINEERING_GATE,
+        release_gate,
+    )
+    from eonwild_motion.dynamics.runtime import footprints_from_authority
+
+    # A 2 mm hover: invisible at review distance, but the lab gate sees bias.
+    frames = _stance_frames(gap=0.002)
+    assert evaluate_contact_authority(frames, [True] * 12)["verdict"] == "FAIL"
+    assert evaluate_contact_authority(frames, [True] * 12,
+                                      thresholds=release_gate())["verdict"] == "PASS"
+    assert ENGINEERING_GATE.ground_tolerance_m == pytest.approx(0.001)
+    assert release_gate().ground_tolerance_m == pytest.approx(0.003)
+
+    # Soft ground: 8 mm sink is a print, not a violation.
+    soft = AuthorityThresholds(substrate="soft", max_sink_m=0.02)
+    sunk = _stance_frames(gap=-0.008)
+    report = evaluate_contact_authority(sunk, [True] * 12, thresholds=soft)
+    assert report["verdict"] == "PASS"
+    assert report["phases"][0]["print_depth_m"] == pytest.approx(0.008)
+    # Same sink on hard ground fails.
+    assert evaluate_contact_authority(sunk, [True] * 12)["verdict"] == "FAIL"
+    # Sinking past the allowance fails even on soft ground.
+    deep = _stance_frames(gap=-0.05)
+    assert evaluate_contact_authority(deep, [True] * 12, thresholds=soft)["verdict"] == "FAIL"
+    with pytest.raises(ContractError):
+        AuthorityThresholds(substrate="soft", max_sink_m=0.0)
+    with pytest.raises(ContractError):
+        AuthorityThresholds(substrate="hard", max_sink_m=0.01)
+
+    # Footprint events: one per PASS phase, with print payload.
+    prints = footprints_from_authority(
+        {"verdict": "PASS"},
+        {"left": report["phases"]},
+        load_kg_per_foot=750.0,
+    )
+    assert len(prints) == 1 and prints[0].name == "FOOT_PRINT"
+    assert prints[0].payload["print_depth_m"] == pytest.approx(0.008)
+    assert prints[0].payload["foot"] == "left"
+    assert len(prints[0].payload["contact_centroid_m"]) == 3
+    # Failed phases emit nothing rather than fabricated positions.
+    failed = evaluate_contact_authority(_stance_frames(gap=0.05), [True] * 12)
+    assert footprints_from_authority({"verdict": "FAIL"}, {"left": failed["phases"]}) == []
+
+
 def test_contact_authority_fails_penetration_and_skate():
     penetrated = _stance_frames(gap=-0.01)
     assert evaluate_contact_authority(penetrated, [True] * 12)["verdict"] == "FAIL"

@@ -302,3 +302,35 @@ PNG frames regenerable via the script):
 Reviewer note: these are engineering candidates (clay, no PBR), not
 art approval. Numeric PASS remains necessary but insufficient — the
 eye still rules on weight and character.
+
+## Floor truth, two-tier gates, and footprints
+
+**Is the dino floating? No.** Pixel-projected in Blender: the lowest
+skinned vertex and the review floor land on the same pixel (469, 438)
+at stance — mesh touches to 0.8 mm. The confusing composition (dark
+void over a vast lit plane) is a review-aid readability issue, not a
+contact issue: the grey is the 100 m diagnostic plane lit by the
+studio light, the thin dark line is the contact line plus cast shadow.
+`contact-closeup.png` next to each side preview shows the planted toes
+on that line. Future aid: grid-texture the plane so height reads
+instantly (open improvement, not yet implemented).
+
+**On chasing 1 mm in a 7 m animal.** At review distance 1 mm is
+0.08 px — invisible, and that was never the point. The 1 mm
+`ENGINEERING_GATE` exists to detect systematic bias (it caught the
+8–14 mm hover, the 0.5 m/s skate, the bind asymmetry, the mask
+semantics). Release uses `release_gate()` (3 mm, sub-visual) **plus
+mandatory human review** — numeric PASS can never approve alone. A
+2 mm hover passes release review and fails the lab gate, exactly as
+designed (tested).
+
+**Footprints: penetration is sometimes correct.** A 1.5-ton animal on
+soil sinks; forbidding all penetration models concrete, not ground.
+The authority now takes `substrate: hard | soft` with `max_sink_m`:
+sink within allowance on soft ground passes and is recorded as
+`print_depth_m`; the ground-plane witness band covers the print
+volume while the above-surface bar stays strict (hovering air never
+counts as mud). Every PASS loaded phase emits a `FOOT_PRINT` runtime
+event (centroid, depth, yaw, velocity, load) via
+`dynamics.runtime.footprints_from_authority` — the direct hook for
+decal/dust/terrain-deformation consumers in the game runtime.

@@ -132,8 +132,59 @@ class RuntimeTrack:
         return result
 
 
-def interpolate_com_plans(
-    plan_a: Sequence[Mapping[str, Any]],
+def footprints_from_authority(
+    authority: Mapping[str, Any],
+    per_foot: Mapping[str, Sequence[Mapping[str, Any]]],
+    *,
+    load_kg_per_foot: float = 750.0,
+) -> list[Event]:
+    """Footprint + dust events from evaluated contact phases.
+
+    A multi-ton animal on soil leaves prints: every PASS loaded phase
+    emits a ``FOOT_PRINT`` point event at touchdown carrying centroid,
+    print depth, yaw and peak ground velocity — the exact payload a game
+    runtime needs to spawn decals, deform terrain or puff dust. Phases
+    without a centroid (e.g. single-frame failures) emit nothing rather
+    than a fabricated position.
+    """
+    load = _finite(load_kg_per_foot, label="load_kg_per_foot")
+    if load <= 0.0:
+        raise ContractError("footprint load must be positive")
+    phases_by_foot = per_foot
+    if not isinstance(authority, Mapping) or not isinstance(phases_by_foot, Mapping):
+        raise ContractError("footprint emission needs authority and per-foot phases")
+    events: list[Event] = []
+    for foot, phases in phases_by_foot.items():
+        if not isinstance(foot, str) or not foot:
+            raise ContractError("footprint foot identity must be a non-empty string")
+        for phase in phases:
+            if not isinstance(phase, Mapping):
+                raise ContractError("footprint phase must be an object")
+            if phase.get("verdict") != "PASS":
+                continue
+            centroid = phase.get("contact_centroid_m")
+            if centroid is None:
+                continue
+            events.append(
+                Event(
+                    name="FOOT_PRINT",
+                    kind=POINT,
+                    time_s=float(phase["start_time_s"]),
+                    payload={
+                        "foot": foot,
+                        "contact_centroid_m": [float(v) for v in centroid],
+                        "print_depth_m": float(phase.get("print_depth_m", 0.0)),
+                        "substrate": str(phase.get("substrate", "hard")),
+                        "yaw_deg": phase.get("yaw_deg"),
+                        "peak_ground_velocity_mps": phase.get("max_persistent_velocity_mps"),
+                        "load_kg": load,
+                    },
+                )
+            )
+    return sorted(events, key=lambda e: (e.time_s, e.name))
+
+
+def interpolate_com_plans(    plan_a: Sequence[Mapping[str, Any]],
     plan_b: Sequence[Mapping[str, Any]],
     *,
     alpha: float,
@@ -219,5 +270,6 @@ __all__ = [
     "WINDOW",
     "Event",
     "RuntimeTrack",
+    "footprints_from_authority",
     "interpolate_com_plans",
 ]
