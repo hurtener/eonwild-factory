@@ -293,7 +293,9 @@ def solve_bite_window(
     Each sample solves the head chain at its target; the head sweep rate
     (point-mass head at ``head_lever_m``) drives the tail ODE as the
     answering moment, so the tail track is coupled to what the head did —
-    not to a pelvis-velocity sine.
+    not to a pelvis-velocity sine. When ``tail_params`` carries
+    ``lateral_moments`` (one step-coupled drive value per frame), a second
+    ODE produces ``tail_lateral_track`` for side-to-side counter-sway.
     """
     frames = len(root_track)
     for name, seq in (("root_track", root_track), ("root_rotations", root_rotations),
@@ -348,6 +350,29 @@ def solve_bite_window(
         max_angle_rad=float((tail_params or {}).get("max_angle_rad", math.radians(35.0))),
         body_inertia_kg_m2=(tail_params or {}).get("body_inertia_kg_m2"),
     )
+    # Lateral counter-sway (optional, defaults off): a second ODE driven
+    # by caller-supplied step-coupled moments (e.g. stance asymmetry from
+    # the shared contact plan) so the tail answers footfalls side to side
+    # instead of swinging in one sagittal plane. Absent
+    # ``lateral_moments`` the result carries ``tail_lateral_track: None``
+    # and every other field is untouched (legacy byte-identity).
+    lateral_moments = (tail_params or {}).get("lateral_moments")
+    tail_lateral = None
+    if lateral_moments is not None:
+        lateral_moments = [float(m) for m in lateral_moments]
+        if len(lateral_moments) != frames:
+            raise ContractError("tail lateral moments must match the track length")
+        tail_lateral = tail_ode_track(
+            list(times_s), lateral_moments,
+            inertia_kg_m2=float((tail_params or {}).get("lateral_inertia_kg_m2", 750.0)),
+            damping_ratio=float((tail_params or {}).get("lateral_damping_ratio", 0.5)),
+            natural_freq_hz=float((tail_params or {}).get(
+                "lateral_natural_freq_hz",
+                float((tail_params or {}).get("natural_freq_hz", 1.5)))),
+            max_angle_rad=float((tail_params or {}).get(
+                "lateral_max_angle_rad", math.radians(12.0))),
+            body_inertia_kg_m2=(tail_params or {}).get("body_inertia_kg_m2"),
+        )
     all_preferred = all(j.get("inside_preferred", True) for s in samples for j in s["joints"])
     return {
         "schema": SCHEMA,
@@ -356,6 +381,7 @@ def solve_bite_window(
         "all_reached": all(s["reached"] for s in samples),
         "all_inside_preferred": bool(all_preferred),
         "tail_track": tail,
+        "tail_lateral_track": tail_lateral,
         "coupling": "tail driven by head-sweep angular impulse; body counter-rotation propagated when body inertia given",
     }
 

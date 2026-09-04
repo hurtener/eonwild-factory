@@ -334,3 +334,40 @@ counts as mud). Every PASS loaded phase emits a `FOOT_PRINT` runtime
 event (centroid, depth, yaw, velocity, load) via
 `dynamics.runtime.footprints_from_authority` — the direct hook for
 decal/dust/terrain-deformation consumers in the game runtime.
+
+## Tail lateral counter-sway (iteration-013)
+
+Rear-view review showed the run tail pegged left with zero balancing.
+Measured root causes, all in world-frame FK (local-frame measurements
+kept lying — twisted pelvis frames rotate the −121 mm local X offset
+into the sagittal plane, so the rest pose is innocent):
+
+- The source clip HAS a lively tail (±315 mm world lateral, 1×/stride).
+- `solve_airborne_gait` rebuilds every frame from source frame 0, so
+  the sway is discarded by design; the leg-only run keeps a frozen
+  +229 mm offset with 6.7 mm of residual motion, plus a synthetic
+  0.8° sine on three base bones.
+- The unified overlay (012) replaced tail rotations with rest+pitch
+  (mean +28 mm) but pitch-only motion reads dead: lateral range 0.0.
+
+Fix (`integration.solve_unified_run`, all defaults-off/byte-identical):
+
+- `tail_step_asymmetry`: per-frame stance drive from the SHARED contact
+  plan (+1 left-only, −1 right-only, 0 otherwise), through the same
+  damped ODE at stride frequency — counter-sway locked to footfalls.
+- `tail_recenter_yaws`: Newton-solved uniform yaw canceling the
+  ANIMATED mean tip-attachment offset, calibrated against the exact
+  overlay composition (`q = P·Y·R`) with base→tip linkage validation
+  and a divergence guard. Calibrating on rest pose or leg channels
+  alone both failed loudly first — the overlay pitch changes the base
+  pose, so only overlay-exact calibration lands (residual +4 mm).
+- `tail_yaw_weights`: whip-gradient distribution peaking mid-distally
+  instead of the uniform copy-paste split.
+
+Iteration-013 (`build/V9-AIRBORNE-RUN-001/iteration-013-lateral-tail/`,
+`build_unified_run013_lateral_tail.py`): world tip mean **+4.2 mm**,
+range **342 mm file (≈170 mm real)** vs the >150 mm acceptance;
+extremes land inside the stance windows with correct counter-balance
+phase (tip left during right stance, away from the support foot).
+Legs untouched: contact-authority verdict identical to 012.
+Renders: `build/V9-DYNAMICS-SLICE-001-reviews/lateral-tail-{rear,side}/`.

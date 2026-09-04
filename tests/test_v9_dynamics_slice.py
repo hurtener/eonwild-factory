@@ -888,15 +888,22 @@ def _unified_fixture():
                 node["children"] = [start + i + 1]
             nodes.append(node)
         roles["legs"][side] = {"contactChain": names[:4], "toeChains": [names[4:]]}
-    # Axial chains off the pelvis: chest/neck/head forward, tail back.
+    # Axial chains off the pelvis: chest/neck/head forward, tail back
+    # (tail linked base-to-tip: pelvis -> tail0 -> tail1 -> tail2).
     upper = [("chest", (0, .3, .3)), ("neck", (0, .25, .3)), ("head", (0, .2, .35)),
              ("tail0", (0, .05, -.4)), ("tail1", (0, 0, -.4)), ("tail2", (0, 0, -.4))]
     parent = 1
+    tail_parent = 1
     for name, offset in upper:
         index = len(nodes)
-        nodes[parent].setdefault("children", []).append(index)
-        nodes.append({"name": name, "translation": list(offset)})
-        parent = index if name in ("chest", "neck", "head") else 1 if name == "tail0" else index
+        if name in ("chest", "neck", "head"):
+            nodes[parent].setdefault("children", []).append(index)
+            nodes.append({"name": name, "translation": list(offset)})
+            parent = index
+        else:
+            nodes[tail_parent].setdefault("children", []).append(index)
+            nodes.append({"name": name, "translation": list(offset)})
+            tail_parent = index
     roles.update(chest="chest", neck=["neck"], head="head", tail=["tail0", "tail1", "tail2"])
     doc = {"asset": {"version": "2.0"}, "nodes": nodes, "scenes": [{"nodes": [0]}],
            "scene": 0, "buffers": [{"byteLength": 4}], "bufferViews": [], "accessors": []}
@@ -957,3 +964,193 @@ def test_unified_run_without_axial_chain_is_fail_closed():
     gait = AirborneGait(cycles=1, sample_hz=24)
     with pytest.raises(ContractError, match="head chain"):
         solve_unified_run(source=source, source_clip="source", semantic_roles=roles, gait=gait)
+
+
+def _lateral_plan():
+    return {"samples": [
+        {"time_s": 0.0, "feet": {"left": {"contact": True}, "right": {"contact": False}}},
+        {"time_s": 0.5, "feet": {"left": {"contact": False}, "right": {"contact": True}}},
+        {"time_s": 1.0, "feet": {"left": {"contact": True}, "right": {"contact": True}}},
+        {"time_s": 1.5, "feet": {"left": {"contact": False}, "right": {"contact": False}}},
+    ]}
+
+
+def test_tail_step_asymmetry_maps_stance_to_drive():
+    from eonwild_motion.dynamics.integration import tail_step_asymmetry
+
+    drive = tail_step_asymmetry(_lateral_plan(), [0.0, 0.5, 1.0, 1.5])
+    assert drive == [1.0, -1.0, 0.0, 0.0]
+    # Nearest-time matching: off-grid samples snap to the closest plan row.
+    drive = tail_step_asymmetry(_lateral_plan(), [0.1, 0.9])
+    assert drive == [1.0, 0.0]
+    with pytest.raises(ContractError, match="plan samples"):
+        tail_step_asymmetry({"samples": []}, [0.0])
+
+
+def test_tail_recenter_cancels_lean_and_zero_is_identity():
+    from types import SimpleNamespace
+
+    from eonwild_motion.dynamics.integration import tail_recenter_yaws
+
+    # Two-bone tail off a root: base yawed 10° about Y so the tip hangs
+    # off midline. parents: root(0) -> t0(1) -> t1(2). Only the base
+    # bone's yaw steers the single offset segment, so the uniform
+    # solution is -10 deg per bone (t1's share is along for the ride:
+    # uniform split is a styling choice, documented in the helper).
+    yaw10 = [0.0, math.sin(math.radians(5.0)), 0.0, math.cos(math.radians(5.0))]
+    ident = [0.0, 0.0, 0.0, 1.0]
+    source = SimpleNamespace(
+        name_to_node={"root": 0, "t0": 1, "t1": 2},
+        parents=[None, 0, 1],
+        rest_translation=[(0.0, 0.0, 0.0), (0.0, 0.0, 0.0), (0.0, 0.0, -1.0)],
+        rest_rotation=[ident, yaw10, ident],
+    )
+    assert tail_recenter_yaws(source, ["t0", "t1"], (0.0, 1.0, 0.0), 0.0,
+                              (1.0, 0.0, 0.0)) == [0.0, 0.0]
+
+    corrected = tail_recenter_yaws(source, ["t0", "t1"], (0.0, 1.0, 0.0), 1.0,
+                                   (1.0, 0.0, 0.0))
+    assert corrected[0] == pytest.approx(corrected[1])
+    assert corrected[0] == pytest.approx(math.radians(-10.0), abs=1e-3)
+
+    # Animated channels: a constant ancestor yaw carries the tail off
+    # midline on every frame; recentering must center the animated mean
+    # (apply-and-measure, not just unit-check the angle). Four bones so
+    # the correction stays in the small-angle regime.
+    from eonwild_motion.dynamics.integration import _quat_mul
+    from eonwild_motion.dynamics.whole_body import _axis_angle_quat
+
+    bones = ["t0", "t1", "t2", "t3"]
+    yaw4 = [0.0, 0.0, math.sin(math.radians(2.0)), math.cos(math.radians(2.0))]
+    animated = SimpleNamespace(
+        name_to_node={"root": 0, "t0": 1, "t1": 2, "t2": 3, "t3": 4},
+        parents=[None, 0, 1, 2, 3],
+        nodes=[{}, {}, {}, {}, {}],
+        rest_translation=[(0.0, 0.0, 0.0)] + [(0.0, -1.0, 0.0)] * 4,
+        rest_rotation=[ident] * 5,
+    )
+    chan = {(0, "rotation"): np.array([yaw4, yaw4]),
+            (0, "translation"): np.zeros((2, 3))}
+    for name in bones:
+        idx = animated.name_to_node[name]
+        chan[(idx, "rotation")] = np.array([ident, ident])
+        chan[(idx, "translation")] = np.array([[0.0, -1.0, 0.0], [0.0, -1.0, 0.0]])
+    # Sanity: the animated mean really is off midline before correction.
+    raw = tail_recenter_yaws(animated, bones, (0.0, 0.0, 1.0), 0.0,
+                             (1.0, 0.0, 0.0), channels=chan)
+    assert raw == [0.0] * 4
+    fixed = tail_recenter_yaws(animated, bones, (0.0, 0.0, 1.0), 1.0,
+                               (1.0, 0.0, 0.0), channels=chan)
+    assert abs(sum(fixed)) > math.radians(1.0)  # a real lean was found
+    assert abs(sum(fixed)) < math.radians(20.0)  # ...of sane magnitude
+
+    def animated_mean(extra):
+        total = 0.0
+        for k in range(2):
+            Q = np.array(chan[(0, "rotation")][k], dtype=float)
+            p = np.zeros(3)
+            base = p.copy()  # attachment: root joint, before tail offsets
+            for name in bones:
+                idx = animated.name_to_node[name]
+                off = np.asarray(animated.rest_translation[idx], dtype=float)
+                qv = np.array([off[0], off[1], off[2], 0.0])
+                qc = np.array([-Q[0], -Q[1], -Q[2], Q[3]])
+                p = p + _quat_mul(_quat_mul(Q, qv), qc)[:3]
+                step = _quat_mul(_axis_angle_quat(np.array([0.0, 0.0, 1.0]), extra),
+                                 np.asarray(chan[(idx, "rotation")][k], dtype=float))
+                Q = _quat_mul(Q, step)
+            total += p[0] - base[0]
+        return total / 2
+
+    assert abs(animated_mean(0.0)) > 0.1
+    assert abs(animated_mean(fixed[0])) < 1e-4
+
+    # Reversed (tip-to-base) order is fail-closed, never silently wrong.
+    with pytest.raises(ContractError, match="base-to-tip"):
+        tail_recenter_yaws(source, ["t1", "t0"], (0.0, 1.0, 0.0), 1.0,
+                           (1.0, 0.0, 0.0))
+    with pytest.raises(ContractError, match="recenter"):
+        tail_recenter_yaws(source, ["t0", "t1"], (0.0, 1.0, 0.0), 1.5, (1.0, 0.0, 0.0))
+    with pytest.raises(ContractError, match="tail nodes"):
+        tail_recenter_yaws(source, [], (0.0, 1.0, 0.0), 1.0, (1.0, 0.0, 0.0))
+
+
+def test_bite_window_lateral_track_defaults_off_and_drives_when_fed():
+    from eonwild_motion.dynamics.whole_body import solve_bite_window
+
+    parents: list = [None, 0, 1]
+    rest_t = [[0.0, 0.0, 0.0], [0.0, 0.5, 0.0], [0.0, 0.5, 0.0]]
+    rest_r = [[0.0, 0.0, 0.0, 1.0]] * 3
+    times = [0.0, 0.25, 0.5]
+    kwargs = dict(
+        parents=parents, rest_translations=rest_t, rest_rotations=rest_r,
+        chain=[1, 2],
+        root_track=[{"root_position_m": [0.0, 0.0, 0.0]}] * 3,
+        root_rotations=[np.eye(3)] * 3, lateral_axis=[1.0, 0.0, 0.0],
+        targets_m=[[0.0, 1.2, 0.6]] * 3, times_s=times,
+    )
+    legacy = solve_bite_window(**kwargs)
+    assert legacy["tail_lateral_track"] is None
+    assert "tail_lateral_track" in legacy
+
+    driven = solve_bite_window(
+        **kwargs,
+        tail_params={"lateral_moments": [0.0, 500.0, 0.0],
+                     "lateral_inertia_kg_m2": 100.0,
+                     "lateral_natural_freq_hz": 1.0,
+                     "lateral_damping_ratio": 0.5},
+    )
+    samples = driven["tail_lateral_track"]["samples"]
+    assert len(samples) == 3
+    assert samples[0]["angle_rad"] == pytest.approx(0.0)
+    assert any(abs(s["angle_rad"]) > 1e-4 for s in samples[1:])
+    # Pitch track untouched by the lateral drive.
+    assert [s["angle_rad"] for s in driven["tail_track"]["samples"]] == pytest.approx(
+        [s["angle_rad"] for s in legacy["tail_track"]["samples"]])
+
+
+def test_unified_lateral_defaults_are_byte_identical():
+    from eonwild_motion.dynamics.integration import solve_unified_run
+    from eonwild_motion.planning.airborne_gait import AirborneGait
+
+    source, roles = _unified_fixture()
+    gait = AirborneGait(cycles=1, sample_hz=24, step_length_body_heights=.38,
+                        touchdown_reach_body_heights=.17, swing_clearance_body_heights=.18)
+    kwargs = dict(source=source, source_clip="source", semantic_roles=roles, gait=gait,
+                  axial_lateral=(1.0, 0.0, 0.0), gaze_distance_m=0.5,
+                  gaze_height_offset_m=0.3, axial_posture_weight=0.0)
+    root_out, _, unified, detail = solve_unified_run(**kwargs)
+    root_explicit, _, unified_explicit, _ = solve_unified_run(
+        **kwargs, tail_lateral_peak_deg=0.0, tail_recenter=0.0)
+    assert root_explicit == root_out
+    assert unified_explicit["unified_sha256"] == unified["unified_sha256"]
+    assert "tail_lateral_peak_deg" not in unified
+    assert detail["axial"]["tail_lateral_track"] is None
+
+
+def test_unified_lateral_tail_reports_receipt_facts():
+    from eonwild_motion.dynamics.integration import solve_unified_run
+    from eonwild_motion.planning.airborne_gait import AirborneGait
+
+    source, roles = _unified_fixture()
+    gait = AirborneGait(cycles=1, sample_hz=24, step_length_body_heights=.38,
+                        touchdown_reach_body_heights=.17, swing_clearance_body_heights=.18)
+    _, _, unified, detail = solve_unified_run(
+        source=source, source_clip="source", semantic_roles=roles, gait=gait,
+        axial_lateral=(1.0, 0.0, 0.0), gaze_distance_m=0.5,
+        gaze_height_offset_m=0.3, axial_posture_weight=0.0,
+        tail_lateral_peak_deg=6.0, tail_recenter=0.5,
+    )
+    assert unified["tail_lateral_peak_deg"] == pytest.approx(6.0)
+    assert unified["tail_recenter"] == pytest.approx(0.5)
+    assert unified["tail_lateral_total_deg"] > 0.0
+    assert set(unified["channels_yawed"]) == {"tail0", "tail1", "tail2"}
+    assert set(detail["overlay_report"]["channels_yawed"]) == {"tail0", "tail1", "tail2"}
+    # Deterministic with lateral active.
+    _, _, unified_again, _ = solve_unified_run(
+        source=source, source_clip="source", semantic_roles=roles, gait=gait,
+        axial_lateral=(1.0, 0.0, 0.0), gaze_distance_m=0.5,
+        gaze_height_offset_m=0.3, axial_posture_weight=0.0,
+        tail_lateral_peak_deg=6.0, tail_recenter=0.5,
+    )
+    assert unified_again["unified_sha256"] == unified["unified_sha256"]

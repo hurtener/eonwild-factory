@@ -1,0 +1,104 @@
+{
+  "schema": "eonwild.motion.v9.contact-authority.v1",
+  "verdict": "FAIL",
+  "per_foot": {
+    "left": {
+      "schema": "eonwild.motion.v9.contact-authority.v1",
+      "phase_count": 2,
+      "phases": [
+        {
+          "start_frame": 0,
+          "end_frame": 54,
+          "start_time_s": 0.0,
+          "end_time_s": 0.45,
+          "minimum_gap_m": -0.00423368473786233,
+          "contact_centroid_m": [
+            -0.4031318922198876,
+            0.13353204314718478,
+            2.524147665633836
+          ],
+          "max_penetration_m": 0.00423368473786233,
+          "print_depth_m": 0.0,
+          "substrate": "hard",
+          "max_persistent_velocity_mps": 0.4743251631439755,
+          "persistent_point_total": 97,
+          "unknown_pairs": 8,
+          "drift_m": 0.023037723535835646,
+          "yaw_deg": 0.33076733958614746,
+          "verdict": "FAIL",
+          "reasons": [
+            "8/54 pairs have no persistent ground points (unknown contact)",
+            "penetration 0.004234 m exceeds tolerance",
+            "persistent skate 0.474 m/s exceeds threshold",
+            "patch drift 0.0230 m exceeds threshold"
+          ]
+        },
+        {
+          "start_frame": 150,
+          "end_frame": 150,
+          "start_time_s": 1.25,
+          "end_time_s": 1.25,
+          "minimum_gap_m": null,
+          "max_persistent_velocity_mps": null,
+          "persistent_point_total": 0,
+          "unknown_pairs": 0,
+          "drift_m": 0.0,
+          "yaw_deg": null,
+          "print_depth_m": 0.0,
+          "substrate": "hard",
+          "verdict": "FAIL",
+          "reasons": [
+            "single-frame phase cannot establish persistent contact"
+          ]
+        }
+      ],
+      "global_minimum_gap_m": -0.00423368473786233,
+      "verdict": "FAIL",
+      "reasons": [
+        "phase 0-54: 8/54 pairs have no persistent ground points (unknown contact)",
+        "phase 0-54: penetration 0.004234 m exceeds tolerance",
+        "phase 0-54: persistent skate 0.474 m/s exceeds threshold",
+        "phase 0-54: patch drift 0.0230 m exceeds threshold",
+        "phase 150-150: single-frame phase cannot establish persistent contact"
+      ],
+      "classification": "skinned patch authority; band-relative speeds excluded from verdict"
+    },
+    "right": {
+      "schema": "eonwild.motion.v9.contact-authority.v1",
+      "phase_count": 1,
+      "phases": [
+        {
+          "start_frame": 75,
+          "end_frame": 129,
+          "start_time_s": 0.625,
+          "end_time_s": 1.075,
+          "minimum_gap_m": 0.001750972120726551,
+          "contact_centroid_m": [
+            0.793078337289312,
+            0.1052414619283215,
+            6.03189543604896
+          ],
+          "max_penetration_m": 0.0,
+          "print_depth_m": 0.0,
+          "substrate": "hard",
+          "max_persistent_velocity_mps": 0.0,
+          "persistent_point_total": 0,
+          "unknown_pairs": 54,
+          "drift_m": 0.0,
+          "yaw_deg": 0.0,
+          "verdict": "FAIL",
+          "reasons": [
+            "54/54 pairs have no persistent ground points (unknown contact)"
+          ]
+        }
+      ],
+      "global_minimum_gap_m": 0.001750972120726551,
+      "verdict": "FAIL",
+      "reasons": [
+        "phase 75-129: 54/54 pairs have no persistent ground points (unknown contact)"
+      ],
+      "classification": "skinned patch authority; band-relative speeds excluded from verdict"
+    }
+  },
+  "classification": "persistent ground-plane semantics; band-relative speeds excluded from verdict"
+}
