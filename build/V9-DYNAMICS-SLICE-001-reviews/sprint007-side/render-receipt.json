@@ -1,0 +1,183 @@
+{
+  "status": "ENGINEERING_MEDIAN_SEED_NOT_VISUALLY_ACCEPTED",
+  "timeline": {
+    "action_name": "V9_SPRINT007_UNIFIED_IN_PLACE",
+    "frame_start": 0.0,
+    "frame_end": 23.0,
+    "duration_s": 0.9583333333333334,
+    "presentation_scale": 1.3043478260869565,
+    "presentation_cycle_coverage": 1.0,
+    "nla_repeat": 1.0,
+    "timeline_sha256": "c79fc1acec1245d381d27e43e51a44fd65c592a70f296ba0b5e99b695a1592ce",
+    "nla_scene_start": 1.0,
+    "nla_scene_end": 31.0,
+    "source_time_formula": "(action_frame_start + (scene_frame - nla_scene_start) / presentation_scale) / fps",
+    "rendered_samples": [
+      {
+        "scene_frame": 1.0,
+        "source_time_s": 0.0
+      },
+      {
+        "scene_frame": 2.0,
+        "source_time_s": 0.031944443302022126
+      },
+      {
+        "scene_frame": 3.0,
+        "source_time_s": 0.06388888660404425
+      },
+      {
+        "scene_frame": 4.0,
+        "source_time_s": 0.09583332990606637
+      },
+      {
+        "scene_frame": 5.0,
+        "source_time_s": 0.1277777732080885
+      },
+      {
+        "scene_frame": 6.0,
+        "source_time_s": 0.15972221651011062
+      },
+      {
+        "scene_frame": 7.0,
+        "source_time_s": 0.19166665981213274
+      },
+      {
+        "scene_frame": 8.0,
+        "source_time_s": 0.22361110311415489
+      },
+      {
+        "scene_frame": 9.0,
+        "source_time_s": 0.255555546416177
+      },
+      {
+        "scene_frame": 10.0,
+        "source_time_s": 0.2874999897181992
+      },
+      {
+        "scene_frame": 11.0,
+        "source_time_s": 0.31944443302022124
+      },
+      {
+        "scene_frame": 12.0,
+        "source_time_s": 0.3513888763222434
+      },
+      {
+        "scene_frame": 13.0,
+        "source_time_s": 0.3833333196242655
+      },
+      {
+        "scene_frame": 14.0,
+        "source_time_s": 0.41527776292628765
+      },
+      {
+        "scene_frame": 15.0,
+        "source_time_s": 0.44722220622830977
+      },
+      {
+        "scene_frame": 16.0,
+        "source_time_s": 0.4791666495303319
+      },
+      {
+        "scene_frame": 17.0,
+        "source_time_s": 0.511111092832354
+      },
+      {
+        "scene_frame": 18.0,
+        "source_time_s": 0.5430555361343762
+      },
+      {
+        "scene_frame": 19.0,
+        "source_time_s": 0.5749999794363984
+      },
+      {
+        "scene_frame": 20.0,
+        "source_time_s": 0.6069444227384204
+      },
+      {
+        "scene_frame": 21.0,
+        "source_time_s": 0.6388888660404425
+      },
+      {
+        "scene_frame": 22.0,
+        "source_time_s": 0.6708333093424647
+      },
+      {
+        "scene_frame": 23.0,
+        "source_time_s": 0.7027777526444868
+      },
+      {
+        "scene_frame": 24.0,
+        "source_time_s": 0.7347221959465089
+      },
+      {
+        "scene_frame": 25.0,
+        "source_time_s": 0.766666639248531
+      },
+      {
+        "scene_frame": 26.0,
+        "source_time_s": 0.7986110825505532
+      },
+      {
+        "scene_frame": 27.0,
+        "source_time_s": 0.8305555258525753
+      },
+      {
+        "scene_frame": 28.0,
+        "source_time_s": 0.8624999691545975
+      },
+      {
+        "scene_frame": 29.0,
+        "source_time_s": 0.8944444124566195
+      },
+      {
+        "scene_frame": 30.0,
+        "source_time_s": 0.9263888557586416
+      }
+    ]
+  },
+  "camera": {
+    "center": [
+      0.05223286151885986,
+      -0.05201458930969238,
+      1.6862688064575195
+    ],
+    "horizontalSpan": 12.012033462524414,
+    "verticalSpan": 3.455994449555874,
+    "orthoScale": 14.174199104309082,
+    "direction": [
+      0.9993880987167358,
+      0.0,
+      0.034978583455085754
+    ],
+    "right": [
+      0.0,
+      -1.0,
+      0.0
+    ],
+    "up": [
+      -0.034978583455085754,
+      0.0,
+      0.9993880987167358
+    ],
+    "view": "side"
+  },
+  "ground": -0.01200103802869944,
+  "frames": 30,
+  "fps": 24,
+  "materials": {
+    "mode": "texture",
+    "engine": "BLENDER_WORKBENCH",
+    "images": [
+      {
+        "material": "Material_0",
+        "image": "Image_0",
+        "size": [
+          4096,
+          4096
+        ],
+        "packed": true
+      }
+    ],
+    "scope": "original embedded base-color preview; normal/roughness not evaluated"
+  }
+}
