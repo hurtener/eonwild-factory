@@ -1,5 +1,5 @@
 {
-  "engine_head": "b189b60",
+  "engine_head": "f665217",
   "facts": {
     "01-ballistic-vs-kinematic": {
       "flight_time_s": 0.6991,
@@ -33,6 +33,11 @@
         "subadult": 0.551
       }
     },
+    "04-bite-window": {
+      "all_reached": true,
+      "tail_final_deg": -0.511,
+      "worst_residual_m": 9.6e-05
+    },
     "power_attack": {
       "brutal_limiting_factor": "trajectory",
       "brutal_plan_sha256": "1ea35d1ae31a6bb4176750ce18220a79de53a730d2afe496ced626fb6ec4308c",
@@ -45,6 +50,7 @@
   "figures": {
     "01-ballistic-vs-kinematic": "01-ballistic-vs-kinematic.svg",
     "02-contact-authority": "02-contact-authority.svg",
-    "03-budgets-and-growth": "03-budgets-and-growth.svg"
+    "03-budgets-and-growth": "03-budgets-and-growth.svg",
+    "04-bite-window": "04-bite-window.svg"
   }
 }

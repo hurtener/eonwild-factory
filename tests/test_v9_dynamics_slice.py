@@ -67,6 +67,7 @@ from eonwild_motion.dynamics.transition import (
     tail_ode_track,
     turn_plan,
 )
+from eonwild_motion.dynamics.whole_body import solve_axial_chain, solve_bite_window
 from eonwild_motion.errors import ContractError
 from eonwild_motion.planning.power_attack import (
     PowerAttackRequest,
@@ -605,3 +606,74 @@ def test_pi_flip_recovers_axis_and_nan_dt_rejected():
                              "root_orientation": [0, 0, 0, 1],
                              "linear_velocity_mps": [0, 0, 0],
                              "angular_momentum_kg_m2ps": [0, 0, 0], "contacts": {}})
+
+
+def _axial_rig():
+    parents = [None, 0, 1, 2]
+    rest_t = [(0.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 1.0, 0.0), (0.0, 1.0, 0.0)]
+    rest_r = [(0.0, 0.0, 0.0, 1.0)] * 4
+    return parents, rest_t, rest_r
+
+
+def test_axial_chain_reaches_target():
+    parents, rest_t, rest_r = _axial_rig()
+    solved = solve_axial_chain(
+        parents=parents, rest_translations=rest_t, rest_rotations=rest_r,
+        chain=[1, 2, 3], root_position_m=(0.0, 0.0, 0.0), root_rotation=np.eye(3),
+        lateral_axis=(0.0, 0.0, 1.0), target_m=(1.0, 2.0, 0.0),
+    )
+    assert solved["reached"] is True
+    assert solved["residual_m"] == pytest.approx(0.0, abs=1e-3)
+    assert solved["tip_m"] == pytest.approx([1.0, 2.0, 0.0], abs=1e-3)
+    # Deterministic: same inputs, same outputs.
+    again = solve_axial_chain(
+        parents=parents, rest_translations=rest_t, rest_rotations=rest_r,
+        chain=[1, 2, 3], root_position_m=(0.0, 0.0, 0.0), root_rotation=np.eye(3),
+        lateral_axis=(0.0, 0.0, 1.0), target_m=(1.0, 2.0, 0.0),
+    )
+    assert again["pitch_rad"] == solved["pitch_rad"]
+
+
+def test_axial_chain_reports_unreachable_and_clamps():
+    from eonwild_motion.dynamics.capacity import JointEnvelope
+    parents, rest_t, rest_r = _axial_rig()
+    far = solve_axial_chain(
+        parents=parents, rest_translations=rest_t, rest_rotations=rest_r,
+        chain=[1, 2, 3], root_position_m=(0.0, 0.0, 0.0), root_rotation=np.eye(3),
+        lateral_axis=(0.0, 0.0, 1.0), target_m=(9.0, 9.0, 0.0),
+    )
+    assert far["reached"] is False
+    # Optimum: the root→node1 link is fixed vertical, so the two moving
+    # links extend from (0,1,0) straight at the target.
+    assert far["residual_m"] == pytest.approx(10.0416, rel=1e-3)
+    assert far["tip_m"] == pytest.approx([1.4948, 2.3288, 0.0], abs=1e-3)
+    envelopes = {1: JointEnvelope("spine", -45.0, 45.0, -20.0, 20.0),
+                 2: JointEnvelope("neck", -45.0, 45.0, -20.0, 20.0),
+                 3: JointEnvelope("head", -45.0, 45.0, -20.0, 20.0)}
+    held = solve_axial_chain(
+        parents=parents, rest_translations=rest_t, rest_rotations=rest_r,
+        chain=[1, 2, 3], root_position_m=(0.0, 0.0, 0.0), root_rotation=np.eye(3),
+        lateral_axis=(0.0, 0.0, 1.0), target_m=(1.0, 2.0, 0.0),
+        envelopes=envelopes,
+    )
+    for joint in held["joints"]:
+        assert -45.0 <= joint["pitch_deg"] <= 45.0
+        assert "inside_preferred" in joint
+
+
+def test_bite_window_couples_tail_to_head_sweep():
+    parents, rest_t, rest_r = _axial_rig()
+    times = [0.0, 0.1, 0.2]
+    track = [{"root_position_m": (0.0, 0.0, 0.0)} for _ in times]
+    targets = [(0.5, 2.5, 0.0), (1.0, 2.0, 0.0), (1.2, 1.8, 0.0)]
+    window = solve_bite_window(
+        parents=parents, rest_translations=rest_t, rest_rotations=rest_r,
+        chain=[1, 2, 3], root_track=track,
+        root_rotations=[np.eye(3)] * 3, lateral_axis=(0.0, 0.0, 1.0),
+        targets_m=targets, times_s=times,
+        tail_params={"inertia_kg_m2": 750.0, "body_inertia_kg_m2": 7500.0},
+    )
+    assert window["all_reached"] is True
+    assert window["worst_residual_m"] == pytest.approx(0.0, abs=1e-3)
+    assert len(window["tail_track"]["samples"]) == 3
+    assert window["tail_track"]["body_counter_track"] is not None

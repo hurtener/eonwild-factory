@@ -82,6 +82,22 @@ continuity/turning/braking, growth hysteresis and the runtime seam.
 * `src/eonwild_motion/planning/power_attack.py` — the vertical slice.
 * `tests/test_v9_dynamics_slice.py` — 32 tests, all passing.
 
+### 04 — Bite window: axial tracking plus the coupled tail
+
+![bite window](04-bite-window.svg)
+
+* A 3-link head chain tracks a moving target over 0.3 s: worst
+  residual **0.096 mm**, every sample reached. Unreachable targets
+  report maximum extension (and the fixed-base optimum is asserted
+  exactly in tests); every joint projects through its hard envelope
+  with preferred-margin status.
+* The tail is driven by the head sweep it answers (head angular
+  impulse → tail ODE moment → damped track → body counter-rotation),
+  not by pelvis velocity. The tail rest angle here (−0.51°) is small
+  because the demo sweep is gentle — the coupling, not the amplitude,
+  is the claim, and conservation (`I·θ` sums to zero per sample) is
+  asserted in tests.
+
 ## Adversarial review fixes (P0, applied after first pass)
 
 An independent review of the slice found five load-bearing bugs; all

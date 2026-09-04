@@ -183,8 +183,46 @@ def figure_budgets_and_growth() -> tuple[str, dict[str, Any]]:
     return svg, {"capacity_status": capacity.status, "mass_ratios": growth}
 
 
+def figure_bite_window() -> tuple[str, dict[str, Any]]:
+    """Axial target tracking over a bite window plus the coupled tail."""
+    import numpy as np
+
+    from .whole_body import solve_bite_window
+
+    parents = [None, 0, 1, 2]
+    rest_t = [(0.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 1.0, 0.0), (0.0, 1.0, 0.0)]
+    rest_r = [(0.0, 0.0, 0.0, 1.0)] * 4
+    times = [i / 60.0 for i in range(19)]
+    track = [{"root_position_m": (0.0, 0.0, 0.0)} for _ in times]
+    targets = [(0.5 + 0.8 * (t / times[-1]), 2.5 - 0.7 * (t / times[-1]), 0.0) for t in times]
+    window = solve_bite_window(
+        parents=parents, rest_translations=rest_t, rest_rotations=rest_r,
+        chain=[1, 2, 3], root_track=track,
+        root_rotations=[np.eye(3)] * len(times), lateral_axis=(0.0, 0.0, 1.0),
+        targets_m=targets, times_s=times,
+        tail_params={"inertia_kg_m2": 750.0, "body_inertia_kg_m2": 7500.0},
+    )
+    residuals = [s["residual_m"] for s in window["samples"]]
+    tail_angles = [math.degrees(s["angle_rad"]) for s in window["tail_track"]["samples"]]
+    svg = svg_line_chart(
+        "Bite window: head tracking residual and coupled tail answer",
+        [
+            ("tracking residual x100 (m)", PALETTE[1], times, [100 * r for r in residuals]),
+            ("tail angle (deg)", PALETTE[0], times, tail_angles),
+        ],
+        xlabel="window time (s)",
+        ylabel="residual x100 (m) / tail (deg)",
+    )
+    return svg, {
+        "worst_residual_m": round(window["worst_residual_m"], 6),
+        "all_reached": window["all_reached"],
+        "tail_final_deg": round(tail_angles[-1], 3),
+    }
+
+
 __all__ = [
     "figure_ballistic_vs_kinematic",
+    "figure_bite_window",
     "figure_budgets_and_growth",
     "figure_contact_authority",
     "svg_line_chart",

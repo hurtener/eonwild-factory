@@ -23,6 +23,7 @@ from eonwild_motion.dynamics.ballistic import BallisticRequest, plan_ballistic_c
 from eonwild_motion.dynamics.capacity import CapacityProfile
 from eonwild_motion.dynamics.evidence import (
     figure_ballistic_vs_kinematic,
+    figure_bite_window,
     figure_budgets_and_growth,
     figure_contact_authority,
 )
@@ -63,6 +64,7 @@ def main() -> None:
         ("01-ballistic-vs-kinematic", figure_ballistic_vs_kinematic),
         ("02-contact-authority", figure_contact_authority),
         ("03-budgets-and-growth", figure_budgets_and_growth),
+        ("04-bite-window", figure_bite_window),
     ):
         svg, figure_facts = builder()
         (OUTPUT / f"{name}.svg").write_text(svg + "\n", encoding="utf-8")
