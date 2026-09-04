@@ -62,7 +62,23 @@ DEFAULT_TIERS: tuple[GrowthTier, ...] = (
 
 
 def allometric_scale(length_ratio: float) -> dict[str, float]:
-    """Continuous-trait scales from a linear size ratio (Froude-baseline)."""
+    """Continuous-trait scales from a linear size ratio (Froude-baseline).
+
+    Semantics per trait (all relative to the reviewed adult reference):
+
+    * ``mass_ratio`` — body mass (volume scales with ``L³``);
+    * ``inertia_ratio`` — rotational inertia (``m·L²``);
+    * ``force_ratio`` — muscle force (cross-section ``L²``);
+    * ``cadence_ratio`` — stride frequency at equal Froude number
+      (``v²/gL`` constant implies ``f ∝ 1/√L``);
+    * ``stride_ratio`` — stride length (``∝ L``);
+    * ``turn_authority_ratio`` — friction-limited yaw moment (``∝ L²``);
+    * ``jump_authority_ratio`` — specific launch impulse (force per mass);
+    * ``impact_stress_ratio`` — peak tissue stress on a size-matched
+      impact (``∝ m/L²``; higher is *worse*, budgets must shrink);
+    * ``braking_ratio`` — specific braking force;
+    * ``tail_frequency_ratio`` — tail pendulum frequency (``∝ 1/√L``).
+    """
     ratio = _finite(length_ratio, label="length_ratio")
     if ratio <= 0.0:
         raise ContractError("length ratio must be positive")
@@ -76,7 +92,7 @@ def allometric_scale(length_ratio: float) -> dict[str, float]:
         "stride_ratio": ratio,
         "turn_authority_ratio": ratio**2,  # friction-limited yaw ~ weight arm
         "jump_authority_ratio": ratio**2 / mass,  # specific launch impulse
-        "landing_tolerance_ratio": mass / ratio**2,  # stress scales against area
+        "impact_stress_ratio": mass / ratio**2,  # stress scales against area
         "braking_ratio": ratio**2 / mass,
         "tail_frequency_ratio": 1.0 / math.sqrt(ratio),
     }
@@ -86,6 +102,8 @@ def tier_for_mass_ratio(
     tiers: Sequence[GrowthTier],
     mass_ratio: float,
 ) -> GrowthTier:
+    if not tiers:
+        raise ContractError("growth tier table is empty")
     ratio = _finite(mass_ratio, label="mass_ratio")
     for tier in tiers:
         if tier.mass_ratio_min <= ratio < tier.mass_ratio_max:
@@ -113,6 +131,8 @@ def select_tier(
     band = _finite(hysteresis, label="hysteresis")
     if band < 0.0:
         raise ContractError("hysteresis must be non-negative")
+    if not tiers:
+        raise ContractError("growth tier table is empty")
     names = [t.name for t in tiers]
     if current is not None and current not in names:
         raise ContractError(f"unknown current tier {current!r}")
@@ -131,6 +151,7 @@ def select_tier(
         "tier": target,
         "switched": switched,
         "mass_ratio": ratio,
+        "clamped": bool(ratio >= tiers[-1].mass_ratio_max),
         "carry_over": list(CARRY_OVER),
         "length_ratio": next(t.length_ratio for t in tiers if t.name == target),
     }

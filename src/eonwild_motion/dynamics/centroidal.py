@@ -88,8 +88,8 @@ def quat_mul(left: np.ndarray, right: np.ndarray) -> np.ndarray:
 
 def rotation_between_frames(previous: np.ndarray, current: np.ndarray, dt: float) -> np.ndarray:
     """Angular velocity (rad/s, world frame) taking R_prev -> R_curr over dt."""
-    if dt <= 0.0:
-        raise ContractError("angular velocity requires positive dt")
+    if not math.isfinite(dt) or dt <= 0.0:
+        raise ContractError("angular velocity requires finite positive dt")
     delta = current @ previous.T
     trace = float(np.trace(delta))
     cos_angle = max(-1.0, min(1.0, (trace - 1.0) / 2.0))
@@ -99,7 +99,15 @@ def rotation_between_frames(previous: np.ndarray, current: np.ndarray, dt: float
     axis = np.array([delta[2, 1] - delta[1, 2], delta[0, 2] - delta[2, 0], delta[1, 0] - delta[0, 1]])
     norm = float(np.linalg.norm(axis))
     if norm < 1e-12:
-        return np.zeros(3)
+        # Near-π rotation: the cross-product axis degenerates. The axis is
+        # the eigenvector of the delta rotation for eigenvalue 1, i.e. the
+        # strongest column of (R + I).
+        rescued = delta + np.eye(3)
+        col = int(np.argmax([float(np.linalg.norm(rescued[:, j])) for j in range(3)]))
+        axis = rescued[:, col]
+        norm = float(np.linalg.norm(axis))
+        if norm < 1e-12:
+            raise ContractError("rotation delta has no recoverable axis")
     return axis / norm * (angle / dt)
 
 

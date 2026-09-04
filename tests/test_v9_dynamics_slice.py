@@ -62,7 +62,9 @@ from eonwild_motion.dynamics.transition import (
     bridge_impulse,
     capture_step_target,
     continuity_error,
+    packet_from_mapping,
     redistribute_tail_head,
+    tail_ode_track,
     turn_plan,
 )
 from eonwild_motion.errors import ContractError
@@ -519,3 +521,87 @@ def test_evidence_figures_render():
         svg, facts = builder()
         assert svg.startswith("<svg") and "</svg>" in svg
         assert isinstance(facts, dict) and facts
+
+
+def test_tail_ode_converges_to_static_deflection():
+    times = [i / 120.0 for i in range(241)]
+    track = tail_ode_track(times, [10.0] * len(times), inertia_kg_m2=750.0,
+                           damping_ratio=0.7, natural_freq_hz=1.5, moment_gain=1.0)
+    omega_n = 2 * math.pi * 1.5
+    expected = 10.0 / (750.0 * omega_n * omega_n)
+    assert track["final_angle_rad"] == pytest.approx(expected, rel=0.02)
+    assert track["clamped_samples"] == 0
+
+
+def test_tail_ode_clamps_and_propagates_counter_rotation():
+    times = [i / 120.0 for i in range(60)]
+    track = tail_ode_track(times, [50000.0] * len(times), inertia_kg_m2=750.0,
+                           damping_ratio=0.7, natural_freq_hz=1.5,
+                           max_angle_rad=math.radians(35.0), body_inertia_kg_m2=7500.0)
+    assert track["clamped_samples"] > 0
+    assert track["final_angle_rad"] == pytest.approx(math.radians(35.0))
+    body = track["body_counter_track"]
+    assert body[-1]["angle_rad"] == pytest.approx(-0.1 * track["final_angle_rad"])
+    # Conservation: I_tail*θ_tail + I_body*θ_body == 0 at every sample.
+    for tail, torso in zip(track["samples"], body):
+        assert 750.0 * tail["angle_rad"] + 7500.0 * torso["angle_rad"] == pytest.approx(0.0)
+
+
+def test_runtime_blend_velocity_matches_position_derivative():
+    plan_a = [{"time_s": 0.0, "com_m": [0, 1, 0], "com_velocity_mps": [1, 0, 0]},
+              {"time_s": 0.1, "com_m": [0.1, 1, 0], "com_velocity_mps": [1, 0, 0]},
+              {"time_s": 0.2, "com_m": [0.2, 1.1, 0], "com_velocity_mps": [1, 1, 0]}]
+    plan_b = [{"time_s": 0.0, "com_m": [0, 2, 0], "com_velocity_mps": [2, 0, 0]},
+              {"time_s": 0.1, "com_m": [0.2, 2, 0], "com_velocity_mps": [2, 0, 0]},
+              {"time_s": 0.2, "com_m": [0.4, 2.1, 0], "com_velocity_mps": [2, 1, 0]}]
+    mid = interpolate_com_plans(plan_a, plan_b, alpha=0.5)
+    positions = np.array([s["com_m"] for s in mid])
+    dt = 0.1
+    for i, sample in enumerate(mid):
+        if i == 0:
+            numeric = (positions[1] - positions[0]) / dt
+        elif i == len(mid) - 1:
+            numeric = (positions[-1] - positions[-2]) / dt
+        else:
+            numeric = (positions[i + 1] - positions[i - 1]) / (2 * dt)
+        # Hermite-consistent: reported velocity matches the curve derivative
+        # within the central-averaging tolerance of the blend.
+        assert np.asarray(sample["com_velocity_mps"]) == pytest.approx(numeric, abs=0.6)
+
+
+def test_loop_safe_full_seam_state():
+    track = RuntimeTrack(duration_s=2.0, events=[Event("X", "point", 1.0)])
+    state = {"root_position_m": [0, 1, 0], "root_orientation": [0, 0, 0, 1],
+             "linear_velocity_mps": [1, 0, 0], "contacts": {"l": "loaded"},
+             "overlay": {"gaze": "forward"}}
+    report = track.loop_safe({"opening": state, "closing": dict(state)})
+    assert report["seam_state_match"] is True
+    broken = dict(state, linear_velocity_mps=[9, 0, 0])
+    assert track.loop_safe({"opening": state, "closing": broken})["seam_state_match"] is False
+
+
+def test_growth_stress_ratio_and_clamp_flag():
+    scales = allometric_scale(2.0)
+    assert scales["impact_stress_ratio"] == pytest.approx(2.0)  # m/r² = 8/4; bigger = worse
+    assert "landing_tolerance_ratio" not in scales
+    overweight = select_tier(DEFAULT_TIERS, 9.0, "adult")
+    assert overweight["tier"] == "heavy_adult" and overweight["clamped"] is True
+    normal = select_tier(DEFAULT_TIERS, 0.8, "subadult")
+    assert normal["clamped"] is False
+    with pytest.raises(ContractError):
+        select_tier([], 0.5, None)
+
+
+def test_pi_flip_recovers_axis_and_nan_dt_rejected():
+    from eonwild_motion.dynamics.centroidal import rotation_between_frames
+    axis, angle = np.array([1.0, 0.0, 0.0]), math.pi
+    delta = np.eye(3) * math.cos(angle) + (1 - math.cos(angle)) * np.outer(axis, axis)
+    omega = rotation_between_frames(np.eye(3), delta, 0.1)
+    assert omega == pytest.approx([math.pi / 0.1, 0.0, 0.0])
+    with pytest.raises(ContractError):
+        rotation_between_frames(np.eye(3), np.eye(3), float("nan"))
+    with pytest.raises(ContractError):
+        packet_from_mapping({"root_position_m": [0, 1, float("nan")],
+                             "root_orientation": [0, 0, 0, 1],
+                             "linear_velocity_mps": [0, 0, 0],
+                             "angular_momentum_kg_m2ps": [0, 0, 0], "contacts": {}})

@@ -87,7 +87,7 @@ def bridge_impulse(leaving: ContinuityPacket, entering: ContinuityPacket) -> dic
 
 def packet_from_mapping(value: Mapping[str, Any]) -> ContinuityPacket:
     try:
-        return ContinuityPacket(
+        packet = ContinuityPacket(
             root_position_m=tuple(float(v) for v in value["root_position_m"]),
             root_orientation=tuple(float(v) for v in value["root_orientation"]),
             linear_velocity_mps=tuple(float(v) for v in value["linear_velocity_mps"]),
@@ -103,6 +103,17 @@ def packet_from_mapping(value: Mapping[str, Any]) -> ContinuityPacket:
             interruptible=bool(value.get("interruptible", True)),
             angular_velocity_radps=tuple(float(v) for v in value.get("angular_velocity_radps", (0.0, 0.0, 0.0))),
         )
+        _quat(np.asarray(packet.root_orientation), label="packet orientation")
+        for label, triple in (
+            ("packet root_position_m", packet.root_position_m),
+            ("packet linear_velocity_mps", packet.linear_velocity_mps),
+            ("packet angular_momentum", packet.angular_momentum_kg_m2ps),
+            ("packet angular_velocity", packet.angular_velocity_radps),
+        ):
+            _vec3(triple, label=label)
+        for key in ("tail_angle_rad", "tail_angular_velocity_radps", "gait_phase", "breathing_phase"):
+            _finite(getattr(packet, key), label=f"packet {key}")
+        return packet
     except (KeyError, TypeError, ValueError) as exc:
         raise ContractError(f"continuity packet is malformed: {exc}") from exc
 
@@ -344,6 +355,84 @@ def redistribute_tail_head(
         "transferred_kg_m2ps": transferred,
         "untransferred_kg_m2ps": max(0.0, residual_mag - transferred),
         "conservation": "internal redistribution; total L conserved" if airborne else "remainder requires contact reaction (step)",
+        "model": "static budget; prefer tail_ode_track for time histories",
+    }
+
+
+def tail_ode_track(
+    times_s: Sequence[float],
+    desired_moment: Sequence[float],
+    *,
+    inertia_kg_m2: float,
+    damping_ratio: float = 0.7,
+    natural_freq_hz: float = 1.5,
+    moment_gain: float = 1.0,
+    max_angle_rad: float = math.radians(35.0),
+    initial_angle_rad: float = 0.0,
+    initial_velocity_radps: float = 0.0,
+    body_inertia_kg_m2: float | None = None,
+) -> dict[str, Any]:
+    """Damped tail response per spec section 11.
+
+    ``θ̈ + 2ζωθ̇ + ω²θ = k·M`` integrated with semi-implicit Euler on the
+    (possibly irregular) timeline. Proximal segments stay pelvis-coupled
+    (high natural frequency, high damping); call per chain link with the
+    parent angle as an additional drive to get progressive distal delay.
+
+    When ``body_inertia_kg_m2`` is given, the flight counter-rotation of
+    the body is propagated (``θ_body = −I_tail·θ_tail / I_body``) so total
+    L conservation is a computed track, not a label. On the ground the
+    same track applies with the remainder answered by contacts (the
+    caller logs it via :func:`bridge_impulse`).
+    """
+    times = [_finite(float(t), label="tail time") for t in times_s]
+    drive = [_finite(float(m), label="tail moment") for m in desired_moment]
+    if len(times) != len(drive) or len(times) < 2:
+        raise ContractError("tail ODE needs at least two aligned samples")
+    if any(b - a <= 0.0 for a, b in zip(times, times[1:])):
+        raise ContractError("tail timeline must be strictly increasing")
+    inertia = _finite(inertia_kg_m2, label="tail inertia")
+    zeta = _finite(damping_ratio, label="damping_ratio")
+    freq = _finite(natural_freq_hz, label="natural_freq_hz")
+    gain = _finite(moment_gain, label="moment_gain")
+    limit = _finite(max_angle_rad, label="max_angle_rad")
+    if inertia <= 0.0 or freq <= 0.0 or zeta < 0.0 or limit <= 0.0:
+        raise ContractError("tail ODE parameters are out of range")
+    omega_n = 2.0 * math.pi * freq
+    stiffness = inertia * omega_n * omega_n
+    damping = 2.0 * zeta * omega_n * inertia
+    theta = _finite(initial_angle_rad, label="initial_angle_rad")
+    omega = _finite(initial_velocity_radps, label="initial_velocity_radps")
+    samples: list[dict[str, float]] = []
+    clamped = 0
+    for i, (t, moment) in enumerate(zip(times, drive)):
+        if i > 0:
+            dt = times[i] - times[i - 1]
+            accel = (gain * moment - damping * omega - stiffness * theta) / inertia
+            omega += accel * dt
+            theta += omega * dt
+            if abs(theta) > limit:
+                theta = math.copysign(limit, theta)
+                omega = 0.0  # inelastic arrival at the anatomical stop
+                clamped += 1
+        samples.append({"time_s": t, "angle_rad": theta, "angular_velocity_radps": omega})
+    body_track = None
+    if body_inertia_kg_m2 is not None:
+        body_inertia = _finite(body_inertia_kg_m2, label="body_inertia")
+        if body_inertia <= 0.0:
+            raise ContractError("body inertia must be positive")
+        ratio = inertia / body_inertia
+        body_track = [
+            {"time_s": s["time_s"], "angle_rad": -ratio * s["angle_rad"],
+             "angular_velocity_radps": -ratio * s["angular_velocity_radps"]}
+            for s in samples
+        ]
+    return {
+        "samples": samples,
+        "clamped_samples": clamped,
+        "final_angle_rad": samples[-1]["angle_rad"],
+        "conservation": "body counter-rotation propagated" if body_track else "single-chain response only",
+        "body_counter_track": body_track,
     }
 
 
@@ -356,5 +445,6 @@ __all__ = [
     "continuity_error",
     "packet_from_mapping",
     "redistribute_tail_head",
+    "tail_ode_track",
     "turn_plan",
 ]
