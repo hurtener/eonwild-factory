@@ -17,7 +17,14 @@ jobs:
           cd /tmp/motion-validator
           sha256sum validator.tar.xz > SHA256SUMS
           tar -xf validator.tar.xz
-          ./gltf_validator --version > version.txt
+          python - <<'PY'
+          import pathlib, subprocess
+          # This CLI has no --version flag; no-input usage exits 1.
+          p = subprocess.run(['./gltf_validator'], text=True, capture_output=True)
+          text = p.stdout + p.stderr
+          assert p.returncode == 1 and 'version 2.0.0-dev.3.10' in text, text
+          pathlib.Path('version.txt').write_text(text)
+          PY
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: motion-official-validator
