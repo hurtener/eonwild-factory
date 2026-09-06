@@ -1,7 +1,8 @@
-"""Render actual candidate channels in Blender; optionally export FBX.
+"""Render actual candidate channels with Blender Cycles CPU; optionally FBX.
 
 blender -b --python tools/render_candidate.py -- --package out/run --output out/review
-No factory/experiment modules are imported. Transport is not Unity acceptance.
+No graphics driver, factory/experiment imports, or external scene assets are
+required. A preview or FBX transport never grants production/Unity approval.
 """
 from __future__ import annotations
 
@@ -28,17 +29,27 @@ def set_frame(scene, value):
     scene.frame_set(frame, subframe=value - frame)
 
 
+def area_light(scene, name, position, target, power, size):
+    data = bpy.data.lights.new(name, type="AREA")
+    data.energy, data.size = power, size
+    obj = bpy.data.objects.new(name, data)
+    scene.collection.objects.link(obj)
+    obj.location = position
+    obj.rotation_euler = (target - position).to_track_quat("-Z", "Y").to_euler()
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--package", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--view", choices=("side", "three-quarter"), default="three-quarter")
     parser.add_argument("--fps", type=int, default=24)
-    parser.add_argument("--width", type=int, default=768)
+    parser.add_argument("--width", type=int, default=640)
+    parser.add_argument("--samples", type=int, default=8)
     parser.add_argument("--fbx", action="store_true")
     args = parser.parse_args(sys.argv[sys.argv.index("--") + 1:])
-    if not 12 <= args.fps <= 120 or not 320 <= args.width <= 3840:
-        raise ValueError("invalid review resolution or frame rate")
+    if not 12 <= args.fps <= 120 or not 320 <= args.width <= 3840 or not 1 <= args.samples <= 256:
+        raise ValueError("invalid review resolution, samples or frame rate")
     package, output = args.package.resolve(), args.output.resolve()
     source = package / "in_place.glb"
     manifest = json.loads((package / "manifest.json").read_text())
@@ -66,7 +77,6 @@ def main():
     actions = list(bpy.data.actions)
     if not actions:
         raise ValueError("candidate import has no animation actions")
-    # Read the importer's actual frame origin; glTF t=0 is not assumed frame 1.
     start = min(float(action.frame_range[0]) for action in actions)
     end = max(float(action.frame_range[1]) for action in actions)
     if abs((end - start) / SOURCE_FPS - duration) > 2e-5:
@@ -97,8 +107,8 @@ def main():
     span = max(high - low)
     if span <= 0:
         raise ValueError("degenerate candidate bounds")
-    # Blender's glTF importer maps Y-up to Z-up: (x,y,z)->(x,-z,y).
     f = runtime["forward_axis"]
+    # Blender's glTF importer maps Y-up to Z-up: (x,y,z)->(x,-z,y).
     forward = Vector((f[0], -f[2], f[1])).normalized()
     lateral = Vector((0, 0, 1)).cross(forward).normalized()
     offset = lateral + (forward * .65 if args.view == "three-quarter" else Vector((0, 0, 0)))
@@ -114,43 +124,59 @@ def main():
     bpy.ops.mesh.primitive_plane_add(size=span * 8, location=(center.x, center.y, low.z - .005))
     ground = bpy.context.object
     ground.name = "ReviewGround"
-    ground.color = (.22, .24, .25, 1)
-    scene.render.engine = "BLENDER_WORKBENCH"
-    shading = scene.display.shading
-    shading.light = "STUDIO"
-    shading.color_type = "TEXTURE"
-    shading.show_shadows = True
-    shading.show_cavity = True
-    shading.cavity_type = "BOTH"
-    shading.background_type = "WORLD"
+    material = bpy.data.materials.new("ReviewGroundMaterial")
+    material.use_nodes = True
+    bsdf = material.node_tree.nodes.get("Principled BSDF")
+    bsdf.inputs["Base Color"].default_value = (.18, .20, .22, 1)
+    bsdf.inputs["Roughness"].default_value = .85
+    ground.data.materials.append(material)
     if scene.world is None:
         scene.world = bpy.data.worlds.new("ReviewWorld")
-    scene.world.color = (.12, .13, .15)
+    scene.world.use_nodes = True
+    background = scene.world.node_tree.nodes.get("Background")
+    background.inputs["Color"].default_value = (.32, .36, .42, 1)
+    background.inputs["Strength"].default_value = .45
+    area_light(scene, "Key", center + lateral * span * .7 + Vector((0, 0, span)), center, span * span * 90, span * .8)
+    area_light(scene, "Fill", center - lateral * span * .8 + forward * span * .4 + Vector((0, 0, span * .5)), center, span * span * 35, span)
+    # Workbench/Mesa segfaulted on headless CI. CPU Cycles avoids that driver
+    # path rather than silently skipping the missing frames or retrying errors.
+    scene.render.engine = "CYCLES"
+    scene.cycles.device = "CPU"
+    scene.cycles.samples = args.samples
+    scene.cycles.use_denoising = True
+    scene.cycles.seed = 0
+    scene.cycles.max_bounces = 3
+    scene.cycles.diffuse_bounces = 2
+    scene.cycles.glossy_bounces = 2
+    scene.render.use_persistent_data = True
     scene.render.resolution_x = args.width
     scene.render.resolution_y = int(args.width * 9 / 16) // 2 * 2
     scene.render.resolution_percentage = 100
     scene.render.image_settings.file_format = "PNG"
     scene.render.film_transparent = False
     for index in range(count):
-        # Scene remains 120 Hz. Preview sampling and encoding are explicitly
-        # index/fps seconds, with no action retiming or shifted first frame.
         set_frame(scene, start + index * SOURCE_FPS / args.fps)
         scene.render.filepath = str(frames / f"{index:05d}.png")
         bpy.ops.render.render(write_still=True)
     video = output / "preview.mp4"
     subprocess.run(["ffmpeg", "-y", "-framerate", str(args.fps), "-i", str(frames / "%05d.png"),
         "-c:v", "libx264", "-crf", "20", "-pix_fmt", "yuv420p", "-movflags", "+faststart", str(video)], check=True)
+    probe = json.loads(subprocess.check_output(["ffprobe", "-v", "error", "-count_frames", "-select_streams", "v:0",
+        "-show_entries", "stream=nb_read_frames,width,height", "-of", "json", str(video)], text=True))["streams"][0]
+    if int(probe["nb_read_frames"]) != count:
+        raise ValueError("encoded preview has missing or extra frames")
     cover = output / "cover.png"
     cover.write_bytes((frames / f"{count // 3:05d}.png").read_bytes())
     receipt = {"schema": "eonwild.motion.review-render.v1", "source_sha256": sha(source),
         "manifest_sha256": sha(package / "manifest.json"), "renderer_sha256": sha(Path(__file__)),
-        "blender": bpy.app.version_string, "fps": args.fps, "frames": count,
+        "blender": bpy.app.version_string, "engine": "CYCLES_CPU", "samples": args.samples,
+        "fps": args.fps, "frames": count, "verified_encoded_frames": int(probe["nb_read_frames"]),
         "source_duration_s": duration, "encoded_duration_s": count / args.fps,
         "source_frame_start": start, "source_frame_end": end, "source_fps": SOURCE_FPS,
         "timing": "native-time sampling; FBX retains full endpoint; video omits duplicate loop endpoint",
         "view": args.view, "media": {"preview.mp4": sha(video), "cover.png": sha(cover)}, "exports": exports,
         "visual_approval": "PENDING", "unity_import_validation": "NOT_RUN",
-        "presentation": "Workbench study; bbox presentation floor is not contact validation"}
+        "presentation": "CPU studio study; bbox presentation floor is not contact validation"}
     (output / "render-receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
     print(json.dumps(receipt, indent=2))
 

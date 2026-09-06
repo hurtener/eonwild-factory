@@ -1,11 +1,16 @@
-# macOS metadata.
-.DS_Store
-
-# Procedural engine local environments and generated runs.
-.venv/
-.eonwild/
+# Historical generated directories (tracked evidence remains tracked)
+build/
+candidate.json
+# All new factory outputs and review media
+out/
+*.crash.txt
+core
+core.*
 __pycache__/
 *.py[cod]
-build/
-dist/
+.DS_Store
+
+# Local Python toolchain and generated package metadata
+.venv/
+.pytest_cache/
 *.egg-info/

@@ -22,7 +22,7 @@ jobs:
         with:
           python-version: '3.13'
       - run: python -m pip install -e . pytest==9.1.1
-      - name: Engine and factory contracts (Blender-dependent tests are a separate job)
+      - name: Engine and factory contracts
         env:
           PYTHONPATH: src
         run: python -m pytest tests -q --ignore=tests/test_integration.py -k 'not test_zero_bounds_fails_blender_stage' --junitxml=/tmp/contracts.xml
@@ -34,7 +34,11 @@ jobs:
           retention-days: 14
   generate-and-review:
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        recipe: [run.v1, run.v2, sprint.v2, reverse-walk.v1]
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -44,23 +48,23 @@ jobs:
         with:
           python-version: '3.13'
       - run: python -m pip install -e . pytest==9.1.1
-      - name: Install Blender and its separate Python dependencies
+      - name: Install real Blender CPU renderer and separate Python dependencies
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y blender ffmpeg xvfb python3-numpy python3-jsonschema
-          blender -b --python-exit-code 1 --python-expr "import sys, numpy; print('BLENDER_PYTHON', sys.version, numpy.__version__)"
+          sudo apt-get install -y blender ffmpeg python3-numpy python3-jsonschema
       - name: Blender rejection regression
+        if: matrix.recipe == 'run.v1'
         env:
           PYTHONPATH: src
         run: |
           mkdir -p out/ci
           python -m pytest tests/test_negative.py -q -k test_zero_bounds_fails_blender_stage --junitxml=out/ci/blender-test.xml
-      - name: Generate actual motion and native-time previews
+      - name: Generate actual motion, FBX and native-time CPU preview
         env:
           PYTHONPATH: src
-          LIBGL_ALWAYS_SOFTWARE: '1'
-        run: python tools/build_showcase.py --output out/showcase --render
-      - name: Publish concise measured summary
+          RECIPE: ${{ matrix.recipe }}
+        run: python tools/build_showcase.py --output out/showcase --render --recipes "$RECIPE"
+      - name: Publish measured status
         if: always()
         shell: python
         run: |
@@ -71,11 +75,11 @@ jobs:
               summary = '\n'.join(f"{r['recipe']}: generation={r['generation']}; render={r.get('render','not run')}; acceptance={r.get('integrity',{}).get('technical_status','not measured')}" for r in data['results'])
               print(summary)
               with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as f:
-                  f.write('## Motion candidates\n\n' + summary + '\n\nCandidate generation is not visual approval or Unity validation.\n')
+                  f.write('## Motion candidates\n\n' + summary + '\n\nGeneration/rendering success is not mechanical or visual approval. Unity parity is not run.\n')
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
-          name: motion-review-previews
+          name: preview-${{ matrix.recipe }}
           path: |
             out/showcase/previews/*/preview.mp4
             out/showcase/previews/*/cover.png
@@ -86,7 +90,7 @@ jobs:
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
-          name: motion-candidate-packages
+          name: motion-${{ matrix.recipe }}
           path: |
             out/showcase/*/*.glb
             out/showcase/*/*.json

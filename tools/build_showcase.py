@@ -1,15 +1,13 @@
-"""Compile selected locked recipes without importing any experiment builder.
+"""Compile locked recipes and render actual motion without experiment imports.
 
 python tools/build_showcase.py --output out/showcase --render
-A successful build is not production acceptance. Every final gate is preserved
-in its package. Failed recipes are reported; they never become missing passes.
+Generation, final mechanical gates, rendering and approval stay separate.
 """
 from __future__ import annotations
 
 import argparse
 import json
 from pathlib import Path
-import shutil
 import subprocess
 import sys
 import traceback
@@ -35,18 +33,27 @@ def main():
         try:
             manifest = compile_recipe(root / f"recipes/heavy-biped/{name}.json", root=root, output=target)
             integrity = verify_package(target)
+            validation = json.loads((target / "validation.json").read_text())
+            print("FINAL_VALIDATION " + name + " " + json.dumps(validation, allow_nan=False), flush=True)
             result = {"recipe": name, "generation": "PASS", "integrity": integrity, "files": manifest["files"]}
             if args.render:
                 render = output / "previews" / name
                 command = [args.blender, "-b", "-t", "2", "--python-exit-code", "1", "--python", str(root / "tools/render_candidate.py"),
                     "--", "--package", str(target), "--output", str(render), "--fbx"]
-                if sys.platform.startswith("linux") and shutil.which("xvfb-run"):
-                    command = ["xvfb-run", "-a", *command]
-                process = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, timeout=600)
-                (output / (name + ".render.log")).write_text(process.stdout)
-                result["render"] = "PASS" if process.returncode == 0 else "FAIL"
-                if process.returncode:
-                    print(process.stdout[-4000:], flush=True)
+                try:
+                    process = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, timeout=900)
+                    log, returncode = process.stdout, process.returncode
+                except subprocess.TimeoutExpired as exc:
+                    raw = exc.stdout or b""
+                    log = raw.decode(errors="replace") if isinstance(raw, bytes) else raw
+                    log += "\nRENDER_TIMEOUT: no preview acceptance granted\n"
+                    returncode = -1
+                (output / (name + ".render.log")).write_text(log)
+                result["render"] = "PASS" if returncode == 0 else "FAIL"
+                if returncode:
+                    print(log[-5000:], flush=True)
+                else:
+                    result["render_receipt"] = json.loads((render / "render-receipt.json").read_text())
         except Exception as exc:
             result = {"recipe": name, "generation": "FAIL", "error": str(exc)}
             (output / (name + ".error.log")).write_text(traceback.format_exc())
@@ -56,4 +63,5 @@ def main():
     return 1 if any(r["generation"] != "PASS" or r.get("render") == "FAIL" for r in results) else 0
 
 
-if __name__ == "__main__": raise SystemExit(main())
+if __name__ == "__main__":
+    raise SystemExit(main())

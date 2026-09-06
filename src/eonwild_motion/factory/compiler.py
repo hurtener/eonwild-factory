@@ -1,15 +1,15 @@
-"""Candidate compilation from locked neutral geometry and versioned programs.
+"""Candidate compiler from locked neutral geometry and versioned programs.
 
-This is not the legacy approved-byte reproducer. It never imports experiments,
-requires an expected output hash, promotes itself, or equates proxy checks with
-skinned contact, visual approval, Unity parity, or biological correctness.
+Generation, final mechanical evidence, perceptual review and Unity parity are
+separate. This module never imports historical experiment builders or grants
+production approval. Baked GLBs are outputs, not the reusable program itself.
 """
 from __future__ import annotations
 
-from dataclasses import asdict
+import json
 from pathlib import Path
+import platform
 import shutil
-import subprocess
 import tempfile
 from typing import Any
 
@@ -23,6 +23,7 @@ from ..planning.grounded_gait import build_grounded_plan, load_grounded_gait
 from ..solve.airborne_gait import solve_airborne_gait, evaluate_airborne_skin_with_authority
 from ..solve.whole_body_gait_transition import _encode
 from .io import digest, frame_axes, json_bytes, locked_file, read_json, write_json
+from .quality import emitted_rotation_rates, require_supported_geometry, solver_checks
 from .source import geometry_height
 
 SCHEMA = "eonwild.motion.factory-recipe.v1"
@@ -73,7 +74,6 @@ def validate_plan(plan: dict, program: str) -> None:
 
 def event_track(plan: dict) -> list[dict]:
     events = []
-    # Initial support is state, not a fabricated landing impact at spawn.
     previous = {side: plan["samples"][0]["feet"][side]["contact"] for side in ("left", "right")}
     for row in plan["samples"][1:]:
         for side in previous:
@@ -108,7 +108,7 @@ def evaluate_emitted(glb: Glb, source: Glb, roles: dict, plan: dict, forward: An
     base_root = np.asarray(_world_position(neutral[root]))
     base_t, base_s = np.asarray(source.rest_translation), np.asarray(source.rest_scale)
     protected = [i for i in range(len(source.nodes)) if i not in (root, pelvis)]
-    max_root_error = max_attachment = max_scale_error = max_tip_drift = max_seam = 0.0
+    max_root_error = max_attachment = max_scale_error = max_tip_drift = 0.0
     first_r = last_r = None
     previous_tips, previous_row = {}, None
     forward = np.asarray(forward, dtype=float)
@@ -125,9 +125,8 @@ def evaluate_emitted(glb: Glb, source: Glb, roles: dict, plan: dict, forward: An
         max_attachment = max(max_attachment, float(np.max(np.abs(t[protected] - base_t[protected]))))
         max_scale_error = max(max_scale_error, float(np.max(np.abs(s - base_s))))
         worlds = _world_matrices(glb, t.tolist(), r.tolist(), s.tolist())
-        actual_root = np.asarray(_world_position(worlds[root]))
         expected = base_root + forward * (0 if in_place else row["root_forward_m"])
-        max_root_error = max(max_root_error, float(np.linalg.norm(actual_root - expected)))
+        max_root_error = max(max_root_error, float(np.linalg.norm(np.asarray(_world_position(worlds[root])) - expected)))
         for side in ("left", "right"):
             tips = np.asarray([_world_position(worlds[glb.name_to_node[chain[-1]]]) for chain in roles["legs"][side]["toeChains"]])
             if in_place:
@@ -156,27 +155,36 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
     root, recipe_path, output = root.resolve(), recipe_path.resolve(), output.resolve()
     if output.exists():
         raise ContractError("candidate output already exists; never overwrite an existing take")
+    recipe_bytes = recipe_path.read_bytes()
     recipe, paths = load_recipe(recipe_path, root)
-    source = Glb(paths["source"])
+    if json.loads(recipe_bytes) != recipe:
+        raise ContractError("recipe changed during input resolution")
+    # Compile only from bytes whose hashes were checked, not later rereads.
+    snapshots = {name: path.read_bytes() for name, path in paths.items()}
+    for name, raw in snapshots.items():
+        if digest(raw) != recipe[name]["sha256"]:
+            raise ContractError(f"input changed during snapshot: {name}")
+    source = Glb.from_bytes(snapshots["source"])
+    require_supported_geometry(source)
     if source.document.get("animations"):
         raise ContractError("factory source must be admitted neutral geometry, not a prior animation")
     geometry = source.document.get("extras", {}).get("eonwildGeometry", {})
     forward, up = frame_axes(recipe["forward_axis"], recipe["up_axis"])
-    if not np.allclose(geometry.get("forward_axis", []), forward) or not np.allclose(geometry.get("up_axis", []), up):
+    declared_forward, declared_up = frame_axes(geometry.get("forward_axis"), geometry.get("up_axis"))
+    if not np.allclose(declared_forward, forward) or not np.allclose(declared_up, up):
         raise ContractError("recipe coordinate frame differs from admitted geometry")
-    roles = read_json(paths["rig"])["roles"]
-    profile = read_json(paths["program_profile"])
+    roles = json.loads(snapshots["rig"])["roles"]
+    profile = json.loads(snapshots["program_profile"])
     height = geometry_height(source, roles, up)
     if recipe["program"] == "airborne_gait":
         gait = load_airborne_gait(profile)
         plan = build_airborne_plan(gait, height)
-        # Ensure the program identity is explicit even for historical planners.
         plan["program"] = "airborne_gait"
     else:
         grounded = load_grounded_gait(profile)
         plan = build_grounded_plan(grounded, height)
-        # This carrier contains only limb-emitter articulation settings. Its
-        # airborne schedule is never evaluated when plan_override is supplied.
+        # Only articulation settings are reused. plan_override prevents the
+        # airborne support schedule from being evaluated for grounded walking.
         gait = AirborneGait(step_period_s=grounded.step_period_s, cycles=grounded.cycles,
                            sample_hz=grounded.sample_hz, swing_hip_lift_degrees=0)
     validate_plan(plan, recipe["program"])
@@ -184,43 +192,44 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
         semantic_roles=roles, gait=gait, up_axis=tuple(up), forward_axis=tuple(forward),
         plan_override=plan, legacy_overlay=False)
     root_raw, inplace_raw = (tag_output(raw, recipe, plan, mode) for raw, mode in ((root_raw, "root_motion"), (inplace_raw, "in_place")))
-    evaluated = {mode: evaluate_emitted(Glb.from_bytes(raw), source, roles, plan, forward, in_place=(mode == "in_place"))
-                 for mode, raw in (("root_motion", root_raw), ("in_place", inplace_raw))}
-    surface: dict = {"verdict": "NOT_MEASURED", "reason": "no bound skinned contact profile"}
-    if "contact_profile" in paths:
+    outputs = {"root_motion": Glb.from_bytes(root_raw), "in_place": Glb.from_bytes(inplace_raw)}
+    evaluated = {mode: evaluate_emitted(glb, source, roles, plan, forward, in_place=(mode == "in_place")) for mode, glb in outputs.items()}
+    rates = {mode: emitted_rotation_rates(glb, gait.max_joint_angular_velocity_degrees_per_s) for mode, glb in outputs.items()}
+    feasibility = solver_checks(receipt)
+    surface = {"verdict": "NOT_MEASURED", "reason": "no bound skinned contact profile"}
+    if "contact_profile" in snapshots:
         try:
-            facts = evaluate_airborne_skin_with_authority(Glb.from_bytes(root_raw),
-                contact_profile=read_json(paths["contact_profile"]), gait=gait, body_height_m=height,
+            facts = evaluate_airborne_skin_with_authority(outputs["root_motion"],
+                contact_profile=json.loads(snapshots["contact_profile"]), gait=gait, body_height_m=height,
                 clip_name=recipe["id"] + ".root_motion", plan_override=plan)
             surface = {"verdict": facts["contact_authority_v1"]["verdict"], "authority": facts["contact_authority_v1"],
                        "maximum_penetration_m": facts["maximum_foot_surface_penetration_m"],
                        "planned_stance_without_contact_samples": facts["planned_stance_without_surface_contact_samples"]}
         except (ContractError, ValueError, KeyError, StopIteration) as exc:
-            # A failed measurement is not zero skate or a pass.
             surface = {"verdict": "FAIL", "reason": f"final skinned evaluation failed: {exc}"}
-    technical = all(row["status"] == "PASS" for row in evaluated.values()) and surface["verdict"] == "PASS"
+    technical = (all(row["status"] == "PASS" for row in evaluated.values()) and
+                 all(row["status"] == "PASS" for row in rates.values()) and feasibility["status"] == "PASS" and surface["verdict"] == "PASS")
     validation = {"schema": "eonwild.motion.factory-validation.v1", "technical_status": "PASS" if technical else "BLOCKED",
-                  "outputs": evaluated, "skinned_contact": surface, "visual_review": "PENDING", "unity_parity": "NOT_RUN",
-                  "production_approved": False}
-    lock = {"schema": "eonwild.motion.factory-lock.v1", "recipe_sha256": digest(recipe_path.read_bytes()),
+        "outputs": evaluated, "rotation_rates": rates, "solver_feasibility": feasibility, "skinned_contact": surface,
+        "visual_review": "PENDING", "unity_parity": "NOT_RUN", "production_approved": False}
+    lock = {"schema": "eonwild.motion.factory-lock.v1", "recipe_sha256": digest(recipe_bytes),
             "inputs": {name: recipe[name] for name in paths}, "engine_files": engine_fingerprint(),
-            "python_numpy": np.__version__}
+            "tools": {"python": platform.python_version(), "numpy": np.__version__}}
     state = {"schema": "eonwild.motion.runtime-data.v1", "program": recipe["program"], "family": recipe["family"],
-             "units": "m", "time_units": "s", "handedness": "right", "forward_axis": forward.tolist(), "up_axis": up.tolist(),
-             "root_authority": "choose motor OR applied root motion, never both", "rig_roles": roles,
-             "duration_s": plan["samples"][-1]["time_s"], "loop": True,
-             "initial_contacts": {side: plan["samples"][0]["feet"][side]["contact"] for side in ("left", "right")},
-             "events": event_track(plan), "plan_sha256": digest(json_bytes(plan)),
-             "world_interaction_authority": "runtime decides contact, damage, grip resistance and release",
-             "unity_import_status": "NOT_VERIFIED"}
+        "units": "m", "time_units": "s", "handedness": "right", "forward_axis": forward.tolist(), "up_axis": up.tolist(),
+        "root_authority": "choose motor OR applied root motion, never both", "rig_roles": roles,
+        "duration_s": plan["samples"][-1]["time_s"], "loop": True,
+        "initial_contacts": {side: plan["samples"][0]["feet"][side]["contact"] for side in ("left", "right")},
+        "events": event_track(plan), "plan_sha256": digest(json_bytes(plan)),
+        "world_interaction_authority": "runtime decides contact, damage, grip resistance and release",
+        "unity_import_status": "NOT_VERIFIED"}
     payloads = {"root_motion.glb": root_raw, "in_place.glb": inplace_raw, "plan.json": json_bytes(plan),
-                "solver-receipt.json": json_bytes(receipt), "runtime.json": json_bytes(state),
-                "validation.json": json_bytes(validation), "inputs.lock.json": json_bytes(lock),
-                "recipe.json": recipe_path.read_bytes()}
+        "solver-receipt.json": json_bytes(receipt), "runtime.json": json_bytes(state),
+        "validation.json": json_bytes(validation), "inputs.lock.json": json_bytes(lock), "recipe.json": recipe_bytes}
     manifest = {"schema": "eonwild.motion.factory-package.v1", "id": recipe["id"], "version": recipe["version"],
-                "status": "CANDIDATE", "production_approved": False, "technical_status": validation["technical_status"],
-                "files": {name: digest(data) for name, data in payloads.items()},
-                "claims": {"physical": False, "scientific": False, "biological": False}}
+        "status": "CANDIDATE", "production_approved": False, "technical_status": validation["technical_status"],
+        "files": {name: digest(data) for name, data in payloads.items()},
+        "claims": {"physical": False, "scientific": False, "biological": False}}
     output.parent.mkdir(parents=True, exist_ok=True)
     stage = Path(tempfile.mkdtemp(prefix=".motion-stage-", dir=output.parent))
     try:
@@ -247,5 +256,4 @@ def verify_package(path: Path) -> dict:
     if manifest["technical_status"] != validation["technical_status"]:
         raise ContractError("manifest and validation disagree")
     return {"integrity": "PASS", "technical_status": validation["technical_status"],
-            "visual_review": validation["visual_review"], "unity_parity": validation["unity_parity"],
-            "production_approved": False}
+            "visual_review": validation["visual_review"], "unity_parity": validation["unity_parity"], "production_approved": False}
