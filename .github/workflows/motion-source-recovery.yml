@@ -10,16 +10,38 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - name: Recover recorded Blender 5.2.0 release
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Inspect existing recovery data without executing or applying it
+        shell: python
         run: |
-          mkdir -p /tmp/motion-blender-52
-          cd /tmp/motion-blender-52
-          curl --fail --location --retry 3 https://download.blender.org/release/Blender5.2/blender-5.2.0-linux-x64.tar.xz -o blender-5.2.0-linux-x64.tar.xz
-          curl --fail --location --retry 3 https://download.blender.org/release/Blender5.2/blender-5.2.0.sha256 -o blender-5.2.0.sha256
-          grep 'blender-5.2.0-linux-x64.tar.xz$' blender-5.2.0.sha256 | sha256sum --check
+          import base64, hashlib, lzma, pathlib, subprocess
+          print('REMOTE_EXECUTION_READABLE')
+          print(subprocess.check_output(['git','rev-parse','HEAD'], text=True))
+          print(subprocess.check_output(['git','log','-12','--oneline'], text=True))
+          print('AGENT_FILES')
+          print(subprocess.check_output(['git','ls-files','*AGENTS.md'], text=True))
+          print('ACTIVE_SOURCE_INVENTORY')
+          for directory in ('src/eonwild_motion/planning','src/eonwild_motion/solve','src/eonwild_motion/factory','recipes','catalog','tools','tests'):
+              for p in sorted(pathlib.Path(directory).rglob('*')):
+                  if p.is_file():
+                      print(p.as_posix(),p.stat().st_size)
+          out=pathlib.Path('out/recovery');out.mkdir(parents=True,exist_ok=True)
+          parts=sorted(pathlib.Path('.github').glob('motion-session-part-*.b64'))
+          print('PRESERVED_PARTS',[(p.name,p.stat().st_size) for p in parts])
+          raw=base64.b64decode(''.join(p.read_text().strip() for p in parts),validate=True)
+          print('COMPRESSED_SHA256',hashlib.sha256(raw).hexdigest())
+          decoder=lzma.LZMADecompressor(memlimit=256*1024*1024)
+          prefix=decoder.decompress(raw,max_length=16*1024*1024)
+          (out/'decompressed-prefix.bin').write_bytes(prefix)
+          print('DECOMPRESSED_BYTES',len(prefix),'COMPLETE_STREAM',decoder.eof)
+          print('PREFIX_BEGIN')
+          print(prefix[:28000].decode('utf-8',errors='replace'))
+          print('PREFIX_END')
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: motion-recorded-blender-52
-          path: /tmp/motion-blender-52
-          compression-level: 0
-          retention-days: 3
+          name: preserved-motion-recovery-inspection
+          path: out/recovery
+          retention-days: 7
