@@ -1,10 +1,10 @@
 {
   "approvedOutput": {
-    "path": "procedural-animation-toolkit(v8.2)/asset/tarbosaurus_v8_2_approved.glb",
+    "path": "legacy/capsules/v8.2/asset/tarbosaurus_v8_2_approved.glb",
     "sha256": "a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5"
   },
   "contactEvidence": {
-    "path": "procedural-animation-toolkit(v8.2)/evidence/structural-mechanical.json",
+    "path": "legacy/capsules/v8.2/evidence/structural-mechanical.json",
     "sha256": "b5a0e161e819311b79038130a4ce5a30927938237b0d8a06713d67d6bb1239ed"
   },
   "documents": {
@@ -26,7 +26,7 @@
     "rig": {
       "id": "hero-theropod-v8",
       "path": "catalog/rigs/hero-theropod-v8.semantic-rig.json",
-      "sha256": "a4ab9ee2a7547a513a1b9b4d564de78865f4ab369beec164fe34f40c02fa9980"
+      "sha256": "aaedb5217d15e5af2ee376ca0c2772385c6429bdf8bdffbefefebadeea2f2f1c"
     },
     "species": {
       "id": "hero-theropod",
@@ -35,7 +35,7 @@
     }
   },
   "input": {
-    "path": "procedural-animation-toolkit(v8.2)/input/tarbosaurus_v8_2_iteration_b_base.glb",
+    "path": "legacy/capsules/v8.2/input/tarbosaurus_v8_2_iteration_b_base.glb",
     "sha256": "bfe8e833721f1dc0b8b4a1df72a6ea933debb1c6d76ac6d7970ae3ed6c8f4bc2"
   },
   "layers": [
@@ -45,16 +45,16 @@
       "sha256": "e2bd2e21b99f7e17527a4a5eade909c9a67935b06b71d3e8a96756ab2c2300b8"
     }
   ],
-  "lockSha256": "eba6d05608e5b34c408dfeed5f9440ac85444b441d380c9279688e76d5c280ec",
+  "lockSha256": "5c3926022afd594364844eed5120f781ec6e9914dfa6d721b2760cd0d8b9f23f",
   "profile": {
     "id": "v8.2",
     "path": "profiles/v8.2/profile.json",
-    "sha256": "37a26e006700350bc42d40eeb50f93bb4fa63dae98c98db2423a8eb3c9157c9b",
+    "sha256": "721952e556ed900149f585bc129c137df6fc9a60f6478890b343adbeb2df25c9",
     "version": 1
   },
   "schema": "eonwild.motion.resolved-profile.v1",
   "sourceManifest": {
-    "path": "procedural-animation-toolkit(v8.2)/RELEASE_MANIFEST.json",
+    "path": "legacy/capsules/v8.2/RELEASE_MANIFEST.json",
     "sha256": "51f493aaae13fe46d8b6d3600ec1a8de117c2ee39beb6e05159398cacb21fada"
   }
 }

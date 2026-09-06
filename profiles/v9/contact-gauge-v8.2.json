@@ -9,7 +9,7 @@
     "forward_axis": "-Z"
   },
   "source": {
-    "path": "procedural-animation-toolkit(v8.2)/asset/tarbosaurus_v8_2_approved.glb",
+    "path": "legacy/capsules/v8.2/asset/tarbosaurus_v8_2_approved.glb",
     "sha256": "a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5",
     "clips": {
       "root_motion": "PROC_WALK_RELAXED_V8_1_RESPIN_ROOTMOTION",

@@ -1,0 +1,34 @@
+{
+  "approval_evidence": "reports/V9-THREE-MOTION-REVIEW-003/README.md",
+  "schema": "eonwild.motion.baselines.v1",
+  "source_commit": "8c1f5c2bfea481a56916ee6e0bfa74961ca0d141",
+  "takes": [
+    {
+      "motion": "run",
+      "profile": {
+        "path": "build/V9-AIRBORNE-RUN-001/iteration-010-breathing/candidate/engineering-profile.json",
+        "sha256": "5a271b25e0e3a85361dbffcb619d727af6128cb7888417fcca1ce6eace462f81"
+      },
+      "reference_commit": "8c1f5c2bfea481a56916ee6e0bfa74961ca0d141",
+      "status": "user-approved historical take; approval does not transfer to new recipe"
+    },
+    {
+      "motion": "sprint",
+      "profile": {
+        "path": "build/V9-AIRBORNE-SPRINT-001/review-candidate-006/candidate/engineering-profile.json",
+        "sha256": "4f0e5fd0bb53ef40881398db6f67c02e9b858b25a181c67ac186ff4414772553"
+      },
+      "reference_commit": "8c1f5c2bfea481a56916ee6e0bfa74961ca0d141",
+      "status": "user-approved historical take; approval does not transfer to new recipe"
+    },
+    {
+      "artifact": {
+        "path": "build/V9-FEEDING-REVIEW-003/feeding.glb",
+        "sha256": "8f70dcab8e8b56035ed0787ca15674166575213f098ec9c6579e6e8350b6d47b"
+      },
+      "motion": "feeding",
+      "reference_commit": "8c1f5c2bfea481a56916ee6e0bfa74961ca0d141",
+      "status": "user-approved Feeding003, unchanged"
+    }
+  ]
+}

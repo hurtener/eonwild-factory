@@ -1,21 +1,77 @@
 {
-  "schema": "eonwild.motion.release-profile.v1",
+  "approvedOutput": {
+    "path": "assets/sha256/b5fc582e3bae3b2708735e7ae68cc31da65599f6d155d3b6d089a44ed5517d03.glb",
+    "sha256": "b5fc582e3bae3b2708735e7ae68cc31da65599f6d155d3b6d089a44ed5517d03"
+  },
+  "contactEvidence": {
+    "path": "reports/PROCEDURAL-ENGINE-V8-3/evidence/machine-evaluation.json",
+    "sha256": "c7b679cb0d048bcf74c620f67f853596d780d35fb32b7711ceb0df4c79db3ffc"
+  },
+  "family": {
+    "path": "catalog/families/heavy-predatory-biped.v1.json",
+    "sha256": "b642c2de2570ba7ba79be5dd585a1a2281e2c9c0922d24c7ad6705a47ac891b2"
+  },
   "id": "v8.3",
-  "version": 1,
-  "rig": {"path": "catalog/rigs/hero-theropod-v8_3.semantic-rig.json", "sha256": "35bbcc97654057dc57d2cb7153457c4836bc78d21170f67c33e112f808c27b99"},
-  "family": {"path": "catalog/families/heavy-predatory-biped.v1.json", "sha256": "b642c2de2570ba7ba79be5dd585a1a2281e2c9c0922d24c7ad6705a47ac891b2"},
-  "species": {"path": "catalog/species/hero-theropod.v8_3.json", "sha256": "fa1b529bd9f756a00e362ef4dd5c4ca4092c65578c00917aa71754283d36a54a"},
-  "motion": {"path": "catalog/motions/relaxed-walk.v8_3.json", "sha256": "af89ba695a52da2e2eea1d882d4121a913ad125ec74cbcde765db44b836c842c"},
+  "input": {
+    "path": "legacy/capsules/v8.2/asset/tarbosaurus_v8_2_approved.glb",
+    "sha256": "a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5"
+  },
   "layers": [
-    {"path": "catalog/layers/pelvis-balance-pre-ik.v1.json", "sha256": "28df28ed850c86242ea5a8fd2ccb843e29383502f4aa5852ed2388508d7919f2"},
-    {"path": "catalog/layers/leg-contact-resolve.v1.json", "sha256": "6a79a6c9ed6e2bbb8c3c32bfecb2d09a58b35e1f8de27ca02c051ae9ba6676b3"},
-    {"path": "catalog/layers/chest-tail-head-stabilization.v1.json", "sha256": "57db7a58308fb8364611588d4aee5c9a5b11cef99d254ea8eaedde36a26f59d0"}
+    {
+      "path": "catalog/layers/pelvis-balance-pre-ik.v1.json",
+      "sha256": "28df28ed850c86242ea5a8fd2ccb843e29383502f4aa5852ed2388508d7919f2"
+    },
+    {
+      "path": "catalog/layers/leg-contact-resolve.v1.json",
+      "sha256": "6a79a6c9ed6e2bbb8c3c32bfecb2d09a58b35e1f8de27ca02c051ae9ba6676b3"
+    },
+    {
+      "path": "catalog/layers/chest-tail-head-stabilization.v1.json",
+      "sha256": "57db7a58308fb8364611588d4aee5c9a5b11cef99d254ea8eaedde36a26f59d0"
+    }
   ],
-  "renderSet": {"path": "catalog/render-sets/locomotion-review.v1.json", "sha256": "ae2379aaeb4d980a15cb22510e0c013e5f155da46e8182b4598022b362971d62"},
-  "input": {"path": "procedural-animation-toolkit(v8.2)/asset/tarbosaurus_v8_2_approved.glb", "sha256": "a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5"},
-  "approvedOutput": {"path": "assets/sha256/b5fc582e3bae3b2708735e7ae68cc31da65599f6d155d3b6d089a44ed5517d03.glb", "sha256": "b5fc582e3bae3b2708735e7ae68cc31da65599f6d155d3b6d089a44ed5517d03"},
-  "sourceRelease": {"root": "procedural-animation-toolkit(v8.2)", "manifest": {"path": "procedural-animation-toolkit(v8.2)/RELEASE_MANIFEST.json", "sha256": "51f493aaae13fe46d8b6d3600ec1a8de117c2ee39beb6e05159398cacb21fada"}},
-  "contactEvidence": {"path": "reports/PROCEDURAL-ENGINE-V8-3/evidence/machine-evaluation.json", "sha256": "c7b679cb0d048bcf74c620f67f853596d780d35fb32b7711ceb0df4c79db3ffc"},
-  "validators": ["schema", "hash", "source-package", "hierarchy", "accessor", "timeline", "unchanged-region", "gltf-validator", "normative-evidence@1#eonwild.motion.v8_3_evaluation.v1", "final-skinned-contact", "upper-counterbalance"],
-  "provenance": {"status": "working-candidate", "source": "immutable V8.2 output plus three declared semantic V8.3 balance layers", "stableUnchanged": true, "selectedScale": 0.5}
+  "motion": {
+    "path": "catalog/motions/relaxed-walk.v8_3.json",
+    "sha256": "af89ba695a52da2e2eea1d882d4121a913ad125ec74cbcde765db44b836c842c"
+  },
+  "provenance": {
+    "selectedScale": 0.5,
+    "source": "immutable V8.2 output plus three declared semantic V8.3 balance layers",
+    "stableUnchanged": true,
+    "status": "working-candidate"
+  },
+  "renderSet": {
+    "path": "catalog/render-sets/locomotion-review.v1.json",
+    "sha256": "ae2379aaeb4d980a15cb22510e0c013e5f155da46e8182b4598022b362971d62"
+  },
+  "rig": {
+    "path": "catalog/rigs/hero-theropod-v8_3.semantic-rig.json",
+    "sha256": "35bbcc97654057dc57d2cb7153457c4836bc78d21170f67c33e112f808c27b99"
+  },
+  "schema": "eonwild.motion.release-profile.v1",
+  "sourceRelease": {
+    "manifest": {
+      "path": "legacy/capsules/v8.2/RELEASE_MANIFEST.json",
+      "sha256": "51f493aaae13fe46d8b6d3600ec1a8de117c2ee39beb6e05159398cacb21fada"
+    },
+    "root": "legacy/capsules/v8.2"
+  },
+  "species": {
+    "path": "catalog/species/hero-theropod.v8_3.json",
+    "sha256": "fa1b529bd9f756a00e362ef4dd5c4ca4092c65578c00917aa71754283d36a54a"
+  },
+  "validators": [
+    "schema",
+    "hash",
+    "source-package",
+    "hierarchy",
+    "accessor",
+    "timeline",
+    "unchanged-region",
+    "gltf-validator",
+    "normative-evidence@1#eonwild.motion.v8_3_evaluation.v1",
+    "final-skinned-contact",
+    "upper-counterbalance"
+  ],
+  "version": 1
 }

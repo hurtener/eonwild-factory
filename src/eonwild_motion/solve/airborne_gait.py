@@ -199,13 +199,13 @@ def _validate_plan_override(plan: Mapping[str, Any], gait: AirborneGait) -> dict
             if not isinstance(foot["contact"], bool):
                 raise ContractError("plan override foot contact must be bool")
     out = dict(plan)
-    out["schema"] = "eonwild.motion.v9.airborne-gait-plan.v1"
-    out["program"] = "airborne_gait"
+    out.setdefault("schema", "eonwild.motion.v9.airborne-gait-plan.v1")
+    out.setdefault("program", "airborne_gait")
     out.setdefault("parameters", {})
     return out
 
 
-def solve_airborne_gait(source: Glb, *, source_clip: str, semantic_roles: Mapping[str, Any], gait: AirborneGait, up_axis: tuple[float, float, float] = (0, 1, 0), plan_override: Mapping[str, Any] | None = None) -> tuple[bytes, bytes, dict[str, Any], dict[str, Any]]:
+def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles: Mapping[str, Any], gait: AirborneGait, up_axis: tuple[float, float, float] = (0, 1, 0), plan_override: Mapping[str, Any] | None = None, forward_axis: tuple[float, float, float] | None = None, legacy_overlay: bool = True) -> tuple[bytes, bytes, dict[str, Any], dict[str, Any]]:
     """Emit one GLB authority and its derived in-place projection.
 
     Source supplies rig/skin/rest pose and body geometry only; source animation
@@ -238,12 +238,22 @@ def solve_airborne_gait(source: Glb, *, source_clip: str, semantic_roles: Mappin
         for chain in chains:
             if source.parents[chain[0]] != legs[side][-1] or any(source.parents[b] != a for a, b in zip(chain, chain[1:])):
                 raise ContractError("semantic toe chains must follow actual foot-parent topology")
-    tracks, source_times = _clip_state(source, source_clip)
-    translations, rotations, scales = _pose(source, tracks, 0)
-    worlds = _world_matrices(source, translations, rotations, scales)
-    final_worlds = _world_matrices(source, *_pose(source, tracks, len(source_times) - 1))
     up = _unit(up_axis)
-    travel = np.asarray(_world_position(final_worlds[root])) - np.asarray(_world_position(worlds[root]))
+    if source_clip is None:
+        if forward_axis is None:
+            raise ContractError("neutral geometry requires an explicit forward axis")
+        translations, rotations, scales = source.rest_translation, source.rest_rotation, source.rest_scale
+        worlds = _world_matrices(source, translations, rotations, scales)
+        travel = np.asarray(forward_axis, dtype=float)
+    else:
+        tracks, source_times = _clip_state(source, source_clip)
+        translations, rotations, scales = _pose(source, tracks, 0)
+        worlds = _world_matrices(source, translations, rotations, scales)
+        final_worlds = _world_matrices(source, *_pose(source, tracks, len(source_times) - 1))
+        travel = (np.asarray(forward_axis, dtype=float) if forward_axis is not None else
+                  np.asarray(_world_position(final_worlds[root])) - np.asarray(_world_position(worlds[root])))
+    if travel.shape != (3,) or not np.isfinite(travel).all():
+        raise ContractError("forward axis must be a finite three-vector")
     forward = _unit(travel - up * (travel @ up))
     lateral = _unit(np.cross(up, forward))
     origin = np.asarray(_world_position(worlds[pelvis]))
@@ -254,9 +264,10 @@ def solve_airborne_gait(source: Glb, *, source_clip: str, semantic_roles: Mappin
     body_height = float(origin @ up - ground)
     if body_height <= 0:
         raise ContractError("semantic pelvis must be above the toe plane")
-    plan = build_airborne_plan(gait, body_height)
-    if plan_override is not None:
-        plan = _validate_plan_override(plan_override, gait)
+    # Behavior programs own support choreography; an override never runs
+    # the airborne planner. Legacy calls retain their original default path.
+    plan = (build_airborne_plan(gait, body_height) if plan_override is None else
+            _validate_plan_override(plan_override, gait))
     body_response = driven_body_response(gait, plan, roles)
     base_t, base_r, base_s = translations[:], rotations[:], scales[:]
     base_w = worlds
@@ -293,7 +304,7 @@ def solve_airborne_gait(source: Glb, *, source_clip: str, semantic_roles: Mappin
                 n = source.name_to_node[name]
                 axis = _qrotate(_qinv(_rotation_from_matrix(base_w[n])), tuple(lateral))
                 rot[n] = _qmul(base_r[n], _qrotvec(tuple(np.asarray(axis) * math.radians(degrees))))
-        else:
+        elif legacy_overlay:
             # Preserve the pre-existing default path for accepted artifacts and
             # other profiles. The new driven response is explicitly opt-in.
             pulse = math.sin(2 * math.pi * row["time_s"] / gait.step_period_s)

@@ -1,0 +1,65 @@
+{
+  "admission": {
+    "admission": {
+      "claim": "calibrated geometry; no behavioral or biological validation",
+      "forward_axis": [
+        0.03893162055641767,
+        0.0,
+        0.9992418770852486
+      ],
+      "reference_clip": "PROC_WALK_RELAXED_V8_1_RESPIN_ROOTMOTION",
+      "schema": "eonwild.motion.geometry.v1",
+      "up_axis": [
+        0.0,
+        1.0,
+        0.0
+      ]
+    },
+    "neutral_geometry": {
+      "path": "assets/sha256/044a8be907eb650fa71c613f19655eb10a0dd23c1d6bce86dfef93cd8d9575f6.glb",
+      "sha256": "044a8be907eb650fa71c613f19655eb10a0dd23c1d6bce86dfef93cd8d9575f6"
+    },
+    "source": {
+      "path": "build/V9-NARROW-GAUGE-WALK-002/sweep-run-016-v4-skinned-authority/sweep-0p34000000000000002-fa4aa9445c12/narrow-gauge-walk-root_motion.glb",
+      "sha256": "b54e3740ea451927b3b812c1be3f4ca6146cc369ad1313be7f08edd5ca741cd3"
+    }
+  },
+  "claim": "baseline consolidation, not complete V9 or Unity acceptance",
+  "retirement": {
+    "relocated_capsule": {
+      "from": "procedural-animation-toolkit(v8.2)",
+      "to": "legacy/capsules/v8.2",
+      "unchanged_files": {
+        "README.md": "b4e544a75f0a3680f5913516bf71f724816405b2e006688d45d2c42998a3497c",
+        "RELEASE_MANIFEST.json": "51f493aaae13fe46d8b6d3600ec1a8de117c2ee39beb6e05159398cacb21fada",
+        "asset/tarbosaurus_v8_2_approved.glb": "a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5",
+        "config/release.json": "3e7daad5c0453674a0d24df181b0e8c9a57e470378b0ca05400779060ac4a3ed",
+        "evidence/official-balance.json": "6a78aa26b14bb5e9248b873c4be6976a1ddc113121fa0fa84fe13cc8e0447219",
+        "evidence/reproduction-verify.json": "be8b1ecf1da9503d43346edd41b4a12ae19794189253b2bcd55b0d602e08f8e1",
+        "evidence/structural-mechanical.json": "b5a0e161e819311b79038130a4ce5a30927938237b0d8a06713d67d6bb1239ed",
+        "input/tarbosaurus_v8_2_iteration_b_base.glb": "bfe8e833721f1dc0b8b4a1df72a6ea933debb1c6d76ac6d7970ae3ed6c8f4bc2",
+        "media/v8-1-approved-vs-v8-2-threeq.mp4": "5e11692890b18166cea169c61894c0cb3824a69fea79c932ebfffbba00045d10",
+        "media/walk-relaxed-v8-2-side.mp4": "a29a14dcbcab3b6963c03966755e274419acb43704f26a71da2b055f0eaa8bac",
+        "scripts/glb_math.py": "91011b2646f3ef05bcbcf7e25956669374da9b9dfe99b08caaa01be2ffb95ce5",
+        "scripts/release_generate.py": "9ef1755d651261330cc87e56a876def6333bcb8d4dc7ea063f3f4068d04c0dc4",
+        "scripts/verify_release.py": "ba0437a474f8af1444956e17c6045a31c9165ab04d22f5dc7cc5742f2b43d45c"
+      }
+    },
+    "removed": [
+      {
+        "bytes": 260629613,
+        "files": 216,
+        "path": "procedural-animation-toolkit(v8)",
+        "recover_from_commit": "8c1f5c2bfea481a56916ee6e0bfa74961ca0d141"
+      },
+      {
+        "bytes": 798577743,
+        "files": 303,
+        "path": "procedural-animation-toolkit(v8.1)",
+        "recover_from_commit": "8c1f5c2bfea481a56916ee6e0bfa74961ca0d141"
+      }
+    ]
+  },
+  "schema": "eonwild.motion.migration.v1",
+  "source_commit": "8c1f5c2bfea481a56916ee6e0bfa74961ca0d141"
+}

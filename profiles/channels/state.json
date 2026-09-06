@@ -1,35 +1,35 @@
 {
-  "schema": "eonwild.motion.channel-state.v1",
   "engineVersion": "0.1.0",
   "generation": 1,
+  "schema": "eonwild.motion.channel-state.v1",
   "stable": {
-    "revision": 1,
     "historyId": "stable-0001",
     "profile": {
       "path": "profiles/v8.2/profile.json",
-      "sha256": "37a26e006700350bc42d40eeb50f93bb4fa63dae98c98db2423a8eb3c9157c9b"
+      "sha256": "721952e556ed900149f585bc129c137df6fc9a60f6478890b343adbeb2df25c9"
     },
-    "profileLockSha256": "eba6d05608e5b34c408dfeed5f9440ac85444b441d380c9279688e76d5c280ec",
+    "profileLockSha256": "5c3926022afd594364844eed5120f781ec6e9914dfa6d721b2760cd0d8b9f23f",
     "release": {
+      "artifact": {
+        "path": "legacy/capsules/v8.2/asset/tarbosaurus_v8_2_approved.glb",
+        "sha256": "a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5"
+      },
       "id": "v8.2",
       "manifest": {
-        "path": "procedural-animation-toolkit(v8.2)/RELEASE_MANIFEST.json",
+        "path": "legacy/capsules/v8.2/RELEASE_MANIFEST.json",
         "sha256": "51f493aaae13fe46d8b6d3600ec1a8de117c2ee39beb6e05159398cacb21fada"
-      },
-      "artifact": {
-        "path": "procedural-animation-toolkit(v8.2)/asset/tarbosaurus_v8_2_approved.glb",
-        "sha256": "a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5"
       }
-    }
+    },
+    "revision": 1
   },
   "working": {
-    "iteration": 1,
-    "revision": 2,
     "basedOnStable": "stable-0001",
+    "iteration": 1,
     "profile": {
       "path": "profiles/v8.3/profile.json",
-      "sha256": "d222e1159db92928a442c1fa0c048ac1c8c733a3dfc3e7a18731a9416cd96815"
+      "sha256": "9ebbc7d2c0c814c9a83f6a9e88cbd719104c2cd3389d8c326c89178f9f1f6136"
     },
-    "profileLockSha256": "4b506eb9145ccdeb21bebbb58d8fd40aa3a0048c1625be927655c012f989abc9"
+    "profileLockSha256": "152cab85935d4c9f90053fe2a16d372ab50f58ea6cc7906b0bd12d975415a395",
+    "revision": 2
   }
 }

@@ -1,0 +1,48 @@
+{
+  "schema": "eonwild.procedural_animation_toolkit.release_manifest.v1",
+  "release": "v8.2-candidate-a-balance-transfer",
+  "approvedArtifact": {
+    "path": "asset/tarbosaurus_v8_2_approved.glb",
+    "sha256": "a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5"
+  },
+  "includedReproductionBase": {
+    "path": "input/tarbosaurus_v8_2_iteration_b_base.glb",
+    "sha256": "bfe8e833721f1dc0b8b4a1df72a6ea933debb1c6d76ac6d7970ae3ed6c8f4bc2"
+  },
+  "upstreamApprovedV8_1": {
+    "sha256": "1b9a7d071c1b375e128beeb5bda68298e32b39aac3ea76a90afe7ca3f744b73e",
+    "provenance": "approved V8.1 walk iteration-38 snapshot; referenced, not duplicated"
+  },
+  "algorithm": {
+    "name": "official-world-relative-chest-roll-v1",
+    "formula": "Exp(Log(R_chest * inverse(R_pelvis)) + [0,0,-gain*pelvis_roll_z]) * R_pelvis",
+    "gain": 0.3984375,
+    "changedNodes": ["Bone_002", "Bone_041", "Bone_040", "Bone_039", "Bone_038", "Bone_037", "Bone_036"],
+    "clips": ["PROC_WALK_RELAXED_V8_1_RESPIN_ROOTMOTION", "PROC_WALK_RELAXED_V8_1_RESPIN_INPLACE"]
+  },
+  "evidence": {
+    "officialBalance": {"path": "evidence/official-balance.json", "sha256": "6a78aa26b14bb5e9248b873c4be6976a1ddc113121fa0fa84fe13cc8e0447219", "status": "PASS"},
+    "structuralMechanical": {"path": "evidence/structural-mechanical.json", "sha256": "b5a0e161e819311b79038130a4ce5a30927938237b0d8a06713d67d6bb1239ed", "status": "PASS"},
+    "reproduction": {"path": "evidence/reproduction-verify.json", "status": "PASS"}
+  },
+  "media": {
+    "side": {"path": "media/walk-relaxed-v8-2-side.mp4", "sha256": "a29a14dcbcab3b6963c03966755e274419acb43704f26a71da2b055f0eaa8bac", "durationSeconds": 10.0, "fps": 24, "resolution": [960,540]},
+    "comparison": {"path": "media/v8-1-approved-vs-v8-2-threeq.mp4", "sha256": "5e11692890b18166cea169c61894c0cb3824a69fea79c932ebfffbba00045d10", "durationSeconds": 10.0, "fps": 24, "resolution": [1920,540]}
+  },
+  "exclusions": ["rejected candidates", "render caches", "temporary frames", "duplicate rebuilt artifacts", "unapproved source packages"]
+  ,"selfHashConvention":"RELEASE_MANIFEST.json is excluded from inventory to avoid self-referential hashing; it is parsed and schema-checked by the verifier and bound by the signed Git commit.",
+  "inventory": {
+    "README.md":{"sha256":"b4e544a75f0a3680f5913516bf71f724816405b2e006688d45d2c42998a3497c"},
+    "config/release.json":{"sha256":"3e7daad5c0453674a0d24df181b0e8c9a57e470378b0ca05400779060ac4a3ed"},
+    "scripts/glb_math.py":{"sha256":"91011b2646f3ef05bcbcf7e25956669374da9b9dfe99b08caaa01be2ffb95ce5"},
+    "scripts/release_generate.py":{"sha256":"9ef1755d651261330cc87e56a876def6333bcb8d4dc7ea063f3f4068d04c0dc4"},
+    "scripts/verify_release.py":{"sha256":"ba0437a474f8af1444956e17c6045a31c9165ab04d22f5dc7cc5742f2b43d45c"},
+    "input/tarbosaurus_v8_2_iteration_b_base.glb":{"sha256":"bfe8e833721f1dc0b8b4a1df72a6ea933debb1c6d76ac6d7970ae3ed6c8f4bc2"},
+    "asset/tarbosaurus_v8_2_approved.glb":{"sha256":"a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5"},
+    "evidence/official-balance.json":{"sha256":"6a78aa26b14bb5e9248b873c4be6976a1ddc113121fa0fa84fe13cc8e0447219"},
+    "evidence/structural-mechanical.json":{"sha256":"b5a0e161e819311b79038130a4ce5a30927938237b0d8a06713d67d6bb1239ed"},
+    "evidence/reproduction-verify.json":{"sha256":"be8b1ecf1da9503d43346edd41b4a12ae19794189253b2bcd55b0d602e08f8e1"},
+    "media/walk-relaxed-v8-2-side.mp4":{"sha256":"a29a14dcbcab3b6963c03966755e274419acb43704f26a71da2b055f0eaa8bac","media":{"width":960,"height":540,"frames":240,"duration":10.0}},
+    "media/v8-1-approved-vs-v8-2-threeq.mp4":{"sha256":"5e11692890b18166cea169c61894c0cb3824a69fea79c932ebfffbba00045d10","media":{"width":1920,"height":540,"frames":240,"duration":10.0}}
+  }
+}
