@@ -70,3 +70,84 @@ def emitted_rotation_rates(glb: Glb, maximum_degrees_per_s: float) -> dict:
     return {"status": "PASS" if peak <= maximum_degrees_per_s else "FAIL",
             "maximum_degrees_per_s": peak, "limit_degrees_per_s": maximum_degrees_per_s, "peak_witness": witness,
             "classification": "serialized per-channel rotation rate; not joint torque or muscle capacity"}
+
+
+# Added acceptance gates, not substitutes for the unchanged contact/position
+# gates. Estimates use a quadratic through the first/last three native samples;
+# a duplicated endpoint alone cannot establish cyclic velocity continuity.
+CYCLIC_ANGULAR_VELOCITY_TOLERANCE_DEG_S = 10.0
+CYCLIC_LINEAR_VELOCITY_TOLERANCE_M_S = 0.001
+
+
+def _endpoint_derivative(times: np.ndarray, deltas: np.ndarray) -> np.ndarray:
+    if times.shape != (2,) or deltas.shape[0] != 2 or np.any(times == 0):
+        raise ContractError("invalid one-sided derivative samples")
+    return np.linalg.solve(np.column_stack((times, times * times)), deltas)[0]
+
+
+def emitted_cyclic_continuity(glb: Glb, *, loop: bool) -> dict:
+    """Measure native-time incoming/outgoing velocity on final serialized TRS.
+
+    Quaternion logarithms are relative to each endpoint, use the shortest
+    rotation, and are invariant under q/-q encoding. Root displacement is not
+    erased: only its derivatives must match across a moving loop. This is a
+    sampled engineering witness, not proof of an analytic continuous curve.
+    """
+    from ..layers.leg_contact_resolve_v3 import _qmul, _qinv, _q_to_rotvec
+    if type(loop) is not bool:
+        raise ContractError("loop declaration must be boolean")
+    if not loop:
+        return {"status": "NOT_APPLICABLE", "reason": "one-shot program; entry/exit contracts are separate"}
+    angular = linear = 0.0
+    witnesses = {"angular": None, "linear": None}
+    counts = {"rotation": 0, "translation": 0}
+    for animation in glb.document.get("animations", []):
+        for channel in animation["channels"]:
+            path = channel["target"]["path"]
+            if path not in counts:
+                continue
+            sampler = animation["samplers"][channel["sampler"]]
+            if sampler.get("interpolation", "LINEAR") != "LINEAR":
+                raise ContractError("continuity witness requires emitted LINEAR channels")
+            times = np.asarray(glb.accessor_values(sampler["input"]), dtype=float).reshape(-1)
+            values = np.asarray(glb.accessor_values(sampler["output"]), dtype=float)
+            width = 4 if path == "rotation" else 3
+            if (len(times) < 5 or values.shape != (len(times), width)
+                or not np.isfinite(times).all() or not np.isfinite(values).all()
+                or np.any(np.diff(times) <= 0)):
+                raise ContractError("invalid final cyclic timeline")
+            if path == "rotation":
+                norms = np.linalg.norm(values, axis=1)
+                if np.max(np.abs(norms - 1)) > 1e-4:
+                    raise ContractError("invalid quaternion in cyclic witness")
+                values /= norms[:, None]
+                def deltas(endpoint, indices):
+                    inverse = _qinv(tuple(values[endpoint]))
+                    return np.array([_q_to_rotvec(_qmul(inverse, tuple(values[i]))) for i in indices])
+                start_delta, end_delta = deltas(0, [1, 2]), deltas(-1, [-3, -2])
+            else:
+                start_delta, end_delta = values[1:3] - values[0], values[-3:-1] - values[-1]
+            incoming = _endpoint_derivative(times[-3:-1] - times[-1], end_delta)
+            outgoing = _endpoint_derivative(times[1:3] - times[0], start_delta)
+            error = float(np.linalg.norm(incoming - outgoing))
+            node = int(channel["target"]["node"])
+            witness = {"node": node, "bone": glb.nodes[node].get("name"),
+                "incoming": incoming.tolist(), "outgoing": outgoing.tolist()}
+            if path == "rotation":
+                error = math.degrees(error)
+                if error > angular:
+                    angular, witnesses["angular"] = error, witness
+            elif error > linear:
+                linear, witnesses["linear"] = error, witness
+            counts[path] += 1
+    if not all(counts.values()):
+        raise ContractError("cyclic witness requires actual rotation and translation channels")
+    checks = {"angular_velocity": angular <= CYCLIC_ANGULAR_VELOCITY_TOLERANCE_DEG_S,
+              "linear_velocity": linear <= CYCLIC_LINEAR_VELOCITY_TOLERANCE_M_S}
+    return {"status": "PASS" if all(checks.values()) else "FAIL", "checks": checks,
+        "maximum_angular_velocity_seam_degrees_per_s": angular,
+        "maximum_linear_velocity_seam_m_per_s": linear,
+        "limits": {"angular_degrees_per_s": CYCLIC_ANGULAR_VELOCITY_TOLERANCE_DEG_S,
+                   "linear_m_per_s": CYCLIC_LINEAR_VELOCITY_TOLERANCE_M_S},
+        "peak_witnesses": witnesses,
+        "classification": "second-order native-time derivatives of final serialized channels; endpoint closure alone is insufficient"}

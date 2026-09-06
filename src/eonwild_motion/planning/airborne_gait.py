@@ -63,6 +63,7 @@ class AirborneGait:
     jaw_breathing_cycles_per_cycle: int = 1
     cycles: int = 2
     sample_hz: int = 120
+    boundary_sample_hz: int = 0
 
     def __post_init__(self) -> None:
         for key, value in asdict(self).items():
@@ -123,6 +124,9 @@ class AirborneGait:
             raise ContractError("breathing cycles must be an integer from one to four per same-foot cycle")
         if (self.chest_response_gain_degrees or self.tail_response_gain_degrees) and not self.continuous_body_launch_fraction:
             raise ContractError("driven body response requires the continuous carrier")
+        if (type(self.boundary_sample_hz) is not int or self.boundary_sample_hz < 0
+            or (self.boundary_sample_hz and not self.sample_hz <= self.boundary_sample_hz <= 1920)):
+            raise ContractError("boundary sample rate must be zero or between sample_hz and 1920")
         if int(self.cycles) != self.cycles or self.cycles < 1 or int(self.sample_hz) != self.sample_hz or self.sample_hz < 24:
             raise ContractError("cycles and sample_hz must be positive integers; sample_hz >= 24")
 
@@ -296,6 +300,16 @@ def build_airborne_plan(gait: AirborneGait, body_height_m: float) -> dict[str, A
     # Preserve exact touchdown and toe-off boundaries even for noninteger fps.
     for i in range(2 * gait.cycles):
         times.update((i * gait.step_period_s, (i + 1 - gait.flight_fraction) * gait.step_period_s))
+    if gait.boundary_sample_hz:
+        # Densify native-time witnesses around actual load boundaries. A fast
+        # C2 carrier's third derivative can bias coarse one-sided differences;
+        # no cadence, stride, pose or failing tolerance is changed here.
+        boundaries = {0., duration}
+        for i in range(2*gait.cycles):
+            boundaries.update((i*gait.step_period_s, (i+1-gait.flight_fraction)*gait.step_period_s))
+        for boundary in boundaries:
+            times.update(boundary+k/gait.boundary_sample_hz for k in range(-4,5)
+                         if 0 <= boundary+k/gait.boundary_sample_hz <= duration)
     unique_times = []
     for time_s in sorted(times):
         if not unique_times or time_s - unique_times[-1] > 1e-7:

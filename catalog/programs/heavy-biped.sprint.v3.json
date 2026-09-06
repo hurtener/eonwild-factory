@@ -41,7 +41,8 @@
     "tail_elevation_degrees": 18,
     "tail_response_gain_degrees": 10,
     "toe_flex_degrees": 32,
-    "touchdown_reach_body_heights": 0.47
+    "touchdown_reach_body_heights": 0.47,
+    "boundary_sample_hz": 480
   },
   "program": "airborne_gait",
   "reference_basis": "V9-RUN-PERFORMANCE-REFERENCE-002; engineering phase allocation, not reconstructed COM or forces",

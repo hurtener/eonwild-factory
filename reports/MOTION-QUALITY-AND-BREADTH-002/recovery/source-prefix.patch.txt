@@ -1,0 +1,807 @@
+diff --git a/.github/workflows/factory-baseline.yml b/.github/workflows/factory-baseline.yml
+index 512c6b6..efdad18 100644
+--- a/.github/workflows/factory-baseline.yml
++++ b/.github/workflows/factory-baseline.yml
+@@ -1,9 +1,12 @@
+ name: Factory verification
+ on:
+   push:
+-    branches: [main, feat/v9-factory-baseline]
++    branches: [main, feat/v9-factory-baseline, feat/motion-quality-and-breadth]
+   pull_request:
+     branches: [main]
++env:
++  OPENBLAS_NUM_THREADS: "1"
++  OMP_NUM_THREADS: "2"
+ permissions:
+   contents: read
+ concurrency:
+@@ -97,3 +100,45 @@ jobs:
+             out/showcase/previews/*/motion.fbx
+             out/ci/blender-test.xml
+           retention-days: 14
++
++  quality-and-breadth:
++    runs-on: ubuntu-24.04
++    timeout-minutes: 35
++    strategy:
++      fail-fast: false
++      matrix:
++        recipe: [walk.v2, reverse-walk.v3, fast-walk.v1, run.v3, sprint.v3,
++                 idle.v1, alert.v1, bite-miss.v1, feeding.v1, call.v1,
++                 walk-start.v1, walk-stop.v1, reverse-walk-start.v1,
++                 reverse-walk-stop.v1, run-start.v1, run-stop.v1,
++                 sprint-start.v1, sprint-stop.v1]
++    steps:
++      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
++        with:
++          fetch-depth: 1
++          persist-credentials: false
++      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
++        with:
++          python-version: '3.13'
++      - run: python -m pip install -e . pytest==9.1.1
++      - name: Compile with all final mechanical gates required
++        env:
++          PYTHONPATH: src
++          RECIPE: ${{ matrix.recipe }}
++        run: python tools/build_showcase.py --output out/quality --recipes "$RECIPE" --require-technical-pass
++      - name: Reopen channels and audit runtime-interpolated contact
++        env:
++          PYTHONPATH: src
++          RECIPE: ${{ matrix.recipe }}
++        run: |
++          extra=()
++          case "$RECIPE" in
++            walk.v2|run.v3|sprint.v3|feeding.v1) extra+=(--adversarial) ;;
++          esac
++          python tools/audit_motion_package.py --package "out/quality/$RECIPE" --output "out/quality/$RECIPE.runtime-audit.json" "${extra[@]}"
++      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
++        if: always()
++        with:
++          name: quality-${{ matrix.recipe }}
++          path: out/quality
++          retention-days: 14
+diff --git a/catalog/programs/heavy-biped.alert.v1.json b/catalog/programs/heavy-biped.alert.v1.json
+index 286974b..a8e9bfe 100644
+--- a/catalog/programs/heavy-biped.alert.v1.json
++++ b/catalog/programs/heavy-biped.alert.v1.json
+@@ -40,7 +40,7 @@
+     "body": [
+       [
+         0,
+-        0
++        0.0
+       ],
+       [
+         1.2,
+@@ -52,7 +52,7 @@
+       ],
+       [
+         6,
+-        0
++        0.0
+       ]
+     ],
+     "drop": [
+@@ -213,7 +213,7 @@
+       ]
+     ]
+   },
+-  "lane_width_body_heights": 0.3,
++  "lane_width_body_heights": 0.24,
+   "loop": false,
+   "max_joint_rate_degrees_per_second": 360.0,
+   "reference_basis": "V9 Feeding003 authored channels; user reference video informs performance review, not forces or biology",
+@@ -241,5 +241,14 @@
+     "pelvis": 0.1,
+     "spine": 0.2,
+     "tail": -0.7
+-  }
++  },
++  "translation_scale_body_heights": [
++    1.8856539447880523,
++    1.0,
++    0.754261577915221
++  ],
++  "support_reach_body_heights": [
++    0.0,
++    0.0
++  ]
+ }
+diff --git a/catalog/programs/heavy-biped.bite-miss.v1.json b/catalog/programs/heavy-biped.bite-miss.v1.json
+index 0f094f1..5073629 100644
+--- a/catalog/programs/heavy-biped.bite-miss.v1.json
++++ b/catalog/programs/heavy-biped.bite-miss.v1.json
+@@ -40,7 +40,7 @@
+     "body": [
+       [
+         0,
+-        0.05
++        0.0
+       ],
+       [
+         1.3,
+@@ -64,7 +64,7 @@
+       ],
+       [
+         6,
+-        0.05
++        0.0
+       ]
+     ],
+     "drop": [
+@@ -201,7 +201,19 @@
+   "events": [
+     {
+       "name": "ANTICIPATION_START",
+-      "reference_time_seconds": 0
++      "reference_time_seconds": 0.0
++    },
++    {
++      "name": "BITE_COMMIT_START",
++      "reference_time_seconds": 1.8
++    },
++    {
++      "name": "BITE_WINDOW_OPEN",
++      "reference_time_seconds": 2.2
++    },
++    {
++      "name": "BITE_WINDOW_CLOSE",
++      "reference_time_seconds": 2.65
+     },
+     {
+       "name": "RECOVERY_START",
+@@ -277,7 +289,7 @@
+       ]
+     ]
+   },
+-  "lane_width_body_heights": 0.3,
++  "lane_width_body_heights": 0.24,
+   "loop": false,
+   "max_joint_rate_degrees_per_second": 360.0,
+   "reference_basis": "V9 Feeding003 authored channels; user reference video informs performance review, not forces or biology",
+@@ -305,5 +317,14 @@
+     "pelvis": 0.1,
+     "spine": 0.2,
+     "tail": -0.7
+-  }
++  },
++  "translation_scale_body_heights": [
++    1.8856539447880523,
++    1.0,
++    0.754261577915221
++  ],
++  "support_reach_body_heights": [
++    0.0,
++    0.0
++  ]
+ }
+diff --git a/catalog/programs/heavy-biped.call.v1.json b/catalog/programs/heavy-biped.call.v1.json
+index d977ec5..d159fea 100644
+--- a/catalog/programs/heavy-biped.call.v1.json
++++ b/catalog/programs/heavy-biped.call.v1.json
+@@ -40,7 +40,7 @@
+     "body": [
+       [
+         0,
+-        0
++        0.0
+       ],
+       [
+         1.2,
+@@ -56,7 +56,7 @@
+       ],
+       [
+         6,
+-        0
++        0.0
+       ]
+     ],
+     "drop": [
+@@ -241,7 +241,7 @@
+       ]
+     ]
+   },
+-  "lane_width_body_heights": 0.3,
++  "lane_width_body_heights": 0.24,
+   "loop": false,
+   "max_joint_rate_degrees_per_second": 360.0,
+   "reference_basis": "V9 Feeding003 authored channels; user reference video informs performance review, not forces or biology",
+@@ -269,5 +269,14 @@
+     "pelvis": 0.1,
+     "spine": 0.2,
+     "tail": -0.7
+-  }
++  },
++  "translation_scale_body_heights": [
++    1.8856539447880523,
++    1.0,
++    0.754261577915221
++  ],
++  "support_reach_body_heights": [
++    0.0,
++    0.0
++  ]
+ }
+diff --git a/catalog/programs/heavy-biped.feeding.v1.json b/catalog/programs/heavy-biped.feeding.v1.json
+index d1feded..5e6e0cc 100644
+--- a/catalog/programs/heavy-biped.feeding.v1.json
++++ b/catalog/programs/heavy-biped.feeding.v1.json
+@@ -479,5 +479,14 @@
+     "pelvis": 0.1,
+     "spine": 0.2,
+     "tail": -0.7
+-  }
++  },
++  "translation_scale_body_heights": [
++    1.8856539447880523,
++    1.0,
++    0.754261577915221
++  ],
++  "support_reach_body_heights": [
++    -0.18,
++    0.24
++  ]
+ }
+diff --git a/catalog/programs/heavy-biped.idle.v1.json b/catalog/programs/heavy-biped.idle.v1.json
+index 48dc3ee..15b79a6 100644
+--- a/catalog/programs/heavy-biped.idle.v1.json
++++ b/catalog/programs/heavy-biped.idle.v1.json
+@@ -40,7 +40,7 @@
+     "body": [
+       [
+         0,
+-        0.02
++        0.0
+       ],
+       [
+         3,
+@@ -48,7 +48,7 @@
+       ],
+       [
+         6,
+-        0.02
++        0.0
+       ]
+     ],
+     "drop": [
+@@ -122,20 +122,7 @@
+   },
+   "classification": "authored supported idle performance using the shared V9 body/contact program; not a gameplay contact fact",
+   "duration_seconds": 6.0,
+-  "events": [
+-    {
+-      "name": "ANTICIPATION_START",
+-      "reference_time_seconds": 0
+-    },
+-    {
+-      "name": "RECOVERY_START",
+-      "reference_time_seconds": 3.0
+-    },
+-    {
+-      "name": "ACTION_COMPLETE",
+-      "reference_time_seconds": 6.0
+-    }
+-  ],
++  "events": [],
+   "gape_degrees": 58.0,
+   "joint_pitch_limits_degrees": {
+     "chest": [
+@@ -201,7 +188,7 @@
+       ]
+     ]
+   },
+-  "lane_width_body_heights": 0.3,
++  "lane_width_body_heights": 0.24,
+   "loop": true,
+   "max_joint_rate_degrees_per_second": 360.0,
+   "reference_basis": "V9 Feeding003 authored channels; user reference video informs performance review, not forces or biology",
+@@ -229,5 +216,14 @@
+     "pelvis": 0.1,
+     "spine": 0.2,
+     "tail": -0.7
+-  }
++  },
++  "translation_scale_body_heights": [
++    1.8856539447880523,
++    1.0,
++    0.754261577915221
++  ],
++  "support_reach_body_heights": [
++    0.0,
++    0.0
++  ]
+ }
+diff --git a/catalog/programs/heavy-biped.run.v3.json b/catalog/programs/heavy-biped.run.v3.json
+index 81a0606..1818987 100644
+--- a/catalog/programs/heavy-biped.run.v3.json
++++ b/catalog/programs/heavy-biped.run.v3.json
+@@ -39,7 +39,8 @@
+     "swing_recovery_peak_fraction": 0.42,
+     "tail_response_gain_degrees": 20,
+     "toe_flex_degrees": 32,
+-    "touchdown_reach_body_heights": 0.32
++    "touchdown_reach_body_heights": 0.32,
++    "boundary_sample_hz": 480
+   },
+   "program": "airborne_gait",
+   "reference_basis": "V9-RUN-PERFORMANCE-REFERENCE-002; engineering phase allocation, not reconstructed COM or forces",
+diff --git a/catalog/programs/heavy-biped.sprint.v3.json b/catalog/programs/heavy-biped.sprint.v3.json
+index ecf5b56..7325894 100644
+--- a/catalog/programs/heavy-biped.sprint.v3.json
++++ b/catalog/programs/heavy-biped.sprint.v3.json
+@@ -41,7 +41,8 @@
+     "tail_elevation_degrees": 18,
+     "tail_response_gain_degrees": 10,
+     "toe_flex_degrees": 32,
+-    "touchdown_reach_body_heights": 0.47
++    "touchdown_reach_body_heights": 0.47,
++    "boundary_sample_hz": 480
+   },
+   "program": "airborne_gait",
+   "reference_basis": "V9-RUN-PERFORMANCE-REFERENCE-002; engineering phase allocation, not reconstructed COM or forces",
+diff --git a/pyproject.toml b/pyproject.toml
+index 6ace91a..b99a009 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -9,6 +9,9 @@ description = "Deterministic procedural animation build and release engine"
+ requires-python = ">=3.12"
+ dependencies = ["jsonschema==4.26.0", "numpy==2.5.2"]
+ 
++[project.optional-dependencies]
++review = ["Pillow==12.3.0"]
++
+ [dependency-groups]
+ test = ["pytest==9.1.1"]
+ 
+@@ -20,3 +23,7 @@ package-dir = {"" = "src"}
+ 
+ [tool.setuptools.packages.find]
+ where = ["src"]
++
++[tool.pytest.ini_options]
++# Match the established CI contract; archived experiment toolkits are immutable.
++testpaths = ["tests"]
+diff --git a/recipes/heavy-biped/alert.v1.json b/recipes/heavy-biped/alert.v1.json
+index e23dc7e..3e14f14 100644
+--- a/recipes/heavy-biped/alert.v1.json
++++ b/recipes/heavy-biped/alert.v1.json
+@@ -14,7 +14,7 @@
+   "program": "supported_action",
+   "program_profile": {
+     "path": "catalog/programs/heavy-biped.alert.v1.json",
+-    "sha256": "d0d5cf1c965faf1b54d44a5e044ef0030029eb44bcdf7c04963917db6862f07d"
++    "sha256": "b453a0238988f6f642ac562ed4f6d1d01b7079e702770f8e976fdd2b071905e1"
+   },
+   "rig": {
+     "path": "catalog/rigs/heavy-biped.v9.json",
+diff --git a/recipes/heavy-biped/bite-miss.v1.json b/recipes/heavy-biped/bite-miss.v1.json
+index 5d198e0..ee3b17b 100644
+--- a/recipes/heavy-biped/bite-miss.v1.json
++++ b/recipes/heavy-biped/bite-miss.v1.json
+@@ -14,7 +14,7 @@
+   "program": "supported_action",
+   "program_profile": {
+     "path": "catalog/programs/heavy-biped.bite-miss.v1.json",
+-    "sha256": "d55f5e4e6942da2a4cfda6e3061a2c2ac14317fbfe07d7ecf70738d6b25cc1d6"
++    "sha256": "89976b650d1dedb2eedd877b931eca1ce00121817ed9563abea414cdba6677d8"
+   },
+   "rig": {
+     "path": "catalog/rigs/heavy-biped.v9.json",
+diff --git a/recipes/heavy-biped/call.v1.json b/recipes/heavy-biped/call.v1.json
+index c627842..a2ec951 100644
+--- a/recipes/heavy-biped/call.v1.json
++++ b/recipes/heavy-biped/call.v1.json
+@@ -14,7 +14,7 @@
+   "program": "supported_action",
+   "program_profile": {
+     "path": "catalog/programs/heavy-biped.call.v1.json",
+-    "sha256": "2651274b3e519f5e02e7b43faec83188e4e5d05dabc8a0a1235a758a08a724aa"
++    "sha256": "25af7262a31acbfe41756aec41eeeae35e130e6cfe37f1420c9b877eb411b47d"
+   },
+   "rig": {
+     "path": "catalog/rigs/heavy-biped.v9.json",
+diff --git a/recipes/heavy-biped/feeding.v1.json b/recipes/heavy-biped/feeding.v1.json
+index dcfef94..85126d7 100644
+--- a/recipes/heavy-biped/feeding.v1.json
++++ b/recipes/heavy-biped/feeding.v1.json
+@@ -14,7 +14,7 @@
+   "program": "supported_action",
+   "program_profile": {
+     "path": "catalog/programs/heavy-biped.feeding.v1.json",
+-    "sha256": "853c6d70f04d0eaa7fb89c506a8fd08260565cc3bae8bbec32a97839fac01c97"
++    "sha256": "aecd30f2c392aed9310a4ffbe36fc93e70d9d5b30bca10e95df391eff77d1b3e"
+   },
+   "rig": {
+     "path": "catalog/rigs/heavy-biped.v9.json",
+diff --git a/recipes/heavy-biped/idle.v1.json b/recipes/heavy-biped/idle.v1.json
+index 477e693..d568687 100644
+--- a/recipes/heavy-biped/idle.v1.json
++++ b/recipes/heavy-biped/idle.v1.json
+@@ -14,7 +14,7 @@
+   "program": "supported_action",
+   "program_profile": {
+     "path": "catalog/programs/heavy-biped.idle.v1.json",
+-    "sha256": "5b14031747152fb5a10303e0168d34495a0e78b846b699267812c39fdbbdeaf0"
++    "sha256": "cba9b6b74a31ac22b48076b267718eeb78584170107511f91b5e5af2989d4e26"
+   },
+   "rig": {
+     "path": "catalog/rigs/heavy-biped.v9.json",
+diff --git a/recipes/heavy-biped/run.v3.json b/recipes/heavy-biped/run.v3.json
+index d3a6e98..25ad4f2 100644
+--- a/recipes/heavy-biped/run.v3.json
++++ b/recipes/heavy-biped/run.v3.json
+@@ -18,7 +18,7 @@
+   "program": "airborne_gait",
+   "program_profile": {
+     "path": "catalog/programs/heavy-biped.run.v3.json",
+-    "sha256": "f2edea57649f584480915601704147e3ae5f7d04389f63f7a5ac1f0a1cc976ae"
++    "sha256": "9fa53be6ae295a93286ccf06685c30a01f5c613bca3f344b19bd1f528c741830"
+   },
+   "rig": {
+     "path": "catalog/rigs/heavy-biped.v9.json",
+diff --git a/recipes/heavy-biped/sprint.v3.json b/recipes/heavy-biped/sprint.v3.json
+index 3f351bb..ffdfee7 100644
+--- a/recipes/heavy-biped/sprint.v3.json
++++ b/recipes/heavy-biped/sprint.v3.json
+@@ -18,7 +18,7 @@
+   "program": "airborne_gait",
+   "program_profile": {
+     "path": "catalog/programs/heavy-biped.sprint.v3.json",
+-    "sha256": "2ef233b10c0a7dcd5a8a233ed03b401911dbd22d19ab4dc5cc12a44865a4a984"
++    "sha256": "8d090c8c1e954772f2baf12ccd86fe7130bae97f2c4e757e1a7c9e44cd32d382"
+   },
+   "rig": {
+     "path": "catalog/rigs/heavy-biped.v9.json",
+diff --git a/src/eonwild_motion/blender/render.py b/src/eonwild_motion/blender/render.py
+index 4a8ecda..f6d8904 100644
+--- a/src/eonwild_motion/blender/render.py
++++ b/src/eonwild_motion/blender/render.py
+@@ -39,7 +39,18 @@ def execute_render_request(request_path: Path) -> dict[str, Any]:
+     render_set = request["renderSet"]
+     scene = bpy.context.scene
+     scene.frame_set(int(render_set["frame"]))
+-    scene.render.engine = "BLENDER_EEVEE"
++    # The historical EEVEE enum was removed in newer Blender and requires
++    # a usable graphics context. The active reproduction verifier must also
++    # run headlessly: real CPU rendering, never a placeholder or skipped gate.
++    # This changes only review PNGs, not immutable approved GLB bytes.
++    scene.render.engine = "CYCLES"
++    scene.cycles.device = "CPU"
++    scene.cycles.samples = 16
++    scene.cycles.use_denoising = False
++    scene.cycles.use_adaptive_sampling = False
++    scene.cycles.seed = 0
++    scene.render.threads_mode = "FIXED"
++    scene.render.threads = 1
+     scene.render.resolution_x = int(render_set["width"])
+     scene.render.resolution_y = int(render_set["height"])
+     scene.render.resolution_percentage = 100
+diff --git a/src/eonwild_motion/factory/compiler.py b/src/eonwild_motion/factory/compiler.py
+index 4c9491b..6074c47 100644
+--- a/src/eonwild_motion/factory/compiler.py
++++ b/src/eonwild_motion/factory/compiler.py
+@@ -23,21 +23,22 @@ from ..planning.grounded_gait import build_grounded_plan, load_grounded_gait
+ from ..solve.airborne_gait import solve_airborne_gait, evaluate_airborne_skin_with_authority
+ from ..solve.whole_body_gait_transition import _encode
+ from .io import digest, frame_axes, json_bytes, locked_file, read_json, write_json
+-from .quality import emitted_rotation_rates, require_supported_geometry, solver_checks
++from .quality import emitted_rotation_rates, emitted_cyclic_continuity, require_supported_geometry, solver_checks
+ from .source import geometry_height
+ from ..solve.performance import load_performance, decorate_plan
+ from ..solve.skin_targets import solve_with_skin_targets, evaluate_skin
+ from ..planning.supported_action import load_supported_action
++from ..planning.gait_transition import load_gait_transition, build_transition_plan
+ from ..solve.supported_action import solve_supported_action
+ 
+ SCHEMA = "eonwild.motion.factory-recipe.v1"
+-PROGRAMS = ("airborne_gait", "grounded_gait", "supported_action")
++PROGRAMS = ("airborne_gait", "grounded_gait", "supported_action", "gait_transition")
+ 
+ 
+ def load_recipe(path: Path, root: Path) -> tuple[dict, dict[str, Path]]:
+     recipe = read_json(path)
+     required = {"schema", "id", "version", "family", "program", "source", "rig", "program_profile", "forward_axis", "up_axis"}
+-    if not isinstance(recipe, dict) or set(recipe) - required - {"contact_profile", "performance_profile", "description", "supersedes"} or not required <= set(recipe):
++    if not isinstance(recipe, dict) or set(recipe) - required - {"contact_profile", "performance_profile", "gait_profile", "description", "supersedes"} or not required <= set(recipe):
+         raise ContractError("recipe contains missing or unknown fields")
+     if recipe["schema"] != SCHEMA or recipe["program"] not in PROGRAMS:
+         raise ContractError("unsupported recipe schema or program")
+@@ -51,6 +52,12 @@ def load_recipe(path: Path, root: Path) -> tuple[dict, dict[str, Path]]:
+         paths["contact_profile"] = locked_file(root, recipe["contact_profile"])
+     if "performance_profile" in recipe:
+         paths["performance_profile"] = locked_file(root, recipe["performance_profile"])
++    if "gait_profile" in recipe:
++        if recipe["program"] != "gait_transition":
++            raise ContractError("only gait transitions accept a separate locomotion profile")
++        paths["gait_profile"] = locked_file(root, recipe["gait_profile"])
++    elif recipe["program"] == "gait_transition":
++        raise ContractError("gait transition requires a locked locomotion profile")
+     return recipe, paths
+ 
+ 
+@@ -72,7 +79,7 @@ def validate_plan(plan: dict, program: str) -> None:
+         if type(row["support_count"]) is not int or row["support_count"] != support or type(row["flight"]) is not bool or row["flight"] != (support == 0):
+             raise ContractError("plan contact, support and flight disagree")
+         double_support |= support == 2
+-        if program == "grounded_gait" and support == 0:
++        if (program == "grounded_gait" or plan.get("locomotion_program") == "grounded_gait") and support == 0:
+             raise ContractError("grounded gait must not fly")
+     if program == "grounded_gait" and not double_support:
+         raise ContractError("grounded gait must include double support")
+@@ -160,7 +167,13 @@ def engine_fingerprint() -> dict[str, str]:
+     return {path.relative_to(root).as_posix(): digest(path.read_bytes()) for path in sorted(root.rglob("*.py"))}
+ 
+ 
++_ENGINE_AT_IMPORT = engine_fingerprint()
++
++
+ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
++    engine_identity = engine_fingerprint()
++    if engine_identity != _ENGINE_AT_IMPORT:
++        raise ContractError("engine sources changed since import; restart the compiler")
+     root, recipe_path, output = root.resolve(), recipe_path.resolve(), output.resolve()
+     if output.exists():
+         raise ContractError("candidate output already exists; never overwrite an existing take")
+@@ -190,6 +203,17 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
+         gait = load_airborne_gait(profile)
+         plan = build_airborne_plan(gait, height)
+         plan["program"] = "airborne_gait"
++    elif recipe["program"] == "gait_transition":
++        transition = load_gait_transition(profile)
++        locomotion = json.loads(snapshots["gait_profile"])
++        if locomotion.get("schema") == "eonwild.motion.v9.grounded-gait.v1":
++            grounded = load_grounded_gait(locomotion)
++            gait = AirborneGait(step_period_s=grounded.step_period_s, cycles=grounded.cycles,
++                sample_hz=transition.sample_hz, swing_hip_lift_degrees=grounded.swing_hip_lift_degrees)
++            plan = build_transition_plan(transition, grounded, height)
++        else:
++            gait = load_airborne_gait(locomotion)
++            plan = build_transition_plan(transition, gait, height)
+     elif not supported:
+         grounded = load_grounded_gait(profile)
+         plan = build_grounded_plan(grounded, height)
+@@ -223,6 +247,7 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
+     outputs = {"root_motion": Glb.from_bytes(root_raw), "in_place": Glb.from_bytes(inplace_raw)}
+     evaluated = {mode: evaluate_emitted(glb, source, roles, plan, forward, in_place=(mode == "in_place")) for mode, glb in outputs.items()}
+     rates = {mode: emitted_rotation_rates(glb, gait.max_joint_angular_velocity_degrees_per_s) for mode, glb in outputs.items()}
++    continuity = {mode: emitted_cyclic_continuity(glb, loop=plan.get("loop", True)) for mode, glb in outputs.items()}
+     feasibility = solver_checks(receipt)
+     surface = {"verdict": "NOT_MEASURED", "reason": "no bound skinned contact profile"}
+     if "contact_profile" in snapshots:
+@@ -237,15 +262,20 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
+             surface = {"verdict": "FAIL", "reason": f"final skinned evaluation failed: {exc}"}
+     if ("performance_profile" in snapshots or supported) and "contact_profile" in snapshots:
+         surface = evaluate_skin(outputs["root_motion"], json.loads(snapshots["contact_profile"]), plan)
++    receipt["final_skinned_contact_gate"] = surface["verdict"]
++    receipt["final_skinned_contact_scope"] = "reopened serialized root-motion authority at the locked floor; full skin influences"
+     refinement_ok = receipt.get("skin_target_refinement", {}).get("converged", True) and receipt.get("oral_contact", {"status":"PASS"})["status"] == "PASS"
+     technical = (refinement_ok and all(row["status"] == "PASS" for row in evaluated.values()) and
+-                 all(row["status"] == "PASS" for row in rates.values()) and feasibility["status"] == "PASS" and surface["verdict"] == "PASS")
++                 all(row["status"] == "PASS" for row in rates.values()) and
++                 all(row["status"] in ("PASS", "NOT_APPLICABLE") for row in continuity.values()) and feasibility["status"] == "PASS" and surface["verdict"] == "PASS")
+     validation = {"schema": "eonwild.motion.factory-validation.v1", "technical_status": "PASS" if technical else "BLOCKED",
+-        "outputs": evaluated, "rotation_rates": rates, "solver_feasibility": feasibility, "skinned_contact": surface,
++        "outputs": evaluated, "rotation_rates": rates, "cyclic_continuity": continuity, "solver_feasibility": feasibility, "skinned_contact": surface,
+         "oral_contact": receipt.get("oral_contact"),
+         "visual_review": "PENDING", "unity_parity": "NOT_RUN", "production_approved": False}
++    if engine_fingerprint() != engine_identity:
++        raise ContractError("engine sources changed during compilation; no candidate published")
+     lock = {"schema": "eonwild.motion.factory-lock.v1", "recipe_sha256": digest(recipe_bytes),
+-            "inputs": {name: recipe[name] for name in paths}, "engine_files": engine_fingerprint(),
++            "inputs": {name: recipe[name] for name in paths}, "engine_files": engine_identity,
+             "tools": {"python": platform.python_version(), "numpy": np.__version__}}
+     state = {"schema": "eonwild.motion.runtime-data.v1", "program": recipe["program"], "family": recipe["family"],
+         "units": "m", "time_units": "s", "handedness": "right", "forward_axis": forward.tolist(), "up_axis": up.tolist(),
+@@ -254,7 +284,7 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
+         "initial_contacts": {side: plan["samples"][0]["feet"][side]["contact"] for side in ("left", "right")},
+         "events": sorted(event_track(plan) + plan.get("events", []), key=lambda e: e["time_s"]), "plan_sha256": digest(json_bytes(plan)),
+         "world_interaction_authority": "runtime decides contact, damage, grip resistance and release",
+-        "unity_import_status": "NOT_VERIFIED",
++        "unity_import_status": "NOT_VERIFIED", "transition_contract": plan.get("transition_contract"),
+         "ground_plane": (json.loads(snapshots["contact_profile"])["geometry"]["ground"] if "contact_profile" in snapshots else None)}
+     payloads = {"root_motion.glb": root_raw, "in_place.glb": inplace_raw, "plan.json": json_bytes(plan),
+         "solver-receipt.json": json_bytes(receipt), "runtime.json": json_bytes(state),
+diff --git a/src/eonwild_motion/factory/quality.py b/src/eonwild_motion/factory/quality.py
+index a8e1154..e020035 100644
+--- a/src/eonwild_motion/factory/quality.py
++++ b/src/eonwild_motion/factory/quality.py
+@@ -70,3 +70,84 @@ def emitted_rotation_rates(glb: Glb, maximum_degrees_per_s: float) -> dict:
+     return {"status": "PASS" if peak <= maximum_degrees_per_s else "FAIL",
+             "maximum_degrees_per_s": peak, "limit_degrees_per_s": maximum_degrees_per_s, "peak_witness": witness,
+             "classification": "serialized per-channel rotation rate; not joint torque or muscle capacity"}
++
++
++# Added acceptance gates, not substitutes for the unchanged contact/position
++# gates. Estimates use a quadratic through the first/last three native samples;
++# a duplicated endpoint alone cannot establish cyclic velocity continuity.
++CYCLIC_ANGULAR_VELOCITY_TOLERANCE_DEG_S = 10.0
++CYCLIC_LINEAR_VELOCITY_TOLERANCE_M_S = 0.001
++
++
++def _endpoint_derivative(times: np.ndarray, deltas: np.ndarray) -> np.ndarray:
++    if times.shape != (2,) or deltas.shape[0] != 2 or np.any(times == 0):
++        raise ContractError("invalid one-sided derivative samples")
++    return np.linalg.solve(np.column_stack((times, times * times)), deltas)[0]
++
++
++def emitted_cyclic_continuity(glb: Glb, *, loop: bool) -> dict:
++    """Measure native-time incoming/outgoing velocity on final serialized TRS.
++
++    Quaternion logarithms are relative to each endpoint, use the shortest
++    rotation, and are invariant under q/-q encoding. Root displacement is not
++    erased: only its derivatives must match across a moving loop. This is a
++    sampled engineering witness, not proof of an analytic continuous curve.
++    """
++    from ..layers.leg_contact_resolve_v3 import _qmul, _qinv, _q_to_rotvec
++    if type(loop) is not bool:
++        raise ContractError("loop declaration must be boolean")
++    if not loop:
++        return {"status": "NOT_APPLICABLE", "reason": "one-shot program; entry/exit contracts are separate"}
++    angular = linear = 0.0
++    witnesses = {"angular": None, "linear": None}
++    counts = {"rotation": 0, "translation": 0}
++    for animation in glb.document.get("animations", []):
++        for channel in animation["channels"]:
++            path = channel["target"]["path"]
++            if path not in counts:
++                continue
++            sampler = animation["samplers"][channel["sampler"]]
++            if sampler.get("interpolation", "LINEAR") != "LINEAR":
++                raise ContractError("continuity witness requires emitted LINEAR channels")
++            times = np.asarray(glb.accessor_values(sampler["input"]), dtype=float).reshape(-1)
++            values = np.asarray(glb.accessor_values(sampler["output"]), dtype=float)
++            width = 4 if path == "rotation" else 3
++            if (len(times) < 5 or values.shape != (len(times), width)
++                or not np.isfinite(times).all() or not np.isfinite(values).all()
++                or np.any(np.diff(times) <= 0)):
++                raise ContractError("invalid final cyclic timeline")
++            if path == "rotation":
++                norms = np.linalg.norm(values, axis=1)
++                if np.max(np.abs(norms - 1)) > 1e-4:
++                    raise ContractError("invalid quaternion in cyclic witness")
++                values /= norms[:, None]
++                def deltas(endpoint, indices):
++                    inverse = _qinv(tuple(values[endpoint]))
++                    return np.array([_q_to_rotvec(_qmul(inverse, tuple(values[i]))) for i in indices])
++                start_delta, end_delta = deltas(0, [1, 2]), deltas(-1, [-3, -2])
++            else:
++                start_delta, end_delta = values[1:3] - values[0], values[-3:-1] - values[-1]
++            incoming = _endpoint_derivative(times[-3:-1] - times[-1], end_delta)
++            outgoing = _endpoint_derivative(times[1:3] - times[0], start_delta)
++            error = float(np.linalg.norm(incoming - outgoing))
++            node = int(channel["target"]["node"])
++            witness = {"node": node, "bone": glb.nodes[node].get("name"),
++                "incoming": incoming.tolist(), "outgoing": outgoing.tolist()}
++            if path == "rotation":
++                error = math.degrees(error)
++                if error > angular:
++                    angular, witnesses["angular"] = error, witness
++            elif error > linear:
++                linear, witnesses["linear"] = error, witness
++            counts[path] += 1
++    if not all(counts.values()):
++        raise ContractError("cyclic witness requires actual rotation and translation channels")
++    checks = {"angular_velocity": angular <= CYCLIC_ANGULAR_VELOCITY_TOLERANCE_DEG_S,
++              "linear_velocity": linear <= CYCLIC_LINEAR_VELOCITY_TOLERANCE_M_S}
++    return {"status": "PASS" if all(checks.values()) else "FAIL", "checks": checks,
++        "maximum_angular_velocity_seam_degrees_per_s": angular,
++        "maximum_linear_velocity_seam_m_per_s": linear,
++        "limits": {"angular_degrees_per_s": CYCLIC_ANGULAR_VELOCITY_TOLERANCE_DEG_S,
++                   "linear_m_per_s": CYCLIC_LINEAR_VELOCITY_TOLERANCE_M_S},
++        "peak_witnesses": witnesses,
++        "classification": "second-order native-time derivatives of final serialized channels; endpoint closure alone is insufficient"}
+diff --git a/src/eonwild_motion/planning/airborne_gait.py b/src/eonwild_motion/planning/airborne_gait.py
+index e17a448..cf7fa77 100644
+--- a/src/eonwild_motion/planning/airborne_gait.py
++++ b/src/eonwild_motion/planning/airborne_gait.py
+@@ -63,6 +63,7 @@ class AirborneGait:
+     jaw_breathing_cycles_per_cycle: int = 1
+     cycles: int = 2
+     sample_hz: int = 120
++    boundary_sample_hz: int = 0
+ 
+     def __post_init__(self) -> None:
+         for key, value in asdict(self).items():
+@@ -123,6 +124,9 @@ class AirborneGait:
+             raise ContractError("breathing cycles must be an integer from one to four per same-foot cycle")
+         if (self.chest_response_gain_degrees or self.tail_response_gain_degrees) and not self.continuous_body_launch_fraction:
+             raise ContractError("driven body response requires the continuous carrier")
++        if (type(self.boundary_sample_hz) is not int or self.boundary_sample_hz < 0
++            or (self.boundary_sample_hz and not self.sample_hz <= self.boundary_sample_hz <= 1920)):
++            raise ContractError("boundary sample rate must be zero or between sample_hz and 1920")
+         if int(self.cycles) != self.cycles or self.cycles < 1 or int(self.sample_hz) != self.sample_hz or self.sample_hz < 24:
+             raise ContractError("cycles and sample_hz must be positive integers; sample_hz >= 24")
+ 
+@@ -296,6 +300,16 @@ def build_airborne_plan(gait: AirborneGait, body_height_m: float) -> dict[str, A
+     # Preserve exact touchdown and toe-off boundaries even for noninteger fps.
+     for i in range(2 * gait.cycles):
+         times.update((i * gait.step_period_s, (i + 1 - gait.flight_fraction) * gait.step_period_s))
++    if gait.boundary_sample_hz:
++        # Densify native-time witnesses around actual load boundaries. A fast
++        # C2 carrier's third derivative can bias coarse one-sided differences;
++        # no cadence, stride, pose or failing tolerance is changed here.
++        boundaries = {0., duration}
++        for i in range(2*gait.cycles):
++            boundaries.update((i*gait.step_period_s, (i+1-gait.flight_fraction)*gait.step_period_s))
++        for boundary in boundaries:
++            times.update(boundary+k/gait.boundary_sample_hz for k in range(-4,5)
++                         if 0 <= boundary+k/gait.boundary_sample_hz <= duration)
+     unique_times = []
+     for time_s in sorted(times):
+         if not unique_times or time_s - unique_times[-1] > 1e-7:
+diff --git a/src/eonwild_motion/planning/supported_action.py b/src/eonwild_motion/planning/supported_action.py
+index 36233fb..d5c2559 100644
+--- a/src/eonwild_motion/planning/supported_action.py
++++ b/src/eonwild_motion/planning/supported_action.py
+@@ -26,7 +26,7 @@ class Anchor:
+             raise ContractError('oral phases require finite numbers')
+         if not 0 <= self.enter < self.capture < self.resisted_end < self.release <= duration:
+             raise ContractError('oral phases must be ordered')
+-        if not 0 < self.tolerance_m <= .002 or len(self.offset_body_heights) != 3:
++        if not 0 < self.tolerance_m <= .002 or len(self.offset_body_heights) != 3 or np.linalg.norm(self.offset_body_heights) > .5:
+             raise ContractError('invalid oral tolerance or target offset')
+ 
+ 
+@@ -46,10 +46,16 @@ class SupportedAction:
+     joint_pitch_limits_degrees: dict
+     anchor: Anchor | None
+     events: tuple
++    translation_scale_body_heights: tuple = (1., 1., 1.)
++    support_reach_body_heights: tuple = (0., 0.)
+ 
+ 
+ def curve(time, keys):
+     """Shape-preserving cubic Hermite; endpoints/extrema have zero velocity."""
++    if isinstance(time, bool) or not isinstance(time, (int,float)) or not math.isfinite(time):
++        raise ContractError('channel time must be finite numeric')
++    if any(isinstance(value, bool) for row in keys for value in row):
++        raise ContractError('channel booleans are not numeric parameters')
+     rows = np.asarray(keys, dtype=float)
+     if rows.ndim != 2 or rows.shape[1] != 2 or len(rows) < 2 or not np.isfinite(rows).all():
+         raise ContractError('channel needs finite time/value pairs')
+@@ -73,18 +79,25 @@ def curve(time, keys):
+ 
+ def resample_chain(values, count):
+     """Preserve total authored rotation when a semantic chain changes size."""
++    if any(isinstance(value, bool) for value in values):
++        raise ContractError('chain booleans are not angles')
+     values = np.asarray(values, dtype=float)
+-    if count < 1 or values.ndim != 1 or not len(values) or not np.isfinite(values).all():
++    if type(count) is not int or not 1 <= count <= 128 or values.ndim != 1 or not len(values) or not np.isfinite(values).all():
+         raise ContractError('invalid semantic chain weights')
+     if count == len(values): return values.copy()
+-    values = np.interp((np.arange(count)+.5)/count, (np.arange(len(values))+.5)/len(values), values) * len(values)/count
+-    return values
++    # Each source joint contributes an angular increment over its normalized
++    # chain segment. Conservative overlap integration, unlike midpoint
++    # interpolation, preserves the total for nonuniform and signed profiles.
++    left = np.maximum(np.arange(count)[:, None] / count, np.arange(len(values))[None, :] / len(values))
++    right = np.minimum((np.arange(count)[:, None] + 1) / count, (np.arange(len(values))[None, :] + 1) / len(values))
++    return np.maximum(0., right - left) @ (values * len(values))
+ 
+ 
+ def load_supported_action(document):
+     allowed = {'schema','duration_seconds','sample_hz','reference_duration_seconds','loop','gape_degrees',
+         'max_joint_rate_degrees_per_second','lane_width_body_heights','base_pitch_degrees','yaw_weights','channels',
+-        'support_limits','joint_pitch_limits_degrees','anchor','events','reference_basis','classification'}
++        'support_limits','joint_pitch_limits_degrees','anchor','events','reference_basis','classification',
++        'translation_scale_body_heights','support_reach_body_heights'}
+     if not isinstance(document, dict) or document.get('schema') != 'eonwild.motion.supported-action.v1' or set(document) - allowed:
+         raise ContractError('unsupported persistent-support profile')
+     try:
+@@ -103,35 +116,51 @@ def load_supported_action(document):
+         if set(data['channels']) != {'body','drop','forward','lateral','yaw','jaw','tail'}:
+             raise ContractError('supported channels are incomplete')
+         channels = {}
++        channel_bounds = {'body':(-1.,2.),'drop':(-.15,.4),'forward':(-.4,.4),'lateral':(-.15,.15),
++                          'yaw':(-45.,45.),'jaw':(0.,1.),'tail':(-2.,2.)}
+         for name, keys in data['channels'].items():
+             curve(0, keys)
+             if keys[0][0] != 0 or keys[-1][0] != reference:
+                 raise ContractError('channel must span the reference timeline')
+             if loop and keys[0][1] != keys[-1][1]: raise ContractError('loop channel does not close')
+             if name == 'jaw' and any(not 0 <= row[1] <= 1 for row in keys): raise ContractError('jaw fraction outside [0,1]')
++            low,high = channel_bounds[name]
++            if any(not low
