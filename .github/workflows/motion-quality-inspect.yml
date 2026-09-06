@@ -1,0 +1,32 @@
+name: Temporary V9 inspection
+on:
+  push:
+    branches: [feat/motion-quality-and-breadth]
+    paths: [.github/workflows/motion-quality-inspect.yml]
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.13'
+      - run: python -m pip install -e . pytest==9.1.1 > /tmp/install.log
+      - name: Relevant calibration and reusable adapter
+        env:
+          PYTHONPATH: src
+        shell: python
+        run: |
+          import inspect, json, pathlib
+          from eonwild_motion.contact_gauge import _source_frames
+          print('SKIN_ADAPTER\n' + inspect.getsource(_source_frames))
+          for p in ['catalog/contacts/heavy-biped.v9.json','catalog/rigs/heavy-biped.v9.json','catalog/programs/heavy-biped.run.v2.json','catalog/programs/heavy-biped.sprint.v2.json','docs/FACTORY_ROADMAP.md','docs/UNITY_MOTION_CONTRACT.md']:
+              print('\nFILE ' + p + '\n' + pathlib.Path(p).read_text())
+          print('\nWALK_PROFILES')
+          for p in pathlib.Path('profiles').rglob('*'):
+              if p.is_file() and ('walk' in p.name.lower() or 'v9' in p.name.lower()): print(p)
+          print('\nTEST_INTEGRATION\n' + pathlib.Path('tests/test_integration.py').read_text())
