@@ -108,6 +108,10 @@ class _Choreography:
         # Both start feet are initially planted under the calibrated pelvis.
         if self.start and time <= 0:
             return 0.
+        # The swing already in progress at stop entry owns its next
+        # touchdown. Replanning that airborne target would jump the foot at t=0.
+        if not self.start and time <= self.step:
+            return self.speed * time + self.reach
         weight, _ = self.envelope(time)
         return self.root(time)[0] + self.reach * weight
 

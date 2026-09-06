@@ -232,6 +232,11 @@ def sample_airborne_gait(gait: AirborneGait, time_s: float, body_height_m: float
     feet = {}
     for side, offset in (("left", 0.0), ("right", step)):
         local = (time_s - offset) % cycle
+        # Modulo at an exact cycle boundary can return cycle-epsilon.
+        # Canonicalize the existing 1e-10 contact boundary precision so
+        # equivalent clocks cannot disagree about which foot is loaded.
+        if min(local, cycle-local) < 1e-10:
+            local = 0.0
         touchdown = time_s - local
         anchor = speed * touchdown + gait.touchdown_reach_body_heights * body_height_m
         stance = local < contact_s - 1e-10
