@@ -360,6 +360,8 @@ def solve_unified_run(
     tail_lateral_sign: float = 1.0,
     tail_recenter: float = 0.0,
     tail_yaw_weights: Sequence[float] | None = None,
+    plan_override: Mapping[str, Any] | None = None,
+    gaze_targets_override: Sequence[Sequence[float]] | None = None,
 ) -> tuple[bytes, bytes, dict[str, Any], dict[str, Any]]:
     """Leg solve, axial gaze solve, single re-emit, unified receipt.
 
@@ -377,6 +379,12 @@ def solve_unified_run(
     cancels that fraction of the rig's rest-pose lean. ``tail_yaw_axis``
     is the parent-frame yaw axis; ``tail_yaw_weights`` distributes the
     total yaw across tail bones (default uniform).
+
+    One-shot moves: ``plan_override`` replaces the cyclic plan samples
+    (lunges, stumbles — passed through to the leg solver, which stays
+    fully generic); ``gaze_targets_override`` replaces the static gaze
+    formula with per-frame world-space head-chain targets (dives,
+    scans — must match the solved frame count). Both default off.
     """
     from ..solve.airborne_gait import solve_airborne_gait
     from ..solve.whole_body_gait_transition import _build_glb, _encode
@@ -398,7 +406,8 @@ def solve_unified_run(
         raise ContractError(f"axial chain node missing in rig: {exc}") from exc
 
     authority_bytes, _, plan, leg_receipt = solve_airborne_gait(
-        source, source_clip=source_clip, semantic_roles=roles, gait=gait
+        source, source_clip=source_clip, semantic_roles=roles, gait=gait,
+        plan_override=plan_override,
     )
     leg_glb = Glb.from_bytes(authority_bytes)
     leg_clip = leg_glb.document["animations"][0]["name"]
@@ -421,10 +430,16 @@ def solve_unified_run(
     fwd = fwd / float(np.linalg.norm(fwd))
     gaze_d = _finite(gaze_distance_m, label="gaze distance")
     gaze_h = _finite(gaze_height_offset_m, label="gaze height offset")
-    targets = [
-        list(base0 + (np.asarray(pos, dtype=float) - root0) + fwd * gaze_d + np.array([0.0, gaze_h, 0.0]))
-        for pos in root_positions
-    ]
+    if gaze_targets_override is not None:
+        targets = [[_finite(float(v), label="gaze target") for v in point]
+                   for point in gaze_targets_override]
+        if any(len(point) != 3 for point in targets):
+            raise ContractError("gaze target override must be xyz per frame")
+    else:
+        targets = [
+            list(base0 + (np.asarray(pos, dtype=float) - root0) + fwd * gaze_d + np.array([0.0, gaze_h, 0.0]))
+            for pos in root_positions
+        ]
     envelope_map = dict(envelopes or {})
     lateral_active = bool(tail_names) and (
         _finite(tail_lateral_peak_deg, label="tail_lateral_peak_deg") != 0.0
