@@ -7,126 +7,56 @@ permissions:
   contents: read
   actions: read
 jobs:
-  repair:
-    runs-on: ubuntu-24.04
-    permissions:
-      contents: write
-      actions: read
-    outputs:
-      sha: ${{ steps.publish.outputs.sha }}
-    env:
-      PYTHONPATH: src
-      OPENBLAS_NUM_THREADS: '1'
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-        with:
-          fetch-depth: 1
-          show-progress: false
-      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
-        with:
-          python-version: '3.13'
-      - run: python -m pip install -e . pytest==9.1.1
-      - name: Preserve an in-flight foot at stop entry and canonicalize touchdown arithmetic
-        id: publish
-        shell: python
-        run: |
-          from pathlib import Path
-          import subprocess,os
-          def edit(path,old,new):
-              p=Path(path);s=p.read_text();assert s.count(old)==1,(path,old);p.write_text(s.replace(old,new))
-          edit('src/eonwild_motion/planning/gait_transition.py',
-              '        weight, _ = self.envelope(time)\n        return self.root(time)[0] + self.reach * weight',
-              '        # The swing already in progress at stop entry owns its next\n        # touchdown. Replanning that airborne target would jump the foot at t=0.\n        if not self.start and time <= self.step:\n            return self.speed * time + self.reach\n        weight, _ = self.envelope(time)\n        return self.root(time)[0] + self.reach * weight')
-          edit('src/eonwild_motion/planning/airborne_gait.py',
-              '        local = (time_s - offset) % cycle\n        touchdown = time_s - local',
-              '        local = (time_s - offset) % cycle\n        # Modulo at an exact cycle boundary can return cycle-epsilon.\n        # Canonicalize the existing 1e-10 contact boundary precision so\n        # equivalent clocks cannot disagree about which foot is loaded.\n        if min(local, cycle-local) < 1e-10:\n            local = 0.0\n        touchdown = time_s - local')
-          subprocess.run(['python','-m','compileall','-q','src','tools'],check=True)
-          subprocess.run(['git','config','user.name','github-actions[bot]'],check=True)
-          subprocess.run(['git','config','user.email','41898282+github-actions[bot]@users.noreply.github.com'],check=True)
-          subprocess.run(['git','add','src'],check=True)
-          subprocess.run(['git','commit','-m','fix: retain committed swing targets and exact touchdown handoffs'],check=True)
-          subprocess.run(['git','push','origin','HEAD:refs/heads/feat/motion-quality-and-breadth'],check=True)
-          sha=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
-          with open(os.environ['GITHUB_OUTPUT'],'a') as f:f.write('sha='+sha+'\n')
-          print('VERIFIED_SOURCE_HEAD',sha)
-      - name: Focused behavior, contact and continuity regressions
-        run: python -m pytest tests/test_behavior_programs.py tests/test_motion_contact_adversarial.py -q --tb=short --junitxml=out/focused-tests.xml
-      - name: Measure V9 and current rejected walk without retiming
-        if: always()
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh run download 34045100968 --repo hurtener/eonwild-factory --name contact-repair-walk.v2 --dir out/candidate
-          python - <<'PY'
-          import sys,json,pathlib
-          sys.path.insert(0,'tools')
-          from measure_motion_reference import measure
-          root=pathlib.Path('.')
-          source=next(root.glob('build/V9-NARROW-GAUGE-WALK-002/**/*.glb'))
-          recipe=json.loads((root/'recipes/heavy-biped/walk.v2.json').read_text())
-          roles=json.loads((root/recipe['rig']['path']).read_text())['roles']
-          out=root/'out/measurements';out.mkdir(parents=True,exist_ok=True)
-          candidate=next((root/'out/candidate').rglob('root_motion.glb'))
-          for key,path,clip in [('v9-comparison',source,'PROC_WALK_RELAXED_V8_1_RESPIN_ROOTMOTION'),('repaired-walk-v2',candidate,'heavy-biped.walk.v2.root_motion')]:
-              result=measure(path,clip=clip,roles=roles,forward_axis=recipe['forward_axis'])
-              (out/(key+'.json')).write_text(json.dumps(result,indent=2)+'\n')
-              print('NATIVE_MEASUREMENTS',key,json.dumps(result))
-          validation=json.loads((candidate.parent/'validation.json').read_text())
-          print('CANDIDATE_VALIDATION',json.dumps(validation))
-          receipt=json.loads((candidate.parent/'solver-receipt.json').read_text())
-          print('CANDIDATE_REFINEMENT',json.dumps(receipt.get('skin_target_refinement')))
-          print('TOOLCHAIN_INPUTS')
-          for path in sorted(root.glob('tools/*')):
-              print(path)
-          print((root/'profiles/v8.2/profile.json').read_text())
-          PY
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        if: always()
-        with:
-          name: native-motion-diagnostics
-          path: |
-            out/focused-tests.xml
-            out/measurements
-          retention-days: 14
-  render:
-    needs: repair
-    if: always() && needs.repair.outputs.sha != ''
+  verify:
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
-        view: [side, front, rear, three-quarter]
+        task: [tests, side, front, rear, three-quarter]
     env:
       PYTHONPATH: src
       OPENBLAS_NUM_THREADS: '1'
       OMP_NUM_THREADS: '2'
       GH_TOKEN: ${{ github.token }}
-      REVIEW_VIEW: ${{ matrix.view }}
+      TASK: ${{ matrix.task }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: ${{ needs.repair.outputs.sha }}
           fetch-depth: 1
           show-progress: false
           persist-credentials: false
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: '3.13'
-      - run: python -m pip install -e .
-      - name: Install checksum-pinned Blender and video tools
+      - run: python -m pip install -e . pytest==9.1.1 pillow
+      - name: Verify recorded upstream Blender archive and install video dependencies
         run: |
-          curl --fail --location --retry 3 https://download.blender.org/release/Blender5.2/blender-5.2.0-linux-x64.tar.xz -o "$RUNNER_TEMP/blender.tar.xz"
-          echo "b873bdeec9e0866bef345262f0382ebc3fcf6fcecd27e84e558a39d39d13aa020  $RUNNER_TEMP/blender.tar.xz" | sha256sum -c -
-          tar -xJf "$RUNNER_TEMP/blender.tar.xz" -C "$RUNNER_TEMP"
+          gh run download 34041514733 --repo hurtener/eonwild-factory --name motion-recorded-blender-52 --dir "$RUNNER_TEMP/recorded-blender"
+          cd "$RUNNER_TEMP/recorded-blender"
+          grep 'blender-5.2.0-linux-x64.tar.xz$' blender-5.2.0.sha256 | sha256sum --check
+          tar -xJf blender-5.2.0-linux-x64.tar.xz -C "$RUNNER_TEMP"
           echo "$RUNNER_TEMP/blender-5.2.0-linux-x64" >> "$GITHUB_PATH"
+          echo "BLENDER_PATH=$RUNNER_TEMP/blender-5.2.0-linux-x64/blender" >> "$GITHUB_ENV"
           sudo apt-get update -qq
           sudo apt-get install -y ffmpeg libxrender1 libxi6 libxfixes3 libxkbcommon0 libsm6
-      - name: Prepare reference-only selection and preserve actual candidate bytes
+      - name: Run all regression tests including real Blender integration
+        if: matrix.task == 'tests'
+        run: |
+          git config --global user.name 'Eonwild regression runner'
+          git config --global user.email 'eonwild-regression@example.invalid'
+          "$BLENDER_PATH" --version
+          python -m pytest tests -q --tb=short --junitxml=out/full-tests.xml > out-test.log 2>&1
+          tail -100 out-test.log
+      - name: Expose failed test details without turning failures into success
+        if: always() && matrix.task == 'tests'
+        run: tail -160 out-test.log || true
+      - name: Prepare reference-only selection and actual candidate bytes
+        if: matrix.task != 'tests'
         run: |
           gh run download 34045100968 --repo hurtener/eonwild-factory --name contact-repair-walk.v2 --dir out/candidate
           python - <<'PY'
-          import sys,json,pathlib,shutil
+          import sys,json,pathlib
           sys.path.insert(0,'tools')
           from prepare_motion_reference import prepare
           root=pathlib.Path('.')
@@ -138,13 +68,83 @@ jobs:
           candidate=next((root/'out/candidate').rglob('manifest.json')).parent
           pathlib.Path('out/candidate-path.txt').write_text(str(candidate))
           PY
-      - name: Native-time matched-camera comparison; no claim of visual acceptance
+      - name: Native-time matched-camera comparison
+        if: matrix.task != 'tests'
         run: |
-          blender -b --threads 2 --python tools/render_candidate.py -- --package out/reference --output "out/review/$REVIEW_VIEW/reference" --view "$REVIEW_VIEW" --mode root_motion --camera-lock "out/camera-$REVIEW_VIEW.json" --fps 24 --width 640 --samples 4
-          blender -b --threads 2 --python tools/render_candidate.py -- --package "$(cat out/candidate-path.txt)" --output "out/review/$REVIEW_VIEW/candidate" --view "$REVIEW_VIEW" --mode root_motion --camera-lock "out/camera-$REVIEW_VIEW.json" --fps 24 --width 640 --samples 4
+          blender -b --threads 2 --python-exit-code 1 --python tools/render_candidate.py -- --package out/reference --output "out/review/$TASK/reference" --view "$TASK" --mode root_motion --camera-lock "out/camera-$TASK.json" --fps 24 --width 640 --samples 4 > out-reference-render.log 2>&1
+          tail -30 out-reference-render.log
+          blender -b --threads 2 --python-exit-code 1 --python tools/render_candidate.py -- --package "$(cat out/candidate-path.txt)" --output "out/review/$TASK/candidate" --view "$TASK" --mode root_motion --camera-lock "out/camera-$TASK.json" --fps 24 --width 640 --samples 4 > out-candidate-render.log 2>&1
+          tail -30 out-candidate-render.log
+      - name: Make chronological native-frame review sheets
+        if: matrix.task != 'tests'
+        shell: python
+        run: |
+          import os,json,pathlib
+          from PIL import Image,ImageDraw
+          for kind in ('reference','candidate'):
+              root=pathlib.Path('out/review')/os.environ['TASK']/kind
+              timeline=json.loads((root/'timeline.json').read_text())
+              selected=list(range(0,len(timeline),3))
+              columns=4;w,h=320,200
+              sheet=Image.new('RGB',(w*columns,h*((len(selected)+columns-1)//columns)),(245,245,245))
+              draw=ImageDraw.Draw(sheet)
+              for k,index in enumerate(selected):
+                  frame=Image.open(root/'frames'/f'{index:05d}.png').convert('RGB').resize((320,180))
+                  x,y=(k%columns)*w,(k//columns)*h
+                  sheet.paste(frame,(x,y))
+                  draw.text((x+5,y+182),f'{kind}  t={timeline[index]["source_time_s"]:.3f}s',fill=(0,0,0))
+              sheet.save(root/'native-frames.jpg',quality=90)
+      - name: Report renderer failures
+        if: failure() && matrix.task != 'tests'
+        run: |
+          tail -50 out-reference-render.log || true
+          tail -50 out-candidate-render.log || true
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
-          name: native-walk-review-${{ matrix.view }}
-          path: out/review
+          name: motion-native-${{ matrix.task }}
+          path: |
+            out/review
+            out/full-tests.xml
+            out-*.log
           retention-days: 14
+  record:
+    needs: verify
+    if: always()
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      actions: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 1
+          show-progress: false
+      - name: Preserve actual evidence, including failed or incomplete checks
+        shell: python
+        run: |
+          import pathlib,os,subprocess,json,shutil,hashlib
+          destination=pathlib.Path('reports/MOTION-QUALITY-AND-BREADTH-002/verification')
+          destination.mkdir(parents=True,exist_ok=True)
+          subprocess.run(['gh','run','download',os.environ['GITHUB_RUN_ID'],'--repo',os.environ['GITHUB_REPOSITORY'],'--dir','/tmp/motion-evidence'],check=True)
+          for path in pathlib.Path('/tmp/motion-evidence').rglob('*'):
+              if not path.is_file() or path.name not in ('full-tests.xml','render-receipt.json','native-frames.jpg','preview.mp4','camera.json','timeline.json'):
+                  continue
+              relative=path.relative_to('/tmp/motion-evidence')
+              target=destination/relative
+              target.parent.mkdir(parents=True,exist_ok=True)
+              shutil.copyfile(path,target)
+          jobs=json.loads(subprocess.check_output(['gh','api',f'repos/{os.environ["GITHUB_REPOSITORY"]}/actions/runs/{os.environ["GITHUB_RUN_ID"]}/jobs'],text=True))
+          receipt={'schema':'eonwild.motion.verification-run.v1','tested_source_sha':os.environ['GITHUB_SHA'],'run_id':os.environ['GITHUB_RUN_ID'],
+              'jobs':[{'id':job['id'],'name':job['name'],'status':job['status'],'conclusion':job['conclusion']} for job in jobs['jobs'] if job['name']!='record'],
+              'unity_validation':'NOT_RUN','visual_approval':'PENDING_ACTUAL_REVIEW',
+              'files':{str(p.relative_to(destination)):hashlib.sha256(p.read_bytes()).hexdigest() for p in destination.rglob('*') if p.is_file()}}
+          (destination/'run.json').write_text(json.dumps(receipt,indent=2)+'\n')
+          subprocess.run(['git','config','user.name','github-actions[bot]'],check=True)
+          subprocess.run(['git','config','user.email','41898282+github-actions[bot]@users.noreply.github.com'],check=True)
+          subprocess.run(['git','add',str(destination)],check=True)
+          subprocess.run(['git','commit','-m','test: record native review and full regression evidence without promoting candidates'],check=True)
+          subprocess.run(['git','push','origin','HEAD:refs/heads/feat/motion-quality-and-breadth'],check=True)
+          print(json.dumps(receipt,indent=2))
