@@ -29,7 +29,7 @@ from eonwild_motion.hashing import sha256_file
 ROOT = Path(__file__).resolve().parents[1]
 POLICY_PATH = ROOT / "reports/V9-GAIT-FOOT-AUDIT-001/narrow-gauge-contract.json"
 SOURCE_PROFILE_PATH = ROOT / "profiles/v9/contact-gauge-v8.2.json"
-SOURCE_PATH = ROOT / "procedural-animation-toolkit(v8.2)/asset/tarbosaurus_v8_2_approved.glb"
+SOURCE_PATH = ROOT / "legacy/capsules/v8.2/asset/tarbosaurus_v8_2_approved.glb"
 POLICY = load_narrow_gauge_policy(POLICY_PATH)
 SOURCE = load_contact_gauge_source(SOURCE_PROFILE_PATH)
 

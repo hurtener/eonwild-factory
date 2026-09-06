@@ -1,0 +1,85 @@
+{
+  "schema": "eonwild.motion.v9.contact-authority.v1",
+  "verdict": "FAIL",
+  "per_foot": {
+    "left": {
+      "schema": "eonwild.motion.v9.contact-authority.v1",
+      "phase_count": 1,
+      "phases": [
+        {
+          "start_frame": 0,
+          "end_frame": 44,
+          "start_time_s": 0.0,
+          "end_time_s": 0.36666665906491486,
+          "minimum_gap_m": -0.004248626103582001,
+          "contact_centroid_m": [
+            -0.387701734177664,
+            0.13392162802161353,
+            2.92018678791406
+          ],
+          "max_penetration_m": 0.004248626103582001,
+          "print_depth_m": 0.0,
+          "substrate": "hard",
+          "max_persistent_velocity_mps": 0.48258895781450845,
+          "persistent_point_total": 65,
+          "unknown_pairs": 8,
+          "drift_m": 0.0227027770129808,
+          "yaw_deg": 0.4458130269838709,
+          "verdict": "FAIL",
+          "reasons": [
+            "8/44 pairs have no persistent ground points (unknown contact)",
+            "penetration 0.004249 m exceeds tolerance",
+            "persistent skate 0.483 m/s exceeds threshold",
+            "patch drift 0.0227 m exceeds threshold"
+          ]
+        }
+      ],
+      "global_minimum_gap_m": -0.004248626103582001,
+      "verdict": "FAIL",
+      "reasons": [
+        "phase 0-44: 8/44 pairs have no persistent ground points (unknown contact)",
+        "phase 0-44: penetration 0.004249 m exceeds tolerance",
+        "phase 0-44: persistent skate 0.483 m/s exceeds threshold",
+        "phase 0-44: patch drift 0.0227 m exceeds threshold"
+      ],
+      "classification": "skinned patch authority; band-relative speeds excluded from verdict"
+    },
+    "right": {
+      "schema": "eonwild.motion.v9.contact-authority.v1",
+      "phase_count": 1,
+      "phases": [
+        {
+          "start_frame": 58,
+          "end_frame": 102,
+          "start_time_s": 0.48333332331284234,
+          "end_time_s": 0.8499999823777572,
+          "minimum_gap_m": 0.0017509475458026755,
+          "contact_centroid_m": [
+            0.8311413612391629,
+            0.10760320075044323,
+            7.008659667402036
+          ],
+          "max_penetration_m": 0.0,
+          "print_depth_m": 0.0,
+          "substrate": "hard",
+          "max_persistent_velocity_mps": 0.0,
+          "persistent_point_total": 0,
+          "unknown_pairs": 44,
+          "drift_m": 0.0,
+          "yaw_deg": 0.0,
+          "verdict": "FAIL",
+          "reasons": [
+            "44/44 pairs have no persistent ground points (unknown contact)"
+          ]
+        }
+      ],
+      "global_minimum_gap_m": 0.0017509475458026755,
+      "verdict": "FAIL",
+      "reasons": [
+        "phase 58-102: 44/44 pairs have no persistent ground points (unknown contact)"
+      ],
+      "classification": "skinned patch authority; band-relative speeds excluded from verdict"
+    }
+  },
+  "classification": "persistent ground-plane semantics; band-relative speeds excluded from verdict"
+}

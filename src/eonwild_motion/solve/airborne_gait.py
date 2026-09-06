@@ -154,13 +154,71 @@ def driven_body_response(gait: AirborneGait, plan: Mapping[str, Any], roles: Map
     return {"classification": "bounded cyclic kinematic response to the solved carrier velocity; no force/conservation claim", "maximum_cyclic_state_seam_degrees": max(float(abs(values[-1] - values[0])) for values in states), "samples": samples}
 
 
-def solve_airborne_gait(source: Glb, *, source_clip: str, semantic_roles: Mapping[str, Any], gait: AirborneGait, up_axis: tuple[float, float, float] = (0, 1, 0)) -> tuple[bytes, bytes, dict[str, Any], dict[str, Any]]:
+def _validate_plan_override(plan: Mapping[str, Any], gait: AirborneGait) -> dict[str, Any]:
+    """Fail-closed validation for caller-built (one-shot) plan samples."""
+    from ..planning.airborne_gait import build_airborne_plan as _rebuild
+    if not isinstance(plan, Mapping):
+        raise ContractError("plan override must be a mapping")
+    samples = plan.get("samples")
+    if not isinstance(samples, list) or len(samples) < 2:
+        raise ContractError("plan override needs at least two samples")
+    required_row = ("time_s", "root_forward_m", "pelvis_height_offset_m", "flight", "support_count")
+    required_foot = ("contact", "forward_m", "height_m", "toe_flex_degrees", "foot_pitch_degrees", "swing_phase")
+    previous = None
+    for row in samples:
+        if not isinstance(row, Mapping):
+            raise ContractError("plan override rows must be mappings")
+        for key in required_row:
+            if key not in row:
+                raise ContractError(f"plan override row misses {key}")
+        time_s = float(row["time_s"])
+        if not math.isfinite(time_s):
+            raise ContractError("plan override time must be finite")
+        for key in ("root_forward_m", "pelvis_height_offset_m"):
+            value = row[key]
+            if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+                raise ContractError(f"plan override {key} must be finite numeric")
+        if previous is not None and time_s <= previous:
+            raise ContractError("plan override times must be strictly increasing")
+        previous = time_s
+        feet = row.get("feet")
+        if not isinstance(feet, Mapping):
+            raise ContractError("plan override row misses feet")
+        for side in ("left", "right"):
+            foot = feet.get(side)
+            if not isinstance(foot, Mapping):
+                raise ContractError(f"plan override misses {side} foot")
+            for key in required_foot:
+                if key not in foot:
+                    raise ContractError(f"plan override {side} foot misses {key}")
+                if key == "contact":
+                    continue
+                value = foot[key]
+                if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+                    raise ContractError(f"plan override {side} foot {key} must be finite numeric")
+            if not isinstance(foot["contact"], bool):
+                raise ContractError("plan override foot contact must be bool")
+    out = dict(plan)
+    out.setdefault("schema", "eonwild.motion.v9.airborne-gait-plan.v1")
+    out.setdefault("program", "airborne_gait")
+    out.setdefault("parameters", {})
+    return out
+
+
+def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles: Mapping[str, Any], gait: AirborneGait, up_axis: tuple[float, float, float] = (0, 1, 0), plan_override: Mapping[str, Any] | None = None, forward_axis: tuple[float, float, float] | None = None, legacy_overlay: bool = True) -> tuple[bytes, bytes, dict[str, Any], dict[str, Any]]:
     """Emit one GLB authority and its derived in-place projection.
 
     Source supplies rig/skin/rest pose and body geometry only; source animation
     timing never controls the new gait. Reach failures remain visible in the
     receipt (no stretch). Ground witnesses here are skeleton proxies, so final
     skinned-ground/contact checks remain a separate mandatory acceptance gate.
+
+    ``plan_override`` replaces the cyclic planner output with caller-built
+    samples (one-shot moves: lunges, stumbles, recoveries). It must carry
+    the same schema (samples with time_s, root_forward_m,
+    pelvis_height_offset_m, flight, support_count and per-foot contact,
+    forward_m, height_m, toe_flex_degrees, foot_pitch_degrees,
+    swing_phase). Omitting it reproduces legacy output exactly.
     """
     roles = semantic_roles
     try:
@@ -180,12 +238,22 @@ def solve_airborne_gait(source: Glb, *, source_clip: str, semantic_roles: Mappin
         for chain in chains:
             if source.parents[chain[0]] != legs[side][-1] or any(source.parents[b] != a for a, b in zip(chain, chain[1:])):
                 raise ContractError("semantic toe chains must follow actual foot-parent topology")
-    tracks, source_times = _clip_state(source, source_clip)
-    translations, rotations, scales = _pose(source, tracks, 0)
-    worlds = _world_matrices(source, translations, rotations, scales)
-    final_worlds = _world_matrices(source, *_pose(source, tracks, len(source_times) - 1))
     up = _unit(up_axis)
-    travel = np.asarray(_world_position(final_worlds[root])) - np.asarray(_world_position(worlds[root]))
+    if source_clip is None:
+        if forward_axis is None:
+            raise ContractError("neutral geometry requires an explicit forward axis")
+        translations, rotations, scales = source.rest_translation, source.rest_rotation, source.rest_scale
+        worlds = _world_matrices(source, translations, rotations, scales)
+        travel = np.asarray(forward_axis, dtype=float)
+    else:
+        tracks, source_times = _clip_state(source, source_clip)
+        translations, rotations, scales = _pose(source, tracks, 0)
+        worlds = _world_matrices(source, translations, rotations, scales)
+        final_worlds = _world_matrices(source, *_pose(source, tracks, len(source_times) - 1))
+        travel = (np.asarray(forward_axis, dtype=float) if forward_axis is not None else
+                  np.asarray(_world_position(final_worlds[root])) - np.asarray(_world_position(worlds[root])))
+    if travel.shape != (3,) or not np.isfinite(travel).all():
+        raise ContractError("forward axis must be a finite three-vector")
     forward = _unit(travel - up * (travel @ up))
     lateral = _unit(np.cross(up, forward))
     origin = np.asarray(_world_position(worlds[pelvis]))
@@ -196,7 +264,10 @@ def solve_airborne_gait(source: Glb, *, source_clip: str, semantic_roles: Mappin
     body_height = float(origin @ up - ground)
     if body_height <= 0:
         raise ContractError("semantic pelvis must be above the toe plane")
-    plan = build_airborne_plan(gait, body_height)
+    # Behavior programs own support choreography; an override never runs
+    # the airborne planner. Legacy calls retain their original default path.
+    plan = (build_airborne_plan(gait, body_height) if plan_override is None else
+            _validate_plan_override(plan_override, gait))
     body_response = driven_body_response(gait, plan, roles)
     base_t, base_r, base_s = translations[:], rotations[:], scales[:]
     base_w = worlds
@@ -219,6 +290,12 @@ def solve_airborne_gait(source: Glb, *, source_clip: str, semantic_roles: Mappin
         tr, rot = base_t[:], base_r[:]
         root_delta = forward * row["root_forward_m"]
         tr[root] = tuple(float(v) for v in np.asarray(base_t[root]) + _local_delta(source, base_w, root, root_delta))
+        root_pitch = float(row.get("root_pitch_degrees", 0.0))
+        if not math.isfinite(root_pitch):
+            raise ContractError("plan root pitch must be finite numeric")
+        if root_pitch:
+            axis = _qrotate(_qinv(_rotation_from_matrix(base_w[root])), tuple(lateral))
+            rot[root] = _qmul(base_r[root], _qrotvec(tuple(np.asarray(axis) * math.radians(root_pitch))))
         tr[pelvis] = tuple(float(v) for v in np.asarray(base_t[pelvis]) + _local_delta(source, base_w, pelvis, up * row["pelvis_height_offset_m"]))
         if body_response:
             for name, degrees in body_response["samples"][frame_index]["sagittal_node_degrees"].items():
@@ -227,7 +304,7 @@ def solve_airborne_gait(source: Glb, *, source_clip: str, semantic_roles: Mappin
                 n = source.name_to_node[name]
                 axis = _qrotate(_qinv(_rotation_from_matrix(base_w[n])), tuple(lateral))
                 rot[n] = _qmul(base_r[n], _qrotvec(tuple(np.asarray(axis) * math.radians(degrees))))
-        else:
+        elif legacy_overlay:
             # Preserve the pre-existing default path for accepted artifacts and
             # other profiles. The new driven response is explicitly opt-in.
             pulse = math.sin(2 * math.pi * row["time_s"] / gait.step_period_s)
@@ -270,6 +347,17 @@ def solve_airborne_gait(source: Glb, *, source_clip: str, semantic_roles: Mappin
             foot_height = float(np.asarray(_world_position(base_w[foot])) @ up - ground)
             desired_foot = origin + forward * foot_plan["forward_m"] + lateral * side_lane
             desired_foot += up * (ground + foot_height + foot_plan["height_m"] - float(desired_foot @ up))
+            # Regrounding: lower this foot's targets by a constant per-side
+            # offset on EVERY frame (stance and swing). A constant shift
+            # preserves C1 continuity, loop closure and the pelvis/root
+            # motion exactly; only distal leg pose changes, bounded to 5 cm
+            # by the gait contract. Zero (default) reproduces legacy output.
+            ground_offset = (
+                gait.stance_ground_offset_left_m if side == "left"
+                else gait.stance_ground_offset_right_m
+            )
+            if ground_offset:
+                desired_foot -= up * ground_offset
             nominal_foot = desired_foot.copy()
             # Rock the articulated foot about the distal contact centroid,
             # not about the ankle: toe tips stay fixed during stance roll-off.
@@ -476,18 +564,52 @@ def ground_plane_velocity_witness(old: np.ndarray, new: np.ndarray, *, up_axis: 
     return {"persistent_point_count": int(len(ids)), "maximum_velocity_mps": float(speeds[local]), "maximum_tangential_velocity_mps": float(np.linalg.norm(tangential, axis=1).max()), "point_index": point, "previous_world_m": old[point].tolist(), "current_world_m": new[point].tolist(), "previous_ground_gap_m": float(old[point, up_axis] - ground_m), "current_ground_gap_m": float(new[point, up_axis] - ground_m)}
 
 
-def evaluate_airborne_skin(glb: Glb, *, contact_profile: Mapping[str, Any], gait: AirborneGait, body_height_m: float, sample_hz: int = 120) -> dict[str, Any]:
+def evaluate_airborne_skin(glb: Glb, *, contact_profile: Mapping[str, Any], gait: AirborneGait, body_height_m: float, sample_hz: int = 120, include_contact_authority: bool = False, authority_thresholds: Any = None, clip_name: str = "V9_AIRBORNE_RUN_ROOT_MOTION", plan_override: Mapping[str, Any] | None = None) -> dict[str, Any]:
     """Evaluate actual skinned foot vertices against the bound source floor.
 
     Reuses the existing normalized multi-influence skinning/mask adapter;
     does not infer contact from the plan alone. Toe centroid velocity is
     reported separately from the skeletal endpoint lock (a deforming patch
     need not have a stationary centroid during legitimate roll-off).
+
+    When ``include_contact_authority`` is true, the persistent
+    ground-plane verdict from ``dynamics.contact_authority`` is appended
+    under ``contact_authority_v1``. Default off: existing receipts are
+    byte-identical.
+
+    ``plan_override`` reads planned contact/stage from caller-built
+    (one-shot) samples by nearest time instead of the cyclic sampler,
+    and sizes the frame range from the plan span. Omitting it
+    reproduces legacy output exactly.
     """
     from ..contact_gauge import _source_frames
 
-    duration = 2 * gait.cycles * gait.step_period_s
-    frames, metadata = _source_frames(glb, contact_profile, animation_name="V9_AIRBORNE_RUN_ROOT_MOTION", sample_count=int(math.ceil(duration * sample_hz)) + 1)
+    if plan_override is not None:
+        override_samples = _validate_plan_override(plan_override, gait)["samples"]
+        override_times = [float(s["time_s"]) for s in override_samples]
+        duration = override_times[-1] - override_times[0]
+
+        def _nearest_sample(time_s: float) -> dict[str, Any]:
+            best = min(range(len(override_times)), key=lambda i: abs(override_times[i] - time_s))
+            return override_samples[best]
+
+        def _planned(time_s: float) -> dict[str, Any]:
+            row = _nearest_sample(time_s)
+            return {"flight": bool(row["flight"]),
+                    "feet": {side: {"contact": bool(row["feet"][side]["contact"]),
+                                    "height_m": float(row["feet"][side]["height_m"])}
+                             for side in ("left", "right")},
+                    "stage": row.get("stage", "ONE_SHOT")}
+    else:
+        def _planned(time_s: float) -> dict[str, Any]:
+            sample = sample_airborne_gait(gait, time_s, body_height_m)
+            return {"flight": bool(sample["flight"]),
+                    "feet": {side: {"contact": bool(sample["feet"][side]["contact"]),
+                                    "height_m": float(sample["feet"][side]["height_m"])}
+                             for side in ("left", "right")},
+                    "stage": sample.get("stage", "")}
+        duration = 2 * gait.cycles * gait.step_period_s
+    frames, metadata = _source_frames(glb, contact_profile, animation_name=clip_name, sample_count=int(math.ceil(duration * sample_hz)) + 1)
     ground = float(contact_profile["geometry"]["ground"]["level_m"])
     axis_name = contact_profile["geometry"]["ground"]["up_axis"]
     axis = {"X": 0, "Y": 1, "Z": 2}[axis_name]
@@ -498,8 +620,8 @@ def evaluate_airborne_skin(glb: Glb, *, contact_profile: Mapping[str, Any], gait
     airborne_misses = 0
     flight_interior = 0
     for frame in frames:
-        sample = sample_airborne_gait(gait, frame["time_s"], body_height_m)
-        row = {"time_s": frame["time_s"], "planned_flight": sample["flight"], "feet": {}}
+        planned = _planned(frame["time_s"])
+        row = {"time_s": frame["time_s"], "planned_flight": planned["flight"], "feet": {}}
         for side, foot in frame["feet"].items():
             sole = np.asarray([p["point_m"] for p in foot["sole_points"]])
             toe = np.asarray([p["point_m"] for p in foot["toe_points"]])
@@ -507,12 +629,12 @@ def evaluate_airborne_skin(glb: Glb, *, contact_profile: Mapping[str, Any], gait
             min_toe = float(toe[:, axis].min() - ground)
             minimum = min(min_sole, min_toe)
             max_penetration = max(max_penetration, -minimum)
-            contact = sample["feet"][side]["contact"]
+            contact = planned["feet"][side]["contact"]
             contact_misses += int(contact and minimum > ground_gap)
             row["feet"][side] = {"planned_contact": contact, "sole_minimum_gap_m": min_sole, "toe_minimum_gap_m": min_toe, "toe_surface_centroid_m": toe.mean(axis=0).tolist()}
         # Exclude the exact toe-off/landing boundary where zero clearance is
         # mathematically required; check interior flight rather than labels.
-        if sample["flight"] and min(f["height_m"] for f in sample["feet"].values()) > .005 * body_height_m:
+        if planned["flight"] and min(f["height_m"] for f in planned["feet"].values()) > .005 * body_height_m:
             flight_interior += 1
             airborne_misses += int(any(min(f["sole_minimum_gap_m"], f["toe_minimum_gap_m"]) <= 0 for f in row["feet"].values()))
         facts.append(row)
@@ -534,8 +656,13 @@ def evaluate_airborne_skin(glb: Glb, *, contact_profile: Mapping[str, Any], gait
             a, b = previous["feet"][side], current["feet"][side]
             if a["planned_contact"] and b["planned_contact"]:
                 dt = current["time_s"] - previous["time_s"]
-                local_stance = (previous["time_s"] - (0 if side == "left" else gait.step_period_s)) % (2 * gait.step_period_s)
-                witness_context = {"side": side, "time_s": [previous["time_s"], current["time_s"]], "stance_phase": local_stance / (gait.step_period_s * (1 - gait.flight_fraction)), "body_stage": sample_airborne_gait(gait, previous["time_s"], body_height_m)["stage"]}
+                if plan_override is not None:
+                    witness_context = {"side": side, "time_s": [previous["time_s"], current["time_s"]],
+                                       "stance_phase": None,
+                                       "body_stage": _planned(previous["time_s"])["stage"]}
+                else:
+                    local_stance = (previous["time_s"] - (0 if side == "left" else gait.step_period_s)) % (2 * gait.step_period_s)
+                    witness_context = {"side": side, "time_s": [previous["time_s"], current["time_s"]], "stance_phase": local_stance / (gait.step_period_s * (1 - gait.flight_fraction)), "body_stage": sample_airborne_gait(gait, previous["time_s"], body_height_m)["stage"]}
                 all_old = np.asarray([p["point_m"] for region in ("sole_points", "toe_points") for p in frames[index]["feet"][side][region]])
                 all_new = np.asarray([p["point_m"] for region in ("sole_points", "toe_points") for p in frames[index + 1]["feet"][side][region]])
                 for band, summary in true_ground_scan.items():
@@ -571,4 +698,82 @@ def evaluate_airborne_skin(glb: Glb, *, contact_profile: Mapping[str, Any], gait
     for summary in true_ground_scan.values():
         summary["status"] = "MEASURED_PERSISTENT_GROUND_POINTS" if summary["persistent_point_pairs"] else "NO_PERSISTENT_POINTS_AT_THIS_GROUND_TOLERANCE"
     extra_contact_evidence = {"relative_bottom_band_classification": "proximity deformation; not proof of contact at the fixed floor", "proximity_band_peak_witnesses": proximity_witnesses, "absolute_ground_plane_velocity": true_ground_scan}
-    return {**extra_contact_evidence, "status": "PASS_FOCUSED_SKIN_FLOOR" if max_penetration <= .0005 and contact_misses == 0 and airborne_misses == 0 and flight_interior > 0 else "FAIL_FOCUSED_SKIN_FLOOR", "ground_level_m": ground, "source_floor_not_recalibrated": True, "maximum_foot_surface_penetration_m": max_penetration, "planned_stance_without_surface_contact_samples": contact_misses, "interior_flight_samples": flight_interior, "interior_flight_with_surface_ground_intersection_samples": airborne_misses, "maximum_planted_toe_surface_centroid_velocity_mps": max_surface_speed, "maximum_planted_distal_surface_point_velocity_mps": max_distal_patch_speed, "maximum_active_ground_surface_point_velocity_mps": max_active_surface_speed, "contact_band_sensitivity_max_velocity_mps": contact_band_scan, "active_ground_surface_point_pairs": active_surface_pairs, "distal_patch_vertex_indices": {s: [metadata["mask_counts"][s]["toe_vertex_indices"][i] for i in ids] for s, ids in patch_indices.items()}, "skin_adapter": metadata, "frames": facts, "acceptance": "focused ground/flight evidence only; visual review and contact-patch drift gate still required"}
+    result = {**extra_contact_evidence, "status": "PASS_FOCUSED_SKIN_FLOOR" if max_penetration <= .0005 and contact_misses == 0 and airborne_misses == 0 and flight_interior > 0 else "FAIL_FOCUSED_SKIN_FLOOR", "ground_level_m": ground, "source_floor_not_recalibrated": True, "maximum_foot_surface_penetration_m": max_penetration, "planned_stance_without_surface_contact_samples": contact_misses, "interior_flight_samples": flight_interior, "interior_flight_with_surface_ground_intersection_samples": airborne_misses, "maximum_planted_toe_surface_centroid_velocity_mps": max_surface_speed, "maximum_planted_distal_surface_point_velocity_mps": max_distal_patch_speed, "maximum_active_ground_surface_point_velocity_mps": max_active_surface_speed, "contact_band_sensitivity_max_velocity_mps": contact_band_scan, "active_ground_surface_point_pairs": active_surface_pairs, "distal_patch_vertex_indices": {s: [metadata["mask_counts"][s]["toe_vertex_indices"][i] for i in ids] for s, ids in patch_indices.items()}, "skin_adapter": metadata, "frames": facts, "acceptance": "focused ground/flight evidence only; visual review and contact-patch drift gate still required"}
+    if include_contact_authority:
+        result["contact_authority_v1"] = _contact_authority_from_skin_frames(
+            frames, facts, ground_m=ground, up_axis=axis, thresholds=authority_thresholds
+        )
+    return result
+
+
+def _contact_authority_from_skin_frames(
+    frames: Any, facts: Any, *, ground_m: float, up_axis: int, thresholds: Any = None
+) -> dict[str, Any]:
+    """Build the persistent ground-plane authority verdict from skin frames.
+
+    Pure data adapter: skinned sole/toe vertices plus planned contact become
+    per-foot :class:`PatchFrame` timelines evaluated by
+    ``dynamics.contact_authority.evaluate_contact_authority``. Band-relative
+    speeds are never consulted for the verdict.
+    """
+    from ..dynamics.contact_authority import (
+        AuthorityThresholds,
+        PatchFrame,
+        evaluate_contact_authority,
+    )
+
+    per_foot: dict[str, Any] = {}
+    if thresholds is None:
+        thresholds = AuthorityThresholds(up_axis=up_axis, ground_m=ground_m)
+    for side in ("left", "right"):
+        patch_frames: list[PatchFrame] = []
+        loaded: list[bool] = []
+        for frame, row in zip(frames, facts):
+            sole = tuple(tuple(float(v) for v in p["point_m"]) for p in frame["feet"][side]["sole_points"])
+            toe = tuple(tuple(float(v) for v in p["point_m"]) for p in frame["feet"][side]["toe_points"])
+            patch_frames.append(
+                PatchFrame(time_s=float(frame["time_s"]), sole_m=sole, toe_m=toe)
+            )
+            loaded.append(bool(row["feet"][side]["planned_contact"]))
+        try:
+            kwargs: dict[str, Any] = {}
+            if thresholds is not None:
+                kwargs["thresholds"] = thresholds
+            per_foot[side] = evaluate_contact_authority(
+                patch_frames,
+                loaded,
+                **kwargs,
+            )
+        except ContractError as exc:
+            per_foot[side] = {"verdict": "FAIL", "reasons": [str(exc)]}
+    # A foot with zero loaded phases makes no contact claim (neutral); the
+    # run fails only if no foot was ever loaded or a loaded foot fails.
+    loaded_feet = [v for v in per_foot.values() if v.get("phase_count", 0) > 0]
+    if not loaded_feet:
+        overall = "FAIL"
+    else:
+        overall = "PASS" if all(v.get("verdict") == "PASS" for v in loaded_feet) else "FAIL"
+    return {
+        "schema": "eonwild.motion.v9.contact-authority.v1",
+        "verdict": overall,
+        "per_foot": per_foot,
+        "classification": "persistent ground-plane semantics; band-relative speeds excluded from verdict",
+    }
+
+
+def evaluate_airborne_skin_with_authority(
+    glb: Glb, *, contact_profile: Mapping[str, Any], gait: AirborneGait, body_height_m: float, sample_hz: int = 120, authority_thresholds: Any = None, clip_name: str = "V9_AIRBORNE_RUN_ROOT_MOTION", plan_override: Mapping[str, Any] | None = None
+) -> dict[str, Any]:
+    """Sibling of :func:`evaluate_airborne_skin` with authority verdict on."""
+
+    return evaluate_airborne_skin(
+        glb,
+        contact_profile=contact_profile,
+        gait=gait,
+        body_height_m=body_height_m,
+        sample_hz=sample_hz,
+        include_contact_authority=True,
+        authority_thresholds=authority_thresholds,
+        clip_name=clip_name,
+        plan_override=plan_override,
+    )

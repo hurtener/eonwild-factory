@@ -30,7 +30,7 @@
     "interpolation": "LINEAR"
   },
   "provenance": {
-    "source": "procedural-animation-toolkit(v8.2)/config/release.json",
+    "source": "legacy/capsules/v8.2/config/release.json",
     "status": "complete",
     "purpose": "engineering semantic map; no anatomical claim"
   }

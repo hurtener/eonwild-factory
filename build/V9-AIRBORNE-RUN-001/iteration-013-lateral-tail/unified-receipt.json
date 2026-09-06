@@ -1,0 +1,53 @@
+{
+  "schema": "eonwild.motion.v9.unified-solve.v1",
+  "clip": "V9_UNIFIED_RUN_LATERAL_TAIL_ROOT_MOTION",
+  "leg_receipt_sha256": "413cb1946f5a2f244c9af3638167dde09f5f9aa11dc9681e73de235a72580851",
+  "axial_schema": "eonwild.motion.v9.axial-solve.v1",
+  "axial_worst_residual_m": 0.12879179379101854,
+  "axial_all_reached": false,
+  "axial_all_inside_preferred": true,
+  "tail_conservation": "body counter-rotation propagated",
+  "channels_replaced": [
+    "Bone_002",
+    "Bone_041",
+    "Bone_040",
+    "Bone_039",
+    "Bone_038",
+    "Bone_037",
+    "Bone_036",
+    "Bone_024",
+    "Bone_023",
+    "Bone_022",
+    "Bone_021",
+    "Bone_020",
+    "Bone_019",
+    "Bone_018",
+    "Bone_017",
+    "Bone_016"
+  ],
+  "max_replace_deg": 20.329689631291455,
+  "loop_seam_deg": 0.1927711634234,
+  "contact_source": "shared leg plan (not re-derived)",
+  "claims": {
+    "classification": "integrated_dynamics_candidate",
+    "capacity_feasibility": "see leg receipt",
+    "physical": false,
+    "scientific": false,
+    "biological": false
+  },
+  "tail_lateral_peak_deg": 6.5,
+  "tail_recenter": 1.0,
+  "channels_yawed": [
+    "Bone_024",
+    "Bone_023",
+    "Bone_022",
+    "Bone_021",
+    "Bone_020",
+    "Bone_019",
+    "Bone_018",
+    "Bone_017",
+    "Bone_016"
+  ],
+  "tail_lateral_total_deg": 15.42853116297865,
+  "unified_sha256": "b9c4a3e87d154c25eea407a8ae080abad7ae9c6cb06bf950b537a9c87e0fec8c"
+}

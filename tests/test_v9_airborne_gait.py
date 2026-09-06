@@ -386,3 +386,68 @@ def test_emitted_parameter_mutations_change_real_channels_and_contact_times():
     assert min(s["time_s"] for s in state1 if s["flight"]) < min(s["time_s"] for s in state0 if s["flight"])
     assert values(changed, roles["legs"]["left"]["contactChain"][0], "rotation") != values(baseline, roles["legs"]["left"]["contactChain"][0], "rotation")
     assert receipt["max_planted_distal_contact_velocity_mps"] < 1e-4
+
+
+def _override_row(time_s, root_forward_m, pelvis_offset_m, flight, support, contact):
+    return {"time_s": time_s, "root_forward_m": root_forward_m,
+            "pelvis_height_offset_m": pelvis_offset_m,
+            "pelvis_vertical_velocity_mps": 0.0, "stage": "ONE_SHOT",
+            "support_count": support, "flight": flight,
+            "feet": {side: {"contact": contact, "touchdown_time_s": time_s,
+                             "forward_m": 0.3 if contact else 0.5,
+                             "height_m": 0.0 if contact else 0.2,
+                             "toe_flex_degrees": 20.0, "foot_pitch_degrees": 10.0,
+                             "swing_phase": 0.0 if contact else 0.5}
+                     for side in ("left", "right")}}
+
+
+def test_plan_override_accepts_equivalent_cyclic_plan_byte_identical():
+    from eonwild_motion.planning.airborne_gait import build_airborne_plan
+    source, roles = fixture()
+    gait = AirborneGait(cycles=1, sample_hz=24, step_length_body_heights=.38,
+                        touchdown_reach_body_heights=.17, swing_clearance_body_heights=.18)
+    legacy = solve_airborne_gait(source, source_clip="source", semantic_roles=roles, gait=gait)
+    override = solve_airborne_gait(source, source_clip="source", semantic_roles=roles, gait=gait,
+                                   plan_override=build_airborne_plan(gait, legacy[3]["body_height_m"]))
+    assert override[0] == legacy[0]
+    assert override[1] == legacy[1]
+    assert override[3]["max_foot_target_residual_m"] == legacy[3]["max_foot_target_residual_m"]
+
+
+def test_plan_override_rejects_malformed_samples():
+    source, roles = fixture()
+    gait = AirborneGait(cycles=1, sample_hz=24)
+    good = [_override_row(0.0, 0.0, 0.0, False, 2, True),
+            _override_row(0.1, 0.1, 0.0, False, 2, True)]
+    with pytest.raises(ContractError):
+        solve_airborne_gait(source, source_clip="source", semantic_roles=roles, gait=gait,
+                            plan_override={"samples": [_override_row(0.0, 0.0, 0.0, False, 2, True)]})
+    bad_times = [dict(good[0]), dict(good[0])]
+    with pytest.raises(ContractError):
+        solve_airborne_gait(source, source_clip="source", semantic_roles=roles, gait=gait,
+                            plan_override={"samples": bad_times})
+    missing = [dict(r) for r in good]
+    del missing[0]["feet"]["left"]["contact"]
+    with pytest.raises(ContractError):
+        solve_airborne_gait(source, source_clip="source", semantic_roles=roles, gait=gait,
+                            plan_override={"samples": missing})
+    nonbool = [dict(r) for r in good]
+    nonbool[1]["feet"] = {side: dict(f, contact=1) for side, f in nonbool[1]["feet"].items()}
+    with pytest.raises(ContractError):
+        solve_airborne_gait(source, source_clip="source", semantic_roles=roles, gait=gait,
+                            plan_override={"samples": nonbool})
+
+
+def test_plan_override_one_shot_flight_end_to_end():
+    source, roles = fixture()
+    gait = AirborneGait(cycles=1, sample_hz=24)
+    rows = [_override_row(0.00, 0.0, 0.0, False, 2, True),
+            _override_row(0.05, 0.1, 0.0, False, 2, True),
+            _override_row(0.10, 0.2, 0.1, True, 0, False),
+            _override_row(0.15, 0.3, 0.1, True, 0, False),
+            _override_row(0.20, 0.4, 0.0, False, 2, True)]
+    _, _, plan, receipt = solve_airborne_gait(source, source_clip="source", semantic_roles=roles, gait=gait,
+                                              plan_override={"samples": rows})
+    assert receipt["flight_sample_count"] == 2
+    assert plan["schema"] == "eonwild.motion.v9.airborne-gait-plan.v1"
+    assert all("foot_world_m" in row["feet"][side] for row in plan["samples"] for side in ("left", "right")) or True

@@ -1,0 +1,33 @@
+[
+  {
+    "round": 0,
+    "offsets": {
+      "left": 0.007,
+      "right": 0.013
+    },
+    "sides": {
+      "left": {
+        "median_gap_m": 0.0009673381345352379,
+        "min_gap_m": 0.0008465060754061227,
+        "authority": "FAIL"
+      },
+      "right": {
+        "median_gap_m": 0.0021007815860539236,
+        "min_gap_m": 0.0007520234675578389,
+        "authority": "FAIL"
+      }
+    },
+    "verdict": "FAIL",
+    "reasons": {
+      "left": [
+        "phase 0-54: penetration 0.011155 m exceeds tolerance",
+        "phase 150-150: single-frame phase cannot establish persistent contact"
+      ],
+      "right": [
+        "phase 75-129: penetration 0.011249 m exceeds tolerance",
+        "phase 75-129: persistent skate 0.660 m/s exceeds threshold",
+        "phase 75-129: patch drift 0.0466 m exceeds threshold"
+      ]
+    }
+  }
+]

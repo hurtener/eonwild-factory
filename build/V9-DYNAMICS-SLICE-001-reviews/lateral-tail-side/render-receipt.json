@@ -1,0 +1,172 @@
+{
+  "status": "ENGINEERING_MEDIAN_SEED_NOT_VISUALLY_ACCEPTED",
+  "timeline": {
+    "action_name": "V9_UNIFIED_RUN_LATERAL_TAIL_IN_PLACE",
+    "frame_start": 0.0,
+    "frame_end": 30.0,
+    "duration_s": 1.25,
+    "presentation_scale": 1.0,
+    "presentation_cycle_coverage": 1.0,
+    "nla_repeat": 1.0,
+    "timeline_sha256": "fc00e0e9e6bd89a70ce569c84a3dbbb2a817df8c63ec49b4f31fc998bf86a976",
+    "nla_scene_start": 1.0,
+    "nla_scene_end": 31.0,
+    "source_time_formula": "(action_frame_start + (scene_frame - nla_scene_start) / presentation_scale) / fps",
+    "rendered_samples": [
+      {
+        "scene_frame": 1.0,
+        "source_time_s": 0.0
+      },
+      {
+        "scene_frame": 2.0,
+        "source_time_s": 0.041666666666666664
+      },
+      {
+        "scene_frame": 3.0,
+        "source_time_s": 0.08333333333333333
+      },
+      {
+        "scene_frame": 4.0,
+        "source_time_s": 0.125
+      },
+      {
+        "scene_frame": 5.0,
+        "source_time_s": 0.16666666666666666
+      },
+      {
+        "scene_frame": 6.0,
+        "source_time_s": 0.20833333333333334
+      },
+      {
+        "scene_frame": 7.0,
+        "source_time_s": 0.25
+      },
+      {
+        "scene_frame": 8.0,
+        "source_time_s": 0.2916666666666667
+      },
+      {
+        "scene_frame": 9.0,
+        "source_time_s": 0.3333333333333333
+      },
+      {
+        "scene_frame": 10.0,
+        "source_time_s": 0.375
+      },
+      {
+        "scene_frame": 11.0,
+        "source_time_s": 0.4166666666666667
+      },
+      {
+        "scene_frame": 12.0,
+        "source_time_s": 0.4583333333333333
+      },
+      {
+        "scene_frame": 13.0,
+        "source_time_s": 0.5
+      },
+      {
+        "scene_frame": 14.0,
+        "source_time_s": 0.5416666666666666
+      },
+      {
+        "scene_frame": 15.0,
+        "source_time_s": 0.5833333333333334
+      },
+      {
+        "scene_frame": 16.0,
+        "source_time_s": 0.625
+      },
+      {
+        "scene_frame": 17.0,
+        "source_time_s": 0.6666666666666666
+      },
+      {
+        "scene_frame": 18.0,
+        "source_time_s": 0.7083333333333334
+      },
+      {
+        "scene_frame": 19.0,
+        "source_time_s": 0.75
+      },
+      {
+        "scene_frame": 20.0,
+        "source_time_s": 0.7916666666666666
+      },
+      {
+        "scene_frame": 21.0,
+        "source_time_s": 0.8333333333333334
+      },
+      {
+        "scene_frame": 22.0,
+        "source_time_s": 0.875
+      },
+      {
+        "scene_frame": 23.0,
+        "source_time_s": 0.9166666666666666
+      },
+      {
+        "scene_frame": 24.0,
+        "source_time_s": 0.9583333333333334
+      },
+      {
+        "scene_frame": 25.0,
+        "source_time_s": 1.0
+      },
+      {
+        "scene_frame": 26.0,
+        "source_time_s": 1.0416666666666667
+      },
+      {
+        "scene_frame": 27.0,
+        "source_time_s": 1.0833333333333333
+      },
+      {
+        "scene_frame": 28.0,
+        "source_time_s": 1.125
+      },
+      {
+        "scene_frame": 29.0,
+        "source_time_s": 1.1666666666666667
+      },
+      {
+        "scene_frame": 30.0,
+        "source_time_s": 1.2083333333333333
+      }
+    ]
+  },
+  "camera": {
+    "center": [
+      0.05409818887710571,
+      0.21605539321899414,
+      1.744771957397461
+    ],
+    "horizontalSpan": 11.476091384887695,
+    "verticalSpan": 3.569805733859539,
+    "orthoScale": 13.541788101196289,
+    "direction": [
+      0.9993880987167358,
+      0.0,
+      0.034978583455085754
+    ],
+    "right": [
+      0.0,
+      -1.0,
+      0.0
+    ],
+    "up": [
+      -0.034978583455085754,
+      0.0,
+      0.9993880987167358
+    ],
+    "view": "side"
+  },
+  "ground": -0.01200103802869944,
+  "frames": 30,
+  "fps": 24,
+  "materials": {
+    "mode": "clay",
+    "engine": "BLENDER_WORKBENCH",
+    "images": []
+  }
+}
