@@ -45,7 +45,7 @@ class Performance:
 
 
 def load_performance(document: Mapping[str, Any]) -> Performance:
-    if document.get("schema") != "eonwild.motion.performance.v1" or set(document) - {"schema", "parameters", "reference", "classification"}:
+    if not isinstance(document, Mapping) or document.get("schema") != "eonwild.motion.performance.v1" or set(document) - {"schema", "parameters", "reference", "classification"}:
         raise ContractError("unsupported performance profile")
     parameters = document.get("parameters")
     if not isinstance(parameters, Mapping) or set(parameters) - set(Performance.__dataclass_fields__):
@@ -54,12 +54,23 @@ def load_performance(document: Mapping[str, Any]) -> Performance:
 
 
 def decorate_plan(plan: dict, performance: Performance) -> dict:
-    # Plan and state are per-request. Never cache or monkey-patch a rig/module.
     from copy import deepcopy
     result = deepcopy(plan)
     result["performance"] = asdict(performance)
     result["loop"] = plan.get("loop", True)
     return result
+
+
+def phase_and_gain(row):
+    """One clock for limbs, body, tail and breathing across a gait handoff."""
+    phase = row.get("locomotion_time_s", row["time_s"])
+    gain = row.get("performance_gain", 1.)
+    for value in (phase, gain):
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+            raise ContractError("performance phase and gain must be finite numeric")
+    if phase < 0 or not 0 <= gain <= 1:
+        raise ContractError("invalid performance phase or gain")
+    return float(phase), float(gain)
 
 
 def _world_delta(source, translations, rotations, scales, node, axis, degrees):
@@ -71,21 +82,24 @@ def _world_delta(source, translations, rotations, scales, node, axis, degrees):
 
 
 def apply_performance(source, translations, rotations, scales, base_worlds, roles, plan, row, up, forward):
-    """Resolve tail rest bias, support-alternating body response and gaze.
+    """Resolve rest-tail bias, lateral support response, and forward attention.
 
-    The following leg solve restores contacts after pelvis/body rotation. Yaw
-    centres only the tail's horizontal curvature; its sagittal shape is kept.
-    Head direction is a calibrated neutral-relative attention vector, not a
-    claim about an unmeasured anatomical optic axis.
+    The subsequent limb solve restores contacts after body rotation. The gaze
+    axis is neutral-relative calibration, not a measured anatomical optic axis.
+    Ready/start/stop poses share the same centered-tail calibration; authored
+    oscillation, body sway, and elevated attention blend with locomotion gain.
     """
     if "performance" not in plan:
         return
     p = Performance(**plan["performance"])
+    phase, gain = phase_and_gain(row)
     lateral = _unit(np.cross(up, forward))
     pelvis = source.name_to_node[roles["pelvis"]]
     cycle = float(plan["same_foot_cycle_s"])
-    angle = 2 * math.pi * row["time_s"] / cycle
-    pulse = math.sin(angle)
+    if not math.isfinite(cycle) or cycle <= 0:
+        raise ContractError("performance requires a positive finite gait period")
+    angle = 2 * math.pi * phase / cycle
+    pulse = gain * math.sin(angle)
     parent = source.parents[pelvis]
     parent_basis = np.eye(3) if parent is None else np.asarray(base_worlds[parent])[:3, :3]
     shift = lateral * (p.pelvis_sway_body_heights * plan["body_height_m"] * pulse)
@@ -99,28 +113,41 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
         for node, child in zip(tail, tail[1:]):
             worlds = _world_matrices(source, translations, rotations, scales)
             delta = np.asarray(_world_position(worlds[child])) - _world_position(worlds[node])
-            ground = delta - up * float(delta @ up)
-            direction = _unit(ground)
+            direction = _unit(delta - up * float(delta @ up))
             target = -np.asarray(forward)
             yaw = math.degrees(math.atan2(float(up @ np.cross(direction, target)), float(direction @ target)))
             _world_delta(source, translations, rotations, scales, node, up, yaw)
-    # A travelling phase and increasing distal delay, not one rigid wag.
-    weights = np.linspace(.6, 1.4, len(tail)); weights /= weights.sum()
+    weights = np.linspace(.6, 1.4, len(tail))
+    if len(weights):
+        weights /= weights.sum()
     for i, node in enumerate(tail):
         lag = p.tail_lag_fraction * i / max(1, len(tail) - 1)
-        degrees = -p.tail_yaw_degrees * weights[i] * math.sin(angle - 2 * math.pi * lag)
+        degrees = -gain * p.tail_yaw_degrees * weights[i] * math.sin(angle - 2 * math.pi * lag)
         _world_delta(source, translations, rotations, scales, node, up, degrees)
     head = source.name_to_node[roles["head"]]
-    neutral_forward = _qrotate(_qinv(_rotation_from_matrix(base_worlds[head])), tuple(forward))
-    worlds = _world_matrices(source, translations, rotations, scales)
-    current = np.asarray(_qrotate(_rotation_from_matrix(worlds[head]), neutral_forward))
-    elevation = math.degrees(math.atan2(float(current @ up), float(current @ forward)))
-    # World lateral positive rotation lowers a +forward head; signs explicit.
-    error = elevation - p.gaze_elevation_degrees
     neck = [source.name_to_node[n] for n in roles.get("neck", [])]
+    neutral_forward = _qrotate(_qinv(_rotation_from_matrix(base_worlds[head])), tuple(forward))
+
+    def direction():
+        worlds = _world_matrices(source, translations, rotations, scales)
+        return np.asarray(_qrotate(_rotation_from_matrix(worlds[head]), neutral_forward))
+
+    def yaw_error():
+        current = direction()
+        ground = _unit(current - up * float(current @ up))
+        return math.degrees(math.atan2(float(up @ np.cross(ground, forward)), float(ground @ forward)))
+
+    # Pitch-only stabilization could leave the head aimed beside the prey.
+    # Resolve yaw through the neck and then the residual at the head.
+    yaw = yaw_error()
+    for node in neck:
+        _world_delta(source, translations, rotations, scales, node, up, .6 * yaw / len(neck))
+    _world_delta(source, translations, rotations, scales, head, up, yaw_error())
+    target_elevation = gain * p.gaze_elevation_degrees
+    current = direction()
+    error = math.degrees(math.atan2(float(current @ up), float(current @ forward))) - target_elevation
     for node in neck:
         _world_delta(source, translations, rotations, scales, node, lateral, .6 * error / len(neck))
-    worlds = _world_matrices(source, translations, rotations, scales)
-    current = np.asarray(_qrotate(_rotation_from_matrix(worlds[head]), neutral_forward))
-    elevation = math.degrees(math.atan2(float(current @ up), float(current @ forward)))
-    _world_delta(source, translations, rotations, scales, head, lateral, elevation - p.gaze_elevation_degrees)
+    current = direction()
+    error = math.degrees(math.atan2(float(current @ up), float(current @ forward))) - target_elevation
+    _world_delta(source, translations, rotations, scales, head, lateral, error)
