@@ -37,13 +37,13 @@ jobs:
           for rel,expected in saved['files'].items():
               src=Path('/tmp/actual-motion-evidence')/rel
               assert hashlib.sha256(src.read_bytes()).hexdigest()==expected,rel
-              # Avoid nested ignored `out` directories in checked-in evidence.
               parts=[p for p in Path(rel).parts if p!='out']
               target=verification.joinpath(*parts)
               target.parent.mkdir(parents=True,exist_ok=True)
               shutil.copyfile(src,target);added.append(str(target))
           saved['files']={str(Path(*[p for p in Path(rel).parts if p!='out'])):value for rel,value in saved['files'].items()}
           (verification/'run.json').write_text(json.dumps(saved,indent=2)+'\n')
+          subprocess.run(['git','add','-f','--',*added,str(verification/'run.json')],check=True)
           for path in verification.rglob('full-tests.xml'):
               document=ET.parse(path).getroot()
               print('JUNIT_COUNTS',[s.attrib for s in document.iter('testsuite')])
@@ -51,11 +51,12 @@ jobs:
           sys.path.insert(0,'tools')
           from measure_motion_reference import measure
           from eonwild_motion.glb.container import Glb
-          from eonwild_motion.factory.quality import geometry_height
+          from eonwild_motion.factory.source import geometry_height
           recipe=json.loads(Path('recipes/heavy-biped/walk.v2.json').read_text())
           roles=json.loads(Path(recipe['rig']['path']).read_text())['roles']
           candidate=next(Path('/tmp/measured-candidate').rglob('root_motion.glb'))
           ref=next(Path('build/V9-NARROW-GAUGE-WALK-002').rglob('*.glb'))
+          added=[]
           for key,path,clip in [('v9',ref,'PROC_WALK_RELAXED_V8_1_RESPIN_ROOTMOTION'),('candidate',candidate,'heavy-biped.walk.v2.root_motion')]:
               result=measure(path,clip=clip,roles=roles,forward_axis=recipe['forward_axis'])
               target=dest/'native-measurements'/f'{key}.json';target.parent.mkdir(parents=True,exist_ok=True)
@@ -66,7 +67,7 @@ jobs:
               shutil.copyfile(candidate.parent/name,target);added.append(str(target))
           source=Glb.from_bytes(Path(recipe['source']['path']).read_bytes())
           print('SOURCE_BODY_HEIGHT_M',geometry_height(source,roles,recipe['up_axis']))
-          subprocess.run(['git','add','-f','--',*added,str(verification/'run.json')],check=True)
+          subprocess.run(['git','add','-f','--',*added],check=True)
       - name: Install verified recorded Blender and reproduce the exact baseline fixture
         run: |
           gh run download 34041514733 --repo hurtener/eonwild-factory --name motion-recorded-blender-52 --dir "$RUNNER_TEMP/recorded-blender"
