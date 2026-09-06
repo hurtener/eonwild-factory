@@ -1,8 +1,7 @@
-"""Render the ACTUAL candidate in Blender, with an optional FBX transport.
+"""Render actual candidate channels in Blender; optionally export FBX.
 
 blender -b --python tools/render_candidate.py -- --package out/run --output out/review
-Requires Blender's glTF importer and ffmpeg on PATH. No factory modules or old
-experiment scripts are imported. Export is not a claim of Unity parity.
+No factory/experiment modules are imported. Transport is not Unity acceptance.
 """
 from __future__ import annotations
 
@@ -17,8 +16,16 @@ import sys
 import bpy
 from mathutils import Vector
 
+SOURCE_FPS = 120
 
-def sha(path): return hashlib.sha256(path.read_bytes()).hexdigest()
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def set_frame(scene, value):
+    frame = math.floor(value)
+    scene.frame_set(frame, subframe=value - frame)
 
 
 def main():
@@ -30,7 +37,7 @@ def main():
     parser.add_argument("--width", type=int, default=768)
     parser.add_argument("--fbx", action="store_true")
     args = parser.parse_args(sys.argv[sys.argv.index("--") + 1:])
-    if args.fps < 12 or args.width < 320:
+    if not 12 <= args.fps <= 120 or not 320 <= args.width <= 3840:
         raise ValueError("invalid review resolution or frame rate")
     package, output = args.package.resolve(), args.output.resolve()
     source = package / "in_place.glb"
@@ -48,7 +55,7 @@ def main():
     frames.mkdir()
     bpy.ops.wm.read_factory_settings(use_empty=True)
     scene = bpy.context.scene
-    scene.render.fps = args.fps
+    scene.render.fps = SOURCE_FPS
     scene.render.fps_base = 1
     scene.unit_settings.system = "METRIC"
     scene.unit_settings.scale_length = 1
@@ -56,22 +63,30 @@ def main():
     meshes = [obj for obj in scene.objects if obj.type == "MESH"]
     if not meshes or not any(obj.type == "ARMATURE" for obj in scene.objects):
         raise ValueError("candidate import has no rigged mesh")
+    actions = list(bpy.data.actions)
+    if not actions:
+        raise ValueError("candidate import has no animation actions")
+    # Read the importer's actual frame origin; glTF t=0 is not assumed frame 1.
+    start = min(float(action.frame_range[0]) for action in actions)
+    end = max(float(action.frame_range[1]) for action in actions)
+    if abs((end - start) / SOURCE_FPS - duration) > 2e-5:
+        raise ValueError(f"imported duration changed: {(end-start)/SOURCE_FPS} != {duration}")
     count = max(2, int(math.ceil(duration * args.fps)))
-    scene.frame_start, scene.frame_end = 1, count
-    # Export before adding the stage. Preserve actual action timing; verify in
-    # Unity separately before using the transport in gameplay.
+    scene.frame_start, scene.frame_end = math.floor(start), round(end)
     exports = {}
     if args.fbx:
+        if abs(start - round(start)) > .001 or abs(end - round(end)) > .001:
+            raise ValueError("FBX transport requires endpoints on the declared 120 Hz grid")
         target = output / "motion.fbx"
         bpy.ops.export_scene.fbx(filepath=str(target), object_types={"ARMATURE", "MESH"},
             add_leaf_bones=False, bake_anim=True, bake_anim_use_all_actions=False,
             bake_anim_use_nla_strips=False, bake_anim_simplify_factor=0.0,
-            axis_forward="-Z", axis_up="Y", global_scale=1.0, apply_unit_scale=True)
+            axis_forward="-Z", axis_up="Y", global_scale=1.0, apply_unit_scale=True,
+            path_mode="COPY", embed_textures=True)
         exports["motion.fbx"] = sha(target)
     points = []
     for k in range(9):
-        value = 1 + (count - 1) * k / 8
-        scene.frame_set(int(value), subframe=value % 1)
+        set_frame(scene, start + (end - start) * k / 8)
         deps = bpy.context.evaluated_depsgraph_get()
         for obj in meshes:
             evaluated = obj.evaluated_get(deps)
@@ -80,7 +95,9 @@ def main():
     high = Vector(tuple(max(p[i] for p in points) for i in range(3)))
     center = (low + high) / 2
     span = max(high - low)
-    # Blender's glTF import converts Y-up to Z-up: (x,y,z)->(x,-z,y).
+    if span <= 0:
+        raise ValueError("degenerate candidate bounds")
+    # Blender's glTF importer maps Y-up to Z-up: (x,y,z)->(x,-z,y).
     f = runtime["forward_axis"]
     forward = Vector((f[0], -f[2], f[1])).normalized()
     lateral = Vector((0, 0, 1)).cross(forward).normalized()
@@ -98,8 +115,6 @@ def main():
     ground = bpy.context.object
     ground.name = "ReviewGround"
     ground.color = (.22, .24, .25, 1)
-    # Workbench intentionally emphasizes silhouette/deformation, not a claim
-    # of finished game lighting. Existing texture images remain available.
     scene.render.engine = "BLENDER_WORKBENCH"
     shading = scene.display.shading
     shading.light = "STUDIO"
@@ -108,16 +123,18 @@ def main():
     shading.show_cavity = True
     shading.cavity_type = "BOTH"
     shading.background_type = "WORLD"
+    if scene.world is None:
+        scene.world = bpy.data.worlds.new("ReviewWorld")
     scene.world.color = (.12, .13, .15)
     scene.render.resolution_x = args.width
     scene.render.resolution_y = int(args.width * 9 / 16) // 2 * 2
     scene.render.resolution_percentage = 100
     scene.render.image_settings.file_format = "PNG"
     scene.render.film_transparent = False
-    scene.frame_set(1)
     for index in range(count):
-        # No retiming: every image is sampled at index/fps seconds.
-        scene.frame_set(index + 1)
+        # Scene remains 120 Hz. Preview sampling and encoding are explicitly
+        # index/fps seconds, with no action retiming or shifted first frame.
+        set_frame(scene, start + index * SOURCE_FPS / args.fps)
         scene.render.filepath = str(frames / f"{index:05d}.png")
         bpy.ops.render.render(write_still=True)
     video = output / "preview.mp4"
@@ -129,12 +146,14 @@ def main():
         "manifest_sha256": sha(package / "manifest.json"), "renderer_sha256": sha(Path(__file__)),
         "blender": bpy.app.version_string, "fps": args.fps, "frames": count,
         "source_duration_s": duration, "encoded_duration_s": count / args.fps,
-        "timing": "native speed; final duplicate loop endpoint omitted", "view": args.view,
-        "media": {"preview.mp4": sha(video), "cover.png": sha(cover)}, "exports": exports,
+        "source_frame_start": start, "source_frame_end": end, "source_fps": SOURCE_FPS,
+        "timing": "native-time sampling; FBX retains full endpoint; video omits duplicate loop endpoint",
+        "view": args.view, "media": {"preview.mp4": sha(video), "cover.png": sha(cover)}, "exports": exports,
         "visual_approval": "PENDING", "unity_import_validation": "NOT_RUN",
-        "presentation": "Workbench study, not final game shading"}
+        "presentation": "Workbench study; bbox presentation floor is not contact validation"}
     (output / "render-receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
     print(json.dumps(receipt, indent=2))
 
 
-if __name__ == "__main__": main()
+if __name__ == "__main__":
+    main()
