@@ -45,7 +45,7 @@ def main():
     parser.add_argument("--view", choices=("side", "three-quarter"), default="three-quarter")
     parser.add_argument("--fps", type=int, default=24)
     parser.add_argument("--width", type=int, default=640)
-    parser.add_argument("--samples", type=int, default=8)
+    parser.add_argument("--samples", type=int, default=16)
     parser.add_argument("--fbx", action="store_true")
     args = parser.parse_args(sys.argv[sys.argv.index("--") + 1:])
     if not 12 <= args.fps <= 120 or not 320 <= args.width <= 3840 or not 1 <= args.samples <= 256:
@@ -139,11 +139,12 @@ def main():
     area_light(scene, "Key", center + lateral * span * .7 + Vector((0, 0, span)), center, span * span * 90, span * .8)
     area_light(scene, "Fill", center - lateral * span * .8 + forward * span * .4 + Vector((0, 0, span * .5)), center, span * span * 35, span)
     # Workbench/Mesa segfaulted on headless CI. CPU Cycles avoids that driver
-    # path rather than silently skipping the missing frames or retrying errors.
+    # path. Distro Blender has no OpenImageDenoiser, so keep denoising disabled
+    # and record that choice instead of depending on an optional build feature.
     scene.render.engine = "CYCLES"
     scene.cycles.device = "CPU"
     scene.cycles.samples = args.samples
-    scene.cycles.use_denoising = True
+    scene.cycles.use_denoising = False
     scene.cycles.seed = 0
     scene.cycles.max_bounces = 3
     scene.cycles.diffuse_bounces = 2
@@ -170,6 +171,7 @@ def main():
     receipt = {"schema": "eonwild.motion.review-render.v1", "source_sha256": sha(source),
         "manifest_sha256": sha(package / "manifest.json"), "renderer_sha256": sha(Path(__file__)),
         "blender": bpy.app.version_string, "engine": "CYCLES_CPU", "samples": args.samples,
+        "denoising": False,
         "fps": args.fps, "frames": count, "verified_encoded_frames": int(probe["nb_read_frames"]),
         "source_duration_s": duration, "encoded_duration_s": count / args.fps,
         "source_frame_start": start, "source_frame_end": end, "source_fps": SOURCE_FPS,
