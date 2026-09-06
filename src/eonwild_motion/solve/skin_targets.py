@@ -71,8 +71,22 @@ def cyclic_authority(frames, loaded, displacement, thresholds):
         "reasons": [reason for r in results for reason in r.get("reasons", [])]}
 
 
-def evaluate_skin(glb, profile, plan):
+def evaluate_skin(glb, profile, plan, *, world_offsets=None):
     frames, metadata = skin_frames(glb, profile)
+    if world_offsets is not None:
+        # Evaluate the actual in-place skin with the motor's planned travel.
+        # Offsets alter the evaluation coordinate frame, never the GLB, floor,
+        # witness identities, support flags, or engineering tolerances.
+        offsets = np.asarray(world_offsets, dtype=float)
+        if offsets.shape != (len(frames), 3) or not np.isfinite(offsets).all():
+            raise ContractError("in-place world reconstruction requires one finite offset per sample")
+        frames = deepcopy(frames)
+        for frame, offset in zip(frames, offsets):
+            frame["root_m"] = (np.asarray(frame["root_m"]) + offset).tolist()
+            for foot in frame["feet"].values():
+                for region in ("sole_points", "toe_points"):
+                    for point in foot[region]:
+                        point["point_m"] = (np.asarray(point["point_m"]) + offset).tolist()
     if len(frames) != len(plan["samples"]):
         raise ContractError("skin and plan timelines differ")
     axis = {"X": 0, "Y": 1, "Z": 2}[profile["geometry"]["ground"]["up_axis"]]
@@ -101,7 +115,7 @@ def evaluate_skin(glb, profile, plan):
         "classification": "final serialized skin, fixed floor, full multi-influence weights, unchanged engineering thresholds"}
 
 
-def _cyclic_fill(times, values, loaded):
+def _cyclic_fill(times, values, loaded, *, loop=True):
     """Fill unloaded intervals with C2 interpolation of adjacent corrections."""
     result = values.copy()
     indices = np.flatnonzero(loaded)
@@ -111,6 +125,11 @@ def _cyclic_fill(times, values, loaded):
     for i in np.flatnonzero(~np.asarray(loaded)):
         before = indices[indices < i]
         after = indices[indices > i]
+        if not loop and (not len(before) or not len(after)):
+            # A one-shot must not borrow contact corrections from its other
+            # endpoint: entry/exit contact belongs to its adjacent behavior.
+            result[i] = values[after[0] if len(after) else before[-1]]
+            continue
         a, b = (before[-1] if len(before) else indices[-1]), (after[0] if len(after) else indices[0])
         ta = times[a] - (duration if not len(before) else 0)
         tb = times[b] + (duration if not len(after) else 0)
@@ -167,7 +186,7 @@ def solve_with_skin_targets(source, *, semantic_roles, gait, up_axis, forward_ax
                     error += up * (.0001 - gap)
                     correction[i] = error
                     maximum_error = max(maximum_error, float(np.linalg.norm(error)))
-            correction = _cyclic_fill(times, correction, loaded)
+            correction = _cyclic_fill(times, correction, loaded, loop=current.get("loop", True))
             # A swing can still penetrate during fold/landing; retain the
             # higher clearance rather than adjusting the ground or root.
             for i, (frame, load) in enumerate(zip(frames, loaded)):

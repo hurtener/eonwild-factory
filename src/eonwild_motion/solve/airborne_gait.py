@@ -129,6 +129,25 @@ def driven_body_response(gait: AirborneGait, plan: Mapping[str, Any], roles: Map
     if gait.tail_response_gain_degrees and not roles.get("tail"):
         raise ContractError("driven tail response requires a semantic chain")
     rows = plan["samples"]
+    if plan.get("program") == "gait_transition":
+        # Sample the same steady response, not a fresh lag initialized at zero
+        # or a fictitious cyclic start/stop carrier. All pose layers share the
+        # behavior-owned phase; the quintic gain has zero endpoint derivatives.
+        steady = driven_body_response(gait, build_airborne_plan(gait, plan["body_height_m"]), roles)
+        reference_times = np.asarray([r["time_s"] for r in steady["samples"]])
+        names = set().union(*(r["sagittal_node_degrees"] for r in steady["samples"]))
+        from .performance import phase_and_gain
+        result = []
+        for row in rows:
+            phase, gain = phase_and_gain(row)
+            angles = {name: gain * float(np.interp(phase, reference_times,
+                [r["sagittal_node_degrees"].get(name, 0.) for r in steady["samples"]])) for name in names}
+            result.append({"time_s": row["time_s"], "support_count": row["support_count"],
+                "normalized_vertical_motion_drive": gain * float(np.interp(phase, reference_times,
+                    [r["normalized_vertical_motion_drive"] for r in steady["samples"]])),
+                "sagittal_node_degrees": angles})
+        return {"classification": "phase-preserving bounded kinematic transition response; no cyclic claim for a one-shot",
+            "reference_cyclic_state_seam_degrees": steady["maximum_cyclic_state_seam_degrees"], "samples": result}
     times = [row["time_s"] for row in rows]
     # Normalize by the solved carrier's own excursion/time scale, not species
     # constants. Positive rise drives the tail down through launch; lag carries
@@ -281,6 +300,16 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
     for side, (hip, knee, ankle, foot) in legs.items():
         hp, kp, ap = (np.asarray(_world_position(base_w[n])) for n in (hip, knee, ankle))
         anatomical_normals[side] = _unit(np.cross(kp - hp, ap - kp))
+    # Digit bend planes belong to neutral anatomy. Projecting the *moving*
+    # toe elbow becomes ill-conditioned at extension and can choose the other
+    # branch on the last loop sample despite identical endpoint targets.
+    toe_normals = {}
+    if "performance" in plan:
+        for side, chains in toes.items():
+            for a, b, c in chains:
+                pa, pb, pc = (np.asarray(_world_position(base_w[n])) for n in (a, b, c))
+                normal = np.cross(pb - pa, pc - pb)
+                toe_normals[a] = _unit(normal if np.linalg.norm(normal) > 1e-8 else lateral)
     frames_t, frames_r, emitted = [], [], []
     max_residual, max_extension = 0.0, 0.0
     max_envelope_violation = 0.0
@@ -288,6 +317,8 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
     previous_time = None
     for frame_index, row in enumerate(plan["samples"]):
         tr, rot = base_t[:], base_r[:]
+        from .performance import phase_and_gain
+        motion_time, performance_gain = phase_and_gain(row)
         root_delta = forward * row["root_forward_m"]
         tr[root] = tuple(float(v) for v in np.asarray(base_t[root]) + _local_delta(source, base_w, root, root_delta))
         root_pitch = float(row.get("root_pitch_degrees", 0.0))
@@ -326,12 +357,12 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
             for name in names if total else []:
                 n = source.name_to_node[name]
                 axis = _qrotate(_qinv(_rotation_from_matrix(base_w[n])), tuple(lateral))
-                rot[n] = _qmul(rot[n], _qrotvec(tuple(np.asarray(axis) * math.radians(total / len(names)))))
+                rot[n] = _qmul(rot[n], _qrotvec(tuple(np.asarray(axis) * math.radians(performance_gain * total / len(names)))))
         if jaw is not None:
             # Rotate the lower jaw about the rig-derived sagittal axis only.
             # The full-cycle cosine is C2 at the loop; no head/neck compensation
             # is added, so the accepted whole-body motion remains unchanged.
-            rot[jaw] = _qmul(base_r[jaw], _qrotvec(tuple(np.asarray(jaw_axis) * math.radians(jaw_breathing_angle(gait, row["time_s"])))))
+            rot[jaw] = _qmul(base_r[jaw], _qrotvec(tuple(np.asarray(jaw_axis) * math.radians(performance_gain * jaw_breathing_angle(gait, motion_time)))))
         from .performance import apply_performance
         apply_performance(source, tr, rot, base_s, base_w, roles, plan, row, up, forward)
         facts = {}
@@ -407,7 +438,7 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
                 slacks = [hip_angle + gait.hip_extension_limit_degrees, gait.hip_flexion_limit_degrees - hip_angle, knee_angle - gait.knee_min_interior_degrees, gait.knee_max_interior_degrees - knee_angle, ankle_angle - gait.ankle_min_interior_degrees, gait.ankle_max_interior_degrees - ankle_angle]
                 errors = [max(0, -slack) for slack in slacks]
                 recovery = 0.0 if foot_plan["contact"] else math.sin(math.pi * u) ** 2
-                hip_target = gait.swing_hip_lift_degrees * recovery
+                hip_target = gait.swing_hip_lift_degrees * recovery * foot_plan.get("articulation_scale", 1.)
                 # A C2 preferred-region penalty anticipates the hard corner
                 # before ankle/knee limits become active. It coordinates the
                 # pose solve itself; emitted rotations are never post-filtered.
@@ -466,9 +497,15 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
                 dist = float(np.clip(raw_dist, abs(first_len - second_len) + 1e-8, first_len + second_len - 1e-8))
                 max_extension = max(max_extension, float(abs(raw_dist - dist)))
                 along = (first_len ** 2 - second_len ** 2 + dist ** 2) / (2 * dist)
-                bend = pb - pa - direction * float((pb - pa) @ direction)
-                if np.linalg.norm(bend) < 1e-8:
-                    bend = up - direction * float(up @ direction)
+                if "performance" in plan:
+                    foot_delta = _qmul(_rotation_from_matrix(w[foot]), _qinv(_rotation_from_matrix(base_w[foot])))
+                    normal = np.asarray(_qrotate(foot_delta, tuple(toe_normals[a])))
+                    bend = np.cross(direction, normal)
+                else:
+                    # Immutable legacy path for accepted baseline builds.
+                    bend = pb - pa - direction * float((pb - pa) @ direction)
+                    if np.linalg.norm(bend) < 1e-8:
+                        bend = up - direction * float(up @ direction)
                 elbow = pa + direction * along + _unit(bend) * math.sqrt(max(0, first_len ** 2 - along ** 2))
                 rot[a] = _world_rotation(source, w, a, _qmul(_between(pb - pa, elbow - pa), _rotation_from_matrix(w[a])))
                 w = _world_matrices(source, tr, rot, base_s)

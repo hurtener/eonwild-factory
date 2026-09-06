@@ -262,14 +262,23 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
             surface = {"verdict": "FAIL", "reason": f"final skinned evaluation failed: {exc}"}
     if ("performance_profile" in snapshots or supported) and "contact_profile" in snapshots:
         surface = evaluate_skin(outputs["root_motion"], json.loads(snapshots["contact_profile"]), plan)
-    receipt["final_skinned_contact_gate"] = surface["verdict"]
-    receipt["final_skinned_contact_scope"] = "reopened serialized root-motion authority at the locked floor; full skin influences"
+    in_place_surface = {"verdict": "NOT_MEASURED", "reason": "no bound skinned contact profile"}
+    if "contact_profile" in snapshots:
+        try:
+            origin_travel = plan["samples"][0]["root_forward_m"]
+            offsets = [forward * (row["root_forward_m"] - origin_travel) for row in plan["samples"]]
+            in_place_surface = evaluate_skin(outputs["in_place"], json.loads(snapshots["contact_profile"]), plan,
+                world_offsets=offsets)
+        except (ContractError, ValueError, KeyError, StopIteration) as exc:
+            in_place_surface = {"verdict": "FAIL", "reason": f"in-place skinned reconstruction failed: {exc}"}
+    receipt["final_skinned_contact_gate"] = "PASS" if surface["verdict"] == in_place_surface["verdict"] == "PASS" else "FAIL"
+    receipt["final_skinned_contact_scope"] = "both reopened serialized exports; in-place plus planned motor travel; locked floor and full skin influences"
     refinement_ok = receipt.get("skin_target_refinement", {}).get("converged", True) and receipt.get("oral_contact", {"status":"PASS"})["status"] == "PASS"
     technical = (refinement_ok and all(row["status"] == "PASS" for row in evaluated.values()) and
                  all(row["status"] == "PASS" for row in rates.values()) and
-                 all(row["status"] in ("PASS", "NOT_APPLICABLE") for row in continuity.values()) and feasibility["status"] == "PASS" and surface["verdict"] == "PASS")
+                 all(row["status"] in ("PASS", "NOT_APPLICABLE") for row in continuity.values()) and feasibility["status"] == "PASS" and surface["verdict"] == "PASS" and in_place_surface["verdict"] == "PASS")
     validation = {"schema": "eonwild.motion.factory-validation.v1", "technical_status": "PASS" if technical else "BLOCKED",
-        "outputs": evaluated, "rotation_rates": rates, "cyclic_continuity": continuity, "solver_feasibility": feasibility, "skinned_contact": surface,
+        "outputs": evaluated, "rotation_rates": rates, "cyclic_continuity": continuity, "solver_feasibility": feasibility, "skinned_contact": surface, "in_place_skinned_contact": in_place_surface,
         "oral_contact": receipt.get("oral_contact"),
         "visual_review": "PENDING", "unity_parity": "NOT_RUN", "production_approved": False}
     if engine_fingerprint() != engine_identity:
