@@ -116,11 +116,16 @@ def invoke_blender_build(
         capture_output=True,
         text=True,
     )
-    log_path.write_text(process.stdout + process.stderr)
+    captured_output = process.stdout + process.stderr
+    log_path.write_text(captured_output)
     if process.returncode != 0:
-        raise MotionError(
-            f"Blender build failed with exit {process.returncode}; see {log_path}"
-        )
+        # Integration fixtures use temporary directories. Preserve the actionable
+        # failure in the run report even after those directories are cleaned up;
+        # the full, untruncated output remains in the diagnostic log.
+        message = f"Blender build failed with exit {process.returncode}; see {log_path}"
+        if captured_output:
+            message += "\n--- Blender output tail (up to 4000 characters) ---\n" + captured_output[-4000:]
+        raise MotionError(message)
     request = json.loads(request_path.read_text())
     report = Path(request["stageReportPath"])
     if not report.is_file():
