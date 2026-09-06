@@ -8,38 +8,18 @@ permissions:
 jobs:
   recover:
     runs-on: ubuntu-24.04
+    timeout-minutes: 5
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-        with:
-          fetch-depth: 1
-          persist-credentials: false
-      - name: Export sources and immutable comparison inputs
-        shell: python
+      - name: Fetch official pinned glTF Validator
         run: |
-          import pathlib, subprocess, tarfile, json, hashlib
-          paths = subprocess.check_output(['git', 'ls-files', '-z']).decode().split('\0')
-          roots = ('src/', 'catalog/', 'recipes/', 'tools/', 'tests/', '.github/')
-          references = (
-            'build/V9-NARROW-GAUGE-WALK-002/',
-            'build/V9-AIRBORNE-RUN-001/iteration-010-breathing/',
-            'build/V9-AIRBORNE-SPRINT-001/review-candidate-006/',
-            'build/V9-FEEDING-REVIEW-003/',
-            'assets/examples/tarbosaurus/',
-          )
-          inventory = {'head': subprocess.check_output(['git','rev-parse','HEAD']).decode().strip(), 'files': []}
-          with tarfile.open('/tmp/motion-session-source.tar.gz', 'w:gz') as tar:
-            for name in filter(None, paths):
-              p = pathlib.Path(name)
-              if not p.is_file(): continue
-              selected = name.startswith(roots) or '/' not in name or (name.startswith(references) and p.suffix in {'.glb','.mp4','.json','.md'})
-              if not selected: continue
-              inventory['files'].append({'path': name, 'sha256': hashlib.sha256(p.read_bytes()).hexdigest(), 'git_blob': subprocess.check_output(['git','hash-object',name]).decode().strip()})
-              tar.add(p, arcname=name, recursive=False)
-          pathlib.Path('/tmp/motion-session-inventory.json').write_text(json.dumps(inventory, indent=2))
+          mkdir -p /tmp/motion-validator
+          curl --fail --location --retry 3 https://github.com/KhronosGroup/glTF-Validator/releases/download/2.0.0-dev.3.10/gltf_validator-2.0.0-dev.3.10-linux64.tar.xz -o /tmp/motion-validator/validator.tar.xz
+          cd /tmp/motion-validator
+          sha256sum validator.tar.xz > SHA256SUMS
+          tar -xf validator.tar.xz
+          ./gltf_validator --version > version.txt
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: motion-session-source
-          path: |
-            /tmp/motion-session-source.tar.gz
-            /tmp/motion-session-inventory.json
+          name: motion-official-validator
+          path: /tmp/motion-validator
           retention-days: 3
