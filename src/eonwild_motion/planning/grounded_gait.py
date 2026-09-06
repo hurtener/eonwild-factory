@@ -1,8 +1,8 @@
-"""Grounded alternating support, including genuine reverse walking.
+"""Grounded alternating support with independently authored digitigrade recovery.
 
-This program owns contact choreography. It shares limb emission with other
-biped programs, never their flight schedule. Signed travel is solved before
-serialization; no mirroring of an already solved animation is permitted.
+Distances are body-height normalized. The support schedule belongs to this
+program; articulation is emitted by the same rotation-only V9 limb solver as
+running. Zero articulation settings preserve the original reverse-walk recipe.
 """
 from __future__ import annotations
 
@@ -11,6 +11,7 @@ import math
 from typing import Any, Mapping
 
 from ..errors import ContractError
+from .airborne_gait import rounded_swing_height
 
 
 def smooth(value: float) -> float:
@@ -29,6 +30,12 @@ class GroundedGait:
     pelvis_excursion_body_heights: float = 0.004
     cycles: int = 2
     sample_hz: int = 60
+    toe_flex_degrees: float = 0.0
+    foot_recovery_pitch_degrees: float = 0.0
+    push_off_pitch_degrees: float = 0.0
+    push_off_start_fraction: float = 0.60
+    swing_hip_lift_degrees: float = 0.0
+    rounded_swing_peak_fraction: float = 0.0
 
     def __post_init__(self) -> None:
         for key, value in asdict(self).items():
@@ -42,6 +49,13 @@ class GroundedGait:
                     "pelvis_crouch_body_heights", "pelvis_excursion_body_heights"):
             if not 0 <= getattr(self, key) <= 0.25:
                 raise ContractError(f"grounded {key} is outside engineering limits")
+        for key in ("toe_flex_degrees", "foot_recovery_pitch_degrees", "push_off_pitch_degrees", "swing_hip_lift_degrees"):
+            if not 0 <= getattr(self, key) <= 60:
+                raise ContractError(f"grounded {key} exceeds the articulation envelope")
+        if not 0 < self.push_off_start_fraction < 1:
+            raise ContractError("grounded push-off landmark must lie inside stance")
+        if self.rounded_swing_peak_fraction and not .3 <= self.rounded_swing_peak_fraction <= .5:
+            raise ContractError("grounded swing peak must be zero or in [.3,.5]")
         if int(self.cycles) != self.cycles or self.cycles < 1:
             raise ContractError("grounded cycles must be a positive integer")
         if int(self.sample_hz) != self.sample_hz or self.sample_hz < 24:
@@ -70,9 +84,22 @@ def sample_grounded_gait(gait: GroundedGait, time_s: float, body_height_m: float
         anchor = velocity * touchdown + reach
         contact = phase < gait.duty_factor
         swing = 0.0 if contact else (phase - gait.duty_factor) / (1 - gait.duty_factor)
+        if contact:
+            amount = smooth((phase / gait.duty_factor - gait.push_off_start_fraction) / (1 - gait.push_off_start_fraction))
+            pitch = gait.push_off_pitch_degrees * amount
+            flex = 0.0
+            height = 0.0
+        else:
+            # Unload/roll, fold the digitigrade ankle in early recovery, then
+            # extend before touchdown. Both boundaries match stance, C2.
+            recovery = math.sin(math.pi * smooth(swing)) ** 2
+            pitch = gait.push_off_pitch_degrees * (1 - smooth(swing / .35)) + gait.foot_recovery_pitch_degrees * recovery
+            flex = gait.toe_flex_degrees * recovery
+            crown = (rounded_swing_height(swing, gait.rounded_swing_peak_fraction)
+                     if gait.rounded_swing_peak_fraction else recovery)
+            height = body_height_m * gait.swing_clearance_body_heights * crown
         feet[side] = {"contact": contact, "forward_m": anchor + (0 if contact else velocity * period * smooth(swing)),
-            "height_m": 0.0 if contact else body_height_m * gait.swing_clearance_body_heights * math.sin(math.pi * smooth(swing)) ** 2,
-            "toe_flex_degrees": 0.0, "foot_pitch_degrees": 0.0,
+            "height_m": height, "toe_flex_degrees": flex, "foot_pitch_degrees": pitch,
             "swing_phase": swing, "touchdown_time_s": touchdown}
     support = sum(int(foot["contact"]) for foot in feet.values())
     if support == 0:
