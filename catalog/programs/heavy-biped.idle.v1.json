@@ -40,7 +40,7 @@
     "body": [
       [
         0,
-        0.02
+        0.0
       ],
       [
         3,
@@ -48,7 +48,7 @@
       ],
       [
         6,
-        0.02
+        0.0
       ]
     ],
     "drop": [
@@ -122,20 +122,7 @@
   },
   "classification": "authored supported idle performance using the shared V9 body/contact program; not a gameplay contact fact",
   "duration_seconds": 6.0,
-  "events": [
-    {
-      "name": "ANTICIPATION_START",
-      "reference_time_seconds": 0
-    },
-    {
-      "name": "RECOVERY_START",
-      "reference_time_seconds": 3.0
-    },
-    {
-      "name": "ACTION_COMPLETE",
-      "reference_time_seconds": 6.0
-    }
-  ],
+  "events": [],
   "gape_degrees": 58.0,
   "joint_pitch_limits_degrees": {
     "chest": [
@@ -201,7 +188,7 @@
       ]
     ]
   },
-  "lane_width_body_heights": 0.3,
+  "lane_width_body_heights": 0.24,
   "loop": true,
   "max_joint_rate_degrees_per_second": 360.0,
   "reference_basis": "V9 Feeding003 authored channels; user reference video informs performance review, not forces or biology",
@@ -229,5 +216,14 @@
     "pelvis": 0.1,
     "spine": 0.2,
     "tail": -0.7
-  }
+  },
+  "translation_scale_body_heights": [
+    1.8856539447880523,
+    1.0,
+    0.754261577915221
+  ],
+  "support_reach_body_heights": [
+    0.0,
+    0.0
+  ]
 }

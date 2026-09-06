@@ -52,12 +52,13 @@ def bounded_fit(residual, low, high, initial=None, iterations=65):
     return x
 
 
-def calibrate_support(source, roles, contact_profile, up, forward, height, width):
+def calibrate_support(source, roles, contact_profile, up, forward, height, width, support_reach=None):
     rig = SkinRig(source, roles, forward, up, contact_profile)
     pelvis = rig.neutral_world[rig.roles_i['pelvis'][0], :3, 3]
     feet = {}
     for side, chain in rig.legs.items():
-        reach = float((rig.neutral_world[chain[-1], :3, 3] - pelvis) @ forward)
+        reach = (float((rig.neutral_world[chain[-1], :3, 3] - pelvis) @ forward) if support_reach is None
+                 else float(support_reach[0 if side == 'left' else 1]) * height)
         feet[side] = {'contact': True, 'forward_m': reach, 'height_m': 0., 'toe_flex_degrees': 0.,
                       'foot_pitch_degrees': 0., 'swing_phase': 0., 'touchdown_time_s': 0.}
     samples = [{'time_s': t, 'root_forward_m': 0., 'pelvis_height_offset_m': -.025 * height,
@@ -83,11 +84,13 @@ class SupportedSolver:
         self.lateral = _unit(np.cross(self.up, self.forward))
         self.height = float(height)
         self.rig = SkinRig(source, roles, self.forward, self.up, contact_profile, oral=True)
-        (self.t0, self.r0, self.s0), self.calibration = calibrate_support(source, roles, contact_profile, self.up, self.forward, height, action.lane_width_body_heights)
+        (self.t0, self.r0, self.s0), self.calibration = calibrate_support(source, roles, contact_profile, self.up, self.forward, height, action.lane_width_body_heights, action.support_reach_body_heights)
         self.w0 = self.rig.world(self.t0, self.r0, self.s0)
         surface = self.rig.skin(self.w0)
-        self.length = float(np.ptp(surface @ self.forward))
-        self.width = float(np.ptp(surface @ self.lateral))
+        # Explicit family calibration, independent of which contact vertices
+        # happen to be in the current skin masks.
+        self.length = height * action.translation_scale_body_heights[0]
+        self.width = height * action.translation_scale_body_heights[2]
         self.pitch_axes = {n: _unit(np.linalg.solve(self.w0[n,:3,:3], self.lateral)) for nodes in self.rig.roles_i.values() for n in nodes}
         self.yaw_axes = {n: _unit(np.linalg.solve(self.w0[n,:3,:3], self.up)) for nodes in self.rig.roles_i.values() for n in nodes}
         self.angles = {role: resample_chain(action.base_pitch_degrees[role], len(nodes)) for role, nodes in self.rig.roles_i.items() if role in action.base_pitch_degrees}
@@ -112,7 +115,7 @@ class SupportedSolver:
         state = {key: curve(phase, keys) for key, keys in a.channels.items()}
         t, r, s = self.t0.copy(), self.r0.copy(), self.s0.copy()
         pelvis = self.rig.roles_i['pelvis'][0]
-        shift = self.forward * state['forward'] * self.length + self.lateral * state['lateral'] * self.width - self.up * state['drop'] * self.height
+        shift = self.forward * state['forward'] * self.length + self.lateral * state['lateral'] * self.width - self.up * state['drop'] * self.height * a.translation_scale_body_heights[1]
         parent = self.rig.parents[pelvis]
         basis = np.eye(3) if parent is None else self.w0[parent,:3,:3]
         t[pelvis] += np.linalg.solve(basis, shift)

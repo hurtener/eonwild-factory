@@ -14,7 +14,7 @@
   "program": "supported_action",
   "program_profile": {
     "path": "catalog/programs/heavy-biped.call.v1.json",
-    "sha256": "2651274b3e519f5e02e7b43faec83188e4e5d05dabc8a0a1235a758a08a724aa"
+    "sha256": "25af7262a31acbfe41756aec41eeeae35e130e6cfe37f1420c9b877eb411b47d"
   },
   "rig": {
     "path": "catalog/rigs/heavy-biped.v9.json",

@@ -479,5 +479,14 @@
     "pelvis": 0.1,
     "spine": 0.2,
     "tail": -0.7
-  }
+  },
+  "translation_scale_body_heights": [
+    1.8856539447880523,
+    1.0,
+    0.754261577915221
+  ],
+  "support_reach_body_heights": [
+    -0.18,
+    0.24
+  ]
 }

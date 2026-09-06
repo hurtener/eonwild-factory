@@ -40,7 +40,7 @@
     "body": [
       [
         0,
-        0.05
+        0.0
       ],
       [
         1.3,
@@ -64,7 +64,7 @@
       ],
       [
         6,
-        0.05
+        0.0
       ]
     ],
     "drop": [
@@ -201,7 +201,19 @@
   "events": [
     {
       "name": "ANTICIPATION_START",
-      "reference_time_seconds": 0
+      "reference_time_seconds": 0.0
+    },
+    {
+      "name": "BITE_COMMIT_START",
+      "reference_time_seconds": 1.8
+    },
+    {
+      "name": "BITE_WINDOW_OPEN",
+      "reference_time_seconds": 2.2
+    },
+    {
+      "name": "BITE_WINDOW_CLOSE",
+      "reference_time_seconds": 2.65
     },
     {
       "name": "RECOVERY_START",
@@ -277,7 +289,7 @@
       ]
     ]
   },
-  "lane_width_body_heights": 0.3,
+  "lane_width_body_heights": 0.24,
   "loop": false,
   "max_joint_rate_degrees_per_second": 360.0,
   "reference_basis": "V9 Feeding003 authored channels; user reference video informs performance review, not forces or biology",
@@ -305,5 +317,14 @@
     "pelvis": 0.1,
     "spine": 0.2,
     "tail": -0.7
-  }
+  },
+  "translation_scale_body_heights": [
+    1.8856539447880523,
+    1.0,
+    0.754261577915221
+  ],
+  "support_reach_body_heights": [
+    0.0,
+    0.0
+  ]
 }

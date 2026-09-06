@@ -14,7 +14,7 @@
   "program": "supported_action",
   "program_profile": {
     "path": "catalog/programs/heavy-biped.bite-miss.v1.json",
-    "sha256": "d55f5e4e6942da2a4cfda6e3061a2c2ac14317fbfe07d7ecf70738d6b25cc1d6"
+    "sha256": "89976b650d1dedb2eedd877b931eca1ce00121817ed9563abea414cdba6677d8"
   },
   "rig": {
     "path": "catalog/rigs/heavy-biped.v9.json",

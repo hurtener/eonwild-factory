@@ -123,6 +123,19 @@ class _Choreography:
             duration = self.step * (1.12 * (1 - airborne) + (1 - self.gait.flight_fraction) * airborne)
         return max(0., touchdown + duration) if self.start else touchdown + duration
 
+    def canonical_foot(self, side, virtual):
+        offset = 0. if side == 'left' else self.step
+        row = self.sampler(self.gait, virtual + offset, self.height)
+        foot = dict(row['feet'][side])
+        # The base sampler includes a shared flight lift. Reconstruct
+        # it from BOTH actual transition contacts below, not from an
+        # independently warped foot's fictitious partner.
+        if not self.grounded and row['flight']:
+            phase = ((virtual + offset) / self.step) % 1
+            u = (phase - (1 - self.gait.flight_fraction)) / self.gait.flight_fraction
+            foot['height_m'] -= self.gait.flight_foot_lift_body_heights * self.height * math.sin(math.pi * u)**4
+        return foot
+
     def foot(self, side, time):
         offset = 0. if side == 'left' else self.step
         if time < 0 and self.start:
@@ -140,24 +153,24 @@ class _Choreography:
         if contact:
             fraction = min(1., max(0., (time - touchdown) / (lift - touchdown)))
             virtual = fraction * self.stance
-            original = self.sampler(self.gait, virtual, self.height)['feet']['left']
-            forward, height, toe, pitch, swing = self.touchdown(touchdown), 0., 0., original['foot_pitch_degrees'] * weight, 0.
+            original = self.canonical_foot(side, virtual)
+            forward, height, toe, pitch, swing = self.touchdown(touchdown), 0., original['toe_flex_degrees'] * weight, original['foot_pitch_degrees'] * weight, 0.
             amplitude = weight
         else:
             swing = min(1., max(0., (time - lift) / (next_touchdown - lift)))
-            original = self.sampler(self.gait, self.stance + swing * (self.period - self.stance), self.height)['feet']['left']
+            original = self.canonical_foot(side, self.stance + swing * (self.period - self.stance))
             at_lift, _ = self.envelope(lift)
             at_land, _ = self.envelope(next_touchdown)
             amplitude = max(self.transition.minimum_swing_scale, at_lift, at_land)
             pitch_scale = at_lift + (amplitude - at_lift) * smooth(swing / .35)
             forward = self.touchdown(touchdown) + (self.touchdown(next_touchdown) - self.touchdown(touchdown)) * smooth(swing)
             height = original['height_m'] * amplitude
-            toe = original['toe_flex_degrees'] * amplitude
+            toe = original['toe_flex_degrees'] * pitch_scale
             pitch = original['foot_pitch_degrees'] * pitch_scale
         return {'contact': contact, 'forward_m': float(forward), 'height_m': float(height),
             'toe_flex_degrees': float(toe), 'foot_pitch_degrees': float(pitch), 'swing_phase': float(swing),
             'touchdown_time_s': float(self.delay + max(0., touchdown) if self.start else touchdown),
-            'articulation_scale': float(amplitude)}
+            'articulation_scale': float(amplitude), 'liftoff_time_s': float(lift), 'next_touchdown_time_s': float(next_touchdown)}
 
     def sample(self, time):
         active = time - self.delay
@@ -172,6 +185,13 @@ class _Choreography:
         vertical_velocity = weight * carrier.get('pelvis_vertical_velocity_mps', 0.) + derivative * (carrier['pelvis_height_offset_m'] - standing)
         feet = {side: self.foot(side, active) for side in ('left', 'right')}
         support = sum(int(foot['contact']) for foot in feet.values())
+        if not self.grounded and support == 0:
+            begin = max(foot['liftoff_time_s'] for foot in feet.values())
+            end = min(foot['next_touchdown_time_s'] for foot in feet.values())
+            fraction = min(1., max(0., (active - begin) / (end - begin)))
+            lift = self.gait.flight_foot_lift_body_heights * self.height * weight * math.sin(math.pi * fraction)**4
+            for foot in feet.values():
+                foot['height_m'] += lift
         return {'time_s': float(time), 'root_forward_m': float(distance), 'root_velocity_mps': float(velocity),
             'root_acceleration_mps2': float(acceleration), 'pelvis_height_offset_m': float(offset),
             'pelvis_vertical_velocity_mps': float(vertical_velocity), 'locomotion_time_s': float(phase),

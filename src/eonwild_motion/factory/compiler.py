@@ -23,21 +23,22 @@ from ..planning.grounded_gait import build_grounded_plan, load_grounded_gait
 from ..solve.airborne_gait import solve_airborne_gait, evaluate_airborne_skin_with_authority
 from ..solve.whole_body_gait_transition import _encode
 from .io import digest, frame_axes, json_bytes, locked_file, read_json, write_json
-from .quality import emitted_rotation_rates, require_supported_geometry, solver_checks
+from .quality import emitted_rotation_rates, emitted_cyclic_continuity, require_supported_geometry, solver_checks
 from .source import geometry_height
 from ..solve.performance import load_performance, decorate_plan
 from ..solve.skin_targets import solve_with_skin_targets, evaluate_skin
 from ..planning.supported_action import load_supported_action
+from ..planning.gait_transition import load_gait_transition, build_transition_plan
 from ..solve.supported_action import solve_supported_action
 
 SCHEMA = "eonwild.motion.factory-recipe.v1"
-PROGRAMS = ("airborne_gait", "grounded_gait", "supported_action")
+PROGRAMS = ("airborne_gait", "grounded_gait", "supported_action", "gait_transition")
 
 
 def load_recipe(path: Path, root: Path) -> tuple[dict, dict[str, Path]]:
     recipe = read_json(path)
     required = {"schema", "id", "version", "family", "program", "source", "rig", "program_profile", "forward_axis", "up_axis"}
-    if not isinstance(recipe, dict) or set(recipe) - required - {"contact_profile", "performance_profile", "description", "supersedes"} or not required <= set(recipe):
+    if not isinstance(recipe, dict) or set(recipe) - required - {"contact_profile", "performance_profile", "gait_profile", "description", "supersedes"} or not required <= set(recipe):
         raise ContractError("recipe contains missing or unknown fields")
     if recipe["schema"] != SCHEMA or recipe["program"] not in PROGRAMS:
         raise ContractError("unsupported recipe schema or program")
@@ -51,6 +52,12 @@ def load_recipe(path: Path, root: Path) -> tuple[dict, dict[str, Path]]:
         paths["contact_profile"] = locked_file(root, recipe["contact_profile"])
     if "performance_profile" in recipe:
         paths["performance_profile"] = locked_file(root, recipe["performance_profile"])
+    if "gait_profile" in recipe:
+        if recipe["program"] != "gait_transition":
+            raise ContractError("only gait transitions accept a separate locomotion profile")
+        paths["gait_profile"] = locked_file(root, recipe["gait_profile"])
+    elif recipe["program"] == "gait_transition":
+        raise ContractError("gait transition requires a locked locomotion profile")
     return recipe, paths
 
 
@@ -72,7 +79,7 @@ def validate_plan(plan: dict, program: str) -> None:
         if type(row["support_count"]) is not int or row["support_count"] != support or type(row["flight"]) is not bool or row["flight"] != (support == 0):
             raise ContractError("plan contact, support and flight disagree")
         double_support |= support == 2
-        if program == "grounded_gait" and support == 0:
+        if (program == "grounded_gait" or plan.get("locomotion_program") == "grounded_gait") and support == 0:
             raise ContractError("grounded gait must not fly")
     if program == "grounded_gait" and not double_support:
         raise ContractError("grounded gait must include double support")
@@ -160,7 +167,13 @@ def engine_fingerprint() -> dict[str, str]:
     return {path.relative_to(root).as_posix(): digest(path.read_bytes()) for path in sorted(root.rglob("*.py"))}
 
 
+_ENGINE_AT_IMPORT = engine_fingerprint()
+
+
 def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
+    engine_identity = engine_fingerprint()
+    if engine_identity != _ENGINE_AT_IMPORT:
+        raise ContractError("engine sources changed since import; restart the compiler")
     root, recipe_path, output = root.resolve(), recipe_path.resolve(), output.resolve()
     if output.exists():
         raise ContractError("candidate output already exists; never overwrite an existing take")
@@ -190,6 +203,17 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
         gait = load_airborne_gait(profile)
         plan = build_airborne_plan(gait, height)
         plan["program"] = "airborne_gait"
+    elif recipe["program"] == "gait_transition":
+        transition = load_gait_transition(profile)
+        locomotion = json.loads(snapshots["gait_profile"])
+        if locomotion.get("schema") == "eonwild.motion.v9.grounded-gait.v1":
+            grounded = load_grounded_gait(locomotion)
+            gait = AirborneGait(step_period_s=grounded.step_period_s, cycles=grounded.cycles,
+                sample_hz=transition.sample_hz, swing_hip_lift_degrees=grounded.swing_hip_lift_degrees)
+            plan = build_transition_plan(transition, grounded, height)
+        else:
+            gait = load_airborne_gait(locomotion)
+            plan = build_transition_plan(transition, gait, height)
     elif not supported:
         grounded = load_grounded_gait(profile)
         plan = build_grounded_plan(grounded, height)
@@ -223,6 +247,7 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
     outputs = {"root_motion": Glb.from_bytes(root_raw), "in_place": Glb.from_bytes(inplace_raw)}
     evaluated = {mode: evaluate_emitted(glb, source, roles, plan, forward, in_place=(mode == "in_place")) for mode, glb in outputs.items()}
     rates = {mode: emitted_rotation_rates(glb, gait.max_joint_angular_velocity_degrees_per_s) for mode, glb in outputs.items()}
+    continuity = {mode: emitted_cyclic_continuity(glb, loop=plan.get("loop", True)) for mode, glb in outputs.items()}
     feasibility = solver_checks(receipt)
     surface = {"verdict": "NOT_MEASURED", "reason": "no bound skinned contact profile"}
     if "contact_profile" in snapshots:
@@ -237,15 +262,20 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
             surface = {"verdict": "FAIL", "reason": f"final skinned evaluation failed: {exc}"}
     if ("performance_profile" in snapshots or supported) and "contact_profile" in snapshots:
         surface = evaluate_skin(outputs["root_motion"], json.loads(snapshots["contact_profile"]), plan)
+    receipt["final_skinned_contact_gate"] = surface["verdict"]
+    receipt["final_skinned_contact_scope"] = "reopened serialized root-motion authority at the locked floor; full skin influences"
     refinement_ok = receipt.get("skin_target_refinement", {}).get("converged", True) and receipt.get("oral_contact", {"status":"PASS"})["status"] == "PASS"
     technical = (refinement_ok and all(row["status"] == "PASS" for row in evaluated.values()) and
-                 all(row["status"] == "PASS" for row in rates.values()) and feasibility["status"] == "PASS" and surface["verdict"] == "PASS")
+                 all(row["status"] == "PASS" for row in rates.values()) and
+                 all(row["status"] in ("PASS", "NOT_APPLICABLE") for row in continuity.values()) and feasibility["status"] == "PASS" and surface["verdict"] == "PASS")
     validation = {"schema": "eonwild.motion.factory-validation.v1", "technical_status": "PASS" if technical else "BLOCKED",
-        "outputs": evaluated, "rotation_rates": rates, "solver_feasibility": feasibility, "skinned_contact": surface,
+        "outputs": evaluated, "rotation_rates": rates, "cyclic_continuity": continuity, "solver_feasibility": feasibility, "skinned_contact": surface,
         "oral_contact": receipt.get("oral_contact"),
         "visual_review": "PENDING", "unity_parity": "NOT_RUN", "production_approved": False}
+    if engine_fingerprint() != engine_identity:
+        raise ContractError("engine sources changed during compilation; no candidate published")
     lock = {"schema": "eonwild.motion.factory-lock.v1", "recipe_sha256": digest(recipe_bytes),
-            "inputs": {name: recipe[name] for name in paths}, "engine_files": engine_fingerprint(),
+            "inputs": {name: recipe[name] for name in paths}, "engine_files": engine_identity,
             "tools": {"python": platform.python_version(), "numpy": np.__version__}}
     state = {"schema": "eonwild.motion.runtime-data.v1", "program": recipe["program"], "family": recipe["family"],
         "units": "m", "time_units": "s", "handedness": "right", "forward_axis": forward.tolist(), "up_axis": up.tolist(),
@@ -254,7 +284,7 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
         "initial_contacts": {side: plan["samples"][0]["feet"][side]["contact"] for side in ("left", "right")},
         "events": sorted(event_track(plan) + plan.get("events", []), key=lambda e: e["time_s"]), "plan_sha256": digest(json_bytes(plan)),
         "world_interaction_authority": "runtime decides contact, damage, grip resistance and release",
-        "unity_import_status": "NOT_VERIFIED",
+        "unity_import_status": "NOT_VERIFIED", "transition_contract": plan.get("transition_contract"),
         "ground_plane": (json.loads(snapshots["contact_profile"])["geometry"]["ground"] if "contact_profile" in snapshots else None)}
     payloads = {"root_motion.glb": root_raw, "in_place.glb": inplace_raw, "plan.json": json_bytes(plan),
         "solver-receipt.json": json_bytes(receipt), "runtime.json": json_bytes(state),
