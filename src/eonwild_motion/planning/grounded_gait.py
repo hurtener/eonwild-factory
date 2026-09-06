@@ -93,7 +93,7 @@ def sample_grounded_gait(gait: GroundedGait, time_s: float, body_height_m: float
             # Unload/roll, fold the digitigrade ankle in early recovery, then
             # extend before touchdown. Both boundaries match stance, C2.
             recovery = math.sin(math.pi * smooth(swing)) ** 2
-            pitch = gait.push_off_pitch_degrees * (1 - smooth(swing / .35)) + gait.foot_recovery_pitch_degrees * recovery
+            pitch = gait.push_off_pitch_degrees * (1 - smooth(swing / .35)) - gait.foot_recovery_pitch_degrees * recovery
             flex = gait.toe_flex_degrees * recovery
             crown = (rounded_swing_height(swing, gait.rounded_swing_peak_fraction)
                      if gait.rounded_swing_peak_fraction else recovery)

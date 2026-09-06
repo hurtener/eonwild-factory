@@ -42,7 +42,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--package", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--view", choices=("side", "three-quarter"), default="three-quarter")
+    parser.add_argument("--view", choices=("side", "three-quarter", "front", "rear"), default="three-quarter")
     parser.add_argument("--fps", type=int, default=24)
     parser.add_argument("--width", type=int, default=640)
     parser.add_argument("--samples", type=int, default=16)
@@ -112,6 +112,8 @@ def main():
     forward = Vector((f[0], -f[2], f[1])).normalized()
     lateral = Vector((0, 0, 1)).cross(forward).normalized()
     offset = lateral + (forward * .65 if args.view == "three-quarter" else Vector((0, 0, 0)))
+    if args.view in ("front", "rear"):
+        offset = forward * (1 if args.view == "front" else -1)
     camera_data = bpy.data.cameras.new("ReviewCamera")
     camera = bpy.data.objects.new("ReviewCamera", camera_data)
     scene.collection.objects.link(camera)
@@ -121,7 +123,13 @@ def main():
     camera_data.ortho_scale = span * 1.28
     camera_data.clip_end = max(1000., span * 10)
     scene.camera = camera
-    bpy.ops.mesh.primitive_plane_add(size=span * 8, location=(center.x, center.y, low.z - .005))
+    plane = runtime.get("ground_plane")
+    if plane is None:
+        raise ValueError("review requires the explicit package ground plane")
+    if plane["up_axis"] != "Y":
+        raise ValueError("this Blender review scene currently supports Y-up sources only")
+    ground_level = float(plane["level_m"])
+    bpy.ops.mesh.primitive_plane_add(size=span * 8, location=(center.x, center.y, ground_level))
     ground = bpy.context.object
     ground.name = "ReviewGround"
     material = bpy.data.materials.new("ReviewGroundMaterial")
@@ -178,7 +186,7 @@ def main():
         "timing": "native-time sampling; FBX retains full endpoint; video omits duplicate loop endpoint",
         "view": args.view, "media": {"preview.mp4": sha(video), "cover.png": sha(cover)}, "exports": exports,
         "visual_approval": "PENDING", "unity_import_validation": "NOT_RUN",
-        "presentation": "CPU studio study; bbox presentation floor is not contact validation"}
+        "ground_level_m": ground_level, "presentation": "fixed declared contact floor; no bbox floor fitting; review is not approval"}
     (output / "render-receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
     print(json.dumps(receipt, indent=2))
 

@@ -332,6 +332,8 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
             # The full-cycle cosine is C2 at the loop; no head/neck compensation
             # is added, so the accepted whole-body motion remains unchanged.
             rot[jaw] = _qmul(base_r[jaw], _qrotvec(tuple(np.asarray(jaw_axis) * math.radians(jaw_breathing_angle(gait, row["time_s"])))))
+        from .performance import apply_performance
+        apply_performance(source, tr, rot, base_s, base_w, roles, plan, row, up, forward)
         facts = {}
         for side, chain in legs.items():
             hip, knee, ankle, foot = chain
@@ -344,6 +346,8 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
             w = _world_matrices(source, tr, rot, base_s)
             hp, kp, ap, fp = (np.asarray(_world_position(w[n])) for n in chain)
             side_lane = float((np.asarray(_world_position(base_w[foot])) - origin) @ lateral)
+            if "performance" in plan:
+                side_lane = math.copysign(.5 * plan["performance"]["lane_width_body_heights"] * body_height, side_lane)
             foot_height = float(np.asarray(_world_position(base_w[foot])) @ up - ground)
             desired_foot = origin + forward * foot_plan["forward_m"] + lateral * side_lane
             desired_foot += up * (ground + foot_height + foot_plan["height_m"] - float(desired_foot @ up))
@@ -358,6 +362,10 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
             )
             if ground_offset:
                 desired_foot -= up * ground_offset
+            correction = np.asarray(foot_plan.get("target_offset_m", [0., 0., 0.]), dtype=float)
+            if correction.shape != (3,) or not np.isfinite(correction).all() or np.linalg.norm(correction) > .06 * body_height:
+                raise ContractError("invalid bounded skin target correction")
+            desired_foot += correction
             nominal_foot = desired_foot.copy()
             # Rock the articulated foot about the distal contact centroid,
             # not about the ankle: toe tips stay fixed during stance roll-off.
@@ -430,7 +438,8 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
             max_envelope_violation = max(max_envelope_violation, envelope_error)
             previous_pitch[side] = solved_pitch
             desired_normal = _unit(np.cross(desired_knee - hp, desired_end - desired_knee))
-            delta = _orientation_from_bend(kp - hp, anatomical_normals[side], desired_knee - hp, desired_normal)
+            source_normal = (_unit(np.cross(kp - hp, ap - kp)) if "performance" in plan else anatomical_normals[side])
+            delta = _orientation_from_bend(kp - hp, source_normal, desired_knee - hp, desired_normal)
             hq = _qmul(delta, _rotation_from_matrix(w[hip]))
             rot[hip] = _world_rotation(source, w, hip, hq)
             w = _world_matrices(source, tr, rot, base_s)
