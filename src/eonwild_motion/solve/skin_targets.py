@@ -149,7 +149,7 @@ def solve_with_skin_targets(source, *, semantic_roles, gait, up_axis, forward_ax
             if side not in anchors:
                 patch = points(frames[first], side)
                 witness = int(patch[:, index_up].argmin())
-                origin = patch[witness] - forward * current["samples"][first]["feet"][side]["forward_m"]
+                origin = patch - forward * current["samples"][first]["feet"][side]["forward_m"]
                 anchors[side] = (witness, origin)
             witness, origin = anchors[side]
             correction = np.zeros_like(offsets[side])
@@ -158,7 +158,11 @@ def solve_with_skin_targets(source, *, semantic_roles, gait, up_axis, forward_ax
                 gap = float(patch[:, index_up].min() - ground)
                 if load:
                     target = origin + forward * row["feet"][side]["forward_m"]
-                    error = target - patch[witness]
+                    active = patch[:, index_up] <= patch[:, index_up].min() + .001
+                    # Fit the currently loaded material points to immutable
+                    # touchdown witnesses, not just one arbitrarily low point.
+                    errors = target[active] - patch[active]
+                    error = .5 * (errors.max(axis=0) + errors.min(axis=0))
                     error -= up * float(error @ up)
                     error += up * (.0001 - gap)
                     correction[i] = error
@@ -183,6 +187,6 @@ def solve_with_skin_targets(source, *, semantic_roles, gait, up_axis, forward_ax
     receipt["skin_target_refinement"] = {"classification": "material-witness correction before repeated constrained IK, not post-export projection",
         "converged": maximum_error <= .0002, "trace": trace,
         "maximum_offset_m": max(float(np.max(np.linalg.norm(v, axis=1))) for v in offsets.values()),
-        "witnesses": {side: {"patch_index": int(value[0]), "anchor_origin_m": value[1].tolist()} for side, value in anchors.items()},
+        "witnesses": {side: {"initial_lowest_patch_index": int(value[0]), "material_anchor_origins_m": value[1].tolist()} for side, value in anchors.items()},
         "ground_level_m": ground}
     return root_raw, inplace_raw, current, receipt

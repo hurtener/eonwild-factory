@@ -40,6 +40,8 @@ def emitted_rotation_rates(glb: Glb, maximum_degrees_per_s: float) -> dict:
     if not math.isfinite(maximum_degrees_per_s) or maximum_degrees_per_s <= 0:
         raise ContractError("rotation rate limit must be finite and positive")
     peak = 0.0
+    witness = None
+    channel_count = 0
     for animation in glb.document.get("animations", []):
         for channel in animation["channels"]:
             if channel["target"]["path"] != "rotation":
@@ -56,7 +58,15 @@ def emitted_rotation_rates(glb: Glb, maximum_degrees_per_s: float) -> dict:
                 raise ContractError("zero final quaternion")
             quaternions /= norms[:, None]
             angles = np.degrees(2 * np.arccos(np.clip(np.abs(np.sum(quaternions[:-1] * quaternions[1:], axis=1)), 0, 1)))
-            peak = max(peak, float(np.max(angles / np.diff(times))))
+            speed = angles / np.diff(times)
+            index = int(np.argmax(speed)); channel_count += 1
+            if float(speed[index]) > peak:
+                peak = float(speed[index])
+                node = int(channel["target"]["node"])
+                witness = {"node": node, "bone": glb.nodes[node].get("name"), "times_s": times[index:index+2].tolist(),
+                           "quaternions_xyzw": quaternions[index:index+2].tolist()}
+    if not channel_count:
+        raise ContractError("rotation witness requires at least one actual rotation channel")
     return {"status": "PASS" if peak <= maximum_degrees_per_s else "FAIL",
-            "maximum_degrees_per_s": peak, "limit_degrees_per_s": maximum_degrees_per_s,
+            "maximum_degrees_per_s": peak, "limit_degrees_per_s": maximum_degrees_per_s, "peak_witness": witness,
             "classification": "serialized per-channel rotation rate; not joint torque or muscle capacity"}

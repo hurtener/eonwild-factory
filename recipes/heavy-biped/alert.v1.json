@@ -1,0 +1,34 @@
+{
+  "contact_profile": {
+    "path": "catalog/contacts/heavy-biped.v9.json",
+    "sha256": "fef6279c1e7653ae6c7c485c3f934fd647410a726acb59393312b72af754a89f"
+  },
+  "description": "authored supported alert performance using the shared V9 body/contact program; not a gameplay contact fact",
+  "family": "heavy-predatory-biped",
+  "forward_axis": [
+    0.03893162055641767,
+    0.0,
+    0.9992418770852486
+  ],
+  "id": "heavy-biped.alert.v1",
+  "program": "supported_action",
+  "program_profile": {
+    "path": "catalog/programs/heavy-biped.alert.v1.json",
+    "sha256": "d0d5cf1c965faf1b54d44a5e044ef0030029eb44bcdf7c04963917db6862f07d"
+  },
+  "rig": {
+    "path": "catalog/rigs/heavy-biped.v9.json",
+    "sha256": "c3de770bf7dcc68219a28fb9851e9b75f3d3eebe2c2c0c7deb0078850100fd7e"
+  },
+  "schema": "eonwild.motion.factory-recipe.v1",
+  "source": {
+    "path": "assets/sha256/044a8be907eb650fa71c613f19655eb10a0dd23c1d6bce86dfef93cd8d9575f6.glb",
+    "sha256": "044a8be907eb650fa71c613f19655eb10a0dd23c1d6bce86dfef93cd8d9575f6"
+  },
+  "up_axis": [
+    0.0,
+    1.0,
+    0.0
+  ],
+  "version": 1
+}

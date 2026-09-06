@@ -27,9 +27,11 @@ from .quality import emitted_rotation_rates, require_supported_geometry, solver_
 from .source import geometry_height
 from ..solve.performance import load_performance, decorate_plan
 from ..solve.skin_targets import solve_with_skin_targets, evaluate_skin
+from ..planning.supported_action import load_supported_action
+from ..solve.supported_action import solve_supported_action
 
 SCHEMA = "eonwild.motion.factory-recipe.v1"
-PROGRAMS = ("airborne_gait", "grounded_gait")
+PROGRAMS = ("airborne_gait", "grounded_gait", "supported_action")
 
 
 def load_recipe(path: Path, root: Path) -> tuple[dict, dict[str, Path]]:
@@ -93,7 +95,7 @@ def tag_output(raw: bytes, recipe: dict, plan: dict, suffix: str) -> bytes:
     glb = Glb.from_bytes(raw)
     animation = glb.document["animations"][0]
     animation["name"] = recipe["id"] + "." + suffix
-    animation.setdefault("extras", {}).update(program=recipe["program"], loop=True,
+    animation.setdefault("extras", {}).update(program=recipe["program"], loop=plan.get("loop", True),
         plan_sha256=digest(json_bytes(plan)), root_motion=(suffix == "root_motion"))
     glb.document.setdefault("extras", {})["eonwildMotionStateTrack"] = {
         "program": recipe["program"], "samples": [{"time_s": row["time_s"], "flight": row["flight"],
@@ -136,18 +138,21 @@ def evaluate_emitted(glb: Glb, source: Glb, roles: dict, plan: dict, forward: An
             if in_place:
                 tips += forward * row["root_forward_m"]
             if previous_row is not None and row["feet"][side]["contact"] and previous_row["feet"][side]["contact"]:
-                max_tip_drift = max(max_tip_drift, float(np.linalg.norm(tips - previous_tips[side], axis=1).max()))
+                planned_delta = np.asarray(row["feet"][side].get("target_offset_m", [0.,0.,0.])) - np.asarray(previous_row["feet"][side].get("target_offset_m", [0.,0.,0.]))
+                max_tip_drift = max(max_tip_drift, float(np.linalg.norm(tips - previous_tips[side] - planned_delta, axis=1).max()))
             previous_tips[side] = tips
         previous_row = row
     max_seam = float(np.degrees(2 * np.arccos(np.clip(np.abs(np.sum(first_r * last_r, axis=1)), 0, 1))).max())
     checks = {"root_matches_plan": max_root_error <= 2e-5, "attachments_unchanged": max_attachment <= 2e-6,
               "scales_unchanged": max_scale_error <= 2e-6, "rotation_loop_closed": max_seam <= 0.5,
               "skeleton_contact_stationary": max_tip_drift <= 0.001}
+    if not plan.get("loop", True):
+        del checks["rotation_loop_closed"]
     return {"status": "PASS" if all(checks.values()) else "FAIL", "checks": checks,
             "maximum_root_error_m": max_root_error, "maximum_attachment_error_m": max_attachment,
             "maximum_scale_error": max_scale_error, "maximum_rotation_seam_degrees": max_seam,
             "maximum_planted_digit_step_drift_m": max_tip_drift,
-            "classification": "reopened skeleton proxy; not skinned-contact or physical validation"}
+            "classification": "reopened skeleton target-relative proxy; explicit pre-solve skin offsets accounted for, final material contact independently checked"}
 
 
 def engine_fingerprint() -> dict[str, str]:
@@ -180,21 +185,31 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
     roles = json.loads(snapshots["rig"])["roles"]
     profile = json.loads(snapshots["program_profile"])
     height = geometry_height(source, roles, up)
+    supported = recipe["program"] == "supported_action"
     if recipe["program"] == "airborne_gait":
         gait = load_airborne_gait(profile)
         plan = build_airborne_plan(gait, height)
         plan["program"] = "airborne_gait"
-    else:
+    elif not supported:
         grounded = load_grounded_gait(profile)
         plan = build_grounded_plan(grounded, height)
         # Only articulation settings are reused. plan_override prevents the
         # airborne support schedule from being evaluated for grounded walking.
         gait = AirborneGait(step_period_s=grounded.step_period_s, cycles=grounded.cycles,
                            sample_hz=grounded.sample_hz, swing_hip_lift_degrees=grounded.swing_hip_lift_degrees)
+    if supported:
+        if "contact_profile" not in snapshots or "performance_profile" in snapshots:
+            raise ContractError("supported actions require contact data and their own performance channels")
+        action = load_supported_action(profile)
+        gait = AirborneGait(max_joint_angular_velocity_degrees_per_s=action.max_joint_rate_degrees_per_second)
+        root_raw, inplace_raw, plan, receipt = solve_supported_action(source, semantic_roles=roles, action=action,
+            contact_profile=json.loads(snapshots["contact_profile"]), up_axis=up, forward_axis=forward, body_height_m=height)
     if "performance_profile" in snapshots:
         plan = decorate_plan(plan, load_performance(json.loads(snapshots["performance_profile"])))
     validate_plan(plan, recipe["program"])
-    if plan.get("performance", {}).get("skin_refinement", False):
+    if supported:
+        pass  # Already solved by the persistent-support program above.
+    elif plan.get("performance", {}).get("skin_refinement", False):
         if "contact_profile" not in snapshots:
             raise ContractError("skin refinement requires a locked contact profile")
         root_raw, inplace_raw, plan, receipt = solve_with_skin_targets(source, semantic_roles=roles,
@@ -220,13 +235,14 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
                        "planned_stance_without_contact_samples": facts["planned_stance_without_surface_contact_samples"]}
         except (ContractError, ValueError, KeyError, StopIteration) as exc:
             surface = {"verdict": "FAIL", "reason": f"final skinned evaluation failed: {exc}"}
-    if "performance_profile" in snapshots and "contact_profile" in snapshots:
+    if ("performance_profile" in snapshots or supported) and "contact_profile" in snapshots:
         surface = evaluate_skin(outputs["root_motion"], json.loads(snapshots["contact_profile"]), plan)
-    refinement_ok = receipt.get("skin_target_refinement", {}).get("converged", True)
+    refinement_ok = receipt.get("skin_target_refinement", {}).get("converged", True) and receipt.get("oral_contact", {"status":"PASS"})["status"] == "PASS"
     technical = (refinement_ok and all(row["status"] == "PASS" for row in evaluated.values()) and
                  all(row["status"] == "PASS" for row in rates.values()) and feasibility["status"] == "PASS" and surface["verdict"] == "PASS")
     validation = {"schema": "eonwild.motion.factory-validation.v1", "technical_status": "PASS" if technical else "BLOCKED",
         "outputs": evaluated, "rotation_rates": rates, "solver_feasibility": feasibility, "skinned_contact": surface,
+        "oral_contact": receipt.get("oral_contact"),
         "visual_review": "PENDING", "unity_parity": "NOT_RUN", "production_approved": False}
     lock = {"schema": "eonwild.motion.factory-lock.v1", "recipe_sha256": digest(recipe_bytes),
             "inputs": {name: recipe[name] for name in paths}, "engine_files": engine_fingerprint(),
@@ -234,9 +250,9 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
     state = {"schema": "eonwild.motion.runtime-data.v1", "program": recipe["program"], "family": recipe["family"],
         "units": "m", "time_units": "s", "handedness": "right", "forward_axis": forward.tolist(), "up_axis": up.tolist(),
         "root_authority": "choose motor OR applied root motion, never both", "rig_roles": roles,
-        "duration_s": plan["samples"][-1]["time_s"], "loop": True,
+        "duration_s": plan["samples"][-1]["time_s"], "loop": plan.get("loop", True),
         "initial_contacts": {side: plan["samples"][0]["feet"][side]["contact"] for side in ("left", "right")},
-        "events": event_track(plan), "plan_sha256": digest(json_bytes(plan)),
+        "events": sorted(event_track(plan) + plan.get("events", []), key=lambda e: e["time_s"]), "plan_sha256": digest(json_bytes(plan)),
         "world_interaction_authority": "runtime decides contact, damage, grip resistance and release",
         "unity_import_status": "NOT_VERIFIED",
         "ground_plane": (json.loads(snapshots["contact_profile"])["geometry"]["ground"] if "contact_profile" in snapshots else None)}

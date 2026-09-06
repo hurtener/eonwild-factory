@@ -1,0 +1,233 @@
+{
+  "anchor": null,
+  "base_pitch_degrees": {
+    "chest": [
+      3
+    ],
+    "head": [
+      8
+    ],
+    "neck": [
+      1,
+      1,
+      2,
+      2,
+      3
+    ],
+    "pelvis": [
+      12
+    ],
+    "spine": [
+      2,
+      3,
+      4,
+      4,
+      3
+    ],
+    "tail": [
+      -1.5,
+      -1.5,
+      -1.2,
+      -0.9,
+      -0.6,
+      0,
+      0.6,
+      0.9,
+      1.2
+    ]
+  },
+  "channels": {
+    "body": [
+      [
+        0,
+        0.02
+      ],
+      [
+        3,
+        0.08
+      ],
+      [
+        6,
+        0.02
+      ]
+    ],
+    "drop": [
+      [
+        0,
+        0
+      ],
+      [
+        3,
+        0.006
+      ],
+      [
+        6,
+        0
+      ]
+    ],
+    "forward": [
+      [
+        0,
+        0
+      ],
+      [
+        6,
+        0
+      ]
+    ],
+    "jaw": [
+      [
+        0,
+        0
+      ],
+      [
+        6,
+        0
+      ]
+    ],
+    "lateral": [
+      [
+        0,
+        0
+      ],
+      [
+        6,
+        0
+      ]
+    ],
+    "tail": [
+      [
+        0,
+        0
+      ],
+      [
+        3,
+        0.2
+      ],
+      [
+        6,
+        0
+      ]
+    ],
+    "yaw": [
+      [
+        0,
+        0
+      ],
+      [
+        6,
+        0
+      ]
+    ]
+  },
+  "classification": "authored supported idle performance using the shared V9 body/contact program; not a gameplay contact fact",
+  "duration_seconds": 6.0,
+  "events": [
+    {
+      "name": "ANTICIPATION_START",
+      "reference_time_seconds": 0
+    },
+    {
+      "name": "RECOVERY_START",
+      "reference_time_seconds": 3.0
+    },
+    {
+      "name": "ACTION_COMPLETE",
+      "reference_time_seconds": 6.0
+    }
+  ],
+  "gape_degrees": 58.0,
+  "joint_pitch_limits_degrees": {
+    "chest": [
+      [
+        -6,
+        12
+      ]
+    ],
+    "head": [
+      [
+        -4,
+        32
+      ]
+    ],
+    "neck": [
+      [
+        -4,
+        12
+      ],
+      [
+        -4,
+        12
+      ],
+      [
+        -4,
+        12
+      ],
+      [
+        -4,
+        12
+      ],
+      [
+        -4,
+        16
+      ]
+    ],
+    "pelvis": [
+      [
+        -12,
+        15
+      ]
+    ],
+    "spine": [
+      [
+        -5,
+        8
+      ],
+      [
+        -5,
+        8
+      ],
+      [
+        -5,
+        8
+      ],
+      [
+        -5,
+        8
+      ],
+      [
+        -5,
+        8
+      ]
+    ]
+  },
+  "lane_width_body_heights": 0.3,
+  "loop": true,
+  "max_joint_rate_degrees_per_second": 360.0,
+  "reference_basis": "V9 Feeding003 authored channels; user reference video informs performance review, not forces or biology",
+  "reference_duration_seconds": 6.0,
+  "sample_hz": 60,
+  "schema": "eonwild.motion.supported-action.v1",
+  "support_limits": {
+    "ankle_interior_degrees": [
+      65,
+      155
+    ],
+    "hip_sagittal_degrees": [
+      -15,
+      85
+    ],
+    "knee_interior_degrees": [
+      80,
+      155
+    ]
+  },
+  "yaw_weights": {
+    "chest": 0.15,
+    "head": 0.8,
+    "neck": 0.6,
+    "pelvis": 0.1,
+    "spine": 0.2,
+    "tail": -0.7
+  }
+}

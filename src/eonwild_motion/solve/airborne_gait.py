@@ -388,7 +388,7 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
                 candidate_q = _qrotvec(tuple(lateral * math.radians(degrees)))
                 candidate_foot = nominal_foot + initial_tip_offset - np.asarray(_qrotate(candidate_q, tuple(flexed_tip_offset)))
                 rotated_roots = [(np.asarray(_qrotate(candidate_q, tuple(offset))), tip, reach) for offset, tip, reach in toe_geometry]
-                for _ in range(18 if lock > 1e-12 else 0):
+                for _ in range((48 if "performance" in plan else 18) if lock > 1e-12 else 0):
                     largest_correction = 0.0
                     for offset, tip, reach in rotated_roots:
                         delta = tip - (candidate_foot + offset)
