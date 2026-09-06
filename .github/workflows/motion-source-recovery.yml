@@ -4,37 +4,83 @@ on:
     branches: [feat/motion-quality-and-breadth]
     paths: [.github/workflows/motion-source-recovery.yml]
 permissions:
-  contents: read
+  contents: write
 jobs:
   recover:
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 35
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '2'
+      PYTHONPATH: src
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           fetch-depth: 1
-          persist-credentials: false
-      - name: Inspect complete patch boundaries and V9 walk evidence
+      - name: Materialize only independently complete and checksum-matching patches
         shell: python
         run: |
-          import base64, hashlib, lzma, pathlib, subprocess, re
-          parts=sorted(pathlib.Path('.github').glob('motion-session-part-*.b64'))
-          raw=base64.b64decode(''.join(p.read_text().strip() for p in parts),validate=True)
-          assert hashlib.sha256(raw).hexdigest()=='1b2c4beeede55a85322ba3dc5bb7812cd0b1abfe5724830fdd4442a88052e07d'
-          dec=lzma.LZMADecompressor(memlimit=256*1024*1024)
-          prefix=dec.decompress(raw,max_length=16*1024*1024).decode('utf-8')
-          print('RECOVERY_STATUS',len(prefix),dec.eof)
-          for part in re.split(r'(?m)(?=^diff --git )',prefix):
-              if not part: continue
-              print('SECTION',part.splitlines()[0],len(part),'INDEX',next((x for x in part.splitlines() if x.startswith('index ')),''))
-          print('TAIL_BEGIN');print(prefix[25000:]);print('TAIL_END')
+          import base64,hashlib,lzma,pathlib,re,subprocess,json
+          raw=base64.b64decode(pathlib.Path('.github/motion-session-part-0.b64').read_text(),validate=True)
+          expected='1b2c4beeede55a85322ba3dc5bb7812cd0b1abfe5724830fdd4442a88052e07d'
+          assert hashlib.sha256(raw).hexdigest()==expected
+          decoder=lzma.LZMADecompressor(memlimit=256*1024*1024)
+          prefix=decoder.decompress(raw,max_length=16*1024*1024)
+          assert not decoder.eof
+          selected={'src/eonwild_motion/factory/quality.py','src/eonwild_motion/planning/airborne_gait.py','src/eonwild_motion/blender/render.py',
+                    'catalog/programs/heavy-biped.run.v3.json','catalog/programs/heavy-biped.sprint.v3.json',
+                    'recipes/heavy-biped/run.v3.json','recipes/heavy-biped/sprint.v3.json'}
+          sections=[s for s in re.split(rb'(?m)(?=^diff --git )',prefix) if s]
+          records=[]
+          for section in sections[:-1]:
+              path=section.splitlines()[0].decode().split(' b/',1)[1]
+              old,new=re.search(rb'(?m)^index ([0-9a-f]+)\.\.([0-9a-f]+) ',section).groups()
+              if path not in selected: continue
+              assert subprocess.check_output(['git','hash-object',path]).strip().startswith(old)
+              subprocess.run(['git','apply','--check','-'],input=section,check=True)
+              subprocess.run(['git','apply','-'],input=section,check=True)
+              actual=subprocess.check_output(['git','hash-object',path]).strip()
+              assert actual.startswith(new),(path,actual,new)
+              records.append({'path':path,'git_blob':actual.decode(),'sha256':hashlib.sha256(pathlib.Path(path).read_bytes()).hexdigest()})
+          assert {r['path'] for r in records}==selected
+          directory=pathlib.Path('reports/MOTION-QUALITY-AND-BREADTH-002/recovery');directory.mkdir(parents=True,exist_ok=True)
+          (directory/'source-prefix.patch.txt').write_bytes(prefix)
+          receipt={'source_commit':'a1d1ee789a7ebfbe490797a16c76211ae1b1f287','compressed_part_sha256':expected,
+              'prefix_sha256':hashlib.sha256(prefix).hexdigest(),'prefix_bytes':len(prefix),'complete_compressed_stream':False,
+              'available_parts':[0],'missing_parts':[1,2,3],'materialized':records,
+              'remaining':'Other complete sections and the final truncated supported-action section are preserved as text, not executed or silently discarded.',
+              'validation':'Recovery integrity only. Motion, regression, visual and Unity acceptance are separate.'}
+          (directory/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
+          subprocess.run(['git','add','--',*sorted(selected),str(directory)],check=True)
+          subprocess.run(['git','config','user.name','github-actions[bot]'],check=True)
+          subprocess.run(['git','config','user.email','41898282+github-actions[bot]@users.noreply.github.com'],check=True)
+          subprocess.run(['git','commit','-m','fix: recover native seam checks and boundary sampling without losing unfinished work'],check=True)
+          subprocess.run(['git','push','origin','HEAD:refs/heads/feat/motion-quality-and-breadth'],check=True)
+          print('RECOVERED_COMMIT',subprocess.check_output(['git','rev-parse','HEAD'],text=True))
+          print(json.dumps(receipt,indent=2))
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.13'
+      - run: python -m pip install -e . pytest==9.1.1
+      - name: Capture current walk mechanical result without promoting it
+        shell: python
+        run: |
+          from pathlib import Path
+          import json,subprocess
+          from eonwild_motion.factory.compiler import compile_recipe
+          from eonwild_motion.factory.quality import emitted_cyclic_continuity
+          from eonwild_motion.glb.container import Glb
+          out=Path('out/recovered-baseline/walk.v2')
+          result=compile_recipe(Path('recipes/heavy-biped/walk.v2.json'),root=Path.cwd(),output=out)
+          print('MECHANICAL_BASELINE',json.dumps(result,indent=2))
+          print('VELOCITY_SEAM',json.dumps(emitted_cyclic_continuity(Glb.from_bytes((out/'root_motion.glb').read_bytes()),loop=True),indent=2))
           paths=subprocess.check_output(['git','ls-files'],text=True).splitlines()
-          print('WALK_REPORT_PATHS')
+          print('V9_WALK_ASSETS')
           for path in paths:
-              if any(w in path.upper() for w in ('WALK','THREE-MOTION')) and path.endswith(('.md','.json')) and (path.startswith(('reports/','catalog/','profiles/')) or ('V9' in path and any(w in path for w in ('profile','manifest','receipt','validation')))):
-                  print(path)
-          print('APPROVAL_TEXT')
-          matches=subprocess.run(['git','grep','-n','-i','-E','approved.*walk|walk.*approved|accepted.*walk|walk.*accepted','--','reports/*.md','catalog/*.json','docs/*.md'],capture_output=True,text=True)
-          print(matches.stdout[:25000])
-          for path in ('catalog/programs/heavy-biped.walk.v2.json','catalog/performance/heavy-biped.walk.v2.json','catalog/programs/heavy-biped.reverse-walk.v3.json','catalog/programs/heavy-biped.run.v3.json','catalog/programs/heavy-biped.sprint.v3.json'):
-              print('PROFILE',path);print(pathlib.Path(path).read_text())
+              if path.endswith('.glb') and ('V9' in path or 'v9' in path) and ('WALK' in path.upper() or 'DYNAMICS' in path.upper()): print(path)
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: recovered-walk-baseline
+          path: out/recovered-baseline
+          retention-days: 14
