@@ -4,147 +4,97 @@ on:
     branches: [feat/motion-quality-and-breadth]
     paths: [.github/workflows/motion-source-recovery.yml]
 permissions:
-  contents: read
+  contents: write
   actions: read
 jobs:
-  verify:
+  diagnose:
     runs-on: ubuntu-24.04
-    timeout-minutes: 60
-    strategy:
-      fail-fast: false
-      matrix:
-        task: [tests, side, front, rear, three-quarter]
+    timeout-minutes: 20
     env:
       PYTHONPATH: src
       OPENBLAS_NUM_THREADS: '1'
       OMP_NUM_THREADS: '2'
       GH_TOKEN: ${{ github.token }}
-      TASK: ${{ matrix.task }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           fetch-depth: 1
           show-progress: false
-          persist-credentials: false
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: '3.13'
-      - run: python -m pip install -e . pytest==9.1.1 pillow
-      - name: Verify recorded upstream Blender archive and install video dependencies
+      - run: python -m pip install -e . pytest==9.1.1
+      - name: Recover actual review files and native measurements
+        shell: python
+        run: |
+          from pathlib import Path
+          import subprocess,json,hashlib,shutil,sys,xml.etree.ElementTree as ET
+          dest=Path('reports/MOTION-QUALITY-AND-BREADTH-002')
+          verification=dest/'verification'
+          saved=json.loads((verification/'run.json').read_text())
+          subprocess.run(['gh','run','download','34046652734','--repo','hurtener/eonwild-factory','--dir','/tmp/actual-motion-evidence'],check=True)
+          added=[]
+          for rel,expected in saved['files'].items():
+              src=Path('/tmp/actual-motion-evidence')/rel
+              assert hashlib.sha256(src.read_bytes()).hexdigest()==expected,rel
+              # Avoid nested ignored `out` directories in checked-in evidence.
+              parts=[p for p in Path(rel).parts if p!='out']
+              target=verification.joinpath(*parts)
+              target.parent.mkdir(parents=True,exist_ok=True)
+              shutil.copyfile(src,target);added.append(str(target))
+          saved['files']={str(Path(*[p for p in Path(rel).parts if p!='out'])):value for rel,value in saved['files'].items()}
+          (verification/'run.json').write_text(json.dumps(saved,indent=2)+'\n')
+          for path in verification.rglob('full-tests.xml'):
+              document=ET.parse(path).getroot()
+              print('JUNIT_COUNTS',[s.attrib for s in document.iter('testsuite')])
+          subprocess.run(['gh','run','download','34045100968','--repo','hurtener/eonwild-factory','--name','contact-repair-walk.v2','--dir','/tmp/measured-candidate'],check=True)
+          sys.path.insert(0,'tools')
+          from measure_motion_reference import measure
+          from eonwild_motion.glb.container import Glb
+          from eonwild_motion.factory.quality import geometry_height
+          recipe=json.loads(Path('recipes/heavy-biped/walk.v2.json').read_text())
+          roles=json.loads(Path(recipe['rig']['path']).read_text())['roles']
+          candidate=next(Path('/tmp/measured-candidate').rglob('root_motion.glb'))
+          ref=next(Path('build/V9-NARROW-GAUGE-WALK-002').rglob('*.glb'))
+          for key,path,clip in [('v9',ref,'PROC_WALK_RELAXED_V8_1_RESPIN_ROOTMOTION'),('candidate',candidate,'heavy-biped.walk.v2.root_motion')]:
+              result=measure(path,clip=clip,roles=roles,forward_axis=recipe['forward_axis'])
+              target=dest/'native-measurements'/f'{key}.json';target.parent.mkdir(parents=True,exist_ok=True)
+              target.write_text(json.dumps(result,indent=2)+'\n');added.append(str(target))
+              print('MEASUREMENTS',key,json.dumps(result))
+          for name in ('validation.json','solver-receipt.json','inputs.lock.json','plan.json'):
+              target=dest/'native-measurements'/('candidate-'+name)
+              shutil.copyfile(candidate.parent/name,target);added.append(str(target))
+          source=Glb.from_bytes(Path(recipe['source']['path']).read_bytes())
+          print('SOURCE_BODY_HEIGHT_M',geometry_height(source,roles,recipe['up_axis']))
+          subprocess.run(['git','add','-f','--',*added,str(verification/'run.json')],check=True)
+      - name: Install verified recorded Blender and reproduce the exact baseline fixture
         run: |
           gh run download 34041514733 --repo hurtener/eonwild-factory --name motion-recorded-blender-52 --dir "$RUNNER_TEMP/recorded-blender"
           cd "$RUNNER_TEMP/recorded-blender"
           grep 'blender-5.2.0-linux-x64.tar.xz$' blender-5.2.0.sha256 | sha256sum --check
           tar -xJf blender-5.2.0-linux-x64.tar.xz -C "$RUNNER_TEMP"
           echo "$RUNNER_TEMP/blender-5.2.0-linux-x64" >> "$GITHUB_PATH"
-          echo "BLENDER_PATH=$RUNNER_TEMP/blender-5.2.0-linux-x64/blender" >> "$GITHUB_ENV"
           sudo apt-get update -qq
           sudo apt-get install -y ffmpeg libxrender1 libxi6 libxfixes3 libxkbcommon0 libsm6
-      - name: Run all regression tests including real Blender integration
-        if: matrix.task == 'tests'
-        run: |
-          git config --global user.name 'Eonwild regression runner'
-          git config --global user.email 'eonwild-regression@example.invalid'
-          "$BLENDER_PATH" --version
-          python -m pytest tests -q --tb=short --junitxml=out/full-tests.xml > out-test.log 2>&1
-          tail -100 out-test.log
-      - name: Expose failed test details without turning failures into success
-        if: always() && matrix.task == 'tests'
-        run: tail -160 out-test.log || true
-      - name: Prepare reference-only selection and actual candidate bytes
-        if: matrix.task != 'tests'
-        run: |
-          gh run download 34045100968 --repo hurtener/eonwild-factory --name contact-repair-walk.v2 --dir out/candidate
-          python - <<'PY'
-          import sys,json,pathlib
-          sys.path.insert(0,'tools')
-          from prepare_motion_reference import prepare
-          root=pathlib.Path('.')
-          source=next(root.glob('build/V9-NARROW-GAUGE-WALK-002/**/*.glb'))
-          recipe=json.loads((root/'recipes/heavy-biped/walk.v2.json').read_text())
-          prepare(source,'b54e3740ea451927b3b812c1be3f4ca6146cc369ad1313be7f08edd5ca741cd3',
-              'PROC_WALK_RELAXED_V8_1_RESPIN_ROOTMOTION',root/recipe['rig']['path'],
-              source.parent/'candidate-contact-profile-root_motion.json',recipe['forward_axis'],root/'out/reference',loop=True)
-          candidate=next((root/'out/candidate').rglob('manifest.json')).parent
-          pathlib.Path('out/candidate-path.txt').write_text(str(candidate))
-          PY
-      - name: Native-time matched-camera comparison
-        if: matrix.task != 'tests'
-        run: |
-          blender -b --threads 2 --python-exit-code 1 --python tools/render_candidate.py -- --package out/reference --output "out/review/$TASK/reference" --view "$TASK" --mode root_motion --camera-lock "out/camera-$TASK.json" --fps 24 --width 640 --samples 4 > out-reference-render.log 2>&1
-          tail -30 out-reference-render.log
-          blender -b --threads 2 --python-exit-code 1 --python tools/render_candidate.py -- --package "$(cat out/candidate-path.txt)" --output "out/review/$TASK/candidate" --view "$TASK" --mode root_motion --camera-lock "out/camera-$TASK.json" --fps 24 --width 640 --samples 4 > out-candidate-render.log 2>&1
-          tail -30 out-candidate-render.log
-      - name: Make chronological native-frame review sheets
-        if: matrix.task != 'tests'
+      - name: Capture native build logs without skipping the failure
         shell: python
         run: |
-          import os,json,pathlib
-          from PIL import Image,ImageDraw
-          for kind in ('reference','candidate'):
-              root=pathlib.Path('out/review')/os.environ['TASK']/kind
-              timeline=json.loads((root/'timeline.json').read_text())
-              selected=list(range(0,len(timeline),3))
-              columns=4;w,h=320,200
-              sheet=Image.new('RGB',(w*columns,h*((len(selected)+columns-1)//columns)),(245,245,245))
-              draw=ImageDraw.Draw(sheet)
-              for k,index in enumerate(selected):
-                  frame=Image.open(root/'frames'/f'{index:05d}.png').convert('RGB').resize((320,180))
-                  x,y=(k%columns)*w,(k//columns)*h
-                  sheet.paste(frame,(x,y))
-                  draw.text((x+5,y+182),f'{kind}  t={timeline[index]["source_time_s"]:.3f}s',fill=(0,0,0))
-              sheet.save(root/'native-frames.jpg',quality=90)
-      - name: Report renderer failures
-        if: failure() && matrix.task != 'tests'
-        run: |
-          tail -50 out-reference-render.log || true
-          tail -50 out-candidate-render.log || true
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+          import pathlib,subprocess,json,shutil,os
+          target=pathlib.Path('reports/MOTION-QUALITY-AND-BREADTH-002/legacy-fixture');target.mkdir(parents=True,exist_ok=True)
+          run=subprocess.run(['python','-m','eonwild_motion','build','--profile','working','--work-root','/tmp/legacy-fixture'],capture_output=True,text=True)
+          (target/'command.log').write_text(run.stdout+run.stderr)
+          print('BUILD_EXIT',run.returncode);print(run.stdout);print(run.stderr)
+          for path in pathlib.Path('/tmp/legacy-fixture').rglob('*'):
+              if not path.is_file() or path.suffix not in ('.log',) and path.name not in ('run-report.json','validation.json'):continue
+              print('DIAGNOSTIC',path);print(path.read_text(errors='replace')[-24000:])
+              out=target/path.relative_to('/tmp/legacy-fixture');out.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,out)
+          (target/'status.json').write_text(json.dumps({'source_sha':os.environ['GITHUB_SHA'],'exit_code':run.returncode,'unity':'NOT_RUN'},indent=2)+'\n')
+          subprocess.run(['git','add','-f','--',str(target)],check=True)
+      - name: Commit actual evidence only
         if: always()
-        with:
-          name: motion-native-${{ matrix.task }}
-          path: |
-            out/review
-            out/full-tests.xml
-            out-*.log
-          retention-days: 14
-  record:
-    needs: verify
-    if: always()
-    runs-on: ubuntu-24.04
-    permissions:
-      contents: write
-      actions: read
-    env:
-      GH_TOKEN: ${{ github.token }}
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-        with:
-          fetch-depth: 1
-          show-progress: false
-      - name: Preserve actual evidence, including failed or incomplete checks
-        shell: python
         run: |
-          import pathlib,os,subprocess,json,shutil,hashlib
-          destination=pathlib.Path('reports/MOTION-QUALITY-AND-BREADTH-002/verification')
-          destination.mkdir(parents=True,exist_ok=True)
-          subprocess.run(['gh','run','download',os.environ['GITHUB_RUN_ID'],'--repo',os.environ['GITHUB_REPOSITORY'],'--dir','/tmp/motion-evidence'],check=True)
-          for path in pathlib.Path('/tmp/motion-evidence').rglob('*'):
-              if not path.is_file() or path.name not in ('full-tests.xml','render-receipt.json','native-frames.jpg','preview.mp4','camera.json','timeline.json'):
-                  continue
-              relative=path.relative_to('/tmp/motion-evidence')
-              target=destination/relative
-              target.parent.mkdir(parents=True,exist_ok=True)
-              shutil.copyfile(path,target)
-          jobs=json.loads(subprocess.check_output(['gh','api',f'repos/{os.environ["GITHUB_REPOSITORY"]}/actions/runs/{os.environ["GITHUB_RUN_ID"]}/jobs'],text=True))
-          receipt={'schema':'eonwild.motion.verification-run.v1','tested_source_sha':os.environ['GITHUB_SHA'],'run_id':os.environ['GITHUB_RUN_ID'],
-              'jobs':[{'id':job['id'],'name':job['name'],'status':job['status'],'conclusion':job['conclusion']} for job in jobs['jobs'] if job['name']!='record'],
-              'unity_validation':'NOT_RUN','visual_approval':'PENDING_ACTUAL_REVIEW',
-              'files':{str(p.relative_to(destination)):hashlib.sha256(p.read_bytes()).hexdigest() for p in destination.rglob('*') if p.is_file()}}
-          (destination/'run.json').write_text(json.dumps(receipt,indent=2)+'\n')
-          subprocess.run(['git','config','user.name','github-actions[bot]'],check=True)
-          subprocess.run(['git','config','user.email','41898282+github-actions[bot]@users.noreply.github.com'],check=True)
-          subprocess.run(['git','add',str(destination)],check=True)
-          subprocess.run(['git','commit','-m','test: record native review and full regression evidence without promoting candidates'],check=True)
-          subprocess.run(['git','push','origin','HEAD:refs/heads/feat/motion-quality-and-breadth'],check=True)
-          print(json.dumps(receipt,indent=2))
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git diff --cached --stat
+          git commit -m 'test: retain actual native motion reviews and exact baseline build diagnostics'
+          git push origin HEAD:refs/heads/feat/motion-quality-and-breadth
