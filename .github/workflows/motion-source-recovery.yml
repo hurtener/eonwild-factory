@@ -1,0 +1,46 @@
+name: Temporary motion source recovery
+on:
+  push:
+    branches: [feat/motion-quality-and-breadth]
+    paths: [.github/workflows/motion-source-recovery.yml]
+permissions:
+  contents: read
+jobs:
+  recover:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Export current source and input inventory
+        shell: python
+        run: |
+          import pathlib, subprocess, tarfile, json, hashlib
+          paths = subprocess.check_output(['git','ls-files','-z']).decode().split('\0')
+          inventory = {'head': subprocess.check_output(['git','rev-parse','HEAD']).decode().strip(), 'files': []}
+          with tarfile.open('/tmp/current-source.tar.gz','w:gz') as tar:
+              for name in filter(None, paths):
+                  p = pathlib.Path(name)
+                  if not p.is_file(): continue
+                  size = p.stat().st_size
+                  inventory['files'].append({'path': name, 'size': size, 'git_blob': subprocess.check_output(['git','hash-object',name]).decode().strip()})
+                  selected = p.suffix in {'.py','.json','.toml','.lock','.md','.yml','.yaml','.txt','.sh'} or name.startswith(('assets/sha256/','assets/geometry/','legacy/capsules/')) or ('/' not in name)
+                  if selected: tar.add(p, arcname=name, recursive=False)
+          pathlib.Path('/tmp/current-inventory.json').write_text(json.dumps(inventory, indent=2))
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: motion-current-source
+          path: |
+            /tmp/current-source.tar.gz
+            /tmp/current-inventory.json
+          retention-days: 3
+      - name: Obtain portable Blender for offline container verification
+        run: |
+          curl --fail --retry 2 -L https://download.blender.org/release/Blender4.2/blender-4.2.3-linux-x64.tar.xz -o /tmp/blender-4.2.3-linux-x64.tar.xz
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: motion-local-blender
+          path: /tmp/blender-4.2.3-linux-x64.tar.xz
+          compression-level: 0
+          retention-days: 1
