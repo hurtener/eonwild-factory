@@ -4,127 +4,103 @@ on:
     branches: [feat/motion-quality-and-breadth]
     paths: [.github/workflows/motion-source-recovery.yml]
 permissions:
-  contents: write
-  actions: read
+  contents: read
 jobs:
-  recover:
+  repair:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
-    env:
-      OPENBLAS_NUM_THREADS: '1'
-      OMP_NUM_THREADS: '2'
-      PYTHONPATH: src
+    permissions:
+      contents: write
+    outputs:
+      sha: ${{ steps.publish.outputs.sha }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           fetch-depth: 1
           show-progress: false
+      - name: Apply inspected source repairs
+        id: publish
+        env:
+          PYTHONPATH: src
+        run: |
+          python .github/motion-quality-repair.py
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src
+          git rm .github/motion-quality-repair.py
+          git commit -m 'fix: stabilize articulated toe branches and audit both skinned exports'
+          git push origin HEAD:refs/heads/feat/motion-quality-and-breadth
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+  tests:
+    needs: repair
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ needs.repair.outputs.sha }}
+          fetch-depth: 1
+          show-progress: false
+          persist-credentials: false
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: '3.13'
       - run: python -m pip install -e . pytest==9.1.1
-      - name: Integrate independently verified recovery sections
-        shell: python
-        run: |
-          import hashlib,pathlib,re,subprocess,json
-          root=pathlib.Path('.')
-          prefix=(root/'reports/MOTION-QUALITY-AND-BREADTH-002/recovery/source-prefix.patch.txt').read_bytes()
-          assert hashlib.sha256(prefix).hexdigest()=='dc6efdedb6a74e0029bd8be9c03b792f1516b2955a495653870dc411b8499e02'
-          selected={'src/eonwild_motion/factory/compiler.py'}
-          for name in ('idle','alert','call','bite-miss','feeding'):
-              selected.update((f'catalog/programs/heavy-biped.{name}.v1.json',f'recipes/heavy-biped/{name}.v1.json'))
-          records=[]
-          for section in [s for s in re.split(rb'(?m)(?=^diff --git )',prefix) if s][:-1]:
-              path=section.splitlines()[0].decode().split(' b/',1)[1]
-              if path not in selected: continue
-              old,new=re.search(rb'(?m)^index ([0-9a-f]+)\.\.([0-9a-f]+) ',section).groups()
-              assert subprocess.check_output(['git','hash-object',path]).strip().startswith(old)
-              subprocess.run(['git','apply','--check','-'],input=section,check=True)
-              subprocess.run(['git','apply','-'],input=section,check=True)
-              actual=subprocess.check_output(['git','hash-object',path]).strip()
-              assert actual.startswith(new)
-              records.append({'path':path,'git_blob':actual.decode()})
-          assert {r['path'] for r in records}==selected
-          def edit(path,old,new):
-              p=root/path;s=p.read_text();assert s.count(old)==1,(path,old[:100],s.count(old));p.write_text(s.replace(old,new))
-          p='src/eonwild_motion/solve/supported_action.py'
-          edit(p,'def calibrate_support(source, roles, contact_profile, up, forward, height, width):','def calibrate_support(source, roles, contact_profile, up, forward, height, width, support_reach=None):')
-          edit(p,"        reach = float((rig.neutral_world[chain[-1], :3, 3] - pelvis) @ forward)","        reach = (float((rig.neutral_world[chain[-1], :3, 3] - pelvis) @ forward) if support_reach is None\n                 else float(support_reach[0 if side == 'left' else 1]) * height)")
-          edit(p,'height, action.lane_width_body_heights)','height, action.lane_width_body_heights, action.support_reach_body_heights)')
-          edit(p,'        self.length = float(np.ptp(surface @ self.forward))\n        self.width = float(np.ptp(surface @ self.lateral))','        # Explicit family calibration; contact-mask membership is not a ruler.\n        self.length = height * action.translation_scale_body_heights[0]\n        self.width = height * action.translation_scale_body_heights[2]')
-          edit(p,"- self.up * state['drop'] * self.height","- self.up * state['drop'] * self.height * a.translation_scale_body_heights[1]")
-          p='src/eonwild_motion/planning/gait_transition.py'
-          canonical = [
-              '    def canonical_foot(self, side, virtual):',
-              "        offset = 0. if side == 'left' else self.step",
-              '        row = self.sampler(self.gait, virtual + offset, self.height)',
-              "        foot = dict(row['feet'][side])",
-              '        # Shared flight lift is reconstructed from both actual contacts.',
-              "        if not self.grounded and row['flight']:",
-              '            phase = ((virtual + offset) / self.step) % 1',
-              '            u = (phase - (1 - self.gait.flight_fraction)) / self.gait.flight_fraction',
-              "            foot['height_m'] -= self.gait.flight_foot_lift_body_heights * self.height * math.sin(math.pi * u)**4",
-              '        return foot', '', '    def foot(self, side, time):']
-          edit(p,'    def foot(self, side, time):','\n'.join(canonical))
-          edit(p,"            original = self.sampler(self.gait, virtual, self.height)['feet']['left']","            original = self.canonical_foot(side, virtual)")
-          edit(p,"            forward, height, toe, pitch, swing = self.touchdown(touchdown), 0., 0., original['foot_pitch_degrees'] * weight, 0.","            forward, height, toe, pitch, swing = self.touchdown(touchdown), 0., original['toe_flex_degrees'] * weight, original['foot_pitch_degrees'] * weight, 0.")
-          edit(p,"            original = self.sampler(self.gait, self.stance + swing * (self.period - self.stance), self.height)['feet']['left']","            original = self.canonical_foot(side, self.stance + swing * (self.period - self.stance))")
-          edit(p,"            toe = original['toe_flex_degrees'] * amplitude","            toe = original['toe_flex_degrees'] * pitch_scale")
-          edit(p,"            'articulation_scale': float(amplitude)}","            'articulation_scale': float(amplitude), 'liftoff_time_s': float(lift), 'next_touchdown_time_s': float(next_touchdown)}")
-          flight = [
-              "        support = sum(int(foot['contact']) for foot in feet.values())",
-              '        if not self.grounded and support == 0:',
-              "            begin = max(foot['liftoff_time_s'] for foot in feet.values())",
-              "            end = min(foot['next_touchdown_time_s'] for foot in feet.values())",
-              '            fraction = min(1., max(0., (active - begin) / (end - begin)))',
-              '            lift = self.gait.flight_foot_lift_body_heights * self.height * weight * math.sin(math.pi * fraction)**4',
-              '            for foot in feet.values():',
-              "                foot['height_m'] += lift"]
-          edit(p,"        support = sum(int(foot['contact']) for foot in feet.values())",'\n'.join(flight))
-          for kind in ('start','stop'):
-              path=root/f'catalog/programs/heavy-biped.{kind}.v1.json'
-              path.write_text(json.dumps({'schema':'eonwild.motion.gait-transition.v1','parameters':{'kind':kind},'classification':'contact-owned kinematic transition; emitted handoff and visual validation required'},indent=2)+'\n')
-              for locomotion,version in (('walk',2),('reverse-walk',3),('run',3),('sprint',3)):
-                  base=json.loads((root/f'recipes/heavy-biped/{locomotion}.v{version}.json').read_text())
-                  base['gait_profile']=base['program_profile']
-                  base['program_profile']={'path':str(path),'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
-                  base['program']='gait_transition';base['id']=f'heavy-biped.{locomotion}-{kind}.v1';base['version']=1
-                  base.pop('supersedes',None)
-                  base['description']=f'Reusable {locomotion} {kind}; final contact and handoff gates are mandatory.'
-                  (root/f'recipes/heavy-biped/{locomotion}-{kind}.v1.json').write_text(json.dumps(base,indent=2)+'\n')
-          receipt=root/'reports/MOTION-QUALITY-AND-BREADTH-002/recovery/integration.json'
-          receipt.write_text(json.dumps({'materialized_complete_sections':records,'truncated_supported_profile':'reconstructed as typed source, not treated as a complete recovered file','validation':'Pending executable tests; no visual or Unity claim'},indent=2)+'\n')
-          subprocess.run(['python','-m','compileall','-q','src/eonwild_motion'],check=True)
-          subprocess.run(['git','add','src','recipes','catalog/programs',str(receipt)],check=True)
-          subprocess.run(['git','config','user.name','github-actions[bot]'],check=True)
-          subprocess.run(['git','config','user.email','41898282+github-actions[bot]@users.noreply.github.com'],check=True)
-          subprocess.run(['git','commit','-m','feat: integrate typed behavior recovery and contact-owned transition recipes'],check=True)
-          subprocess.run(['git','push','origin','HEAD:refs/heads/feat/motion-quality-and-breadth'],check=True)
-          print('INTEGRATED_HEAD',subprocess.check_output(['git','rev-parse','HEAD'],text=True))
-      - name: Execute behavior and transition regression contracts
+      - name: Behavior and adversarial contracts
         run: python -m pytest tests/test_behavior_programs.py -q --tb=short --junitxml=out/behavior-tests.xml
-      - name: Inspect rejected walk and V9 comparison geometry
+      - name: Full regression attempt with explicit environment failures
         if: always()
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh run download 34043794074 --repo hurtener/eonwild-factory --name recovered-walk-baseline --dir out/baseline
-          python - <<'PY'
-          from pathlib import Path
-          import json,hashlib,numpy as np
-          from eonwild_motion.glb.container import Glb
-          for path in Path('out/baseline').rglob('validation.json'):
-              data=json.loads(path.read_text());print('OLD_VALIDATION',json.dumps(data)[:26000])
-          path=next(Path('build/V9-NARROW-GAUGE-WALK-002').rglob('*.glb'))
-          glb=Glb.from_bytes(path.read_bytes());print('V9_WALK_SHA256',hashlib.sha256(path.read_bytes()).hexdigest())
-          print('V9_WALK_ANIMATIONS',[(a.get('name'),len(a['channels'])) for a in glb.document['animations']])
-          print('V9_CONTACT_PROFILE',next(path.parent.glob('*profile*.json')).read_text())
-          print('JOINT_NAMES',[(i,n.get('name')) for i,n in enumerate(glb.document['nodes']) if i in (55,56)])
-          print('RIG_RECIPE',Path('recipes/heavy-biped/walk.v2.json').read_text())
-          PY
+        run: python -m pytest tests -q --tb=short --junitxml=out/full-tests.xml
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
-          name: behavior-regression-evidence
-          path: out/behavior-tests.xml
+          name: contact-repair-tests
+          path: out/*tests.xml
+          retention-days: 14
+  compile:
+    needs: repair
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        recipe: [walk.v2, idle.v1, run-start.v1]
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '2'
+      PYTHONPATH: src
+      RECIPE: ${{ matrix.recipe }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ needs.repair.outputs.sha }}
+          fetch-depth: 1
+          show-progress: false
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.13'
+      - run: python -m pip install -e .
+      - name: Compile actual skinned candidate at native timing
+        shell: python
+        run: |
+          import os,json,pathlib,traceback,time
+          from eonwild_motion.factory.compiler import compile_recipe
+          directory=pathlib.Path('out')/os.environ['RECIPE']
+          began=time.monotonic()
+          result=compile_recipe(pathlib.Path('recipes/heavy-biped')/(os.environ['RECIPE']+'.json'),root=pathlib.Path.cwd(),output=directory)
+          print('COMPILED',json.dumps(result),'ELAPSED_S',time.monotonic()-began)
+          validation=json.loads((directory/'validation.json').read_text())
+          print('VALIDATION',json.dumps(validation))
+          receipt=json.loads((directory/'solver-receipt.json').read_text())
+          print('REFINEMENT',json.dumps(receipt.get('skin_target_refinement',{})))
+          # Leave failed candidates available for diagnosis; never promote them.
+          if validation['technical_status']!='PASS': raise SystemExit(2)
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: contact-repair-${{ matrix.recipe }}
+          path: out
           retention-days: 14
