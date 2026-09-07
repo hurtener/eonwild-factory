@@ -1,67 +1,110 @@
-name: Final sprint posture feasibility
+name: Remaining locomotion admission and verified run review
 on:
   push:
     branches: [diag/v9-legacy-reproduction-20260907]
-permissions: {contents: read}
+permissions: {contents: read, actions: read}
 jobs:
-  sprint:
+  posture:
     permissions: {contents: write}
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 15
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - variant: braced
-            crouch: '0.26'
-            reach: '0.70'
-          - variant: centered
-            crouch: '0.28'
-            reach: '0.66'
-    env: {PYTHONPATH: src, OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '2', GH_TOKEN: '${{ github.token }}', CROUCH: '${{ matrix.crouch }}', REACH: '${{ matrix.reach }}', VARIANT: '${{ matrix.variant }}'}
+      matrix: {variant: [sprint-controlled, sprint-braced, fast-walk]}
+    env: {PYTHONPATH: src, OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '2', GH_TOKEN: '${{ github.token }}', VARIANT: '${{ matrix.variant }}'}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with: {fetch-depth: 1, persist-credentials: false, show-progress: false}
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with: {python-version: '3.13'}
       - run: python -m pip install -e .
-      - name: Admit posture inside existing limits without reducing stride or speed
+      - name: Admit versioned movement without changing acceptance limits
         shell: python
         run: |
-          import json,pathlib,os,hashlib,sys,subprocess,traceback
+          import json,pathlib,os,hashlib,sys,subprocess
           sys.path.insert(0,'tools')
           from eonwild_motion.factory.compiler import compile_recipe,verify_package
           from verify_catalog import failures
-          root=pathlib.Path.cwd()
-          recipe=json.loads((root/'recipes/heavy-biped/sprint.v3.json').read_text())
+          root=pathlib.Path.cwd();variant=os.environ['VARIANT'];sprint=variant.startswith('sprint')
+          source='sprint.v3' if sprint else 'walk.v3';name='sprint.v4' if sprint else 'fast-walk.v2'
+          recipe=json.loads((root/f'recipes/heavy-biped/{source}.json').read_text())
           profile=json.loads((root/recipe['program_profile']['path']).read_text())
-          profile['parameters'].update(pelvis_crouch_body_heights=float(os.environ['CROUCH']),touchdown_reach_body_heights=float(os.environ['REACH']))
-          path=root/'catalog/programs/heavy-biped.sprint.v4.json'
-          path.write_text(json.dumps(profile,indent=2,sort_keys=True)+'\n')
-          recipe.update(id='heavy-biped.sprint.v4',version=4,supersedes='heavy-biped.sprint.v3',description='Long-stride sprint with feasible braced posture and independent ankle/pad recovery; not visually approved')
+          if sprint:
+              profile['parameters'].update(pelvis_crouch_body_heights=.30 if variant=='sprint-controlled' else .32,
+                  touchdown_reach_body_heights=.66,push_off_pitch_degrees=45,articulation_preferred_margin_degrees=12,
+                  foot_recovery_pitch_degrees=20)
+          else:
+              profile['parameters']['step_period_s']=.80
+          path=root/f'catalog/programs/heavy-biped.{name}.json';path.write_text(json.dumps(profile,indent=2,sort_keys=True)+'\n')
+          recipe.update(id='heavy-biped.'+name,version=int(name.rsplit('v',1)[1]),supersedes='heavy-biped.'+source,
+              description='Versioned coordinated locomotion; generated acceptance is not visual approval')
           recipe['program_profile']={'path':str(path.relative_to(root)),'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
-          recipe_path=root/'recipes/heavy-biped/sprint.v4.json';recipe_path.write_text(json.dumps(recipe,indent=2,sort_keys=True)+'\n')
-          out=root/'out/sprint'/os.environ['VARIANT']
-          try:
-              compile_recipe(recipe_path,root=root,output=out)
-              status=verify_package(out);v=json.loads((out/'validation.json').read_text())
-              print('SPRINT_FINAL '+json.dumps({'variant':os.environ['VARIANT'],**status,'failures':failures(v),
-                  'rates':v['rotation_rates'],'feasibility':v['solver_feasibility'],'continuity':v['cyclic_continuity']}),flush=True)
-              if status['technical_status']=='PASS':
-                  for p in (path,recipe_path):
-                      response=subprocess.run(['gh','api','repos/hurtener/eonwild-factory/git/blobs','--method','POST','--input','-'],input=json.dumps({'content':p.read_text(),'encoding':'utf-8'}),text=True,capture_output=True,check=True)
-                      print('SPRINT_VERIFIED_INPUT '+json.dumps({'path':str(p.relative_to(root)),'blob':json.loads(response.stdout)['sha']}),flush=True)
-              else:sys.exit(2)
-          except Exception:
-              out.parent.mkdir(parents=True,exist_ok=True)
-              (out.parent/(os.environ['VARIANT']+'.error.log')).write_text(traceback.format_exc())
-              raise
+          recipe_path=root/f'recipes/heavy-biped/{name}.json';recipe_path.write_text(json.dumps(recipe,indent=2,sort_keys=True)+'\n')
+          out=root/'out/remaining'/variant
+          compile_recipe(recipe_path,root=root,output=out)
+          status=verify_package(out);v=json.loads((out/'validation.json').read_text())
+          print('REMAINING_RESULT '+json.dumps({'variant':variant,**status,'failures':failures(v),
+              'rates':v['rotation_rates'],'feasibility':v['solver_feasibility'],'continuity':v['cyclic_continuity']}),flush=True)
+          if status['technical_status']=='PASS':
+              for p in (path,recipe_path):
+                  response=subprocess.run(['gh','api','repos/hurtener/eonwild-factory/git/blobs','--method','POST','--input','-'],input=json.dumps({'content':p.read_text(),'encoding':'utf-8'}),text=True,capture_output=True,check=True)
+                  print('VERIFIED_INPUT '+json.dumps({'path':str(p.relative_to(root)),'blob':json.loads(response.stdout)['sha']}),flush=True)
+          else:sys.exit(2)
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
-          name: final-sprint-${{ matrix.variant }}
+          name: remaining-${{ matrix.variant }}
           path: |
-            out/sprint
+            out/remaining
             catalog/programs/heavy-biped.sprint.v4.json
             recipes/heavy-biped/sprint.v4.json
+            catalog/programs/heavy-biped.fast-walk.v2.json
+            recipes/heavy-biped/fast-walk.v2.json
+          retention-days: 14
+  run-review:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env: {PYTHONPATH: src, OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '2', GH_TOKEN: '${{ github.token }}'}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with: {ref: 75454d9aaedd3207b26401d0c78dd24ef570a370, fetch-depth: 1, persist-credentials: false, show-progress: false}
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with: {python-version: '3.13'}
+      - run: python -m pip install -e .
+      - name: Recover already-accepted exact PR-source candidate and full-suite evidence
+        run: |
+          gh run download 34076205439 --repo hurtener/eonwild-factory --name candidate-run.v4 --dir out/compiled
+          gh run download 34076205439 --repo hurtener/eonwild-factory --name factory-full-regression-results --dir out/tests
+      - name: Print exact test counts and native gait evidence
+        shell: python
+        run: |
+          import pathlib,json,xml.etree.ElementTree as ET
+          for path in pathlib.Path('out/tests').rglob('full-tests.xml'):
+              tree=ET.parse(path)
+              print('FINAL_PR_FULL_SUITE',[s.attrib for s in tree.iter('testsuite')],flush=True)
+          for path in pathlib.Path('out/compiled').rglob('results.json'):
+              print('PR_RUN_ACCEPTANCE',path.read_text(),flush=True)
+          for path in pathlib.Path('out/compiled').rglob('*.native-measurements.json'):
+              print('PR_RUN_MEASUREMENTS',path.read_text(),flush=True)
+      - run: bash tools/ci_setup_blender.sh
+      - name: Render the accepted run without regenerating or retiming it
+        shell: python
+        run: |
+          import pathlib,subprocess,sys
+          packages=list(pathlib.Path('out/compiled').rglob('manifest.json'))
+          assert len(packages)==1
+          subprocess.run([sys.executable,'tools/review_compiled_candidate.py','--package',str(packages[0].parent),
+              '--output','out/review','--views','side','front','rear','three-quarter','--fps','30'],check=True)
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-review-run.v4
+          path: |
+            out/review/review-summary.json
+            out/review/candidate/**/*.mp4
+            out/review/candidate/**/cover.png
+            out/review/candidate/**/render-receipt.json
+            out/review/candidate/**/timeline.json
+            out/review/candidate/**/camera.json
+            out/review/**/*.log
           retention-days: 14
