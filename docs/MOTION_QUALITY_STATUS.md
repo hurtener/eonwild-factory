@@ -17,8 +17,12 @@ The continuation corrects native preview/FBX clock transport and camera framing,
 adds actual source-bound connected rendering, removes the gaze controller's
 unwanted absolute-world upward correction, and adds the explicit adult animal
 benchmark below. The authored sprint retains its stride, cadence, flight and
-anatomical/contact limits. Raw direct-join limits remain unchanged and unresolved;
-see [TRANSITION_INTEGRATION.md](TRANSITION_INTEGRATION.md).
+contact policy. The user has authorized evidence-bound reassessment of inherited
+articulation limits; no limit change is accepted merely to make a candidate
+feasible. See
+[HINDLIMB_ARTICULATION_EVIDENCE.md](HINDLIMB_ARTICULATION_EVIDENCE.md) for the
+current evidence and angle conventions. Raw direct-join limits remain unchanged
+and unresolved; see [TRANSITION_INTEGRATION.md](TRANSITION_INTEGRATION.md).
 
 The host has inspected every native frame of the baseline sprint and the corrected
 side preview. Upward craning is corrected. The aggressive sprint's persistent
