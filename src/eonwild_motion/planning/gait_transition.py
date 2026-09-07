@@ -269,7 +269,7 @@ def build_transition_plan(transition: GaitTransition, gait, body_height_m):
         times.add(boundary)
         times.update(boundary + k / transition.boundary_sample_hz for k in range(-2, 3)
                      if 0 <= boundary + k / transition.boundary_sample_hz <= c.duration)
-    if transition.handoff_sample_hz is not None and c.join_phase:
+    if transition.handoff_sample_hz is not None:
         handoff = c.duration if c.start else 0.
         times.update(handoff + k / transition.handoff_sample_hz for k in range(-2, 3)
                      if 0 <= handoff + k / transition.handoff_sample_hz <= c.duration)
@@ -286,7 +286,7 @@ def build_transition_plan(transition: GaitTransition, gait, body_height_m):
     return {'schema': 'eonwild.motion.v9.contact-plan.v1', 'program': 'gait_transition',
         'locomotion_program': 'grounded_gait' if c.grounded else 'airborne_gait', 'loop': False,
         'body_height_m': float(body_height_m), 'duration_s': c.duration, 'same_foot_cycle_s': c.period,
-        'parameters': gait_parameters(gait), 'transition_parameters': asdict(transition), 'samples': rows, 'events': cues,
+        'parameters': gait_parameters(gait), 'transition_parameters': gait_parameters(transition), 'samples': rows, 'events': cues,
         'transition_contract': {'kind': transition.kind, 'entry_speed_mps': entry_speed, 'exit_speed_mps': exit_speed,
             'entry_pose': 'calibrated_ready' if c.start else ('locomotion_declared_phase' if c.join_phase else 'locomotion_phase_zero'),
             'exit_pose': ('locomotion_declared_phase' if c.join_phase else 'locomotion_phase_zero') if c.start else 'calibrated_ready',

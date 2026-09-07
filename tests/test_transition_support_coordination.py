@@ -12,7 +12,7 @@ import pytest
 
 from eonwild_motion.errors import ContractError
 from eonwild_motion.planning.airborne_gait import load_airborne_gait, build_airborne_plan
-from eonwild_motion.planning.grounded_gait import load_grounded_gait, build_grounded_plan
+from eonwild_motion.planning.grounded_gait import GroundedGait, load_grounded_gait, build_grounded_plan
 from eonwild_motion.planning.gait_transition import (
     GaitTransition, _Choreography, build_transition_plan, declared_handoff_phase,
 )
@@ -114,6 +114,27 @@ def test_bound_gait_rejects_a_transition_with_a_different_interface_rate():
     with pytest.raises(ContractError, match='sample rate differs'):
         declared_handoff_phase(GaitTransition('start', handoff_phase_fraction=.125,
             handoff_sample_hz=960), bound)
+
+
+def test_phase_zero_interface_keeps_requested_dense_transition_context():
+    bound = GroundedGait(cycles=1, sample_hz=120,
+        handoff_phase_fraction=0, handoff_sample_hz=480)
+    transition = GaitTransition('stop', handoff_phase_fraction=0,
+        handoff_sample_hz=480)
+    plan = build_transition_plan(transition, bound, 2.0)
+    times = np.asarray([row['time_s'] for row in plan['samples'][:3]])
+    assert np.diff(times) == pytest.approx([1 / 480, 1 / 480])
+
+
+def test_absent_interface_fields_preserve_legacy_plan_parameters():
+    bound = GroundedGait(cycles=1, sample_hz=120)
+    steady = build_grounded_plan(bound, 2.0)
+    transition = build_transition_plan(GaitTransition('start'), bound, 2.0)
+    for parameters in (steady['parameters'], transition['parameters']):
+        assert 'handoff_phase_fraction' not in parameters
+        assert 'handoff_sample_hz' not in parameters
+        assert 'boundary_sample_hz' not in parameters
+    assert 'handoff_sample_hz' not in transition['transition_parameters']
 
 
 @pytest.mark.parametrize('name', STEADY)

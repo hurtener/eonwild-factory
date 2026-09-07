@@ -38,6 +38,6 @@
   "version": 3,
   "gait_profile": {
     "path": "catalog/programs/heavy-biped.walk.v3.json",
-    "sha256": "b2c92c2cc02584a09ca59f8238a00dbf63392b5e20306273c57b6420e6cb4262"
+    "sha256": "d74b6a84a82fb013be3b5622356fa48e5a976c86c11beb327e15971887c108f0"
   }
 }

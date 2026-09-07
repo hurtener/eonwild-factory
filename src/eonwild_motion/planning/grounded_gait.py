@@ -43,7 +43,6 @@ class GroundedGait:
     swing_hip_lift_degrees: float = 0.0
     rounded_swing_peak_fraction: float = 0.0
     centered_stance: bool = False
-    boundary_sample_hz: int = 0
     handoff_phase_fraction: float | None = None
     handoff_sample_hz: int | None = None
 
@@ -83,19 +82,14 @@ class GroundedGait:
             raise ContractError("grounded cycles must be a positive integer")
         if int(self.sample_hz) != self.sample_hz or self.sample_hz < 24:
             raise ContractError("grounded sample_hz must be an integer >=24")
-        if (type(self.boundary_sample_hz) is not int or self.boundary_sample_hz < 0
-            or (self.boundary_sample_hz and not self.sample_hz <= self.boundary_sample_hz <= 1920)):
-            raise ContractError("grounded boundary sample rate must be zero or between sample_hz and 1920")
         if (self.handoff_phase_fraction is not None
             and not 0 <= self.handoff_phase_fraction <= .25):
             raise ContractError("grounded handoff phase must be within the first quarter cycle")
-        if self.handoff_phase_fraction is not None and not self.boundary_sample_hz:
-            raise ContractError("grounded handoff phase requires a boundary sample rate")
         if ((self.handoff_phase_fraction is None) != (self.handoff_sample_hz is None)
             or (self.handoff_sample_hz is not None
                 and (type(self.handoff_sample_hz) is not int
-                     or not self.boundary_sample_hz <= self.handoff_sample_hz <= 1920))):
-            raise ContractError("grounded handoff sampling requires a paired rate within the boundary envelope")
+                     or not self.sample_hz <= self.handoff_sample_hz <= 1920))):
+            raise ContractError("grounded handoff sampling requires a paired rate at or above the base clock")
 
 
 def touchdown_reach(gait: GroundedGait, body_height_m: float) -> float:

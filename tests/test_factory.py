@@ -62,11 +62,11 @@ def test_grounded_contact_boundaries_are_continuous():
 
 
 @pytest.mark.parametrize("change", [{"duty_factor": .475}, {"cycles": True}, {"step_period_s": 0}, {"step_length_body_heights": 0}, {"sample_hz": 23}, {"pelvis_crouch_body_heights": math.nan},
-    {"handoff_phase_fraction": -.01, "handoff_sample_hz": 960, "boundary_sample_hz": 480},
-    {"handoff_phase_fraction": .26, "handoff_sample_hz": 960, "boundary_sample_hz": 480},
-    {"handoff_phase_fraction": .125, "handoff_sample_hz": 960, "boundary_sample_hz": 0},
-    {"handoff_phase_fraction": .125, "handoff_sample_hz": None, "boundary_sample_hz": 480},
-    {"handoff_phase_fraction": None, "handoff_sample_hz": 960, "boundary_sample_hz": 480}])
+    {"handoff_phase_fraction": -.01, "handoff_sample_hz": 960},
+    {"handoff_phase_fraction": .26, "handoff_sample_hz": 960},
+    {"handoff_phase_fraction": .125, "handoff_sample_hz": 23},
+    {"handoff_phase_fraction": .125, "handoff_sample_hz": None},
+    {"handoff_phase_fraction": None, "handoff_sample_hz": 960}])
 def test_grounded_invalid_parameters_fail_closed(change):
     with pytest.raises(ContractError):
         GroundedGait(**change)

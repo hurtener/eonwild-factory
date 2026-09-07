@@ -18,7 +18,7 @@
   "program": "grounded_gait",
   "program_profile": {
     "path": "catalog/programs/heavy-biped.reverse-walk.v4.json",
-    "sha256": "26f401d42baa65d205bac342dfa600b95bc8d61628ca1da9b8ac1c0a78c290c0"
+    "sha256": "f1dcdae569913aa5a7407c3dac945374b698ae9310e3aa965c210b3d4a7bb924"
   },
   "rig": {
     "path": "catalog/rigs/heavy-biped.v9.json",
