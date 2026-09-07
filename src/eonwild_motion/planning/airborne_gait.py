@@ -11,6 +11,7 @@ import math
 from typing import Any, Mapping
 
 from ..errors import ContractError
+from .swing_transport import transport_progress, validate_transport_ramp
 
 
 @dataclass(frozen=True)
@@ -44,6 +45,7 @@ class AirborneGait:
     articulation_preferred_margin_weight: float = 25.0
     continuous_body_launch_fraction: float = 0.0
     rounded_swing_peak_fraction: float = 0.0
+    swing_transport_ramp_fraction: float = 0.0
     chest_response_gain_degrees: float = 0.0
     head_stabilization_gain: float = 0.85
     tail_response_gain_degrees: float = 0.0
@@ -96,6 +98,7 @@ class AirborneGait:
             raise ContractError("rounded swing peak must be zero (legacy) or in [.3, .5]")
         if self.rounded_swing_peak_fraction and not self.swing_lift_fraction <= self.rounded_swing_peak_fraction <= 1 - self.swing_lower_fraction:
             raise ContractError("rounded swing peak must lie between the lift/lower ramps")
+        validate_transport_ramp(self.swing_transport_ramp_fraction)
         if self.continuous_body_launch_fraction:
             trough, rise = continuous_body_timing(self)
             if trough + rise >= 1:
@@ -257,7 +260,9 @@ def sample_airborne_gait(gait: AirborneGait, time_s: float, body_height_m: float
             swing_phase = 0.0
         else:
             swing_phase = (local - contact_s) / (cycle - contact_s)
-            x = anchor + 2 * travel * _smooth(swing_phase)
+            progress = (transport_progress(swing_phase, gait.swing_transport_ramp_fraction)
+                        if gait.swing_transport_ramp_fraction else _smooth(swing_phase))
+            x = anchor + 2 * travel * progress
             lift = math.sin(.5 * math.pi * min(1, swing_phase / gait.swing_lift_fraction)) ** 2
             lower = math.sin(.5 * math.pi * min(1, (1 - swing_phase) / gait.swing_lower_fraction)) ** 2
             y = gait.swing_clearance_body_heights * body_height_m * lift * lower

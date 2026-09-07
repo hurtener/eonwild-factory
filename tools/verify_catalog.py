@@ -16,7 +16,7 @@ from eonwild_motion.factory.compiler import compile_recipe, verify_package
 from measure_motion_reference import measure
 
 GROUPS = {
-    'locomotion': ['walk.v3', 'reverse-walk.v4', 'run.v4', 'sprint.v3', 'fast-walk.v1'],
+    'locomotion': ['walk.v3', 'reverse-walk.v4', 'run.v4', 'sprint.v4', 'fast-walk.v2'],
     'supported': ['idle.v1', 'alert.v1', 'call.v1', 'bite-miss.v2', 'feeding.v2'],
     'transitions': ['walk-start.v1', 'walk-stop.v1', 'reverse-walk-start.v1', 'reverse-walk-stop.v1',
                     'run-start.v1', 'run-stop.v1', 'sprint-start.v1', 'sprint-stop.v1'],

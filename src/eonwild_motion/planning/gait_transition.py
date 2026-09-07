@@ -14,6 +14,7 @@ from numbers import Real
 import numpy as np
 
 from ..errors import ContractError
+from .swing_transport import transport_progress
 from .airborne_gait import AirborneGait, sample_airborne_gait
 from .grounded_gait import GroundedGait, sample_grounded_gait, smooth, touchdown_reach
 
@@ -168,7 +169,9 @@ class _Choreography:
             at_land, _ = self.envelope(next_touchdown)
             amplitude = max(self.transition.minimum_swing_scale, at_lift, at_land)
             pitch_scale = at_lift + (amplitude - at_lift) * smooth(swing / .35)
-            forward = self.touchdown(touchdown) + (self.touchdown(next_touchdown) - self.touchdown(touchdown)) * smooth(swing)
+            progress = (transport_progress(swing, self.gait.swing_transport_ramp_fraction)
+                        if not self.grounded and self.gait.swing_transport_ramp_fraction else smooth(swing))
+            forward = self.touchdown(touchdown) + (self.touchdown(next_touchdown) - self.touchdown(touchdown)) * progress
             height = original['height_m'] * amplitude
             toe = original['toe_flex_degrees'] * pitch_scale
             pitch = original['foot_pitch_degrees'] * pitch_scale

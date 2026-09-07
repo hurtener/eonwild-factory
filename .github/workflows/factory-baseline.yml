@@ -39,20 +39,16 @@ jobs:
           python -m pytest tests -q --tb=short --junitxml=out/ci/full-tests.xml 2>&1 | tee out/ci/full-tests.log
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
-        with:
-          name: factory-full-regression-results
-          path: out/ci
-          retention-days: 14
+        with: {name: factory-full-regression-results, path: out/ci, retention-days: 14}
   candidate-acceptance:
-    # Independent of legacy verification; every requested recipe is still a
-    # strict acceptance job. Failures remain red and block motion readiness.
+    # Every requested recipe remains a strict job; no approved-name whitelist.
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     strategy:
       fail-fast: false
       max-parallel: 4
       matrix:
-        recipe: [walk.v3, reverse-walk.v4, run.v4, sprint.v3, fast-walk.v1, idle.v1, alert.v1, call.v1, bite-miss.v2, feeding.v2, walk-start.v1, walk-stop.v1, reverse-walk-start.v1, reverse-walk-stop.v1, run-start.v1, run-stop.v1, sprint-start.v1, sprint-stop.v1]
+        recipe: [walk.v3, reverse-walk.v4, run.v4, sprint.v4, fast-walk.v2, idle.v1, alert.v1, call.v1, bite-miss.v2, feeding.v2, walk-start.v1, walk-stop.v1, reverse-walk-start.v1, reverse-walk-stop.v1, run-start.v1, run-stop.v1, sprint-start.v1, sprint-stop.v1]
     env: {PYTHONPATH: src, OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '2', RECIPE: '${{ matrix.recipe }}'}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -64,11 +60,7 @@ jobs:
         run: python tools/verify_catalog.py --recipes "$RECIPE" --output out/catalog
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
-        with:
-          name: candidate-${{ matrix.recipe }}
-          path: out/catalog
-          if-no-files-found: error
-          retention-days: 14
+        with: {name: 'candidate-${{ matrix.recipe }}', path: out/catalog, if-no-files-found: error, retention-days: 14}
   native-review:
     needs: contracts
     runs-on: ubuntu-24.04
@@ -77,7 +69,7 @@ jobs:
       fail-fast: false
       max-parallel: 3
       matrix:
-        recipe: [walk.v3, reverse-walk.v4, bite-miss.v2, feeding.v2]
+        recipe: [sprint.v4, fast-walk.v2, walk.v3, reverse-walk.v4, bite-miss.v2, feeding.v2]
     env: {PYTHONPATH: src, OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '2', RECIPE: '${{ matrix.recipe }}'}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -88,13 +80,13 @@ jobs:
       - run: bash tools/ci_setup_blender.sh
       - name: Compile exactly this source's review candidate
         run: python -m eonwild_motion.factory compile --recipe "recipes/heavy-biped/$RECIPE.json" --output out/candidate
-      - name: Native-time multi-view diagnostic, with the preserved V9 walking comparison
+      - name: Native-time multi-view diagnostic, with preserved V9 walking comparison
         shell: bash
         run: |
           set -euo pipefail
           if [[ "$RECIPE" == walk.v3 ]]; then
             python tools/review_compiled_candidate.py --package out/candidate --output out/review --views side front rear three-quarter --fps 30 --compare-v9-walk
-          elif [[ "$RECIPE" == reverse-walk.v4 ]]; then
+          elif [[ "$RECIPE" == reverse-walk.v4 || "$RECIPE" == sprint.v4 || "$RECIPE" == fast-walk.v2 ]]; then
             python tools/review_compiled_candidate.py --package out/candidate --output out/review --views side front rear three-quarter --fps 30
           else
             python tools/review_compiled_candidate.py --package out/candidate --output out/review --views side three-quarter --fps 30
