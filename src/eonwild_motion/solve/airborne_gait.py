@@ -497,7 +497,7 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
                 # the load-bearing pad and digits in their calibrated frame.
                 # Release that frame C2 during swing, allowing authored fold
                 # and digit flex. No per-bone translation/scale is introduced.
-                free_pitch = _qrotvec(tuple(lateral * math.radians(foot_plan["foot_pitch_degrees"] * (1 - support_lock))))
+                free_pitch = _qrotvec(tuple(lateral * math.radians(foot_plan.get("pad_pitch_degrees", 0.) * (1 - support_lock))))
                 foot_world = _qmul(free_pitch, _rotation_from_matrix(base_w[foot]))
                 rot[foot] = _world_rotation(source, w, foot, foot_world)
                 w = _world_matrices(source, tr, rot, base_s)

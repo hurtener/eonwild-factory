@@ -16,7 +16,9 @@ def test_pad_has_zero_pitch_at_lift_and_land_even_with_large_metatarsal_push():
 
 
 def test_pitch_is_c2_at_support_and_recovery_joins():
-    h=1e-5
+    # A one-sided finite difference is O(h), not an exact second derivative.
+    # Use a small enough h to distinguish a true endpoint kink from truncation.
+    h=1e-6
     for at in (0.,.42,1.):
         for direction in (-1,1):
             if not 0<=at+direction*2*h<=1:continue
@@ -37,6 +39,13 @@ def test_decorated_plan_declares_pad_not_metatarsal_push_angle():
             assert foot['pad_pitch_degrees']<=0
             if foot['contact']:assert foot['pad_pitch_degrees']==0
     assert any(f['foot_pitch_degrees']>40 and f['pad_pitch_degrees']==0 for r in result['samples'] for f in r['feet'].values())
+
+
+def test_existing_zero_recovery_crown_sentinel_means_mid_swing():
+    plan={'parameters':{'foot_recovery_pitch_degrees':28,'swing_recovery_peak_fraction':0},
+          'samples':[{'feet':{'left':{'contact':False,'swing_phase':.5}}}]}
+    declare_pad_recovery(plan)
+    assert plan['samples'][0]['feet']['left']['pad_pitch_degrees']==-28
 
 
 @pytest.mark.parametrize('phase,amp,peak',[(math.nan,20,.42),(.2,math.inf,.42),(-.1,20,.42),(.2,61,.42),(.2,20,0),(.2,True,.42)])

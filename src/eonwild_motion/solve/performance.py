@@ -58,6 +58,8 @@ def decorate_plan(plan: dict, performance: Performance) -> dict:
     result = deepcopy(plan)
     result["performance"] = asdict(performance)
     result["loop"] = plan.get("loop", True)
+    from ..planning.foot_articulation import declare_pad_recovery
+    declare_pad_recovery(result)
     return result
 
 
