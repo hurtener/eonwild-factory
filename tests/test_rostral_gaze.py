@@ -3,7 +3,7 @@ import math
 import numpy as np
 import pytest
 from eonwild_motion.errors import ContractError
-from eonwild_motion.solve.gaze import SCHEMA, local_rostral_axis, load_rostral_axis
+from eonwild_motion.solve.gaze import SCHEMA, local_rostral_axis, load_rostral_axis, load_rostral_calibration, relative_attention_elevation
 from eonwild_motion.solve.airborne_gait import _qrotate
 from eonwild_motion.layers.leg_contact_resolve_v3 import _rotation_from_matrix
 
@@ -36,13 +36,34 @@ def test_missing_backward_or_invalid_surface_cannot_be_used(surface):
     with pytest.raises(ContractError):local_rostral_axis(np.eye(4),surface,[0,0,1])
 
 
+def calibration(axis=[0,0,1], elevation=0., role='head'):
+    return {'schema':SCHEMA,'head_role':role,'axis_local':axis,
+            'neutral_elevation_degrees':elevation,
+            'elevation_reference':'neutral head-to-upper-rostrum direction in the declared world frame'}
+
+
 @pytest.mark.parametrize('axis',[[0,0,0],[0,0,2],[0,math.nan,1],[False,0,1],[0,1]])
 def test_untrusted_calibration_cannot_silently_change_attention(axis):
     with pytest.raises(ContractError):
-        load_rostral_axis({'schema':SCHEMA,'head_role':'head','axis_local':axis},'head')
+        load_rostral_axis(calibration(axis),'head')
+
+
+@pytest.mark.parametrize('elevation',[-91,91,math.nan,False])
+def test_untrusted_neutral_elevation_cannot_crank_attention(elevation):
+    with pytest.raises(ContractError):
+        load_rostral_calibration(calibration(elevation=elevation),'head')
+
+
+def test_attention_offset_is_relative_to_admitted_neutral_direction():
+    reference=calibration(elevation=-25.25239071792521)
+    axis, neutral=load_rostral_calibration(reference,'head')
+    assert axis==(0.,0.,1.)
+    assert neutral==pytest.approx(-25.25239071792521)
+    assert relative_attention_elevation(reference,'head',5.)==pytest.approx(-20.25239071792521)
+    assert relative_attention_elevation(reference,'head',0.)==pytest.approx(neutral)
 
 
 def test_renamed_rig_is_bound_by_semantics_not_literal_bone_ids():
-    assert load_rostral_axis({'schema':SCHEMA,'head_role':'renamed-head','axis_local':[0,0,1]},'renamed-head')==(0.,0.,1.)
+    assert load_rostral_axis(calibration(role='renamed-head'),'renamed-head')==(0.,0.,1.)
     with pytest.raises(ContractError):
-        load_rostral_axis({'schema':SCHEMA,'head_role':'other','axis_local':[0,0,1]},'renamed-head')
+        load_rostral_axis(calibration(role='other'),'renamed-head')

@@ -134,8 +134,8 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
         # factory supplies a geometry-derived rostral axis explicitly.
         neutral_forward = _qrotate(_qinv(_rotation_from_matrix(base_worlds[head])), tuple(forward))
     else:
-        from .gaze import load_rostral_axis
-        neutral_forward = load_rostral_axis(calibration, roles["head"])
+        from .gaze import load_rostral_calibration, relative_attention_elevation
+        neutral_forward, neutral_elevation = load_rostral_calibration(calibration, roles["head"])
 
     def direction():
         worlds = _world_matrices(source, translations, rotations, scales)
@@ -152,7 +152,12 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
     for node in neck:
         _world_delta(source, translations, rotations, scales, node, up, .6 * yaw / len(neck))
     _world_delta(source, translations, rotations, scales, head, up, yaw_error())
-    target_elevation = gain * p.gaze_elevation_degrees
+    # The authored value is a bounded offset from the admitted neutral rostral
+    # direction, rather than a command to level (or raise) the muzzle in the
+    # world frame.  This retains the source's ordinary neck curve while still
+    # allowing a locomotion-gated forward-attention response.
+    target_elevation = (gain * p.gaze_elevation_degrees if calibration is None
+                        else relative_attention_elevation(calibration, roles["head"], gain * p.gaze_elevation_degrees))
     current = direction()
     error = math.degrees(math.atan2(float(current @ up), float(current @ forward))) - target_elevation
     for node in neck:
