@@ -30,6 +30,7 @@ from ..solve.skin_targets import solve_with_skin_targets, evaluate_skin
 from ..planning.supported_action import load_supported_action
 from ..planning.gait_transition import load_gait_transition, build_transition_plan
 from ..solve.supported_action import solve_supported_action
+from ..solve.gaze import calibrate_rostral_direction
 
 SCHEMA = "eonwild.motion.factory-recipe.v1"
 PROGRAMS = ("airborne_gait", "grounded_gait", "supported_action", "gait_transition")
@@ -230,6 +231,10 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
             contact_profile=json.loads(snapshots["contact_profile"]), up_axis=up, forward_axis=forward, body_height_m=height)
     if "performance_profile" in snapshots:
         plan = decorate_plan(plan, load_performance(json.loads(snapshots["performance_profile"])))
+        if "contact_profile" not in snapshots:
+            raise ContractError("forward attention requires locked geometry calibration")
+        plan["gaze_calibration"] = calibrate_rostral_direction(source, roles=roles,
+            contact_profile=json.loads(snapshots["contact_profile"]), forward_axis=forward, up_axis=up)
     validate_plan(plan, recipe["program"])
     if supported:
         pass  # Already solved by the persistent-support program above.

@@ -18,6 +18,7 @@ from ..layers.leg_contact_resolve_v3 import _clip_state, _pose, _rotation_from_m
 from ..planning.airborne_gait import AirborneGait
 from ..planning.grounded_gait import smooth
 from ..planning.supported_action import SupportedAction, curve, resample_chain
+from ..planning.support_balance import support_balance
 from .airborne_gait import _unit, _qrotate, _qrotvec, _between, _interior, stable_knee_geometry, _orientation_from_bend
 from .performance import Performance, decorate_plan
 from .skin_rig import SkinRig
@@ -125,6 +126,20 @@ class SupportedSolver:
                 r[n] = _qmul(r[n], _qrotvec(self.pitch_axes[n] * math.radians(degrees * amount)))
                 yaw = state['yaw'] * a.yaw_weights.get(role,0.) / len(values)
                 r[n] = _qmul(r[n], _qrotvec(self.yaw_axes[n] * math.radians(yaw)))
+        # Coordinate body height BEFORE fixing the oral target and solving the
+        # planted limbs. A braced pull must bend/support the body, not stretch
+        # its rear leg or repeatedly drag a skin target beyond reach.
+        world = self.rig.world(t,r,s)
+        chains = list(self.rig.legs.values())
+        hips = np.asarray([world[chain[0],:3,3] for chain in chains])
+        anchors = np.asarray([self.w0[chain[2],:3,3] for chain in chains])
+        lengths = np.asarray([[np.linalg.norm(self.w0[chain[1],:3,3]-self.w0[chain[0],:3,3]),
+                               np.linalg.norm(self.w0[chain[2],:3,3]-self.w0[chain[1],:3,3])] for chain in chains])
+        accommodation, balance = support_balance(hips, anchors, lengths, up_axis=self.up,
+            knee_max_degrees=a.support_limits['knee_interior_degrees'][1],
+            maximum_drop_m=.10*self.height, activation_band_m=.008*self.height)
+        t[pelvis] += np.linalg.solve(basis, accommodation)
+        state['support_balance'] = balance
         jaw = self.rig.roles_i['jaw_lower'][0]
         opening = state['jaw'] * a.gape_degrees
         def jaw_pose(degrees):

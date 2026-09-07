@@ -1,22 +1,23 @@
-"""Generate a bounded catalog group and retain exact final acceptance evidence.
+"""Compile selected locked recipes and require actual final technical gates.
 
-Independent of the legacy compatibility build. Every nonpassing candidate
-keeps the job red; compact summaries make real motion failures diagnosable.
+Per-recipe jobs prevent one slow or infeasible action from hiding all other
+results. Diagnostic measurements live outside immutable candidate packages.
+No whitelist grants approval: every requested recipe must independently pass.
 """
 from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import re
 import subprocess
-import sys
 import traceback
 
 from eonwild_motion.factory.compiler import compile_recipe, verify_package
 from measure_motion_reference import measure
 
 GROUPS = {
-    'locomotion': ['walk.v2', 'reverse-walk.v3', 'run.v3', 'sprint.v3', 'fast-walk.v1'],
-    'supported': ['idle.v1', 'alert.v1', 'call.v1', 'bite-miss.v1', 'feeding.v1'],
+    'locomotion': ['walk.v3', 'reverse-walk.v4', 'run.v4', 'sprint.v3', 'fast-walk.v1'],
+    'supported': ['idle.v1', 'alert.v1', 'call.v1', 'bite-miss.v2', 'feeding.v2'],
     'transitions': ['walk-start.v1', 'walk-stop.v1', 'reverse-walk-start.v1', 'reverse-walk-stop.v1',
                     'run-start.v1', 'run-stop.v1', 'sprint-start.v1', 'sprint-stop.v1'],
 }
@@ -38,15 +39,21 @@ def failures(value, path=''):
     return result
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--group', required=True, choices=GROUPS)
+    selection = parser.add_mutually_exclusive_group(required=True)
+    selection.add_argument('--group', choices=GROUPS)
+    selection.add_argument('--recipes', nargs='+')
     parser.add_argument('--output', type=Path, required=True)
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
+    names = GROUPS[args.group] if args.group else args.recipes
+    if len(set(names)) != len(names) or any(re.fullmatch(r'[a-z][a-z0-9-]*\.v[1-9][0-9]*', name) is None for name in names):
+        parser.error('recipe names must be unique versioned catalog names')
     root = Path(__file__).resolve().parents[1]
     args.output.mkdir(parents=True, exist_ok=False)
     results = []
-    for name in GROUPS[args.group]:
+    source_sha = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip()
+    for name in names:
         package = args.output / name
         print('BEGIN_CANDIDATE ' + name, flush=True)
         try:
@@ -58,25 +65,24 @@ def main():
             roles = json.loads((root/recipe['rig']['path']).read_text())['roles']
             measurements = measure(package/'root_motion.glb', clip=recipe['id']+'.root_motion', roles=roles,
                 forward_axis=recipe['forward_axis'], up_axis=recipe['up_axis'])
-            (package/'native-measurements.json').write_text(json.dumps(measurements, indent=2, allow_nan=False)+'\n')
+            (args.output/f'{name}.native-measurements.json').write_text(json.dumps(measurements, indent=2, allow_nan=False)+'\n')
             row = {'recipe': name, **verification, 'failures': failures(value),
-                'refinement': receipt.get('skin_target_refinement'), 'oral': value.get('oral_contact'),
                 'rates': value['rotation_rates'], 'continuity': value['cyclic_continuity'],
+                'feasibility': value['solver_feasibility'], 'oral': value.get('oral_contact'),
                 'surface_gap_m': value['skinned_contact'].get('maximum_stance_gap_m'),
-                'penetration_m': value['skinned_contact'].get('maximum_penetration_m'),
-                'native_measurements': measurements}
-            if row['refinement']:
-                row['refinement'] = {k:v for k,v in row['refinement'].items() if k != 'witnesses'}
+                'penetration_m': value['skinned_contact'].get('maximum_penetration_m')}
+            refinement = receipt.get('skin_target_refinement')
+            if refinement:
+                row['refinement'] = {k:v for k,v in refinement.items() if k != 'witnesses'}
         except Exception as exc:
             row = {'recipe': name, 'technical_status': 'ERROR', 'error': str(exc)}
             (args.output/f'{name}.error.log').write_text(traceback.format_exc())
             print(traceback.format_exc(), flush=True)
         results.append(row)
-        (args.output/'results.json').write_text(json.dumps({'group': args.group, 'results': results,
-            'source_sha': subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),
-            'visual_review':'PENDING','unity_parity':'NOT_RUN'}, indent=2, allow_nan=False)+'\n')
+        (args.output/'results.json').write_text(json.dumps({'results': results, 'source_sha': source_sha,
+            'visual_review':'PENDING','unity_parity':'NOT_RUN','production_approved':False}, indent=2, allow_nan=False)+'\n')
         print('CANDIDATE_RESULT ' + json.dumps(row, allow_nan=False), flush=True)
-    return 0 if all(row['technical_status'] == 'PASS' for row in results) else 2
+    return 0 if results and all(row['technical_status'] == 'PASS' for row in results) else 2
 
 
 if __name__ == '__main__':
