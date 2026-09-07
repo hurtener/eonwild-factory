@@ -79,7 +79,7 @@
       "frames": 241,
       "duration_s": 10.041667,
       "full_decode_exit_code": 0,
-      "visual_coverage": "24 evenly spaced native-frame overview including first and last"
+      "visual_coverage": "every native primary-stream frame inspected in six consecutive sheets (241 total); recovery frames 101, 108 and 116 additionally inspected at full native resolution; exact user-selected recovery pose confirmed in live browser"
     },
     {
       "path": "assets/examples/tarbosaurus/v9_evidence/BITE MISS + RECOVERY \u2014 front three-quarter.mp4",

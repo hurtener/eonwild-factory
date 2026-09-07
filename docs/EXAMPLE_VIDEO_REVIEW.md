@@ -27,6 +27,13 @@ of every consecutive native frame and complete original-speed browser playback:
 | `v9_evidence/walking-back-gauge.mp4` | 145 | 6.041667 s |
 | `v9_evidence/walking-front-gauge.mp4` | 145 | 6.041667 s |
 
+Following the user's recovery-direction correction, the host also inspected
+all 241 native frames of `tarbosaurus_walk.mp4`, then examined frames 101, 108
+and 116 at full native resolution. Those frames show the foot hanging downward,
+passing below the knee, and opening forward for placement, respectively. The
+exact illustrated reference was confirmed in the live browser; complete native
+playback of this additional clip is not claimed by this receipt.
+
 Frames below are zero-based; time is frame index divided by 24. The full source
 is retained. No source retiming, generated in-between frames or altered geometry
 is used for this review. Comparisons between different clips are qualitative
