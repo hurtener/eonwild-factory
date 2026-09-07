@@ -13,8 +13,8 @@ from eonwild_motion.factory.animal import (
 from eonwild_motion.factory.compiler import load_recipe
 from eonwild_motion.factory.source import admit_geometry,geometry_height
 from eonwild_motion.glb.container import Glb
-from eonwild_motion.planning.grounded_gait import load_grounded_gait, sample_grounded_gait
-from eonwild_motion.solve.performance import load_performance
+from eonwild_motion.planning.grounded_gait import build_grounded_plan, load_grounded_gait, sample_grounded_gait
+from eonwild_motion.solve.performance import decorate_plan, load_performance
 from test_v9_airborne_gait import fixture
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -106,6 +106,43 @@ def test_adult_walk_profile_has_observable_distal_release_and_tail_coordination(
     assert adult_performance_document['reference']['source_frame_rate_hz']==24
     for asset in adult_performance_document['reference']['assets']:
         assert hashlib.sha256((ROOT/asset['path']).read_bytes()).hexdigest()==asset['sha256']
+
+
+def test_adult_walk_v2_changes_only_the_signed_pad_recovery_policy():
+    old_recipe=json.loads((ROOT/'recipes/heavy-biped/tarbosaurus-pin-552-1-adult-walk.v1.json').read_text())
+    new_recipe,paths=load_recipe(ROOT/'recipes/heavy-biped/tarbosaurus-pin-552-1-adult-walk.v2.json',ROOT)
+    assert new_recipe['supersedes']==old_recipe['id']
+    assert new_recipe['program']=='grounded_gait'
+    for reference in new_recipe.values():
+        if isinstance(reference,dict) and {'path','sha256'}<=set(reference):
+            assert hashlib.sha256((ROOT/reference['path']).read_bytes()).hexdigest()==reference['sha256']
+
+    old_document=json.loads((ROOT/old_recipe['program_profile']['path']).read_text())
+    new_document=json.loads(paths['program_profile'].read_text())
+    assert new_document['parameters']['pad_recovery_pitch_degrees']==60
+    assert new_document['parameters']['toe_recovery_peak_fraction']==.42
+    assert new_document['parameters']['toe_flex_degrees']==60
+    assert new_document['parameters']['swing_clearance_body_heights']==.25
+    assert {key:value for key,value in new_document['parameters'].items()
+            if key not in ('pad_recovery_pitch_degrees','toe_recovery_peak_fraction',
+                           'toe_flex_degrees','swing_clearance_body_heights')}=={
+                               key:value for key,value in old_document['parameters'].items()
+                               if key not in ('toe_flex_degrees','swing_clearance_body_heights')}
+
+    old_gait=load_grounded_gait(old_document)
+    new_gait=load_grounded_gait(new_document)
+    old_plan=decorate_plan(build_grounded_plan(old_gait,2.),load_performance(
+        json.loads((ROOT/old_recipe['performance_profile']['path']).read_text())))
+    new_plan=decorate_plan(build_grounded_plan(new_gait,2.),load_performance(
+        json.loads(paths['performance_profile'].read_text())))
+    old_swing=[foot for row in old_plan['samples'] for foot in row['feet'].values() if not foot['contact']]
+    new_swing=[foot for row in new_plan['samples'] for foot in row['feet'].values() if not foot['contact']]
+    assert any(foot['foot_pitch_degrees']<0 and foot['pad_pitch_degrees']<0 for foot in old_swing)
+    assert any(foot['foot_pitch_degrees']<0 and foot['pad_pitch_degrees']>0 for foot in new_swing)
+    early=max(new_swing,key=lambda foot: foot['pad_pitch_degrees'])
+    assert early['toe_flex_degrees']>55
+    assert all(foot['pad_pitch_degrees']==0 for row in new_plan['samples']
+               for foot in row['feet'].values() if foot['contact'])
 
 
 def test_report_exposes_scale_kinematics_and_nonclaims():

@@ -14,6 +14,8 @@ from typing import Any, Mapping
 
 from ..errors import ContractError
 from .airborne_gait import rounded_swing_height
+from .foot_articulation import recovery_pitch
+from .parameters import gait_parameters
 
 
 def smooth(value: float) -> float:
@@ -33,7 +35,9 @@ class GroundedGait:
     cycles: int = 2
     sample_hz: int = 60
     toe_flex_degrees: float = 0.0
+    toe_recovery_peak_fraction: float | None = None
     foot_recovery_pitch_degrees: float = 0.0
+    pad_recovery_pitch_degrees: float | None = None
     push_off_pitch_degrees: float = 0.0
     push_off_start_fraction: float = 0.60
     swing_hip_lift_degrees: float = 0.0
@@ -45,6 +49,10 @@ class GroundedGait:
             if key == 'centered_stance':
                 if type(value) is not bool:
                     raise ContractError('centered_stance must be boolean')
+            elif key in ('toe_recovery_peak_fraction', 'pad_recovery_pitch_degrees'):
+                if value is not None and (isinstance(value, bool) or not isinstance(value, (int, float))
+                                          or not math.isfinite(value)):
+                    raise ContractError(f'grounded optional control {key} must be finite numeric or null')
             elif isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
                 raise ContractError(f"grounded gait {key} must be finite numeric")
         if self.step_period_s <= 0 or not 0.5 < self.duty_factor < 1:
@@ -58,6 +66,10 @@ class GroundedGait:
         for key in ("toe_flex_degrees", "foot_recovery_pitch_degrees", "push_off_pitch_degrees", "swing_hip_lift_degrees"):
             if not 0 <= getattr(self, key) <= 60:
                 raise ContractError(f"grounded {key} exceeds the articulation envelope")
+        if self.pad_recovery_pitch_degrees is not None and not -60 <= self.pad_recovery_pitch_degrees <= 60:
+            raise ContractError("grounded pad recovery pitch exceeds the signed articulation envelope")
+        if self.toe_recovery_peak_fraction is not None and not .3 <= self.toe_recovery_peak_fraction <= .5:
+            raise ContractError("grounded toe recovery peak must lie in [.3,.5]")
         if not 0 < self.push_off_start_fraction < 1:
             raise ContractError("grounded push-off landmark must lie inside stance")
         if self.rounded_swing_peak_fraction and not .3 <= self.rounded_swing_peak_fraction <= .5:
@@ -110,7 +122,8 @@ def sample_grounded_gait(gait: GroundedGait, time_s: float, body_height_m: float
         else:
             recovery = math.sin(math.pi * smooth(swing)) ** 2
             pitch = gait.push_off_pitch_degrees * (1 - smooth(swing / .35)) - gait.foot_recovery_pitch_degrees * recovery
-            flex = gait.toe_flex_degrees * recovery
+            flex = (-recovery_pitch(swing, gait.toe_flex_degrees, gait.toe_recovery_peak_fraction)
+                    if gait.toe_recovery_peak_fraction is not None else gait.toe_flex_degrees * recovery)
             crown = (rounded_swing_height(swing, gait.rounded_swing_peak_fraction)
                      if gait.rounded_swing_peak_fraction else recovery)
             height = body_height_m * gait.swing_clearance_body_heights * crown
@@ -135,5 +148,5 @@ def build_grounded_plan(gait: GroundedGait, body_height_m: float) -> dict[str, A
     return {"schema": "eonwild.motion.v9.contact-plan.v1", "program": "grounded_gait",
         "classification": "authored engineering contact plan; not force simulation",
         "body_height_m": body_height_m, "duration_s": duration,
-        "same_foot_cycle_s": 2 * gait.step_period_s, "parameters": asdict(gait),
+        "same_foot_cycle_s": 2 * gait.step_period_s, "parameters": gait_parameters(gait),
         "samples": [sample_grounded_gait(gait, duration * i / intervals, body_height_m) for i in range(intervals + 1)]}

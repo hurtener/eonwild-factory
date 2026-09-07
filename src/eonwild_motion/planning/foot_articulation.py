@@ -31,11 +31,24 @@ def recovery_pitch(phase: float, amplitude_degrees: float, peak_fraction: float 
     return -amplitude_degrees*gain
 
 
+def signed_recovery_pitch(phase: float, pitch_degrees: float, peak_fraction: float = .42) -> float:
+    """Evaluate a profile-authored signed pad pitch over the same C2 crown."""
+    if isinstance(pitch_degrees, bool) or not isinstance(pitch_degrees, Real) or not math.isfinite(pitch_degrees):
+        raise ContractError('signed pad recovery requires a finite numeric pitch')
+    if not -60 <= pitch_degrees <= 60:
+        raise ContractError('signed pad recovery exceeds its articulation envelope')
+    return math.copysign(-recovery_pitch(phase, abs(pitch_degrees), peak_fraction), pitch_degrees)
+
+
 def declare_pad_recovery(plan: dict) -> None:
     """Annotate an already-private plan copy, never historical input assets."""
     parameters=plan.get('parameters',{})
     amplitude=parameters.get('foot_recovery_pitch_degrees',0.)
+    signed_pitch=parameters.get('pad_recovery_pitch_degrees')
     peak=parameters.get('swing_recovery_peak_fraction',.42)
+    if signed_pitch is not None:
+        # Validate the declared policy even for a degenerate all-contact plan.
+        signed_recovery_pitch(0.,signed_pitch,peak if peak else .5)
     # Existing zero sentinel denotes an unshifted mid-swing recovery.
     if peak == 0 and not isinstance(peak,bool):peak=.5
     for row in plan['samples']:
@@ -43,5 +56,6 @@ def declare_pad_recovery(plan: dict) -> None:
             scale=foot.get('articulation_scale',1.)
             if isinstance(scale,bool) or not isinstance(scale,Real) or not math.isfinite(scale) or not 0<=scale<=1:
                 raise ContractError('pad recovery scale must be finite in [0,1]')
-            foot['pad_pitch_degrees']=(0. if foot['contact'] else
-                recovery_pitch(foot['swing_phase'],amplitude,peak)*scale)
+            foot['pad_pitch_degrees']=(0. if foot['contact'] else scale * (
+                recovery_pitch(foot['swing_phase'],amplitude,peak) if signed_pitch is None
+                else signed_recovery_pitch(foot['swing_phase'],signed_pitch,peak)))
