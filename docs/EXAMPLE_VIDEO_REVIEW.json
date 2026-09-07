@@ -222,6 +222,19 @@
       "review_fps": 30,
       "remaining_render": "STOPPED_AFTER_CONTRARY_EVIDENCE",
       "full_cycle_review": "NOT_RUN"
+    },
+    "pad60_toe60_clearance25_probe": {
+      "source_root_motion_sha256": "c4f337e5bbc78ad7188435c00a831014c93828a2205e4902cde2b74aa591ef6",
+      "technical_status": "PASS",
+      "host_visual_status": "REJECTED",
+      "finding": "Downward/trailing direction and visible material clearance improved, but the user identified a pinched lower-foot bend and rigid dead-weight recovery. Host agrees and withdraws whole-pose acceptance. Scalar world direction is not adequate visual or biomechanical acceptance.",
+      "user_screenshot_sha256": "ca948791487ef0012c2ae1713b7bd292d98d97f087896959e6e0306350a98829",
+      "inspected_stills_per_view": 6,
+      "views": [
+        "side-feet",
+        "three-quarter-body"
+      ],
+      "full_cycle_review": "NOT_RUN"
     }
   }
 }

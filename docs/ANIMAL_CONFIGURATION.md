@@ -96,6 +96,15 @@ upward/forward while the supplied walking reference lets the distal chain hang
 downward beneath a flexed knee. These current values are under correction and
 must not be reused as an accepted animal configuration.
 
+Recovery direction is evaluated in world space separately from each joint's
+flexion or extension. The [ostrich intertarsal-joint study (2009)](https://doi.org/10.1111/j.1469-7580.2009.01083.x)
+reports intertarsal flexion after toe-off and extension before touchdown;
+[ostrich phalangeal measurements (2017)](https://doi.org/10.7717/peerj.2857)
+primarily describe the contact period. These extant-bird observations motivate
+separate joint controls and phase checks. They do not establish Tarbosaurus
+recovery angles, passive ligament behavior, or the candidate's 60° control values.
+A foot pointing downward does not imply every joint is extending.
+
 Forward head carriage is also an authored criterion. Inner-ear reconstructions
 in related tyrannosaurids concern alert head posture and describe a somewhat
 downturned head; they do not establish an exact habitual angle for Tarbosaurus.

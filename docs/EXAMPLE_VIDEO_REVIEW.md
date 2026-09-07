@@ -105,6 +105,17 @@ acceptance is claimed. A downward vector alone does not establish the trailing
 recovery seen in the reference. Foot orientation, toe articulation and clearance
 must be evaluated together before selecting a successor.
 
+A later 60° pad / 60° toe / 0.25-height-clearance probe corrected the signed
+world direction and produced visible clearance in twelve inspected stills. Its
+root-motion GLB is
+`c4f337e5bbc78ad7188435c00a831014c93828a2205e4902cde2b74aa591ef6`.
+The host initially passed those narrow sampled-pose criteria. The user then
+identified a pinched lower-foot bend and rigid, dead-weight recovery; the host
+agreed and withdrew whole-pose acceptance. This candidate is also **visually
+rejected**. Joint-axis distribution, skin deformation and temporal recovery must
+be assessed together. Matching a toe vector with simultaneous extreme controls
+is not sufficient. Its source remains an unapproved, hash-bound candidate.
+
 That polish was compiled independently at `2e718a37dbe3e43094b1c75dc31e86d5021c96f7`.
 It must be corrected, regenerated and reviewed with the shared solver.
 The historical approved V9 artifacts remain frozen comparison sources. Technical
