@@ -36,10 +36,16 @@ identified that its recovery foot moves in the opposite direction to the walking
 reference. The host confirmed this and withdrew its initial positive assessment:
 the foot tucks upward/forward instead of hanging down beneath the flexed knee.
 That recovery polish is visually rejected and is being corrected. Technical
-checks did not establish reference alignment. The supplied `assets/examples`
+checks did not establish reference alignment. A later downward/trailing-foot
+probe was also rejected for a pinched ankle and rigid hanging foot. Coordinating
+the metatarsal, pad and toes improved that fold, but full-cycle host inspection
+rejected its 0.20-height-clearance version for floor-skimming recovery. The
+current correction therefore requires both coherent joint motion and visible
+material clearance throughout swing. The supplied `assets/examples`
 videos have now been audited
 directly, including every native frame and original-speed playback of five key
-walking, sprint and start/stop references. See
+walking, sprint and start/stop references, plus the complete walking clip used
+in the user's recovery comparison. See
 [EXAMPLE_VIDEO_REVIEW.md](EXAMPLE_VIDEO_REVIEW.md) for exact coverage, source
 identities, observations and the remaining candidate gaps.
 

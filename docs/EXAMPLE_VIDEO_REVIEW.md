@@ -116,8 +116,23 @@ rejected**. Joint-axis distribution, skin deformation and temporal recovery must
 be assessed together. Matching a toe vector with simultaneous extreme controls
 is not sufficient. Its source remains an unapproved, hash-bound candidate.
 
-That polish was compiled independently at `2e718a37dbe3e43094b1c75dc31e86d5021c96f7`.
-It must be corrected, regenerated and reviewed with the shared solver.
+A coordinated 45° metatarsal / 50° pad / 35° toe candidate reduced the opposing
+joint folds. With 0.20-body-height authored swing clearance it passed package
+verification (root-motion GLB
+`afa8790c8ab3f19b3b4f925e49493f99f2502bf02db4301461bef48b8baf7049`).
+The host inspected all 74 native-time review frames in each of three views
+(side body, side feet and three-quarter body), verified full decode and media
+hashes, and completed each film's native 1x browser playback. It is **rejected
+for floor-skimming recovery**: the toes dip toward the floor during middle
+swing, then rise before forward placement. Measured middle-swing toe material
+clearance is only 0.0636–0.0659 mm across the two feet. A nonpenetration pass
+does not establish a usable clearance arc. The next candidate must preserve
+the improved articulation while visibly clearing the recovering toes.
+
+The original adult-only polish was compiled independently at
+`2e718a37dbe3e43094b1c75dc31e86d5021c96f7`; subsequent probes have their own source
+locks and artifact hashes. Final candidates must be regenerated and reviewed
+on the integrated shared solver.
 The historical approved V9 artifacts remain frozen comparison sources. Technical
 package acceptance, raw direct-join acceptance, host visual inspection, human art
 approval, biological validation and Unity parity remain separate evidence levels.
