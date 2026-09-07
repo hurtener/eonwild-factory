@@ -10,7 +10,7 @@
   "rig": {"path": "catalog/rigs/heavy-biped.v9.json", "sha256": "c3de770bf7dcc68219a28fb9851e9b75f3d3eebe2c2c0c7deb0078850100fd7e"},
   "contact_profile": {"path": "catalog/contacts/heavy-biped.v9.json", "sha256": "fef6279c1e7653ae6c7c485c3f934fd647410a726acb59393312b72af754a89f"},
   "program_profile": {"path": "catalog/programs/heavy-biped.start.v1.json", "sha256": "fe6bb569a44ade9f2ad8d4a11ea806795187bbaed73c232b39a816f1518160b9"},
-  "gait_profile": {"path": "catalog/programs/heavy-biped.run.v4.json", "sha256": "a19b8b9c211dfc92a13802016157ae33c4fc2910f686827e5bc619a45384fe0f"},
+  "gait_profile": {"path": "catalog/programs/heavy-biped.run.v4.json", "sha256": "b8d22b3d73f3388de4d2c55cb4a07a3f1fdf972b82914653ecd015df2f00267d"},
   "performance_profile": {"path": "catalog/performance/heavy-biped.run.v3.json", "sha256": "ade6d37243d4b9597c9d2c15a86a667b5528654aca3998315abe7f2f06a968be"},
   "forward_axis": [0.03893162055641767, 0.0, 0.9992418770852486],
   "up_axis": [0.0, 1.0, 0.0]

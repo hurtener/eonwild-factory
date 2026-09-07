@@ -16,6 +16,7 @@ from eonwild_motion.planning.grounded_gait import load_grounded_gait, build_grou
 from eonwild_motion.planning.gait_transition import (
     GaitTransition, _Choreography, build_transition_plan, declared_handoff_phase,
 )
+from eonwild_motion.planning.parameters import gait_parameters
 
 ROOT = Path(__file__).resolve().parents[1]
 STEADY = ('walk.v3', 'reverse-walk.v4', 'run.v4', 'sprint.v4')
@@ -27,7 +28,9 @@ def gait(name):
 
 
 def choreography(name, kind):
-    return _Choreography(GaitTransition(kind, support_placement='integrated_support', handoff_phase_fraction=.125), gait(name), 2.6416714066117652)
+    bound = gait(name)
+    return _Choreography(GaitTransition(kind, support_placement='integrated_support',
+        handoff_phase_fraction=.125, handoff_sample_hz=bound.handoff_sample_hz), bound, 2.6416714066117652)
 
 
 @pytest.mark.parametrize('name', STEADY)
@@ -36,7 +39,8 @@ def test_committed_support_is_immutable_and_bound_gait_is_unchanged(name, kind):
     c = choreography(name, kind)
     before = asdict(c.gait)
     plan = build_transition_plan(c.transition, c.gait, c.height)
-    assert plan['parameters'] == before == asdict(c.gait)
+    assert plan['parameters'] == gait_parameters(c.gait)
+    assert before == asdict(c.gait)
     assert plan['same_foot_cycle_s'] == 2 * c.gait.step_period_s
     assert all(not cue['authoritative_world_fact'] for cue in plan['events'])
     sign = np.sign(c.speed)
@@ -75,6 +79,9 @@ def test_loaded_interface_is_on_the_bound_clock_and_has_persistent_contact_conte
     phase = declared_handoff_phase(c.transition, c.gait)
     matches = [r for r in steady['samples'] if abs(r['time_s'] - phase) < 1e-9]
     assert len(matches) == 1
+    index = steady['samples'].index(matches[0])
+    native = [row['time_s'] for row in steady['samples'][index - 2:index + 3]]
+    assert np.diff(native) == pytest.approx(np.full(4, 1 / c.gait.handoff_sample_hz))
     expected = matches[0]
     plan = build_transition_plan(c.transition, c.gait, c.height)
     contract = plan['transition_contract']
@@ -92,6 +99,21 @@ def test_loaded_interface_is_on_the_bound_clock_and_has_persistent_contact_conte
             assert abs(f[key] - g[key]) < 1e-8
         if f['contact']:
             assert all(r['feet'][side]['contact'] for r in plan['samples'][-3:])
+
+
+def test_bound_gait_rejects_a_transition_with_a_different_interface():
+    bound = gait('sprint.v4')
+    with pytest.raises(ContractError, match='differs from the bound gait'):
+        declared_handoff_phase(
+            GaitTransition('start', handoff_phase_fraction=.1), bound,
+        )
+
+
+def test_bound_gait_rejects_a_transition_with_a_different_interface_rate():
+    bound = gait('sprint.v4')
+    with pytest.raises(ContractError, match='sample rate differs'):
+        declared_handoff_phase(GaitTransition('start', handoff_phase_fraction=.125,
+            handoff_sample_hz=960), bound)
 
 
 @pytest.mark.parametrize('name', STEADY)

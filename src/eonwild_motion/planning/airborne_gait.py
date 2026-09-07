@@ -11,6 +11,7 @@ import math
 from typing import Any, Mapping
 
 from ..errors import ContractError
+from .parameters import gait_parameters
 from .swing_transport import transport_progress, validate_transport_ramp
 
 
@@ -66,9 +67,13 @@ class AirborneGait:
     cycles: int = 2
     sample_hz: int = 120
     boundary_sample_hz: int = 0
+    handoff_phase_fraction: float | None = None
+    handoff_sample_hz: int | None = None
 
     def __post_init__(self) -> None:
         for key, value in asdict(self).items():
+            if key in ("handoff_phase_fraction", "handoff_sample_hz") and value is None:
+                continue
             if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
                 raise ContractError(f"airborne gait {key} must be finite numeric")
         if self.step_period_s <= 0 or not 0 < self.flight_fraction < 0.7:
@@ -130,6 +135,16 @@ class AirborneGait:
         if (type(self.boundary_sample_hz) is not int or self.boundary_sample_hz < 0
             or (self.boundary_sample_hz and not self.sample_hz <= self.boundary_sample_hz <= 1920)):
             raise ContractError("boundary sample rate must be zero or between sample_hz and 1920")
+        if (self.handoff_phase_fraction is not None
+            and not 0 <= self.handoff_phase_fraction <= .25):
+            raise ContractError("airborne handoff phase must be within the first quarter cycle")
+        if self.handoff_phase_fraction is not None and not self.boundary_sample_hz:
+            raise ContractError("airborne handoff phase requires a boundary sample rate")
+        if ((self.handoff_phase_fraction is None) != (self.handoff_sample_hz is None)
+            or (self.handoff_sample_hz is not None
+                and (type(self.handoff_sample_hz) is not int
+                     or not self.boundary_sample_hz <= self.handoff_sample_hz <= 1920))):
+            raise ContractError("airborne handoff sampling requires a paired rate within the boundary envelope")
         if int(self.cycles) != self.cycles or self.cycles < 1 or int(self.sample_hz) != self.sample_hz or self.sample_hz < 24:
             raise ContractError("cycles and sample_hz must be positive integers; sample_hz >= 24")
 
@@ -157,6 +172,18 @@ def _smooth(x: float) -> float:
 def _smooth_derivatives(x: float) -> tuple[float, float, float]:
     x = max(0.0, min(1.0, x))
     return _smooth(x), 30 * x * x * (1 - x) ** 2, 60 * x * (1 - x) * (1 - 2 * x)
+
+
+def sampled_handoff_phase(gait: Any) -> float | None:
+    """Resolve the gait-owned interface on its unchanged base sampling clock."""
+    fraction = gait.handoff_phase_fraction
+    if fraction is None:
+        return None
+    period = 2 * gait.step_period_s
+    duration = gait.cycles * period
+    count = math.ceil(duration * gait.sample_hz)
+    dt = duration / count
+    return round(fraction * period / dt) * dt
 
 
 def continuous_body_timing(gait: AirborneGait) -> tuple[float, float]:
@@ -317,6 +344,12 @@ def build_airborne_plan(gait: AirborneGait, body_height_m: float) -> dict[str, A
         boundaries = {0., duration}
         for i in range(2*gait.cycles):
             boundaries.update((i*gait.step_period_s, (i+1-gait.flight_fraction)*gait.step_period_s))
+        interface = sampled_handoff_phase(gait)
+        if interface is not None:
+            for cycle in range(gait.cycles):
+                handoff = interface + cycle * 2 * gait.step_period_s
+                times.update(handoff + k / gait.handoff_sample_hz for k in range(-4, 5)
+                             if 0 <= handoff + k / gait.handoff_sample_hz <= duration)
         for boundary in boundaries:
             times.update(boundary+k/gait.boundary_sample_hz for k in range(-4,5)
                          if 0 <= boundary+k/gait.boundary_sample_hz <= duration)
@@ -324,4 +357,4 @@ def build_airborne_plan(gait: AirborneGait, body_height_m: float) -> dict[str, A
     for time_s in sorted(times):
         if not unique_times or time_s - unique_times[-1] > 1e-7:
             unique_times.append(time_s)
-    return {"schema": "eonwild.motion.v9.airborne-gait-plan.v1", "program": "airborne_gait", "parameters": asdict(gait), "body_height_m": body_height_m, "step_period_s": gait.step_period_s, "same_foot_cycle_s": 2 * gait.step_period_s, "per_foot_duty_factor": gait.duty_factor, "flight_seconds_per_step": gait.flight_fraction * gait.step_period_s, "duration_s": duration, "root_motion_authority": True, "claims": "kinematic engineering candidate; no physical or biological claim", "samples": [sample_airborne_gait(gait, t, body_height_m) for t in unique_times]}
+    return {"schema": "eonwild.motion.v9.airborne-gait-plan.v1", "program": "airborne_gait", "parameters": gait_parameters(gait), "body_height_m": body_height_m, "step_period_s": gait.step_period_s, "same_foot_cycle_s": 2 * gait.step_period_s, "per_foot_duty_factor": gait.duty_factor, "flight_seconds_per_step": gait.flight_fraction * gait.step_period_s, "duration_s": duration, "root_motion_authority": True, "claims": "kinematic engineering candidate; no physical or biological claim", "samples": [sample_airborne_gait(gait, t, body_height_m) for t in unique_times]}

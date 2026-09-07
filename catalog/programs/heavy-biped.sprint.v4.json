@@ -15,6 +15,8 @@
     "flight_height_body_heights": 0.06,
     "foot_recovery_pitch_degrees": 0,
     "front_body_pitch_degrees": 10,
+    "handoff_phase_fraction": 0.125,
+    "handoff_sample_hz": 480,
     "head_stabilization_gain": 0.9,
     "hip_extension_limit_degrees": 45,
     "hip_flexion_limit_degrees": 80,

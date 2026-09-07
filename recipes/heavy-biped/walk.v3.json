@@ -18,7 +18,7 @@
   "program": "grounded_gait",
   "program_profile": {
     "path": "catalog/programs/heavy-biped.walk.v3.json",
-    "sha256": "38b636cd5e80c6b11d0c7c926b843484c978ee764882c802189b9b7056ec7d6f"
+    "sha256": "b2c92c2cc02584a09ca59f8238a00dbf63392b5e20306273c57b6420e6cb4262"
   },
   "rig": {
     "path": "catalog/rigs/heavy-biped.v9.json",

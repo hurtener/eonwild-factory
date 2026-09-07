@@ -18,7 +18,7 @@
   "program": "gait_transition",
   "program_profile": {
     "path": "catalog/programs/heavy-biped.start.v2.json",
-    "sha256": "d89927007c9982f148dcf866ca0c40994b8743cd1f4508c1c9206f03c0259e97"
+    "sha256": "062bc956067bdbc96ebd2901d5e657f36adf46ae34a126cfcea2aa1f7592b480"
   },
   "rig": {
     "path": "catalog/rigs/heavy-biped.v9.json",
@@ -38,6 +38,6 @@
   "version": 3,
   "gait_profile": {
     "path": "catalog/programs/heavy-biped.reverse-walk.v4.json",
-    "sha256": "43848e13d102af954adcf599ae865ddb6aacdd77811bd77a38f22d2a27df9333"
+    "sha256": "26f401d42baa65d205bac342dfa600b95bc8d61628ca1da9b8ac1c0a78c290c0"
   }
 }

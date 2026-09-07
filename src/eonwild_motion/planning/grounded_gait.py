@@ -13,7 +13,7 @@ import math
 from typing import Any, Mapping
 
 from ..errors import ContractError
-from .airborne_gait import rounded_swing_height
+from .airborne_gait import rounded_swing_height, sampled_handoff_phase
 from .foot_articulation import recovery_pitch
 from .parameters import gait_parameters
 
@@ -43,9 +43,14 @@ class GroundedGait:
     swing_hip_lift_degrees: float = 0.0
     rounded_swing_peak_fraction: float = 0.0
     centered_stance: bool = False
+    boundary_sample_hz: int = 0
+    handoff_phase_fraction: float | None = None
+    handoff_sample_hz: int | None = None
 
     def __post_init__(self) -> None:
         for key, value in asdict(self).items():
+            if key in ('handoff_phase_fraction', 'handoff_sample_hz') and value is None:
+                continue
             if key == 'centered_stance':
                 if type(value) is not bool:
                     raise ContractError('centered_stance must be boolean')
@@ -78,6 +83,19 @@ class GroundedGait:
             raise ContractError("grounded cycles must be a positive integer")
         if int(self.sample_hz) != self.sample_hz or self.sample_hz < 24:
             raise ContractError("grounded sample_hz must be an integer >=24")
+        if (type(self.boundary_sample_hz) is not int or self.boundary_sample_hz < 0
+            or (self.boundary_sample_hz and not self.sample_hz <= self.boundary_sample_hz <= 1920)):
+            raise ContractError("grounded boundary sample rate must be zero or between sample_hz and 1920")
+        if (self.handoff_phase_fraction is not None
+            and not 0 <= self.handoff_phase_fraction <= .25):
+            raise ContractError("grounded handoff phase must be within the first quarter cycle")
+        if self.handoff_phase_fraction is not None and not self.boundary_sample_hz:
+            raise ContractError("grounded handoff phase requires a boundary sample rate")
+        if ((self.handoff_phase_fraction is None) != (self.handoff_sample_hz is None)
+            or (self.handoff_sample_hz is not None
+                and (type(self.handoff_sample_hz) is not int
+                     or not self.boundary_sample_hz <= self.handoff_sample_hz <= 1920))):
+            raise ContractError("grounded handoff sampling requires a paired rate within the boundary envelope")
 
 
 def touchdown_reach(gait: GroundedGait, body_height_m: float) -> float:
@@ -145,8 +163,19 @@ def sample_grounded_gait(gait: GroundedGait, time_s: float, body_height_m: float
 def build_grounded_plan(gait: GroundedGait, body_height_m: float) -> dict[str, Any]:
     duration = 2 * gait.step_period_s * gait.cycles
     intervals = int(math.ceil(duration * gait.sample_hz))
+    times = {duration * i / intervals for i in range(intervals + 1)}
+    interface = sampled_handoff_phase(gait)
+    if interface is not None:
+        for cycle in range(gait.cycles):
+            boundary = interface + cycle * 2 * gait.step_period_s
+            times.update(boundary + k / gait.handoff_sample_hz for k in range(-4, 5)
+                         if 0 <= boundary + k / gait.handoff_sample_hz <= duration)
+    unique_times = []
+    for time_s in sorted(times):
+        if not unique_times or time_s - unique_times[-1] > 1e-7:
+            unique_times.append(time_s)
     return {"schema": "eonwild.motion.v9.contact-plan.v1", "program": "grounded_gait",
         "classification": "authored engineering contact plan; not force simulation",
         "body_height_m": body_height_m, "duration_s": duration,
         "same_foot_cycle_s": 2 * gait.step_period_s, "parameters": gait_parameters(gait),
-        "samples": [sample_grounded_gait(gait, duration * i / intervals, body_height_m) for i in range(intervals + 1)]}
+        "samples": [sample_grounded_gait(gait, time_s, body_height_m) for time_s in unique_times]}

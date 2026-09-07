@@ -18,7 +18,7 @@
   "program": "airborne_gait",
   "program_profile": {
     "path": "catalog/programs/heavy-biped.run.v4.json",
-    "sha256": "a19b8b9c211dfc92a13802016157ae33c4fc2910f686827e5bc619a45384fe0f"
+    "sha256": "b8d22b3d73f3388de4d2c55cb4a07a3f1fdf972b82914653ecd015df2f00267d"
   },
   "rig": {
     "path": "catalog/rigs/heavy-biped.v9.json",

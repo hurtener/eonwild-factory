@@ -15,8 +15,9 @@ import numpy as np
 
 from ..errors import ContractError
 from .swing_transport import transport_progress
-from .airborne_gait import AirborneGait, sample_airborne_gait
+from .airborne_gait import AirborneGait, sample_airborne_gait, sampled_handoff_phase
 from .grounded_gait import GroundedGait, sample_grounded_gait, smooth, touchdown_reach
+from .parameters import gait_parameters
 
 
 @dataclass(frozen=True)
@@ -31,6 +32,7 @@ class GaitTransition:
     minimum_swing_scale: float = .25
     support_placement: str = "instantaneous_speed"
     handoff_phase_fraction: float = 0.0
+    handoff_sample_hz: int | None = None
 
     def __post_init__(self):
         if self.kind not in ('start', 'stop'):
@@ -53,6 +55,10 @@ class GaitTransition:
             raise ContractError('unknown transition support placement')
         if not 0 <= self.handoff_phase_fraction <= .25:
             raise ContractError('handoff phase must be within the first quarter cycle')
+        if (self.handoff_sample_hz is not None
+            and (type(self.handoff_sample_hz) is not int
+                 or not self.boundary_sample_hz <= self.handoff_sample_hz <= 1920)):
+            raise ContractError('handoff sample rate must be within the boundary envelope')
 
 
 def load_gait_transition(document):
@@ -81,6 +87,11 @@ def declared_handoff_phase(transition: GaitTransition, gait) -> float:
     """
     if not isinstance(transition, GaitTransition) or not isinstance(gait, (GroundedGait, AirborneGait)):
         raise ContractError('handoff phase requires validated transition and gait profiles')
+    owned = sampled_handoff_phase(gait)
+    if owned is not None and transition.handoff_phase_fraction != gait.handoff_phase_fraction:
+        raise ContractError('transition handoff phase differs from the bound gait interface')
+    if owned is not None and transition.handoff_sample_hz != gait.handoff_sample_hz:
+        raise ContractError('transition handoff sample rate differs from the bound gait interface')
     period = 2 * gait.step_period_s
     count = math.ceil(gait.cycles * period * gait.sample_hz)
     dt = gait.cycles * period / count
@@ -258,6 +269,10 @@ def build_transition_plan(transition: GaitTransition, gait, body_height_m):
         times.add(boundary)
         times.update(boundary + k / transition.boundary_sample_hz for k in range(-2, 3)
                      if 0 <= boundary + k / transition.boundary_sample_hz <= c.duration)
+    if transition.handoff_sample_hz is not None and c.join_phase:
+        handoff = c.duration if c.start else 0.
+        times.update(handoff + k / transition.handoff_sample_hz for k in range(-2, 3)
+                     if 0 <= handoff + k / transition.handoff_sample_hz <= c.duration)
     ordered = []
     for time in sorted(times):
         if not ordered or time - ordered[-1] > 1e-7:
@@ -271,7 +286,7 @@ def build_transition_plan(transition: GaitTransition, gait, body_height_m):
     return {'schema': 'eonwild.motion.v9.contact-plan.v1', 'program': 'gait_transition',
         'locomotion_program': 'grounded_gait' if c.grounded else 'airborne_gait', 'loop': False,
         'body_height_m': float(body_height_m), 'duration_s': c.duration, 'same_foot_cycle_s': c.period,
-        'parameters': asdict(gait), 'transition_parameters': asdict(transition), 'samples': rows, 'events': cues,
+        'parameters': gait_parameters(gait), 'transition_parameters': asdict(transition), 'samples': rows, 'events': cues,
         'transition_contract': {'kind': transition.kind, 'entry_speed_mps': entry_speed, 'exit_speed_mps': exit_speed,
             'entry_pose': 'calibrated_ready' if c.start else ('locomotion_declared_phase' if c.join_phase else 'locomotion_phase_zero'),
             'exit_pose': ('locomotion_declared_phase' if c.join_phase else 'locomotion_phase_zero') if c.start else 'calibrated_ready',
