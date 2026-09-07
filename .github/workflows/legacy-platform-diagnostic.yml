@@ -1,13 +1,13 @@
-name: Resolve exact remaining locomotion and feeding witnesses
+name: Geometry-constrained posture admission
 on:
   push:
     branches: [diag/v9-legacy-reproduction-20260907]
 permissions:
   contents: read
 jobs:
-  limb-envelope:
+  gait-posture:
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix: {recipe: [run.v3, sprint.v3]}
@@ -18,57 +18,38 @@ jobs:
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with: {python-version: '3.13'}
       - run: python -m pip install -e .
-      - run: python tools/diagnose_limb_envelope.py --recipe "recipes/heavy-biped/$RECIPE.json" --output "out/envelope/$RECIPE"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        if: always()
-        with:
-          name: limb-envelope-${{ matrix.recipe }}
-          path: out/envelope
-          retention-days: 14
-  feeding-candidate:
-    permissions: {contents: write}
-    runs-on: ubuntu-24.04
-    timeout-minutes: 15
-    env: {PYTHONPATH: src, OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '2', GH_TOKEN: '${{ github.token }}'}
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-        with: {fetch-depth: 1, persist-credentials: false, show-progress: false}
-      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
-        with: {python-version: '3.13'}
-      - run: python -m pip install -e .
-      - name: Stage measured feeding brace and check final emitted support/grip
+      - name: Measure braced posture using the existing limb limits and unchanged stride
         shell: python
         run: |
-          import json,pathlib,hashlib,subprocess,sys
-          from eonwild_motion.factory.compiler import compile_recipe,verify_package
-          from eonwild_motion.factory.io import digest,json_bytes
-          root=pathlib.Path.cwd()
-          profile=json.loads((root/'catalog/programs/heavy-biped.feeding.v1.json').read_text())
-          profile['support_reach_body_heights']=[-.08,.18]
-          profile['reference_basis']='V9 Feeding003 performance; support brace admitted inside unchanged limb limits after measured posture sweep'
-          target=root/'catalog/programs/heavy-biped.feeding.v2.json'
-          target.write_text(json.dumps(profile,indent=2,sort_keys=True)+'\n')
-          recipe=json.loads((root/'recipes/heavy-biped/feeding.v1.json').read_text())
-          recipe.update(id='heavy-biped.feeding.v2',version=2,supersedes='heavy-biped.feeding.v1',description='Supported grip/pull/release with feasible body-normalized bracing; final skin and oral constraints mandatory')
-          recipe['program_profile']={'path':str(target.relative_to(root)),'sha256':digest(target.read_bytes())}
-          recipe_path=root/'recipes/heavy-biped/feeding.v2.json'
-          recipe_path.write_text(json.dumps(recipe,indent=2,sort_keys=True)+'\n')
-          for path in (target,recipe_path):
-              response=subprocess.run(['gh','api','repos/hurtener/eonwild-factory/git/blobs','--method','POST','--input','-'],
-                  input=json.dumps({'content':path.read_text(),'encoding':'utf-8'}),text=True,capture_output=True,check=True)
-              print('FEEDING_VERSIONED_INPUT '+json.dumps({'path':str(path.relative_to(root)),'blob':json.loads(response.stdout)['sha'],'sha256':digest(path.read_bytes())}),flush=True)
-          output=root/'out/feeding.v2'
-          compile_recipe(recipe_path,root=root,output=output)
-          result=verify_package(output);validation=json.loads((output/'validation.json').read_text())
-          print('FEEDING_V2_ACCEPTANCE '+json.dumps(result),flush=True)
-          print('FEEDING_V2_VALIDATION '+json.dumps(validation),flush=True)
-          if result['technical_status']!='PASS':sys.exit(2)
+          import json,pathlib,os,numpy as np
+          from dataclasses import replace
+          from eonwild_motion.factory.compiler import load_recipe
+          from eonwild_motion.factory.source import geometry_height
+          from eonwild_motion.glb.container import Glb
+          from eonwild_motion.planning.airborne_gait import load_airborne_gait,build_airborne_plan
+          from eonwild_motion.solve.airborne_gait import solve_airborne_gait
+          from eonwild_motion.solve.performance import load_performance,decorate_plan
+          root=pathlib.Path.cwd();name=os.environ['RECIPE'];recipe,paths=load_recipe(root/f'recipes/heavy-biped/{name}.json',root)
+          source=Glb.from_bytes(paths['source'].read_bytes());roles=json.loads(paths['rig'].read_text())['roles']
+          height=geometry_height(source,roles,recipe['up_axis']);base=load_airborne_gait(json.loads(paths['program_profile'].read_text()))
+          performance=load_performance(json.loads(paths['performance_profile'].read_text()))
+          results=[]
+          for crouch in (.06,.12,.18,.24):
+              for reach in (.40,.52,.64):
+                  gait=replace(base,pelvis_crouch_body_heights=crouch,touchdown_reach_body_heights=reach,cycles=1,sample_hz=24,boundary_sample_hz=0)
+                  plan=decorate_plan(build_airborne_plan(gait,height),performance)
+                  _,_,_,receipt=solve_airborne_gait(source,source_clip=None,semantic_roles=roles,gait=gait,
+                      up_axis=recipe['up_axis'],forward_axis=recipe['forward_axis'],plan_override=plan,legacy_overlay=False)
+                  row={'crouch':crouch,'reach':reach,'step_length_body_heights':base.step_length_body_heights,
+                      'extension_m':receipt['max_unreachable_extension_m'],'envelope_degrees':receipt['maximum_articulation_envelope_violation_degrees'],
+                      'residual_m':receipt['max_foot_target_residual_m']}
+                  results.append(row);print('POSTURE_ADMISSION '+name+' '+json.dumps(row),flush=True)
+          output=root/'out/posture'/name;output.mkdir(parents=True,exist_ok=False)
+          (output/'results.json').write_text(json.dumps(results,indent=2)+'\n')
+          print('NOTE coarse geometric admission is not final skin/velocity/visual acceptance',flush=True)
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
-          name: feeding-v2-candidate
-          path: |
-            out/feeding.v2
-            catalog/programs/heavy-biped.feeding.v2.json
-            recipes/heavy-biped/feeding.v2.json
+          name: gait-posture-${{ matrix.recipe }}
+          path: out/posture
           retention-days: 14
