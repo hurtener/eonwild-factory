@@ -1,8 +1,10 @@
 """Grounded alternating support with independently authored digitigrade recovery.
 
 Distances are body-height normalized. The support schedule belongs to this
-program; articulation is emitted by the same rotation-only V9 limb solver as
-running. Zero articulation settings preserve the original reverse-walk recipe.
+program; articulation is emitted by the shared rotation-only V9 limb solver.
+The optional centered placement coordinates touchdown with distance traveled
+DURING stance; increasing stride no longer leaves almost all reach behind the
+body. Old fixed-reach recipes retain their exact choreography.
 """
 from __future__ import annotations
 
@@ -36,10 +38,14 @@ class GroundedGait:
     push_off_start_fraction: float = 0.60
     swing_hip_lift_degrees: float = 0.0
     rounded_swing_peak_fraction: float = 0.0
+    centered_stance: bool = False
 
     def __post_init__(self) -> None:
         for key, value in asdict(self).items():
-            if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+            if key == 'centered_stance':
+                if type(value) is not bool:
+                    raise ContractError('centered_stance must be boolean')
+            elif isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
                 raise ContractError(f"grounded gait {key} must be finite numeric")
         if self.step_period_s <= 0 or not 0.5 < self.duty_factor < 1:
             raise ContractError("grounded walking requires positive timing and double support")
@@ -62,6 +68,18 @@ class GroundedGait:
             raise ContractError("grounded sample_hz must be an integer >=24")
 
 
+def touchdown_reach(gait: GroundedGait, body_height_m: float) -> float:
+    """Signed reach at touchdown, used by steady gait AND its transitions.
+
+    Centered mode derives half of stance travel from the bounded stride and
+    duty. The fixed-reach parameter is used only in the legacy placement mode.
+    This is choreography, not a relaxation of any anatomical/contact gate.
+    """
+    if gait.centered_stance:
+        return gait.step_length_body_heights * gait.duty_factor * body_height_m
+    return math.copysign(gait.touchdown_reach_body_heights * body_height_m, gait.step_length_body_heights)
+
+
 def load_grounded_gait(document: Mapping[str, Any]) -> GroundedGait:
     if document.get("schema") != "eonwild.motion.v9.grounded-gait.v1":
         raise ContractError("unsupported grounded gait schema")
@@ -76,7 +94,7 @@ def sample_grounded_gait(gait: GroundedGait, time_s: float, body_height_m: float
         raise ContractError("grounded sampling requires finite time and positive height")
     period = 2 * gait.step_period_s
     velocity = gait.step_length_body_heights * body_height_m / gait.step_period_s
-    reach = math.copysign(gait.touchdown_reach_body_heights * body_height_m, velocity)
+    reach = touchdown_reach(gait, body_height_m)
     feet = {}
     for side, offset in (("left", 0.0), ("right", gait.step_period_s)):
         phase = ((time_s - offset) / period) % 1
@@ -90,8 +108,6 @@ def sample_grounded_gait(gait: GroundedGait, time_s: float, body_height_m: float
             flex = 0.0
             height = 0.0
         else:
-            # Unload/roll, fold the digitigrade ankle in early recovery, then
-            # extend before touchdown. Both boundaries match stance, C2.
             recovery = math.sin(math.pi * smooth(swing)) ** 2
             pitch = gait.push_off_pitch_degrees * (1 - smooth(swing / .35)) - gait.foot_recovery_pitch_degrees * recovery
             flex = gait.toe_flex_degrees * recovery
