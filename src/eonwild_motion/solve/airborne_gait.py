@@ -369,10 +369,16 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
         for side, chain in legs.items():
             hip, knee, ankle, foot = chain
             foot_plan = row["feet"][side]
+            material_partition = "performance" in plan
+            swing_phase = foot_plan["swing_phase"]
+            support_lock = (1.0 if foot_plan["contact"] else
+                            1 - _smooth(min(swing_phase, 1 - swing_phase) / .18))
             for toe_chain in toes[side]:
                 for index, n in enumerate(toe_chain):
                     axis = _qrotate(_qinv(_rotation_from_matrix(base_w[n])), tuple(lateral))
                     flex = foot_plan["toe_flex_degrees"] * (0.45 if index == 0 else 0.275)
+                    if material_partition:
+                        flex *= 1 - support_lock
                     rot[n] = _qmul(base_r[n], _qrotvec(tuple(np.asarray(axis) * math.radians(flex))))
             w = _world_matrices(source, tr, rot, base_s)
             hp, kp, ap, fp = (np.asarray(_world_position(w[n])) for n in chain)
@@ -417,9 +423,10 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
 
             def pitch_candidate(degrees):
                 candidate_q = _qrotvec(tuple(lateral * math.radians(degrees)))
-                candidate_foot = nominal_foot + initial_tip_offset - np.asarray(_qrotate(candidate_q, tuple(flexed_tip_offset)))
+                candidate_foot = (nominal_foot.copy() if material_partition else
+                                  nominal_foot + initial_tip_offset - np.asarray(_qrotate(candidate_q, tuple(flexed_tip_offset))))
                 rotated_roots = [(np.asarray(_qrotate(candidate_q, tuple(offset))), tip, reach) for offset, tip, reach in toe_geometry]
-                for _ in range((48 if "performance" in plan else 18) if lock > 1e-12 else 0):
+                for _ in range(18 if not material_partition and lock > 1e-12 else 0):
                     largest_correction = 0.0
                     for offset, tip, reach in rotated_roots:
                         delta = tip - (candidate_foot + offset)
@@ -461,7 +468,10 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
             candidates.append(pitch_candidate(float(np.clip(foot_plan["foot_pitch_degrees"], lo, hi))))
             best = min(candidates, key=lambda candidate: candidate[0])
             step = (hi - lo) / 52
-            for _ in range(7):
+            # Resolve the actual articulation more accurately, rather than
+            # filtering serialized rotations after contact validation. The
+            # old reproduction path retains its exact seven refinements.
+            for _ in range(14 if material_partition else 7):
                 best = min([best, pitch_candidate(max(lo, best[-1] - step)), pitch_candidate(min(hi, best[-1] + step))], key=lambda candidate: candidate[0])
                 step *= .5
             _, pitch, desired_foot, target, desired_knee, desired_end, extension, envelope_error, solved_pitch = best
@@ -481,10 +491,27 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
             desired_ankle_q = _qmul(pitch, _rotation_from_matrix(base_w[ankle]))
             rot[ankle] = _world_rotation(source, w, ankle, desired_ankle_q)
             w = _world_matrices(source, tr, rot, base_s)
+            if material_partition:
+                # The ankle/metatarsal is NOT the contact pad. Articulate it
+                # around the stationary foot root while the MTP joint keeps
+                # the load-bearing pad and digits in their calibrated frame.
+                # Release that frame C2 during swing, allowing authored fold
+                # and digit flex. No per-bone translation/scale is introduced.
+                free_pitch = _qrotvec(tuple(lateral * math.radians(solved_pitch * (1 - support_lock))))
+                foot_world = _qmul(free_pitch, _rotation_from_matrix(base_w[foot]))
+                rot[foot] = _world_rotation(source, w, foot, foot_world)
+                w = _world_matrices(source, tr, rot, base_s)
             # During contact each distal digit endpoint stays independently
             # planted. A centroid alone can hide one penetrating toe. Release
             # these constraints smoothly after lift and restore before land.
             for tc in toes[side]:
+                if material_partition:
+                    # Calibrated FK, not a nearly straight two-link toe IK:
+                    # at full support the fixed foot frame plus zero local
+                    # flex makes EVERY toe landmark stationary. During swing
+                    # the existing bounded flex is explicit choreography.
+                    # Final material-point and skeleton checks remain required.
+                    continue
                 if len(tc) != 3:
                     raise ContractError("airborne digit endpoint solve requires three-node toe chains")
                 a, b, c = tc
