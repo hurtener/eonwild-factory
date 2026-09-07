@@ -69,7 +69,7 @@ jobs:
       fail-fast: false
       max-parallel: 3
       matrix:
-        recipe: [tarbosaurus-pin-552-1-adult-walk.v1, sprint.v4, fast-walk.v2, sprint-start.v3, sprint-stop.v3, run-start.v3, run-stop.v3, walk-start.v3, walk-stop.v3, reverse-walk-start.v3, reverse-walk-stop.v3]
+        recipe: [tarbosaurus-pin-552-1-adult-walk.v1, walk.v3, reverse-walk.v4, sprint.v4, fast-walk.v2, sprint-start.v3, sprint-stop.v3, run-start.v3, run-stop.v3, walk-start.v3, walk-stop.v3, reverse-walk-start.v3, reverse-walk-stop.v3]
     env: {PYTHONPATH: src, OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '2', RECIPE: '${{ matrix.recipe }}'}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
