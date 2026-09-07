@@ -15,7 +15,17 @@ from test_v9_airborne_gait import fixture
 
 
 @pytest.mark.parametrize('travel',[.18,-.18])
-def test_stance_pad_and_digits_are_fixed_while_metatarsal_articulates(travel):
+def test_stance_pad_and_digits_are_fixed_while_metatarsal_articulates(travel, monkeypatch):
+    import importlib
+    solver_module = importlib.import_module('eonwild_motion.solve.airborne_gait')
+    original_recovery = solver_module._recovery_pitch_target
+    recovery_modes = []
+
+    def observe_recovery(gait, foot_plan, *, airborne):
+        recovery_modes.append(airborne)
+        return original_recovery(gait, foot_plan, airborne=airborne)
+
+    monkeypatch.setattr(solver_module, '_recovery_pitch_target', observe_recovery)
     source,roles=fixture()
     height=1.0
     plan=build_grounded_plan(GroundedGait(step_length_body_heights=travel,
@@ -50,6 +60,7 @@ def test_stance_pad_and_digits_are_fixed_while_metatarsal_articulates(travel):
         assert pairs>2
         pitch=[row['feet'][side]['solved_foot_pitch_degrees'] for row in receipt['emitted_proxy_samples']]
         assert np.ptp(pitch)>1
+    assert recovery_modes and not any(recovery_modes)
 
 
 def test_no_nearly_straight_toe_projection_in_new_material_partition():
@@ -58,7 +69,7 @@ def test_no_nearly_straight_toe_projection_in_new_material_partition():
     import inspect
     body=inspect.getsource(solve_airborne_gait)
     assert 'rot[foot] = _world_rotation' in body
-    assert '14 if material_partition else 7' in body
+    assert 'for _ in range(18 if not material_partition' in body
 
 
 def test_same_authored_phase_is_independent_of_prior_sampling_history():

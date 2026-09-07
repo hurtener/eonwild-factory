@@ -510,7 +510,11 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
                 preferred = sum(max(0, margin - slack) ** 4 / (margin * margin) for slack in slacks) if margin else 0.0
                 pitch_target = _recovery_pitch_target(
                     gait, foot_plan,
-                    airborne="flight_fraction" in plan.get("parameters", {}),
+                    # The recovery carrier coordinates the airborne material
+                    # partition. Grounded performance and legacy reproduction
+                    # retain their authored pitch target.
+                    airborne=(material_partition
+                              and "flight_fraction" in plan.get("parameters", {})),
                 )
                 score = (degrees - pitch_target) ** 2 + recovery * (hip_angle - hip_target) ** 2 + recovery * gait.articulation_preferred_margin_weight * preferred + 1e5 * sum(e * e for e in errors) + 1e8 * extension * extension
                 return score, candidate_q, candidate_foot, target_ankle, candidate_knee, candidate_end, extension, max(errors), degrees
@@ -535,7 +539,7 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
             # Resolve the actual articulation more accurately, rather than
             # filtering serialized rotations after contact validation. The
             # old reproduction path retains its exact seven refinements.
-            for _ in range(14 if material_partition else 7):
+            for _ in range(22 if material_partition else 7):
                 best = min([best, pitch_candidate(max(lo, best[-1] - step)), pitch_candidate(min(hi, best[-1] + step))], key=lambda candidate: candidate[0])
                 step *= .5
             _, pitch, desired_foot, target, desired_knee, desired_end, extension, envelope_error, solved_pitch = best
