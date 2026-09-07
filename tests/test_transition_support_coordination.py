@@ -118,12 +118,12 @@ def test_bound_gait_rejects_a_transition_with_a_different_interface_rate():
 
 def test_phase_zero_interface_keeps_requested_dense_transition_context():
     bound = GroundedGait(cycles=1, sample_hz=120,
-        handoff_phase_fraction=0, handoff_sample_hz=480)
+        handoff_phase_fraction=0, handoff_sample_hz=960)
     transition = GaitTransition('stop', handoff_phase_fraction=0,
-        handoff_sample_hz=480)
+        boundary_sample_hz=480, handoff_sample_hz=960)
     plan = build_transition_plan(transition, bound, 2.0)
     times = np.asarray([row['time_s'] for row in plan['samples'][:3]])
-    assert np.diff(times) == pytest.approx([1 / 480, 1 / 480])
+    assert np.diff(times) == pytest.approx([1 / 960, 1 / 960])
 
 
 def test_absent_interface_fields_preserve_legacy_plan_parameters():
