@@ -70,6 +70,26 @@ def semantic_root(objects: list, runtime: dict):
     raise ValueError(f"cannot uniquely resolve connected semantic root {name!r}")
 
 
+def declared_armature(objects: list, runtime: dict):
+    """Resolve the one armature that owns the declared semantic root."""
+    name = runtime.get("rig_roles", {}).get("root")
+    matches = [obj for obj in objects if obj.type == "ARMATURE" and name in obj.pose.bones]
+    if len(matches) != 1:
+        raise ValueError(f"cannot uniquely resolve armature for connected root {name!r}")
+    return matches[0]
+
+
+def bound_to_armature(mesh, armature) -> bool:
+    if any(modifier.type == "ARMATURE" and modifier.object == armature for modifier in mesh.modifiers):
+        return True
+    parent = mesh.parent
+    while parent is not None:
+        if parent == armature:
+            return True
+        parent = parent.parent
+    return False
+
+
 def mesh_geometry_digest(obj) -> str:
     """Hash imported shape, topology, UVs and skin weights independent of names."""
     digest = hashlib.sha256()
@@ -100,6 +120,11 @@ def import_source(package: Path, mode: str, runtime: dict, plan: dict, index: in
     meshes = [obj for obj in objects if obj.type == "MESH"]
     if not meshes or not any(obj.type == "ARMATURE" for obj in objects):
         raise ValueError(f"connected source import has no rigged mesh: {package}")
+    armature = declared_armature(objects, runtime)
+    framing_meshes = [obj for obj in meshes if bound_to_armature(obj, armature)]
+    if not framing_meshes:
+        raise ValueError(f"connected source has no mesh bound to its declared armature: {package}")
+    auxiliary_meshes = [obj for obj in meshes if obj not in framing_meshes]
     action_fps = bpy.context.scene.render.fps / bpy.context.scene.render.fps_base
     start = min(float(action.frame_range[0]) for action in actions)
     end = max(float(action.frame_range[1]) for action in actions)
@@ -123,6 +148,8 @@ def import_source(package: Path, mode: str, runtime: dict, plan: dict, index: in
         "plan": plan,
         "objects": objects,
         "meshes": meshes,
+        "framing_meshes": framing_meshes,
+        "auxiliary_meshes": auxiliary_meshes,
         "parent": parent,
         "root_position": root_position,
         "clock": clock,
@@ -241,7 +268,7 @@ def main() -> None:
         max_root_error = max(max_root_error, abs(actual - declared))
         shift = root - initial_root
         deps = bpy.context.evaluated_depsgraph_get()
-        for obj in source["meshes"]:
+        for obj in source["framing_meshes"]:
             evaluated = obj.evaluated_get(deps)
             points.extend(evaluated.matrix_world @ Vector(corner) - shift for corner in evaluated.bound_box)
     if max_root_error > 0.002:
@@ -398,12 +425,21 @@ def main() -> None:
         "verified_encoded_frames": int(probe["nb_read_frames"]),
         "source_clocks": [{"package": str(source["package"]), **source["clock"].receipt()}
                           for source in packages.values()],
+        "camera_extent_sources": [{
+            "package": str(source["package"]),
+            "declared_armature_meshes": [obj.name for obj in source["framing_meshes"]],
+            "auxiliary_meshes_excluded_from_camera_extent": [obj.name for obj in source["auxiliary_meshes"]],
+            "rendered_mesh_count": len(source["meshes"]),
+            "camera_extent_mesh_count": len(source["framing_meshes"]),
+            "excluded_auxiliary_mesh_count": len(source["auxiliary_meshes"]),
+        } for source in packages.values()],
         "declared_duration_s": float(schedule["duration_s"]), "encoded_duration_s": len(timeline) / args.fps,
         "timing": "fixed-rate review frames evaluate immutable source seconds on [0,duration); exact joins and one-shot terminal rendered separately",
         "segment_policy": "direct immutable source intervals; no NLA, repeat strip, retime, blend, fitted or copied boundary",
         "root_policy": "constant cumulative declared offset for root motion; declared motor trajectory reconstruction for in-place",
         "maximum_declared_root_error_m": max_root_error,
         "mode": args.mode, "view": args.view, "focus": "body", "camera": spec,
+        "camera_extent_policy": "fit meshes bound to the declared armature; preserve and render auxiliary source geometry",
         "segments": [{key: row[key] for key in ("label", "package", "source_start_s", "source_end_s",
             "timeline_start_s", "timeline_end_s", "root_motion_parent_offset_m", "world_root_start_m", "world_root_end_m")}
             for row in segments],
