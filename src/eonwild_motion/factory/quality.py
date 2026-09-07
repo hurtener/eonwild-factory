@@ -8,6 +8,117 @@ import numpy as np
 
 from ..errors import ContractError
 from ..glb.container import Glb
+from ..layers.leg_contact_resolve_v3 import _clip_state, _pose, _world_matrices, _world_position
+from ..planning.articulation_profile import ArticulationProfile
+
+
+def emitted_articulation_envelopes(
+    glb: Glb,
+    *,
+    semantic_roles: Mapping[str, Any],
+    plan: Mapping[str, Any],
+    profile: ArticulationProfile,
+    forward_axis: Any,
+    up_axis: Any,
+    tolerance_degrees: float = 0.01,
+) -> dict[str, Any]:
+    """Measure bound scalar guardrails on the reopened serialized animation."""
+    if not isinstance(profile, ArticulationProfile):
+        raise ContractError("final articulation check requires a validated profile")
+    if not math.isfinite(tolerance_degrees) or tolerance_degrees < 0:
+        raise ContractError("articulation tolerance must be finite and non-negative")
+    try:
+        legs = {side: [glb.name_to_node[name] for name in semantic_roles["legs"][side]["contactChain"]]
+                for side in ("left", "right")}
+    except (KeyError, TypeError) as exc:
+        raise ContractError("final articulation check requires complete semantic legs") from exc
+    if any(len(chain) != 4 for chain in legs.values()):
+        raise ContractError("final articulation check requires hip/knee/ankle/foot chains")
+    animations = glb.document.get("animations", [])
+    if len(animations) != 1 or not isinstance(animations[0].get("name"), str):
+        raise ContractError("final articulation check requires one named animation")
+    tracks, times = _clip_state(glb, animations[0]["name"])
+    rows = plan.get("samples")
+    if not isinstance(rows, list) or len(rows) != len(times) or not np.allclose(
+        times, [row["time_s"] for row in rows], rtol=0, atol=2e-6
+    ):
+        raise ContractError("final articulation timeline differs from the plan")
+    forward = np.asarray(forward_axis, dtype=float)
+    up = np.asarray(up_axis, dtype=float)
+    if (forward.shape != (3,) or up.shape != (3,) or not np.isfinite(forward).all()
+            or not np.isfinite(up).all() or np.linalg.norm(forward) < 1e-10
+            or np.linalg.norm(up) < 1e-10 or abs(float(forward @ up)) > 1e-6):
+        raise ContractError("final articulation axes are invalid")
+    forward /= np.linalg.norm(forward)
+    up /= np.linalg.norm(up)
+
+    def unit(vector: np.ndarray) -> np.ndarray:
+        length = float(np.linalg.norm(vector))
+        if not np.isfinite(vector).all() or not math.isfinite(length) or length < 1e-10:
+            raise ContractError("final articulation contains a degenerate segment")
+        return vector / length
+
+    def interior(a: np.ndarray, b: np.ndarray) -> float:
+        return math.degrees(math.acos(float(np.clip(unit(a) @ unit(b), -1, 1))))
+
+    maximum = 0.0
+    witness = None
+    counts = {"support": 0, "swing": 0}
+    observed = {phase: {joint: [math.inf, -math.inf]
+                        for joint in profile.support}
+                for phase in counts}
+    preferred_departure = 0.0
+    for index, (time_s, row) in enumerate(zip(times, rows)):
+        worlds = _world_matrices(glb, *_pose(glb, tracks, index))
+        for side, (hip, knee, ankle, foot) in legs.items():
+            hp, kp, ap, fp = (np.asarray(_world_position(worlds[node]))
+                              for node in (hip, knee, ankle, foot))
+            angles = {
+                "hip_sagittal_degrees": math.degrees(math.atan2(
+                    float((kp - hp) @ forward), -float((kp - hp) @ up))),
+                "knee_interior_degrees": interior(hp - kp, ap - kp),
+                "ankle_interior_degrees": interior(kp - ap, fp - ap),
+            }
+            if not all(math.isfinite(value) for value in angles.values()):
+                raise ContractError("final articulation contains a non-finite angle")
+            contact = row["feet"][side]["contact"]
+            if type(contact) is not bool:
+                raise ContractError("final articulation contact state must be boolean")
+            phase_name = "support" if contact else "swing"
+            counts[phase_name] += 1
+            for joint, angle in angles.items():
+                observed[phase_name][joint][0] = min(observed[phase_name][joint][0], angle)
+                observed[phase_name][joint][1] = max(observed[phase_name][joint][1], angle)
+                envelope = profile.effective(
+                    contact=contact, swing_phase=row["feet"][side]["swing_phase"])[joint]
+                violation = max(envelope.hard_min_deg - angle,
+                                angle - envelope.hard_max_deg, 0.0)
+                preferred_departure = max(
+                    preferred_departure,
+                    max(envelope.preferred_min_deg - angle,
+                        angle - envelope.preferred_max_deg, 0.0),
+                )
+                if violation > maximum:
+                    maximum = violation
+                    witness = {"time_s": float(time_s), "sample_index": index,
+                               "side": side, "phase": phase_name, "joint": joint,
+                               "angle_degrees": angle,
+                               "hard_degrees": [envelope.hard_min_deg, envelope.hard_max_deg]}
+    return {
+        "status": "PASS" if maximum <= tolerance_degrees else "FAIL",
+        "maximum_violation_degrees": maximum,
+        "tolerance_degrees": tolerance_degrees,
+        "maximum_preferred_departure_degrees": preferred_departure,
+        "witness": witness,
+        "phase_sample_counts": counts,
+        "observed_degrees": {
+            phase: {joint: values if math.isfinite(values[0]) else None
+                    for joint, values in joints.items()}
+            for phase, joints in observed.items()
+        },
+        "profile": profile.receipt(),
+        "classification": "reopened scalar engineering guardrails; not biological ROM or 6DoF joint validation",
+    }
 
 
 def require_supported_geometry(source: Glb) -> None:

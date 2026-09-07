@@ -236,7 +236,7 @@ def _cyclic_fill(times, values, loaded, *, loop=True):
     return result
 
 
-def solve_with_skin_targets(source, *, semantic_roles, gait, up_axis, forward_axis, plan, contact_profile, iterations=7):
+def solve_with_skin_targets(source, *, semantic_roles, gait, up_axis, forward_axis, plan, contact_profile, iterations=7, articulation_profile=None):
     from .airborne_gait import solve_airborne_gait
     if type(iterations) is not int or iterations < 0:
         raise ContractError('skin refinement iterations must be a non-negative integer')
@@ -266,7 +266,7 @@ def solve_with_skin_targets(source, *, semantic_roles, gait, up_axis, forward_ax
                 row['feet'][side]['target_offset_m'] = offsets[side][i].tolist()
         root_raw, inplace_raw, _, receipt = solve_airborne_gait(source, source_clip=None,
             semantic_roles=semantic_roles, gait=gait, up_axis=tuple(up), forward_axis=tuple(forward),
-            plan_override=current, legacy_overlay=False)
+            plan_override=current, legacy_overlay=False, articulation_profile=articulation_profile)
         frames, _ = skin_frames(Glb.from_bytes(root_raw), contact_profile)
         times, _ = _validate_skin_samples(frames, current)
         maximum_loaded_error = maximum_swing_error = 0.0

@@ -23,7 +23,8 @@ from ..planning.grounded_gait import build_grounded_plan, load_grounded_gait
 from ..solve.airborne_gait import solve_airborne_gait, evaluate_airborne_skin_with_authority
 from ..solve.whole_body_gait_transition import _encode
 from .io import digest, frame_axes, json_bytes, locked_file, read_json, write_json
-from .quality import emitted_rotation_rates, emitted_cyclic_continuity, require_supported_geometry, solver_checks
+from .quality import (emitted_articulation_envelopes, emitted_rotation_rates,
+                      emitted_cyclic_continuity, require_supported_geometry, solver_checks)
 from .source import geometry_height
 from .animal import (apply_uniform_geometry_scale,biomechanics_report,
     load_animal_instance,scaled_contact_profile,verify_source_calibration)
@@ -31,6 +32,7 @@ from ..solve.performance import load_performance, decorate_plan
 from ..solve.skin_targets import solve_with_skin_targets, evaluate_skin
 from ..planning.supported_action import load_supported_action
 from ..planning.gait_transition import load_gait_transition, build_transition_plan
+from ..planning.articulation_profile import load_articulation_profile
 from ..solve.supported_action import solve_supported_action
 from ..solve.gaze import calibrate_rostral_direction
 
@@ -41,7 +43,7 @@ PROGRAMS = ("airborne_gait", "grounded_gait", "supported_action", "gait_transiti
 def load_recipe(path: Path, root: Path) -> tuple[dict, dict[str, Path]]:
     recipe = read_json(path)
     required = {"schema", "id", "version", "family", "program", "source", "rig", "program_profile", "forward_axis", "up_axis"}
-    if not isinstance(recipe, dict) or set(recipe) - required - {"animal", "contact_profile", "performance_profile", "gait_profile", "description", "supersedes"} or not required <= set(recipe):
+    if not isinstance(recipe, dict) or set(recipe) - required - {"animal", "contact_profile", "performance_profile", "gait_profile", "articulation_profile", "description", "supersedes"} or not required <= set(recipe):
         raise ContractError("recipe contains missing or unknown fields")
     if recipe["schema"] != SCHEMA or recipe["program"] not in PROGRAMS:
         raise ContractError("unsupported recipe schema or program")
@@ -57,6 +59,10 @@ def load_recipe(path: Path, root: Path) -> tuple[dict, dict[str, Path]]:
         paths["contact_profile"] = locked_file(root, recipe["contact_profile"])
     if "performance_profile" in recipe:
         paths["performance_profile"] = locked_file(root, recipe["performance_profile"])
+    if "articulation_profile" in recipe:
+        if recipe["program"] == "supported_action":
+            raise ContractError("supported actions retain their own support limits")
+        paths["articulation_profile"] = locked_file(root, recipe["articulation_profile"])
     if "gait_profile" in recipe:
         if recipe["program"] != "gait_transition":
             raise ContractError("only gait transitions accept a separate locomotion profile")
@@ -212,6 +218,8 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
         contact_profile = scaled_contact_profile(contact_profile,animal["uniform_scale"])
         require_supported_geometry(source)
     profile = json.loads(snapshots["program_profile"])
+    articulation_profile = (load_articulation_profile(json.loads(snapshots["articulation_profile"]))
+                            if "articulation_profile" in snapshots else None)
     height = geometry_height(source, roles, up)
     supported = recipe["program"] == "supported_action"
     if recipe["program"] == "airborne_gait":
@@ -258,16 +266,25 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
             raise ContractError("skin refinement requires a locked contact profile")
         root_raw, inplace_raw, plan, receipt = solve_with_skin_targets(source, semantic_roles=roles,
             gait=gait, up_axis=up, forward_axis=forward, plan=plan,
-            contact_profile=contact_profile)
+            contact_profile=contact_profile, articulation_profile=articulation_profile)
     else:
         root_raw, inplace_raw, _, receipt = solve_airborne_gait(source, source_clip=None,
             semantic_roles=roles, gait=gait, up_axis=tuple(up), forward_axis=tuple(forward),
-            plan_override=plan, legacy_overlay=False)
+            plan_override=plan, legacy_overlay=False, articulation_profile=articulation_profile)
     root_raw, inplace_raw = (tag_output(raw, recipe, plan, mode) for raw, mode in ((root_raw, "root_motion"), (inplace_raw, "in_place")))
     outputs = {"root_motion": Glb.from_bytes(root_raw), "in_place": Glb.from_bytes(inplace_raw)}
     evaluated = {mode: evaluate_emitted(glb, source, roles, plan, forward, in_place=(mode == "in_place")) for mode, glb in outputs.items()}
     rates = {mode: emitted_rotation_rates(glb, gait.max_joint_angular_velocity_degrees_per_s) for mode, glb in outputs.items()}
     continuity = {mode: emitted_cyclic_continuity(glb, loop=plan.get("loop", True)) for mode, glb in outputs.items()}
+    articulation = None
+    if articulation_profile is not None:
+        articulation = {
+            mode: emitted_articulation_envelopes(
+                glb, semantic_roles=roles, plan=plan,
+                profile=articulation_profile, forward_axis=forward, up_axis=up,
+            )
+            for mode, glb in outputs.items()
+        }
     feasibility = solver_checks(receipt)
     surface = {"verdict": "NOT_MEASURED", "reason": "no bound skinned contact profile"}
     if "contact_profile" in snapshots:
@@ -294,13 +311,18 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
     receipt["final_skinned_contact_gate"] = "PASS" if surface["verdict"] == in_place_surface["verdict"] == "PASS" else "FAIL"
     receipt["final_skinned_contact_scope"] = "both reopened serialized exports; in-place plus planned motor travel; locked floor and full skin influences"
     refinement_ok = receipt.get("skin_target_refinement", {}).get("converged", True) and receipt.get("oral_contact", {"status":"PASS"})["status"] == "PASS"
-    technical = (refinement_ok and all(row["status"] == "PASS" for row in evaluated.values()) and
+    articulation_ok = articulation is None or all(row["status"] == "PASS" for row in articulation.values())
+    technical = (refinement_ok and articulation_ok and all(row["status"] == "PASS" for row in evaluated.values()) and
                  all(row["status"] == "PASS" for row in rates.values()) and
                  all(row["status"] in ("PASS", "NOT_APPLICABLE") for row in continuity.values()) and feasibility["status"] == "PASS" and surface["verdict"] == "PASS" and in_place_surface["verdict"] == "PASS")
     validation = {"schema": "eonwild.motion.factory-validation.v1", "technical_status": "PASS" if technical else "BLOCKED",
         "outputs": evaluated, "rotation_rates": rates, "cyclic_continuity": continuity, "solver_feasibility": feasibility, "skinned_contact": surface, "in_place_skinned_contact": in_place_surface,
         "oral_contact": receipt.get("oral_contact"),
         "visual_review": "PENDING", "unity_parity": "NOT_RUN", "production_approved": False}
+    if articulation is not None:
+        validation["articulation_envelopes"] = articulation
+        receipt["final_emitted_articulation_gate"] = "PASS" if articulation_ok else "FAIL"
+        receipt["final_emitted_articulation_scope"] = "both reopened serialized exports"
     if engine_fingerprint() != engine_identity:
         raise ContractError("engine sources changed during compilation; no candidate published")
     lock = {"schema": "eonwild.motion.factory-lock.v1", "recipe_sha256": digest(recipe_bytes),
@@ -318,9 +340,13 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
         "animal": ({"id":animal["document"]["id"],"specimen":animal["document"]["specimen"],
             "uniform_geometry_scale":animal["uniform_scale"],"semantic_pelvis_to_toe_plane_m":height,
             "biological_validation":"NOT_VALIDATED"} if animal else None)}
+    if articulation_profile is not None:
+        state["articulation_profile"] = articulation_profile.receipt()
     payloads = {"root_motion.glb": root_raw, "in_place.glb": inplace_raw, "plan.json": json_bytes(plan),
         "solver-receipt.json": json_bytes(receipt), "runtime.json": json_bytes(state),
         "validation.json": json_bytes(validation), "inputs.lock.json": json_bytes(lock), "recipe.json": recipe_bytes}
+    if articulation_profile is not None:
+        payloads["articulation-profile.json"] = snapshots["articulation_profile"]
     if biomechanics is not None:
         payloads["animal.json"] = snapshots["animal"]
         payloads["biomechanics.json"] = json_bytes(biomechanics)
@@ -347,6 +373,8 @@ def verify_package(path: Path) -> dict:
         raise ContractError("unsupported package manifest")
     recipe = read_json(path / "recipe.json")
     required = {"root_motion.glb", "in_place.glb", "plan.json", "solver-receipt.json", "runtime.json", "validation.json", "inputs.lock.json", "recipe.json"}
+    if "articulation_profile" in recipe:
+        required.add("articulation-profile.json")
     if "animal" in recipe:
         required.update(("animal.json","biomechanics.json"))
     if set(manifest.get("files", {})) != required:
@@ -356,6 +384,40 @@ def verify_package(path: Path) -> dict:
     validation = read_json(path / "validation.json")
     if manifest["technical_status"] != validation["technical_status"]:
         raise ContractError("manifest and validation disagree")
+    lock = read_json(path / "inputs.lock.json")
+    receipt = read_json(path / "solver-receipt.json")
+    runtime = read_json(path / "runtime.json")
+    if "articulation_profile" in recipe:
+        if lock.get("inputs", {}).get("articulation_profile") != recipe["articulation_profile"]:
+            raise ContractError("articulation profile binding is not preserved in the input lock")
+        profile_bytes = (path / "articulation-profile.json").read_bytes()
+        if digest(profile_bytes) != recipe["articulation_profile"]["sha256"]:
+            raise ContractError("packaged articulation profile differs from its recipe binding")
+        articulation_profile = load_articulation_profile(read_json(path / "articulation-profile.json"))
+        summary = receipt.get("articulation_profile")
+        checks = validation.get("articulation_envelopes")
+        plan = read_json(path / "plan.json")
+        repeated = {
+            mode: emitted_articulation_envelopes(
+                Glb.from_bytes((path / f"{mode}.glb").read_bytes()),
+                semantic_roles=runtime.get("rig_roles"), plan=plan,
+                profile=articulation_profile,
+                forward_axis=runtime.get("forward_axis"), up_axis=runtime.get("up_axis"),
+            )
+            for mode in ("root_motion", "in_place")
+        }
+        if (not isinstance(summary, dict) or summary != articulation_profile.receipt()
+                or runtime.get("articulation_profile") != summary
+                or not isinstance(checks, dict) or set(checks) != {"root_motion", "in_place"}
+                or any(check.get("profile") != summary for check in checks.values())
+                or checks != repeated
+                or receipt.get("final_emitted_articulation_gate") !=
+                   ("PASS" if all(check.get("status") == "PASS" for check in checks.values()) else "FAIL")):
+            raise ContractError("articulation profile provenance or final emitted gate is inconsistent")
+        if any(check["status"] != "PASS" for check in repeated.values()) and validation["technical_status"] == "PASS":
+            raise ContractError("technical status ignores a final articulation failure")
+    elif any("articulation_profile" in item for item in (lock.get("inputs", {}), receipt, runtime)) or "articulation_envelopes" in validation:
+        raise ContractError("unbound articulation profile metadata is not allowed")
     from .metadata import require_metadata
     require_metadata(path, manifest)
     return {"integrity": "PASS", "technical_status": validation["technical_status"],

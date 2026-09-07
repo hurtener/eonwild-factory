@@ -89,6 +89,16 @@ def test_bound_and_unbound_animal_instances_cannot_join():
         require_pair(a,b,r)
 
 
+def test_bound_and_unbound_articulation_profiles_cannot_join():
+    a,b,r=bound_recipes()
+    a['articulation_profile']={'path':'articulation.json','sha256':'6'}
+    with pytest.raises(ContractError,match='articulation profile binding'):
+        require_pair(a,b,r)
+    b['articulation_profile']={'path':'articulation.json','sha256':'7'}
+    with pytest.raises(ContractError,match='articulation profile binding'):
+        require_pair(a,b,r)
+
+
 @pytest.mark.parametrize('phase',[None,True,.1,'0'])
 def test_phase_is_explicit_without_best_fit_search(phase):
     a,b,r=bound_recipes();assert require_pair(a,b,r)=='start'

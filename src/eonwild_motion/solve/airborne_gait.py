@@ -21,6 +21,7 @@ from ..layers.leg_contact_resolve_v3 import (
     _qmul, _qinv, _qrotate as _scalar_qrotate, _qrotvec as _scalar_qrotvec,
 )
 from ..planning.airborne_gait import AirborneGait, build_airborne_plan, sample_airborne_gait, jaw_breathing_angle, _smooth
+from ..planning.articulation_profile import ArticulationProfile
 from .whole_body_gait_transition import _build_glb, _encode
 
 
@@ -283,7 +284,7 @@ def _validate_plan_override(plan: Mapping[str, Any], gait: AirborneGait) -> dict
     return out
 
 
-def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles: Mapping[str, Any], gait: AirborneGait, up_axis: tuple[float, float, float] = (0, 1, 0), plan_override: Mapping[str, Any] | None = None, forward_axis: tuple[float, float, float] | None = None, legacy_overlay: bool = True) -> tuple[bytes, bytes, dict[str, Any], dict[str, Any]]:
+def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles: Mapping[str, Any], gait: AirborneGait, up_axis: tuple[float, float, float] = (0, 1, 0), plan_override: Mapping[str, Any] | None = None, forward_axis: tuple[float, float, float] | None = None, legacy_overlay: bool = True, articulation_profile: ArticulationProfile | None = None) -> tuple[bytes, bytes, dict[str, Any], dict[str, Any]]:
     """Emit one GLB authority and its derived in-place projection.
 
     Source supplies rig/skin/rest pose and body geometry only; source animation
@@ -298,6 +299,8 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
     forward_m, height_m, toe_flex_degrees, foot_pitch_degrees,
     swing_phase). Omitting it reproduces legacy output exactly.
     """
+    if articulation_profile is not None and not isinstance(articulation_profile, ArticulationProfile):
+        raise ContractError("articulation_profile must be a validated ArticulationProfile")
     roles = semantic_roles
     try:
         root, pelvis = (source.name_to_node[roles[k]] for k in ("root", "pelvis"))
@@ -499,15 +502,34 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
                 hip_angle = math.degrees(math.atan2(float((candidate_knee - hp) @ forward), -float((candidate_knee - hp) @ up)))
                 knee_angle = _interior(hp - candidate_knee, candidate_end - candidate_knee)
                 ankle_angle = _interior(candidate_knee - candidate_end, candidate_foot - candidate_end)
-                slacks = [hip_angle + gait.hip_extension_limit_degrees, gait.hip_flexion_limit_degrees - hip_angle, knee_angle - gait.knee_min_interior_degrees, gait.knee_max_interior_degrees - knee_angle, ankle_angle - gait.ankle_min_interior_degrees, gait.ankle_max_interior_degrees - ankle_angle]
+                if articulation_profile is None:
+                    slacks = [hip_angle + gait.hip_extension_limit_degrees, gait.hip_flexion_limit_degrees - hip_angle, knee_angle - gait.knee_min_interior_degrees, gait.knee_max_interior_degrees - knee_angle, ankle_angle - gait.ankle_min_interior_degrees, gait.ankle_max_interior_degrees - ankle_angle]
+                    preferred = None
+                else:
+                    envelopes = articulation_profile.effective(
+                        contact=foot_plan["contact"], swing_phase=u)
+                    angles = {"hip_sagittal_degrees": hip_angle,
+                              "knee_interior_degrees": knee_angle,
+                              "ankle_interior_degrees": ankle_angle}
+                    slacks = []
+                    preferred = 0.0
+                    for joint, angle in angles.items():
+                        envelope = envelopes[joint]
+                        slacks.extend((angle - envelope.hard_min_deg,
+                                       envelope.hard_max_deg - angle))
+                        departure = max(0.0, envelope.preferred_min_deg - angle,
+                                        angle - envelope.preferred_max_deg)
+                        scale = max(1.0, envelope.preferred_max_deg - envelope.preferred_min_deg)
+                        preferred += departure ** 4 / (scale * scale)
                 errors = [max(0, -slack) for slack in slacks]
                 recovery = 0.0 if foot_plan["contact"] else math.sin(math.pi * u) ** 2
                 hip_target = gait.swing_hip_lift_degrees * recovery * foot_plan.get("articulation_scale", 1.)
                 # A C2 preferred-region penalty anticipates the hard corner
                 # before ankle/knee limits become active. It coordinates the
                 # pose solve itself; emitted rotations are never post-filtered.
-                margin = gait.articulation_preferred_margin_degrees
-                preferred = sum(max(0, margin - slack) ** 4 / (margin * margin) for slack in slacks) if margin else 0.0
+                if preferred is None:
+                    margin = gait.articulation_preferred_margin_degrees
+                    preferred = sum(max(0, margin - slack) ** 4 / (margin * margin) for slack in slacks) if margin else 0.0
                 pitch_target = _recovery_pitch_target(
                     gait, foot_plan,
                     # The recovery carrier coordinates the airborne material
@@ -516,8 +538,13 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
                     airborne=(material_partition
                               and "flight_fraction" in plan.get("parameters", {})),
                 )
-                score = (degrees - pitch_target) ** 2 + recovery * (hip_angle - hip_target) ** 2 + recovery * gait.articulation_preferred_margin_weight * preferred + 1e5 * sum(e * e for e in errors) + 1e8 * extension * extension
-                return score, candidate_q, candidate_foot, target_ankle, candidate_knee, candidate_end, extension, max(errors), degrees
+                preferred_gain = recovery if articulation_profile is None else 1.0
+                score = (degrees - pitch_target) ** 2 + recovery * (hip_angle - hip_target) ** 2 + preferred_gain * gait.articulation_preferred_margin_weight * preferred + 1e5 * sum(e * e for e in errors) + 1e8 * extension * extension
+                return (score, candidate_q, candidate_foot, target_ankle,
+                        candidate_knee, candidate_end, extension, max(errors),
+                        {"hip_sagittal_degrees": hip_angle,
+                         "knee_interior_degrees": knee_angle,
+                         "ankle_interior_degrees": ankle_angle}, degrees)
 
             # A one-dimensional sagittal articulation solve coordinates the
             # thigh and metatarsal around the unchanged toe target. It does not
@@ -542,7 +569,8 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
             for _ in range(22 if material_partition else 7):
                 best = min([best, pitch_candidate(max(lo, best[-1] - step)), pitch_candidate(min(hi, best[-1] + step))], key=lambda candidate: candidate[0])
                 step *= .5
-            _, pitch, desired_foot, target, desired_knee, desired_end, extension, envelope_error, solved_pitch = best
+            (_, pitch, desired_foot, target, desired_knee, desired_end,
+             extension, envelope_error, articulation_angles, solved_pitch) = best
             max_extension = max(max_extension, extension)
             max_envelope_violation = max(max_envelope_violation, envelope_error)
             desired_normal = _unit(np.cross(desired_knee - hp, desired_end - desired_knee))
@@ -620,6 +648,9 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
             toe_height = min(float(np.asarray(_world_position(w[n])) @ up - ground) for tc in toes[side] for n in tc)
             tip_centroid = np.mean([np.asarray(_world_position(w[n])) for n in tips], axis=0)
             facts[side] = {"contact": foot_plan["contact"], "foot_world_m": actual.tolist(), "distal_contact_centroid_m": tip_centroid.tolist(), "target_foot_world_m": desired_foot.tolist(), "foot_target_residual_m": residual, "minimum_toe_joint_height_m": toe_height, "solved_foot_pitch_degrees": solved_pitch, "articulation_envelope_violation_degrees": envelope_error}
+            if articulation_profile is not None:
+                facts[side]["articulation_phase"] = "support" if foot_plan["contact"] else "swing"
+                facts[side]["articulation_angles_degrees"] = articulation_angles
         frames_t.append(tr); frames_r.append(rot)
         emitted.append({"time_s": row["time_s"], "flight": row["flight"], "feet": facts})
     times = np.asarray([r["time_s"] for r in plan["samples"]])
@@ -681,6 +712,8 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
     receipt["solved_foot_pitch_velocity_limit_degrees_per_s"] = gait.max_ankle_pitch_velocity_degrees_per_s
     receipt["maximum_solved_foot_pitch_velocity_witness"] = pitch_rate_witness
     receipt["articulation_limits_classification"] = "body-configurable engineering limits, not biologically certified; provisional-envelope consolidation deferred"
+    if articulation_profile is not None:
+        receipt["articulation_profile"] = articulation_profile.receipt()
     if body_response:
         receipt["body_response"] = body_response
     return authority, in_place, plan, receipt
