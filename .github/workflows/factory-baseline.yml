@@ -1,7 +1,7 @@
 name: Factory verification
 on:
   push:
-    branches: [main, feat/v9-factory-baseline, feat/motion-quality-and-breadth]
+    branches: [main, feat/v9-factory-baseline]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -19,11 +19,6 @@ jobs:
       OPENBLAS_NUM_THREADS: '1'
       OMP_NUM_THREADS: '2'
     steps:
-      - name: Confirm runner execution
-        run: |
-          printf 'EONWILD_RUNNER_EXECUTION_OK\n'
-          date -u
-          python3 --version
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           fetch-depth: 1
@@ -33,8 +28,7 @@ jobs:
         with:
           python-version: '3.13'
       - run: python -m pip install -e . pytest==9.1.1
-      - name: Install the recorded Blender version
-        run: bash tools/ci_setup_blender.sh
+      - run: bash tools/ci_setup_blender.sh
       - name: Full regression suite including historical integration
         id: tests
         shell: bash
@@ -48,20 +42,23 @@ jobs:
           cp "$RUNNER_TEMP/blender-download/selected.sha256" out/ci/blender-archive.sha256
           git rev-parse HEAD > out/ci/tested-source.txt
           python -m pytest tests -q --tb=short --junitxml=out/ci/full-tests.xml 2>&1 | tee out/ci/full-tests.log
-      - name: Preserve exact legacy build diagnostics on regression failure
+      - name: Diagnose locked-byte reproduction on failure in both Python environments
         if: ${{ failure() && steps.tests.outcome == 'failure' }}
         shell: python
         run: |
           import pathlib, subprocess, sys
-          root = pathlib.Path('out/ci/legacy-diagnostic')
-          root.mkdir(parents=True, exist_ok=True)
-          result = subprocess.run([sys.executable, '-m', 'eonwild_motion', 'build', '--profile', 'working', '--work-root', str(root)], capture_output=True, text=True)
-          (root / 'command.log').write_text(result.stdout + result.stderr)
-          print(result.stdout, result.stderr)
-          for path in root.rglob('blender-build.log'):
-              print('BLENDER_DIAGNOSTIC', path)
-              print(path.read_text(errors='replace')[-12000:])
-          # The failing pytest step remains failed even if this diagnostic succeeds.
+          root = pathlib.Path('out/ci/reproduction')
+          root.mkdir(parents=True, exist_ok=False)
+          commands = {
+            'python': [sys.executable, 'tools/diagnose_reproduction.py', '--output', str(root/'python')],
+            'blender': ['blender','-b','--python-exit-code','1','--python','tools/diagnose_reproduction.py','--','--output',str(root/'blender')],
+          }
+          for key, command in commands.items():
+              process = subprocess.run(command, capture_output=True, text=True, timeout=300)
+              (root/f'{key}.log').write_text(process.stdout+process.stderr)
+              print('ENVIRONMENT', key, 'EXIT', process.returncode)
+              print(process.stdout); print(process.stderr)
+          # The original test failure remains failure, regardless of diagnostics.
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
@@ -71,17 +68,22 @@ jobs:
             out/ci/*.log
             out/ci/*.txt
             out/ci/*.sha256
-            out/ci/legacy-diagnostic/**/*.log
-            out/ci/legacy-diagnostic/**/run-report.json
-          if-no-files-found: warn
+            out/ci/reproduction/**/*.json
+            out/ci/reproduction/**/*.log
           retention-days: 14
   candidate-acceptance:
-    needs: contracts
+    # Independent diagnostics, not permission to merge while contracts fail.
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
+    timeout-minutes: 50
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [locomotion, supported, transitions]
     env:
       PYTHONPATH: src
       OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '2'
+      GROUP: ${{ matrix.group }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -92,35 +94,16 @@ jobs:
         with:
           python-version: '3.13'
       - run: python -m pip install -e .
-      - name: Compile and require final technical acceptance for current catalog
-        shell: python
-        run: |
-          import json, pathlib, subprocess, sys
-          names = ['walk.v2', 'fast-walk.v1', 'reverse-walk.v3', 'run.v3', 'sprint.v3', 'idle.v1', 'alert.v1', 'call.v1', 'bite-miss.v1', 'feeding.v1', 'walk-start.v1', 'walk-stop.v1', 'reverse-walk-start.v1', 'reverse-walk-stop.v1', 'run-start.v1', 'run-stop.v1', 'sprint-start.v1', 'sprint-stop.v1']
-          output = pathlib.Path('out/catalog-verification')
-          output.mkdir(parents=True, exist_ok=False)
-          results = []
-          for name in names:
-              package = output / name
-              compile_run = subprocess.run([sys.executable, '-m', 'eonwild_motion.factory', 'compile', '--recipe', f'recipes/heavy-biped/{name}.json', '--output', str(package)], capture_output=True, text=True)
-              (output / f'{name}.compile.log').write_text(compile_run.stdout + compile_run.stderr)
-              row = {'recipe': name, 'compile_exit': compile_run.returncode, 'verify_exit': None}
-              if compile_run.returncode == 0:
-                  verification = subprocess.run([sys.executable, '-m', 'eonwild_motion.factory', 'verify', str(package)], capture_output=True, text=True)
-                  (output / f'{name}.verify.log').write_text(verification.stdout + verification.stderr)
-                  row['verify_exit'] = verification.returncode
-              results.append(row)
-              print(json.dumps(row), flush=True)
-          (output / 'results.json').write_text(json.dumps({'results': results, 'visual_review': 'NOT_RUN', 'unity_validation': 'NOT_RUN'}, indent=2) + '\n')
-          if any(row['compile_exit'] != 0 or row['verify_exit'] != 0 for row in results):
-              sys.exit('Catalog technical acceptance failed; generation is not approval.')
+      - name: Compile current programs and require actual final acceptance
+        run: python tools/verify_catalog.py --group "$GROUP" --output "out/catalog-$GROUP"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
-          name: factory-catalog-acceptance
+          name: factory-catalog-${{ matrix.group }}
           path: |
-            out/catalog-verification/**/*.json
-            out/catalog-verification/*.log
+            out/catalog-*/**/*.json
+            out/catalog-*/*.log
+            out/catalog-*/*/*.glb
           if-no-files-found: error
           retention-days: 14
   native-review:
