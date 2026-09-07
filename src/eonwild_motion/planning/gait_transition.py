@@ -7,7 +7,7 @@ joining the authored running regime. No historical take or script is loaded.
 """
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 import math
 from numbers import Real
 
