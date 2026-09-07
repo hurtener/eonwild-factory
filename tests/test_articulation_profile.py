@@ -240,6 +240,9 @@ def test_final_envelope_check_rejects_invalid_axes_and_impossible_reopened_angle
     with pytest.raises(ContractError, match="axes"):
         emitted_articulation_envelopes(glb, semantic_roles=roles, plan=plan,
             profile=profile, forward_axis=[0, 0, 0], up_axis=[0, 1, 0])
+    with pytest.raises(ContractError, match="axes"):
+        emitted_articulation_envelopes(glb, semantic_roles=roles, plan=plan,
+            profile=profile, forward_axis=[0, 0, 1e-8], up_axis=[0, 0, 2e-8])
     impossible = profile_payload()
     impossible["envelopes"]["support"]["knee_interior_degrees"] = {
         "hard_degrees": [179, 180], "preferred_degrees": [179, 180]}

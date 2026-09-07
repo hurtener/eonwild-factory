@@ -47,10 +47,12 @@ def emitted_articulation_envelopes(
     up = np.asarray(up_axis, dtype=float)
     if (forward.shape != (3,) or up.shape != (3,) or not np.isfinite(forward).all()
             or not np.isfinite(up).all() or np.linalg.norm(forward) < 1e-10
-            or np.linalg.norm(up) < 1e-10 or abs(float(forward @ up)) > 1e-6):
+            or np.linalg.norm(up) < 1e-10):
         raise ContractError("final articulation axes are invalid")
     forward /= np.linalg.norm(forward)
     up /= np.linalg.norm(up)
+    if abs(float(forward @ up)) > 1e-6:
+        raise ContractError("final articulation axes are invalid")
 
     def unit(vector: np.ndarray) -> np.ndarray:
         length = float(np.linalg.norm(vector))
