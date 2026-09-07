@@ -46,6 +46,18 @@ def _numeric(value):
     return array.astype(float, copy=False)
 
 
+def require_runtime_axes(runtime, recipe):
+    for key in ('forward_axis','up_axis'):
+        actual,declared = _numeric(runtime[key]),_numeric(recipe[key])
+        if actual.shape!=(3,) or declared.shape!=(3,) or np.linalg.norm(declared)<1e-12:
+            raise ContractError('invalid handoff coordinate vector')
+        # The compiler normalizes declared axes. Compare in that same canonical
+        # representation; do not confuse a float64 normalization ULP with drift.
+        expected = declared/np.linalg.norm(declared)
+        if not np.allclose(actual,expected,rtol=0,atol=1e-12):
+            raise ContractError('handoff runtime coordinate declaration differs from recipe')
+
+
 def compare_boundaries(before: dict, after: dict, travel_alignment_m) -> dict:
     """Measure native three-sample windows, preserving the original endpoints."""
     shift = _numeric(travel_alignment_m)
@@ -126,7 +138,6 @@ def _skin_boundary(glb, profile, name, times, indices):
     actual = _numeric([frame['time_s'] for frame in frames])
     if not np.allclose(actual,times,rtol=0,atol=2e-6):
         raise ContractError('handoff skin timeline differs from serialized samples')
-    # Validate correspondence across the whole clip before selecting witnesses.
     sizes = None
     for frame in frames:
         shape = tuple(points(frame,side).shape for side in ('left','right'))
@@ -139,8 +150,7 @@ def _skin_boundary(glb, profile, name, times, indices):
 def _boundary(package: Path, *, terminal: bool, mode: str, profile: dict):
     glb = Glb.from_bytes((package/f'{mode}.glb').read_bytes())
     runtime,plan,recipe = _json(package/'runtime.json'),_json(package/'plan.json'),_json(package/'recipe.json')
-    if runtime['forward_axis']!=recipe['forward_axis'] or runtime['up_axis']!=recipe['up_axis']:
-        raise ContractError('handoff runtime coordinate declaration differs from recipe')
+    require_runtime_axes(runtime,recipe)
     if runtime.get('ground_plane')!=profile['geometry']['ground']:
         raise ContractError('handoff runtime ground differs from the locked floor')
     animations = glb.document.get('animations',[])
@@ -151,7 +161,6 @@ def _boundary(package: Path, *, terminal: bool, mode: str, profile: dict):
     pt = _numeric([row['time_s'] for row in plan['samples']])
     if len(times)<3 or pt.shape!=times.shape or np.any(np.diff(times)<=0) or np.max(np.abs(pt-times))>2e-6:
         raise ContractError('handoff serialized and planned timelines differ')
-    # Every original sample is checked, including the real terminal quaternion.
     for channel in animations[0]['channels']:
         sampler = animations[0]['samplers'][channel['sampler']]
         tt = _numeric(glb.accessor_values(sampler['input'])).reshape(-1)
