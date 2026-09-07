@@ -1,103 +1,31 @@
-name: Centered walk and feasible run verification
+name: Separate pad recovery from metatarsal push-off
 on:
   push:
     branches: [diag/v9-legacy-reproduction-20260907]
 permissions:
   contents: read
 jobs:
-  candidate:
+  pad-recovery:
     permissions: {contents: write}
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
-    strategy:
-      fail-fast: false
-      matrix: {recipe: [walk, run, reverse-walk]}
-    env: {PYTHONPATH: src, OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '2', GH_TOKEN: '${{ github.token }}', RECIPE: '${{ matrix.recipe }}'}
+    timeout-minutes: 20
+    env: {PYTHONPATH: src, OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '2', GH_TOKEN: '${{ github.token }}'}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with: {fetch-depth: 1, persist-credentials: false, show-progress: false}
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with: {python-version: '3.13'}
       - run: python -m pip install -e . pytest==9.1.1
-      - run: python tools/migrations/stage_grounded_centering.py
-      - run: python -m pytest tests/test_centered_grounded_placement.py tests/test_behavior_programs.py tests/test_articulated_contact_partition.py -q
-      - name: Bind independent versioned profiles and require final acceptance
-        shell: python
-        run: |
-          import json,pathlib,os,hashlib,subprocess,sys
-          sys.path.insert(0,'tools')
-          from eonwild_motion.factory.compiler import compile_recipe,verify_package
-          from verify_catalog import failures
-          from measure_motion_reference import measure
-          root=pathlib.Path.cwd();name=os.environ['RECIPE'];old='walk.v2' if name=='walk' else name+'.v3';new=name+('.v3' if name=='walk' else '.v4')
-          recipe=json.loads((root/f'recipes/heavy-biped/{old}.json').read_text())
-          profile=json.loads((root/recipe['program_profile']['path']).read_text())
-          if name=='walk':profile['parameters'].update(centered_stance=True,step_period_s=1.23,pelvis_crouch_body_heights=.06)
-          elif name=='run':profile['parameters'].update(pelvis_crouch_body_heights=.16,touchdown_reach_body_heights=.52)
-          program=root/f'catalog/programs/heavy-biped.{new}.json';program.write_text(json.dumps(profile,indent=2,sort_keys=True)+'\n')
-          recipe.update(id='heavy-biped.'+new,version=int(new.rsplit('v',1)[1]),supersedes=recipe['id'])
-          recipe['program_profile']={'path':str(program.relative_to(root)),'sha256':hashlib.sha256(program.read_bytes()).hexdigest()}
-          target=root/f'recipes/heavy-biped/{new}.json';target.write_text(json.dumps(recipe,indent=2,sort_keys=True)+'\n')
-          for path in (program,target):
-              response=subprocess.run(['gh','api','repos/hurtener/eonwild-factory/git/blobs','--method','POST','--input','-'],input=json.dumps({'content':path.read_text(),'encoding':'utf-8'}),text=True,capture_output=True,check=True)
-              print('ADMITTED_INPUT '+json.dumps({'path':str(path.relative_to(root)),'blob':json.loads(response.stdout)['sha']}),flush=True)
-          output=root/'out/centered'/new
-          compile_recipe(target,root=root,output=output)
-          result=verify_package(output);v=json.loads((output/'validation.json').read_text())
-          print('CENTERED_RESULT '+new+' '+json.dumps(result),flush=True)
-          print('CENTERED_FAILURES '+new+' '+json.dumps(failures(v)),flush=True)
-          print('CENTERED_VALUES '+new+' '+json.dumps({'rates':v['rotation_rates'],'continuity':v['cyclic_continuity'],'feasibility':v['solver_feasibility']}),flush=True)
-          roles=json.loads((root/recipe['rig']['path']).read_text())['roles']
-          measured=measure(output/'root_motion.glb',clip=recipe['id']+'.root_motion',roles=roles,forward_axis=recipe['forward_axis'])
-          (output/'native-measurements.json').write_text(json.dumps(measured,indent=2)+'\n')
-          print('CENTERED_MEASUREMENTS '+new+' '+json.dumps(measured),flush=True)
-          if result['technical_status']!='PASS':sys.exit(2)
+      - run: python tools/migrations/stage_pad_recovery.py
+      - run: python -m pytest tests/test_pad_recovery.py tests/test_centered_grounded_placement.py tests/test_articulated_contact_partition.py tests/test_motion_performance.py tests/test_motion_contact_adversarial.py -q --tb=short
+      - name: Measure actual run after independent pad recovery
+        run: python tools/diagnose_limb_envelope.py --recipe recipes/heavy-biped/run.v4.json --output out/pad-recovery-run
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
-          name: centered-${{ matrix.recipe }}
+          name: pad-recovery-run
           path: |
-            out/centered
-            recipes/heavy-biped/*.json
-            catalog/programs/*.json
-          retention-days: 14
-  sprint-posture:
-    runs-on: ubuntu-24.04
-    timeout-minutes: 10
-    env: {PYTHONPATH: src, OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '2'}
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-        with: {fetch-depth: 1, persist-credentials: false, show-progress: false}
-      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
-        with: {python-version: '3.13'}
-      - run: python -m pip install -e .
-      - name: Screen sprint touchdown placement without reducing stride or widening anatomical limits
-        shell: python
-        run: |
-          import json,pathlib,numpy as np
-          from dataclasses import replace
-          from eonwild_motion.factory.compiler import load_recipe
-          from eonwild_motion.factory.source import geometry_height
-          from eonwild_motion.glb.container import Glb
-          from eonwild_motion.planning.airborne_gait import load_airborne_gait,build_airborne_plan
-          from eonwild_motion.solve.airborne_gait import solve_airborne_gait
-          from eonwild_motion.solve.performance import load_performance,decorate_plan
-          root=pathlib.Path.cwd();recipe,paths=load_recipe(root/'recipes/heavy-biped/sprint.v3.json',root)
-          source=Glb.from_bytes(paths['source'].read_bytes());roles=json.loads(paths['rig'].read_text())['roles']
-          height=geometry_height(source,roles,recipe['up_axis']);base=load_airborne_gait(json.loads(paths['program_profile'].read_text()))
-          performance=load_performance(json.loads(paths['performance_profile'].read_text()));results=[]
-          for crouch in (.12,.16,.20,.24):
-              for reach in (.70,.78,.86):
-                  gait=replace(base,pelvis_crouch_body_heights=crouch,touchdown_reach_body_heights=reach,cycles=1,sample_hz=24,boundary_sample_hz=0)
-                  plan=decorate_plan(build_airborne_plan(gait,height),performance)
-                  _,_,_,r=solve_airborne_gait(source,source_clip=None,semantic_roles=roles,gait=gait,up_axis=recipe['up_axis'],forward_axis=recipe['forward_axis'],plan_override=plan,legacy_overlay=False)
-                  row={'crouch':crouch,'reach':reach,'extension_m':r['max_unreachable_extension_m'],'violation_degrees':r['maximum_articulation_envelope_violation_degrees']}
-                  results.append(row);print('SPRINT_POSTURE '+json.dumps(row),flush=True)
-          out=root/'out/sprint-posture';out.mkdir(parents=True,exist_ok=False)
-          (out/'results.json').write_text(json.dumps(results,indent=2)+'\n')
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        if: always()
-        with:
-          name: sprint-posture-admission
-          path: out/sprint-posture
+            out/pad-recovery-run
+            src/eonwild_motion/solve/airborne_gait.py
+            src/eonwild_motion/solve/performance.py
           retention-days: 14

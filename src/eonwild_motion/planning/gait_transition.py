@@ -15,7 +15,7 @@ import numpy as np
 
 from ..errors import ContractError
 from .airborne_gait import AirborneGait, sample_airborne_gait
-from .grounded_gait import GroundedGait, sample_grounded_gait, smooth
+from .grounded_gait import GroundedGait, sample_grounded_gait, smooth, touchdown_reach
 
 
 @dataclass(frozen=True)
@@ -76,7 +76,8 @@ class _Choreography:
         self.period = 2 * self.step
         self.ramp = transition.ramp_cycles * self.period
         self.speed = gait.step_length_body_heights * height / self.step
-        self.reach = math.copysign(gait.touchdown_reach_body_heights * height, self.speed)
+        self.reach = (touchdown_reach(gait, height) if isinstance(gait, GroundedGait) else
+                      math.copysign(gait.touchdown_reach_body_heights * height, self.speed))
         self.start = transition.kind == 'start'
         self.delay = transition.anticipation_seconds if self.start else 0.
         self.end = self.ramp + (self.period if self.start else self.step + transition.settle_seconds)
