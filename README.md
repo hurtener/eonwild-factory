@@ -39,6 +39,12 @@ An output directory must be new; earlier takes cannot be overwritten.
 Compilation is not approval. Verification exits nonzero for blocked technical
 acceptance. Missing evidence is not a zero-error pass.
 
+The explicit adult Tarbosaurus benchmark is
+`recipes/heavy-biped/tarbosaurus-pin-552-1-adult-walk.v1.json`.
+It adds specimen-specific mass evidence and measured geometry calibration to
+the grounded walk. See [animal configuration](docs/ANIMAL_CONFIGURATION.md)
+for the reusable data contract and its current biomechanical limits.
+
 Current explicit review candidates are `walk.v3`, `reverse-walk.v4`, `run.v4`,
 `sprint.v4`, `fast-walk.v2`, `feeding.v2`, and `bite-miss.v2`, alongside `idle.v1`,
 `alert.v1`, and `call.v1`. The eight start/stop recipes are now `.v3`, bound to

@@ -6,24 +6,45 @@ Unity parity are separate; none transfers automatically to a newer candidate.
 
 ## Current source and workstream
 
-The recovered branch at `544b93e859f56339f2b804b81aac57b820924cd5` already
-contained sprint v4 and fast-walk v2. Their actual candidate and multi-view jobs
-passed in run 34093117077. Do not confuse the earlier written handoff with that
-newer repository state. These are mechanical results, not visual approvals.
+The 2026-09-07 continuation fetched PR #2 at
+`5475b6988ad5c82b1f5a56415a075f36d0e58dc0`. Baseline CI run
+34137687969 passed all 18 individual candidates, but sprint, run and walk
+transition pairs failed velocity checks. Reverse-walk passed its pair checks.
+Several one-shot previews also failed the FBX transport-clock admission. These
+are baseline results, not acceptance of the later implementation.
 
-This pass adds prospective support placement, explicit loaded-phase interfaces,
-continuous driven-lag evaluation, cross-document package metadata checks and
-permanent start/steady/stop pair verification. Read the precise behavior and
-remaining direct-join failures in [TRANSITION_INTEGRATION.md](TRANSITION_INTEGRATION.md).
-The active start/stop selectors are v3. Sustained stride/cadence/flight settings,
-contact floors, acceptance limits and approved assets remain unchanged.
+The continuation corrects native preview/FBX clock transport and camera framing,
+adds actual source-bound connected rendering, removes the gaze controller's
+unwanted absolute-world upward correction, and adds the explicit adult animal
+benchmark below. The authored sprint retains its stride, cadence, flight and
+anatomical/contact limits. Raw direct-join limits remain unchanged and unresolved;
+see [TRANSITION_INTEGRATION.md](TRANSITION_INTEGRATION.md).
+
+The host has inspected every native frame of the baseline sprint and the corrected
+side preview. Upward craning is corrected. The aggressive sprint's persistent
+crouch, compressed neck presentation and recovery folding remain motion-quality
+concerns; correcting gaze does not approve the full sprint. The host also inspected
+all 74 native review frames of the adult grounded walk in side, three-quarter and
+foot-close views, verified full media decode and hashes, and exercised native 1x
+browser playback. Forward head posture and recovery clearance are visible; the
+fairly flat foot release remains a qualitative comparison concern. This is an
+inspection record, not human art-direction or biological approval.
+
+The subsequent adult-only profile polish visibly improves foot release/recovery
+and introduces a modest increase in delayed tail response. It passed isolated
+compilation and focused checks; integration with the shared solver still requires
+fresh output review. The supplied `assets/examples` videos have now been audited
+directly, including every native frame and original-speed playback of five key
+walking, sprint and start/stop references. See
+[EXAMPLE_VIDEO_REVIEW.md](EXAMPLE_VIDEO_REVIEW.md) for exact coverage, source
+identities, observations and the remaining candidate gaps.
 
 ## Evidence-bound adult benchmark
 
 `tarbosaurus-pin-552-1-adult-walk.v1` is the first explicit animal-instance
 benchmark. It binds the adult PIN 552-1 estimates of 2816.3 kg body mass and
 2.415 m summed femur, tibia and central-metatarsal length to a separately
-versioned evidence document. The admitted neutral geometry is uniformly scaled
+versioned evidence document. Mass provenance is [Snively et al. (2019)](https://doi.org/10.7717/peerj.6432), Tables 2–3; the limb and estimated hip-height basis is [Dececchi et al. (2020)](https://doi.org/10.1371/journal.pone.0223698), Table 1. The admitted neutral geometry is uniformly scaled
 from the mean of its independently measured left/right semantic hindlimb chains;
 the compiler remeasures the bound rig and full bind-pose skin before accepting
 that calibration. Existing engineering recipes and approved assets are not
@@ -39,23 +60,20 @@ height. Pelvis acceleration is not whole-body center-of-mass acceleration;
 force-aware solving, contact-force distribution, segment inertia and tissue
 stress remain `NOT_IMPLEMENTED` or `NOT_EVALUATED`.
 
-Dececchi et al. supplement S4 also provides taxon-level femur/tibia/central-
+[Dececchi et al. (2020)](https://doi.org/10.1371/journal.pone.0223698), supplement S4, also provides taxon-level femur/tibia/central-
 metatarsal lengths, but that row has no specimen identifier and sums to 2.420 m
 rather than the PIN 552-1 Table 1 value. It is retained only as comparison:
 the neutral rig's relative segment proportions differ, so anatomical fit remains
 `UNVERIFIED`. Uniform scaling does not conceal that mismatch or authorize
 per-bone resizing.
 
-Local execution and image access now work. Mounted old work was preserved
-before source recovery. A GitHub source-evidence artifact and per-file Git blob
-checks supplied current source when local Git network/DNS failed. This is not
-proof that every historical partial-recovery fragment has been recovered.
+See [ANIMAL_CONFIGURATION.md](ANIMAL_CONFIGURATION.md) for the reusable instance
+contract, generation command and the distinction between recorded mass and
+mass-dependent solving.
 
-Local preliminary generation with the revised engine passed individual
-sprint-start v3, sprint-stop v3 and run-start v3 mechanical gates. Their actual
-direct joins are still BLOCKED by velocity mismatch. Final CI on the exact
-committed source must establish the full catalog results. A green individual
-clip must not be reported as a green connected locomotion sequence.
+The current host uses the pinned macOS arm64 toolchain. Final source tests,
+individual candidates, direct joins and native-media review are recorded separately.
+A passing individual clip never grants connected locomotion or biological approval.
 
 ## Verification and immutable legacy boundary
 
