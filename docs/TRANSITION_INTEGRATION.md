@@ -58,6 +58,28 @@ error, 0.5 degree pose error, 1 mm/s world/material velocity mismatch and 10
 degrees/s angular mismatch. This is an offline direct-join contract, not proof
 of arbitrary Unity blending, interruption, event delivery or terrain adaptation.
 
+## Connected native-time diagnostic
+
+After producing the three immutable packages, render the declared interface as
+one connected film from side and three-quarter views in both movement modes:
+
+```sh
+uv run python tools/review_connected_sequence.py \
+  --start out/sprint-pair/start --steady out/sprint-pair/steady \
+  --stop out/sprint-pair/stop --output out/sprint-connected \
+  --cycles 2 --blender /Applications/Blender.app/Contents/MacOS/Blender
+```
+
+The film evaluates start, steady phase-to-duration, complete steady cycles,
+steady zero-to-phase and stop directly from their serialized GLBs. Root-motion
+segments receive only the schedule's constant cumulative travel offset;
+in-place segments reconstruct world travel from the declared motor trajectory.
+The render receipt records every source hash and native interval, exact images
+from both sides of each join, the exact stop terminal, encoded frame count and
+post-render input immutability. It creates no NLA repeat, blend, retime, fitted
+seam or copied boundary pose. Render completion remains distinct from human
+visual approval and Unity validation.
+
 ## Current evidence and unfinished work
 
 Local preliminary generation with the revised shared engine produced mechanically
