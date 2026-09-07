@@ -88,6 +88,7 @@ def test_profile_reuses_joint_envelopes_and_selects_contact_phase():
     lambda p: p["angle_conventions"].__setitem__("hip_sagittal_degrees", "local Euler"),
     lambda p: p["evidence"].__setitem__("sources", []),
     lambda p: p["evidence"].__setitem__("limitations", []),
+    lambda p: p["evidence"].__setitem__("status", "biologically_certified"),
     lambda p: p["envelopes"].pop("support"),
     lambda p: p["envelopes"]["swing"].pop("ankle_interior_degrees"),
     lambda p: p["envelopes"]["swing"]["knee_interior_degrees"].__setitem__("hard_degrees", [120, 80]),

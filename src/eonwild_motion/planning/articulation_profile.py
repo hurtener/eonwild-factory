@@ -22,6 +22,12 @@ ANGLE_CONVENTIONS = {
     "ankle_interior_degrees": "0 fully folded; 180 straight",
 }
 _JOINTS = tuple(ANGLE_CONVENTIONS)
+_EVIDENCE_STATUSES = {
+    "unresolved",
+    "engineering_selected",
+    "comparative_anatomy_informed",
+    "synthetic_test_only",
+}
 
 
 @dataclass(frozen=True)
@@ -142,7 +148,9 @@ def load_articulation_profile(raw: Any) -> ArticulationProfile:
     evidence = raw["evidence"]
     if not isinstance(evidence, Mapping) or set(evidence) != {"status", "sources", "limitations"}:
         raise ContractError("articulation profile evidence contains missing or unknown fields")
-    _text(evidence["status"], "articulation evidence status")
+    status = _text(evidence["status"], "articulation evidence status")
+    if status not in _EVIDENCE_STATUSES:
+        raise ContractError("unsupported articulation evidence status")
     if not isinstance(evidence["sources"], list) or not evidence["sources"]:
         raise ContractError("articulation evidence requires at least one scoped source")
     for source in evidence["sources"]:
