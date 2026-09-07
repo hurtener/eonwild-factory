@@ -111,15 +111,38 @@ def require_pair(transition: dict, steady: dict, runtime: dict) -> str:
         raise ContractError('handoff gait profile is not the bound steady program')
     contract = runtime.get('transition_contract') or {}
     kind = contract.get('kind')
-    phase = contract.get('steady_phase')
+    phase = contract.get('steady_phase_s')
     if kind not in ('start','stop') or type(phase) not in (float,int) or phase!=0:
         raise ContractError('handoff requires an explicit phase-zero transition contract')
     return kind
 
 
+def _skin_boundary(glb, profile, name, times, indices):
+    # The extractor validates the complete clip, including both real endpoints.
+    # Never replace its full-timeline requirement with a cropped witness set.
+    frames,_ = _source_frames(glb,profile,animation_name=name,sample_times=times.tolist())
+    if len(frames)!=len(times):
+        raise ContractError('handoff skin timeline is incomplete')
+    actual = _numeric([frame['time_s'] for frame in frames])
+    if not np.allclose(actual,times,rtol=0,atol=2e-6):
+        raise ContractError('handoff skin timeline differs from serialized samples')
+    # Validate correspondence across the whole clip before selecting witnesses.
+    sizes = None
+    for frame in frames:
+        shape = tuple(points(frame,side).shape for side in ('left','right'))
+        if sizes is not None and shape!=sizes:
+            raise ContractError('handoff skin material correspondence changes')
+        sizes = shape
+    return [frames[i] for i in indices]
+
+
 def _boundary(package: Path, *, terminal: bool, mode: str, profile: dict):
     glb = Glb.from_bytes((package/f'{mode}.glb').read_bytes())
-    runtime,plan = _json(package/'runtime.json'),_json(package/'plan.json')
+    runtime,plan,recipe = _json(package/'runtime.json'),_json(package/'plan.json'),_json(package/'recipe.json')
+    if runtime['forward_axis']!=recipe['forward_axis'] or runtime['up_axis']!=recipe['up_axis']:
+        raise ContractError('handoff runtime coordinate declaration differs from recipe')
+    if runtime.get('ground_plane')!=profile['geometry']['ground']:
+        raise ContractError('handoff runtime ground differs from the locked floor')
     animations = glb.document.get('animations',[])
     if len(animations)!=1:
         raise ContractError('handoff requires exactly one exported clip')
@@ -165,9 +188,7 @@ def _boundary(package: Path, *, terminal: bool, mode: str, profile: dict):
         offset = forward*distance if mode=='in_place' else np.zeros(3)
         world.append([np.asarray(_world_position(ws[n]))+offset for n in descendants])
         rotations.append([pose[1][n] for n in descendants])
-    frames,_ = _source_frames(glb,profile,animation_name=animations[0]['name'],sample_times=times[ids].tolist())
-    if len(frames)!=3:
-        raise ContractError('handoff skin boundary is incomplete')
+    frames = _skin_boundary(glb,profile,animations[0]['name'],times,ids)
     skin = [np.concatenate([points(frame,side) for side in ('left','right')])+
             (forward*distance if mode=='in_place' else np.zeros(3)) for frame,distance in zip(frames,travel)]
     endpoint = -1 if terminal else 0
@@ -183,10 +204,15 @@ def verify_handoff(transition: Path, steady: Path, *, root: Path) -> dict:
     tr,sr = [_json(p/'recipe.json') for p in paths]
     kind = require_pair(tr,sr,_json(paths[0]/'runtime.json'))
     root = root.resolve()
-    profile_path = (root/tr['contact_profile']['path']).resolve()
-    if root not in profile_path.parents or _digest(profile_path)!=tr['contact_profile']['sha256']:
-        raise ContractError('handoff contact profile is not the locked source')
-    profile = _json(profile_path)
+    def locked(reference):
+        path=(root/reference['path']).resolve()
+        if root not in path.parents or _digest(path)!=reference['sha256']:
+            raise ContractError('handoff profile is not the locked source')
+        return _json(path)
+    profile,rig = locked(tr['contact_profile']),locked(tr['rig'])
+    for path in paths:
+        if _json(path/'runtime.json')['rig_roles']!=rig['roles']:
+            raise ContractError('handoff runtime roles differ from the locked rig')
     before,after = paths if kind=='start' else paths[::-1]
     modes = {}
     for mode in ('root_motion','in_place'):

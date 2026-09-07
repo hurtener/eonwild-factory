@@ -1,4 +1,4 @@
-name: Full-stride sprint catch and native handoff verification
+name: Actual emitted handoff diagnosis
 on:
   push:
     branches: [diag/motion-joins-20260907]
@@ -6,7 +6,7 @@ permissions: {contents: read, actions: read}
 jobs:
   handoffs:
     runs-on: ubuntu-24.04
-    timeout-minutes: 12
+    timeout-minutes: 15
     env: {PYTHONPATH: src, OPENBLAS_NUM_THREADS: '1', GH_TOKEN: '${{ github.token }}'}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -14,23 +14,6 @@ jobs:
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with: {python-version: '3.13'}
       - run: python -m pip install -e . pytest==9.1.1 -q
-      - name: Match the real planner contract dialect before evaluating the new observer
-        shell: python
-        run: |
-          from pathlib import Path
-          for path in ('src/eonwild_motion/factory/handoff.py','tests/test_emitted_handoff.py'):
-              p=Path(path);s=p.read_text();assert "'steady_phase'" in s
-              p.write_text(s.replace("'steady_phase'","'steady_phase_s'"))
-          from eonwild_motion.factory.handoff import require_pair
-          from eonwild_motion.planning.gait_transition import GaitTransition,build_transition_plan
-          from eonwild_motion.planning.airborne_gait import AirborneGait
-          import json
-          r=json.loads(Path('recipes/heavy-biped/run-start.v1.json').read_text())
-          s=json.loads(Path('recipes/heavy-biped/run.v4.json').read_text())
-          r['gait_profile']=s['program_profile'];r['performance_profile']=s['performance_profile']
-          for kind in ('start','stop'):
-              plan=build_transition_plan(GaitTransition(kind),AirborneGait(),2.6)
-              assert require_pair(r,s,plan)==kind
       - run: python -m pytest tests/test_emitted_handoff.py -q --tb=short
       - name: Reopen exactly identified packages and preserve failing joins
         shell: python
@@ -48,17 +31,15 @@ jobs:
           'walk-start':(10006339681,'ef87b131d7292bf8ffd00a4b12c7b9219636e2145f9c3b218f825172b5caf2fa'),
           'run-start':(10006217320,'b040c69bdf7cb6076280a3d8533198750954fbdce2245af70a4a6c0db2f1e378'),
           'reverse-walk-start':(10006561197,'4d69ff3f517e7c246206f24e7c7ca35ca9abf9075cc46a6cdbbdb2f58802ca1e')}
-          packages={}; failures=[]
+          packages={};failures=[]
           for name,(ident,sha) in specs.items():
-              process=subprocess.run(['gh','api',f'/repos/hurtener/eonwild-factory/actions/artifacts/{ident}/zip'],capture_output=True)
-              if process.returncode:raise RuntimeError(f'{name}: {process.stderr.decode(errors="replace")}')
+              process=subprocess.run(['gh','api',f'/repos/hurtener/eonwild-factory/actions/artifacts/{ident}/zip'],capture_output=True,check=True)
               raw=process.stdout;assert hashlib.sha256(raw).hexdigest()==sha
-              z=zipfile.ZipFile(io.BytesIO(raw)); manifests=[n for n in z.namelist() if n=='manifest.json' or n.endswith('/manifest.json')];assert len(manifests)==1,manifests
+              z=zipfile.ZipFile(io.BytesIO(raw));manifests=[n for n in z.namelist() if n=='manifest.json' or n.endswith('/manifest.json')];assert len(manifests)==1,manifests
               prefix=manifests[0][:-len('manifest.json')];package=out/name;package.mkdir()
               for n in z.namelist():
                   suffix=n[len(prefix):]
-                  if n.startswith(prefix) and suffix not in ('','.','..') and '/' not in suffix and '\\' not in suffix and not n.endswith('/'):
-                      (package/suffix).write_bytes(z.read(n))
+                  if n.startswith(prefix) and suffix not in ('','.','..') and '/' not in suffix and '\\' not in suffix and not n.endswith('/'):(package/suffix).write_bytes(z.read(n))
               packages[name]=package
           for gait in ('walk','run','reverse-walk'):
               for kind in ('start','stop'):
@@ -69,58 +50,9 @@ jobs:
                   summary={k:v for k,v in result.items() if k!='modes'}
                   summary['modes']={k:{x:y for x,y in v.items() if x!='motion_owned_nodes'} for k,v in result.get('modes',{}).items()}
                   print('ACTUAL_HANDOFF',name,json.dumps(summary),flush=True)
-                  plan=json.loads((packages[name]/'plan.json').read_text());rows=plan['samples']
-                  if kind=='start':
-                      print('INITIAL_SUPPORT',name,json.dumps([{'t':r['time_s'],'support':r['support_count'],'feet':r['feet']} for r in rows if r['time_s']<.6][::6]),flush=True)
-                  (out/f'{name}.recipe.json').write_text((packages[name]/'recipe.json').read_text())
+                  print('RECIPE',name,(packages[name]/'recipe.json').read_text(),flush=True)
                   failures.append(result['status']!='PASS')
           if any(failures):raise SystemExit('At least one real handoff remains blocked')
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with: {name: actual-handoffs, path: 'out/joins/*.json', if-no-files-found: error, retention-days: 14}
-  sprint:
-    runs-on: ubuntu-24.04
-    timeout-minutes: 15
-    strategy:
-      fail-fast: false
-      max-parallel: 3
-      matrix: {case: [individual-recovery, reduced-common-lift, earlier-catch]}
-    env: {PYTHONPATH: src, OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '2', CASE: '${{ matrix.case }}', GH_TOKEN: '${{ github.token }}'}
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-        with: {fetch-depth: 1, persist-credentials: false, show-progress: false}
-      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
-        with: {python-version: '3.13'}
-      - run: python -m pip install -e . pytest==9.1.1 -q
-      - name: Avoid piling common-flight lift onto already elevated recovery
-        shell: python
-        run: |
-          from pathlib import Path
-          import json,hashlib,os,subprocess,io,zipfile
-          raw=subprocess.run(['gh','api','/repos/hurtener/eonwild-factory/actions/artifacts/10006962327/zip'],check=True,capture_output=True).stdout
-          assert hashlib.sha256(raw).hexdigest()=='2c29bbedf3c224172ec14a279eba216dcf3053a211068959867590ab02ff1841'
-          z=zipfile.ZipFile(io.BytesIO(raw));names=[n for n in z.namelist() if n.endswith('source-proposal/files.json')];assert len(names)==1
-          files=json.loads(z.read(names[0]));allowed={'src/eonwild_motion/planning/airborne_gait.py','src/eonwild_motion/planning/gait_transition.py','catalog/programs/heavy-biped.sprint.v4.json','recipes/heavy-biped/sprint.v4.json'};assert set(files)==allowed
-          for path,text in files.items():Path(path).write_text(text)
-          p=Path('catalog/programs/heavy-biped.sprint.v4.json');g=json.loads(p.read_text());params=g['parameters']
-          params['flight_foot_lift_body_heights']={'individual-recovery':0.,'reduced-common-lift':.015,'earlier-catch':.015}[os.environ['CASE']]
-          if os.environ['CASE']=='earlier-catch':params['swing_lower_fraction']=.4
-          original=json.loads(Path('catalog/programs/heavy-biped.sprint.v3.json').read_text())['parameters']
-          for key in ('step_length_body_heights','step_period_s','flight_fraction','max_joint_angular_velocity_degrees_per_s','max_ankle_pitch_velocity_degrees_per_s','hip_extension_limit_degrees','hip_flexion_limit_degrees','knee_min_interior_degrees','knee_max_interior_degrees','ankle_min_interior_degrees','ankle_max_interior_degrees'):assert params[key]==original[key],key
-          p.write_text(json.dumps(g,indent=2,sort_keys=True)+'\n');r=Path('recipes/heavy-biped/sprint.v4.json');recipe=json.loads(r.read_text());recipe['program_profile']['sha256']=hashlib.sha256(p.read_bytes()).hexdigest();r.write_text(json.dumps(recipe,indent=2,sort_keys=True)+'\n')
-          out=Path('out/source-proposal');out.mkdir(parents=True)
-          (out/'files.json').write_text(json.dumps({p:Path(p).read_text() for p in allowed},indent=2)+'\n')
-          print('FINAL_PROPOSED_RECIPE',r.read_text(),flush=True)
-          print('FINAL_PROPOSED_PROGRAM',p.read_text(),flush=True)
-      - run: python -m pytest tests/test_swing_transport.py tests/test_behavior_programs.py -q --tb=short
-      - name: Require unchanged mechanical gates
-        shell: bash
-        run: |
-          set +e
-          python tools/inspect_motion_failure.py --recipe recipes/heavy-biped/sprint.v4.json --output out/diagnostic > out/diagnostic.log 2>&1
-          result=$?
-          python tools/summarize_motion_diagnostic.py out/diagnostic/diagnostic.json --output out/summary.json
-          exit "$result"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        if: always()
-        with: {name: 'catch-${{ matrix.case }}', path: out, if-no-files-found: error, retention-days: 14}
