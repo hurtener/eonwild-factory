@@ -36,7 +36,7 @@ phase comparisons, not pixel-correspondence or equal-speed measurements.
 
 | Region/action | Reference observations | Factory criterion and current gap |
 | --- | --- | --- |
-| Walking feet | Side walk frames 12–30 (0.50–1.25 s) show release, flexed recovery and forward placement, repeated in later cycles. | A planted foot should progress into toe release and a visibly articulated recovery. Adult walk 002 clears the floor but carries a relatively flat foot through too much of release/swing. |
+| Walking feet | Side walk frames 12–30 (0.50–1.25 s) show release, knee flexion and forward placement, repeated in later cycles. In `tarbosaurus_walk.mp4` at about 4.233 s, the knee is flexed while the distal foot hangs downward and the toes trail. | Distinguish knee clearance from distal recovery direction. The first adult polish folds the foot upward/forward beneath the leg and is rejected on this criterion; increasing articulation amplitude alone is not an improvement. |
 | Walking neck/head | The side walk maintains a forward head with a continuous neck curve during the recurring gait. Its opening mouth/head gesture is an introductory action. | Preserve neutral-relative forward attention. The corrected gaze removes the former absolute-world upward correction; it does not excuse a compressed neck during sprint. |
 | Foot track | Front/rear gauge sequences show alternating support beneath the torso and flexed toes during recovery; the body transfers over the support side without a wide lateral step. | Inspect front and rear output as well as side view. Preserve narrow support placement and check clearance throughout the crossing portion of swing. |
 | Tail | Front/rear sequences show changing curvature and delayed distal response. The rear reference includes a large, slow lateral sweep and a low tail tip. | Use distributed, delayed response. Do not copy the full sweep amplitude or let a heavy tail become a fast independent whip. Adult polish is deliberately a modest increase. |
@@ -71,14 +71,24 @@ exact bone lengths, joint angles, center of mass or ground reaction forces.
 
 The pre-polish adult candidate was inspected at all 74 native review frames in
 side, three-quarter and foot-close views, with complete media decode and native
-1x playback. The adult-only polish subsequently showed clearer toe release and
-recovery in matched-camera, matched-time Blender frames. Emitted push-off rose
+1x playback. The first adult-only polish increased articulation in matched-camera,
+matched-time Blender frames. Emitted push-off rose
 from 20.372° to 28.000° and recovery pitch from −26.659° to −31.110°; the measured
 tail-tip lateral range in eight matched poses rose from 0.879 m to 1.125 m.
 These are output comparisons, not scientific target values.
 
+The host initially called the stronger recovery an improvement. The user's
+comparison of the candidate at 0.600 s with `tarbosaurus_walk.mp4` at about
+4.233 s exposed the opposite distal direction: the candidate tucks the foot
+upward/forward, while the reference hangs it downward with trailing toes beneath
+a flexed knee. The host confirmed the exact reference in the live player and
+withdrew that positive assessment. This polish is **visually rejected for foot
+recovery**. Correcting it requires checking the emitted tibia, metatarsus and
+toe directions through release, recovery and placement; changing a numeric
+pitch amplitude is not evidence of reference alignment.
+
 That polish was compiled independently at `2e718a37dbe3e43094b1c75dc31e86d5021c96f7`.
-It must be regenerated and reviewed after integration with the shared solver.
+It must be corrected, regenerated and reviewed with the shared solver.
 The historical approved V9 artifacts remain frozen comparison sources. Technical
 package acceptance, raw direct-join acceptance, host visual inspection, human art
 approval, biological validation and Unity parity remain separate evidence levels.

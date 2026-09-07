@@ -191,5 +191,18 @@
       "full_decode_exit_code": 0,
       "visual_coverage": "every native primary-stream frame inspected in consecutive sheets plus last frame; native-speed browser playback completed"
     }
-  ]
+  ],
+  "adult_recovery_correction": {
+    "status": "VISUALLY_REJECTED_PENDING_CORRECTION",
+    "candidate_source_commit": "2e718a37dbe3e43094b1c75dc31e86d5021c96f7",
+    "candidate_time_s": 0.6,
+    "reference_path": "assets/examples/tarbosaurus/tarbosaurus_walk.mp4",
+    "reference_time_s_approximately": 4.233,
+    "reference_confirmed_in_live_browser": true,
+    "finding": "Candidate distal foot tucks upward/forward under a flexed knee; reference distal foot hangs down with trailing toes. Prior positive host assessment of the stronger recovery is withdrawn.",
+    "user_screenshot_sha256": {
+      "candidate-rejected.png": "46c8f82e74b921798f7767e70d0a51e354c8efb4244f30f07abad30c57249ffd",
+      "reference-user-frame.png": "e22006fed28584a3a539e16ae62d0dc8d180120e7c37af84b1495e4a16183b76"
+    }
+  }
 }

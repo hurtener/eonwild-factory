@@ -91,6 +91,11 @@ not fossil measurements or mass-derived physiological limits. The solver may
 adjust targets to satisfy the actual rig/contact constraints, so inspect emitted
 poses rather than assuming those values are achieved exactly.
 
+The first 36° recovery-pitch polish was visually rejected: the emitted foot tucks
+upward/forward while the supplied walking reference lets the distal chain hang
+downward beneath a flexed knee. These current values are under correction and
+must not be reused as an accepted animal configuration.
+
 Forward head carriage is also an authored criterion. Inner-ear reconstructions
 in related tyrannosaurids concern alert head posture and describe a somewhat
 downturned head; they do not establish an exact habitual angle for Tarbosaurus.

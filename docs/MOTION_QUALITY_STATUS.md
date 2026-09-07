@@ -30,10 +30,14 @@ browser playback. Forward head posture and recovery clearance are visible; the
 fairly flat foot release remains a qualitative comparison concern. This is an
 inspection record, not human art-direction or biological approval.
 
-The subsequent adult-only profile polish visibly improves foot release/recovery
-and introduces a modest increase in delayed tail response. It passed isolated
-compilation and focused checks; integration with the shared solver still requires
-fresh output review. The supplied `assets/examples` videos have now been audited
+The subsequent adult-only profile polish increases distal articulation and delayed
+tail response. It passed isolated compilation and focused checks, but the user
+identified that its recovery foot moves in the opposite direction to the walking
+reference. The host confirmed this and withdrew its initial positive assessment:
+the foot tucks upward/forward instead of hanging down beneath the flexed knee.
+That recovery polish is visually rejected and is being corrected. Technical
+checks did not establish reference alignment. The supplied `assets/examples`
+videos have now been audited
 directly, including every native frame and original-speed playback of five key
 walking, sprint and start/stop references. See
 [EXAMPLE_VIDEO_REVIEW.md](EXAMPLE_VIDEO_REVIEW.md) for exact coverage, source
