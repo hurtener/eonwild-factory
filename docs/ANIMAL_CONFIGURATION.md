@@ -91,6 +91,13 @@ not fossil measurements or mass-derived physiological limits. The solver may
 adjust targets to satisfy the actual rig/contact constraints, so inspect emitted
 poses rather than assuming those values are achieved exactly.
 
+Forward head carriage is also an authored criterion. Inner-ear reconstructions
+in related tyrannosaurids concern alert head posture and describe a somewhat
+downturned head; they do not establish an exact habitual angle for Tarbosaurus.
+See [Witmer and Ridgely (2009)](https://doi.org/10.1002/ar.20983). The neutral-relative
+gaze correction therefore removes unwanted upward compensation without labeling
+the rig's bind pose or its 3° relative attention cue as a fossil-derived posture.
+
 [EXAMPLE_VIDEO_REVIEW.md](EXAMPLE_VIDEO_REVIEW.md) records the supplied reference
 clips, frame-by-frame coverage and the criteria used to judge legs, tail, neck,
 torso and start/stop staging. Profile metadata locks the selected visual-reference
