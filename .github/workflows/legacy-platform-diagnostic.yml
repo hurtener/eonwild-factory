@@ -1,63 +1,81 @@
-name: Versioned transitions to accepted locomotion programs
+name: Final fast-walk identity and actual native frame evidence
 on:
   push:
     branches: [diag/v9-legacy-reproduction-20260907]
-permissions: {contents: read}
+permissions: {contents: read, actions: read}
 jobs:
-  transition:
-    permissions: {contents: write}
+  fast-walk:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
-    strategy:
-      fail-fast: false
-      max-parallel: 3
-      matrix: {motion: [walk, reverse-walk, run], kind: [start, stop]}
-    env: {PYTHONPATH: src, OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '2', GH_TOKEN: '${{ github.token }}', MOTION: '${{ matrix.motion }}', KIND: '${{ matrix.kind }}'}
+    timeout-minutes: 12
+    env: {PYTHONPATH: src, OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '2'}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with: {fetch-depth: 1, persist-credentials: false, show-progress: false}
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with: {python-version: '3.13'}
       - run: python -m pip install -e .
-      - name: Bind transitions to the actual accepted gait inputs, not a copied clip
-        shell: python
-        run: |
-          import json,pathlib,os,subprocess,sys,traceback
-          sys.path.insert(0,'tools')
-          from eonwild_motion.factory.compiler import compile_recipe,verify_package
-          from verify_catalog import failures
-          root=pathlib.Path.cwd();motion=os.environ['MOTION'];kind=os.environ['KIND']
-          old=f'{motion}-{kind}.v1';new=f'{motion}-{kind}.v2'
-          gait_name={'walk':'walk.v3','reverse-walk':'reverse-walk.v4','run':'run.v4'}[motion]
-          gait=json.loads((root/f'recipes/heavy-biped/{gait_name}.json').read_text())
-          recipe=json.loads((root/f'recipes/heavy-biped/{old}.json').read_text())
-          recipe.update(id='heavy-biped.'+new,version=2,supersedes='heavy-biped.'+old,
-              description='Versioned transition into the accepted '+gait_name+' input program; final handoff and visual review remain separate')
-          recipe['gait_profile']=gait['program_profile']
-          recipe['performance_profile']=gait['performance_profile']
-          path=root/f'recipes/heavy-biped/{new}.json'
-          path.write_text(json.dumps(recipe,indent=2,sort_keys=True)+'\n')
-          output=root/'out/transitions'/new
-          try:
-              compile_recipe(path,root=root,output=output)
-              status=verify_package(output);v=json.loads((output/'validation.json').read_text())
-              print('TRANSITION_ACCEPTANCE '+json.dumps({'recipe':new,**status,'failures':failures(v),
-                  'rates':v['rotation_rates'],'feasibility':v['solver_feasibility']}),flush=True)
-              if status['technical_status']=='PASS':
-                  response=subprocess.run(['gh','api','repos/hurtener/eonwild-factory/git/blobs','--method','POST','--input','-'],
-                      input=json.dumps({'content':path.read_text(),'encoding':'utf-8'}),text=True,capture_output=True,check=True)
-                  print('VERIFIED_TRANSITION_INPUT '+json.dumps({'path':str(path.relative_to(root)),'blob':json.loads(response.stdout)['sha']}),flush=True)
-              else:sys.exit(2)
-          except Exception:
-              output.parent.mkdir(parents=True,exist_ok=True)
-              (output.parent/(new+'.error.log')).write_text(traceback.format_exc())
-              raise
+      - run: python tools/verify_catalog.py --recipes fast-walk.v2 --output out/fast-walk
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
-          name: transition-${{ matrix.motion }}-${{ matrix.kind }}-v2
+          name: fast-walk-v2-final-identity
+          path: out/fast-walk
+          retention-days: 14
+  native-frames:
+    permissions: {contents: write, actions: read}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env: {GH_TOKEN: '${{ github.token }}'}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with: {ref: 75454d9aaedd3207b26401d0c78dd24ef570a370, fetch-depth: 1, persist-credentials: false, show-progress: false}
+      - run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg python3-pil
+      - name: Retain all native side frames plus sampled multi-view sheets from exact verified videos
+        shell: python
+        run: |
+          import pathlib,json,subprocess,hashlib,base64,math
+          from PIL import Image,ImageDraw
+          out=pathlib.Path('out/frame-evidence');out.mkdir(parents=True,exist_ok=False)
+          cases=[('run.v4',34076811095,'native-review-run.v4'),('reverse-walk.v4',34076205439,'native-review-reverse-walk.v4'),('bite-miss.v2',34076205439,'native-review-bite-miss.v2')]
+          entries=[];evidence=[]
+          for name,run,artifact in cases:
+              dest=pathlib.Path('/tmp/native-media')/name
+              subprocess.run(['gh','run','download',str(run),'--repo','hurtener/eonwild-factory','--name',artifact,'--dir',str(dest)],check=True)
+              for receipt_path in sorted(dest.rglob('render-receipt.json')):
+                  receipt=json.loads(receipt_path.read_text());movie=receipt_path.parent/'preview.mp4'
+                  assert hashlib.sha256(movie.read_bytes()).hexdigest()==receipt['media']['preview.mp4']
+                  view=receipt['view'];temp=out/name/view;temp.mkdir(parents=True,exist_ok=False)
+                  subprocess.run(['ffmpeg','-v','error','-i',str(movie),'-vsync','0',str(temp/'%05d.png')],check=True)
+                  frames=sorted(temp.glob('*.png'));assert len(frames)==receipt['verified_encoded_frames']
+                  index_groups=([list(range(i,min(i+24,len(frames)))) for i in range(0,len(frames),24)] if view=='side'
+                      else [sorted(set(round(i*(len(frames)-1)/11) for i in range(12)))])
+                  for group_number,indices in enumerate(index_groups):
+                      sheet=Image.new('RGB',(1280,math.ceil(len(indices)/4)*202),(245,245,245));draw=ImageDraw.Draw(sheet)
+                      for j,index in enumerate(indices):
+                          frame=Image.open(frames[index]).convert('RGB');frame.thumbnail((320,180))
+                          x=(j%4)*320;y=(j//4)*202
+                          sheet.paste(frame,(x,y));draw.text((x+4,y+183),f'{name} / {view} / f{index:03d} / {index/receipt["fps"]:.3f}s',fill=(20,20,20))
+                      rel=f'reports/MOTION-QUALITY-AND-BREADTH-003/native/{name}-{view}-{group_number:02d}.jpg'
+                      target=out/pathlib.Path(rel).name;sheet.save(target,quality=91)
+                      raw=target.read_bytes();request={'content':base64.b64encode(raw).decode(),'encoding':'base64'}
+                      response=subprocess.run(['gh','api','repos/hurtener/eonwild-factory/git/blobs','--method','POST','--input','-'],input=json.dumps(request),text=True,capture_output=True,check=True)
+                      entry={'path':rel,'mode':'100644','type':'blob','sha':json.loads(response.stdout)['sha']};entries.append(entry)
+                      evidence.append({'path':rel,'sha256':hashlib.sha256(raw).hexdigest(),'source_movie_sha256':receipt['media']['preview.mp4'],
+                          'source_animation_sha256':receipt['source_sha256'],'run':run,'artifact':artifact,'view':view,'frame_indices':indices,'fps':receipt['fps'],
+                          'classification':'exact decoded video frames, no motion retiming or generated illustration'})
+                      print('NATIVE_FRAME_BLOB '+json.dumps(entry),flush=True)
+          report={'source_sha':'75454d9aaedd3207b26401d0c78dd24ef570a370','visual_review':'PENDING','unity':'NOT_RUN','images':evidence}
+          response=subprocess.run(['gh','api','repos/hurtener/eonwild-factory/git/blobs','--method','POST','--input','-'],input=json.dumps({'content':json.dumps(report,indent=2)+'\n','encoding':'utf-8'}),text=True,capture_output=True,check=True)
+          entries.append({'path':'reports/MOTION-QUALITY-AND-BREADTH-003/native/manifest.json','mode':'100644','type':'blob','sha':json.loads(response.stdout)['sha']})
+          (out/'tree-entries.json').write_text(json.dumps(entries,indent=2)+'\n')
+          print('NATIVE_EVIDENCE_TREE '+json.dumps(entries),flush=True)
+          # Creates only immutable blobs; committing these into the PR is a
+          # separate explicit action after inspecting this evidence.
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: actual-native-frame-evidence
           path: |
-            out/transitions
-            recipes/heavy-biped/*-start.v2.json
-            recipes/heavy-biped/*-stop.v2.json
+            out/frame-evidence/*.jpg
+            out/frame-evidence/tree-entries.json
           retention-days: 14
