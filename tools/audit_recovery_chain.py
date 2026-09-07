@@ -337,9 +337,18 @@ def audit(package: Path, repository: Path) -> dict[str, Any]:
         state = side_state[side]
         all_indices = range(len(times))
         swing_indices = [row["index"] for row in state["rows"] if not row["contact"]]
+        mid_swing_indices = [
+            row["index"] for row in state["rows"]
+            if not row["contact"] and 0.25 <= row["swing_phase"] <= 0.75
+        ]
         stance_indices = [row["index"] for row in state["rows"] if row["contact"]]
         summaries = {}
-        for scope, indices in (("full_cycle", all_indices), ("swing", swing_indices), ("stance", stance_indices)):
+        for scope, indices in (
+            ("full_cycle", all_indices),
+            ("swing", swing_indices),
+            ("mid_swing_phase_0.25_to_0.75", mid_swing_indices),
+            ("stance", stance_indices),
+        ):
             summaries[scope] = {
                 name: temporal_summary(state["series"][name], times, indices, circular=name in circular)
                 for name in MEASUREMENTS
