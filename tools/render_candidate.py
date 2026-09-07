@@ -21,7 +21,7 @@ from mathutils import Vector
 # Blender does not reliably add a --python script's directory to sys.path.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from preview_clock import SOURCE_FPS, source_frame, transport_clock
-from review_timing import native_sample_times
+from review_timing import native_sample_times, native_still_times
 
 
 def sha(path):
@@ -176,20 +176,29 @@ def main():
     parser.add_argument('--width', type=int, default=640)
     parser.add_argument('--samples', type=int, default=16)
     parser.add_argument('--fbx', action='store_true')
+    parser.add_argument('--still-times', type=float, nargs='+',
+                        help='render only these exact native source seconds; no film or FBX')
     args = parser.parse_args(sys.argv[sys.argv.index('--') + 1:])
     if not 12 <= args.fps <= 120 or not 320 <= args.width <= 3840 or not 1 <= args.samples <= 256:
         raise ValueError('invalid review resolution, samples or frame rate')
     package, output = args.package.resolve(), args.output.resolve()
     source_name = args.mode + '.glb'
     source = package / source_name
-    manifest = json.loads((package / 'manifest.json').read_text())
-    if sha(source) != manifest['files'][source_name]:
+    manifest_path = package / 'manifest.json'
+    manifest_sha = sha(manifest_path)
+    manifest = json.loads(manifest_path.read_text())
+    source_sha = sha(source)
+    if source_sha != manifest['files'][source_name]:
         raise ValueError('candidate hash does not match its manifest')
     runtime = json.loads((package / 'runtime.json').read_text())
     if sha(package / 'runtime.json') != manifest['files']['runtime.json']:
         raise ValueError('runtime metadata hash mismatch')
     duration = runtime['duration_s']
-    sample_times = native_sample_times(duration, args.fps)
+    still_mode = args.still_times is not None
+    if still_mode and args.fbx:
+        raise ValueError('native still diagnosis cannot export FBX')
+    sample_times = (native_still_times(duration, args.still_times) if still_mode
+                    else native_sample_times(duration, args.fps))
     if not math.isfinite(duration) or not 0 < duration <= 60:
         raise ValueError('review duration outside supported envelope')
     output.mkdir(parents=True, exist_ok=False)
@@ -327,6 +336,34 @@ def main():
         timeline.append({'index': index, 'source_time_s': time, 'blender_frame': source_frame(start, time, action_fps),
             'camera_translation_m': list(shift)})
     (output / 'timeline.json').write_text(json.dumps(timeline, indent=2) + '\n')
+    if still_mode:
+        source_after = sha(source)
+        manifest_after = sha(manifest_path)
+        if source_after != source_sha or manifest_after != manifest_sha:
+            raise ValueError('candidate package changed during still diagnosis')
+        stills = [{**row, 'file': f"frames/{row['index']:05d}.png",
+            'sha256': sha(frames / f"{row['index']:05d}.png")} for row in timeline]
+        receipt = {'schema': 'eonwild.motion.review-stills.v1',
+            'source_sha256': source_after, 'manifest_sha256': manifest_after,
+            'renderer_sha256': sha(Path(__file__)),
+            'timing_sampler_sha256': sha(Path(__file__).with_name('review_timing.py')),
+            'source_kind': manifest.get('kind', 'unapproved_candidate'),
+            'technical_status': manifest.get('technical_status', 'NOT_EVALUATED'),
+            'blender': bpy.app.version_string, 'engine': 'CYCLES_CPU',
+            'samples': args.samples, 'denoising': False,
+            'declared_duration_s': duration, 'source_duration_s': source_duration,
+            'source_frame_start': start, 'source_frame_end': end, 'source_fps': action_fps,
+            'requested_native_times_s': sample_times, 'stills': stills,
+            'mode': args.mode, 'view': args.view, 'focus': args.focus, 'camera': spec,
+            'media': {'camera.json': sha(output / 'camera.json'),
+                      'timeline.json': sha(output / 'timeline.json')},
+            'diagnostic_scope': 'requested native-time stills only; no encoded film or full-cycle review claim',
+            'visual_approval': 'PENDING', 'unity_import_validation': 'NOT_RUN',
+            'ground_level_m': ground_level,
+            'presentation': 'fixed declared floor and 0.5 m world checker; camera-only root tracking; no bbox floor fitting or animal rescaling'}
+        (output / 'render-receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
+        print(json.dumps(receipt, indent=2))
+        return
     terminal = None
     if runtime.get('loop') is False:
         set_frame(scene, start + source_duration * action_fps)

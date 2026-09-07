@@ -22,3 +22,20 @@ def native_sample_times(duration_s: float, fps: int) -> list[float]:
         frames = float(nearest)
     count = max(1, math.ceil(frames))
     return [index / fps for index in range(count)]
+
+
+def native_still_times(duration_s: float, requested: list[float]) -> list[float]:
+    """Validate a small, explicit set of source seconds for still diagnosis."""
+    if (isinstance(duration_s, bool) or not isinstance(duration_s, Real)
+        or not math.isfinite(duration_s) or not 0 < duration_s <= 60
+        or not isinstance(requested, list) or not 1 <= len(requested) <= 12):
+        raise ValueError('invalid native still duration or requested times')
+    result = []
+    for value in requested:
+        if (isinstance(value, bool) or not isinstance(value, Real)
+            or not math.isfinite(value) or not 0 <= value <= duration_s):
+            raise ValueError('native still time lies outside the source interval')
+        result.append(float(value))
+    if any(right <= left for left, right in zip(result, result[1:])):
+        raise ValueError('native still times must be unique and strictly increasing')
+    return result
