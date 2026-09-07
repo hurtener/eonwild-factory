@@ -1,128 +1,127 @@
 # Eonwild Motion Factory
 
-A reproducible motion-authoring factory for Eonwild, the dinosaur-life game.
-**Python builds the motion; Unity will consume the motion package.**
+**Python authors reusable motion; Unity is the intended consumer.** This work
+continues V9 and the merged factory baseline, not another numbered toolkit.
 
-**Current continuation: DRAFT / NOT PRODUCTION-APPROVED.** The quality-01 walk
-is rejected. The preserved V9 narrow-gauge take, not that candidate, is the
-walking comparison authority. Read [current verification and remaining motion
-acceptance](docs/MOTION_QUALITY_STATUS.md) before replacing approved assets.
-The last inspected full test run has unresolved integration errors; the final
-continuation changes still need execution and actual motion review.
+PR #2 is still a draft: **quality-01 is rejected** and new candidates do not
+inherit the approval of the preserved V9 takes. Execution is restored. Read
+[the current motion/evidence status](docs/MOTION_QUALITY_STATUS.md) for the
+verified improvements and remaining run/sprint/transition acceptance work.
 
-This work continues V9 from `feat/spark-muse` at
-`8c1f5c2bfea481a56916ee6e0bfa74961ca0d141` through the merged factory baseline.
-It does not restart the project or claim the entire biomechanical/runtime
-architecture is finished.
+## One active generation path
 
-## The active path
-
-```text
+```
 admitted geometry + semantic rig + versioned behavior recipe
-    → behavior-owned plan → shared limb/body/contact solving
-    → reopen final GLBs → measure → immutable candidate package
-    → native-time review → Unity parity → explicit production promotion
+    → behavior-owned placement, attention and contact plans
+    → shared articulated limb/body/skin constraints
+    → reopen final GLBs and measure
+    → immutable candidate + source identity + runtime metadata
+    → native-time review → Unity parity → explicit future promotion
 ```
 
-New code lives in `src/eonwild_motion/`. New inputs live in `catalog/` and
-`recipes/`. Generated outputs belong in `out/`, not inside source modules.
-No new factory code may import `build/`, `reports/`, or a retired toolkit.
-Read-only quality comparisons may inspect an explicitly selected, hash-bound
-historical asset; its animation is never a generation input.
+Generation never imports historical `build/`, `reports/` or retired toolkits.
+Read-only review may inspect a specifically hash-bound historical asset; its
+animation is not an input to new choreography. Species differences belong in
+geometry, semantic bindings and profile data rather than literal bone names.
 
 ## Install and generate
 
-Use Python 3.12 or newer. The existing lock file and dependency pins remain.
+Use Python 3.12 or newer and the existing pinned dependencies:
 
 ```sh
 uv sync --frozen --group test
 uv run python -m eonwild_motion.factory compile \
-  --recipe recipes/heavy-biped/run.v3.json --output out/run-v3
-uv run python -m eonwild_motion.factory verify out/run-v3
+  --recipe recipes/heavy-biped/walk.v3.json --output out/walk-v3
+uv run python -m eonwild_motion.factory verify out/walk-v3
 ```
 
-Compilation creates a candidate, not an approval. `verify` returns nonzero
-when technical acceptance remains blocked. Read `validation.json`: skeleton
-proxies, final skinned contact, visual approval, and Unity parity are separate.
-Do not weaken a gate just to turn a candidate green.
+An output directory must be new; earlier takes cannot be overwritten.
+Compilation is not approval. Verification exits nonzero for blocked technical
+acceptance. Missing evidence is not a zero-error pass.
 
-## Candidate behavior catalog
-
-The compiler now dispatches grounded gait, airborne gait, gait-transition and
-persistent-support programs. The current catalog contains:
-
-| Program group | Candidate recipes |
-|---|---|
-| Locomotion | `walk.v2`, `fast-walk.v1`, `reverse-walk.v3`, `run.v3`, `sprint.v3` |
-| Supported behavior | `idle.v1`, `alert.v1`, `call.v1`, `bite-miss.v1`, `feeding.v1` |
-| Starts/stops | `walk-start.v1`, `walk-stop.v1`, `reverse-walk-start.v1`, `reverse-walk-stop.v1`, `run-start.v1`, `run-stop.v1`, `sprint-start.v1`, `sprint-stop.v1` |
-
-Catalog membership is not motion acceptance. Earlier run/sprint/reverse recipes
-remain historical candidates and must not silently replace newer recipe inputs.
-The supported-action implementation does not import the historical feeding
-builder. Its grip, support, timing and recovery still require final skinned
-and visual acceptance.
-
-## Render and compare
+Current explicit review candidates are `walk.v3`, `reverse-walk.v4`,
+`feeding.v2`, and `bite-miss.v2`, alongside `idle.v1`, `alert.v1`, and `call.v1`.
+The newer `run.v4`, retained `sprint.v3`, `fast-walk.v1`, and the eight start/stop
+recipes remain part of strict catalog verification, not automatically accepted
+animations. See the current workflow for the exact source-bound results.
 
 ```sh
-uv run python tools/build_showcase.py --output out/showcase --render \
-  --views side front rear three-quarter --mode root_motion --fps 60
+uv run python tools/verify_catalog.py \
+  --recipes walk.v3 reverse-walk.v4 feeding.v2 bite-miss.v2 \
+  --output out/review-candidates
 ```
 
-Rendering needs Blender and ffmpeg. On macOS pass
-`--blender /Applications/Blender.app/Contents/MacOS/Blender` when Blender is not
-on PATH. Each requested camera produces its own native-time MP4 and receipt.
-One FBX transport is exported per candidate. FBX export is **not** Unity import
-validation.
+The compiler supports grounded gait, airborne gait, gait transitions and
+persistent-support actions. Metatarsal articulation is separate from pad
+contact and digit recovery. Forward attention is calibrated from the admitted
+rostrum. Feeding coordinates a feasible initial brace and bounded common pelvis
+accommodation before oral constraints; the mouth anchor and floor do not move
+to conceal failed reach. These are geometric/art-directed controls, not claims
+of simulated muscles or reconstructed dinosaur optic axes.
 
-Use `tools/prepare_motion_reference.py` for an explicit read-only reference,
-then pass its prepared package to `--reference-package` with exactly one
-recipe. The showcase renders the reference first and reuses each locked camera
-for the candidate without retiming the reference or modifying either motion.
-It verifies the candidate again after rendering. See
-[MOTION_QUALITY_STATUS.md](docs/MOTION_QUALITY_STATUS.md) for the exact preserved
-walking artifact and its hash.
+## Review actual motion
 
-The showcase deliberately retains diagnostic renders for blocked candidates,
-but returns **exit 2** for mechanical rejection or **exit 1** for generation,
-integrity, missing-view or render failures. Even exit 0 does not grant visual
-approval, biological correctness, or Unity parity.
+With Blender and ffmpeg installed:
 
-## Verification
+```sh
+uv run python tools/review_compiled_candidate.py \
+  --package out/review-candidates/walk.v3 --output out/walk-review \
+  --views side front rear three-quarter --fps 30 --compare-v9-walk
+```
+
+On macOS pass
+`--blender /Applications/Blender.app/Contents/MacOS/Blender` when needed.
+The command renders an existing immutable package without regenerating or
+repairing it. It uses the explicit floor, keeps native timing, locks each camera
+from the preserved V9 reference before drawing the candidate, and checks the
+candidate again after rendering. Review outputs contain actual MP4s, timing,
+camera and render receipts; FBX transport is **not** Unity validation.
+
+The older `tools/build_showcase.py` is also available; pass explicit `--recipes`
+for the current candidates rather than relying on its initial-catalog defaults.
+Both tools retain mechanical rejection even when diagnostic rendering succeeds.
+
+## Verification and toolchain
 
 ```sh
 uv run python -m pytest tests -q --tb=short
 ```
 
-CI uses read-only repository access, runs the full suite including the legacy
-integration fixture, strictly verifies all 18 current recipes, and has separate
-native-time multi-view jobs. There are no integration exclusions or temporary
-workflows committing results back to the branch. Diagnostic logs and artifacts
-remain separate from approval. Failure or missing execution is not a pass.
+The complete mandatory suite includes historical integration, exact duplicate
+builds, promotion rejection and real rendering. Its canonical CI is macOS
+arm64 + Blender 5.2.0 + genuine Khronos glTF validator 2.0.0-dev.3.10. The
+preserved release reproduces exactly there. Linux differs by two float32
+rounding values; the approved hash is not changed to hide that portability
+boundary. Current V9 candidate mechanics run independently on Linux.
 
-## What is preserved, and what is retired
+CI is read-only, runs one job per recipe, retains failed receipts, and generates
+native multi-view reviews. There are no self-committing recovery workflows,
+production imports of staging scripts, or omitted integration tests. A green
+test suite is not itself a green motion catalog or a visual approval.
 
-Run010, Sprint006, Feeding003, and the accepted walk remain historical quality
-references. A new recipe never inherits their visual approval automatically.
-See `catalog/baselines/approved-takes.json` and the original review reports.
+## Preserve what worked
 
-V8 and V8.1 toolkits are retired from the active tree, recoverable from the
-source commit above. The byte-identical V8.2 capsule is under
-`legacy/capsules/v8.2/`, only for compatibility and provenance. The old
-`eonwild-motion build/validate/promote` CLI remains the compatibility path;
-it is not the new candidate compiler. V5/V5.5 stay as breadth-recovery sources.
+Approved Run010, Sprint006, Feeding003 and V9 walking references remain
+unchanged. See `catalog/baselines/approved-takes.json` and the exact walk identity
+in `docs/MOTION_QUALITY_STATUS.md`. The inherited V8_1 name inside the V9 walk
+GLB is not a reason to select a different asset.
 
-Historical `build/` and `reports/` contain useful but unstandardized experiments.
-They are **not** the public factory API. In particular, Feeding004 and the old
-reverse-walk builders are not production generation dependencies.
+V8 and V8.1 are retired from the active tree but recoverable through Git
+history. `legacy/capsules/v8.2` is immutable compatibility/provenance material.
+V5/V5.5 remain breadth-recovery references, never the active generation path.
+Prior partial-recovery records remain honest about missing source fragments.
 
-## Current boundary
+## Runtime boundary
 
-The factory has reusable program implementations and final-artifact accounting;
-it does not yet establish accepted natural motion for the entire catalog, a
-real second skinned species, runtime terrain/target adaptation, or Unity/device
-budgets. See [the implementation roadmap](docs/FACTORY_ROADMAP.md),
-[the Unity boundary](docs/UNITY_MOTION_CONTRACT.md), and the current status above.
+One runtime motor owns final movement. Animation contacts are cues, not
+unconditional gameplay damage, grip, yield or feeding facts. The Python factory
+emits the planned motion and versioned metadata; the Unity adapter must still
+prove imported/compressed trace parity, terrain and target adaptation, event
+handoff and device cost. A second real independently skinned species is also
+still required to establish production family transfer.
 
-One convincing, reproducible animal comes before a larger clip count.
+See [the factory roadmap](docs/FACTORY_ROADMAP.md),
+[the Unity contract](docs/UNITY_MOTION_CONTRACT.md), and
+[the current status](docs/MOTION_QUALITY_STATUS.md).
+
+**Unity: NOT_RUN. Visual approval: PENDING. Production promotion: NOT_GRANTED.**

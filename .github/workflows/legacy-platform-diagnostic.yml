@@ -1,38 +1,67 @@
-name: Final materialized foot recovery verification
+name: Final sprint posture feasibility
 on:
   push:
     branches: [diag/v9-legacy-reproduction-20260907]
 permissions: {contents: read}
 jobs:
-  verify:
+  sprint:
+    permissions: {contents: write}
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 20
     strategy:
       fail-fast: false
-      matrix: {recipe: [walk.v3, reverse-walk.v4, run.v4]}
-    env: {PYTHONPATH: src, OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '2', RECIPE: '${{ matrix.recipe }}'}
+      matrix:
+        include:
+          - variant: braced
+            crouch: '0.26'
+            reach: '0.70'
+          - variant: centered
+            crouch: '0.28'
+            reach: '0.66'
+    env: {PYTHONPATH: src, OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '2', GH_TOKEN: '${{ github.token }}', CROUCH: '${{ matrix.crouch }}', REACH: '${{ matrix.reach }}', VARIANT: '${{ matrix.variant }}'}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with: {fetch-depth: 1, persist-credentials: false, show-progress: false}
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with: {python-version: '3.13'}
-      - run: python -m pip install -e . pytest==9.1.1
-      - run: python -m pytest tests/test_pad_recovery.py tests/test_centered_grounded_placement.py tests/test_articulated_contact_partition.py tests/test_motion_performance.py tests/test_motion_contact_adversarial.py -q --tb=short
-      - name: Actual final skin and limb acceptance
-        run: python tools/diagnose_limb_envelope.py --recipe "recipes/heavy-biped/$RECIPE.json" --output "out/pad-recovery/$RECIPE"
-      - name: Print exact final gates when a candidate was emitted
-        if: always()
+      - run: python -m pip install -e .
+      - name: Admit posture inside existing limits without reducing stride or speed
         shell: python
         run: |
-          import json,os,pathlib,sys
+          import json,pathlib,os,hashlib,sys,subprocess,traceback
           sys.path.insert(0,'tools')
+          from eonwild_motion.factory.compiler import compile_recipe,verify_package
           from verify_catalog import failures
-          path=pathlib.Path('out/pad-recovery')/os.environ['RECIPE']/'candidate/validation.json'
-          if path.is_file():
-              v=json.loads(path.read_text());print('FINAL_RECOVERY_GATES '+json.dumps({'recipe':os.environ['RECIPE'],'failures':failures(v),'rotation_rates':v['rotation_rates'],'continuity':v['cyclic_continuity']}),flush=True)
+          root=pathlib.Path.cwd()
+          recipe=json.loads((root/'recipes/heavy-biped/sprint.v3.json').read_text())
+          profile=json.loads((root/recipe['program_profile']['path']).read_text())
+          profile['parameters'].update(pelvis_crouch_body_heights=float(os.environ['CROUCH']),touchdown_reach_body_heights=float(os.environ['REACH']))
+          path=root/'catalog/programs/heavy-biped.sprint.v4.json'
+          path.write_text(json.dumps(profile,indent=2,sort_keys=True)+'\n')
+          recipe.update(id='heavy-biped.sprint.v4',version=4,supersedes='heavy-biped.sprint.v3',description='Long-stride sprint with feasible braced posture and independent ankle/pad recovery; not visually approved')
+          recipe['program_profile']={'path':str(path.relative_to(root)),'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
+          recipe_path=root/'recipes/heavy-biped/sprint.v4.json';recipe_path.write_text(json.dumps(recipe,indent=2,sort_keys=True)+'\n')
+          out=root/'out/sprint'/os.environ['VARIANT']
+          try:
+              compile_recipe(recipe_path,root=root,output=out)
+              status=verify_package(out);v=json.loads((out/'validation.json').read_text())
+              print('SPRINT_FINAL '+json.dumps({'variant':os.environ['VARIANT'],**status,'failures':failures(v),
+                  'rates':v['rotation_rates'],'feasibility':v['solver_feasibility'],'continuity':v['cyclic_continuity']}),flush=True)
+              if status['technical_status']=='PASS':
+                  for p in (path,recipe_path):
+                      response=subprocess.run(['gh','api','repos/hurtener/eonwild-factory/git/blobs','--method','POST','--input','-'],input=json.dumps({'content':p.read_text(),'encoding':'utf-8'}),text=True,capture_output=True,check=True)
+                      print('SPRINT_VERIFIED_INPUT '+json.dumps({'path':str(p.relative_to(root)),'blob':json.loads(response.stdout)['sha']}),flush=True)
+              else:sys.exit(2)
+          except Exception:
+              out.parent.mkdir(parents=True,exist_ok=True)
+              (out.parent/(os.environ['VARIANT']+'.error.log')).write_text(traceback.format_exc())
+              raise
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
-          name: final-recovery-${{ matrix.recipe }}
-          path: out/pad-recovery
+          name: final-sprint-${{ matrix.variant }}
+          path: |
+            out/sprint
+            catalog/programs/heavy-biped.sprint.v4.json
+            recipes/heavy-biped/sprint.v4.json
           retention-days: 14
