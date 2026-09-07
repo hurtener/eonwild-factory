@@ -20,14 +20,14 @@ def test_transport_rebases_a_fractional_import_range_without_retiming_it():
     assert clock.source_end_frame == 137.25
     assert clock.transport_start_frame == 0.0
     assert clock.transport_end_frame == 120.0
-    assert clock.bake_step_frames == 1.0
+    assert clock.bake_step_frames == .5
     assert clock.receipt()['transport_duration_s'] == clock.receipt()['source_duration_s'] == 1.0
 
 
 def test_transport_preserves_a_real_fractional_terminal_time_without_a_held_sample():
     clock = transport_clock(3.5, 153.75, 1.2520833333333334)
     assert clock.transport_end_frame == 150.25
-    assert clock.bake_step_frames == 150.25 / 151
+    assert clock.bake_step_frames == 150.25 / 301
     assert clock.bake_step_frames < 1.0
     receipt = clock.receipt()
     assert receipt['transport_frame_end'] / receipt['source_fps'] == receipt['source_duration_s']

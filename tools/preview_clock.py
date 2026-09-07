@@ -9,6 +9,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import math
 from numbers import Real
+import struct
 
 
 SOURCE_FPS = 120
@@ -26,12 +27,17 @@ class TransportClock:
 
     source_start_frame: float
     source_end_frame: float
-    duration_s: float
+    declared_duration_s: float
+    source_duration_frames: float
     source_fps: int = SOURCE_FPS
 
     @property
     def duration_frames(self) -> float:
-        return self.duration_s * self.source_fps
+        return self.source_duration_frames
+
+    @property
+    def duration_s(self) -> float:
+        return self.source_duration_frames / self.source_fps
 
     @property
     def transport_start_frame(self) -> float:
@@ -49,14 +55,18 @@ class TransportClock:
         frame when a valid clip ends between source ticks.  This changes only
         sampling density; transport key times retain their exact source clock.
         """
-        return self.duration_frames / math.ceil(self.duration_frames)
+        # A half-frame ceiling makes a binary fractional terminal endpoint
+        # representable to Blender's FBX baker while preserving its timestamp.
+        return self.duration_frames / math.ceil(self.duration_frames * 2)
 
     def receipt(self) -> dict[str, float | int | str]:
         return {
             'source_fps': self.source_fps,
             'source_frame_start': self.source_start_frame,
             'source_frame_end': self.source_end_frame,
+            'declared_duration_s': self.declared_duration_s,
             'source_duration_s': self.duration_s,
+            'serialized_vs_declared_delta_s': self.duration_s - self.declared_duration_s,
             'transport_frame_start': self.transport_start_frame,
             'transport_frame_end': self.transport_end_frame,
             'transport_duration_s': self.duration_s,
@@ -69,21 +79,25 @@ def transport_clock(source_start_frame: object, source_end_frame: object,
                     duration_s: object, source_fps: object = SOURCE_FPS) -> TransportClock:
     """Validate imported coverage against the declared duration and re-base it.
 
-    A tiny numerical tolerance only covers GLTF/Blender float conversion. It
-    never rounds the transport endpoint, treats a nearby source frame as the
-    terminal pose, or permits an NLA time-scale correction.
+    Float32 glTF timestamps are admitted with the factory's 2 microsecond
+    timeline tolerance. The imported endpoint remains authoritative for
+    transport; it is never snapped to the float64 plan duration.
     """
     start = _number(source_start_frame, 'source frame start')
     end = _number(source_end_frame, 'source frame end')
     duration = _number(duration_s, 'source duration')
     if duration <= 0:
         raise ValueError('invalid source duration')
-    if isinstance(source_fps, bool) or type(source_fps) is not int or not 1 <= source_fps <= 1000:
+    if (isinstance(source_fps, bool) or not isinstance(source_fps, Real) or not math.isfinite(source_fps)
+            or not 1 <= source_fps <= 1000 or int(source_fps) != source_fps):
         raise ValueError('invalid source frame rate')
     if end <= start:
         raise ValueError('source action has no positive duration')
+    source_fps = int(source_fps)
     expected = duration * source_fps
     actual = end - start
-    if abs(actual - expected) > 64 * math.ulp(max(1.0, abs(actual), abs(expected))):
+    f32_expected = struct.unpack('f', struct.pack('f', expected))[0]
+    tolerance = max(2e-6 * source_fps, abs(f32_expected - expected) * 2)
+    if abs(actual - expected) > tolerance:
         raise ValueError(f'imported duration changed: {actual / source_fps} != {duration}')
-    return TransportClock(start, end, duration, source_fps)
+    return TransportClock(start, end, duration, actual, source_fps)

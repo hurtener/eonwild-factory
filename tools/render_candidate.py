@@ -68,7 +68,9 @@ def export_transport(scene, actions, clock, target):
     armature.animation_data_create()
     armature.animation_data.action = None
     track = armature.animation_data.nla_tracks.new()
-    strip = track.strips.new('FactoryTransport', clock.transport_start_frame, matching[0])
+    # Blender's creation API requires an integer placement even though the
+    # resulting strip endpoints are floating point.
+    strip = track.strips.new('FactoryTransport', int(clock.transport_start_frame), matching[0])
     strip.action_frame_start = clock.source_start_frame
     strip.action_frame_end = clock.source_end_frame
     strip.frame_start = clock.transport_start_frame
@@ -96,8 +98,11 @@ def export_transport(scene, actions, clock, target):
     start = min(float(action.frame_range[0]) for action in imported)
     end = max(float(action.frame_range[1]) for action in imported)
     tolerance = 64 * math.ulp(max(1., abs(clock.transport_end_frame)))
-    if abs(start - clock.transport_start_frame) > tolerance or abs(end - clock.transport_end_frame) > tolerance:
-        raise ValueError(f'FBX transport endpoint changed on reopen: [{start}, {end}] != [0, {clock.transport_end_frame}]')
+    # Blender's importer presents an FBX zero timestamp at frame 1.  Preserve
+    # that documented import origin, and measure the actual reopened interval
+    # rather than falsely demanding a Blender-frame zero.
+    if abs((end - start) - clock.duration_frames) > tolerance:
+        raise ValueError(f'FBX transport duration changed on reopen: {end - start} != {clock.duration_frames}')
     return {'sha256': sha(target), 'nla_scale': nla_scale, 'reopened_status': 'PASS',
         'reopened_frame_start': start, 'reopened_frame_end': end,
         'reopened_duration_s': (end - start) / clock.source_fps}
@@ -151,7 +156,9 @@ def projected_camera_frame(points, *, viewing_direction, fallback_center, fallba
     projected_height = max(1e-6, top - bottom)
     projected_width = max(1e-6, right_edge - left)
     # 8% room keeps tail/feet readable without fitting individual frames.
-    scale = max(projected_height, projected_width / aspect) * 1.08
+    # Blender's landscape orthographic_scale is the visible width.  Constrain
+    # both projected width and height, rather than treating it as height.
+    scale = max(projected_width, projected_height * aspect) * 1.08
     if not math.isfinite(scale) or scale <= 0:
         return fallback_center, fallback_span * 1.28
     return target, scale
@@ -193,6 +200,12 @@ def main():
     scene.render.fps, scene.render.fps_base = SOURCE_FPS, 1
     scene.unit_settings.system, scene.unit_settings.scale_length = 'METRIC', 1
     bpy.ops.import_scene.gltf(filepath=str(source))
+    # Blender's glTF importer owns its action-frame representation and may
+    # reset scene FPS (currently 24).  Seconds remain the package authority;
+    # never mistake the factory's 120 Hz plan samples for imported frame IDs.
+    action_fps = scene.render.fps / scene.render.fps_base
+    if not math.isfinite(action_fps) or action_fps <= 0:
+        raise ValueError('imported action has invalid frame clock')
     meshes = [obj for obj in scene.objects if obj.type == 'MESH']
     if not meshes or not any(obj.type == 'ARMATURE' for obj in scene.objects):
         raise ValueError('candidate import has no rigged mesh')
@@ -201,7 +214,8 @@ def main():
         raise ValueError('candidate import has no animation actions')
     start = min(float(action.frame_range[0]) for action in actions)
     end = max(float(action.frame_range[1]) for action in actions)
-    clock = transport_clock(start, end, duration, SOURCE_FPS)
+    clock = transport_clock(start, end, duration, action_fps)
+    source_duration = clock.duration_s
     count = len(sample_times)
     scene.frame_start, scene.frame_end = math.floor(start), round(end)
     set_frame(scene, start)
@@ -209,8 +223,10 @@ def main():
     initial_root = root_position()
     exports = {}
     points = []
-    for k in range(9):
-        set_frame(scene, start + (end - start) * k / 8)
+    # Camera coverage is a whole-clip claim: inspect every native review
+    # sample and the exact source endpoint, never nine representative probes.
+    for time in [*sample_times, source_duration]:
+        set_frame(scene, start + time * action_fps)
         shift = root_position() - initial_root if args.mode == 'root_motion' else Vector((0, 0, 0))
         deps = bpy.context.evaluated_depsgraph_get()
         for obj in meshes:
@@ -303,7 +319,7 @@ def main():
     scene.render.film_transparent = False
     timeline = []
     for index, time in enumerate(sample_times):
-        set_frame(scene, start + time * SOURCE_FPS)
+        set_frame(scene, start + time * action_fps)
         shift = root_position() - initial_root if args.mode == 'root_motion' else Vector((0, 0, 0))
         camera.location = camera_base + shift
         scene.render.filepath = str(frames / f'{index:05d}.png')
@@ -313,12 +329,12 @@ def main():
     (output / 'timeline.json').write_text(json.dumps(timeline, indent=2) + '\n')
     terminal = None
     if runtime.get('loop') is False:
-        set_frame(scene, start + duration * SOURCE_FPS)
+        set_frame(scene, start + source_duration * action_fps)
         shift = root_position() - initial_root if args.mode == 'root_motion' else Vector((0, 0, 0))
         camera.location = camera_base + shift
         scene.render.filepath = str(output / 'terminal.png')
         bpy.ops.render.render(write_still=True)
-        terminal = {'source_time_s': duration, 'sha256': sha(output / 'terminal.png')}
+        terminal = {'source_time_s': source_duration, 'sha256': sha(output / 'terminal.png')}
     video = output / 'preview.mp4'
     subprocess.run(['ffmpeg', '-y', '-framerate', str(args.fps), '-i', str(frames / '%05d.png'),
         '-c:v', 'libx264', '-crf', '20', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', str(video)], check=True)
@@ -339,8 +355,9 @@ def main():
         'source_kind': manifest.get('kind', 'unapproved_candidate'), 'technical_status': manifest.get('technical_status', 'NOT_EVALUATED'),
         'blender': bpy.app.version_string, 'engine': 'CYCLES_CPU', 'samples': args.samples, 'denoising': False,
         'fps': args.fps, 'frames': count, 'verified_encoded_frames': int(probe['nb_read_frames']),
-        'source_duration_s': duration, 'encoded_duration_s': count / args.fps,
-        'source_frame_start': start, 'source_frame_end': end, 'source_fps': SOURCE_FPS,
+        'declared_duration_s': duration, 'source_duration_s': source_duration, 'encoded_duration_s': count / args.fps,
+        'source_frame_start': start, 'source_frame_end': end, 'source_fps': action_fps,
+        'factory_sample_hz': SOURCE_FPS,
         'transport_clock': clock.receipt() if args.fbx else None,
         'timing': 'native-time sampling on [0, duration); no speed adjustment or duplicate endpoint',
         'terminal_pose': terminal,
