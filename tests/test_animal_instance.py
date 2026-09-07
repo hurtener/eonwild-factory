@@ -1,3 +1,4 @@
+import hashlib
 import json
 from copy import deepcopy
 from pathlib import Path
@@ -12,6 +13,8 @@ from eonwild_motion.factory.animal import (
 from eonwild_motion.factory.compiler import load_recipe
 from eonwild_motion.factory.source import admit_geometry,geometry_height
 from eonwild_motion.glb.container import Glb
+from eonwild_motion.planning.grounded_gait import load_grounded_gait, sample_grounded_gait
+from eonwild_motion.solve.performance import load_performance
 from test_v9_airborne_gait import fixture
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -75,9 +78,34 @@ def test_committed_source_calibration_is_recomputed_from_bound_rig_and_skin():
 def test_benchmark_recipe_binds_animal_without_superseding_engineering_walk():
     path=ROOT/'recipes/heavy-biped/tarbosaurus-pin-552-1-adult-walk.v1.json'
     recipe,paths=load_recipe(path,ROOT)
+    engineering=json.loads((ROOT/'recipes/heavy-biped/walk.v3.json').read_text())
     assert recipe['animal']['path']==str(PROFILE.relative_to(ROOT))
     assert 'animal' in paths and 'supersedes' not in recipe
-    assert recipe['program_profile']==json.loads((ROOT/'recipes/heavy-biped/walk.v3.json').read_text())['program_profile']
+    assert recipe['program_profile'] != engineering['program_profile']
+    assert recipe['performance_profile'] != engineering['performance_profile']
+
+
+def test_adult_walk_profile_has_observable_distal_release_and_tail_coordination():
+    adult=json.loads((ROOT/'recipes/heavy-biped/tarbosaurus-pin-552-1-adult-walk.v1.json').read_text())
+    engineering=json.loads((ROOT/'recipes/heavy-biped/walk.v3.json').read_text())
+    adult_gait=load_grounded_gait(json.loads((ROOT/adult['program_profile']['path']).read_text()))
+    engineering_gait=load_grounded_gait(json.loads((ROOT/engineering['program_profile']['path']).read_text()))
+    times=[2*adult_gait.step_period_s*i/240 for i in range(241)]
+    adult_feet=[sample_grounded_gait(adult_gait,t,2.)['feet']['left'] for t in times]
+    engineering_feet=[sample_grounded_gait(engineering_gait,t,2.)['feet']['left'] for t in times]
+    assert max(row['foot_pitch_degrees'] for row in adult_feet) > max(row['foot_pitch_degrees'] for row in engineering_feet)+7
+    assert min(row['foot_pitch_degrees'] for row in adult_feet) < min(row['foot_pitch_degrees'] for row in engineering_feet)-7
+    assert max(row['toe_flex_degrees'] for row in adult_feet) > max(row['toe_flex_degrees'] for row in engineering_feet)+5
+    adult_performance_document=json.loads((ROOT/adult['performance_profile']['path']).read_text())
+    adult_performance=load_performance(adult_performance_document)
+    engineering_performance=load_performance(json.loads((ROOT/engineering['performance_profile']['path']).read_text()))
+    assert adult_performance.tail_yaw_degrees > engineering_performance.tail_yaw_degrees
+    assert adult_performance.tail_lag_fraction > engineering_performance.tail_lag_fraction
+    assert adult_performance_document['classification']=='art-directed coordination; no force or biological claim'
+    assert adult_performance_document['reference']['classification']=='visual direction only; no biological or force claim'
+    assert adult_performance_document['reference']['source_frame_rate_hz']==24
+    for asset in adult_performance_document['reference']['assets']:
+        assert hashlib.sha256((ROOT/asset['path']).read_bytes()).hexdigest()==asset['sha256']
 
 
 def test_report_exposes_scale_kinematics_and_nonclaims():

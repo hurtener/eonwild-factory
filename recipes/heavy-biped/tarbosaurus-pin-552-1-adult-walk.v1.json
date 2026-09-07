@@ -18,16 +18,16 @@
     "sha256": "dbb0336caacea988fdc5b5c9250fa4490f281e8442b23acf24502a7e35896a7b"
   },
   "program_profile": {
-    "path": "catalog/programs/heavy-biped.walk.v3.json",
-    "sha256": "38b636cd5e80c6b11d0c7c926b843484c978ee764882c802189b9b7056ec7d6f"
+    "path": "catalog/programs/heavy-biped.tarbosaurus-adult-walk.v1.json",
+    "sha256": "ea018f47631a0d509a1a2adedf620947f15e6c9665b9043e361c3d2277c4a182"
   },
   "contact_profile": {
     "path": "catalog/contacts/heavy-biped.v9.json",
     "sha256": "fef6279c1e7653ae6c7c485c3f934fd647410a726acb59393312b72af754a89f"
   },
   "performance_profile": {
-    "path": "catalog/performance/heavy-biped.walk.v2.json",
-    "sha256": "ade6d37243d4b9597c9d2c15a86a667b5528654aca3998315abe7f2f06a968be"
+    "path": "catalog/performance/heavy-biped.tarbosaurus-adult-walk.v1.json",
+    "sha256": "4ce24c072c01f9378af2d13cf95bfe15a16f0fb2e51431f7ab089f5f97d501cf"
   },
   "forward_axis": [0.03893162055641767, 0.0, 0.9992418770852486],
   "up_axis": [0.0, 1.0, 0.0]
