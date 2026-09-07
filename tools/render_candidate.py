@@ -20,9 +20,8 @@ from mathutils import Vector
 
 # Blender does not reliably add a --python script's directory to sys.path.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from preview_clock import SOURCE_FPS, transport_clock
 from review_timing import native_sample_times
-
-SOURCE_FPS = 120
 
 
 def sha(path):
@@ -56,6 +55,54 @@ def semantic_root(scene, runtime):
     raise ValueError(f'cannot uniquely resolve the declared root for camera tracking: {name!r}')
 
 
+def export_transport(scene, actions, clock, target):
+    """Export and reopen one unit-scale, zero-based FBX transport strip."""
+    matching = [action for action in actions if abs(float(action.frame_range[0]) - clock.source_start_frame) <= 64 * math.ulp(max(1., abs(clock.source_start_frame)))
+        and abs(float(action.frame_range[1]) - clock.source_end_frame) <= 64 * math.ulp(max(1., abs(clock.source_end_frame)))]
+    if len(matching) != 1:
+        raise ValueError('FBX transport requires one action spanning the declared source clock')
+    armatures = [obj for obj in scene.objects if obj.type == 'ARMATURE']
+    if len(armatures) != 1:
+        raise ValueError('FBX transport requires one imported armature')
+    armature = armatures[0]
+    armature.animation_data_create()
+    armature.animation_data.action = None
+    track = armature.animation_data.nla_tracks.new()
+    strip = track.strips.new('FactoryTransport', clock.transport_start_frame, matching[0])
+    strip.action_frame_start = clock.source_start_frame
+    strip.action_frame_end = clock.source_end_frame
+    strip.frame_start = clock.transport_start_frame
+    strip.frame_end = clock.transport_end_frame
+    strip.blend_type = 'REPLACE'
+    strip.extrapolation = 'NOTHING'
+    strip.use_animated_time = False
+    if abs(strip.scale - 1.0) > 64 * math.ulp(1.0):
+        raise ValueError(f'FBX transport would retime source action: NLA scale {strip.scale}')
+    nla_scale = float(strip.scale)
+    bpy.ops.export_scene.fbx(filepath=str(target), object_types={'ARMATURE', 'MESH'},
+        add_leaf_bones=False, bake_anim=True, bake_anim_use_all_actions=False,
+        bake_anim_use_nla_strips=True, bake_anim_step=clock.bake_step_frames,
+        bake_anim_force_startend_keying=True, bake_anim_simplify_factor=0.0,
+        axis_forward='-Z', axis_up='Y', global_scale=1.0, apply_unit_scale=True,
+        path_mode='COPY', embed_textures=True)
+    # This is transport evidence only; it does not establish Unity parity.
+    bpy.ops.wm.read_factory_settings(use_empty=True)
+    reopened = bpy.context.scene
+    reopened.render.fps, reopened.render.fps_base = clock.source_fps, 1
+    bpy.ops.import_scene.fbx(filepath=str(target))
+    imported = list(bpy.data.actions)
+    if not imported:
+        raise ValueError('FBX transport reopened without animation')
+    start = min(float(action.frame_range[0]) for action in imported)
+    end = max(float(action.frame_range[1]) for action in imported)
+    tolerance = 64 * math.ulp(max(1., abs(clock.transport_end_frame)))
+    if abs(start - clock.transport_start_frame) > tolerance or abs(end - clock.transport_end_frame) > tolerance:
+        raise ValueError(f'FBX transport endpoint changed on reopen: [{start}, {end}] != [0, {clock.transport_end_frame}]')
+    return {'sha256': sha(target), 'nla_scale': nla_scale, 'reopened_status': 'PASS',
+        'reopened_frame_start': start, 'reopened_frame_end': end,
+        'reopened_duration_s': (end - start) / clock.source_fps}
+
+
 def camera_spec(path, *, view, focus, center, position, root, scale):
     expected = {'schema', 'view', 'focus', 'center_relative_root', 'position_relative_root', 'orthographic_scale'}
     if path is not None and path.exists():
@@ -79,6 +126,35 @@ def camera_spec(path, *, view, focus, center, position, root, scale):
             json.dump(value, handle, indent=2)
             handle.write('\n')
     return value
+
+
+def projected_camera_frame(points, *, viewing_direction, fallback_center, fallback_span, aspect):
+    """Return a full-body orthographic frame for one declared view direction.
+
+    Bounds are projected onto the camera plane once, over the complete native
+    clip.  They only choose a camera target and scale; scene transforms, floor
+    and root tracking remain untouched.
+    """
+    direction = viewing_direction.normalized()
+    right = direction.cross(Vector((0, 0, 1)))
+    if right.length < 1e-8:
+        raise ValueError('review camera direction is parallel to world up')
+    right.normalize()
+    up = right.cross(direction).normalized()
+    horizontal = [point.dot(right) for point in points]
+    vertical = [point.dot(up) for point in points]
+    depth = [point.dot(direction) for point in points]
+    left, right_edge = min(horizontal), max(horizontal)
+    bottom, top = min(vertical), max(vertical)
+    depth_center = (min(depth) + max(depth)) / 2
+    target = right * ((left + right_edge) / 2) + up * ((bottom + top) / 2) + direction * depth_center
+    projected_height = max(1e-6, top - bottom)
+    projected_width = max(1e-6, right_edge - left)
+    # 8% room keeps tail/feet readable without fitting individual frames.
+    scale = max(projected_height, projected_width / aspect) * 1.08
+    if not math.isfinite(scale) or scale <= 0:
+        return fallback_center, fallback_span * 1.28
+    return target, scale
 
 
 def main():
@@ -125,24 +201,13 @@ def main():
         raise ValueError('candidate import has no animation actions')
     start = min(float(action.frame_range[0]) for action in actions)
     end = max(float(action.frame_range[1]) for action in actions)
-    if abs((end - start) / SOURCE_FPS - duration) > 2e-5:
-        raise ValueError(f'imported duration changed: {(end-start)/SOURCE_FPS} != {duration}')
+    clock = transport_clock(start, end, duration, SOURCE_FPS)
     count = len(sample_times)
     scene.frame_start, scene.frame_end = math.floor(start), round(end)
     set_frame(scene, start)
     root_position = semantic_root(scene, runtime)
     initial_root = root_position()
     exports = {}
-    if args.fbx:
-        if abs(start - round(start)) > .001 or abs(end - round(end)) > .001:
-            raise ValueError('FBX transport requires endpoints on the declared 120 Hz grid')
-        target = output / 'motion.fbx'
-        bpy.ops.export_scene.fbx(filepath=str(target), object_types={'ARMATURE', 'MESH'},
-            add_leaf_bones=False, bake_anim=True, bake_anim_use_all_actions=False,
-            bake_anim_use_nla_strips=False, bake_anim_simplify_factor=0.0,
-            axis_forward='-Z', axis_up='Y', global_scale=1.0, apply_unit_scale=True,
-            path_mode='COPY', embed_textures=True)
-        exports['motion.fbx'] = sha(target)
     points = []
     for k in range(9):
         set_frame(scene, start + (end - start) * k / 8)
@@ -174,9 +239,21 @@ def main():
         height = float(runtime.get('body_height_m', max(.1, (high.z - ground_level) * .55)))
         center = Vector((initial_root.x, initial_root.y, ground_level + .45 * height))
         span = 2.4 * height
-    position = center + offset.normalized() * span * 1.65 + Vector((0, 0, span * .25))
+    # The side/end-on views need their own projected fit.  A tail's world
+    # length is horizontal in a side view, not a reason to make its height
+    # occupy only a small fraction of the film.  Feet focus remains an
+    # explicit close diagnostic crop.
+    aspect = 16 / 9
+    if args.focus == 'body':
+        viewing_direction = (offset.normalized() * 1.65 + Vector((0, 0, .25))).normalized()
+        center, scale = projected_camera_frame(points, viewing_direction=viewing_direction,
+            fallback_center=center, fallback_span=span, aspect=aspect)
+    else:
+        scale = span * 1.28
+        viewing_direction = (offset.normalized() * 1.65 + Vector((0, 0, .25))).normalized()
+    position = center + viewing_direction * max(span, scale) * 1.65
     spec = camera_spec(args.camera_lock, view=args.view, focus=args.focus, center=center,
-        position=position, root=initial_root, scale=span * 1.28)
+        position=position, root=initial_root, scale=scale)
     camera_base = initial_root + Vector(spec['position_relative_root'])
     camera_center = initial_root + Vector(spec['center_relative_root'])
     (output / 'camera.json').write_text(json.dumps(spec, indent=2) + '\n')
@@ -254,6 +331,8 @@ def main():
         raise ValueError('encoded preview changed the native review frame rate')
     cover = output / 'cover.png'
     cover.write_bytes((frames / f'{count // 3:05d}.png').read_bytes())
+    if args.fbx:
+        exports['motion.fbx'] = export_transport(scene, actions, clock, output / 'motion.fbx')
     receipt = {'schema': 'eonwild.motion.review-render.v2', 'source_sha256': sha(source),
         'manifest_sha256': sha(package / 'manifest.json'), 'renderer_sha256': sha(Path(__file__)),
         'timing_sampler_sha256': sha(Path(__file__).with_name('review_timing.py')),
@@ -262,6 +341,7 @@ def main():
         'fps': args.fps, 'frames': count, 'verified_encoded_frames': int(probe['nb_read_frames']),
         'source_duration_s': duration, 'encoded_duration_s': count / args.fps,
         'source_frame_start': start, 'source_frame_end': end, 'source_fps': SOURCE_FPS,
+        'transport_clock': clock.receipt() if args.fbx else None,
         'timing': 'native-time sampling on [0, duration); no speed adjustment or duplicate endpoint',
         'terminal_pose': terminal,
         'mode': args.mode, 'view': args.view, 'focus': args.focus, 'camera': spec,
