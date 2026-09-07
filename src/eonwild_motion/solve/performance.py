@@ -126,7 +126,14 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
         _world_delta(source, translations, rotations, scales, node, up, degrees)
     head = source.name_to_node[roles["head"]]
     neck = [source.name_to_node[n] for n in roles.get("neck", [])]
-    neutral_forward = _qrotate(_qinv(_rotation_from_matrix(base_worlds[head])), tuple(forward))
+    calibration = plan.get("gaze_calibration")
+    if calibration is None:
+        # Preserve the low-level/synthetic compatibility path. The active
+        # factory supplies a geometry-derived rostral axis explicitly.
+        neutral_forward = _qrotate(_qinv(_rotation_from_matrix(base_worlds[head])), tuple(forward))
+    else:
+        from .gaze import load_rostral_axis
+        neutral_forward = load_rostral_axis(calibration, roles["head"])
 
     def direction():
         worlds = _world_matrices(source, translations, rotations, scales)
