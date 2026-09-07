@@ -84,6 +84,24 @@ def _interior(a: np.ndarray, b: np.ndarray) -> float:
     return math.degrees(math.acos(float(np.clip(_unit(a) @ _unit(b), -1, 1))))
 
 
+def _recovery_pitch_target(gait: AirborneGait, foot_plan: Mapping[str, Any], *, airborne: bool) -> float:
+    """Phase-pure pitch carrier for the returning half of swing.
+
+    The carrier starts and ends with zero slope and derives its excursion from
+    the authored hip-lift response. It keeps the articulation solve on one
+    recovery branch without consulting a previously sampled pose.
+    """
+    authored = float(foot_plan["foot_pitch_degrees"])
+    u = float(foot_plan["swing_phase"])
+    peak = gait.swing_recovery_peak_fraction
+    if not airborne or foot_plan["contact"] or u <= peak:
+        return authored
+    progress = (u - peak) / (1 - peak)
+    recovery_fold = math.sin(math.pi * progress) ** 2
+    scale = float(foot_plan.get("articulation_scale", 1.0))
+    return authored - 0.5 * gait.swing_hip_lift_degrees * scale * recovery_fold
+
+
 def _orientation_from_bend(source_upper: np.ndarray, source_normal: np.ndarray, target_upper: np.ndarray, target_normal: np.ndarray) -> tuple[float, ...]:
     """Map both the bone axis and its bend plane; a direction alone loses twist."""
     a, b = _unit(source_upper), _unit(target_upper)
@@ -354,8 +372,6 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
     frames_t, frames_r, emitted = [], [], []
     max_residual, max_extension = 0.0, 0.0
     max_envelope_violation = 0.0
-    previous_pitch = {}
-    previous_time = None
     for frame_index, row in enumerate(plan["samples"]):
         tr, rot = base_t[:], base_r[:]
         from .performance import phase_and_gain
@@ -492,16 +508,23 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
                 # pose solve itself; emitted rotations are never post-filtered.
                 margin = gait.articulation_preferred_margin_degrees
                 preferred = sum(max(0, margin - slack) ** 4 / (margin * margin) for slack in slacks) if margin else 0.0
-                score = (degrees - foot_plan["foot_pitch_degrees"]) ** 2 + recovery * (hip_angle - hip_target) ** 2 + recovery * gait.articulation_preferred_margin_weight * preferred + 1e5 * sum(e * e for e in errors) + 1e8 * extension * extension
+                pitch_target = _recovery_pitch_target(
+                    gait, foot_plan,
+                    airborne="flight_fraction" in plan.get("parameters", {}),
+                )
+                score = (degrees - pitch_target) ** 2 + recovery * (hip_angle - hip_target) ** 2 + recovery * gait.articulation_preferred_margin_weight * preferred + 1e5 * sum(e * e for e in errors) + 1e8 * extension * extension
                 return score, candidate_q, candidate_foot, target_ankle, candidate_knee, candidate_end, extension, max(errors), degrees
 
             # A one-dimensional sagittal articulation solve coordinates the
             # thigh and metatarsal around the unchanged toe target. It does not
             # raise feet, translate limb bones, or smooth over a branch flip.
+            # Solve the articulated pose from this authored state alone. The
+            # old bounds depended on the previously sampled pitch, so the same
+            # gait phase could emit a different pose when a transition and a
+            # sustained clip reached it through different sample histories.
+            # Rate compliance is measured on the completed trajectory below;
+            # it must never alter this pose as a function of query order.
             lo, hi = -45.0, 85.0
-            if side in previous_pitch and previous_time is not None:
-                limit = gait.max_ankle_pitch_velocity_degrees_per_s * (row["time_s"] - previous_time)
-                lo, hi = max(lo, previous_pitch[side] - limit), min(hi, previous_pitch[side] + limit)
             candidates = [pitch_candidate(degrees) for degrees in np.linspace(lo, hi, 27)]
             # Preserve an exactly feasible authored pitch (especially flat
             # stance=0). A refined grid alone can leave a few millidegrees of
@@ -518,7 +541,6 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
             _, pitch, desired_foot, target, desired_knee, desired_end, extension, envelope_error, solved_pitch = best
             max_extension = max(max_extension, extension)
             max_envelope_violation = max(max_envelope_violation, envelope_error)
-            previous_pitch[side] = solved_pitch
             desired_normal = _unit(np.cross(desired_knee - hp, desired_end - desired_knee))
             source_normal = (_unit(np.cross(kp - hp, ap - kp)) if "performance" in plan else anatomical_normals[side])
             delta = _orientation_from_bend(kp - hp, source_normal, desired_knee - hp, desired_normal)
@@ -596,7 +618,6 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
             facts[side] = {"contact": foot_plan["contact"], "foot_world_m": actual.tolist(), "distal_contact_centroid_m": tip_centroid.tolist(), "target_foot_world_m": desired_foot.tolist(), "foot_target_residual_m": residual, "minimum_toe_joint_height_m": toe_height, "solved_foot_pitch_degrees": solved_pitch, "articulation_envelope_violation_degrees": envelope_error}
         frames_t.append(tr); frames_r.append(rot)
         emitted.append({"time_s": row["time_s"], "flight": row["flight"], "feet": facts})
-        previous_time = row["time_s"]
     times = np.asarray([r["time_s"] for r in plan["samples"]])
     ta, ra = np.asarray(frames_t), np.asarray(frames_r)
     # Quaternion sign continuity prevents long-path interpolation artifacts.
@@ -641,6 +662,20 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
     receipt = {"status": "PROVISIONAL_REQUIRES_SKINNED_AND_VISUAL_GATE", "semantic_binding": dict(roles), "body_height_m": body_height, "forward_axis": forward.tolist(), "up_axis": up.tolist(), "ground_toe_joint_plane_m": ground, "max_foot_target_residual_m": max_residual, "max_unreachable_extension_m": max_extension, "max_planted_distal_contact_step_drift_m": max_drift, "minimum_toe_joint_height_m": min(f["minimum_toe_joint_height_m"] for r in emitted for f in r["feet"].values()), "flight_sample_count": sum(r["flight"] for r in emitted), "leg_local_translations_constant": True, "in_place_derived_only_from_authority": True, "final_skinned_contact_gate": "NOT_YET_MEASURED", "emitted_proxy_samples": emitted}
     receipt["max_planted_distal_contact_velocity_mps"] = max_velocity
     receipt["maximum_articulation_envelope_violation_degrees"] = max_envelope_violation
+    maximum_pitch_rate = 0.0
+    pitch_rate_witness = None
+    for side in legs:
+        samples = [(row["time_s"], row["feet"][side]["solved_foot_pitch_degrees"])
+                   for row in emitted]
+        for (old_time, old_pitch), (new_time, new_pitch) in zip(samples, samples[1:]):
+            rate = abs(new_pitch - old_pitch) / (new_time - old_time)
+            if rate > maximum_pitch_rate:
+                maximum_pitch_rate = rate
+                pitch_rate_witness = {"side": side, "times_s": [old_time, new_time],
+                                      "pitches_degrees": [old_pitch, new_pitch]}
+    receipt["maximum_solved_foot_pitch_velocity_degrees_per_s"] = maximum_pitch_rate
+    receipt["solved_foot_pitch_velocity_limit_degrees_per_s"] = gait.max_ankle_pitch_velocity_degrees_per_s
+    receipt["maximum_solved_foot_pitch_velocity_witness"] = pitch_rate_witness
     receipt["articulation_limits_classification"] = "body-configurable engineering limits, not biologically certified; provisional-envelope consolidation deferred"
     if body_response:
         receipt["body_response"] = body_response

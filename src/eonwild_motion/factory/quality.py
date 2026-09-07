@@ -25,12 +25,19 @@ def require_supported_geometry(source: Glb) -> None:
 def solver_checks(receipt: Mapping[str, Any]) -> dict:
     limits = {"max_foot_target_residual_m": 0.001, "max_unreachable_extension_m": 0.001,
               "maximum_articulation_envelope_violation_degrees": 0.01}
+    pitch_rate_key = "maximum_solved_foot_pitch_velocity_degrees_per_s"
+    pitch_limit_key = "solved_foot_pitch_velocity_limit_degrees_per_s"
+    if pitch_rate_key in receipt or pitch_limit_key in receipt:
+        pitch_limit = receipt.get(pitch_limit_key)
+        valid_limit = (not isinstance(pitch_limit, bool) and isinstance(pitch_limit, (int, float))
+                       and math.isfinite(pitch_limit) and pitch_limit > 0)
+        limits[pitch_rate_key] = float(pitch_limit) if valid_limit else None
     checks, values = {}, {}
     for key, limit in limits.items():
         value = receipt.get(key)
         valid = not isinstance(value, bool) and isinstance(value, (int, float)) and math.isfinite(value) and value >= 0
         values[key] = float(value) if valid else None
-        checks[key] = bool(valid and value <= limit)
+        checks[key] = bool(valid and limit is not None and value <= limit)
     return {"status": "PASS" if all(checks.values()) else "FAIL", "checks": checks,
             "values": values, "limits": limits,
             "classification": "engineering feasibility only; missing evidence is a failure"}
