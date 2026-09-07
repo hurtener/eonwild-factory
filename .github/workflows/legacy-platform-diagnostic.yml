@@ -1,86 +1,60 @@
-name: Complete toolchain and supported-performance verification
+name: Materialize reviewed limb source and measure preserved references
 on:
   push:
     branches: [diag/v9-legacy-reproduction-20260907]
 permissions:
   contents: read
 jobs:
-  full-suite:
-    runs-on: macos-15
-    timeout-minutes: 25
-    env: {PYTHONPATH: src, OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '2'}
+  stage-and-measure:
+    permissions:
+      contents: write # Immutable source blob only; never commits or branch refs.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env: {PYTHONPATH: src, OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '2', GH_TOKEN: '${{ github.token }}'}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with: {fetch-depth: 1, persist-credentials: false, show-progress: false}
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with: {python-version: '3.13'}
       - run: python -m pip install -e . pytest==9.1.1
-      - run: bash tools/ci_setup_blender.sh
-      - run: bash tools/ci_setup_gltf_validator.sh
-      - name: Full real-tool integration suite
-        run: |
-          set -euo pipefail
-          git config user.name 'Eonwild regression runner'
-          git config user.email 'eonwild-regression@example.invalid'
-          mkdir -p out/ci
-          python -m pytest tests -q --tb=short --junitxml=out/ci/full-tests.xml 2>&1 | tee out/ci/full-tests.log
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        if: always()
-        with:
-          name: canonical-full-integration-results
-          path: out/ci
-          retention-days: 14
-  supported-review:
-    runs-on: ubuntu-24.04
-    timeout-minutes: 25
-    env: {PYTHONPATH: src, OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '2'}
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-        with: {fetch-depth: 1, persist-credentials: false, show-progress: false}
-      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
-        with: {python-version: '3.13'}
-      - run: python -m pip install -e .
-      - name: Find the remaining feeding joint-limit witness
+      - run: python tools/migrations/stage_articulated_contact.py
+      - name: Record native geometric reference, never retime or copy it into generation
         shell: python
         run: |
-          import json,pathlib,numpy as np
-          from eonwild_motion.factory.compiler import load_recipe
-          from eonwild_motion.factory.source import geometry_height
+          import json,pathlib,sys,hashlib,numpy as np
+          sys.path.insert(0,'tools')
+          from measure_motion_reference import measure
           from eonwild_motion.glb.container import Glb
-          from eonwild_motion.planning.supported_action import load_supported_action
-          from eonwild_motion.solve.supported_action import SupportedSolver
-          root=pathlib.Path.cwd(); recipe,paths=load_recipe(root/'recipes/heavy-biped/feeding.v1.json',root)
-          source=Glb.from_bytes(paths['source'].read_bytes());roles=json.loads(paths['rig'].read_text())['roles']
-          contact=json.loads(paths['contact_profile'].read_text());profile=json.loads(paths['program_profile'].read_text())
-          height=geometry_height(source,roles,recipe['up_axis'])
-          results=[]
-          for reach in ([-.22,.28],[-.16,.20],[-.12,.18]):
-              variant=json.loads(json.dumps(profile));variant['support_reach_body_heights']=reach
-              action=load_supported_action(variant)
-              solver=SupportedSolver(source,roles,action,contact,np.asarray(recipe['up_axis']),np.asarray(recipe['forward_axis']),height)
-              worst={'violation':0}
-              for phase in np.linspace(0,6,81):
-                  t,r,s,state,facts=solver.pose(float(phase))
-                  for side,values in facts['legs'].items():
-                      for key,(lo,hi) in action.support_limits.items():
-                          amount=max(0,lo-values[key],values[key]-hi)
-                          if amount>worst['violation']:worst={'violation':amount,'phase':float(phase),'side':side,'joint':key,'value':values[key],'limits':[lo,hi]}
-              results.append({'support_reach_body_heights':reach,'worst':worst})
-              print('FEEDING_BRACE_WITNESS '+json.dumps(results[-1]),flush=True)
-          out=root/'out/feeding-brace';out.mkdir(parents=True,exist_ok=True)
-          (out/'measurements.json').write_text(json.dumps(results,indent=2)+'\n')
-      - run: bash tools/ci_setup_blender.sh
-      - name: Render the corrected forward-target bite from actual serialized motion
-        run: python tools/build_showcase.py --output out/bite-review --recipes bite-miss.v2 --render --views side three-quarter --mode root_motion --fps 24
+          from eonwild_motion.layers.leg_contact_resolve_v3 import _clip_state,_pose,_world_matrices
+          from eonwild_motion.solve.skin_rig import SkinRig
+          root=pathlib.Path.cwd(); recipe=json.loads((root/'recipes/heavy-biped/walk.v2.json').read_text())
+          roles=json.loads((root/recipe['rig']['path']).read_text())['roles']
+          folder=root/'build/V9-NARROW-GAUGE-WALK-002/sweep-run-016-v4-skinned-authority/sweep-0p34000000000000002-fa4aa9445c12'
+          source=folder/'narrow-gauge-walk-root_motion.glb'
+          assert hashlib.sha256(source.read_bytes()).hexdigest()=='b54e3740ea451927b3b812c1be3f4ca6146cc369ad1313be7f08edd5ca741cd3'
+          glb=Glb.from_bytes(source.read_bytes());clip='PROC_WALK_RELAXED_V8_1_RESPIN_ROOTMOTION'
+          tracks,times=_clip_state(glb,clip)
+          begin=_world_matrices(glb,*_pose(glb,tracks,0));end=_world_matrices(glb,*_pose(glb,tracks,len(times)-1))
+          node=glb.name_to_node[roles['root']]
+          travel=np.asarray(end[node])[:3,3]-np.asarray(begin[node])[:3,3];travel[1]=0;travel/=np.linalg.norm(travel)
+          report=measure(source,clip=clip,roles=roles,forward_axis=travel)
+          out=root/'out/reference-measurements';out.mkdir(parents=True,exist_ok=False)
+          (out/'approved-v9-walk.json').write_text(json.dumps(report,indent=2)+'\n')
+          print('APPROVED_V9_NATIVE_MEASUREMENTS '+json.dumps(report),flush=True)
+          neutral=Glb.from_bytes((root/recipe['source']['path']).read_bytes())
+          contact=json.loads((root/recipe['contact_profile']['path']).read_text())
+          rig=SkinRig(neutral,roles,np.asarray(recipe['forward_axis']),np.asarray(recipe['up_axis']),contact,oral=True)
+          head=neutral.name_to_node[roles['head']]
+          axis=rig.centroid(rig.neutral_world,'upper')-rig.neutral_world[head,:3,3];axis/=np.linalg.norm(axis)
+          calibration={'head_to_upper_rostrum_world_unit':axis.tolist(),'elevation_degrees':float(np.degrees(np.arctan2(axis@rig.up,axis@rig.forward))),
+              'classification':'geometry-derived rostral direction, not a calibrated optic axis'}
+          print('NEUTRAL_ROSTRAL_CALIBRATION '+json.dumps(calibration),flush=True)
+          (out/'neutral-rostral-calibration.json').write_text(json.dumps(calibration,indent=2)+'\n')
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
-          name: supported-bite-review
+          name: reviewed-source-and-v9-reference
           path: |
-            out/bite-review/showcase.json
-            out/bite-review/previews/**/*.mp4
-            out/bite-review/previews/**/cover.png
-            out/bite-review/previews/**/*.json
-            out/bite-review/**/*.log
-            out/feeding-brace
+            src/eonwild_motion/solve/airborne_gait.py
+            out/reference-measurements
           retention-days: 14
