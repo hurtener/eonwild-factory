@@ -29,6 +29,8 @@ class GaitTransition:
     boundary_sample_hz: int = 480
     idle_crouch_body_heights: float = .025
     minimum_swing_scale: float = .25
+    support_placement: str = "instantaneous_speed"
+    handoff_phase_fraction: float = 0.0
 
     def __post_init__(self):
         if self.kind not in ('start', 'stop'):
@@ -39,7 +41,7 @@ class GaitTransition:
             raise ContractError('invalid transition sample rate')
         if type(self.boundary_sample_hz) is not int or not self.sample_hz <= self.boundary_sample_hz <= 1920:
             raise ContractError('invalid transition boundary sample rate')
-        for key in ('anticipation_seconds', 'settle_seconds', 'idle_crouch_body_heights', 'minimum_swing_scale'):
+        for key in ('anticipation_seconds', 'settle_seconds', 'idle_crouch_body_heights', 'minimum_swing_scale', 'handoff_phase_fraction'):
             value = getattr(self, key)
             if isinstance(value, bool) or not isinstance(value, Real) or not math.isfinite(value):
                 raise ContractError(f'{key} must be finite numeric')
@@ -47,6 +49,10 @@ class GaitTransition:
             raise ContractError('transition hold exceeds its envelope')
         if not 0 <= self.idle_crouch_body_heights <= .15 or not .1 <= self.minimum_swing_scale <= 1:
             raise ContractError('transition posture exceeds its envelope')
+        if self.support_placement not in ('instantaneous_speed', 'integrated_support'):
+            raise ContractError('unknown transition support placement')
+        if not 0 <= self.handoff_phase_fraction <= .25:
+            raise ContractError('handoff phase must be within the first quarter cycle')
 
 
 def load_gait_transition(document):
@@ -66,6 +72,21 @@ def _smooth_integral(u):
     return 2.5 * u**4 - 3 * u**5 + u**6
 
 
+def declared_handoff_phase(transition: GaitTransition, gait) -> float:
+    """Return an authored phase on the bound gait's actual sampling clock.
+
+    No candidate is inspected, no phase search is performed and no timing is
+    inherited from a historical take. Integer rounding selects a clock tick,
+    not a pose that happens to satisfy a failed validation metric.
+    """
+    if not isinstance(transition, GaitTransition) or not isinstance(gait, (GroundedGait, AirborneGait)):
+        raise ContractError('handoff phase requires validated transition and gait profiles')
+    period = 2 * gait.step_period_s
+    count = math.ceil(gait.cycles * period * gait.sample_hz)
+    dt = gait.cycles * period / count
+    return round(transition.handoff_phase_fraction * period / dt) * dt
+
+
 class _Choreography:
     def __init__(self, transition, gait, height):
         if not isinstance(gait, (GroundedGait, AirborneGait)):
@@ -75,13 +96,15 @@ class _Choreography:
         self.transition, self.gait, self.height = transition, gait, float(height)
         self.step = gait.step_period_s
         self.period = 2 * self.step
-        self.ramp = transition.ramp_cycles * self.period
+        self.join_phase = declared_handoff_phase(transition, gait)
+        self.clock_offset = self.join_phase if transition.kind == 'stop' else 0.
+        self.ramp = transition.ramp_cycles * self.period - self.clock_offset
         self.speed = gait.step_length_body_heights * height / self.step
         self.reach = (touchdown_reach(gait, height) if isinstance(gait, GroundedGait) else
                       math.copysign(gait.touchdown_reach_body_heights * height, self.speed))
         self.start = transition.kind == 'start'
         self.delay = transition.anticipation_seconds if self.start else 0.
-        self.end = self.ramp + (self.period if self.start else self.step + transition.settle_seconds)
+        self.end = self.ramp + (self.period + self.join_phase if self.start else self.step + transition.settle_seconds)
         self.duration = self.delay + self.end
         if self.duration > 30:
             raise ContractError('transition duration exceeds 30 seconds')
@@ -112,9 +135,16 @@ class _Choreography:
             return 0.
         # The swing already in progress at stop entry owns its next
         # touchdown. Replanning that airborne target would jump the foot at t=0.
-        if not self.start and time <= self.step:
+        if not self.start and time <= self.step - self.clock_offset + 1e-9:
             return self.speed * time + self.reach
         weight, _ = self.envelope(time)
+        if self.transition.support_placement == 'integrated_support':
+            # Commit reach using the distance the body WILL cover over this
+            # support interval. An instantaneous speed scale leaves a planted
+            # foot behind an accelerating pelvis. Neither anchors nor the
+            # sustained gait's length/cadence are changed after touchdown.
+            travel = self.root(self.liftoff(time))[0] - self.root(time)[0]
+            weight = travel / (self.speed * self.stance)
         return self.root(time)[0] + self.reach * weight
 
     def liftoff(self, touchdown):
@@ -125,6 +155,11 @@ class _Choreography:
             # Extend support at low speed, rather than inventing a flight
             # phase before acceleration or after the final arrest.
             weight = min(self.envelope(touchdown)[0], self.envelope(touchdown + self.step)[0])
+            if self.start and self.transition.support_placement == 'integrated_support':
+                # Support must release in time for the upcoming speed, rather
+                # than retain a low-speed stance duration while the body runs
+                # away from it. The next contact is committed, not slid.
+                weight = self.envelope(touchdown + self.step)[0]
             airborne = smooth((weight - .35) / .3)
             duration = self.step * (1.12 * (1 - airborne) + (1 - self.gait.flight_fraction) * airborne)
         return max(0., touchdown + duration) if self.start else touchdown + duration
@@ -147,8 +182,8 @@ class _Choreography:
         if time < 0 and self.start:
             return {'contact': True, 'forward_m': 0., 'height_m': 0., 'toe_flex_degrees': 0.,
                 'foot_pitch_degrees': 0., 'swing_phase': 0., 'touchdown_time_s': 0., 'articulation_scale': 0.}
-        index = math.floor((time - offset + 1e-9) / self.period)
-        touchdown = offset + index * self.period
+        index = math.floor((time + self.clock_offset - offset + 1e-9) / self.period)
+        touchdown = offset + index * self.period - self.clock_offset
         if not self.start:
             last = self.ramp + offset
             touchdown = min(touchdown, last)
@@ -184,7 +219,7 @@ class _Choreography:
         active = time - self.delay
         weight, derivative = self.envelope(active)
         distance, velocity, acceleration = self.root(active)
-        phase = max(0., active) % self.period
+        phase = (max(0., active) + self.clock_offset) % self.period
         if min(phase, self.period - phase) < 1e-8:
             phase = 0.
         carrier = self.sampler(self.gait, phase, self.height)
@@ -215,7 +250,7 @@ def build_transition_plan(transition: GaitTransition, gait, body_height_m):
     times = set(np.linspace(0., c.duration, count + 1).tolist())
     boundaries = {0., c.duration, c.delay, c.delay + c.ramp}
     for index in range(-2, 2 * transition.ramp_cycles + 5):
-        touchdown = index * c.step
+        touchdown = index * c.step - c.clock_offset
         boundaries.update((c.delay + touchdown, c.delay + c.liftoff(touchdown)))
     for boundary in boundaries:
         if not 0 <= boundary <= c.duration:
@@ -238,8 +273,9 @@ def build_transition_plan(transition: GaitTransition, gait, body_height_m):
         'body_height_m': float(body_height_m), 'duration_s': c.duration, 'same_foot_cycle_s': c.period,
         'parameters': asdict(gait), 'transition_parameters': asdict(transition), 'samples': rows, 'events': cues,
         'transition_contract': {'kind': transition.kind, 'entry_speed_mps': entry_speed, 'exit_speed_mps': exit_speed,
-            'entry_pose': 'calibrated_ready' if c.start else 'locomotion_phase_zero',
-            'exit_pose': 'locomotion_phase_zero' if c.start else 'calibrated_ready',
-            'steady_phase_s': 0., 'root_distance_m': rows[-1]['root_forward_m'],
+            'entry_pose': 'calibrated_ready' if c.start else ('locomotion_declared_phase' if c.join_phase else 'locomotion_phase_zero'),
+            'exit_pose': ('locomotion_declared_phase' if c.join_phase else 'locomotion_phase_zero') if c.start else 'calibrated_ready',
+            'steady_phase_s': c.join_phase, 'interface_schema': 'eonwild.motion.gait-interface.v2' if c.join_phase else 'eonwild.motion.gait-interface.v1',
+            'root_distance_m': rows[-1]['root_forward_m'],
             'verification': 'Requires final emitted pose/velocity and skin-contact parity; planner intent is not proof.'},
         'classification': 'bounded contact-owned kinematic start/stop choreography; no force or biological claim'}

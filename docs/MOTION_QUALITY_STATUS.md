@@ -1,77 +1,48 @@
-# V9 motion quality: execution restored, motion review still pending
+# V9 motion quality: candidates and direct joins are separate gates
 
 PR #2 continues the existing engine and approved references. **Quality-01 is
 REJECTED**. Technical acceptance, source integrity, native visual review and
 Unity parity are separate; none transfers automatically to a newer candidate.
 
-## Executable verification, not an infrastructure blocker
+## Current source and workstream
 
-GitHub Actions execution has been restored by the owner. The assistant's local
-container and image access remained unavailable; no local recovery directory
-was overwritten or declared completely recovered. The earlier partial recovery
-receipts remain historical evidence, not proof that all missing parts exist.
+The recovered branch at `544b93e859f56339f2b804b81aac57b820924cd5` already
+contained sprint v4 and fast-walk v2. Their actual candidate and multi-view jobs
+passed in run 34093117077. Do not confuse the earlier written handoff with that
+newer repository state. These are mechanical results, not visual approvals.
 
-The nine legacy integration errors have been traced to **two float32 rounding
-values on Linux**. The preserved animation reproduces byte-for-byte on macOS
-arm64, including inside Blender. The approved output hash is unchanged:
+This pass adds prospective support placement, explicit loaded-phase interfaces,
+continuous driven-lag evaluation, cross-document package metadata checks and
+permanent start/steady/stop pair verification. Read the precise behavior and
+remaining direct-join failures in [TRANSITION_INTEGRATION.md](TRANSITION_INTEGRATION.md).
+The active start/stop selectors are v3. Sustained stride/cadence/flight settings,
+contact floors, acceptance limits and approved assets remain unchanged.
+
+Local execution and image access now work. Mounted old work was preserved
+before source recovery. A GitHub source-evidence artifact and per-file Git blob
+checks supplied current source when local Git network/DNS failed. This is not
+proof that every historical partial-recovery fragment has been recovered.
+
+Local preliminary generation with the revised engine passed individual
+sprint-start v3, sprint-stop v3 and run-start v3 mechanical gates. Their actual
+direct joins are still BLOCKED by velocity mismatch. Final CI on the exact
+committed source must establish the full catalog results. A green individual
+clip must not be reported as a green connected locomotion sequence.
+
+## Verification and immutable legacy boundary
+
+Mandatory full-suite CI runs all tests, including real rendering, exact duplicate
+builds, promotion rejection and corruption. Its canonical toolchain is macOS
+arm64, Blender 5.2.0 and the genuine Khronos glTF validator 2.0.0-dev.3.10.
+The preserved release reproduces byte-for-byte there. Linux differs by two
+float32 rounding values; the approved output hash is unchanged:
 
 `b5fc582e3bae3b2708735e7ae68cc31da65599f6d155d3b6d089a44ed5517d03`
 
-Mandatory full-suite CI now uses that verified legacy toolchain, real Blender
-5.2.0 and the real Khronos glTF validator 2.0.0-dev.3.10. Linux independently
-compiles and verifies the current V9 candidates. This is an explicit legacy
-reproduction boundary, not a claim of universal bitwise floating-point parity.
-No test exclusion or approved-hash update was used.
-
-The verified intermediate full-suite run **34074280191**, source
-`63cccb285b2fba481568b9241e3c8464d04eaa27`, passed **356 tests and 21 subtests**.
-All tests, including real render, promotion, corruption and exact double-build
-integration, ran. This intermediate evidence does not replace the final PR-head
-check. Read the latest workflow results for the final source status.
-
-## Motion fixes in this continuation
-
-- Separate the ankle/metatarsal from the load-bearing pad frame. Metatarsal
-  articulation no longer forces nearly straight toes through unstable IK.
-  The pad and all calibrated digits remain in their support frame, with C2
-  release and explicit swing flex. No limb translation or scaling is added.
-- Declare the pad's own recovery trajectory instead of treating a 55-degree
-  metatarsal push-off as a downward pad rotation immediately after lift.
-- Center forward walking support around distance traveled DURING stance.
-  The old fixed-reach planner remains the default compatibility path; the
-  newer program explicitly opts into centered placement. Starts/stops share
-  the same placement authority.
-- Calibrate forward attention from admitted head-to-upper-rostrum geometry.
-  The previous generic axis concealed a roughly 25-degree downward snout.
-  This is geometric presentation calibration, not a reconstructed optic axis.
-- Plan bounded common pelvis accommodation before supported mouth/leg solving.
-  Feeding now loads its braced posture without stretching the trailing leg or
-  moving its foot anchor. Feeding v2 admits a feasible initial brace first.
-- Bite-miss v2 uses a forward-target posture and controlled closure rather than
-  feeding posture and an abrupt jaw snap. Existing rate limits are unchanged.
-
-These are shared, semantic programs and input data, not imports of historical
-builders. The approved GLBs, legacy capsules and reference hashes are unchanged.
-All exact staging helpers and diagnostic-only workflows are excluded from the
-active PR tree. Read-only diagnostic commands do not publish or repair motion.
-
-## Measured intermediate candidates
-
-These measurements describe the indicated actual outputs, not ungenerated
-final-head promises. Subsequent changes must regenerate and revalidate them.
-
-| Candidate | Actual technical result | Evidence run |
-|---|---|---|
-| walk.v3, before independent pad recovery | PASS; 2.165 m root-relative foot stroke, 1.289 m/s travel, 0.634 m foot-root gauge; ankle interior range about 62/68 degrees | 34075285131 |
-| reverse-walk.v4, before independent pad recovery | PASS; 1.462 m stroke, -1.004 m/s travel, 0.634 m foot-root gauge | 34075285131 |
-| feeding.v2 | PASS; fixed foot contact, oral anchoring and unchanged joint/rate limits | 34074559443 |
-| bite-miss.v2 | PASS; peak 195.49 degrees/s against the unchanged 360 limit; actual side/three-quarter videos rendered | 34072825372 / 34073556706 |
-| idle.v1 / alert.v1 / call.v1 | PASS on the inspected earlier catalog source | 34071484802 |
-| run / sprint / transition catalog | Remaining motion feasibility or acceptance work; do not promote | Latest per-recipe CI |
-
-Large articulation numbers do not by themselves establish natural movement.
-The current walking performance must be compared visually against V9 before
-replacing an approved take. Native-time review is required, not optional.
+Current V9 candidates independently compile and verify on Linux. The new pair
+jobs compile each bound start, steady and stop and check both native serialized
+joins in root-motion and in-place reconstructed-world modes. No tolerance is
+relaxed, failing witness discarded, or Unity result inferred from this work.
 
 ## Preserved V9 walking comparison
 
@@ -82,35 +53,16 @@ Clip PROC_WALK_RELAXED_V8_1_RESPIN_ROOTMOTION
 ```
 
 The inherited clip name does not change the identity of this V9 artifact.
-Read-only native measurements (run 34073669963) establish a 2.073/2.088 m
-root-relative foot stroke and 1.281 m/s mean travel. Its foot-ROOT gauge is
-about 0.876 m; do not confuse a directory's numeric sweep setting with this
-measured geometry quantity. No reference is retimed, repaired or copied into
-a factory generation recipe.
-
-## Reproduction and review
-
-```sh
-uv run python -m pytest tests -q --tb=short
-uv run python tools/verify_catalog.py --recipes walk.v3 reverse-walk.v4 \
-  --output out/walking-candidates
-uv run python tools/review_compiled_candidate.py \
-  --package out/walking-candidates/walk.v3 --output out/walk-review \
-  --views side front rear three-quarter --fps 30 --compare-v9-walk
-```
-
-The review command compiles nothing. It renders the same immutable package,
-verifies it before and after, shares reference-first camera locks per view,
-and records each clip's own native timeline. Separate candidate jobs retain
-real failures without allowing a slow transition to hide the whole catalog.
+Approved Run010, Sprint006, Feeding003 and walking references remain unchanged.
+Read-only comparison is not permission to inherit a prior animation as a
+factory generation dependency. No historical builders are imported by new work.
 
 ## Still required before ready/merge
 
-Pass the complete final-source suite and all requested current recipe gates.
-Finish run/sprint reach and transition handoff, inspect real multi-view motion,
-and bind decisions to exact output hashes. No random noise, lowered floor,
-dropped seam witness, changed approved hash or looser acceptance bar can
-substitute for those requirements.
+Pass all current individual candidates AND both direct joins for all four gait
+pairs. Inspect native-time multi-view motion and retain human art-direction
+approval separately. Then validate the intended Unity consumer, root authority,
+phase handoff, event delivery, import/compression and target-device performance.
 
 **PR: draft. Visual approval: PENDING. Unity validation: NOT_RUN.
 Production promotion: NOT_GRANTED.**

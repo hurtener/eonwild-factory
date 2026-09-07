@@ -332,5 +332,7 @@ def verify_package(path: Path) -> dict:
     validation = read_json(path / "validation.json")
     if manifest["technical_status"] != validation["technical_status"]:
         raise ContractError("manifest and validation disagree")
+    from .metadata import require_metadata
+    require_metadata(path, manifest)
     return {"integrity": "PASS", "technical_status": validation["technical_status"],
             "visual_review": validation["visual_review"], "unity_parity": validation["unity_parity"], "production_approved": False}

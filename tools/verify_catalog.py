@@ -18,8 +18,8 @@ from measure_motion_reference import measure
 GROUPS = {
     'locomotion': ['walk.v3', 'reverse-walk.v4', 'run.v4', 'sprint.v4', 'fast-walk.v2'],
     'supported': ['idle.v1', 'alert.v1', 'call.v1', 'bite-miss.v2', 'feeding.v2'],
-    'transitions': ['walk-start.v1', 'walk-stop.v1', 'reverse-walk-start.v1', 'reverse-walk-stop.v1',
-                    'run-start.v1', 'run-stop.v1', 'sprint-start.v1', 'sprint-stop.v1'],
+    'transitions': ['walk-start.v3', 'walk-stop.v3', 'reverse-walk-start.v3', 'reverse-walk-stop.v3',
+                    'run-start.v3', 'run-stop.v3', 'sprint-start.v3', 'sprint-stop.v3'],
 }
 
 

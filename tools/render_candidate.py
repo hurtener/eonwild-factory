@@ -18,6 +18,10 @@ import sys
 import bpy
 from mathutils import Vector
 
+# Blender does not reliably add a --python script's directory to sys.path.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from review_timing import native_sample_times
+
 SOURCE_FPS = 120
 
 
@@ -101,7 +105,8 @@ def main():
     runtime = json.loads((package / 'runtime.json').read_text())
     if sha(package / 'runtime.json') != manifest['files']['runtime.json']:
         raise ValueError('runtime metadata hash mismatch')
-    duration = float(runtime['duration_s'])
+    duration = runtime['duration_s']
+    sample_times = native_sample_times(duration, args.fps)
     if not math.isfinite(duration) or not 0 < duration <= 60:
         raise ValueError('review duration outside supported envelope')
     output.mkdir(parents=True, exist_ok=False)
@@ -122,7 +127,7 @@ def main():
     end = max(float(action.frame_range[1]) for action in actions)
     if abs((end - start) / SOURCE_FPS - duration) > 2e-5:
         raise ValueError(f'imported duration changed: {(end-start)/SOURCE_FPS} != {duration}')
-    count = max(2, int(math.ceil(duration * args.fps)))
+    count = len(sample_times)
     scene.frame_start, scene.frame_end = math.floor(start), round(end)
     set_frame(scene, start)
     root_position = semantic_root(scene, runtime)
@@ -220,8 +225,7 @@ def main():
     scene.render.image_settings.file_format = 'PNG'
     scene.render.film_transparent = False
     timeline = []
-    for index in range(count):
-        time = index / args.fps
+    for index, time in enumerate(sample_times):
         set_frame(scene, start + time * SOURCE_FPS)
         shift = root_position() - initial_root if args.mode == 'root_motion' else Vector((0, 0, 0))
         camera.location = camera_base + shift
@@ -230,6 +234,14 @@ def main():
         timeline.append({'index': index, 'source_time_s': time, 'blender_frame': start + time * SOURCE_FPS,
             'camera_translation_m': list(shift)})
     (output / 'timeline.json').write_text(json.dumps(timeline, indent=2) + '\n')
+    terminal = None
+    if runtime.get('loop') is False:
+        set_frame(scene, start + duration * SOURCE_FPS)
+        shift = root_position() - initial_root if args.mode == 'root_motion' else Vector((0, 0, 0))
+        camera.location = camera_base + shift
+        scene.render.filepath = str(output / 'terminal.png')
+        bpy.ops.render.render(write_still=True)
+        terminal = {'source_time_s': duration, 'sha256': sha(output / 'terminal.png')}
     video = output / 'preview.mp4'
     subprocess.run(['ffmpeg', '-y', '-framerate', str(args.fps), '-i', str(frames / '%05d.png'),
         '-c:v', 'libx264', '-crf', '20', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', str(video)], check=True)
@@ -244,12 +256,14 @@ def main():
     cover.write_bytes((frames / f'{count // 3:05d}.png').read_bytes())
     receipt = {'schema': 'eonwild.motion.review-render.v2', 'source_sha256': sha(source),
         'manifest_sha256': sha(package / 'manifest.json'), 'renderer_sha256': sha(Path(__file__)),
+        'timing_sampler_sha256': sha(Path(__file__).with_name('review_timing.py')),
         'source_kind': manifest.get('kind', 'unapproved_candidate'), 'technical_status': manifest.get('technical_status', 'NOT_EVALUATED'),
         'blender': bpy.app.version_string, 'engine': 'CYCLES_CPU', 'samples': args.samples, 'denoising': False,
         'fps': args.fps, 'frames': count, 'verified_encoded_frames': int(probe['nb_read_frames']),
         'source_duration_s': duration, 'encoded_duration_s': count / args.fps,
         'source_frame_start': start, 'source_frame_end': end, 'source_fps': SOURCE_FPS,
-        'timing': 'native-time sampling; no speed adjustment; video omits duplicate loop endpoint',
+        'timing': 'native-time sampling on [0, duration); no speed adjustment or duplicate endpoint',
+        'terminal_pose': terminal,
         'mode': args.mode, 'view': args.view, 'focus': args.focus, 'camera': spec,
         'media': {name: sha(output / name) for name in ('preview.mp4', 'cover.png', 'camera.json', 'timeline.json')},
         'exports': exports, 'visual_approval': 'PENDING', 'unity_import_validation': 'NOT_RUN',

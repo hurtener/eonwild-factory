@@ -48,7 +48,7 @@ jobs:
       fail-fast: false
       max-parallel: 4
       matrix:
-        recipe: [walk.v3, reverse-walk.v4, run.v4, sprint.v4, fast-walk.v2, idle.v1, alert.v1, call.v1, bite-miss.v2, feeding.v2, walk-start.v1, walk-stop.v1, reverse-walk-start.v1, reverse-walk-stop.v1, run-start.v1, run-stop.v1, sprint-start.v1, sprint-stop.v1]
+        recipe: [walk.v3, reverse-walk.v4, run.v4, sprint.v4, fast-walk.v2, idle.v1, alert.v1, call.v1, bite-miss.v2, feeding.v2, walk-start.v3, walk-stop.v3, reverse-walk-start.v3, reverse-walk-stop.v3, run-start.v3, run-stop.v3, sprint-start.v3, sprint-stop.v3]
     env: {PYTHONPATH: src, OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '2', RECIPE: '${{ matrix.recipe }}'}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -69,7 +69,7 @@ jobs:
       fail-fast: false
       max-parallel: 3
       matrix:
-        recipe: [sprint.v4, fast-walk.v2, walk.v3, reverse-walk.v4, bite-miss.v2, feeding.v2]
+        recipe: [sprint.v4, fast-walk.v2, sprint-start.v3, sprint-stop.v3, run-start.v3, run-stop.v3, walk-start.v3, walk-stop.v3, reverse-walk-start.v3, reverse-walk-stop.v3]
     env: {PYTHONPATH: src, OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '2', RECIPE: '${{ matrix.recipe }}'}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -99,6 +99,7 @@ jobs:
             out/review/review-summary.json
             out/review/candidate/**/*.mp4
             out/review/candidate/**/cover.png
+            out/review/candidate/**/terminal.png
             out/review/candidate/**/render-receipt.json
             out/review/candidate/**/camera.json
             out/review/candidate/**/timeline.json
@@ -111,3 +112,34 @@ jobs:
             out/candidate/*.json
           if-no-files-found: error
           retention-days: 14
+  transition-pairs:
+    # A green clip is not a green join. All four sets and both directions
+    # remain required; no crossfade, best-fit phase, or acceptance whitelist.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        include:
+          - {gait: sprint, steady: sprint.v4}
+          - {gait: run, steady: run.v4}
+          - {gait: walk, steady: walk.v3}
+          - {gait: reverse-walk, steady: reverse-walk.v4}
+    env: {PYTHONPATH: src, OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '2', GAIT: '${{ matrix.gait }}', STEADY: '${{ matrix.steady }}'}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with: {fetch-depth: 1, persist-credentials: false, show-progress: false}
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with: {python-version: '3.13'}
+      - run: python -m pip install -e .
+      - name: Compile all three packages and verify actual native joins
+        run: >-
+          python tools/verify_transition_pair.py
+          --steady "recipes/heavy-biped/$STEADY.json"
+          --start "recipes/heavy-biped/$GAIT-start.v3.json"
+          --stop "recipes/heavy-biped/$GAIT-stop.v3.json"
+          --output out/pair
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with: {name: 'transition-pair-${{ matrix.gait }}', path: out/pair, if-no-files-found: error, retention-days: 14}

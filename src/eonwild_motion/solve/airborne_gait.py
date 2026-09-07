@@ -121,6 +121,31 @@ def periodic_response(times: Any, drive: Any, response_time_s: float) -> np.ndar
     return np.asarray(result)
 
 
+def sample_periodic_response(times: Any, drive: Any, response_time_s: float, sample_times: Any) -> np.ndarray:
+    """Evaluate the lag's analytic interval solution at declared query times.
+
+    Interpolating *states* would add velocity discontinuities. The same linear
+    input and cyclic initial state define this continuous evaluation. Exact
+    reference knots return the original states, not fitted replacements.
+    """
+    times, drive, query = (np.asarray(v, dtype=float) for v in (times, drive, sample_times))
+    if (times.ndim != 1 or drive.shape != times.shape or query.ndim != 1
+        or not all(np.isfinite(v).all() for v in (times, drive, query))
+        or len(times) < 2 or not math.isfinite(response_time_s) or response_time_s <= 0
+        or np.any(np.diff(times) <= 0) or np.any(query < times[0]) or np.any(query > times[-1])):
+        raise ContractError("continuous periodic response needs finite ordered data and in-range queries")
+    states = periodic_response(times, drive, response_time_s)
+    index = np.clip(np.searchsorted(times, query, side="right") - 1, 0, len(times) - 2)
+    dt = query - times[index]
+    span = times[index + 1] - times[index]
+    decay = np.exp(-dt / response_time_s)
+    one_minus_decay = -np.expm1(-dt / response_time_s)
+    slope = (drive[index + 1] - drive[index]) / span
+    values = decay * states[index] + one_minus_decay * drive[index] + (dt - response_time_s * one_minus_decay) * slope
+    # Keep the duplicated terminal reference state exact too.
+    return np.where(query == times[-1], states[-1], values)
+
+
 def driven_body_response(gait: AirborneGait, plan: Mapping[str, Any], roles: Mapping[str, Any]) -> dict[str, Any] | None:
     if not (gait.chest_response_gain_degrees or gait.tail_response_gain_degrees):
         return None
@@ -130,24 +155,40 @@ def driven_body_response(gait: AirborneGait, plan: Mapping[str, Any], roles: Map
         raise ContractError("driven tail response requires a semantic chain")
     rows = plan["samples"]
     if plan.get("program") == "gait_transition":
-        # Sample the same steady response, not a fresh lag initialized at zero
-        # or a fictitious cyclic start/stop carrier. All pose layers share the
-        # behavior-owned phase; the quintic gain has zero endpoint derivatives.
-        steady = driven_body_response(gait, build_airborne_plan(gait, plan["body_height_m"]), roles)
-        reference_times = np.asarray([r["time_s"] for r in steady["samples"]])
-        names = set().union(*(r["sagittal_node_degrees"] for r in steady["samples"]))
+        # Evaluate the same cyclic lag continuously, not a piecewise-linear
+        # interpolation of its output angles. Output-angle interpolation has a
+        # velocity corner at every steady sample, amplified at the tail tip.
+        # Reference samples and the sustained gait are unchanged.
         from .performance import phase_and_gain
+        reference = build_airborne_plan(gait, plan["body_height_m"])
+        clock = np.asarray([row["time_s"] for row in reference["samples"]])
+        scale = 2 * (gait.pelvis_compression_body_heights + gait.flight_height_body_heights) * plan["body_height_m"] / gait.step_period_s
+        drive = np.clip([row["pelvis_vertical_velocity_mps"] / scale for row in reference["samples"]], -1, 1)
+        phases, gains = np.asarray([phase_and_gain(row) for row in rows]).T
+        def response(values, tau):
+            return sample_periodic_response(clock, values, tau, phases)
+        chest_reference = -gait.chest_response_gain_degrees * periodic_response(clock, drive, gait.body_response_time_s)
+        chest = -gait.chest_response_gain_degrees * response(drive, gait.body_response_time_s)
+        counter_reference = -gait.head_stabilization_gain * chest_reference
+        counter = -gait.head_stabilization_gain * chest
+        neck = .65 * response(counter_reference, gait.body_response_time_s * 1.5) if roles.get("neck") else np.zeros(len(rows))
+        head = counter - neck
+        names = list(roles.get("tail", []))
+        weights = np.asarray([(i + 1) ** .6 for i in range(len(names))])
+        if len(weights):
+            weights /= weights.sum()
+        tail = {name: -gait.tail_response_gain_degrees * weights[i] * response(drive,
+            gait.body_response_time_s * (1 + .6 * i / max(1, len(names) - 1))) for i, name in enumerate(names)}
         result = []
-        for row in rows:
-            phase, gain = phase_and_gain(row)
-            angles = {name: gain * float(np.interp(phase, reference_times,
-                [r["sagittal_node_degrees"].get(name, 0.) for r in steady["samples"]])) for name in names}
+        for i, row in enumerate(rows):
+            angles = {roles["chest"]: float(chest[i]), roles["head"]: float(head[i])} if gait.chest_response_gain_degrees else {}
+            angles.update({name: float(neck[i] / len(roles["neck"])) for name in roles.get("neck", [])})
+            angles.update({name: float(values[i]) for name, values in tail.items()})
             result.append({"time_s": row["time_s"], "support_count": row["support_count"],
-                "normalized_vertical_motion_drive": gain * float(np.interp(phase, reference_times,
-                    [r["normalized_vertical_motion_drive"] for r in steady["samples"]])),
-                "sagittal_node_degrees": angles})
-        return {"classification": "phase-preserving bounded kinematic transition response; no cyclic claim for a one-shot",
-            "reference_cyclic_state_seam_degrees": steady["maximum_cyclic_state_seam_degrees"], "samples": result}
+                "normalized_vertical_motion_drive": float(gains[i] * np.interp(phases[i], clock, drive)),
+                "sagittal_node_degrees": {name: float(gains[i] * value) for name, value in angles.items()}})
+        return {"classification": "phase-preserving continuous bounded lag; no force or one-shot cyclic claim",
+            "samples": result}
     times = [row["time_s"] for row in rows]
     # Normalize by the solved carrier's own excursion/time scale, not species
     # constants. Positive rise drives the tail down through launch; lag carries

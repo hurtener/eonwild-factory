@@ -6,7 +6,7 @@ continues V9 and the merged factory baseline, not another numbered toolkit.
 PR #2 is still a draft: **quality-01 is rejected** and new candidates do not
 inherit the approval of the preserved V9 takes. Execution is restored. Read
 [the current motion/evidence status](docs/MOTION_QUALITY_STATUS.md) for the
-verified improvements and remaining run/sprint/transition acceptance work.
+verified improvements and remaining transition/handoff acceptance work.
 
 ## One active generation path
 
@@ -39,11 +39,13 @@ An output directory must be new; earlier takes cannot be overwritten.
 Compilation is not approval. Verification exits nonzero for blocked technical
 acceptance. Missing evidence is not a zero-error pass.
 
-Current explicit review candidates are `walk.v3`, `reverse-walk.v4`,
-`feeding.v2`, and `bite-miss.v2`, alongside `idle.v1`, `alert.v1`, and `call.v1`.
-The newer `run.v4`, retained `sprint.v3`, `fast-walk.v1`, and the eight start/stop
-recipes remain part of strict catalog verification, not automatically accepted
-animations. See the current workflow for the exact source-bound results.
+Current explicit review candidates are `walk.v3`, `reverse-walk.v4`, `run.v4`,
+`sprint.v4`, `fast-walk.v2`, `feeding.v2`, and `bite-miss.v2`, alongside `idle.v1`,
+`alert.v1`, and `call.v1`. The eight start/stop recipes are now `.v3`, bound to
+those exact sustained gait/performance inputs. All remain candidates, not
+automatically accepted animations. A passing start, steady gait and stop are
+insufficient: the permanent transition-pair jobs independently check both actual
+serialized joins. See [the transition interface](docs/TRANSITION_INTEGRATION.md).
 
 ```sh
 uv run python tools/verify_catalog.py \
