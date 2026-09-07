@@ -16,6 +16,7 @@ from eonwild_motion.factory.compiler import compile_recipe, verify_package
 from measure_motion_reference import measure
 
 GROUPS = {
+    'animal-benchmarks': ['tarbosaurus-pin-552-1-adult-walk.v1'],
     'locomotion': ['walk.v3', 'reverse-walk.v4', 'run.v4', 'sprint.v4', 'fast-walk.v2'],
     'supported': ['idle.v1', 'alert.v1', 'call.v1', 'bite-miss.v2', 'feeding.v2'],
     'transitions': ['walk-start.v3', 'walk-stop.v3', 'reverse-walk-start.v3', 'reverse-walk-stop.v3',

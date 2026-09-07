@@ -38,7 +38,8 @@ def _load(package: Path) -> dict:
         raise ValueError('connected review package lacks source/rig identity')
     value = {'path': str(package), 'manifest_sha256': hashlib.sha256(manifest.read_bytes()).hexdigest(),
              'runtime': json.loads(runtime.read_text()), 'plan': json.loads(plan.read_text()),
-             'recipe': json.loads(recipe.read_text()), 'source_identity': identity}
+             'recipe': json.loads(recipe.read_text()), 'source_identity': identity,
+             'animal_identity': named.get('animal')}
     rows = value['plan'].get('samples')
     if not isinstance(rows, list) or len(rows) < 2:
         raise ValueError('connected review requires a native plan timeline')
@@ -79,16 +80,18 @@ def build_connected_schedule(start_package: Path, steady_package: Path, stop_pac
     start, steady, stop = (_load(path) for path in (start_package, steady_package, stop_package))
     if start['source_identity'] != steady['source_identity'] or start['source_identity'] != stop['source_identity']:
         raise ValueError('connected review packages do not share admitted geometry and rig identity')
+    if start['animal_identity'] != steady['animal_identity'] or start['animal_identity'] != stop['animal_identity']:
+        raise ValueError('connected review packages do not share animal identity')
     for transition in (start, stop):
         if transition['recipe'].get('gait_profile') != steady['recipe'].get('program_profile'):
             raise ValueError('connected review transition is not recipe-bound to the steady gait')
-        for key in ('family', 'source', 'rig', 'contact_profile', 'performance_profile', 'forward_axis', 'up_axis'):
+        for key in ('family', 'source', 'rig', 'animal', 'contact_profile', 'performance_profile', 'forward_axis', 'up_axis'):
             if transition['recipe'].get(key) != steady['recipe'].get(key):
                 raise ValueError(f'connected review recipe {key} differs')
     sr, rr, tr = (value['runtime'] for value in (start, steady, stop))
     if rr.get('loop') is not True or sr.get('loop') is not False or tr.get('loop') is not False:
         raise ValueError('connected review requires non-looping start/stop and a looping steady package')
-    for key in ('family', 'forward_axis', 'up_axis', 'rig_roles', 'ground_plane', 'handedness', 'units', 'time_units'):
+    for key in ('family', 'animal', 'forward_axis', 'up_axis', 'rig_roles', 'ground_plane', 'handedness', 'units', 'time_units'):
         if sr.get(key) != rr.get(key) or sr.get(key) != tr.get(key):
             raise ValueError(f'connected review package {key} differs')
     start_phase = _phase(sr.get('transition_contract', {}), 'start')
@@ -138,6 +141,7 @@ def build_connected_schedule(start_package: Path, steady_package: Path, stop_pac
         cursor_travel = row['world_root_end_m']
     return {'schema': 'eonwild.motion.connected-review-schedule.v1', 'cycles': cycles,
             'source_identity': start['source_identity'],
+            'animal_identity': start['animal_identity'],
             'steady_phase_s': phase, 'segments': segments, 'duration_s': cursor_time,
             'declared_root_travel_m': cursor_travel, 'modes': ('root_motion', 'in_place'),
             'visual_review': 'PENDING', 'unity_validation': 'NOT_RUN',

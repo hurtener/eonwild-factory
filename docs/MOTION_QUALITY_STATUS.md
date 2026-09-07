@@ -18,6 +18,34 @@ remaining direct-join failures in [TRANSITION_INTEGRATION.md](TRANSITION_INTEGRA
 The active start/stop selectors are v3. Sustained stride/cadence/flight settings,
 contact floors, acceptance limits and approved assets remain unchanged.
 
+## Evidence-bound adult benchmark
+
+`tarbosaurus-pin-552-1-adult-walk.v1` is the first explicit animal-instance
+benchmark. It binds the adult PIN 552-1 estimates of 2816.3 kg body mass and
+2.415 m summed femur, tibia and central-metatarsal length to a separately
+versioned evidence document. The admitted neutral geometry is uniformly scaled
+from the mean of its independently measured left/right semantic hindlimb chains;
+the compiler remeasures the bound rig and full bind-pose skin before accepting
+that calibration. Existing engineering recipes and approved assets are not
+superseded or rewritten.
+
+The benchmark deliberately uses the grounded walk. Sprint v4 remains an
+engineering stress track whose flight and rebound have not been biologically
+validated for this animal. Each animal package reports mass weight, root-motion
+and pelvis kinematics, two clearly labeled Froude normalizers, and a translational
+inertial-load proxy. The published 1.932 m hip height is recorded as the study's
+`0.8 * hindlimb length` posture proxy, separate from the emitted semantic pelvis
+height. Pelvis acceleration is not whole-body center-of-mass acceleration;
+force-aware solving, contact-force distribution, segment inertia and tissue
+stress remain `NOT_IMPLEMENTED` or `NOT_EVALUATED`.
+
+Dececchi et al. supplement S4 also provides taxon-level femur/tibia/central-
+metatarsal lengths, but that row has no specimen identifier and sums to 2.420 m
+rather than the PIN 552-1 Table 1 value. It is retained only as comparison:
+the neutral rig's relative segment proportions differ, so anatomical fit remains
+`UNVERIFIED`. Uniform scaling does not conceal that mismatch or authorize
+per-bone resizing.
+
 Local execution and image access now work. Mounted old work was preserved
 before source recovery. A GitHub source-evidence artifact and per-file Git blob
 checks supplied current source when local Git network/DNS failed. This is not

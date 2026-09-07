@@ -119,6 +119,8 @@ def require_pair(transition: dict, steady: dict, runtime: dict) -> str:
     for key in ('family','source','rig','contact_profile','performance_profile','forward_axis','up_axis'):
         if key not in transition or transition[key]!=steady.get(key):
             raise ContractError(f'handoff {key} binding differs')
+    if transition.get('animal') != steady.get('animal'):
+        raise ContractError('handoff animal binding differs')
     if transition.get('gait_profile')!=steady.get('program_profile'):
         raise ContractError('handoff gait profile is not the bound steady program')
     contract = runtime.get('transition_contract') or {}

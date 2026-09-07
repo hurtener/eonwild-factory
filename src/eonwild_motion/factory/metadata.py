@@ -14,7 +14,7 @@ from ..glb.container import Glb
 from .io import digest, frame_axes, read_json
 
 
-_INPUTS = ('source', 'rig', 'program_profile', 'contact_profile', 'performance_profile', 'gait_profile')
+_INPUTS = ('source', 'rig', 'program_profile', 'animal', 'contact_profile', 'performance_profile', 'gait_profile')
 
 
 def require_metadata(path: Path, manifest: dict) -> None:
@@ -33,6 +33,27 @@ def require_metadata(path: Path, manifest: dict) -> None:
     require(lock.get('inputs') == {k: recipe[k] for k in _INPUTS if k in recipe}, 'input bindings differ')
     require(runtime.get('program') == recipe.get('program') == plan.get('program'), 'program differs')
     require(runtime.get('family') == recipe.get('family'), 'family differs')
+    if 'animal' in recipe:
+        from .animal import biomechanics_report,load_animal_instance
+        animal_document = read_json(path / 'animal.json')
+        require(digest((path/'animal.json').read_bytes()) == recipe['animal']['sha256'],
+                'animal snapshot differs from recipe binding')
+        animal_instance=load_animal_instance(animal_document,source_sha256=recipe['source']['sha256'])
+        animal = read_json(path / 'biomechanics.json')
+        runtime_animal = runtime.get('animal')
+        require(isinstance(runtime_animal,dict) and runtime_animal.get('id') == animal.get('animal_id')
+                and runtime_animal.get('specimen') == animal.get('specimen')
+                and runtime_animal.get('uniform_geometry_scale') == animal.get('geometry',{}).get('uniform_scale'),
+                'animal runtime and biomechanics evidence differ')
+        expected=biomechanics_report(animal_instance,plan,
+            actual_semantic_height_m=runtime_animal.get('semantic_pelvis_to_toe_plane_m'))
+        require(animal == expected, 'biomechanics report differs from bound animal and plan')
+        require(animal.get('force_aware_solver') == 'NOT_IMPLEMENTED'
+                and animal.get('contact_force_distribution') == 'NOT_EVALUATED'
+                and animal.get('biological_validation') == 'NOT_VALIDATED',
+                'animal report overclaims implemented evidence')
+    else:
+        require(runtime.get('animal') is None, 'unbound animal runtime data')
     require((runtime.get('units'), runtime.get('time_units'), runtime.get('handedness')) == ('m', 's', 'right'),
             'unsupported runtime coordinate convention')
     for key, expected in zip(('forward_axis', 'up_axis'), frame_axes(recipe['forward_axis'], recipe['up_axis'])):

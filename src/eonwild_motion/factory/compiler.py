@@ -25,6 +25,8 @@ from ..solve.whole_body_gait_transition import _encode
 from .io import digest, frame_axes, json_bytes, locked_file, read_json, write_json
 from .quality import emitted_rotation_rates, emitted_cyclic_continuity, require_supported_geometry, solver_checks
 from .source import geometry_height
+from .animal import (apply_uniform_geometry_scale,biomechanics_report,
+    load_animal_instance,scaled_contact_profile,verify_source_calibration)
 from ..solve.performance import load_performance, decorate_plan
 from ..solve.skin_targets import solve_with_skin_targets, evaluate_skin
 from ..planning.supported_action import load_supported_action
@@ -39,7 +41,7 @@ PROGRAMS = ("airborne_gait", "grounded_gait", "supported_action", "gait_transiti
 def load_recipe(path: Path, root: Path) -> tuple[dict, dict[str, Path]]:
     recipe = read_json(path)
     required = {"schema", "id", "version", "family", "program", "source", "rig", "program_profile", "forward_axis", "up_axis"}
-    if not isinstance(recipe, dict) or set(recipe) - required - {"contact_profile", "performance_profile", "gait_profile", "description", "supersedes"} or not required <= set(recipe):
+    if not isinstance(recipe, dict) or set(recipe) - required - {"animal", "contact_profile", "performance_profile", "gait_profile", "description", "supersedes"} or not required <= set(recipe):
         raise ContractError("recipe contains missing or unknown fields")
     if recipe["schema"] != SCHEMA or recipe["program"] not in PROGRAMS:
         raise ContractError("unsupported recipe schema or program")
@@ -49,6 +51,8 @@ def load_recipe(path: Path, root: Path) -> tuple[dict, dict[str, Path]]:
         raise ContractError("recipe version must be a positive integer")
     frame_axes(recipe["forward_axis"], recipe["up_axis"])
     paths = {key: locked_file(root, recipe[key]) for key in ("source", "rig", "program_profile")}
+    if "animal" in recipe:
+        paths["animal"] = locked_file(root, recipe["animal"])
     if "contact_profile" in recipe:
         paths["contact_profile"] = locked_file(root, recipe["contact_profile"])
     if "performance_profile" in recipe:
@@ -197,6 +201,16 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
     if not np.allclose(declared_forward, forward) or not np.allclose(declared_up, up):
         raise ContractError("recipe coordinate frame differs from admitted geometry")
     roles = json.loads(snapshots["rig"])["roles"]
+    contact_profile = json.loads(snapshots["contact_profile"]) if "contact_profile" in snapshots else None
+    animal = None
+    if "animal" in snapshots:
+        if "contact_profile" not in snapshots:
+            raise ContractError("animal geometry calibration requires a locked contact profile")
+        animal = load_animal_instance(json.loads(snapshots["animal"]),source_sha256=recipe["source"]["sha256"])
+        verify_source_calibration(animal,source,roles,contact_profile,forward,up)
+        apply_uniform_geometry_scale(source,animal["uniform_scale"])
+        contact_profile = scaled_contact_profile(contact_profile,animal["uniform_scale"])
+        require_supported_geometry(source)
     profile = json.loads(snapshots["program_profile"])
     height = geometry_height(source, roles, up)
     supported = recipe["program"] == "supported_action"
@@ -228,14 +242,15 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
         action = load_supported_action(profile)
         gait = AirborneGait(max_joint_angular_velocity_degrees_per_s=action.max_joint_rate_degrees_per_second)
         root_raw, inplace_raw, plan, receipt = solve_supported_action(source, semantic_roles=roles, action=action,
-            contact_profile=json.loads(snapshots["contact_profile"]), up_axis=up, forward_axis=forward, body_height_m=height)
+            contact_profile=contact_profile, up_axis=up, forward_axis=forward, body_height_m=height)
     if "performance_profile" in snapshots:
         plan = decorate_plan(plan, load_performance(json.loads(snapshots["performance_profile"])))
         if "contact_profile" not in snapshots:
             raise ContractError("forward attention requires locked geometry calibration")
         plan["gaze_calibration"] = calibrate_rostral_direction(source, roles=roles,
-            contact_profile=json.loads(snapshots["contact_profile"]), forward_axis=forward, up_axis=up)
+            contact_profile=contact_profile, forward_axis=forward, up_axis=up)
     validate_plan(plan, recipe["program"])
+    biomechanics = biomechanics_report(animal,plan,actual_semantic_height_m=height) if animal else None
     if supported:
         pass  # Already solved by the persistent-support program above.
     elif plan.get("performance", {}).get("skin_refinement", False):
@@ -243,7 +258,7 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
             raise ContractError("skin refinement requires a locked contact profile")
         root_raw, inplace_raw, plan, receipt = solve_with_skin_targets(source, semantic_roles=roles,
             gait=gait, up_axis=up, forward_axis=forward, plan=plan,
-            contact_profile=json.loads(snapshots["contact_profile"]))
+            contact_profile=contact_profile)
     else:
         root_raw, inplace_raw, _, receipt = solve_airborne_gait(source, source_clip=None,
             semantic_roles=roles, gait=gait, up_axis=tuple(up), forward_axis=tuple(forward),
@@ -258,7 +273,7 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
     if "contact_profile" in snapshots:
         try:
             facts = evaluate_airborne_skin_with_authority(outputs["root_motion"],
-                contact_profile=json.loads(snapshots["contact_profile"]), gait=gait, body_height_m=height,
+                contact_profile=contact_profile, gait=gait, body_height_m=height,
                 clip_name=recipe["id"] + ".root_motion", plan_override=plan)
             surface = {"verdict": facts["contact_authority_v1"]["verdict"], "authority": facts["contact_authority_v1"],
                        "maximum_penetration_m": facts["maximum_foot_surface_penetration_m"],
@@ -266,13 +281,13 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
         except (ContractError, ValueError, KeyError, StopIteration) as exc:
             surface = {"verdict": "FAIL", "reason": f"final skinned evaluation failed: {exc}"}
     if ("performance_profile" in snapshots or supported) and "contact_profile" in snapshots:
-        surface = evaluate_skin(outputs["root_motion"], json.loads(snapshots["contact_profile"]), plan)
+        surface = evaluate_skin(outputs["root_motion"], contact_profile, plan)
     in_place_surface = {"verdict": "NOT_MEASURED", "reason": "no bound skinned contact profile"}
     if "contact_profile" in snapshots:
         try:
             origin_travel = plan["samples"][0]["root_forward_m"]
             offsets = [forward * (row["root_forward_m"] - origin_travel) for row in plan["samples"]]
-            in_place_surface = evaluate_skin(outputs["in_place"], json.loads(snapshots["contact_profile"]), plan,
+            in_place_surface = evaluate_skin(outputs["in_place"], contact_profile, plan,
                 world_offsets=offsets)
         except (ContractError, ValueError, KeyError, StopIteration) as exc:
             in_place_surface = {"verdict": "FAIL", "reason": f"in-place skinned reconstruction failed: {exc}"}
@@ -299,10 +314,16 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
         "events": sorted(event_track(plan) + plan.get("events", []), key=lambda e: e["time_s"]), "plan_sha256": digest(json_bytes(plan)),
         "world_interaction_authority": "runtime decides contact, damage, grip resistance and release",
         "unity_import_status": "NOT_VERIFIED", "transition_contract": plan.get("transition_contract"),
-        "ground_plane": (json.loads(snapshots["contact_profile"])["geometry"]["ground"] if "contact_profile" in snapshots else None)}
+        "ground_plane": (contact_profile["geometry"]["ground"] if contact_profile else None),
+        "animal": ({"id":animal["document"]["id"],"specimen":animal["document"]["specimen"],
+            "uniform_geometry_scale":animal["uniform_scale"],"semantic_pelvis_to_toe_plane_m":height,
+            "biological_validation":"NOT_VALIDATED"} if animal else None)}
     payloads = {"root_motion.glb": root_raw, "in_place.glb": inplace_raw, "plan.json": json_bytes(plan),
         "solver-receipt.json": json_bytes(receipt), "runtime.json": json_bytes(state),
         "validation.json": json_bytes(validation), "inputs.lock.json": json_bytes(lock), "recipe.json": recipe_bytes}
+    if biomechanics is not None:
+        payloads["animal.json"] = snapshots["animal"]
+        payloads["biomechanics.json"] = json_bytes(biomechanics)
     manifest = {"schema": "eonwild.motion.factory-package.v1", "id": recipe["id"], "version": recipe["version"],
         "status": "CANDIDATE", "production_approved": False, "technical_status": validation["technical_status"],
         "files": {name: digest(data) for name, data in payloads.items()},
@@ -324,7 +345,10 @@ def verify_package(path: Path) -> dict:
     manifest = read_json(path / "manifest.json")
     if manifest.get("schema") != "eonwild.motion.factory-package.v1":
         raise ContractError("unsupported package manifest")
+    recipe = read_json(path / "recipe.json")
     required = {"root_motion.glb", "in_place.glb", "plan.json", "solver-receipt.json", "runtime.json", "validation.json", "inputs.lock.json", "recipe.json"}
+    if "animal" in recipe:
+        required.update(("animal.json","biomechanics.json"))
     if set(manifest.get("files", {})) != required:
         raise ContractError("package inventory is incomplete or has unknown entries")
     for name, sha in manifest["files"].items():

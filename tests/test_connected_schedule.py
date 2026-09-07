@@ -14,7 +14,7 @@ sys.modules[spec.name] = module
 spec.loader.exec_module(module)
 
 
-def package(root, name, *, loop, contract=None, phase=.25, distance=2.):
+def package(root, name, *, loop, contract=None, phase=.25, distance=2., animal=None):
     folder = root / name
     folder.mkdir()
     runtime = {'duration_s': 1., 'loop': loop, 'forward_axis': [1, 0, 0], 'up_axis': [0, 1, 0],
@@ -32,6 +32,9 @@ def package(root, name, *, loop, contract=None, phase=.25, distance=2.):
         'performance_profile': {'path': 'performance.json', 'sha256': 'd' * 64},
         'forward_axis': [1, 0, 0], 'up_axis': [0, 1, 0],
     }
+    if animal is not None:
+        shared['animal']={'path':'animal.json','sha256':animal*64}
+        runtime['animal']={'id':animal,'specimen':'fixture','uniform_geometry_scale':1.0}
     recipe = {**shared, 'program_profile': {'path': 'gait.json', 'sha256': 'e' * 64}}
     if contract:
         recipe['gait_profile'] = recipe.pop('program_profile')
@@ -42,7 +45,7 @@ def package(root, name, *, loop, contract=None, phase=.25, distance=2.):
         {'time_s': 0., 'root_forward_m': 0.}, {'time_s': phase, 'root_forward_m': distance * phase},
         {'time_s': 1., 'root_forward_m': distance}]}))
     (folder / 'inputs.lock.json').write_text(json.dumps({'inputs': {
-        'source': shared['source'], 'rig': shared['rig'],
+        'source': shared['source'], 'rig': shared['rig'], **({'animal':shared['animal']} if animal is not None else {}),
     }}))
     (folder / 'root_motion.glb').write_bytes(b'root')
     (folder / 'in_place.glb').write_bytes(b'in-place')
@@ -106,3 +109,11 @@ def test_schedule_rejects_changed_source_identity_and_nonfinite_plan(tmp_path):
     manifest_path.write_text(json.dumps(manifest))
     with pytest.raises(ValueError, match='invalid clock'):
         module.build_connected_schedule(start, steady, start, cycles=1)
+
+
+def test_schedule_rejects_mixed_or_different_animal_instances(tmp_path):
+    start=package(tmp_path,'start',loop=False,contract='start',animal='a')
+    steady=package(tmp_path,'steady',loop=True,animal='a')
+    stop=package(tmp_path,'stop',loop=False,contract='stop',animal='b')
+    with pytest.raises(ValueError,match='animal identity'):
+        module.build_connected_schedule(start,steady,stop,cycles=1)
