@@ -34,7 +34,7 @@ def require_metadata(path: Path, manifest: dict) -> None:
     require(runtime.get('program') == recipe.get('program') == plan.get('program'), 'program differs')
     require(runtime.get('family') == recipe.get('family'), 'family differs')
     if 'animal' in recipe:
-        from .animal import biomechanics_report,load_animal_instance
+        from .animal import biomechanics_report,load_animal_instance,verify_emitted_animal_geometry
         animal_document = read_json(path / 'animal.json')
         require(digest((path/'animal.json').read_bytes()) == recipe['animal']['sha256'],
                 'animal snapshot differs from recipe binding')
@@ -78,6 +78,9 @@ def require_metadata(path: Path, manifest: dict) -> None:
     times = np.asarray([r['time_s'] for r in samples], dtype=float)
     for mode in ('root_motion', 'in_place'):
         glb = Glb.from_bytes((path / (mode + '.glb')).read_bytes())
+        if 'animal' in recipe:
+            verify_emitted_animal_geometry(animal_instance, glb, runtime['rig_roles'], runtime['up_axis'],
+                actual_semantic_height_m=runtime_animal['semantic_pelvis_to_toe_plane_m'])
         animations = glb.document.get('animations', [])
         require(len(animations) == 1 and animations[0].get('name') == recipe['id'] + '.' + mode,
                 'serialized clip identity differs')

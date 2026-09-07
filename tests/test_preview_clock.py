@@ -12,6 +12,7 @@ module = importlib.util.module_from_spec(spec)
 sys.modules[spec.name] = module
 spec.loader.exec_module(module)
 transport_clock = module.transport_clock
+source_frame = module.source_frame
 
 
 def test_transport_rebases_a_fractional_import_range_without_retiming_it():
@@ -32,6 +33,10 @@ def test_transport_preserves_a_real_fractional_terminal_time_without_a_held_samp
     receipt = clock.receipt()
     assert receipt['transport_frame_end'] / receipt['source_fps'] == receipt['source_duration_s']
     assert 'held' in receipt['endpoint_policy']
+
+
+def test_source_frame_uses_the_imported_action_clock_instead_of_factory_rate():
+    assert source_frame(17.25, .5, 24) == pytest.approx(29.25)
 
 
 @pytest.mark.parametrize('start,end,duration', [

@@ -118,6 +118,43 @@ def apply_uniform_geometry_scale(source: Glb, scale: float) -> None:
         source.rest_scale[index] = scaled
 
 
+def verify_emitted_animal_geometry(animal: dict, emitted: Glb, roles: Mapping[str, Any],
+                                   up_axis: Any, *, actual_semantic_height_m: float) -> None:
+    """Bind the declared animal scale to each reopened emitted skeleton."""
+    try:
+        up = np.asarray(up_axis, dtype=float)
+        up = up / np.linalg.norm(up)
+        worlds = _world_matrices(emitted, emitted.rest_translation, emitted.rest_rotation, emitted.rest_scale)
+        for side in ("left", "right"):
+            indices = [emitted.name_to_node[name] for name in roles["legs"][side]["contactChain"]]
+            points = [np.asarray(_world_position(worlds[index])) for index in indices]
+            measured = [float(np.linalg.norm(after - before)) for before, after in zip(points, points[1:])]
+            expected = np.asarray(animal["source_measurements_m"][f"{side}_semantic_segments"], dtype=float)
+            expected *= float(animal["uniform_scale"])
+            if len(measured) != len(expected) or not np.allclose(measured, expected, rtol=0, atol=2e-6):
+                raise ContractError(f"emitted animal geometry scale differs for {side} semantic segments")
+        pelvis = np.asarray(_world_position(worlds[emitted.name_to_node[roles["pelvis"]]]))
+        toes = [emitted.name_to_node[name] for leg in roles["legs"].values()
+                for chain in leg["toeChains"] for name in chain]
+        if not toes:
+            raise ContractError("emitted animal geometry has no bound digits")
+        ground = min(float(np.asarray(_world_position(worlds[index])) @ up) for index in toes)
+        measured_height = float(pelvis @ up - ground)
+        if (isinstance(actual_semantic_height_m, bool)
+                or not isinstance(actual_semantic_height_m, (int, float))
+                or not math.isfinite(actual_semantic_height_m)
+                or not math.isclose(measured_height, actual_semantic_height_m, rel_tol=0, abs_tol=2e-6)):
+            raise ContractError("emitted animal semantic height differs from runtime calibration")
+        animation = emitted.document.get("animations", [])
+        if any(channel.get("target", {}).get("path") == "scale"
+               for item in animation for channel in item.get("channels", [])):
+            raise ContractError("emitted animal geometry scale must remain constant")
+    except ContractError:
+        raise
+    except (AttributeError, KeyError, TypeError, IndexError, ValueError, ZeroDivisionError) as exc:
+        raise ContractError("emitted animal geometry scale cannot be verified") from exc
+
+
 def scaled_contact_profile(document: Mapping[str, Any], scale: float) -> dict:
     result=deepcopy(document)
     try: level=result["geometry"]["ground"]["level_m"]

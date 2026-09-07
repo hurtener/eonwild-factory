@@ -1,10 +1,10 @@
 """Render an immutable start -> steady cycles -> stop schedule in Blender.
 
-Each segment evaluates its source GLB directly at native source time.  The
-renderer does not create animation strips, blend, retime, fit endpoints or
-copy boundary poses.  Root-motion segments receive only their declared
-constant parent offset.  In-place segments receive the same offset plus the
-declared motor trajectory at the evaluated source time.
+Each segment evaluates its source GLB directly at source seconds selected by
+the fixed-rate review clock.  The renderer does not create animation strips,
+blend, retime, fit endpoints or copy boundary poses.  Root-motion segments
+receive only their declared constant parent offset.  In-place segments receive
+the same offset plus the declared motor trajectory at the evaluated source time.
 """
 from __future__ import annotations
 
@@ -23,7 +23,7 @@ from mathutils import Vector
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from connected_schedule import validate_connected_schedule
 from connected_timeline import plan_distance, segment_at
-from preview_clock import transport_clock
+from preview_clock import source_frame as mapped_source_frame, transport_clock
 from render_candidate import area_light, camera_spec, projected_camera_frame, set_frame
 from review_timing import native_sample_times
 
@@ -138,7 +138,7 @@ def source_frame(source: dict, time_s: float) -> float:
         return clock.source_start_frame
     if abs(time_s - float(source["runtime"]["duration_s"])) <= 2e-6:
         return clock.source_end_frame
-    return clock.source_start_frame + time_s * source["action_fps"]
+    return mapped_source_frame(clock.source_start_frame, time_s, source["action_fps"])
 
 
 def main() -> None:
@@ -399,7 +399,7 @@ def main() -> None:
         "source_clocks": [{"package": str(source["package"]), **source["clock"].receipt()}
                           for source in packages.values()],
         "declared_duration_s": float(schedule["duration_s"]), "encoded_duration_s": len(timeline) / args.fps,
-        "timing": "native-time [0,duration) film; exact joins and one-shot terminal rendered separately",
+        "timing": "fixed-rate review frames evaluate immutable source seconds on [0,duration); exact joins and one-shot terminal rendered separately",
         "segment_policy": "direct immutable source intervals; no NLA, repeat strip, retime, blend, fitted or copied boundary",
         "root_policy": "constant cumulative declared offset for root motion; declared motor trajectory reconstruction for in-place",
         "maximum_declared_root_error_m": max_root_error,

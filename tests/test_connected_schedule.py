@@ -46,7 +46,7 @@ def package(root, name, *, loop, contract=None, phase=.25, distance=2., animal=N
         {'time_s': 1., 'root_forward_m': distance}]}))
     (folder / 'inputs.lock.json').write_text(json.dumps({'inputs': {
         'source': shared['source'], 'rig': shared['rig'], **({'animal':shared['animal']} if animal is not None else {}),
-    }}))
+    }, 'engine_files': {'factory/compiler.py': '7' * 64}}))
     (folder / 'root_motion.glb').write_bytes(b'root')
     (folder / 'in_place.glb').write_bytes(b'in-place')
     files = {path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in folder.iterdir()}
@@ -56,11 +56,22 @@ def package(root, name, *, loop, contract=None, phase=.25, distance=2., animal=N
     return folder
 
 
-def test_schedule_uses_phase_tail_full_cycles_head_without_repeat_or_reset(tmp_path):
+@pytest.fixture
+def verified_packages(monkeypatch):
+    """Keep schedule-unit fixtures focused; production verification is tested separately."""
+    checked = []
+    def verify(path):
+        checked.append(Path(path))
+    monkeypatch.setattr(module, '_verify_factory_package', verify)
+    return checked
+
+
+def test_schedule_uses_phase_tail_full_cycles_head_without_repeat_or_reset(tmp_path, verified_packages):
     start = package(tmp_path, 'start', loop=False, contract='start')
     steady = package(tmp_path, 'steady', loop=True)
     stop = package(tmp_path, 'stop', loop=False, contract='stop')
     schedule = module.build_connected_schedule(start, steady, stop, cycles=3)
+    assert verified_packages == [start.resolve(), steady.resolve(), stop.resolve()]
     labels = [row['label'] for row in schedule['segments']]
     assert labels == ['start', 'steady-tail', 'steady-cycle-1', 'steady-cycle-2', 'steady-head', 'stop']
     assert schedule['duration_s'] == pytest.approx(5.)
@@ -73,7 +84,7 @@ def test_schedule_uses_phase_tail_full_cycles_head_without_repeat_or_reset(tmp_p
         module.validate_connected_schedule(schedule)
 
 
-def test_schedule_rejects_phase_mismatch_or_nonlooping_steady(tmp_path):
+def test_schedule_rejects_phase_mismatch_or_nonlooping_steady(tmp_path, verified_packages):
     start = package(tmp_path, 'start', loop=False, contract='start', phase=.25)
     steady = package(tmp_path, 'steady', loop=True)
     stop = package(tmp_path, 'stop', loop=False, contract='stop', phase=.5)
@@ -84,7 +95,7 @@ def test_schedule_rejects_phase_mismatch_or_nonlooping_steady(tmp_path):
         module.build_connected_schedule(start, steady, start, cycles=1)
 
 
-def test_schedule_rejects_changed_source_identity_and_nonfinite_plan(tmp_path):
+def test_schedule_rejects_changed_source_identity_and_nonfinite_plan(tmp_path, verified_packages):
     start = package(tmp_path, 'start', loop=False, contract='start')
     steady = package(tmp_path, 'steady', loop=True)
     stop = package(tmp_path, 'stop', loop=False, contract='stop')
@@ -111,9 +122,85 @@ def test_schedule_rejects_changed_source_identity_and_nonfinite_plan(tmp_path):
         module.build_connected_schedule(start, steady, start, cycles=1)
 
 
-def test_schedule_rejects_mixed_or_different_animal_instances(tmp_path):
+def test_schedule_rejects_mixed_or_different_animal_instances(tmp_path, verified_packages):
     start=package(tmp_path,'start',loop=False,contract='start',animal='a')
     steady=package(tmp_path,'steady',loop=True,animal='a')
     stop=package(tmp_path,'stop',loop=False,contract='stop',animal='b')
     with pytest.raises(ValueError,match='animal identity'):
         module.build_connected_schedule(start,steady,stop,cycles=1)
+
+
+def test_schedule_requires_actual_factory_package_verification(tmp_path):
+    start = package(tmp_path, 'start', loop=False, contract='start')
+    steady = package(tmp_path, 'steady', loop=True)
+    stop = package(tmp_path, 'stop', loop=False, contract='stop')
+    with pytest.raises(ValueError, match='does not pass factory verification'):
+        module.build_connected_schedule(start, steady, stop, cycles=1)
+
+
+@pytest.mark.parametrize('engine_files', [None, {}, {'factory/compiler.py': 'INVALID'},
+                                           {'../compiler.py': '7' * 64}])
+def test_schedule_rejects_missing_or_invalid_compiler_fingerprints(tmp_path, verified_packages, engine_files):
+    start = package(tmp_path, 'start', loop=False, contract='start')
+    steady = package(tmp_path, 'steady', loop=True)
+    stop = package(tmp_path, 'stop', loop=False, contract='stop')
+    lock_path = stop / 'inputs.lock.json'
+    lock = json.loads(lock_path.read_text())
+    if engine_files is None:
+        lock.pop('engine_files')
+    else:
+        lock['engine_files'] = engine_files
+    lock_path.write_text(json.dumps(lock))
+    manifest_path = stop / 'manifest.json'
+    manifest = json.loads(manifest_path.read_text())
+    manifest['files']['inputs.lock.json'] = hashlib.sha256(lock_path.read_bytes()).hexdigest()
+    manifest_path.write_text(json.dumps(manifest))
+    with pytest.raises(ValueError, match='compiler fingerprints'):
+        module.build_connected_schedule(start, steady, stop, cycles=1)
+
+
+def test_schedule_rejects_mixed_compiler_fingerprints(tmp_path, verified_packages):
+    start = package(tmp_path, 'start', loop=False, contract='start')
+    steady = package(tmp_path, 'steady', loop=True)
+    stop = package(tmp_path, 'stop', loop=False, contract='stop')
+    lock_path = stop / 'inputs.lock.json'
+    lock = json.loads(lock_path.read_text())
+    lock['engine_files']['factory/compiler.py'] = '8' * 64
+    lock_path.write_text(json.dumps(lock))
+    manifest_path = stop / 'manifest.json'
+    manifest = json.loads(manifest_path.read_text())
+    manifest['files']['inputs.lock.json'] = hashlib.sha256(lock_path.read_bytes()).hexdigest()
+    manifest_path.write_text(json.dumps(manifest))
+    with pytest.raises(ValueError, match='do not share compiler fingerprints'):
+        module.build_connected_schedule(start, steady, stop, cycles=1)
+
+
+def test_schedule_rejects_nonzero_v1_phase_and_labels_zero_phase_cycles_uniquely(tmp_path, verified_packages):
+    start = package(tmp_path, 'start', loop=False, contract='start', phase=.25)
+    steady = package(tmp_path, 'steady', loop=True)
+    stop = package(tmp_path, 'stop', loop=False, contract='stop', phase=.25)
+    for package_path in (start, stop):
+        runtime_path = package_path / 'runtime.json'
+        runtime = json.loads(runtime_path.read_text())
+        runtime['transition_contract']['interface_schema'] = 'eonwild.motion.gait-interface.v1'
+        runtime_path.write_text(json.dumps(runtime))
+        manifest_path = package_path / 'manifest.json'
+        manifest = json.loads(manifest_path.read_text())
+        manifest['files']['runtime.json'] = hashlib.sha256(runtime_path.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+    with pytest.raises(ValueError, match='v1 interface requires zero'):
+        module.build_connected_schedule(start, steady, stop, cycles=2)
+
+    for package_path in (start, stop):
+        runtime_path = package_path / 'runtime.json'
+        runtime = json.loads(runtime_path.read_text())
+        runtime['transition_contract']['steady_phase_s'] = 0.
+        runtime_path.write_text(json.dumps(runtime))
+        manifest_path = package_path / 'manifest.json'
+        manifest = json.loads(manifest_path.read_text())
+        manifest['files']['runtime.json'] = hashlib.sha256(runtime_path.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+    schedule = module.build_connected_schedule(start, steady, stop, cycles=3)
+    labels = [row['label'] for row in schedule['segments']]
+    assert labels == ['start', 'steady-cycle-1', 'steady-cycle-2', 'steady-cycle-3', 'stop']
+    assert len(labels) == len(set(labels))

@@ -20,7 +20,7 @@ from mathutils import Vector
 
 # Blender does not reliably add a --python script's directory to sys.path.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from preview_clock import SOURCE_FPS, transport_clock
+from preview_clock import SOURCE_FPS, source_frame, transport_clock
 from review_timing import native_sample_times
 
 
@@ -324,7 +324,7 @@ def main():
         camera.location = camera_base + shift
         scene.render.filepath = str(frames / f'{index:05d}.png')
         bpy.ops.render.render(write_still=True)
-        timeline.append({'index': index, 'source_time_s': time, 'blender_frame': start + time * SOURCE_FPS,
+        timeline.append({'index': index, 'source_time_s': time, 'blender_frame': source_frame(start, time, action_fps),
             'camera_translation_m': list(shift)})
     (output / 'timeline.json').write_text(json.dumps(timeline, indent=2) + '\n')
     terminal = None
@@ -344,7 +344,7 @@ def main():
         raise ValueError('encoded preview has missing or extra frames')
     numerator, denominator = map(int, probe['r_frame_rate'].split('/'))
     if numerator != args.fps * denominator:
-        raise ValueError('encoded preview changed the native review frame rate')
+        raise ValueError('encoded preview changed the fixed review frame rate')
     cover = output / 'cover.png'
     cover.write_bytes((frames / f'{count // 3:05d}.png').read_bytes())
     if args.fbx:
@@ -359,7 +359,7 @@ def main():
         'source_frame_start': start, 'source_frame_end': end, 'source_fps': action_fps,
         'factory_sample_hz': SOURCE_FPS,
         'transport_clock': clock.receipt() if args.fbx else None,
-        'timing': 'native-time sampling on [0, duration); no speed adjustment or duplicate endpoint',
+        'timing': 'fixed-rate preview evaluates immutable source seconds on [0,duration); no speed adjustment or duplicate endpoint',
         'terminal_pose': terminal,
         'mode': args.mode, 'view': args.view, 'focus': args.focus, 'camera': spec,
         'media': {name: sha(output / name) for name in ('preview.mp4', 'cover.png', 'camera.json', 'timeline.json')},

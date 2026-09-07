@@ -101,3 +101,13 @@ def transport_clock(source_start_frame: object, source_end_frame: object,
     if abs(actual - expected) > tolerance:
         raise ValueError(f'imported duration changed: {actual / source_fps} != {duration}')
     return TransportClock(start, end, duration, actual, source_fps)
+
+
+def source_frame(source_start_frame: object, time_s: object, action_fps: object) -> float:
+    """Map package seconds to the imported action's actual Blender clock."""
+    start = _number(source_start_frame, 'source frame start')
+    time = _number(time_s, 'source time')
+    fps = _number(action_fps, 'action frame rate')
+    if time < 0 or fps <= 0:
+        raise ValueError('invalid source time or action frame rate')
+    return start + time * fps

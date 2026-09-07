@@ -13,12 +13,23 @@ from eonwild_motion.solve.whole_body_gait_transition import _encode
 from test_factory import make_recipe
 
 
+ROOT = Path(__file__).resolve().parents[1]
+
+
 @pytest.fixture(scope='module')
 def candidate(tmp_path_factory):
     root = tmp_path_factory.mktemp('metadata-candidate')
     recipe = make_recipe(root)
     out = root / 'candidate'
     compile_recipe(recipe, root=root, output=out)
+    return out
+
+
+@pytest.fixture(scope='module')
+def adult_candidate(tmp_path_factory):
+    out = tmp_path_factory.mktemp('adult-metadata-candidate') / 'candidate'
+    compile_recipe(ROOT / 'recipes/heavy-biped/tarbosaurus-pin-552-1-adult-walk.v1.json',
+                   root=ROOT, output=out)
     return out
 
 
@@ -69,3 +80,18 @@ def test_complete_old_package_remains_inspectable_without_recompiling(candidate)
     assert result['integrity'] == 'PASS'
     assert result['technical_status'] == 'BLOCKED'  # no actual skin fixture; not an approval
     assert result['production_approved'] is False
+
+
+def test_animal_package_rejects_rehashed_emitted_scale_corruption(adult_candidate, tmp_path):
+    out = tmp_path / 'candidate'
+    shutil.copytree(adult_candidate, out)
+    for filename in ('root_motion.glb', 'in_place.glb'):
+        glb = Glb.from_bytes((out / filename).read_bytes())
+        roots = [index for index, parent in enumerate(glb.parents) if parent is None]
+        assert roots and all(glb.nodes[index].get('scale') != [1, 1, 1] for index in roots)
+        for index in roots:
+            glb.nodes[index]['scale'] = [1, 1, 1]
+        (out / filename).write_bytes(_encode(glb.document, glb.binary))
+        rehash(out, filename)
+    with pytest.raises(ContractError, match='emitted animal geometry scale differs'):
+        verify_package(out)
