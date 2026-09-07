@@ -17,3 +17,11 @@ def test_blender_command_requests_only_exact_native_stills():
     assert "--fbx" not in command
     assert "--fps" not in command
     assert command[command.index("--view") + 1] == "side"
+
+
+def test_blender_command_can_reuse_an_explicit_camera_lock():
+    lock = Path("/locks/side.json")
+    command = module.blender_command(blender="blender", root=Path("/repo"),
+        package=Path("/candidate"), output=Path("/review/side"), view="side",
+        mode="in_place", times=[.25], width=480, samples=2, camera_lock=lock)
+    assert command[-2:] == ["--camera-lock", str(lock)]

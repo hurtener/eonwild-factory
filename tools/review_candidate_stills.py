@@ -28,12 +28,15 @@ def sha(path: Path) -> str:
 
 def blender_command(*, blender: str, root: Path, package: Path, output: Path,
                     view: str, mode: str, times: list[float], width: int,
-                    samples: int) -> list[str]:
-    return [blender, "-b", "-t", "2", "--python-exit-code", "1", "--python",
+                    samples: int, camera_lock: Path | None = None) -> list[str]:
+    command = [blender, "-b", "-t", "2", "--python-exit-code", "1", "--python",
         str(root / "tools/render_candidate.py"), "--", "--package", str(package),
         "--output", str(output), "--view", view, "--mode", mode,
         "--width", str(width), "--samples", str(samples), "--still-times",
         *[repr(value) for value in times]]
+    if camera_lock is not None:
+        command.extend(["--camera-lock", str(camera_lock)])
+    return command
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -46,12 +49,15 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--width", type=int, default=640)
     parser.add_argument("--samples", type=int, default=4)
     parser.add_argument("--blender", default="blender")
+    parser.add_argument("--camera-lock-dir", type=Path,
+                        help="create or reuse one immutable camera lock per view")
     args = parser.parse_args(argv)
     if len(set(args.views)) != len(args.views) or not 320 <= args.width <= 3840 or not 1 <= args.samples <= 256:
         parser.error("still views, resolution, or samples are invalid")
     root = Path(__file__).resolve().parents[1]
     package = args.package.resolve()
     output = args.output.resolve()
+    camera_lock_dir = args.camera_lock_dir.resolve() if args.camera_lock_dir is not None else None
     before = verify_package(package)
     runtime = json.loads((package / "runtime.json").read_text())
     times = native_still_times(runtime["duration_s"], args.times)
@@ -66,9 +72,10 @@ def main(argv: list[str] | None = None) -> int:
     try:
         for view in args.views:
             target = output / view
+            camera_lock = camera_lock_dir / f"{view}.json" if camera_lock_dir is not None else None
             command = blender_command(blender=args.blender, root=root, package=package,
                 output=target, view=view, mode=args.mode, times=times,
-                width=args.width, samples=args.samples)
+                width=args.width, samples=args.samples, camera_lock=camera_lock)
             process = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                 text=True, timeout=600)
             log = output / f"{view}.render.log"
@@ -82,7 +89,9 @@ def main(argv: list[str] | None = None) -> int:
                 raise ValueError(f"{view} renderer did not preserve requested native seconds")
             result["views"][view] = {"status": "PASS", "receipt": str(receipt_path),
                 "receipt_sha256": sha(receipt_path), "stills": receipt["stills"],
-                "log": str(log)}
+                "log": str(log),
+                "camera_lock": (None if camera_lock is None else
+                    {"path": str(camera_lock), "sha256": sha(camera_lock)})}
         result["candidate_status"] = verify_package(package)
         if sha(package / "manifest.json") != package_manifest_sha:
             raise ValueError("candidate manifest changed during still review")
