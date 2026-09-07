@@ -79,7 +79,7 @@
       "frames": 241,
       "duration_s": 10.041667,
       "full_decode_exit_code": 0,
-      "visual_coverage": "every native primary-stream frame inspected in six consecutive sheets (241 total); recovery frames 101, 108 and 116 additionally inspected at full native resolution; exact user-selected recovery pose confirmed in live browser"
+      "visual_coverage": "every native primary-stream frame inspected in six consecutive sheets (241 total); recovery frames 101, 108 and 116 additionally inspected at full native resolution; exact user-selected recovery pose confirmed in live browser; subsequent full original-speed browser playback verified from opening playing state to 10.041667 s terminal paused state"
     },
     {
       "path": "assets/examples/tarbosaurus/v9_evidence/BITE MISS + RECOVERY \u2014 front three-quarter.mp4",
@@ -203,6 +203,25 @@
     "user_screenshot_sha256": {
       "candidate-rejected.png": "46c8f82e74b921798f7767e70d0a51e354c8efb4244f30f07abad30c57249ffd",
       "reference-user-frame.png": "e22006fed28584a3a539e16ae62d0dc8d180120e7c37af84b1495e4a16183b76"
+    },
+    "signed_pad20_probe": {
+      "source_root_motion_sha256": "af00f83f90ce9af91f08572267a3031e20d0a5c2179f05c619f53767c54b5c2e",
+      "technical_status": "PASS",
+      "host_visual_status": "REJECTED",
+      "finding": "Actual skin at t=0.600 s points toes forward/down with low clearance, not downward/trailing as in reference. Downward vector alone is insufficient.",
+      "inspected_review_frames": {
+        "side-feet": [
+          10,
+          18
+        ],
+        "three-quarter-body": [
+          15,
+          18
+        ]
+      },
+      "review_fps": 30,
+      "remaining_render": "STOPPED_AFTER_CONTRARY_EVIDENCE",
+      "full_cycle_review": "NOT_RUN"
     }
   }
 }

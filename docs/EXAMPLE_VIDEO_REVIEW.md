@@ -31,8 +31,9 @@ Following the user's recovery-direction correction, the host also inspected
 all 241 native frames of `tarbosaurus_walk.mp4`, then examined frames 101, 108
 and 116 at full native resolution. Those frames show the foot hanging downward,
 passing below the knee, and opening forward for placement, respectively. The
-exact illustrated reference was confirmed in the live browser; complete native
-playback of this additional clip is not claimed by this receipt.
+exact illustrated reference was confirmed in the live browser. A subsequent
+independent browser playback ran this complete 10.041667 s clip at 1x from the
+beginning to its terminal paused state; the original user-selected tab was retained.
 
 Frames below are zero-based; time is frame index divided by 24. The full source
 is retained. No source retiming, generated in-between frames or altered geometry
@@ -93,6 +94,16 @@ withdrew that positive assessment. This polish is **visually rejected for foot
 recovery**. Correcting it requires checking the emitted tibia, metatarsus and
 toe directions through release, recovery and placement; changing a numeric
 pitch amplitude is not evidence of reference alignment.
+
+An isolated signed-pad probe subsequently pointed the foot farther downward
+and passed the existing technical gates (root-motion GLB
+`af00f83f90ce9af91f08572267a3031e20d0a5c2179f05c619f53767c54b5c2e`).
+The host rejected this probe after inspecting actual side-foot and three-quarter
+skin frames at 0.600 s: the toes still project forward and have little ground
+clearance. Its remaining render was stopped; no full-cycle render or visual
+acceptance is claimed. A downward vector alone does not establish the trailing
+recovery seen in the reference. Foot orientation, toe articulation and clearance
+must be evaluated together before selecting a successor.
 
 That polish was compiled independently at `2e718a37dbe3e43094b1c75dc31e86d5021c96f7`.
 It must be corrected, regenerated and reviewed with the shared solver.
