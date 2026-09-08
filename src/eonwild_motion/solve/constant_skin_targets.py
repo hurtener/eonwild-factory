@@ -398,7 +398,18 @@ class CanonicalConstantSkinTargetLaw:
         self, query: SourceMotionQuery, time_s: float
     ) -> dict[str, dict[str, Any]]:
         """Reuse one owned query and row solve for the two material patches."""
-        result = query.evaluate_with_target_offsets(time_s, self._constants)
+        if query._transition_clearance is None:
+            result = query.evaluate_with_target_offsets(time_s, self._constants)
+        else:
+            # value()/values() already proved the final query binding, which
+            # includes the resolver and its raw calibrated law. Avoid hashing
+            # that immutable source request again for every time in the batch.
+            result = query._evaluate_owned(
+                _finite_time(time_s),
+                side="value",
+                target_offsets=query._target_offsets(self._constants),
+                transition_clearance_integrity_proved=True,
+            )
         if isinstance(result, SourceMotionUnavailable):
             raise ContractError("constant skin target source value is unavailable")
         row = _thaw(result.row)

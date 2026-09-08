@@ -126,6 +126,23 @@ def test_one_baseline_resolves_a_canonical_flat_recipe(tmp_path):
     ) == resolved.recipe
 
 
+def test_transition_clearance_policy_is_additive_and_strict(tmp_path):
+    baseline, _, motion_set = _documents(tmp_path)
+    baseline["solve_policy"].pop("grounded_transition_clearance")
+    write_json(tmp_path / "baseline.json", baseline)
+    motion_set["baseline"] = bind(tmp_path, tmp_path / "baseline.json")
+    write_json(tmp_path / "set.json", motion_set)
+    resolved = resolve_motion_set(tmp_path, tmp_path / "set.json", "walk")
+    assert "grounded_transition_clearance" not in resolved.solve_policy
+
+    baseline["solve_policy"]["grounded_transition_clearance"] = "unknown"
+    write_json(tmp_path / "baseline.json", baseline)
+    motion_set["baseline"] = bind(tmp_path, tmp_path / "baseline.json")
+    write_json(tmp_path / "set.json", motion_set)
+    with pytest.raises(ContractError, match="supported explicit solve policy"):
+        resolve_motion_set(tmp_path, tmp_path / "set.json", "walk")
+
+
 @pytest.mark.parametrize(
     "field",
     [

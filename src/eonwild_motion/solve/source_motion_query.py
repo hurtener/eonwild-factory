@@ -398,7 +398,13 @@ class SourceMotionQuery:
             foot.pop("target_offset_m", None)
         return result
 
-    def _sample_row(self, time_s: float, *, apply_clearance: bool = True) -> dict[str, Any]:
+    def _sample_row(
+        self,
+        time_s: float,
+        *,
+        apply_clearance: bool = True,
+        transition_clearance_integrity_proved: bool = False,
+    ) -> dict[str, Any]:
         if self._choreography is not None:
             row = self._choreography.sample(time_s)
         elif isinstance(self._locomotion_gait, GroundedGait):
@@ -413,7 +419,10 @@ class SourceMotionQuery:
         if "performance" in self._plan:
             declare_pad_recovery_sample(_thaw(self._plan["parameters"]), row)
         if apply_clearance and self._transition_clearance is not None:
-            row = self._transition_clearance.resolve(row)
+            row = self._transition_clearance.resolve(
+                row,
+                integrity_proved=transition_clearance_integrity_proved,
+            )
         return row
 
     def _validate_source_binding(self) -> None:
@@ -795,6 +804,7 @@ class SourceMotionQuery:
         *,
         side: str,
         target_offsets: Mapping[str, list[float]] | None,
+        transition_clearance_integrity_proved: bool = False,
     ) -> SourceMotionResult | SourceMotionUnavailable:
         if side not in ("value", "left_limit", "right_limit"):
             raise ContractError(
@@ -817,10 +827,18 @@ class SourceMotionQuery:
             row = (
                 _thaw(self._plan["samples"][index])
                 if index is not None
-                else self._sample_row(sampled_time)
+                else self._sample_row(
+                    sampled_time,
+                    transition_clearance_integrity_proved=(
+                        transition_clearance_integrity_proved
+                    ),
+                )
             )
             if index is not None and self._transition_clearance is not None:
-                row = self._transition_clearance.resolve(row)
+                row = self._transition_clearance.resolve(
+                    row,
+                    integrity_proved=transition_clearance_integrity_proved,
+                )
         except GroundedTransitionClearanceUnavailable as exc:
             return SourceMotionUnavailable(
                 TRANSITION_CLEARANCE_UNAVAILABLE, sampled_time, str(exc)
