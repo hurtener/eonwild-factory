@@ -170,6 +170,23 @@ emitter or interval-rate authority is included, and current motion remains
 blocked under the exact gates. See
 [V9-CUBICSPLINE-CONSUMER-STAGE-A-001](../reports/V9-CUBICSPLINE-CONSUMER-STAGE-A-001/README.md).
 
+The current published source is
+`83aa5e5391848493c902af0c6bd4ecab6228afe6`. Its local real-tool suite and
+hosted macOS arm64 CI each passed 928 tests plus 21 subtests; the CI source tree
+is identical to the published tree. This head includes the opt-in canonical
+support-anchor provider and SourceMotionQuery admission, but does not activate
+a tangent emitter or change any motion threshold. Exact emitted evaluation
+still blocks the generic direct joins and local loops, including adult V9 at
+`3.23101227406632 mm/s`. Bounded walk v3 start/steady/stop measurements are
+consistent with a shared continuous source trajectory at both tested
+interfaces; no finite jump is resolved. They are numerical evidence for a
+future all-key source-derived tangent experiment, not formal derivatives or a
+current C1 pass. See
+[V9-CURRENT-CONTINUITY-83AA5E5-001](../reports/V9-CURRENT-CONTINUITY-83AA5E5-001/README.md),
+[V9-CANONICAL-SUPPORT-ANCHOR-PROVIDER-001](../reports/V9-CANONICAL-SUPPORT-ANCHOR-PROVIDER-001/README.md),
+and
+[V9-SOURCE-MOTION-QUERY-V9-INTEGRATION-001](../reports/V9-SOURCE-MOTION-QUERY-V9-INTEGRATION-001/README.md).
+
 ## Evidence-bound adult benchmark
 
 `tarbosaurus-pin-552-1-adult-walk.v1` is the first explicit animal-instance
