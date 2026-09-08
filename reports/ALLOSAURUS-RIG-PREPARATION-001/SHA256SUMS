@@ -1,6 +1,9 @@
-cf0612cbf561f63f25a64befd774be929694a3df0d12ca0b654e563726779904  ./README.md
+295a3c7b25c2cd42a30247dcfd300aaa3241b74ff0c7c67161f8620aa688916c  ./README.md
 b9216f550a32748246d1479cc5bcf79070e814a4b3ff6ecab6774571c935adcf  ./evidence/articulation-probes.json
 daa5482e3fdb787744c7ecdfb5c8f7bb3bdec61bd84b3be35b46991208ebcf42  ./evidence/bilateral-chain-measurements.json
+f5a701950df9b8801e5a0181774f0fddfa0b97ceb9c934fb16b714f7715fb3da  ./evidence/combined-full-suite.log
+988db26e94764fd271b1f0738950b7cc2e82c6b47c555259035af8c920b941b7  ./evidence/combined-reproduction-source-binding.json
+f82848462c30414566ebd96e693da4d9a93ac2979a76118c381f07da63892036  ./evidence/combined-reproduction.json
 4639a856cddde9a85226486acef543e4ae76ec3bbd15973d6e355f5ccc1a5142  ./evidence/focused-tests.log
 ca3319abb9f102a1141b17378b95c7279e0f9eba09b58fdc7ebbec4de81d3436  ./evidence/hindlimb-proportion-sanity.json
 96246ed1e69dcbab97e109eed1b7ecf5ffdbfd846a207defa9d9e897b4c53834  ./evidence/incoming-gltf-validation.json

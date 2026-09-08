@@ -194,3 +194,21 @@ remains unresolved; this stage does not start another tuning loop.
 The evidence supports a reproducible neutral rig-preparation candidate for
 adversarial review. It does not establish motion readiness, visual approval,
 Unity transfer, mass physics, biological accuracy, or production approval.
+
+## Reachable combined-checkpoint reproduction
+
+The original reviewed generator remains implementation head `55cd2b6`; that
+identity is retained above as history. The same source and preparation logic
+are now reachable from combined repository head
+`c5bbdcf77a2842d5bbe0e16080279fe18fec1bbb` (tree
+`272c9cfd1316adda58e3c28d849471aee4daa904`). Root regenerated the prepared
+source from the preserved `91d9816...` input and checked-in configuration.
+The result is byte-identical to reviewed candidate `c56772d...`; all four
+recorded neutral reconstruction measurements are also identical. See
+`evidence/combined-reproduction-source-binding.json` and
+`evidence/combined-reproduction.json`.
+
+The complete combined-head validation recorded `1,063` pytest cases plus 21
+subtests passing in `645.46 s`; the exact output is retained as
+`evidence/combined-full-suite.log` (SHA-256 `f5a70195...`). This does not change
+the candidate's non-promoted status or its anatomical and visual limitations.
