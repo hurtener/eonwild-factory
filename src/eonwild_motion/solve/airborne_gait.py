@@ -10,6 +10,7 @@ from copy import deepcopy
 import hashlib
 import json
 import math
+from dataclasses import dataclass
 from typing import Any, Mapping
 
 import numpy as np
@@ -320,6 +321,422 @@ def _validate_plan_override(plan: Mapping[str, Any], gait: AirborneGait) -> dict
     return out
 
 
+
+
+@dataclass(frozen=True)
+class AirborneSolveContext:
+    """Read-only source geometry and plan context for one solved plan row.
+
+    This is deliberately a plan-row seam. It accepts an already-authored plan
+    sample and optional already-computed body-response sample; it neither
+    samples arbitrary time nor exposes source tangents or skin refinement.
+    """
+
+    source: Glb
+    roles: Mapping[str, Any]
+    gait: AirborneGait
+    plan: Mapping[str, Any]
+    articulation_profile: ArticulationProfile | None
+    legacy_overlay: bool
+    root: int
+    pelvis: int
+    legs: Mapping[str, list[int]]
+    toes: Mapping[str, list[list[int]]]
+    up: np.ndarray
+    forward: np.ndarray
+    lateral: np.ndarray
+    origin: np.ndarray
+    ground: float
+    body_height: float
+    hip_offsets: Mapping[str, float]
+    hip_lane_center: float
+    base_t: tuple[Any, ...]
+    base_r: tuple[Any, ...]
+    base_s: tuple[Any, ...]
+    base_w: tuple[np.ndarray, ...]
+    jaw: int | None
+    jaw_axis: tuple[float, ...] | None
+    anatomical_normals: Mapping[str, np.ndarray]
+    toe_normals: Mapping[int, np.ndarray]
+
+
+@dataclass(frozen=True)
+class SolvedAirbornePose:
+    """Local TRS plus skeletal contact/constraint witnesses for one plan row."""
+
+    translations: list[Any]
+    rotations: list[Any]
+    feet: dict[str, Any]
+    maximum_foot_target_residual_m: float
+    maximum_unreachable_extension_m: float
+    maximum_articulation_envelope_violation_degrees: float
+
+
+def solve_airborne_plan_sample(
+    context: AirborneSolveContext, row: Mapping[str, Any], *,
+    body_response_sample: Mapping[str, Any] | None = None,
+) -> SolvedAirbornePose:
+    """Solve one existing plan row without reading or mutating sibling rows."""
+    source = context.source
+    roles = context.roles
+    gait = context.gait
+    plan = context.plan
+    articulation_profile = context.articulation_profile
+    legacy_overlay = context.legacy_overlay
+    root, pelvis = context.root, context.pelvis
+    legs, toes = context.legs, context.toes
+    up, forward, lateral = context.up, context.forward, context.lateral
+    origin, ground, body_height = context.origin, context.ground, context.body_height
+    hip_offsets, hip_lane_center = context.hip_offsets, context.hip_lane_center
+    base_t, base_r, base_s, base_w = context.base_t, context.base_r, context.base_s, context.base_w
+    jaw, jaw_axis = context.jaw, context.jaw_axis
+    anatomical_normals, toe_normals = context.anatomical_normals, context.toe_normals
+    tr, rot = list(base_t), list(base_r)
+    from .performance import phase_and_gain
+    motion_time, performance_gain = phase_and_gain(row)
+    root_delta = forward * row["root_forward_m"]
+    tr[root] = tuple(float(v) for v in np.asarray(base_t[root]) + _local_delta(source, base_w, root, root_delta))
+    root_pitch = float(row.get("root_pitch_degrees", 0.0))
+    if not math.isfinite(root_pitch):
+        raise ContractError("plan root pitch must be finite numeric")
+    if root_pitch:
+        axis = _qrotate(_qinv(_rotation_from_matrix(base_w[root])), tuple(lateral))
+        rot[root] = _qmul(base_r[root], _qrotvec(tuple(np.asarray(axis) * math.radians(root_pitch))))
+    tr[pelvis] = tuple(float(v) for v in np.asarray(base_t[pelvis]) + _local_delta(source, base_w, pelvis, up * row["pelvis_height_offset_m"]))
+    if body_response_sample is not None:
+        for name, degrees in body_response_sample["sagittal_node_degrees"].items():
+            if name not in source.name_to_node:
+                raise ContractError("driven body response role is not present in the rig")
+            n = source.name_to_node[name]
+            axis = _qrotate(_qinv(_rotation_from_matrix(base_w[n])), tuple(lateral))
+            rot[n] = _qmul(base_r[n], _qrotvec(tuple(np.asarray(axis) * math.radians(degrees))))
+    elif legacy_overlay:
+        # Preserve the pre-existing default path for accepted artifacts and
+        # other profiles. The new driven response is explicitly opt-in.
+        pulse = math.sin(2 * math.pi * row["time_s"] / gait.step_period_s)
+        for role, amplitude in (("chest", -1.5), ("head", 0.8)):
+            if role in roles and roles[role] in source.name_to_node:
+                n = source.name_to_node[roles[role]]
+                axis = _qrotate(_qinv(_rotation_from_matrix(base_w[n])), tuple(lateral))
+                rot[n] = _qmul(base_r[n], _qrotvec(tuple(np.asarray(axis) * math.radians(amplitude * pulse))))
+        for nname in roles.get("tail", [])[:3]:
+            n = source.name_to_node[nname]
+            axis = _qrotate(_qinv(_rotation_from_matrix(base_w[n])), tuple(lateral))
+            rot[n] = _qmul(base_r[n], _qrotvec(tuple(np.asarray(axis) * math.radians(0.8 * pulse))))
+    # Profile-owned sagittal posture distributed over semantic chains.
+    # A higher pelvis can retain leg reach while the front body inclines;
+    # the tail is a distributed elevation, never an attachment offset.
+    for names, total in ((list(roles.get("spine", [])) + ([roles["chest"]] if roles.get("chest") else []), gait.front_body_pitch_degrees), (list(roles.get("tail", [])), gait.tail_elevation_degrees)):
+        if total and not names:
+            raise ContractError("sagittal posture requires its semantic body chain")
+        for name in names if total else []:
+            n = source.name_to_node[name]
+            axis = _qrotate(_qinv(_rotation_from_matrix(base_w[n])), tuple(lateral))
+            rot[n] = _qmul(rot[n], _qrotvec(tuple(np.asarray(axis) * math.radians(performance_gain * total / len(names)))))
+    if jaw is not None:
+        # Rotate the lower jaw about the rig-derived sagittal axis only.
+        # The full-cycle cosine is C2 at the loop; no head/neck compensation
+        # is added, so the accepted whole-body motion remains unchanged.
+        rot[jaw] = _qmul(base_r[jaw], _qrotvec(tuple(np.asarray(jaw_axis) * math.radians(performance_gain * jaw_breathing_angle(gait, motion_time)))))
+    from .performance import apply_performance
+    apply_performance(source, tr, rot, base_s, base_w, roles, plan, row, up, forward)
+    facts = {}
+    max_residual, max_extension = 0.0, 0.0
+    max_envelope_violation = 0.0
+    for side, chain in legs.items():
+        hip, knee, ankle, foot = chain
+        foot_plan = row["feet"][side]
+        material_partition = "performance" in plan
+        swing_phase = foot_plan["swing_phase"]
+        support_lock = (1.0 if foot_plan["contact"] else
+                        1 - _smooth(min(swing_phase, 1 - swing_phase) / .18))
+        for toe_chain in toes[side]:
+            for index, n in enumerate(toe_chain):
+                axis = _qrotate(_qinv(_rotation_from_matrix(base_w[n])), tuple(lateral))
+                flex = foot_plan["toe_flex_degrees"] * (0.45 if index == 0 else 0.275)
+                if material_partition:
+                    flex *= 1 - support_lock
+                rot[n] = _qmul(base_r[n], _qrotvec(tuple(np.asarray(axis) * math.radians(flex))))
+        w = _world_matrices(source, tr, rot, base_s)
+        hp, kp, ap, fp = (np.asarray(_world_position(w[n])) for n in chain)
+        side_lane = float((np.asarray(_world_position(base_w[foot])) - origin) @ lateral)
+        if "performance" in plan:
+            half_lane = .5 * plan["performance"]["lane_width_body_heights"] * body_height
+            if plan["performance"].get("center_lanes_on_bilateral_hip_midpoint", False):
+                if min(abs(value) for value in hip_offsets.values()) < 1e-8 * body_height:
+                    raise ContractError("bilateral hip midpoint lane calibration requires separated hip origins")
+                side_lane = hip_lane_center + math.copysign(half_lane, hip_offsets[side])
+            else:
+                side_lane = math.copysign(half_lane, side_lane)
+        foot_height = float(np.asarray(_world_position(base_w[foot])) @ up - ground)
+        desired_foot = origin + forward * foot_plan["forward_m"] + lateral * side_lane
+        desired_foot += up * (ground + foot_height + foot_plan["height_m"] - float(desired_foot @ up))
+        # Regrounding: lower this foot's targets by a constant per-side
+        # offset on EVERY frame (stance and swing). A constant shift
+        # preserves C1 continuity, loop closure and the pelvis/root
+        # motion exactly; only distal leg pose changes, bounded to 5 cm
+        # by the gait contract. Zero (default) reproduces legacy output.
+        ground_offset = (
+            gait.stance_ground_offset_left_m if side == "left"
+            else gait.stance_ground_offset_right_m
+        )
+        if ground_offset:
+            desired_foot -= up * ground_offset
+        correction = np.asarray(foot_plan.get("target_offset_m", [0., 0., 0.]), dtype=float)
+        if correction.shape != (3,) or not np.isfinite(correction).all() or np.linalg.norm(correction) > .06 * body_height:
+            raise ContractError("invalid bounded skin target correction")
+        desired_foot += correction
+        nominal_foot = desired_foot.copy()
+        # Rock the articulated foot about the distal contact centroid,
+        # not about the ankle: toe tips stay fixed during stance roll-off.
+        tips = [tc[-1] for tc in toes[side]]
+        initial_tip_offset = np.mean([np.asarray(_world_position(base_w[n])) for n in tips], axis=0) - np.asarray(_world_position(base_w[foot]))
+        flexed_tip_offset = np.mean([np.asarray(_world_position(w[n])) for n in tips], axis=0) - fp
+        u = foot_plan["swing_phase"]
+        lock = 1.0 if foot_plan["contact"] else 1 - _smooth(min(u, 1 - u) / .18)
+        # Keep the rolled foot inside every toe's unchanged-length reach
+        # envelope before the leg solve. This small rigid foot adjustment
+        # is realized by hip/knee/ankle rotations, never translations.
+        base_offset = np.asarray(_world_position(base_w[foot])) - np.asarray(_world_position(base_w[ankle]))
+        world_metatarsus_recovery = _world_metatarsus_recovery(foot_plan)
+        upper, lower = np.linalg.norm(kp - hp), np.linalg.norm(ap - kp)
+        toe_geometry = []
+        for a, b, c in toes[side]:
+            pa, pb, pc = (np.asarray(_world_position(w[n])) for n in (a, b, c))
+            toe_geometry.append((pa - fp, np.asarray(_world_position(base_w[c])) + nominal_foot - np.asarray(_world_position(base_w[foot])), np.linalg.norm(pb - pa) + np.linalg.norm(pc - pb) - 1e-7))
+
+        def pitch_candidate(degrees, world_metatarsus_target=None):
+            candidate_q = _qrotvec(tuple(lateral * math.radians(degrees)))
+            candidate_foot = (nominal_foot.copy() if material_partition else
+                              nominal_foot + initial_tip_offset - np.asarray(_qrotate(candidate_q, tuple(flexed_tip_offset))))
+            rotated_roots = [(np.asarray(_qrotate(candidate_q, tuple(offset))), tip, reach) for offset, tip, reach in toe_geometry]
+            for _ in range(18 if not material_partition and lock > 1e-12 else 0):
+                largest_correction = 0.0
+                for offset, tip, reach in rotated_roots:
+                    delta = tip - (candidate_foot + offset)
+                    distance = np.linalg.norm(delta)
+                    if distance > reach:
+                        correction = lock * delta * (1 - reach / distance)
+                        candidate_foot += correction
+                        largest_correction = max(largest_correction, float(np.linalg.norm(correction)))
+                if largest_correction < 1e-12:
+                    break
+            target_ankle = candidate_foot - np.asarray(_qrotate(candidate_q, tuple(base_offset)))
+            candidate_knee, candidate_end, extension = stable_knee_geometry(hp, target_ankle, upper, lower, anatomical_normals[side])
+            hip_angle = math.degrees(math.atan2(float((candidate_knee - hp) @ forward), -float((candidate_knee - hp) @ up)))
+            knee_angle = _interior(hp - candidate_knee, candidate_end - candidate_knee)
+            ankle_angle = _interior(candidate_knee - candidate_end, candidate_foot - candidate_end)
+            metatarsus_world_degrees = _world_sagittal_degrees(
+                candidate_foot - candidate_end, forward, up)
+            if articulation_profile is None:
+                slacks = [hip_angle + gait.hip_extension_limit_degrees, gait.hip_flexion_limit_degrees - hip_angle, knee_angle - gait.knee_min_interior_degrees, gait.knee_max_interior_degrees - knee_angle, ankle_angle - gait.ankle_min_interior_degrees, gait.ankle_max_interior_degrees - ankle_angle]
+                preferred = None
+            else:
+                envelopes = articulation_profile.effective(
+                    contact=foot_plan["contact"], swing_phase=u)
+                angles = {"hip_sagittal_degrees": hip_angle,
+                          "knee_interior_degrees": knee_angle,
+                          "ankle_interior_degrees": ankle_angle}
+                slacks = []
+                preferred = 0.0
+                for joint, angle in angles.items():
+                    envelope = envelopes[joint]
+                    slacks.extend((angle - envelope.hard_min_deg,
+                                   envelope.hard_max_deg - angle))
+                    departure = max(0.0, envelope.preferred_min_deg - angle,
+                                    angle - envelope.preferred_max_deg)
+                    scale = max(1.0, envelope.preferred_max_deg - envelope.preferred_min_deg)
+                    preferred += departure ** 4 / (scale * scale)
+            errors = [max(0, -slack) for slack in slacks]
+            recovery = 0.0 if foot_plan["contact"] else math.sin(math.pi * u) ** 2
+            hip_target = gait.swing_hip_lift_degrees * recovery * foot_plan.get("articulation_scale", 1.)
+            # A C2 preferred-region penalty anticipates the hard corner
+            # before ankle/knee limits become active. It coordinates the
+            # pose solve itself; emitted rotations are never post-filtered.
+            if preferred is None:
+                margin = gait.articulation_preferred_margin_degrees
+                preferred = sum(max(0, margin - slack) ** 4 / (margin * margin) for slack in slacks) if margin else 0.0
+            pitch_target = _recovery_pitch_target(
+                gait, foot_plan,
+                # The recovery carrier coordinates the airborne material
+                # partition. Grounded performance and legacy reproduction
+                # retain their authored pitch target.
+                airborne=(material_partition
+                          and "flight_fraction" in plan.get("parameters", {})),
+            )
+            preferred_gain = recovery if articulation_profile is None else 1.0
+            authored_pitch_cost = (degrees - pitch_target) ** 2
+            if world_metatarsus_target is None:
+                pitch_cost = authored_pitch_cost
+            else:
+                # Blend the objectives, not only their targets. As the C2
+                # recovery gain tends to zero, both the value and gradient
+                # converge to the existing per-side authored-pitch solve.
+                world_cost = 100.0 * (
+                    metatarsus_world_degrees - world_metatarsus_target) ** 2
+                pitch_cost = ((1 - world_metatarsus_gain) * authored_pitch_cost
+                              + world_metatarsus_gain * world_cost)
+            score = pitch_cost + recovery * (hip_angle - hip_target) ** 2 + preferred_gain * gait.articulation_preferred_margin_weight * preferred + 1e5 * sum(e * e for e in errors) + 1e8 * extension * extension
+            return (score, candidate_q, candidate_foot, target_ankle,
+                    candidate_knee, candidate_end, extension, max(errors),
+                    {"hip_sagittal_degrees": hip_angle,
+                     "knee_interior_degrees": knee_angle,
+                     "ankle_interior_degrees": ankle_angle},
+                    metatarsus_world_degrees, degrees)
+
+        # A one-dimensional sagittal articulation solve coordinates the
+        # thigh and metatarsal around the unchanged toe target. It does not
+        # raise feet, translate limb bones, or smooth over a branch flip.
+        # Solve the articulated pose from this authored state alone. The
+        # old bounds depended on the previously sampled pitch, so the same
+        # gait phase could emit a different pose when a transition and a
+        # sustained clip reached it through different sample histories.
+        # Rate compliance is measured on the completed trajectory below;
+        # it must never alter this pose as a function of query order.
+        lo, hi = -45.0, 85.0
+
+        def candidate_key(candidate):
+            if articulation_profile is None:
+                return (candidate[0],)
+            # Bound profiles are constraints, not score suggestions. A
+            # feasible candidate always outranks one outside a hard bound;
+            # only a genuinely infeasible pitch domain minimizes violation.
+            violation = candidate[7]
+            return ((0, candidate[0]) if violation <= 1e-10
+                    else (1, violation, candidate[0]))
+
+        def minimize_pitch(world_target=None):
+            candidates = [pitch_candidate(degrees, world_target)
+                          for degrees in np.linspace(lo, hi, 27)]
+            # Preserve an exactly feasible authored pitch (especially flat
+            # stance=0). A refined grid alone can leave a few millidegrees of
+            # negative pitch and depress a distal joint on a straight toe rig.
+            candidates.append(pitch_candidate(
+                float(np.clip(foot_plan["foot_pitch_degrees"], lo, hi)), world_target))
+            best_candidate = min(candidates, key=candidate_key)
+            step = (hi - lo) / 52
+            # Resolve the actual articulation more accurately, rather than
+            # filtering serialized rotations after contact validation. The
+            # old reproduction path retains its exact seven refinements.
+            for _ in range(22 if material_partition else 7):
+                best_candidate = min([
+                    best_candidate,
+                    pitch_candidate(max(lo, best_candidate[-1] - step), world_target),
+                    pitch_candidate(min(hi, best_candidate[-1] + step), world_target),
+                ], key=candidate_key)
+                step *= .5
+            return best_candidate
+
+        baseline_best = minimize_pitch()
+        if world_metatarsus_recovery is None:
+            world_metatarsus_baseline = None
+            world_metatarsus_target = None
+            world_metatarsus_gain = None
+            best = baseline_best
+        else:
+            peak_target, world_metatarsus_gain = world_metatarsus_recovery
+            world_metatarsus_baseline = baseline_best[-2]
+            world_metatarsus_target = ((1 - world_metatarsus_gain) * world_metatarsus_baseline
+                                        + world_metatarsus_gain * peak_target)
+            best = minimize_pitch(world_metatarsus_target)
+        (_, pitch, desired_foot, target, desired_knee, desired_end,
+         extension, envelope_error, articulation_angles,
+         metatarsus_world_degrees, solved_pitch) = best
+        max_extension = max(max_extension, extension)
+        max_envelope_violation = max(max_envelope_violation, envelope_error)
+        desired_normal = _unit(np.cross(desired_knee - hp, desired_end - desired_knee))
+        source_normal = (_unit(np.cross(kp - hp, ap - kp)) if "performance" in plan else anatomical_normals[side])
+        delta = _orientation_from_bend(kp - hp, source_normal, desired_knee - hp, desired_normal)
+        hq = _qmul(delta, _rotation_from_matrix(w[hip]))
+        rot[hip] = _world_rotation(source, w, hip, hq)
+        w = _world_matrices(source, tr, rot, base_s)
+        kp, ap = (np.asarray(_world_position(w[n])) for n in (knee, ankle))
+        kq = _qmul(_between(ap - kp, desired_end - kp), _rotation_from_matrix(w[knee]))
+        rot[knee] = _world_rotation(source, w, knee, kq)
+        w = _world_matrices(source, tr, rot, base_s)
+        desired_ankle_q = _qmul(pitch, _rotation_from_matrix(base_w[ankle]))
+        rot[ankle] = _world_rotation(source, w, ankle, desired_ankle_q)
+        w = _world_matrices(source, tr, rot, base_s)
+        if material_partition:
+            # The ankle/metatarsal is NOT the contact pad. Articulate it
+            # around the stationary foot root while the MTP joint keeps
+            # the load-bearing pad and digits in their calibrated frame.
+            # Release that frame C2 during swing, allowing authored fold
+            # and digit flex. No per-bone translation/scale is introduced.
+            free_pitch = _qrotvec(tuple(lateral * math.radians(foot_plan.get("pad_pitch_degrees", 0.) * (1 - support_lock))))
+            foot_world = _qmul(free_pitch, _rotation_from_matrix(base_w[foot]))
+            rot[foot] = _world_rotation(source, w, foot, foot_world)
+            w = _world_matrices(source, tr, rot, base_s)
+        # During contact each distal digit endpoint stays independently
+        # planted. A centroid alone can hide one penetrating toe. Release
+        # these constraints smoothly after lift and restore before land.
+        for tc in toes[side]:
+            if material_partition:
+                # Calibrated FK, not a nearly straight two-link toe IK:
+                # at full support the fixed foot frame plus zero local
+                # flex makes EVERY toe landmark stationary. During swing
+                # the existing bounded flex is explicit choreography.
+                # Final material-point and skeleton checks remain required.
+                continue
+            if len(tc) != 3:
+                raise ContractError("airborne digit endpoint solve requires three-node toe chains")
+            a, b, c = tc
+            pa, pb, pc = (np.asarray(_world_position(w[n])) for n in tc)
+            desired_tip = np.asarray(_world_position(base_w[c])) + nominal_foot - np.asarray(_world_position(base_w[foot]))
+            target_tip = pc + lock * (desired_tip - pc)
+            direction = _unit(target_tip - pa)
+            first_len, second_len = np.linalg.norm(pb - pa), np.linalg.norm(pc - pb)
+            raw_dist = np.linalg.norm(target_tip - pa)
+            dist = float(np.clip(raw_dist, abs(first_len - second_len) + 1e-8, first_len + second_len - 1e-8))
+            max_extension = max(max_extension, float(abs(raw_dist - dist)))
+            along = (first_len ** 2 - second_len ** 2 + dist ** 2) / (2 * dist)
+            if "performance" in plan:
+                foot_delta = _qmul(_rotation_from_matrix(w[foot]), _qinv(_rotation_from_matrix(base_w[foot])))
+                normal = np.asarray(_qrotate(foot_delta, tuple(toe_normals[a])))
+                bend = np.cross(direction, normal)
+            else:
+                # Immutable legacy path for accepted baseline builds.
+                bend = pb - pa - direction * float((pb - pa) @ direction)
+                if np.linalg.norm(bend) < 1e-8:
+                    bend = up - direction * float(up @ direction)
+            elbow = pa + direction * along + _unit(bend) * math.sqrt(max(0, first_len ** 2 - along ** 2))
+            rot[a] = _world_rotation(source, w, a, _qmul(_between(pb - pa, elbow - pa), _rotation_from_matrix(w[a])))
+            w = _world_matrices(source, tr, rot, base_s)
+            pb, pc = (np.asarray(_world_position(w[n])) for n in (b, c))
+            rot[b] = _world_rotation(source, w, b, _qmul(_between(pc - pb, pa + direction * dist - pb), _rotation_from_matrix(w[b])))
+            w = _world_matrices(source, tr, rot, base_s)
+            # A terminal joint has no downstream skeletal witness, yet
+            # rotating it can drive the skinned claw through the floor.
+            # Preserve its loaded world orientation, then progressively
+            # permit distal flex only as the swing constraint releases.
+            distal_flex = math.radians(foot_plan["toe_flex_degrees"] * .275 * (1 - lock))
+            distal_world = _qmul(_qrotvec(tuple(lateral * distal_flex)), _rotation_from_matrix(base_w[c]))
+            rot[c] = _world_rotation(source, w, c, distal_world)
+            w = _world_matrices(source, tr, rot, base_s)
+        actual = np.asarray(_world_position(w[foot]))
+        residual = float(np.linalg.norm(actual - desired_foot))
+        max_residual = max(max_residual, residual)
+        toe_height = min(float(np.asarray(_world_position(w[n])) @ up - ground) for tc in toes[side] for n in tc)
+        tip_centroid = np.mean([np.asarray(_world_position(w[n])) for n in tips], axis=0)
+        facts[side] = {"contact": foot_plan["contact"], "foot_world_m": actual.tolist(), "distal_contact_centroid_m": tip_centroid.tolist(), "target_foot_world_m": desired_foot.tolist(), "foot_target_residual_m": residual, "minimum_toe_joint_height_m": toe_height, "solved_foot_pitch_degrees": solved_pitch, "articulation_envelope_violation_degrees": envelope_error}
+        if articulation_profile is not None:
+            facts[side]["articulation_phase"] = "support" if foot_plan["contact"] else "swing"
+            facts[side]["articulation_angles_degrees"] = articulation_angles
+        if world_metatarsus_target is not None:
+            facts[side]["metatarsus_world_degrees_from_down"] = metatarsus_world_degrees
+            facts[side]["metatarsus_world_baseline_degrees_from_down"] = world_metatarsus_baseline
+            facts[side]["metatarsus_world_target_degrees_from_down"] = world_metatarsus_target
+            facts[side]["metatarsus_world_target_gain"] = world_metatarsus_gain
+    return SolvedAirbornePose(
+        translations=tr,
+        rotations=rot,
+        feet=facts,
+        maximum_foot_target_residual_m=max_residual,
+        maximum_unreachable_extension_m=max_extension,
+        maximum_articulation_envelope_violation_degrees=max_envelope_violation,
+    )
+
+
 def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles: Mapping[str, Any], gait: AirborneGait, up_axis: tuple[float, float, float] = (0, 1, 0), plan_override: Mapping[str, Any] | None = None, forward_axis: tuple[float, float, float] | None = None, legacy_overlay: bool = True, articulation_profile: ArticulationProfile | None = None) -> tuple[bytes, bytes, dict[str, Any], dict[str, Any]]:
     """Emit one GLB authority and its derived in-place projection.
 
@@ -395,6 +812,7 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
     base_t, base_r, base_s = translations[:], rotations[:], scales[:]
     base_w = worlds
     jaw = None
+    jaw_axis = None
     if gait.jaw_breathing_max_degrees:
         if roles.get("jaw_lower") not in source.name_to_node:
             raise ContractError("breathing requires a bound semantic lower jaw")
@@ -414,347 +832,37 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
                 pa, pb, pc = (np.asarray(_world_position(base_w[n])) for n in (a, b, c))
                 normal = np.cross(pb - pa, pc - pb)
                 toe_normals[a] = _unit(normal if np.linalg.norm(normal) > 1e-8 else lateral)
+    context = AirborneSolveContext(
+        source=source, roles=roles, gait=gait, plan=plan,
+        articulation_profile=articulation_profile, legacy_overlay=legacy_overlay,
+        root=root, pelvis=pelvis, legs=legs, toes=toes, up=up, forward=forward,
+        lateral=lateral, origin=origin, ground=ground, body_height=body_height,
+        hip_offsets=hip_offsets, hip_lane_center=hip_lane_center,
+        base_t=tuple(base_t), base_r=tuple(base_r), base_s=tuple(base_s),
+        base_w=tuple(np.array(value, copy=True) for value in base_w),
+        jaw=jaw, jaw_axis=jaw_axis, anatomical_normals=anatomical_normals,
+        toe_normals=toe_normals,
+    )
+    for matrix in context.base_w:
+        matrix.setflags(write=False)
     frames_t, frames_r, emitted = [], [], []
     max_residual, max_extension = 0.0, 0.0
     max_envelope_violation = 0.0
     for frame_index, row in enumerate(plan["samples"]):
-        tr, rot = base_t[:], base_r[:]
-        from .performance import phase_and_gain
-        motion_time, performance_gain = phase_and_gain(row)
-        root_delta = forward * row["root_forward_m"]
-        tr[root] = tuple(float(v) for v in np.asarray(base_t[root]) + _local_delta(source, base_w, root, root_delta))
-        root_pitch = float(row.get("root_pitch_degrees", 0.0))
-        if not math.isfinite(root_pitch):
-            raise ContractError("plan root pitch must be finite numeric")
-        if root_pitch:
-            axis = _qrotate(_qinv(_rotation_from_matrix(base_w[root])), tuple(lateral))
-            rot[root] = _qmul(base_r[root], _qrotvec(tuple(np.asarray(axis) * math.radians(root_pitch))))
-        tr[pelvis] = tuple(float(v) for v in np.asarray(base_t[pelvis]) + _local_delta(source, base_w, pelvis, up * row["pelvis_height_offset_m"]))
-        if body_response:
-            for name, degrees in body_response["samples"][frame_index]["sagittal_node_degrees"].items():
-                if name not in source.name_to_node:
-                    raise ContractError("driven body response role is not present in the rig")
-                n = source.name_to_node[name]
-                axis = _qrotate(_qinv(_rotation_from_matrix(base_w[n])), tuple(lateral))
-                rot[n] = _qmul(base_r[n], _qrotvec(tuple(np.asarray(axis) * math.radians(degrees))))
-        elif legacy_overlay:
-            # Preserve the pre-existing default path for accepted artifacts and
-            # other profiles. The new driven response is explicitly opt-in.
-            pulse = math.sin(2 * math.pi * row["time_s"] / gait.step_period_s)
-            for role, amplitude in (("chest", -1.5), ("head", 0.8)):
-                if role in roles and roles[role] in source.name_to_node:
-                    n = source.name_to_node[roles[role]]
-                    axis = _qrotate(_qinv(_rotation_from_matrix(base_w[n])), tuple(lateral))
-                    rot[n] = _qmul(base_r[n], _qrotvec(tuple(np.asarray(axis) * math.radians(amplitude * pulse))))
-            for nname in roles.get("tail", [])[:3]:
-                n = source.name_to_node[nname]
-                axis = _qrotate(_qinv(_rotation_from_matrix(base_w[n])), tuple(lateral))
-                rot[n] = _qmul(base_r[n], _qrotvec(tuple(np.asarray(axis) * math.radians(0.8 * pulse))))
-        # Profile-owned sagittal posture distributed over semantic chains.
-        # A higher pelvis can retain leg reach while the front body inclines;
-        # the tail is a distributed elevation, never an attachment offset.
-        for names, total in ((list(roles.get("spine", [])) + ([roles["chest"]] if roles.get("chest") else []), gait.front_body_pitch_degrees), (list(roles.get("tail", [])), gait.tail_elevation_degrees)):
-            if total and not names:
-                raise ContractError("sagittal posture requires its semantic body chain")
-            for name in names if total else []:
-                n = source.name_to_node[name]
-                axis = _qrotate(_qinv(_rotation_from_matrix(base_w[n])), tuple(lateral))
-                rot[n] = _qmul(rot[n], _qrotvec(tuple(np.asarray(axis) * math.radians(performance_gain * total / len(names)))))
-        if jaw is not None:
-            # Rotate the lower jaw about the rig-derived sagittal axis only.
-            # The full-cycle cosine is C2 at the loop; no head/neck compensation
-            # is added, so the accepted whole-body motion remains unchanged.
-            rot[jaw] = _qmul(base_r[jaw], _qrotvec(tuple(np.asarray(jaw_axis) * math.radians(performance_gain * jaw_breathing_angle(gait, motion_time)))))
-        from .performance import apply_performance
-        apply_performance(source, tr, rot, base_s, base_w, roles, plan, row, up, forward)
-        facts = {}
-        for side, chain in legs.items():
-            hip, knee, ankle, foot = chain
-            foot_plan = row["feet"][side]
-            material_partition = "performance" in plan
-            swing_phase = foot_plan["swing_phase"]
-            support_lock = (1.0 if foot_plan["contact"] else
-                            1 - _smooth(min(swing_phase, 1 - swing_phase) / .18))
-            for toe_chain in toes[side]:
-                for index, n in enumerate(toe_chain):
-                    axis = _qrotate(_qinv(_rotation_from_matrix(base_w[n])), tuple(lateral))
-                    flex = foot_plan["toe_flex_degrees"] * (0.45 if index == 0 else 0.275)
-                    if material_partition:
-                        flex *= 1 - support_lock
-                    rot[n] = _qmul(base_r[n], _qrotvec(tuple(np.asarray(axis) * math.radians(flex))))
-            w = _world_matrices(source, tr, rot, base_s)
-            hp, kp, ap, fp = (np.asarray(_world_position(w[n])) for n in chain)
-            side_lane = float((np.asarray(_world_position(base_w[foot])) - origin) @ lateral)
-            if "performance" in plan:
-                half_lane = .5 * plan["performance"]["lane_width_body_heights"] * body_height
-                if plan["performance"].get("center_lanes_on_bilateral_hip_midpoint", False):
-                    if min(abs(value) for value in hip_offsets.values()) < 1e-8 * body_height:
-                        raise ContractError("bilateral hip midpoint lane calibration requires separated hip origins")
-                    side_lane = hip_lane_center + math.copysign(half_lane, hip_offsets[side])
-                else:
-                    side_lane = math.copysign(half_lane, side_lane)
-            foot_height = float(np.asarray(_world_position(base_w[foot])) @ up - ground)
-            desired_foot = origin + forward * foot_plan["forward_m"] + lateral * side_lane
-            desired_foot += up * (ground + foot_height + foot_plan["height_m"] - float(desired_foot @ up))
-            # Regrounding: lower this foot's targets by a constant per-side
-            # offset on EVERY frame (stance and swing). A constant shift
-            # preserves C1 continuity, loop closure and the pelvis/root
-            # motion exactly; only distal leg pose changes, bounded to 5 cm
-            # by the gait contract. Zero (default) reproduces legacy output.
-            ground_offset = (
-                gait.stance_ground_offset_left_m if side == "left"
-                else gait.stance_ground_offset_right_m
-            )
-            if ground_offset:
-                desired_foot -= up * ground_offset
-            correction = np.asarray(foot_plan.get("target_offset_m", [0., 0., 0.]), dtype=float)
-            if correction.shape != (3,) or not np.isfinite(correction).all() or np.linalg.norm(correction) > .06 * body_height:
-                raise ContractError("invalid bounded skin target correction")
-            desired_foot += correction
-            nominal_foot = desired_foot.copy()
-            # Rock the articulated foot about the distal contact centroid,
-            # not about the ankle: toe tips stay fixed during stance roll-off.
-            tips = [tc[-1] for tc in toes[side]]
-            initial_tip_offset = np.mean([np.asarray(_world_position(base_w[n])) for n in tips], axis=0) - np.asarray(_world_position(base_w[foot]))
-            flexed_tip_offset = np.mean([np.asarray(_world_position(w[n])) for n in tips], axis=0) - fp
-            u = foot_plan["swing_phase"]
-            lock = 1.0 if foot_plan["contact"] else 1 - _smooth(min(u, 1 - u) / .18)
-            # Keep the rolled foot inside every toe's unchanged-length reach
-            # envelope before the leg solve. This small rigid foot adjustment
-            # is realized by hip/knee/ankle rotations, never translations.
-            base_offset = np.asarray(_world_position(base_w[foot])) - np.asarray(_world_position(base_w[ankle]))
-            world_metatarsus_recovery = _world_metatarsus_recovery(foot_plan)
-            upper, lower = np.linalg.norm(kp - hp), np.linalg.norm(ap - kp)
-            toe_geometry = []
-            for a, b, c in toes[side]:
-                pa, pb, pc = (np.asarray(_world_position(w[n])) for n in (a, b, c))
-                toe_geometry.append((pa - fp, np.asarray(_world_position(base_w[c])) + nominal_foot - np.asarray(_world_position(base_w[foot])), np.linalg.norm(pb - pa) + np.linalg.norm(pc - pb) - 1e-7))
-
-            def pitch_candidate(degrees, world_metatarsus_target=None):
-                candidate_q = _qrotvec(tuple(lateral * math.radians(degrees)))
-                candidate_foot = (nominal_foot.copy() if material_partition else
-                                  nominal_foot + initial_tip_offset - np.asarray(_qrotate(candidate_q, tuple(flexed_tip_offset))))
-                rotated_roots = [(np.asarray(_qrotate(candidate_q, tuple(offset))), tip, reach) for offset, tip, reach in toe_geometry]
-                for _ in range(18 if not material_partition and lock > 1e-12 else 0):
-                    largest_correction = 0.0
-                    for offset, tip, reach in rotated_roots:
-                        delta = tip - (candidate_foot + offset)
-                        distance = np.linalg.norm(delta)
-                        if distance > reach:
-                            correction = lock * delta * (1 - reach / distance)
-                            candidate_foot += correction
-                            largest_correction = max(largest_correction, float(np.linalg.norm(correction)))
-                    if largest_correction < 1e-12:
-                        break
-                target_ankle = candidate_foot - np.asarray(_qrotate(candidate_q, tuple(base_offset)))
-                candidate_knee, candidate_end, extension = stable_knee_geometry(hp, target_ankle, upper, lower, anatomical_normals[side])
-                hip_angle = math.degrees(math.atan2(float((candidate_knee - hp) @ forward), -float((candidate_knee - hp) @ up)))
-                knee_angle = _interior(hp - candidate_knee, candidate_end - candidate_knee)
-                ankle_angle = _interior(candidate_knee - candidate_end, candidate_foot - candidate_end)
-                metatarsus_world_degrees = _world_sagittal_degrees(
-                    candidate_foot - candidate_end, forward, up)
-                if articulation_profile is None:
-                    slacks = [hip_angle + gait.hip_extension_limit_degrees, gait.hip_flexion_limit_degrees - hip_angle, knee_angle - gait.knee_min_interior_degrees, gait.knee_max_interior_degrees - knee_angle, ankle_angle - gait.ankle_min_interior_degrees, gait.ankle_max_interior_degrees - ankle_angle]
-                    preferred = None
-                else:
-                    envelopes = articulation_profile.effective(
-                        contact=foot_plan["contact"], swing_phase=u)
-                    angles = {"hip_sagittal_degrees": hip_angle,
-                              "knee_interior_degrees": knee_angle,
-                              "ankle_interior_degrees": ankle_angle}
-                    slacks = []
-                    preferred = 0.0
-                    for joint, angle in angles.items():
-                        envelope = envelopes[joint]
-                        slacks.extend((angle - envelope.hard_min_deg,
-                                       envelope.hard_max_deg - angle))
-                        departure = max(0.0, envelope.preferred_min_deg - angle,
-                                        angle - envelope.preferred_max_deg)
-                        scale = max(1.0, envelope.preferred_max_deg - envelope.preferred_min_deg)
-                        preferred += departure ** 4 / (scale * scale)
-                errors = [max(0, -slack) for slack in slacks]
-                recovery = 0.0 if foot_plan["contact"] else math.sin(math.pi * u) ** 2
-                hip_target = gait.swing_hip_lift_degrees * recovery * foot_plan.get("articulation_scale", 1.)
-                # A C2 preferred-region penalty anticipates the hard corner
-                # before ankle/knee limits become active. It coordinates the
-                # pose solve itself; emitted rotations are never post-filtered.
-                if preferred is None:
-                    margin = gait.articulation_preferred_margin_degrees
-                    preferred = sum(max(0, margin - slack) ** 4 / (margin * margin) for slack in slacks) if margin else 0.0
-                pitch_target = _recovery_pitch_target(
-                    gait, foot_plan,
-                    # The recovery carrier coordinates the airborne material
-                    # partition. Grounded performance and legacy reproduction
-                    # retain their authored pitch target.
-                    airborne=(material_partition
-                              and "flight_fraction" in plan.get("parameters", {})),
-                )
-                preferred_gain = recovery if articulation_profile is None else 1.0
-                authored_pitch_cost = (degrees - pitch_target) ** 2
-                if world_metatarsus_target is None:
-                    pitch_cost = authored_pitch_cost
-                else:
-                    # Blend the objectives, not only their targets. As the C2
-                    # recovery gain tends to zero, both the value and gradient
-                    # converge to the existing per-side authored-pitch solve.
-                    world_cost = 100.0 * (
-                        metatarsus_world_degrees - world_metatarsus_target) ** 2
-                    pitch_cost = ((1 - world_metatarsus_gain) * authored_pitch_cost
-                                  + world_metatarsus_gain * world_cost)
-                score = pitch_cost + recovery * (hip_angle - hip_target) ** 2 + preferred_gain * gait.articulation_preferred_margin_weight * preferred + 1e5 * sum(e * e for e in errors) + 1e8 * extension * extension
-                return (score, candidate_q, candidate_foot, target_ankle,
-                        candidate_knee, candidate_end, extension, max(errors),
-                        {"hip_sagittal_degrees": hip_angle,
-                         "knee_interior_degrees": knee_angle,
-                         "ankle_interior_degrees": ankle_angle},
-                        metatarsus_world_degrees, degrees)
-
-            # A one-dimensional sagittal articulation solve coordinates the
-            # thigh and metatarsal around the unchanged toe target. It does not
-            # raise feet, translate limb bones, or smooth over a branch flip.
-            # Solve the articulated pose from this authored state alone. The
-            # old bounds depended on the previously sampled pitch, so the same
-            # gait phase could emit a different pose when a transition and a
-            # sustained clip reached it through different sample histories.
-            # Rate compliance is measured on the completed trajectory below;
-            # it must never alter this pose as a function of query order.
-            lo, hi = -45.0, 85.0
-
-            def candidate_key(candidate):
-                if articulation_profile is None:
-                    return (candidate[0],)
-                # Bound profiles are constraints, not score suggestions. A
-                # feasible candidate always outranks one outside a hard bound;
-                # only a genuinely infeasible pitch domain minimizes violation.
-                violation = candidate[7]
-                return ((0, candidate[0]) if violation <= 1e-10
-                        else (1, violation, candidate[0]))
-
-            def minimize_pitch(world_target=None):
-                candidates = [pitch_candidate(degrees, world_target)
-                              for degrees in np.linspace(lo, hi, 27)]
-                # Preserve an exactly feasible authored pitch (especially flat
-                # stance=0). A refined grid alone can leave a few millidegrees of
-                # negative pitch and depress a distal joint on a straight toe rig.
-                candidates.append(pitch_candidate(
-                    float(np.clip(foot_plan["foot_pitch_degrees"], lo, hi)), world_target))
-                best_candidate = min(candidates, key=candidate_key)
-                step = (hi - lo) / 52
-                # Resolve the actual articulation more accurately, rather than
-                # filtering serialized rotations after contact validation. The
-                # old reproduction path retains its exact seven refinements.
-                for _ in range(22 if material_partition else 7):
-                    best_candidate = min([
-                        best_candidate,
-                        pitch_candidate(max(lo, best_candidate[-1] - step), world_target),
-                        pitch_candidate(min(hi, best_candidate[-1] + step), world_target),
-                    ], key=candidate_key)
-                    step *= .5
-                return best_candidate
-
-            baseline_best = minimize_pitch()
-            if world_metatarsus_recovery is None:
-                world_metatarsus_baseline = None
-                world_metatarsus_target = None
-                world_metatarsus_gain = None
-                best = baseline_best
-            else:
-                peak_target, world_metatarsus_gain = world_metatarsus_recovery
-                world_metatarsus_baseline = baseline_best[-2]
-                world_metatarsus_target = ((1 - world_metatarsus_gain) * world_metatarsus_baseline
-                                            + world_metatarsus_gain * peak_target)
-                best = minimize_pitch(world_metatarsus_target)
-            (_, pitch, desired_foot, target, desired_knee, desired_end,
-             extension, envelope_error, articulation_angles,
-             metatarsus_world_degrees, solved_pitch) = best
-            max_extension = max(max_extension, extension)
-            max_envelope_violation = max(max_envelope_violation, envelope_error)
-            desired_normal = _unit(np.cross(desired_knee - hp, desired_end - desired_knee))
-            source_normal = (_unit(np.cross(kp - hp, ap - kp)) if "performance" in plan else anatomical_normals[side])
-            delta = _orientation_from_bend(kp - hp, source_normal, desired_knee - hp, desired_normal)
-            hq = _qmul(delta, _rotation_from_matrix(w[hip]))
-            rot[hip] = _world_rotation(source, w, hip, hq)
-            w = _world_matrices(source, tr, rot, base_s)
-            kp, ap = (np.asarray(_world_position(w[n])) for n in (knee, ankle))
-            kq = _qmul(_between(ap - kp, desired_end - kp), _rotation_from_matrix(w[knee]))
-            rot[knee] = _world_rotation(source, w, knee, kq)
-            w = _world_matrices(source, tr, rot, base_s)
-            desired_ankle_q = _qmul(pitch, _rotation_from_matrix(base_w[ankle]))
-            rot[ankle] = _world_rotation(source, w, ankle, desired_ankle_q)
-            w = _world_matrices(source, tr, rot, base_s)
-            if material_partition:
-                # The ankle/metatarsal is NOT the contact pad. Articulate it
-                # around the stationary foot root while the MTP joint keeps
-                # the load-bearing pad and digits in their calibrated frame.
-                # Release that frame C2 during swing, allowing authored fold
-                # and digit flex. No per-bone translation/scale is introduced.
-                free_pitch = _qrotvec(tuple(lateral * math.radians(foot_plan.get("pad_pitch_degrees", 0.) * (1 - support_lock))))
-                foot_world = _qmul(free_pitch, _rotation_from_matrix(base_w[foot]))
-                rot[foot] = _world_rotation(source, w, foot, foot_world)
-                w = _world_matrices(source, tr, rot, base_s)
-            # During contact each distal digit endpoint stays independently
-            # planted. A centroid alone can hide one penetrating toe. Release
-            # these constraints smoothly after lift and restore before land.
-            for tc in toes[side]:
-                if material_partition:
-                    # Calibrated FK, not a nearly straight two-link toe IK:
-                    # at full support the fixed foot frame plus zero local
-                    # flex makes EVERY toe landmark stationary. During swing
-                    # the existing bounded flex is explicit choreography.
-                    # Final material-point and skeleton checks remain required.
-                    continue
-                if len(tc) != 3:
-                    raise ContractError("airborne digit endpoint solve requires three-node toe chains")
-                a, b, c = tc
-                pa, pb, pc = (np.asarray(_world_position(w[n])) for n in tc)
-                desired_tip = np.asarray(_world_position(base_w[c])) + nominal_foot - np.asarray(_world_position(base_w[foot]))
-                target_tip = pc + lock * (desired_tip - pc)
-                direction = _unit(target_tip - pa)
-                first_len, second_len = np.linalg.norm(pb - pa), np.linalg.norm(pc - pb)
-                raw_dist = np.linalg.norm(target_tip - pa)
-                dist = float(np.clip(raw_dist, abs(first_len - second_len) + 1e-8, first_len + second_len - 1e-8))
-                max_extension = max(max_extension, float(abs(raw_dist - dist)))
-                along = (first_len ** 2 - second_len ** 2 + dist ** 2) / (2 * dist)
-                if "performance" in plan:
-                    foot_delta = _qmul(_rotation_from_matrix(w[foot]), _qinv(_rotation_from_matrix(base_w[foot])))
-                    normal = np.asarray(_qrotate(foot_delta, tuple(toe_normals[a])))
-                    bend = np.cross(direction, normal)
-                else:
-                    # Immutable legacy path for accepted baseline builds.
-                    bend = pb - pa - direction * float((pb - pa) @ direction)
-                    if np.linalg.norm(bend) < 1e-8:
-                        bend = up - direction * float(up @ direction)
-                elbow = pa + direction * along + _unit(bend) * math.sqrt(max(0, first_len ** 2 - along ** 2))
-                rot[a] = _world_rotation(source, w, a, _qmul(_between(pb - pa, elbow - pa), _rotation_from_matrix(w[a])))
-                w = _world_matrices(source, tr, rot, base_s)
-                pb, pc = (np.asarray(_world_position(w[n])) for n in (b, c))
-                rot[b] = _world_rotation(source, w, b, _qmul(_between(pc - pb, pa + direction * dist - pb), _rotation_from_matrix(w[b])))
-                w = _world_matrices(source, tr, rot, base_s)
-                # A terminal joint has no downstream skeletal witness, yet
-                # rotating it can drive the skinned claw through the floor.
-                # Preserve its loaded world orientation, then progressively
-                # permit distal flex only as the swing constraint releases.
-                distal_flex = math.radians(foot_plan["toe_flex_degrees"] * .275 * (1 - lock))
-                distal_world = _qmul(_qrotvec(tuple(lateral * distal_flex)), _rotation_from_matrix(base_w[c]))
-                rot[c] = _world_rotation(source, w, c, distal_world)
-                w = _world_matrices(source, tr, rot, base_s)
-            actual = np.asarray(_world_position(w[foot]))
-            residual = float(np.linalg.norm(actual - desired_foot))
-            max_residual = max(max_residual, residual)
-            toe_height = min(float(np.asarray(_world_position(w[n])) @ up - ground) for tc in toes[side] for n in tc)
-            tip_centroid = np.mean([np.asarray(_world_position(w[n])) for n in tips], axis=0)
-            facts[side] = {"contact": foot_plan["contact"], "foot_world_m": actual.tolist(), "distal_contact_centroid_m": tip_centroid.tolist(), "target_foot_world_m": desired_foot.tolist(), "foot_target_residual_m": residual, "minimum_toe_joint_height_m": toe_height, "solved_foot_pitch_degrees": solved_pitch, "articulation_envelope_violation_degrees": envelope_error}
-            if articulation_profile is not None:
-                facts[side]["articulation_phase"] = "support" if foot_plan["contact"] else "swing"
-                facts[side]["articulation_angles_degrees"] = articulation_angles
-            if world_metatarsus_target is not None:
-                facts[side]["metatarsus_world_degrees_from_down"] = metatarsus_world_degrees
-                facts[side]["metatarsus_world_baseline_degrees_from_down"] = world_metatarsus_baseline
-                facts[side]["metatarsus_world_target_degrees_from_down"] = world_metatarsus_target
-                facts[side]["metatarsus_world_target_gain"] = world_metatarsus_gain
-        frames_t.append(tr)
-        frames_r.append(rot)
-        emitted.append({"time_s": row["time_s"], "flight": row["flight"], "feet": facts})
+        body_response_sample = (body_response["samples"][frame_index]
+                                if body_response else None)
+        solved = solve_airborne_plan_sample(
+            context, row, body_response_sample=body_response_sample)
+        frames_t.append(solved.translations)
+        frames_r.append(solved.rotations)
+        emitted.append({"time_s": row["time_s"], "flight": row["flight"],
+                        "feet": solved.feet})
+        max_residual = max(max_residual, solved.maximum_foot_target_residual_m)
+        max_extension = max(max_extension, solved.maximum_unreachable_extension_m)
+        max_envelope_violation = max(
+            max_envelope_violation,
+            solved.maximum_articulation_envelope_violation_degrees,
+        )
     times = np.asarray([r["time_s"] for r in plan["samples"]])
     ta, ra = np.asarray(frames_t), np.asarray(frames_r)
     # Quaternion sign continuity prevents long-path interpolation artifacts.
