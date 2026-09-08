@@ -1,0 +1,191 @@
+{
+  "schema": "eonwild.allosaurus.rig-preparation-render.v1",
+  "classification": "STATIC_INSPECTION_ONLY",
+  "renders": [
+    {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/allosaurus-rig-preparation-renders/side-final-before-overlay.png",
+      "sha256": "ab0767bb68b4d348dd4df1d7bc8b8b07628d060ae6c612b34bd06b0a1681fe33",
+      "asset_sha256": "91d9816b6bbaeb1037f3e9cbf253261799d8a4121efd91e0e2185f76908a6bf7",
+      "kind": "neutral_joint_overlay",
+      "camera": {
+        "position": [
+          8.0,
+          0.0004993677139282227,
+          0.35000020265579224
+        ],
+        "target": [
+          0.0,
+          0.0004993677139282227,
+          0.35000020265579224
+        ],
+        "ortho_scale": 5.553291320800782,
+        "resolution": [
+          960,
+          540
+        ]
+      }
+    },
+    {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/allosaurus-rig-preparation-renders/front-final-before-overlay.png",
+      "sha256": "6b58820116f56373d2e4a4dc85031de305ab966213ec24450d6ab2fc185c3e4b",
+      "asset_sha256": "91d9816b6bbaeb1037f3e9cbf253261799d8a4121efd91e0e2185f76908a6bf7",
+      "kind": "neutral_joint_overlay",
+      "camera": {
+        "position": [
+          0.0,
+          -8.0,
+          0.35000020265579224
+        ],
+        "target": [
+          0.0,
+          0.0004993677139282227,
+          0.35000020265579224
+        ],
+        "ortho_scale": 4.320000457763672,
+        "resolution": [
+          720,
+          720
+        ]
+      }
+    },
+    {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/allosaurus-rig-preparation-renders/side-final-after-overlay.png",
+      "sha256": "d9f5a3fe33c2612ee8d8827d53594491cb961fa24ce539d15cf2e894bd53bbce",
+      "asset_sha256": "0fe715fe38aeca125d3ecda873d4575eb151690c4b759cbfdfbaa0f0ef8ec04f",
+      "kind": "neutral_joint_overlay",
+      "camera": {
+        "position": [
+          8.0,
+          0.000499725341796875,
+          0.3500000834465027
+        ],
+        "target": [
+          0.0,
+          0.000499725341796875,
+          0.3500000834465027
+        ],
+        "ortho_scale": 5.553292388916016,
+        "resolution": [
+          960,
+          540
+        ]
+      }
+    },
+    {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/allosaurus-rig-preparation-renders/front-final-after-overlay.png",
+      "sha256": "c940fa52d75ce6bd9e06e1aaf443bed4814cbf14f8107023a8f861989dba2256",
+      "asset_sha256": "0fe715fe38aeca125d3ecda873d4575eb151690c4b759cbfdfbaa0f0ef8ec04f",
+      "kind": "neutral_joint_overlay",
+      "camera": {
+        "position": [
+          0.0,
+          -8.0,
+          0.3500000834465027
+        ],
+        "target": [
+          0.0,
+          0.000499725341796875,
+          0.3500000834465027
+        ],
+        "ortho_scale": 4.320000457763672,
+        "resolution": [
+          720,
+          720
+        ]
+      }
+    },
+    {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/allosaurus-rig-preparation-renders/final-left-chain-probe-side.png",
+      "sha256": "f4d9792624b99c4f7eca2e16bf2f42a96ef73209a1c354aa674d1f4e7e73a3ef",
+      "asset_sha256": "8e65c832fcfbb799fac4277f6cb25270c8787d845a8b209d1902f730ae918b30",
+      "kind": "static_deformation_probe",
+      "camera": {
+        "position": [
+          8.0,
+          0.000499725341796875,
+          0.3500000834465027
+        ],
+        "target": [
+          0.0,
+          0.000499725341796875,
+          0.3500000834465027
+        ],
+        "ortho_scale": 5.553292388916016,
+        "resolution": [
+          960,
+          540
+        ]
+      }
+    },
+    {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/allosaurus-rig-preparation-renders/final-right-chain-probe-front.png",
+      "sha256": "2c5ec636b2a9725f9cb86c0ce6a71ec17416bec3704f644d559b70fa1fdfc871",
+      "asset_sha256": "5894a9c3e2e20aafc6126af43bddf548a38a51c315f94597f199952aa8f4cb6c",
+      "kind": "static_deformation_probe",
+      "camera": {
+        "position": [
+          0.0,
+          -8.0,
+          0.3500000834465027
+        ],
+        "target": [
+          0.0,
+          0.000499725341796875,
+          0.3500000834465027
+        ],
+        "ortho_scale": 4.320000457763672,
+        "resolution": [
+          720,
+          720
+        ]
+      }
+    },
+    {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/allosaurus-rig-preparation-renders/final-jaw-plus8-head-side.png",
+      "sha256": "13a623950bc5af6cd8456aea3e4d4c25b4ff0e7ed66fdbf5e1c0e02594f30835",
+      "asset_sha256": "9a0932153544ec425f74ef09f5d06ff22bba592aa7525b3de7d49d93eab7e938",
+      "kind": "static_jaw_probe",
+      "camera": {
+        "position": [
+          3.200000047683716,
+          -2.200000047683716,
+          1.4199999570846558
+        ],
+        "target": [
+          0.0,
+          -2.200000047683716,
+          1.4199999570846558
+        ],
+        "ortho_scale": 0.72,
+        "resolution": [
+          720,
+          540
+        ]
+      }
+    },
+    {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/allosaurus-rig-preparation-renders/final-jaw-minus8-head-side.png",
+      "sha256": "f6b4dcbd09e1bf9b1e39a3447ec85ed012865b81f602bd7c2ea2dcc87ae9c724",
+      "asset_sha256": "8394f34a6c0878a01d352605ea1631dfe1e05d17eac36e63403fe3ea77b0ea42",
+      "kind": "static_jaw_probe",
+      "camera": {
+        "position": [
+          3.200000047683716,
+          -2.200000047683716,
+          1.4199999570846558
+        ],
+        "target": [
+          0.0,
+          -2.200000047683716,
+          1.4199999570846558
+        ],
+        "ortho_scale": 0.72,
+        "resolution": [
+          720,
+          540
+        ]
+      }
+    }
+  ],
+  "scope": "Neutral before/after joint overlays and static isolated deformation probes. Probe GLBs are not source or animation assets."
+}
