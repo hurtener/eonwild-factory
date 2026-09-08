@@ -90,8 +90,13 @@ Tarbosaurus envelope.
 ## Factory interpretation
 
 The present scalar engine cannot represent a coupled three-dimensional
-articulation envelope or an articular-surface score. Source-bone translations
-remain disallowed. Six-degree-of-freedom studies therefore bound the strength of
+articulation envelope or an articular-surface score. Animation-time bone
+translations, segment stretching or rest-offset changes used to conceal an
+infeasible pose remain disallowed. This is not a blanket freeze on source rigs:
+an evidence-backed correction to a neutral source rig may change joint
+placement, local axes, rest pose or skin weights in Blender when it is versioned
+with a new source-geometry hash and calibration. Original approved source assets
+remain untouched. Six-degree-of-freedom studies therefore bound the strength of
 our biological claims; they do not describe functionality already implemented
 by the compiler.
 
