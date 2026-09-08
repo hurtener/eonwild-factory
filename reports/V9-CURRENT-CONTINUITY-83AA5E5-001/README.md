@@ -15,6 +15,18 @@ passed 928 tests plus 21 subtests in 571.06 seconds at commit
 published 83aa tree. `ci-contracts-83aa5e5.json` records the run, runner, tree
 identities, tool-scope boundary and log hash.
 
+A later current-motion workflow at the same published 83aa source completed
+the adult V9 and walk-pair jobs with blocked motion results; it was not a full
+CI pass. Adult V9 remained integrity `PASS` and technical `BLOCKED` because
+both exact local-loop modes exceeded the unchanged linear-velocity limit.
+Walk v3 start and stop pairs likewise remained `BLOCKED` on exact emitted
+linear and skinned velocity. Native review jobs could still be running when the
+receipt was captured. The adult V9 native job subsequently completed with
+render status `PASS`, technical status `BLOCKED`, exit 2, and an uploaded media
+artifact; this is render/job evidence without a perception or frame-by-frame
+review claim. The two current receipts preserve that evidence without replacing
+the earlier source-identical suite receipt.
+
 The bounded walk v3 source-interface experiment uses the actual walk v3,
 walk-start v3 and walk-stop v3 recipes and independently evaluates their
 unrefined source poses at the declared one-eighth-cycle interface. Exact
@@ -42,6 +54,12 @@ onto changed source.
 
 - `ci-contracts-83aa5e5.json` — hosted CI receipt; SHA-256
   `72dff9ec0448e73b7648f8d73e8f3632c73d352b5b83cd88de265c8cd66722c3`.
+- `ci-current-motion-failures-83aa5e5.json` — completed adult/pair motion-job
+  failures at the same published source, not a full-suite receipt; SHA-256
+  `dcfade5c79e305786436b46853b7dfbb8a6c33a45fd578e14c5d7d120497f31c`.
+- `ci-adult-v9-native-83aa5e5.json` — completed native render job and uploaded
+  media artifact, with technical status still blocked; SHA-256
+  `ba2dbdd6933821301a5340f9a2067825f8826adca53a54403ff4943f36ec4ce6`.
 - `walk-v3-source-interface-README.md` — bounded method and interpretation;
   SHA-256 `229dd4e15010d4be1f6b5a0516e06138437ec386f850648e2e970b66bc773343`.
 - `walk-v3-source-interface-result.json` — full first-order results; SHA-256

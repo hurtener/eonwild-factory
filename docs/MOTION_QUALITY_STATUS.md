@@ -187,6 +187,16 @@ current C1 pass. See
 and
 [V9-SOURCE-MOTION-QUERY-V9-INTEGRATION-001](../reports/V9-SOURCE-MOTION-QUERY-V9-INTEGRATION-001/README.md).
 
+Two diagnostics are closed through two independent review rounds after that
+published checkpoint. The canonical constant skin-target law provides
+source-bound pointwise values for opt-in callers, and the adult V9
+support-resultant diagnostic records sensitivity to explicit engineering
+mass/COM/load alternatives. Both remain non-emitting: no recipe, emitter,
+default motion, threshold or accepted asset activates them. The current exact
+LINEAR continuity failures remain authoritative, and neither diagnostic grants
+C1, mass-physics, biological, visual, Unity or production approval. See
+[V9-CLOSED-DIAGNOSTICS-83AA5E5-001](../reports/V9-CLOSED-DIAGNOSTICS-83AA5E5-001/README.md).
+
 ## Evidence-bound adult benchmark
 
 `tarbosaurus-pin-552-1-adult-walk.v1` is the first explicit animal-instance
