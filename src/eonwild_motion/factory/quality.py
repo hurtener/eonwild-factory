@@ -36,7 +36,7 @@ def emitted_articulation_envelopes(
     if any(len(chain) != 4 for chain in legs.values()):
         raise ContractError("final articulation check requires hip/knee/ankle/foot chains")
     animations = glb.document.get("animations", [])
-    if len(animations) != 1 or not isinstance(animations[0].get("name"), str):
+    if not isinstance(animations, list) or len(animations) != 1 or not isinstance(animations[0].get("name"), str):
         raise ContractError("final articulation check requires one named animation")
     tracks, times = _clip_state(glb, animations[0]["name"])
     rows = plan.get("samples")
@@ -232,56 +232,70 @@ def emitted_cyclic_continuity(glb: Glb, *, loop: bool) -> dict:
         raise ContractError("loop declaration must be boolean")
     if not loop:
         return {"status": "NOT_APPLICABLE", "reason": "one-shot program; entry/exit contracts are separate"}
+    # Retain the historic quadratic estimate for forensic comparison only.
+    # glTF LINEAR playback has no quadratic endpoint tangent; the exact result
+    # below is the acceptance value.
+    animations = glb.document.get("animations", [])
+    if len(animations) != 1 or not isinstance(animations[0].get("name"), str):
+        raise ContractError("cyclic witness requires exactly one named emitted clip")
+    animation = animations[0]
     angular = linear = 0.0
     witnesses = {"angular": None, "linear": None}
     counts = {"rotation": 0, "translation": 0}
-    for animation in glb.document.get("animations", []):
-        for channel in animation["channels"]:
-            path = channel["target"]["path"]
-            if path not in counts:
-                continue
-            sampler = animation["samplers"][channel["sampler"]]
-            if sampler.get("interpolation", "LINEAR") != "LINEAR":
-                raise ContractError("continuity witness requires emitted LINEAR channels")
-            times = np.asarray(glb.accessor_values(sampler["input"]), dtype=float).reshape(-1)
-            values = np.asarray(glb.accessor_values(sampler["output"]), dtype=float)
-            width = 4 if path == "rotation" else 3
-            if (len(times) < 5 or values.shape != (len(times), width)
-                or not np.isfinite(times).all() or not np.isfinite(values).all()
-                or np.any(np.diff(times) <= 0)):
-                raise ContractError("invalid final cyclic timeline")
-            if path == "rotation":
-                norms = np.linalg.norm(values, axis=1)
-                if np.max(np.abs(norms - 1)) > 1e-4:
-                    raise ContractError("invalid quaternion in cyclic witness")
-                values /= norms[:, None]
-                def deltas(endpoint, indices):
-                    inverse = _qinv(tuple(values[endpoint]))
-                    return np.array([_q_to_rotvec(_qmul(inverse, tuple(values[i]))) for i in indices])
-                start_delta, end_delta = deltas(0, [1, 2]), deltas(-1, [-3, -2])
-            else:
-                start_delta, end_delta = values[1:3] - values[0], values[-3:-1] - values[-1]
-            incoming = _endpoint_derivative(times[-3:-1] - times[-1], end_delta)
-            outgoing = _endpoint_derivative(times[1:3] - times[0], start_delta)
-            error = float(np.linalg.norm(incoming - outgoing))
-            node = int(channel["target"]["node"])
-            witness = {"node": node, "bone": glb.nodes[node].get("name"),
-                "incoming": incoming.tolist(), "outgoing": outgoing.tolist()}
-            if path == "rotation":
-                error = math.degrees(error)
-                if error > angular:
-                    angular, witnesses["angular"] = error, witness
-            elif error > linear:
-                linear, witnesses["linear"] = error, witness
-            counts[path] += 1
+    for channel in animation["channels"]:
+        path = channel["target"]["path"]
+        if path not in counts:
+            continue
+        sampler = animation["samplers"][channel["sampler"]]
+        if sampler.get("interpolation", "LINEAR") != "LINEAR":
+            raise ContractError("continuity witness requires emitted LINEAR channels")
+        times = np.asarray(glb.accessor_values(sampler["input"]), dtype=float).reshape(-1)
+        values = np.asarray(glb.accessor_values(sampler["output"]), dtype=float)
+        width = 4 if path == "rotation" else 3
+        if (len(times) < 5 or values.shape != (len(times), width)
+            or not np.isfinite(times).all() or not np.isfinite(values).all()
+            or np.any(np.diff(times) <= 0)):
+            raise ContractError("invalid final cyclic timeline")
+        if path == "rotation":
+            norms = np.linalg.norm(values, axis=1)
+            if np.max(np.abs(norms - 1)) > 1e-4:
+                raise ContractError("invalid quaternion in cyclic witness")
+            values /= norms[:, None]
+            def deltas(endpoint, indices):
+                inverse = _qinv(tuple(values[endpoint]))
+                return np.array([_q_to_rotvec(_qmul(inverse, tuple(values[i]))) for i in indices])
+            start_delta, end_delta = deltas(0, [1, 2]), deltas(-1, [-3, -2])
+        else:
+            start_delta, end_delta = values[1:3] - values[0], values[-3:-1] - values[-1]
+        incoming = _endpoint_derivative(times[-3:-1] - times[-1], end_delta)
+        outgoing = _endpoint_derivative(times[1:3] - times[0], start_delta)
+        error = float(np.linalg.norm(incoming - outgoing))
+        node = int(channel["target"]["node"])
+        witness = {"node": node, "bone": glb.nodes[node].get("name"),
+            "incoming": incoming.tolist(), "outgoing": outgoing.tolist()}
+        if path == "rotation":
+            error = math.degrees(error)
+            if error > angular:
+                angular, witnesses["angular"] = error, witness
+        elif error > linear:
+            linear, witnesses["linear"] = error, witness
+        counts[path] += 1
     if not all(counts.values()):
         raise ContractError("cyclic witness requires actual rotation and translation channels")
-    checks = {"angular_velocity": angular <= CYCLIC_ANGULAR_VELOCITY_TOLERANCE_DEG_S,
-              "linear_velocity": linear <= CYCLIC_LINEAR_VELOCITY_TOLERANCE_M_S}
+    from .emitted_tangent import local_cyclic_tangents
+    exact = local_cyclic_tangents(glb, animation["name"])
+    checks = {"angular_velocity": exact["angular_degrees_per_s"] <= CYCLIC_ANGULAR_VELOCITY_TOLERANCE_DEG_S,
+              "linear_velocity": exact["linear_m_per_s"] <= CYCLIC_LINEAR_VELOCITY_TOLERANCE_M_S}
     return {"status": "PASS" if all(checks.values()) else "FAIL", "checks": checks,
-        "maximum_angular_velocity_seam_degrees_per_s": angular,
-        "maximum_linear_velocity_seam_m_per_s": linear,
+        "maximum_angular_velocity_seam_degrees_per_s": exact["angular_degrees_per_s"],
+        "maximum_linear_velocity_seam_m_per_s": exact["linear_m_per_s"],
         "limits": {"angular_degrees_per_s": CYCLIC_ANGULAR_VELOCITY_TOLERANCE_DEG_S,
                    "linear_m_per_s": CYCLIC_LINEAR_VELOCITY_TOLERANCE_M_S},
-        "peak_witnesses": witnesses,
-        "classification": "second-order native-time derivatives of final serialized channels; endpoint closure alone is insufficient"}
+        "peak_witnesses": exact["witnesses"],
+        "classification": exact["classification"],
+        "diagnostics": {"quadratic_three_sample_estimate": {
+            "maximum_angular_velocity_seam_degrees_per_s": angular,
+            "maximum_linear_velocity_seam_m_per_s": linear,
+            "peak_witnesses": witnesses,
+            "classification": "diagnostic quadratic fit through three native samples; not an emitted LINEAR pass claim",
+        }}}

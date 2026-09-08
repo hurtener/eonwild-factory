@@ -114,16 +114,38 @@ def test_endpoint_pose_closure_cannot_hide_angular_velocity_jump():
     assert angles[0] == angles[-1] == 0
     report = emitted_cyclic_continuity(serialized_clip(times, angles), loop=True)
     assert report['status'] == 'FAIL'
-    assert report['maximum_angular_velocity_seam_degrees_per_s'] == pytest.approx(90, abs=.01)
+    assert report['maximum_angular_velocity_seam_degrees_per_s'] == pytest.approx(89.25, abs=.01)
+    assert report['diagnostics']['quadratic_three_sample_estimate']['maximum_angular_velocity_seam_degrees_per_s'] == pytest.approx(90, abs=.01)
+    witness=report['peak_witnesses']['angular']
+    assert witness['unit']=='rad/s' and len(witness['incoming'])==len(witness['outgoing'])==3
+    assert set(witness['incoming_key'])==set(witness['outgoing_key'])=={'time_s','neighbor_time_s'}
 
 
 def test_endpoint_root_displacement_cannot_hide_speed_jump():
     times = np.linspace(0., 1., 121)
     report = emitted_cyclic_continuity(serialized_clip(times, np.zeros_like(times), travel=times**2), loop=True)
     assert report['status'] == 'FAIL'
-    assert report['maximum_linear_velocity_seam_m_per_s'] == pytest.approx(2, abs=.001)
+    assert report['maximum_linear_velocity_seam_m_per_s'] == pytest.approx(119 / 60, abs=.001)
+    assert report['diagnostics']['quadratic_three_sample_estimate']['maximum_linear_velocity_seam_m_per_s'] == pytest.approx(2, abs=.001)
 
 
 def test_cyclic_gate_does_not_claim_a_one_shot_is_a_loop():
     times = np.linspace(0., 1., 121)
     assert emitted_cyclic_continuity(serialized_clip(times, 30 * times), loop=False)['status'] == 'NOT_APPLICABLE'
+
+
+def test_cyclic_exact_metric_rejects_multiple_clips_and_nonconstant_scale():
+    times=np.linspace(0.,1.,6)
+    multiple=serialized_clip(times,np.zeros_like(times))
+    multiple.document['animations'].append(deepcopy(multiple.document['animations'][0]))
+    with pytest.raises(ContractError,match='exactly one'):
+        emitted_cyclic_continuity(multiple,loop=True)
+    source,roles=fixture();root=source.name_to_node[roles['root']]
+    rotation=np.tile([0.,0.,0.,1.],(len(times),1))
+    translation=np.zeros((len(times),3));scale=np.ones((len(times),3));scale[-1,0]=2.
+    raw=_build_glb(source,'scale-seam',times,{(root,'rotation'):rotation,(root,'translation'):translation,(root,'scale'):scale},'scale-seam',{})
+    with pytest.raises(ContractError,match='nonconstant animated scale'):
+        emitted_cyclic_continuity(Glb.from_bytes(raw),loop=True)
+    constant_scale=np.ones((len(times),3))
+    raw=_build_glb(source,'constant-scale',times,{(root,'rotation'):rotation,(root,'translation'):translation,(root,'scale'):constant_scale},'constant-scale',{})
+    assert emitted_cyclic_continuity(Glb.from_bytes(raw),loop=True)['status']=='PASS'

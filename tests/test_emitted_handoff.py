@@ -9,6 +9,10 @@ from eonwild_motion.planning.gait_transition import GaitTransition,build_transit
 from eonwild_motion.planning.airborne_gait import AirborneGait
 
 
+def compare_test(*args):
+    return compare_boundaries(*args, test_only_allow_sampled_tangents=True)
+
+
 def boundary(times,position_shift=0.,velocity=1.,omega=.2):
     t=np.array(times,dtype=float)
     p=np.zeros((3,2,3));p[:,:,0]=t[:,None]*velocity+position_shift;p[:,1,1]=1
@@ -22,14 +26,58 @@ def pair():return boundary([-.03,-.01,0],position_shift=8),boundary([0,.007,.021
 
 def test_native_uneven_boundary_alignment_without_mutation():
     a,b=pair();old=deepcopy((a,b))
-    assert compare_boundaries(a,b,[8,0,0])['status']=='PASS'
+    assert compare_test(a,b,[8,0,0])['status']=='PASS'
     for value,prior in zip((a,b),old):
         for key in ('times','positions','rotations','skin'):assert np.array_equal(value[key],prior[key])
 
 
 def test_antipodal_quaternion_is_not_a_false_snap():
     a,b=pair();b['rotations'][::2]*=-1
-    assert compare_boundaries(a,b,[8,0,0])['status']=='PASS'
+    assert compare_test(a,b,[8,0,0])['status']=='PASS'
+
+
+def test_quadratic_false_pass_does_not_hide_actual_linear_join_jump():
+    # y=t^2 over [-2,-1,0] and [0,1,2] has a fitted endpoint
+    # derivative of zero on both sides, but emitted LINEAR slopes are -1/+1.
+    a,b=pair()
+    a['positions'][:,:,0]=np.array([[4.],[1.],[0.]])
+    a['skin']=a['positions'].copy()
+    b['positions'][:,:,0]=np.array([[0.],[1.],[4.]])
+    b['skin']=b['positions'].copy()
+    a['times']=np.array([-2.,-1.,0.]);b['times']=np.array([0.,1.,2.])
+    result=compare_test(a,b,[0,0,0])
+    assert result['status']=='FAIL'
+    assert result['values']['linear_velocity_mps']==pytest.approx(2.)
+    assert result['diagnostics']['quadratic_three_sample_estimate']['values']['linear_velocity_mps']==pytest.approx(0.)
+
+
+def test_quadratic_false_fail_is_diagnostic_not_exact_join_failure():
+    # The adjacent LINEAR slope is +1 on both sides.  Curved outer samples
+    # produce the old fitted 4/0 derivative discrepancy.
+    a,b=pair()
+    a['positions'][:,:,0]=np.array([[4.],[-1.],[0.]])
+    a['skin']=a['positions'].copy()
+    b['positions'][:,:,0]=np.array([[0.],[1.],[4.]])
+    b['skin']=b['positions'].copy()
+    a['times']=np.array([-2.,-1.,0.]);b['times']=np.array([0.,1.,2.])
+    result=compare_test(a,b,[0,0,0])
+    assert result['status']=='PASS'
+    assert result['values']['linear_velocity_mps']==pytest.approx(0.)
+    assert result['diagnostics']['quadratic_three_sample_estimate']['values']['linear_velocity_mps']==pytest.approx(4.)
+    assert result['diagnostics']['quadratic_three_sample_estimate']['witness_indices']['linear_velocity_mps']==0
+
+
+@pytest.mark.parametrize('case', ['undersized', 'duplicate-label'])
+def test_exact_handoff_evidence_is_bound_to_sampled_correspondence(case):
+    a,b=pair()
+    exact={'node_names':['node'], 'world_velocity':[[0.,0.,0.]],
+           'skin_labels':['skin'], 'skin_velocity':[[0.,0.,0.]], 'angular_velocity':[[0.,0.,0.]]}
+    if case=='duplicate-label':
+        exact={'node_names':['node','node'], 'world_velocity':[[0.,0.,0.],[0.,0.,0.]],
+               'skin_labels':['skin','skin'], 'skin_velocity':[[0.,0.,0.],[0.,0.,0.]], 'angular_velocity':[[0.,0.,0.],[0.,0.,0.]]}
+    a['exact']=exact;b['exact']=deepcopy(exact)
+    with pytest.raises(ContractError, match='exact tangent'):
+        compare_boundaries(a,b,[8,0,0])
 
 
 @pytest.mark.parametrize('case',['position','skin','linear','angular','contacts','double-root'])
@@ -41,14 +89,14 @@ def test_endpoint_equality_does_not_hide_other_failures(case):
     elif case=='angular':b=boundary([0,.007,.021],omega=1.)
     elif case=='contacts':b['contacts']['left']=False
     elif case=='double-root':b['positions'][:,:,0]+=b['times'][:,None]
-    assert compare_boundaries(a,b,[8,0,0])['status']=='FAIL'
+    assert compare_test(a,b,[8,0,0])['status']=='FAIL'
 
 
 @pytest.mark.parametrize('key',['positions','skin','rotations','times'])
 @pytest.mark.parametrize('which',[0,1])
 def test_invalid_original_endpoint_is_rejected(key,which):
     values=list(pair());values[which][key][-1 if which==0 else 0]=np.nan
-    with pytest.raises(ContractError):compare_boundaries(*values,[8,0,0])
+    with pytest.raises(ContractError):compare_test(*values,[8,0,0])
 
 
 @pytest.mark.parametrize('case',['zero-quaternion','boolean-contact','short','unordered','mismatched-skin','mismatched-nodes','numeric-string'])
@@ -61,7 +109,7 @@ def test_malformed_evidence_fails_closed(case):
     elif case=='mismatched-skin':b['skin']=b['skin'][:,:1]
     elif case=='mismatched-nodes':b['positions']=b['positions'][:,:1];b['rotations']=b['rotations'][:,:1]
     elif case=='numeric-string':b['times']=b['times'].astype(str)
-    with pytest.raises(ContractError):compare_boundaries(a,b,[8,0,0])
+    with pytest.raises(ContractError):compare_test(a,b,[8,0,0])
 
 
 def bound_recipes():

@@ -20,6 +20,7 @@ from ..layers.leg_contact_resolve_v3 import (
     _qinv, _qmul, _q_to_rotvec,
 )
 from ..solve.skin_targets import points
+from .emitted_tangent import descendant_indices, endpoint_tangent, skinned_velocity
 from .compiler import verify_package
 from .quality import (
     CYCLIC_ANGULAR_VELOCITY_TOLERANCE_DEG_S,
@@ -58,7 +59,7 @@ def require_runtime_axes(runtime, recipe):
             raise ContractError('handoff runtime coordinate declaration differs from recipe')
 
 
-def compare_boundaries(before: dict, after: dict, travel_alignment_m) -> dict:
+def compare_boundaries(before: dict, after: dict, travel_alignment_m, *, test_only_allow_sampled_tangents: bool = False) -> dict:
     """Measure native three-sample windows, preserving the original endpoints."""
     shift = _numeric(travel_alignment_m)
     if shift.shape != (3,):
@@ -93,14 +94,62 @@ def compare_boundaries(before: dict, after: dict, travel_alignment_m) -> dict:
         end = -1 if terminal else 0
         ids = [0,1] if terminal else [1,2]
         return _endpoint_derivative(t[ids]-t[end],(values[ids]-values[end]).reshape(2,-1)).reshape(values.shape[1:])
-    record('linear_velocity_mps',np.linalg.norm(velocity(a[0],a[1],True)-velocity(b[0],b[1],False),axis=1))
-    record('skin_velocity_mps',np.linalg.norm(velocity(a[0],a[3],True)-velocity(b[0],b[3],False),axis=1))
+    quadratic = {}
+    quadratic['linear_velocity_mps'] = np.linalg.norm(velocity(a[0],a[1],True)-velocity(b[0],b[1],False),axis=1)
+    quadratic['skin_velocity_mps'] = np.linalg.norm(velocity(a[0],a[3],True)-velocity(b[0],b[3],False),axis=1)
     def angular(t,qs,terminal):
         endpoint,ids = (-1,[0,1]) if terminal else (0,[1,2])
         deltas = np.array([[_q_to_rotvec(_qmul(_qinv(tuple(qs[endpoint,j])),tuple(qs[i,j])))
                             for j in range(qs.shape[1])] for i in ids])
         return _endpoint_derivative(t[ids]-t[endpoint],deltas.reshape(2,-1)).reshape(-1,3)
-    record('angular_velocity_degrees_per_s',np.degrees(np.linalg.norm(angular(a[0],a[2],True)-angular(b[0],b[2],False),axis=1)))
+    quadratic['angular_velocity_degrees_per_s'] = np.degrees(np.linalg.norm(angular(a[0],a[2],True)-angular(b[0],b[2],False),axis=1))
+    quadratic_witness_indices = {key:int(np.argmax(value)) for key,value in quadratic.items()}
+    exact_before, exact_after = before.get('exact'), after.get('exact')
+    if type(test_only_allow_sampled_tangents) is not bool:
+        raise ContractError('handoff test-only tangent option must be boolean')
+    if (exact_before is None) != (exact_after is None):
+        raise ContractError('handoff exact tangent evidence is incomplete')
+    if exact_before is None:
+        if not test_only_allow_sampled_tangents:
+            raise ContractError('handoff requires exact emitted tangent evidence')
+        # This route is deliberately available only to isolated unit fixtures;
+        # it cannot be mistaken for emitted FK/LBS tangent validation.
+        def adjacent(t, values, terminal):
+            left, right = (-2, -1) if terminal else (0, 1)
+            return (values[right] - values[left]) / (t[right] - t[left])
+        def adjacent_angular(t, qs, terminal):
+            left, right = (-2, -1) if terminal else (0, 1)
+            return np.asarray([_q_to_rotvec(_qmul(_qinv(tuple(qs[left, index])), tuple(qs[right, index])))
+                               for index in range(qs.shape[1])]) / (t[right] - t[left])
+        exact = {'linear_velocity_mps':np.linalg.norm(adjacent(a[0],a[1],True)-adjacent(b[0],b[1],False),axis=1),
+                 'skin_velocity_mps':np.linalg.norm(adjacent(a[0],a[3],True)-adjacent(b[0],b[3],False),axis=1),
+                 'angular_velocity_degrees_per_s':np.degrees(np.linalg.norm(adjacent_angular(a[0],a[2],True)-adjacent_angular(b[0],b[2],False),axis=1))}
+        exact_kind = 'adjacent sampled synthetic boundary values'
+    else:
+        required = {'node_names','world_velocity','skin_labels','skin_velocity','angular_velocity'}
+        if (not isinstance(exact_before, dict) or not isinstance(exact_after, dict)
+            or set(exact_before) != required or set(exact_after) != required
+            or exact_before['node_names'] != exact_after['node_names']
+            or exact_before['skin_labels'] != exact_after['skin_labels']
+            or not isinstance(exact_before['node_names'], list) or not isinstance(exact_before['skin_labels'], list)
+            or any(not isinstance(value, str) for value in (*exact_before['node_names'], *exact_before['skin_labels']))
+            or len(set(exact_before['node_names'])) != len(exact_before['node_names'])
+            or len(set(exact_before['skin_labels'])) != len(exact_before['skin_labels'])):
+            raise ContractError('handoff exact tangent correspondence differs')
+        aw, bw = _numeric(exact_before['world_velocity']), _numeric(exact_after['world_velocity'])
+        ask, bsk = _numeric(exact_before['skin_velocity']), _numeric(exact_after['skin_velocity'])
+        aa, ba = _numeric(exact_before['angular_velocity']), _numeric(exact_after['angular_velocity'])
+        if (aw.shape != bw.shape or aw.ndim != 2 or aw.shape[1] != 3 or len(exact_before['node_names']) != aw.shape[0]
+            or aw.shape[0] != a[1].shape[1] or ask.shape != bsk.shape or len(exact_before['skin_labels']) != ask.shape[0]
+            or ask.shape[0] != a[3].shape[1]
+            or ask.ndim != 2 or ask.shape[1] != 3 or aa.shape != ba.shape or aa.shape != aw.shape):
+            raise ContractError('handoff exact tangent shape differs')
+        exact = {'linear_velocity_mps':np.linalg.norm(aw-bw,axis=1),
+                 'skin_velocity_mps':np.linalg.norm(ask-bsk,axis=1),
+                 'angular_velocity_degrees_per_s':np.degrees(np.linalg.norm(aa-ba,axis=1))}
+        exact_kind = 'exact adjacent LINEAR translation/scale and shortest-SLERP FK/LBS tangents'
+    for key, value in exact.items():
+        record(key, value)
     limits = {'position_m':POSITION_TOLERANCE_M,'skin_position_m':SKIN_TOLERANCE_M,
         'rotation_degrees':ROTATION_TOLERANCE_DEGREES,
         'linear_velocity_mps':CYCLIC_LINEAR_VELOCITY_TOLERANCE_M_S,
@@ -110,7 +159,11 @@ def compare_boundaries(before: dict, after: dict, travel_alignment_m) -> dict:
     checks['contact_state'] = before['contacts']==after['contacts']
     return {'status':'PASS' if all(checks.values()) else 'FAIL','checks':checks,
         'values':errors,'limits':limits,'witness_indices':witnesses,
-        'before_times_s':a[0].tolist(),'after_times_s':b[0].tolist()}
+        'before_times_s':a[0].tolist(),'after_times_s':b[0].tolist(),
+        'classification':exact_kind,
+        'diagnostics':{'quadratic_three_sample_estimate':{'values':{key:float(np.max(value)) for key,value in quadratic.items()},
+            'witness_indices':quadratic_witness_indices}}
+        }
 
 
 def require_pair(transition: dict, steady: dict, runtime: dict) -> str:
@@ -189,18 +242,7 @@ def _boundary(package: Path, *, terminal: bool, mode: str, profile: dict, phase_
     if min(ids) < 0 or max(ids) >= len(times):
         raise ContractError('declared handoff phase has insufficient native context')
     root = glb.name_to_node[runtime['rig_roles']['root']]
-    descendants = []
-    for index in range(len(glb.nodes)):
-        cursor,seen = index,set()
-        while cursor is not None:
-            if cursor in seen:
-                raise ContractError('cyclic handoff topology')
-            seen.add(cursor)
-            if cursor==root:
-                descendants.append(index);break
-            cursor = glb.parents[cursor]
-    if not descendants:
-        raise ContractError('handoff has no motion-owned nodes')
+    descendants = descendant_indices(glb, root)
     forward = _numeric(runtime['forward_axis'])
     travel = _numeric([plan['samples'][i]['root_forward_m']-plan['samples'][0]['root_forward_m'] for i in ids])
     if forward.shape!=(3,) or abs(np.linalg.norm(forward)-1)>1e-6:
@@ -215,9 +257,21 @@ def _boundary(package: Path, *, terminal: bool, mode: str, profile: dict, phase_
     frames = _skin_boundary(glb,profile,animations[0]['name'],times,ids)
     skin = [np.concatenate([points(frame,side) for side in ('left','right')])+
             (forward*distance if mode=='in_place' else np.zeros(3)) for frame,distance in zip(frames,travel)]
+    tangent = endpoint_tangent(glb, animations[0]['name'], endpoint=endpoint, terminal=terminal)
+    motor_velocity = forward * ((travel[-1] - travel[-2]) / (times[ids[-1]] - times[ids[-2]]) if terminal
+                                else (travel[1] - travel[0]) / (times[ids[1]] - times[ids[0]])) if mode == 'in_place' else np.zeros(3)
+    labels, skin_tangent = skinned_velocity(glb, profile, tangent)
+    world_tangent = tangent.world_velocity[descendants, :3, 3] + motor_velocity
+    skin_tangent = skin_tangent + motor_velocity
+    exact = {'node_names':[tangent.names[index] for index in descendants],
+             'world_velocity':world_tangent.tolist(), 'skin_labels':labels,
+             'skin_velocity':skin_tangent.tolist(),
+             'angular_velocity':tangent.angular_velocity[descendants].tolist()}
     data = {'times':times[ids],'positions':world,'rotations':rotations,'skin':skin,
-        'contacts':{side:plan['samples'][endpoint]['feet'][side]['contact'] for side in ('left','right')}}
-    return data,float(travel[-1 if terminal else 0]),[glb.nodes[i].get('name') for i in descendants]
+        'contacts':{side:plan['samples'][endpoint]['feet'][side]['contact'] for side in ('left','right')}, 'exact':exact}
+    topology = [(tangent.names[index], None if glb.parents[index] is None else tangent.names[int(glb.parents[index])])
+                for index in descendants]
+    return data,float(travel[-1 if terminal else 0]),topology
 
 
 def verify_handoff(transition: Path, steady: Path, *, root: Path) -> dict:
@@ -249,12 +303,12 @@ def verify_handoff(transition: Path, steady: Path, *, root: Path) -> dict:
     before,after = paths if kind=='start' else paths[::-1]
     modes = {}
     for mode in ('root_motion','in_place'):
-        a,da,names_a = _boundary(before,terminal=True,mode=mode,profile=profile,phase_s=phase if kind=='stop' else 0.)
-        b,db,names_b = _boundary(after,terminal=False,mode=mode,profile=profile,phase_s=phase if kind=='start' else 0.)
-        if names_a!=names_b:
+        a,da,topology_a = _boundary(before,terminal=True,mode=mode,profile=profile,phase_s=phase if kind=='stop' else 0.)
+        b,db,topology_b = _boundary(after,terminal=False,mode=mode,profile=profile,phase_s=phase if kind=='start' else 0.)
+        if topology_a!=topology_b:
             raise ContractError('handoff motion-owned topology differs')
         modes[mode] = compare_boundaries(a,b,_numeric(tr['forward_axis'])*(da-db))
-        modes[mode]['motion_owned_nodes'] = names_a
+        modes[mode]['motion_owned_nodes'] = [name for name,_ in topology_a]
     for p,expected in zip(paths,hashes):
         verify_package(p)
         if _digest(p/'manifest.json')!=expected:
