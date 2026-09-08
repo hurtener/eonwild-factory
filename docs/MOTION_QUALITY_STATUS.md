@@ -89,6 +89,21 @@ The complete review page is
 and summary are in
 [reports/V9-ADULT-RECOVERY-V3-HOST-001](../reports/V9-ADULT-RECOVERY-V3-HOST-001/README.md).
 
+The latest body-response diagnostic is
+`tarbosaurus-pin-552-1-adult-walk.v5`. It preserves v3's leg, contact and
+articulation inputs while using support-timed pelvis transfer and a restrained
+distributed trunk counterroll. The host inspected all 370 rendered review
+frames across five native-time views and completed native-speed v3/A/B and
+root-motion comparisons. Lateral coordination and torso response improve over
+v3 and Candidate A, but the sagittal body, neck and tail profile still reads too
+level and even for the requested several-ton effort. Its status is
+**POLISH_REQUIRED**. Mass-response physics, user art-direction approval,
+biological validation, Unity parity and production approval are absent. See
+[reports/V9-ADULT-BODY-TRANSFER-B-001](../reports/V9-ADULT-BODY-TRANSFER-B-001/README.md).
+The exact B review/CI head `2199e7f2fb4040b4988a7a267f2b0a9b7eb5a2a5`
+passed 716 tests plus 21 subtests in 306.42 seconds with the pinned real tools;
+hosted CI remains pending.
+
 The exact integrated source `5304b1967ad350737cf7e9ee6555a5f4de9e9bff`
 passed 658 tests plus 21 subtests in 225.75 seconds. The new adult v3 catalog
 binding test then passed at exact source

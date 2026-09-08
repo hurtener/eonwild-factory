@@ -46,12 +46,20 @@ It adds specimen-specific mass evidence and measured geometry calibration to
 the grounded walk. See [animal configuration](docs/ANIMAL_CONFIGURATION.md)
 for the reusable data contract and its current biomechanical limits.
 
+The latest body-response review candidate is
+`recipes/heavy-biped/tarbosaurus-pin-552-1-adult-walk.v5.json`. It preserves the
+v3 leg recovery and adds support-timed pelvis and distributed trunk response.
+Host review found clearer lateral coordination but still requires whole-body
+polish for the requested heavy-animal effort; mass-response physics is not
+implemented. See [the Candidate B report](reports/V9-ADULT-BODY-TRANSFER-B-001/README.md).
+
 Current explicit review candidates are `walk.v3`, `reverse-walk.v4`, `run.v4`,
-`sprint.v4`, `fast-walk.v2`, `feeding.v2`, and `bite-miss.v2`, alongside `idle.v1`,
-`alert.v1`, and `call.v1`. The eight start/stop recipes are now `.v3`, bound to
-those exact sustained gait/performance inputs. All remain candidates, not
-automatically accepted animations. A passing start, steady gait and stop are
-insufficient: the permanent transition-pair jobs independently check both actual
+`sprint.v4`, `fast-walk.v2`, `tarbosaurus-pin-552-1-adult-walk.v5`, `feeding.v2`,
+and `bite-miss.v2`, alongside `idle.v1`, `alert.v1`, and `call.v1`. The eight
+start/stop recipes are now `.v3`, bound to those exact sustained gait/performance
+inputs. All remain candidates, not automatically accepted animations. Passing
+the individual start, steady-gait and stop clips is insufficient: the permanent
+transition-pair jobs independently check both actual
 serialized joins. See [the transition interface](docs/TRANSITION_INTEGRATION.md).
 
 ```sh
@@ -96,12 +104,16 @@ Both tools retain mechanical rejection even when diagnostic rendering succeeds.
 uv run python -m pytest tests -q --tb=short
 ```
 
-The final clean local head
+The 2026-09-08 adult body-diagnostic head
+`2199e7f2fb4040b4988a7a267f2b0a9b7eb5a2a5` passed 716 tests plus 21
+subtests in 306.42 seconds with the pinned real tools. Hosted CI for this B
+candidate head is pending; the local result does not approve motion or authorize
+merging draft PR #2.
+
+The earlier 2026-09-08 final continuation head
 `4ae0fe92ec3ffd49dfeca14085756cc7cbe7d852` passed 683 tests plus 21
-subtests in 212.65 seconds with the pinned real tools. Hosted CI for the ensuing
-published documentation head is pending; the local result does not approve
-motion or authorize merging draft PR #2. The receipts and final review closure
-are tracked in [V9-CONTINUATION-FINAL-4AE0FE9-001](reports/V9-CONTINUATION-FINAL-4AE0FE9-001/README.md).
+subtests in 212.65 seconds. Its receipts and final review closure remain tracked
+in [V9-CONTINUATION-FINAL-4AE0FE9-001](reports/V9-CONTINUATION-FINAL-4AE0FE9-001/README.md).
 
 The complete mandatory suite includes historical integration, exact duplicate
 builds, promotion rejection and real rendering. Its canonical CI is macOS

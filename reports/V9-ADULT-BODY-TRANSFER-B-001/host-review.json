@@ -1,0 +1,216 @@
+{
+  "schema": "eonwild.motion.host-body-review.v1",
+  "reviewed_utc": "2026-09-08T05:29:14.392950+00:00",
+  "candidate": "tarbosaurus-pin-552-1-adult-walk.v5",
+  "generation_head": "329b150566d08c2a2ca19153aa844f8ae054855f",
+  "technical_verification": "PASS",
+  "body_visual_decision": "POLISH_REQUIRED",
+  "body_direction": "IMPROVED_OVER_V3_AND_A",
+  "production_approved": false,
+  "unity_parity": "NOT_RUN",
+  "source_root_motion_sha256": "6f7c6fb7ee79055c66f0f76be150a5c72cbe919fa9514c11ffb64915ee8fecf4",
+  "source_in_place_sha256": "8dff0f9d4c92e73cda477e05ad554e536967b2c46a3df89748538fe0bfe4d086",
+  "manifest_sha256": "e4f417a16a7e00cae78a69762816a1ede252b10a25daf242ed7d77e761c6d694",
+  "review_coverage": {
+    "frames_visually_inspected": 370,
+    "views": {
+      "front-body": {
+        "view": "front-body",
+        "mode": "in_place",
+        "source_sha256": "8dff0f9d4c92e73cda477e05ad554e536967b2c46a3df89748538fe0bfe4d086",
+        "render_receipt_sha256": "e580fb14ec119d873e67e98412855b3f5445e5d2e4a1d5828173f0e678a9ae0d",
+        "film_sha256": "5b9fe7a838194e8c779d74896bbc68e40f92243b9c7fe58ae346e8bfd6d138f5",
+        "frames": 74,
+        "native_fps": 30,
+        "encoded_duration_s": 2.466667,
+        "camera_matches_retained_v3": true,
+        "full_ffmpeg_decode": "PASS",
+        "contact_sheets": [
+          {
+            "name": "000-015.png",
+            "sha256": "f6512ece9c7546d0bdc8e601d4842b542b4f383147296922ca716e9ef2ab2169"
+          },
+          {
+            "name": "016-031.png",
+            "sha256": "dab82092b4c8a57c984532e3d312fc18ec8352210711300a3be2c9aae15b91bf"
+          },
+          {
+            "name": "032-047.png",
+            "sha256": "2aec4d392164b44e74ee6f9506e598d124c1d9144aee19b6ba7fce1b6f47bc45"
+          },
+          {
+            "name": "048-063.png",
+            "sha256": "9b31783ca222f9710f6ade8b932d2b88a8773f8ee3b13de3640d6a013da60074"
+          },
+          {
+            "name": "064-073.png",
+            "sha256": "974f5ab1aa51beb1ad36de012f98235ccc5ca2547a25ec788dd17b24732d4ab0"
+          }
+        ],
+        "visual_inspection": "ALL_74_REVIEW_FRAMES_INSPECTED",
+        "native_browser_playback": "COMPLETE_AT_1X",
+        "render_completed_local": "2026-09-08T02:18:42.033164-03:00"
+      },
+      "three-quarter-body": {
+        "view": "three-quarter-body",
+        "mode": "in_place",
+        "source_sha256": "8dff0f9d4c92e73cda477e05ad554e536967b2c46a3df89748538fe0bfe4d086",
+        "render_receipt_sha256": "67b2a799ace2738859d57fbd37a43b325ce8103b6fedd5af50f3abf357527fba",
+        "film_sha256": "2fcb761216221f285678a81b9e442acf6acf147f866c5ee41bed324e80e40770",
+        "frames": 74,
+        "native_fps": 30,
+        "encoded_duration_s": 2.466667,
+        "camera_matches_retained_v3": true,
+        "full_ffmpeg_decode": "PASS",
+        "contact_sheets": [
+          {
+            "name": "000-015.png",
+            "sha256": "232dc1ef1d03afc3952c4d77c3150681cb1e2099c78039e65bdba8f222d6dfee"
+          },
+          {
+            "name": "016-031.png",
+            "sha256": "16ba916645b81553f0df1cc80b6cbac85aebe8e1334907c1c1bd1504915a6f62"
+          },
+          {
+            "name": "032-047.png",
+            "sha256": "fbdf8a8366427cb84babede12f54de3b564beee28be3c81f171070d9adaf67e8"
+          },
+          {
+            "name": "048-063.png",
+            "sha256": "68aa1f6624d38d8848205225d466543c0bb6e179526d0aa514df64483efd6758"
+          },
+          {
+            "name": "064-073.png",
+            "sha256": "3883add1ad9441674c478d55b076c2e50fd9da6bcadad4f155acb2fe38c692a5"
+          }
+        ],
+        "visual_inspection": "ALL_74_REVIEW_FRAMES_INSPECTED",
+        "native_browser_playback": "COMPLETE_AT_1X",
+        "render_completed_local": "2026-09-08T02:18:45.931129-03:00"
+      },
+      "side-body": {
+        "view": "side-body",
+        "mode": "in_place",
+        "source_sha256": "8dff0f9d4c92e73cda477e05ad554e536967b2c46a3df89748538fe0bfe4d086",
+        "render_receipt_sha256": "e6fee80092402b1f22af95aa87cde622f5db861c32885f190883d821ffa6642c",
+        "film_sha256": "acb62c67566d954f9cf7e896b9f92dd2c7b61c58b551f1e8b61ff4cf7142abc6",
+        "frames": 74,
+        "native_fps": 30,
+        "encoded_duration_s": 2.466667,
+        "camera_matches_retained_v3": true,
+        "full_ffmpeg_decode": "PASS",
+        "contact_sheets": [
+          {
+            "name": "000-015.png",
+            "sha256": "389144b42ac012728400f1beac4c344fc314ec592b28517e64f821bfdc309219"
+          },
+          {
+            "name": "016-031.png",
+            "sha256": "88ecc305249e8a6f5928df8e3ff17af0552755271db156c0273aaad0b7f2e815"
+          },
+          {
+            "name": "032-047.png",
+            "sha256": "7ed725bdea4460e2fd6129df0dd80b1b92d51fafdb3241c613ce3076d1fec4f5"
+          },
+          {
+            "name": "048-063.png",
+            "sha256": "0d97f024581ba3faf92d26fc34266089da1f9d9c2e208593acf1a0dacc591be2"
+          },
+          {
+            "name": "064-073.png",
+            "sha256": "e3ad50afd242f5628f8779ca441851e7f088697f1b6c91af892799335b6c1591"
+          }
+        ],
+        "visual_inspection": "ALL_74_REVIEW_FRAMES_INSPECTED",
+        "native_browser_playback": "COMPLETE_AT_1X",
+        "render_completed_local": "2026-09-08T02:21:42.600273-03:00"
+      },
+      "rear-body": {
+        "view": "rear-body",
+        "mode": "in_place",
+        "source_sha256": "8dff0f9d4c92e73cda477e05ad554e536967b2c46a3df89748538fe0bfe4d086",
+        "render_receipt_sha256": "155ba9f61418360d3a60c3239e17e9197b4cf23cda97db9b90c53f6e59827310",
+        "film_sha256": "4748c9f1d058c5fd046e3023698e843de1b7d61f615ed2663ab3abfce7e8c3a1",
+        "frames": 74,
+        "native_fps": 30,
+        "encoded_duration_s": 2.466667,
+        "camera_matches_retained_v3": true,
+        "full_ffmpeg_decode": "PASS",
+        "contact_sheets": [
+          {
+            "name": "000-015.png",
+            "sha256": "1ee54d8b598d929c7c33b223428d2a9a875c4371dd6722b5eb03d591ad23f974"
+          },
+          {
+            "name": "016-031.png",
+            "sha256": "77065ae76affb50c5a47396b73882fef3004961917effd02e283dff3f795d354"
+          },
+          {
+            "name": "032-047.png",
+            "sha256": "dbfd73f6966214af8275382370523892eec766c10129f3cedd18491455426cdb"
+          },
+          {
+            "name": "048-063.png",
+            "sha256": "c3adba84ad53f6eacb60d1fa5fc95feea6d63827c59613eccc4e308e2077576f"
+          },
+          {
+            "name": "064-073.png",
+            "sha256": "ebf6962625d2932ccb185946fcefac7116bd3cf58dc18ab9b63e24a67344edef"
+          }
+        ],
+        "visual_inspection": "ALL_74_REVIEW_FRAMES_INSPECTED",
+        "native_browser_playback": "COMPLETE_AT_1X",
+        "render_completed_local": "2026-09-08T02:21:39.598359-03:00"
+      },
+      "root-motion-side": {
+        "view": "root-motion-side",
+        "mode": "root_motion",
+        "source_sha256": "6f7c6fb7ee79055c66f0f76be150a5c72cbe919fa9514c11ffb64915ee8fecf4",
+        "render_receipt_sha256": "a79c4195ff7904e1c1077892792f3cbb442e9b148f1c00f0844ece87372915b6",
+        "film_sha256": "d9f07515a91ddec1317a304a9fd8e31c4a16f6197e9f2daa04aeaaa05b3a19dc",
+        "frames": 74,
+        "native_fps": 30,
+        "encoded_duration_s": 2.466667,
+        "camera_matches_retained_v3": true,
+        "full_ffmpeg_decode": "PASS",
+        "contact_sheets": [
+          {
+            "name": "000-015.png",
+            "sha256": "bd873155d125e793efce39d0d1f4ee997ed7403049fc628951c7e0419f7a46c8"
+          },
+          {
+            "name": "016-031.png",
+            "sha256": "5a100fcf7120b7e62f6888afc0d4f3172e035f07920f0796ca757df18d69d53b"
+          },
+          {
+            "name": "032-047.png",
+            "sha256": "4e215cec7b140e206d973a732bc269f36371faa78a29a3a55da2309d8b25ee50"
+          },
+          {
+            "name": "048-063.png",
+            "sha256": "429b5c45227bf711896753a418ba63564cad021059bede19f38d7bb2bceaaea9"
+          },
+          {
+            "name": "064-073.png",
+            "sha256": "ecd4a0bdb039583236ac90fc72b76a3609e3a75c41c4a0763d4a3f3f6a46ce40"
+          }
+        ],
+        "visual_inspection": "ALL_74_REVIEW_FRAMES_INSPECTED",
+        "native_browser_playback": "COMPLETE_AT_1X",
+        "render_completed_local": "2026-09-08T02:24:17.459712-03:00"
+      }
+    },
+    "native_emitted_pose_audit_keys_per_candidate": 297,
+    "root_reproduced_audit_sha256": "3499f467ed9aae5ebf981e8b548fdeea791e5eced7233047036fb68e50dd859d",
+    "root_reproduced_chain_audit_sha256": "26034b89befca9ed0e4749e6edded066c3fc920ede760786f3f19f99837fab61"
+  },
+  "observations": [
+    "Pelvis and torso transfer toward the supporting side, with a small distributed counterroll reducing chest lean relative to the pelvis. This is a visible lateral coordination improvement over the retained v3 and A.",
+    "The authored leg program, contact schedule and recovery targets are retained. Reopened geometry preserves full-patch interior swing clearance near 35.2 mm left and 40.6 mm right, with zero hard articulation violations or ground penetration.",
+    "The side and forward-moving profiles remain too level and even through support changes to satisfy the full requested sense of several-ton mass and effort. Body polish is still required; this diagnostic is not approved as the finished animal.",
+    "The reviewed frames show no obvious new abrupt lateral hitch or exaggerated waddle. Fine surface-deformation assessment is limited by the four-sample diagnostic render quality."
+  ],
+  "next_work": "Retain corrected support clocks and leg motion. Diagnose support-timed sagittal trunk, neck and tail response and the relationship between forward progress and load transfer before another body revision. Do not treat success of the current kinematic gates as a force or balance solution.",
+  "claim_limit": "Kinematic and visual review only. Pelvis/hip/surface-centroid measures are geometric proxies, not mass-weighted COM. No ground-reaction force, muscle effort or measured Tarbosaurus dynamics is simulated or claimed.",
+  "review_comparisons": "All four v3/A/B in-place views and the separate v3/B root-motion-side pair completed browser playback at native 1x. All 370 B review frames were inspected via 25 contact sheets."
+}

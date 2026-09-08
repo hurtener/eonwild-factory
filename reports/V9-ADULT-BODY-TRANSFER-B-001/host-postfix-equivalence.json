@@ -1,0 +1,31 @@
+{
+  "schema": "eonwild.motion.host-postfix-byte-equivalence.v1",
+  "review_generation_head": "329b150566d08c2a2ca19153aa844f8ae054855f",
+  "fixed_source_head": "64dd6b4ae45e297eef968b116bbc2cca700617b8",
+  "status": "PASS",
+  "all_payload_bytes_identical_except_source_lock_and_manifest": true,
+  "different_files": {
+    "inputs.lock.json": {
+      "reviewed": "5e28feb9bf2d55bcd374c599b7e3e322d6ba6af5973da6741c9d00e98a2ea785",
+      "fixed": "3c08cfa5fec0daef9c50bfa0ca1e3e682b990fb96304c3002f593e6e96e5cd5a"
+    },
+    "manifest.json": {
+      "reviewed": "e4f417a16a7e00cae78a69762816a1ede252b10a25daf242ed7d77e761c6d694",
+      "fixed": "8408608975c8499a1676f91228c18650557ae71c0c46961bff72d0eb30332229"
+    }
+  },
+  "identical_files": {
+    "runtime.json": "218483e84d829ad725f8da2297eccbfb618d8260f82691324b4b64fec57cae17",
+    "animal.json": "dbb0336caacea988fdc5b5c9250fa4490f281e8442b23acf24502a7e35896a7b",
+    "plan.json": "76a92ae16caf5c5d03f2b1772aaf6f3d3878fd2bb84ec7b9b681a0ae83e30540",
+    "in_place.glb": "8dff0f9d4c92e73cda477e05ad554e536967b2c46a3df89748538fe0bfe4d086",
+    "recipe.json": "7c4c7614368c85f9eb9c4e45e890adcccfc04ed6e18e2c74d4d3be2671eb37f4",
+    "biomechanics.json": "507f9d5b92d6d4703460e4d769d4acd206c838991a81e1d350dd50655c376bb4",
+    "solver-receipt.json": "b0f51ab50762a54a9369aded2d0e3200eb1ccb8aff699cd393f7d693a2938bfd",
+    "articulation-profile.json": "c1206143387ad4d1084a413ee031018f5a61a8e0539ef8256c6bba74a0f4bc6a",
+    "validation.json": "bacf5bc4025e87c9e93084e4a46bf1f4ab611e2afdd183fbde41ca28b06488bf",
+    "root_motion.glb": "6f7c6fb7ee79055c66f0f76be150a5c72cbe919fa9514c11ffb64915ee8fecf4"
+  },
+  "review_receipt_sha256": "1dc16b5220ff06eea00735237d9635109534787674e54ab26d819bed9c4945d6",
+  "explanation": "The validation-only source fix reproduces both reviewed motion payloads exactly. The source-commit lock and manifest correctly change. Reviewed media retain their original generation-manifest identity; postfix-package is the authoritative fixed-source integrity artifact."
+}

@@ -1,0 +1,91 @@
+{
+  "schema": "eonwild.motion.host-body-review.v1",
+  "reviewed_utc": "2026-09-08T05:04:04.077751+00:00",
+  "candidate": "tarbosaurus-pin-552-1-adult-walk.v4",
+  "implementation_and_input_head": "9d5ae0fe873507e6088714727943dfd8b293b2c2",
+  "technical_verification": "PASS",
+  "body_visual_decision": "POLISH_REQUIRED",
+  "production_approved": false,
+  "unity_parity": "NOT_RUN",
+  "source_root_motion_sha256": "fa6e3a11b9d1d017c3945758d976e97cfe4812960e087dad00eb37436a7840d6",
+  "source_in_place_sha256": "8adbe7f17434fb8a9fe8d4956a46ff8d78e803495a10690722514659783a5e3b",
+  "review_coverage": {
+    "frames": 296,
+    "views": {
+      "front-body": {
+        "render_receipt_sha256": "8aa50b3c8f55c68642ee2544174624843211a47aa80dca2f598bd455e7a498f1",
+        "film_sha256": "0d193b78c688f834eaf8dfb79461fe3eac95452c6d73db3605a96f93d7e5f4fa",
+        "frames_visually_inspected": 74,
+        "contact_sheets": [
+          "000-015.png",
+          "016-031.png",
+          "032-047.png",
+          "048-063.png",
+          "064-073.png"
+        ],
+        "camera_matches_retained_v3": true,
+        "full_ffmpeg_decode": "PASS",
+        "encoded_duration_s": 2.466667,
+        "native_review_fps": 30
+      },
+      "three-quarter-body": {
+        "render_receipt_sha256": "4efb328f9058febb09668647ed1bb2dda9e919e79d7ef4a9ff3239f8ce3ea594",
+        "film_sha256": "34d8c2850d8eaa71b356d16a9367bbeb643861b0b7e43abf3f20bc34f5f36682",
+        "frames_visually_inspected": 74,
+        "contact_sheets": [
+          "000-015.png",
+          "016-031.png",
+          "032-047.png",
+          "048-063.png",
+          "064-073.png"
+        ],
+        "camera_matches_retained_v3": true,
+        "full_ffmpeg_decode": "PASS",
+        "encoded_duration_s": 2.466667,
+        "native_review_fps": 30
+      },
+      "side-body": {
+        "render_receipt_sha256": "d83659aa219cfc1237395faf2f2f4affbcc15ee9ba28c98227636a647b71a49a",
+        "film_sha256": "b2fa2d1d28d6a77532dce98efa888531faed0c1fca9e390f98a1d675d6157231",
+        "frames_visually_inspected": 74,
+        "contact_sheets": [
+          "000-015.png",
+          "016-031.png",
+          "032-047.png",
+          "048-063.png",
+          "064-073.png"
+        ],
+        "camera_matches_retained_v3": true,
+        "full_ffmpeg_decode": "PASS",
+        "encoded_duration_s": 2.466667,
+        "native_review_fps": 30
+      },
+      "rear-body": {
+        "render_receipt_sha256": "fa4d259beaa7d98a804cb55bd30337713520abd95e6b6ce9c982116d234ce52b",
+        "film_sha256": "9378ad8db53b4f7d593df489a8f1926ff9377202ff8ca2b305b0c35b59bf0e46",
+        "frames_visually_inspected": 74,
+        "contact_sheets": [
+          "000-015.png",
+          "016-031.png",
+          "032-047.png",
+          "048-063.png",
+          "064-073.png"
+        ],
+        "camera_matches_retained_v3": true,
+        "full_ffmpeg_decode": "PASS",
+        "encoded_duration_s": 2.466667,
+        "native_review_fps": 30
+      }
+    },
+    "browser_native_1x_playback": "exercised for all four paired views; emitted review frames inspected via contact sheets",
+    "native_emitted_pose_audit_keys": 297,
+    "root_reproduced_audit_sha256": "bfb765ada2fa74d895ffd367941458224e37a0800bfa15a6d150d9e427b4463f"
+  },
+  "observations": [
+    "Support-timed pelvis shift and lean now agree; the walking-style height phase is internally consistent with the declared stance clock.",
+    "The improved leg program and full-patch recovery clearance are retained.",
+    "At current amplitudes the torso remains visually rigid and body transfer too restrained to satisfy the requested sense of a heavy adult animal."
+  ],
+  "next_candidate": "Retain corrected clocks and leg inputs; test modestly increased supportward sway/roll with a small distributed upper-trunk counterroll. No third unbounded amplitude search.",
+  "claim_limit": "Kinematic and visual review only; no mass-weighted COM, ground-reaction force or measured Tarbosaurus dynamics claim."
+}
