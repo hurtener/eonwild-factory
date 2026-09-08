@@ -40,13 +40,12 @@ An output directory must be new; earlier takes cannot be overwritten.
 Compilation is not approval. Verification exits nonzero for blocked technical
 acceptance. Missing evidence is not a zero-error pass.
 
-The current adult Tarbosaurus benchmark candidate is
-`recipes/heavy-biped/tarbosaurus-pin-552-1-adult-walk.v3.json`.
-It adds specimen-specific mass evidence and measured geometry calibration to
-the grounded walk. See [animal configuration](docs/ANIMAL_CONFIGURATION.md)
-for the reusable data contract and its current biomechanical limits.
+Adult Tarbosaurus v3 introduced specimen-specific mass evidence and measured
+geometry calibration to the grounded walk. See
+[animal configuration](docs/ANIMAL_CONFIGURATION.md) for the reusable data
+contract and its current biomechanical limits.
 
-The latest body-response review candidate is
+The current body-response review candidate is
 `recipes/heavy-biped/tarbosaurus-pin-552-1-adult-walk.v9.json`. It preserves the
 reviewed V8 bind geometry, gait, legs, contacts, articulation, travel and
 configured amplitudes, then combines the support-timed axial clock with the calibrated
