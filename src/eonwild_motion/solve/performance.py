@@ -29,16 +29,27 @@ class Performance:
     center_lanes_on_bilateral_hip_midpoint: bool | None = None
     support_directed_pelvis_carrier: bool | None = None
     upper_trunk_counterroll_degrees: float | None = None
+    support_timed_sagittal_carrier: bool | None = None
+    pelvis_support_pitch_degrees: float | None = None
+    upper_trunk_counterpitch_degrees: float | None = None
+    neck_counterpitch_degrees: float | None = None
+    tail_counterpitch_degrees: float | None = None
     skin_refinement: bool = True
 
     def __post_init__(self):
         for key, value in asdict(self).items():
             if key in ("center_lanes_on_bilateral_hip_midpoint",
                        "support_directed_pelvis_carrier",
-                       "upper_trunk_counterroll_degrees") and value is None:
+                       "upper_trunk_counterroll_degrees",
+                       "support_timed_sagittal_carrier",
+                       "pelvis_support_pitch_degrees",
+                       "upper_trunk_counterpitch_degrees",
+                       "neck_counterpitch_degrees",
+                       "tail_counterpitch_degrees") and value is None:
                 continue
             if key in ("center_tail", "center_lanes_on_bilateral_hip_midpoint",
-                       "support_directed_pelvis_carrier", "skin_refinement"):
+                       "support_directed_pelvis_carrier",
+                       "support_timed_sagittal_carrier", "skin_refinement"):
                 if type(value) is not bool:
                     raise ContractError(f"{key} must be boolean")
             elif isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
@@ -58,6 +69,28 @@ class Performance:
                 and self.support_directed_pelvis_carrier is not True):
             raise ContractError(
                 "upper-trunk counterroll requires the support-directed pelvis carrier")
+        sagittal = (
+            self.pelvis_support_pitch_degrees,
+            self.upper_trunk_counterpitch_degrees,
+            self.neck_counterpitch_degrees,
+            self.tail_counterpitch_degrees,
+        )
+        if self.support_timed_sagittal_carrier is True:
+            if any(value is None for value in sagittal):
+                raise ContractError(
+                    "support-timed sagittal carrier requires all pitch amplitudes")
+        elif any(value is not None for value in sagittal):
+            raise ContractError(
+                "sagittal pitch amplitudes require the support-timed carrier")
+        sagittal_limits = (
+            (self.pelvis_support_pitch_degrees, 3., "pelvis support pitch"),
+            (self.upper_trunk_counterpitch_degrees, 3., "upper-trunk counterpitch"),
+            (self.neck_counterpitch_degrees, 2., "neck counterpitch"),
+            (self.tail_counterpitch_degrees, 4., "tail counterpitch"),
+        )
+        for value, limit, label in sagittal_limits:
+            if value is not None and not 0 <= value <= limit:
+                raise ContractError(f"{label} exceeds the authored envelope")
 
 
 def load_performance(document: Mapping[str, Any]) -> Performance:
@@ -77,6 +110,12 @@ def decorate_plan(plan: dict, performance: Performance) -> dict:
         if not grounded:
             raise ContractError(
                 "support-directed pelvis carrier requires grounded locomotion")
+    if performance.support_timed_sagittal_carrier is not None:
+        grounded = (plan.get("program") == "grounded_gait"
+                    or plan.get("locomotion_program") == "grounded_gait")
+        if not grounded:
+            raise ContractError(
+                "support-timed sagittal carrier requires grounded locomotion")
     result = deepcopy(plan)
     result["performance"] = {key: value for key, value in asdict(performance).items()
                              if value is not None}
@@ -148,6 +187,35 @@ def _support_directed_pulse(source, base_worlds, roles, plan, phase, gain, later
     return gain * left_sign * math.cos(math.pi * stance_clock)
 
 
+def _support_timed_sagittal_pulse(plan, phase, gain):
+    """C2 support clock shared by both sides of a grounded gait.
+
+    Positive values occur at declared double-support midpoints and negative
+    values at declared single-support midpoints. This is an authored kinematic
+    clock, not a load, force, energy, or center-of-mass estimate.
+    """
+    grounded = (plan.get("program") == "grounded_gait"
+                or plan.get("locomotion_program") == "grounded_gait")
+    if not grounded:
+        raise ContractError(
+            "support-timed sagittal carrier requires grounded locomotion")
+    parameters = plan.get("parameters")
+    if not isinstance(parameters, Mapping):
+        raise ContractError(
+            "support-timed sagittal carrier requires gait parameters")
+    duty = parameters.get("duty_factor")
+    cycle = plan.get("same_foot_cycle_s")
+    if (isinstance(duty, bool) or not isinstance(duty, (int, float))
+            or not math.isfinite(duty) or not .5 < duty < 1
+            or isinstance(cycle, bool) or not isinstance(cycle, (int, float))
+            or not math.isfinite(cycle) or cycle <= 0):
+        raise ContractError(
+            "support-timed sagittal carrier requires finite grounded timing")
+    step = float(cycle) / 2
+    stance_clock = phase / step - float(duty)
+    return -gain * math.cos(2 * math.pi * stance_clock)
+
+
 def _counterroll_trunk_names(roles: Mapping[str, Any]) -> list[str]:
     """Admit one semantic upper-body chain without accepting unrelated roles."""
     if not isinstance(roles, Mapping):
@@ -209,6 +277,62 @@ def _counterroll_trunk_names(roles: Mapping[str, Any]) -> list[str]:
     return trunk
 
 
+def _sagittal_body_chains(source, roles: Mapping[str, Any]):
+    """Admit typed, disjoint body chains and their actual hierarchy."""
+    trunk = _counterroll_trunk_names(roles)
+    neck = list(roles["neck"])
+    tail = list(roles["tail"])
+    head = roles["head"]
+    root = roles["root"]
+    pelvis = roles["pelvis"]
+    leg_names = []
+    for side in ("left", "right"):
+        leg = roles["legs"][side]
+        leg_names.extend(leg["contactChain"])
+        for toe_chain in leg["toeChains"]:
+            leg_names.extend(toe_chain)
+    all_names = [root, pelvis, *trunk, *neck, head, *tail, *leg_names]
+    if len(all_names) != len(set(all_names)):
+        raise ContractError(
+            "sagittal body chains must be disjoint from other semantic roles")
+    if any(name not in source.name_to_node for name in all_names):
+        raise ContractError(
+            "sagittal body chains require admitted semantic nodes")
+    nodes = {
+        "trunk": [source.name_to_node[name] for name in trunk],
+        "neck": [source.name_to_node[name] for name in neck],
+        "tail": [source.name_to_node[name] for name in tail],
+    }
+    pelvis_node = source.name_to_node[pelvis]
+    chest_node = source.name_to_node[trunk[-1]]
+    head_node = source.name_to_node[head]
+    if (source.parents[nodes["trunk"][0]] != pelvis_node
+            or any(source.parents[child] != parent
+                   for parent, child in zip(nodes["trunk"], nodes["trunk"][1:]))
+            or not nodes["neck"]
+            or source.parents[nodes["neck"][0]] != chest_node
+            or any(source.parents[child] != parent
+                   for parent, child in zip(nodes["neck"], nodes["neck"][1:]))
+            or source.parents[head_node] != nodes["neck"][-1]
+            or not nodes["tail"]
+            or source.parents[nodes["tail"][0]] != pelvis_node
+            or any(source.parents[child] != parent
+                   for parent, child in zip(nodes["tail"], nodes["tail"][1:]))):
+        raise ContractError(
+            "sagittal body semantic roles must follow actual topology")
+    return nodes
+
+
+def _distributed_world_delta(
+        source, translations, rotations, scales, nodes, axis, total_degrees):
+    weights = np.linspace(.6, 1.4, len(nodes))
+    weights /= weights.sum()
+    for node, weight in zip(nodes, weights):
+        _world_delta(
+            source, translations, rotations, scales, node, axis,
+            total_degrees * float(weight))
+
+
 def apply_performance(source, translations, rotations, scales, base_worlds, roles, plan, row, up, forward):
     """Resolve rest-tail bias, lateral support response, and forward attention.
 
@@ -222,6 +346,8 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
     p = Performance(**plan["performance"])
     trunk_names = (_counterroll_trunk_names(roles)
                    if p.upper_trunk_counterroll_degrees is not None else None)
+    sagittal_chains = (_sagittal_body_chains(source, roles)
+                       if p.support_timed_sagittal_carrier is True else None)
     phase, gain = phase_and_gain(row)
     lateral = _unit(np.cross(up, forward))
     pelvis = source.name_to_node[roles["pelvis"]]
@@ -232,18 +358,28 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
     pulse = gain * math.sin(angle)
     sway_pulse = pulse
     roll_pulse = pulse
+    sagittal_pulse = 0.
     if p.support_directed_pelvis_carrier:
         sway_pulse = _support_directed_pulse(
             source, base_worlds, roles, plan, phase, gain, lateral)
         # Positive world rotation about forward leans the pelvis top toward
         # negative lateral, so invert the translation carrier for the lean.
         roll_pulse = -sway_pulse
+    if p.support_timed_sagittal_carrier:
+        sagittal_pulse = _support_timed_sagittal_pulse(
+            plan, phase, gain)
     parent = source.parents[pelvis]
     parent_basis = np.eye(3) if parent is None else np.asarray(base_worlds[parent])[:3, :3]
     shift = lateral * (p.pelvis_sway_body_heights * plan["body_height_m"] * sway_pulse)
     translations[pelvis] = tuple(np.asarray(translations[pelvis]) + np.linalg.solve(parent_basis, shift))
     _world_delta(source, translations, rotations, scales, pelvis, up, p.pelvis_yaw_degrees * pulse)
     _world_delta(source, translations, rotations, scales, pelvis, forward, p.pelvis_roll_degrees * roll_pulse)
+    if p.pelvis_support_pitch_degrees is not None:
+        # Positive rotation about lateral tips the pelvis up axis toward
+        # declared forward and its forward axis toward declared down.
+        _world_delta(
+            source, translations, rotations, scales, pelvis, lateral,
+            p.pelvis_support_pitch_degrees * sagittal_pulse)
     chest = source.name_to_node[roles["chest"]]
     _world_delta(source, translations, rotations, scales, chest, up, -.65 * p.pelvis_yaw_degrees * pulse)
     if p.upper_trunk_counterroll_degrees is not None:
@@ -263,6 +399,12 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
             _world_delta(
                 source, translations, rotations, scales, node, forward,
                 p.upper_trunk_counterroll_degrees * sway_pulse * float(weight))
+    if p.upper_trunk_counterpitch_degrees is not None:
+        assert sagittal_chains is not None
+        _distributed_world_delta(
+            source, translations, rotations, scales,
+            sagittal_chains["trunk"], lateral,
+            -p.upper_trunk_counterpitch_degrees * sagittal_pulse)
     tail = [source.name_to_node[n] for n in roles["tail"]]
     if p.center_tail:
         for node, child in zip(tail, tail[1:]):
@@ -279,8 +421,20 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
         lag = p.tail_lag_fraction * i / max(1, len(tail) - 1)
         degrees = -gain * p.tail_yaw_degrees * weights[i] * math.sin(angle - 2 * math.pi * lag)
         _world_delta(source, translations, rotations, scales, node, up, degrees)
+    if p.tail_counterpitch_degrees is not None:
+        assert sagittal_chains is not None
+        _distributed_world_delta(
+            source, translations, rotations, scales,
+            sagittal_chains["tail"], lateral,
+            -p.tail_counterpitch_degrees * sagittal_pulse)
     head = source.name_to_node[roles["head"]]
     neck = [source.name_to_node[n] for n in roles.get("neck", [])]
+    if p.neck_counterpitch_degrees is not None:
+        assert sagittal_chains is not None
+        _distributed_world_delta(
+            source, translations, rotations, scales,
+            sagittal_chains["neck"], lateral,
+            -p.neck_counterpitch_degrees * sagittal_pulse)
     calibration = plan.get("gaze_calibration")
     if calibration is None:
         # Preserve the low-level/synthetic compatibility path. The active

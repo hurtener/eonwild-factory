@@ -20,7 +20,8 @@ from eonwild_motion.layers.leg_contact_resolve_v3 import (
 )
 from eonwild_motion.solve.airborne_gait import solve_airborne_gait
 from eonwild_motion.solve.performance import (
-    Performance, apply_performance, decorate_plan, load_performance,
+    Performance, _support_timed_sagittal_pulse, apply_performance,
+    decorate_plan, load_performance,
 )
 from test_v9_airborne_gait import fixture
 from eonwild_motion.solve.skin_rig import rotation_matrix
@@ -466,6 +467,323 @@ def test_direct_airborne_override_cannot_forge_support_carrier_identity():
         _performance_pose(
             source, roles, plan, plan["samples"][0],
             np.array([0., 1., 0.]), np.array([0., 0., 1.]))
+
+
+def _sagittal_performance(**changes):
+    values = {
+        "pelvis_sway_body_heights": 0,
+        "pelvis_yaw_degrees": 0,
+        "pelvis_roll_degrees": 0,
+        "tail_yaw_degrees": 0,
+        "gaze_elevation_degrees": 0,
+        "center_tail": False,
+        "support_timed_sagittal_carrier": True,
+        "pelvis_support_pitch_degrees": 1.2,
+        "upper_trunk_counterpitch_degrees": .75,
+        "neck_counterpitch_degrees": .45,
+        "tail_counterpitch_degrees": 1.5,
+    }
+    values.update(changes)
+    return Performance(**values)
+
+
+@pytest.mark.parametrize("value", [0, 1, "yes", float("nan")])
+def test_sagittal_carrier_rejects_malformed_flag(value):
+    with pytest.raises(ContractError):
+        _sagittal_performance(support_timed_sagittal_carrier=value)
+
+
+@pytest.mark.parametrize("field", [
+    "pelvis_support_pitch_degrees",
+    "upper_trunk_counterpitch_degrees",
+    "neck_counterpitch_degrees",
+    "tail_counterpitch_degrees",
+])
+def test_sagittal_carrier_requires_every_amplitude(field):
+    with pytest.raises(ContractError, match="requires all pitch amplitudes"):
+        _sagittal_performance(**{field: None})
+
+
+@pytest.mark.parametrize(("field", "value"), [
+    ("pelvis_support_pitch_degrees", 3.1),
+    ("upper_trunk_counterpitch_degrees", -.1),
+    ("neck_counterpitch_degrees", 2.1),
+    ("tail_counterpitch_degrees", 4.1),
+    ("tail_counterpitch_degrees", True),
+    ("tail_counterpitch_degrees", float("nan")),
+])
+def test_sagittal_carrier_rejects_invalid_amplitudes(field, value):
+    with pytest.raises(ContractError):
+        _sagittal_performance(**{field: value})
+
+
+def test_sagittal_amplitudes_require_opt_in_carrier():
+    for carrier in (None, False):
+        with pytest.raises(ContractError, match="require the support-timed"):
+            _sagittal_performance(support_timed_sagittal_carrier=carrier)
+
+
+def test_sagittal_carrier_is_grounded_only():
+    airborne = build_airborne_plan(AirborneGait(cycles=1, sample_hz=24), 2.)
+    with pytest.raises(ContractError, match="requires grounded locomotion"):
+        decorate_plan(airborne, _sagittal_performance())
+
+
+def test_sagittal_pulse_uses_declared_support_clock_and_closes_c2():
+    gait = GroundedGait(step_period_s=1.23, duty_factor=.62)
+    plan = build_grounded_plan(gait, 2.)
+    step = gait.step_period_s
+    for cycle in (0, 1):
+        stance = (cycle + gait.duty_factor) * step
+        double = (cycle + gait.duty_factor - .5) * step
+        assert _support_timed_sagittal_pulse(plan, stance, 1.) == pytest.approx(-1)
+        assert _support_timed_sagittal_pulse(plan, double, 1.) == pytest.approx(1)
+        assert _support_timed_sagittal_pulse(
+            plan, stance - .25 * step, 1.) == pytest.approx(0, abs=1e-14)
+        assert _support_timed_sagittal_pulse(plan, stance + .25 * step, 1.) == pytest.approx(0, abs=1e-14)
+    cycle = 2 * step
+    h = 1e-4
+    for t in (.317, .941):
+        values = []
+        for offset in (-h, 0, h):
+            values.append(_support_timed_sagittal_pulse(plan, t + offset, .7))
+        repeated = [
+            _support_timed_sagittal_pulse(plan, t + cycle + offset, .7)
+            for offset in (-h, 0, h)
+        ]
+        assert repeated == pytest.approx(values, abs=1e-12)
+        first = (values[2] - values[0]) / (2 * h)
+        repeated_first = (repeated[2] - repeated[0]) / (2 * h)
+        second = (values[2] - 2 * values[1] + values[0]) / h**2
+        repeated_second = (
+            repeated[2] - 2 * repeated[1] + repeated[0]) / h**2
+        assert repeated_first == pytest.approx(first, abs=1e-9)
+        assert repeated_second == pytest.approx(second, abs=5e-7)
+
+
+def _actual_source_and_roles():
+    root = Path(__file__).resolve().parents[1]
+    source = Glb.from_bytes((root / "assets/sha256/044a8be907eb650fa71c613f19655eb10a0dd23c1d6bce86dfef93cd8d9575f6.glb").read_bytes())
+    roles = json.loads((root / "catalog/rigs/heavy-biped.v9.json").read_text())["roles"]
+    return source, roles
+
+
+def _signed_world_rotation_delta(base, posed, node, axis):
+    base_rotation = rotation_matrix(_rotation_from_matrix(base[node]))
+    posed_rotation = rotation_matrix(_rotation_from_matrix(posed[node]))
+    delta = posed_rotation @ base_rotation.T
+    angle = math.acos(float(np.clip((np.trace(delta) - 1) / 2, -1, 1)))
+    if angle < 1e-12:
+        return 0.
+    rotation_axis = np.array([
+        delta[2, 1] - delta[1, 2],
+        delta[0, 2] - delta[2, 0],
+        delta[1, 0] - delta[0, 1],
+    ]) / (2 * math.sin(angle))
+    return math.degrees(angle) * float(rotation_axis @ axis)
+
+
+@pytest.mark.parametrize(("offset_cycles", "pulse"), [(-.5, 1.), (0, -1.)])
+def test_sagittal_carrier_has_signed_distributed_actual_rig_response(
+        offset_cycles, pulse):
+    source, roles = _actual_source_and_roles()
+    up = np.array([0., 1., 0.])
+    forward = np.array([.03893162055641767, 0., .9992418770852486])
+    lateral = np.cross(up, forward)
+    gait = GroundedGait(step_period_s=1.23, duty_factor=.62)
+    plan = decorate_plan(build_grounded_plan(gait, 2.), _sagittal_performance())
+    time_s = (gait.duty_factor + offset_cycles) * gait.step_period_s
+    row = sample_grounded_gait(gait, time_s, 2.)
+    base, posed = _performance_pose(source, roles, plan, row, up, forward)
+    pelvis = source.name_to_node[roles["pelvis"]]
+    pelvis_rotation = rotation_matrix(_rotation_from_matrix(posed[pelvis]))
+    base_rotation = rotation_matrix(_rotation_from_matrix(base[pelvis]))
+    delta = pelvis_rotation @ base_rotation.T
+    assert (delta @ up - up) @ forward * pulse > 0
+    assert (delta @ forward - forward) @ up * pulse < 0
+
+    trunk = [roles["pelvis"], *roles["spine"], roles["chest"]]
+    trunk_expected = [1.2 * pulse]
+    trunk_weights = np.linspace(.6, 1.4, len(trunk) - 1)
+    trunk_weights /= trunk_weights.sum()
+    for weight in trunk_weights:
+        trunk_expected.append(trunk_expected[-1] - .75 * pulse * weight)
+    trunk_actual = [
+        _signed_world_rotation_delta(
+            base, posed, source.name_to_node[name], lateral)
+        for name in trunk
+    ]
+    assert trunk_actual == pytest.approx(trunk_expected, abs=2e-5)
+
+    neck_weights = np.linspace(.6, 1.4, len(roles["neck"]))
+    neck_weights /= neck_weights.sum()
+    neck_expected = []
+    value = trunk_expected[-1]
+    for weight in neck_weights:
+        value -= .45 * pulse * weight
+        neck_expected.append(value)
+    neck_actual = [
+        _signed_world_rotation_delta(
+            base, posed, source.name_to_node[name], lateral)
+        for name in roles["neck"]
+    ]
+    assert neck_actual == pytest.approx(neck_expected, abs=2e-5)
+
+    tail_weights = np.linspace(.6, 1.4, len(roles["tail"]))
+    tail_weights /= tail_weights.sum()
+    tail_expected = []
+    value = 1.2 * pulse
+    for weight in tail_weights:
+        value -= 1.5 * pulse * weight
+        tail_expected.append(value)
+    tail_actual = [
+        _signed_world_rotation_delta(
+            base, posed, source.name_to_node[name], lateral)
+        for name in roles["tail"]
+    ]
+    assert tail_actual == pytest.approx(tail_expected, abs=2e-5)
+    head = source.name_to_node[roles["head"]]
+    assert _signed_world_rotation_delta(base, posed, head, lateral) == pytest.approx(0, abs=2e-5)
+
+
+def test_sagittal_carrier_is_present_in_serialized_actual_rig_motion():
+    source, roles = _actual_source_and_roles()
+    up = np.array([0., 1., 0.])
+    forward = np.array([.03893162055641767, 0., .9992418770852486])
+    lateral = np.cross(up, forward)
+    height = geometry_height(source, roles, up)
+    gait = GroundedGait(
+        step_period_s=1.23,
+        duty_factor=.62,
+        cycles=1,
+        sample_hz=24,
+        step_length_body_heights=.1,
+        touchdown_reach_body_heights=.05,
+        swing_clearance_body_heights=.08,
+    )
+    plan = decorate_plan(
+        build_grounded_plan(gait, height),
+        _sagittal_performance(skin_refinement=False),
+    )
+    raw, _, _, _ = solve_airborne_gait(
+        source,
+        source_clip=None,
+        semantic_roles=roles,
+        gait=AirborneGait(
+            step_period_s=gait.step_period_s,
+            cycles=1,
+            sample_hz=gait.sample_hz,
+        ),
+        up_axis=tuple(up),
+        forward_axis=tuple(forward),
+        plan_override=plan,
+        legacy_overlay=False,
+    )
+    emitted = Glb.from_bytes(raw)
+    tracks, times = _clip_state(
+        emitted, emitted.document["animations"][0]["name"])
+    index = int(np.argmin(np.abs(
+        np.asarray(times) - gait.duty_factor * gait.step_period_s)))
+    translations, rotations, scales = _pose(emitted, tracks, index)
+    posed = _world_matrices(emitted, translations, rotations, scales)
+    base = _world_matrices(
+        source, source.rest_translation, source.rest_rotation, source.rest_scale)
+    pulse = _support_timed_sagittal_pulse(
+        plan, float(times[index]), 1.)
+
+    nodes = {
+        "pelvis": source.name_to_node[roles["pelvis"]],
+        "chest": source.name_to_node[roles["chest"]],
+        "neck": source.name_to_node[roles["neck"][-1]],
+        "head": source.name_to_node[roles["head"]],
+        "tail": source.name_to_node[roles["tail"][-1]],
+    }
+    angles = {
+        label: _signed_world_rotation_delta(base, posed, node, lateral)
+        for label, node in nodes.items()
+    }
+    assert angles["pelvis"] == pytest.approx(1.2 * pulse, abs=2e-4)
+    assert angles["chest"] == pytest.approx(.45 * pulse, abs=2e-4)
+    assert angles["neck"] == pytest.approx(0, abs=2e-4)
+    assert angles["head"] == pytest.approx(0, abs=2e-4)
+    assert angles["tail"] == pytest.approx(-.3 * pulse, abs=2e-4)
+
+
+@pytest.mark.parametrize("role, value", [
+    ("neck", None),
+    ("neck", []),
+    ("tail", None),
+    ("tail", []),
+])
+def test_sagittal_carrier_rejects_malformed_or_empty_body_chains(role, value):
+    source, roles = _actual_source_and_roles()
+    roles[role] = value
+    gait = GroundedGait()
+    plan = decorate_plan(build_grounded_plan(gait, 2.), _sagittal_performance())
+    row = sample_grounded_gait(gait, gait.duty_factor * gait.step_period_s, 2.)
+    with pytest.raises(ContractError):
+        _performance_pose(
+            source, roles, plan, row,
+            np.array([0., 1., 0.]), np.array([0., 0., 1.]))
+
+
+def test_sagittal_carrier_rejects_leg_as_neck_and_disconnected_tail():
+    source, roles = _actual_source_and_roles()
+    gait = GroundedGait()
+    plan = decorate_plan(build_grounded_plan(gait, 2.), _sagittal_performance())
+    row = sample_grounded_gait(gait, gait.duty_factor * gait.step_period_s, 2.)
+    roles["neck"] = list(roles["legs"]["left"]["contactChain"])
+    with pytest.raises(ContractError, match="disjoint from other semantic roles"):
+        _performance_pose(
+            source, roles, plan, row,
+            np.array([0., 1., 0.]), np.array([0., 0., 1.]))
+    source, roles = _actual_source_and_roles()
+    roles["tail"][0], roles["tail"][1] = roles["tail"][1], roles["tail"][0]
+    with pytest.raises(ContractError, match="must follow actual topology"):
+        _performance_pose(
+            source, roles, plan, row,
+            np.array([0., 1., 0.]), np.array([0., 0., 1.]))
+
+
+def test_direct_airborne_override_cannot_forge_sagittal_carrier_identity():
+    source, roles = _actual_source_and_roles()
+    plan = build_airborne_plan(AirborneGait(cycles=1, sample_hz=24), 2.)
+    plan["performance"] = {
+        key: value for key, value in _sagittal_performance().__dict__.items()
+        if value is not None
+    }
+    with pytest.raises(ContractError, match="requires grounded locomotion"):
+        _performance_pose(
+            source, roles, plan, plan["samples"][0],
+            np.array([0., 1., 0.]), np.array([0., 0., 1.]))
+
+
+@pytest.mark.parametrize("kind", ["start", "stop"])
+def test_sagittal_carrier_matches_grounded_transition_interface(kind):
+    source, roles = _actual_source_and_roles()
+    up = np.array([0., 1., 0.])
+    forward = np.array([.03893162055641767, 0., .9992418770852486])
+    gait = GroundedGait(cycles=1, sample_hz=120)
+    performance = _sagittal_performance()
+    steady = decorate_plan(build_grounded_plan(gait, 2.), performance)
+    transition = decorate_plan(
+        build_transition_plan(GaitTransition(kind), gait, 2.), performance)
+    transition_row = transition["samples"][-1 if kind == "start" else 0]
+    steady_row = steady["samples"][0]
+    assert transition_row["locomotion_time_s"] == pytest.approx(0)
+    assert transition_row["performance_gain"] == pytest.approx(1)
+    _, transition_pose = _performance_pose(
+        source, roles, transition, transition_row, up, forward)
+    _, steady_pose = _performance_pose(
+        source, roles, steady, steady_row, up, forward)
+    body_names = [
+        roles["pelvis"], *roles["spine"], roles["chest"],
+        *roles["neck"], roles["head"], *roles["tail"],
+    ]
+    for name in body_names:
+        node = source.name_to_node[name]
+        assert np.asarray(transition_pose[node]) == pytest.approx(
+            np.asarray(steady_pose[node]), abs=1e-12)
 
 
 def patch(time,x,y=0):
