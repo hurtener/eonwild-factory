@@ -94,6 +94,7 @@ def _accessor_index(
     used_end_in_view = accessor_offset + (count - 1) * stride + element_size
     view_end = view_offset + view_length
     if (accessor_offset % component_size != 0
+            or (accessor_type != "MAT4" and accessor_offset % 4 != 0)
             or absolute_start % component_size != 0
             or used_end_in_view > view_length
             or view_end > declared_buffer_length

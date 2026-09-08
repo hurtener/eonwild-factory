@@ -199,6 +199,7 @@ def test_recovery_rejects_accessors_outside_declared_storage(case):
             "attributes"]["JOINTS_0"]
         joint_view = document["accessors"][joint_accessor]["bufferView"]
         document["bufferViews"][joint_view]["byteOffset"] -= 1
+        document["bufferViews"][joint_view]["byteLength"] += 1
         document["accessors"][joint_accessor]["byteOffset"] = 1
     elif case == "excess_bin_padding":
         source = Glb.from_bytes(_encode(document, source.binary + b"\x00" * 4))
