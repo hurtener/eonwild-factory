@@ -82,29 +82,25 @@ visual approval and Unity validation.
 
 ## Current evidence and unfinished work
 
-The host generated all four transition trios at exact local source
-`7920c59dd354027b8784483bb208fd0e6229cd91`. All 12 individual start, steady and
-stop packages passed integrity and technical verification. Walk v3,
-reverse-walk v4 and run v4 pass start and stop joins in root-motion and in-place
-modes. Sprint v4 remains `BLOCKED`: its start world-velocity mismatch is
-`0.001412795 m/s` in root motion and `0.001493701 m/s` in place; its stop values
-are `0.001202134 m/s` and `0.001199715 m/s`. The unchanged limit is
-`0.001 m/s`. See the
-[exact-source pair report](../reports/V9-NATIVE-CLOCK-PAIR-STATUS-001/README.md)
-for report, handoff, package and engine-lock hashes.
+The 7920 source-bound pair report remains historical evidence for the former
+three-sample quadratic estimator. Under that estimator, walk v3, reverse-walk
+v4 and run v4 passed both joins in both movement modes, while sprint v4 was
+blocked. Those values do not establish the endpoint derivatives of the emitted
+LINEAR/SLERP channels. See the
+[native-clock pair report](../reports/V9-NATIVE-CLOCK-PAIR-STATUS-001/README.md)
+and the superseding
+[exact emitted-tangent report](../reports/V9-EXACT-EMITTED-TANGENT-001/README.md).
 
-The pair source passed 136 focused articulation and handoff tests. A subsequent
-complete local suite at exact checkout
-`d6716a15f815480cee525381613dff526f9a844b`, with engine bytes identical to the
-pair source, passed 647 tests plus 21 subtests in 321.11 seconds using the real
-pinned tools. See the
-[source-bound full-suite report](../reports/V9-FULL-SUITE-D6716A1-001/README.md).
-Remote CI has not run for this source. Native media review remains `PENDING`,
-Unity validation remains `NOT_RUN`, and production approval remains false. The
-adult recovery correction has not been visually accepted, and these mechanical
-results do not validate anatomy or biology. The older remote baseline in
-[MOTION_QUALITY_STATUS.md](MOTION_QUALITY_STATUS.md) remains labeled as an
-earlier result.
+At current source `83aa5e5391848493c902af0c6bd4ecab6228afe6`, exact emitted
+evaluation keeps the generic direct joins and local steady loops `BLOCKED` at
+their recorded velocity witnesses; the retained adult V9 loop is likewise
+`BLOCKED` at `3.23101227406632 mm/s` against the unchanged `1 mm/s` limit.
+The current local real-tool suite and hosted macOS arm64 CI each passed 928
+tests plus 21 subtests. These code/contract results do not override failed
+motion gates or grant visual, biological, Unity or production approval. The
+[current continuity record](../reports/V9-CURRENT-CONTINUITY-83AA5E5-001/README.md)
+pins the CI receipt and the bounded source-interface measurements supporting a
+future source-derived tangent experiment.
 
 Fast-walk v2 was already integrated at the recovered branch head. Reopened
 metadata verification of its actual CI package passes. The preview clock now
