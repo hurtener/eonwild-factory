@@ -13,7 +13,7 @@ from eonwild_motion.planning.gait_transition import (
     build_transition_plan,
     load_gait_transition,
 )
-from eonwild_motion.planning.grounded_gait import build_grounded_plan
+from eonwild_motion.planning.grounded_gait import build_grounded_plan, sample_grounded_gait
 from eonwild_motion.solve.constant_skin_targets import (
     CanonicalConstantSkinTargetLaw,
     ConstantSkinTargetUnavailable,
@@ -21,6 +21,9 @@ from eonwild_motion.solve.constant_skin_targets import (
 from eonwild_motion.solve.airborne_gait import _world_matrices
 from eonwild_motion.solve.performance import Performance, decorate_plan
 from eonwild_motion.solve.skin_rig import SkinRig
+from eonwild_motion.solve.grounded_transition_clearance import (
+    GroundedTransitionClearanceResolver,
+)
 from eonwild_motion.solve.source_motion_query import (
     SourceMotionQuery,
     SourceMotionUnavailable,
@@ -71,6 +74,86 @@ def _build(inputs):
     query = values.pop("query")
     provider = values.pop("provider")
     return CanonicalConstantSkinTargetLaw.build(query, provider, **values)
+
+
+def test_transition_clearance_resolver_is_bound_and_returns_detached_rows():
+    inputs = _inputs()
+    transition = load_gait_transition(
+        json.loads((ROOT / "catalog/programs/heavy-biped.start.v2.json").read_text())
+    )
+    performance = Performance(canonical_support_anchors=True)
+    plan = decorate_plan(
+        build_transition_plan(
+            transition,
+            inputs["locomotion_gait"],
+            float(inputs["plan"]["body_height_m"]),
+        ),
+        performance,
+    )
+    provider = _provider(
+        inputs["source"],
+        inputs["semantic_roles"],
+        inputs["contact_profile"],
+        inputs["locomotion_gait"],
+        inputs["solver_gait"],
+        plan,
+        inputs["forward_axis"],
+        transition,
+    )
+    kwargs = dict(
+        source=inputs["source"],
+        semantic_roles=inputs["semantic_roles"],
+        solver_gait=inputs["solver_gait"],
+        locomotion_gait=inputs["locomotion_gait"],
+        transition=transition,
+        plan=plan,
+        contact_profile=inputs["contact_profile"],
+        up_axis=inputs["up_axis"],
+        forward_axis=inputs["forward_axis"],
+    )
+    raw_query = SourceMotionQuery(**kwargs)
+    raw_law = CanonicalConstantSkinTargetLaw.build(
+        raw_query, provider, articulation_profile=None, **kwargs
+    )
+    resolver = GroundedTransitionClearanceResolver.build(
+        raw_law, inputs["locomotion_gait"]
+    )
+    query = SourceMotionQuery(**kwargs, transition_clearance=resolver)
+    for candidate in plan["samples"]:
+        time_s = float(candidate["time_s"])
+        steady_row = sample_grounded_gait(
+            inputs["locomotion_gait"],
+            float(candidate.get("locomotion_time_s", time_s)),
+            float(plan["body_height_m"]),
+        )
+        if any(
+            not candidate["feet"][side]["contact"]
+            and 1e-12 < candidate["feet"][side]["height_m"]
+            < steady_row["feet"][side]["height_m"] - 1e-12
+            for side in ("left", "right")
+        ):
+            break
+    row = query._sample_row(time_s)
+    cached_solves = resolver.solve_count
+    again = query._sample_row(time_s)
+    row["feet"]["left"]["height_m"] = 999
+    assert again["feet"]["left"]["height_m"] != 999
+    assert cached_solves > 0
+    assert resolver.solve_count == cached_solves
+    offgrid = 0.5 * (time_s + float(plan["samples"][plan["samples"].index(candidate) + 1]["time_s"]))
+    assert query.evaluate(offgrid).status == "AVAILABLE"
+    endpoint = query.evaluate(float(plan["duration_s"]))
+    assert endpoint.status == "AVAILABLE"
+    assert endpoint.row["feet"] == plan["samples"][-1]["feet"]
+
+    mismatched = deepcopy(plan)
+    mismatched["performance"]["pelvis_yaw_degrees"] = 3.0
+    with pytest.raises(
+        ContractError, match="resolver differs|validated request|consuming request"
+    ):
+        SourceMotionQuery(
+            **dict(kwargs, plan=mismatched), transition_clearance=resolver
+        )
 
 
 @pytest.fixture(scope="module")

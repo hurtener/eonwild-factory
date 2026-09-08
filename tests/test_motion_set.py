@@ -70,6 +70,7 @@ def _documents(root):
             "schema": "eonwild.motion.solve-policy.v1",
             "representation": "CUBICSPLINE",
             "canonical_support_anchors": True,
+            "grounded_transition_clearance": "material_floor_scaled_excess.v1",
             "skin_target_law": "canonical_constant_skin_targets.v1",
             "skin_refinement": True,
         },

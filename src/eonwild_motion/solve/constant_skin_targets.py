@@ -149,6 +149,11 @@ class CanonicalConstantSkinTargetLaw:
                 "material_vertex_indices": material_ids,
                 "source_clip": query._source_clip,
                 "legacy_overlay": query._legacy_overlay,
+                "transition_clearance": (
+                    None
+                    if query._transition_clearance is None
+                    else query._transition_clearance.binding()
+                ),
             }
         )
 

@@ -1,7 +1,7 @@
 {
   "baseline": {
     "path": "catalog/motion-baselines/tarbosaurus-pin-552-1-adult-grounded.v1.json",
-    "sha256": "0c92fc7c3a42ad28d4712a7bb33b4e8d0c27f4715547e05a4d268a0d844d429a"
+    "sha256": "5ec2867b9523c601db0d695c0e61dd1cbd4848b0d3859fb6873a4989a9f5bcae"
   },
   "id": "tarbosaurus-pin-552-1-adult-grounded-motion-set.v1",
   "motions": [

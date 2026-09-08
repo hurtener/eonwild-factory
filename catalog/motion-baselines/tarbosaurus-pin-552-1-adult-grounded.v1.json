@@ -43,6 +43,7 @@
   "schema": "eonwild.motion.motion-baseline.v1",
   "solve_policy": {
     "canonical_support_anchors": true,
+    "grounded_transition_clearance": "material_floor_scaled_excess.v1",
     "representation": "CUBICSPLINE",
     "schema": "eonwild.motion.solve-policy.v1",
     "skin_refinement": true,

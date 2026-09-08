@@ -41,6 +41,11 @@ from ..solve.skin_targets import solve_with_skin_targets, evaluate_skin
 from ..solve.support_anchors import CanonicalSupportAnchorProvider
 from ..solve.constant_skin_targets import CanonicalConstantSkinTargetLaw
 from ..solve.source_motion_query import SourceMotionQuery, _thaw
+from ..solve.grounded_transition_clearance import (
+    GroundedTransitionClearanceResolver,
+    POLICY as GROUNDED_TRANSITION_CLEARANCE_POLICY,
+    TARGET_GAP_M as GROUNDED_TRANSITION_TARGET_GAP_M,
+)
 from ..planning.supported_action import load_supported_action
 from ..planning.gait_transition import load_gait_transition, build_transition_plan
 from ..planning.articulation_profile import load_articulation_profile
@@ -425,6 +430,44 @@ def compile_recipe(
             forward_axis=tuple(forward),
             articulation_profile=articulation_profile,
         )
+        transition_clearance = None
+        if transition is not None and (
+            _motion_set_resolution is not None
+            and _motion_set_resolution.solve_policy.get("grounded_transition_clearance")
+            == GROUNDED_TRANSITION_CLEARANCE_POLICY
+        ):
+            transition_clearance = GroundedTransitionClearanceResolver.build(
+                law, locomotion_gait
+            )
+            query = SourceMotionQuery(
+                source,
+                semantic_roles=roles,
+                solver_gait=gait,
+                locomotion_gait=locomotion_gait,
+                transition=transition,
+                plan=plan,
+                contact_profile=contact_profile,
+                up_axis=tuple(up),
+                forward_axis=tuple(forward),
+                source_clip=None,
+                legacy_overlay=False,
+                articulation_profile=articulation_profile,
+                transition_clearance=transition_clearance,
+            )
+            law = CanonicalConstantSkinTargetLaw.build(
+                query,
+                support_anchor_provider,
+                source=source,
+                semantic_roles=roles,
+                solver_gait=gait,
+                locomotion_gait=locomotion_gait,
+                transition=transition,
+                plan=plan,
+                contact_profile=contact_profile,
+                up_axis=tuple(up),
+                forward_axis=tuple(forward),
+                articulation_profile=articulation_profile,
+            )
         emission = emit_source_cubics(
             source, law, plan, root_node=source.name_to_node[roles["root"]]
         )
@@ -450,6 +493,16 @@ def compile_recipe(
             "status": "AVAILABLE_AT_ALL_KEYS_STENCILS_AND_MIDPOINTS",
             "classification": "pointwise checked values; derivative and global-C1 authority unavailable",
         }
+        if transition_clearance is not None:
+            receipt["grounded_transition_clearance"] = {
+                "policy": GROUNDED_TRANSITION_CLEARANCE_POLICY,
+                "target_gap_m": GROUNDED_TRANSITION_TARGET_GAP_M,
+                "geometry_pose_solve_count": transition_clearance.solve_count,
+                "classification": (
+                    "pointwise geometry-derived material floor; sampled monotonicity "
+                    "checks do not claim global branch authority"
+                ),
+            }
         root_raw, inplace_raw = emission.root_motion, emission.in_place
     elif plan.get("performance", {}).get("skin_refinement", False):
         if "contact_profile" not in snapshots:

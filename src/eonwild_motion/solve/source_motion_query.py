@@ -47,11 +47,14 @@ from .airborne_gait import (
 )
 from .performance import phase_and_gain
 from .skin_rig import SkinRig
+from .grounded_transition_clearance import GroundedTransitionClearanceResolver
+from .grounded_transition_clearance import GroundedTransitionClearanceUnavailable
 
 
 CONTINUOUS_SKIN_TARGET_UNAVAILABLE = "CONTINUOUS_SKIN_TARGET_UNAVAILABLE"
 BRANCH_OR_CONVERGENCE_UNAVAILABLE = "BRANCH_OR_CONVERGENCE_UNAVAILABLE"
 RAW_NUMERICAL_PROBE_ONLY = "RAW_NUMERICAL_PROBE_ONLY"
+TRANSITION_CLEARANCE_UNAVAILABLE = "TRANSITION_CLEARANCE_UNAVAILABLE"
 
 
 def _readonly(value: np.ndarray) -> np.ndarray:
@@ -185,6 +188,7 @@ class SourceMotionQuery:
         legacy_overlay: bool = False,
         articulation_profile: Any = None,
         contact_profile: Mapping[str, Any] | None = None,
+        transition_clearance: GroundedTransitionClearanceResolver | None = None,
     ) -> None:
         if not isinstance(solver_gait, AirborneGait):
             raise ContractError(
@@ -207,6 +211,29 @@ class SourceMotionQuery:
             raise ContractError("source motion query transition must be validated")
         if type(legacy_overlay) is not bool:
             raise ContractError("source motion query legacy_overlay must be boolean")
+        if transition_clearance is not None and (
+            type(transition_clearance) is not GroundedTransitionClearanceResolver
+            or transition is None
+            or not isinstance(locomotion_gait, GroundedGait)
+        ):
+            raise ContractError(
+                "source motion query transition clearance requires its owned grounded transition resolver"
+            )
+        if transition_clearance is not None:
+            transition_clearance.validate_for_query(
+                source,
+                semantic_roles=semantic_roles,
+                solver_gait=solver_gait,
+                locomotion_gait=locomotion_gait,
+                transition=transition,
+                plan=plan,
+                contact_profile=contact_profile,
+                up_axis=up_axis,
+                forward_axis=forward_axis,
+                articulation_profile=articulation_profile,
+                source_clip=source_clip,
+                legacy_overlay=legacy_overlay,
+            )
         self._validate_plan_input(plan)
         if contact_profile is not None:
             self._validate_contact_profile(contact_profile, source)
@@ -220,6 +247,7 @@ class SourceMotionQuery:
         self._forward_axis = None if forward_axis is None else tuple(forward_axis)
         self._source_clip = source_clip
         self._legacy_overlay = legacy_overlay
+        self._transition_clearance = transition_clearance
         # Retain the complete owned request, rather than only the derived
         # SkinRig. Downstream source-owned diagnostics can therefore prove
         # that this actual query is the request they admitted.
@@ -370,7 +398,7 @@ class SourceMotionQuery:
             foot.pop("target_offset_m", None)
         return result
 
-    def _sample_row(self, time_s: float) -> dict[str, Any]:
+    def _sample_row(self, time_s: float, *, apply_clearance: bool = True) -> dict[str, Any]:
         if self._choreography is not None:
             row = self._choreography.sample(time_s)
         elif isinstance(self._locomotion_gait, GroundedGait):
@@ -384,6 +412,8 @@ class SourceMotionQuery:
         row = deepcopy(row)
         if "performance" in self._plan:
             declare_pad_recovery_sample(_thaw(self._plan["parameters"]), row)
+        if apply_clearance and self._transition_clearance is not None:
+            row = self._transition_clearance.resolve(row)
         return row
 
     def _validate_source_binding(self) -> None:
@@ -474,7 +504,7 @@ class SourceMotionQuery:
                 "source motion query retained plan extent differs from source clock"
             )
         for index, row in enumerate(plan["samples"]):
-            expected = self._sample_row(float(row["time_s"]))
+            expected = self._sample_row(float(row["time_s"]), apply_clearance=False)
             self._require_same(
                 self._without_refinements(row), expected, f"sample[{index}]"
             )
@@ -783,11 +813,18 @@ class SourceMotionQuery:
         sampled_time = self._limit_time(time, side)
         if side != "value":
             index = None
-        row = (
-            _thaw(self._plan["samples"][index])
-            if index is not None
-            else self._sample_row(sampled_time)
-        )
+        try:
+            row = (
+                _thaw(self._plan["samples"][index])
+                if index is not None
+                else self._sample_row(sampled_time)
+            )
+            if index is not None and self._transition_clearance is not None:
+                row = self._transition_clearance.resolve(row)
+        except GroundedTransitionClearanceUnavailable as exc:
+            return SourceMotionUnavailable(
+                TRANSITION_CLEARANCE_UNAVAILABLE, sampled_time, str(exc)
+            )
         if target_offsets is not None:
             for foot_side in ("left", "right"):
                 row["feet"][foot_side]["target_offset_m"] = list(

@@ -120,12 +120,15 @@ def _validate_baseline(value: Any) -> Mapping[str, Any]:
         or set(solve) != {
             "schema", "representation", "canonical_support_anchors",
             "skin_target_law", "skin_refinement",
+            "grounded_transition_clearance",
         }
         or solve.get("schema") != "eonwild.motion.solve-policy.v1"
         or solve.get("representation") != "CUBICSPLINE"
         or solve.get("canonical_support_anchors") is not True
         or solve.get("skin_target_law") != "canonical_constant_skin_targets.v1"
         or solve.get("skin_refinement") is not True
+        or solve.get("grounded_transition_clearance")
+        != "material_floor_scaled_excess.v1"
     ):
         raise ContractError("motion baseline requires the supported explicit solve policy")
     return result
