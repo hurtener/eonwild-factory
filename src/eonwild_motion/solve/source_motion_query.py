@@ -25,7 +25,11 @@ from ..planning.airborne_gait import (
     sampled_handoff_phase,
 )
 from ..planning.foot_articulation import declare_pad_recovery_sample
-from ..planning.gait_transition import GaitTransition, _Choreography
+from ..planning.gait_transition import (
+    GaitTransition,
+    _Choreography,
+    build_transition_plan,
+)
 from ..planning.grounded_gait import GroundedGait, sample_grounded_gait
 from ..planning.parameters import gait_parameters
 from .airborne_gait import (
@@ -408,13 +412,10 @@ class SourceMotionQuery:
                 "transition parameters",
             )
             contract = plan.get("transition_contract")
-            if (
-                not isinstance(contract, Mapping)
-                or contract.get("kind") != self._transition.kind
-            ):
-                raise ContractError(
-                    "source motion query transition contract differs from bound transition"
-                )
+            expected_contract = build_transition_plan(
+                self._transition, self._locomotion_gait, self._context.body_height
+            )["transition_contract"]
+            self._require_same(contract, expected_contract, "transition contract")
         elif plan.get("program") != expected_program:
             raise ContractError(
                 "source motion query program differs from bound locomotion gait"
@@ -898,11 +899,24 @@ class SourceMotionQuery:
             if direction > 0
             else min(anchor - self._times[0], self._times[-1] - anchor)
         )
-        other = [
-            abs(anchor - boundary)
-            for boundary in self._boundaries
-            if abs(anchor - boundary) > 1e-12
-        ]
+        if direction < 0:
+            other = [
+                anchor - boundary
+                for boundary in self._boundaries
+                if boundary < anchor - 1e-12
+            ]
+        elif direction > 0:
+            other = [
+                boundary - anchor
+                for boundary in self._boundaries
+                if boundary > anchor + 1e-12
+            ]
+        else:
+            other = [
+                abs(anchor - boundary)
+                for boundary in self._boundaries
+                if abs(anchor - boundary) > 1e-12
+            ]
         if other:
             room = min(room, min(other))
         h = min(float(initial_h_s), room / 8)

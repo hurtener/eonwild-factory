@@ -153,9 +153,12 @@ def test_source_binding_rejects_plan_height_gait_row_and_transition_mismatches()
     ]
     transition = GaitTransition("start", sample_hz=24, boundary_sample_hz=48)
     transition_plan = build_transition_plan(transition, gait, FIXTURE_HEIGHT_M)
+    bad_contract = deepcopy(transition_plan)
+    bad_contract["transition_contract"]["root_distance_m"] += 0.1
     cases += [
         dict(plan=transition_plan, locomotion_gait=gait),
         dict(plan=plan, locomotion_gait=gait, transition=transition),
+        dict(plan=bad_contract, locomotion_gait=gait, transition=transition),
     ]
     for kwargs in cases:
         with pytest.raises(ContractError):
@@ -202,6 +205,8 @@ def test_transition_query_uses_canonical_events_not_output_grid_and_preserves_re
     raw = steady.raw_probe(0.352, side="right_limit")
     assert isinstance(raw, SourceMotionRawProbe)
     assert raw.status == RAW_NUMERICAL_PROBE_ONLY
+    assert raw.step_sizes_s[0] > 1e-6
+    assert steady.raw_probe(0.352, side="left_limit").step_sizes_s[0] > 1e-6
     assert set(raw.per_unit_deltas) == {
         "local_translation_mps",
         "local_angular_radps",
