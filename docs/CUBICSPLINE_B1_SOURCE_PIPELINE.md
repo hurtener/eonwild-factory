@@ -12,8 +12,10 @@ their control hulls, and subdivides quaternion controls until it can prove a
 positive raw-norm lower bound. The reported quaternion rate is only the
 conservative inequality `2 * max(|qdot|) / min(|q|)` for that normalized
 polynomial; it does not call the path constant-speed SLERP. Rounding envelopes
-retain the original value/tangent magnitude throughout derived controls and
-subdivision, and fail closed on nonfinite arithmetic or a depth/node budget.
+are propagated with directed binary64 intervals through derived controls and
+subdivision. The global quadratic derivative-control hull avoids rescaling
+rounded controls by each leaf duration. The primitive fails closed on
+nonfinite arithmetic, a divisor that crosses zero, or a depth/node budget.
 
 `factory/compiler.py` builds the contact plan and dispatches either
 `solve_airborne_gait` or `solve_with_skin_targets`. The steady grounded planner

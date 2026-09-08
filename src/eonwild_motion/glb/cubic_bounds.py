@@ -13,14 +13,19 @@ from typing import Sequence
 from ..errors import ContractError
 
 
-_EPSILON = math.ulp(1.0)
-_ROUNDING_FACTOR = 64.0 * _EPSILON
+@dataclass(frozen=True)
+class _Interval:
+    lower: float
+    upper: float
 
 
 def _number(value: float, *, label: str) -> float:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise ContractError(f"{label} must be finite")
-    result = float(value)
+    try:
+        result = float(value)
+    except (OverflowError, ValueError) as error:
+        raise ContractError(f"{label} must be finite") from error
     if not math.isfinite(result):
         raise ContractError(f"{label} must be finite")
     return result
@@ -39,80 +44,140 @@ def _duration(value: float) -> float:
     return duration
 
 
-def _error(*values: float) -> float:
-    scale = max(1.0, *(abs(value) for value in values))
-    error = _ROUNDING_FACTOR * scale + 8.0 * math.ulp(scale)
-    if not math.isfinite(error):
-        raise ContractError("cubic interval bounds overflow")
-    return error
+def _interval(lower: float, upper: float, *, label: str) -> _Interval:
+    if not math.isfinite(lower) or not math.isfinite(upper) or lower > upper:
+        raise ContractError(f"{label} overflow")
+    return _Interval(lower, upper)
 
 
-def _inflate(value: float, *scale: float) -> tuple[float, float]:
-    error = _error(value, *scale)
-    lower = math.nextafter(value - error, -math.inf)
-    upper = math.nextafter(value + error, math.inf)
-    if not math.isfinite(lower) or not math.isfinite(upper):
-        raise ContractError("cubic interval bounds overflow")
-    return lower, upper
+def _singleton(value: float) -> _Interval:
+    return _Interval(value, value)
 
 
-def _source_scale(
+def _directed(value: float, *, upward: bool, label: str) -> float:
+    if not math.isfinite(value):
+        raise ContractError(f"{label} overflow")
+    result = math.nextafter(value, math.inf if upward else -math.inf)
+    if not math.isfinite(result):
+        raise ContractError(f"{label} overflow")
+    return result
+
+
+def _add(left: _Interval, right: _Interval, *, label: str) -> _Interval:
+    return _interval(
+        _directed(left.lower + right.lower, upward=False, label=label),
+        _directed(left.upper + right.upper, upward=True, label=label),
+        label=label,
+    )
+
+
+def _negate(value: _Interval) -> _Interval:
+    return _Interval(-value.upper, -value.lower)
+
+
+def _subtract(left: _Interval, right: _Interval, *, label: str) -> _Interval:
+    return _add(left, _negate(right), label=label)
+
+
+def _multiply(left: _Interval, right: _Interval, *, label: str) -> _Interval:
+    products = (
+        left.lower * right.lower,
+        left.lower * right.upper,
+        left.upper * right.lower,
+        left.upper * right.upper,
+    )
+    return _interval(
+        _directed(min(products), upward=False, label=label),
+        _directed(max(products), upward=True, label=label),
+        label=label,
+    )
+
+
+def _divide(left: _Interval, right: _Interval, *, label: str) -> _Interval:
+    if right.lower <= 0.0 <= right.upper:
+        raise ContractError(f"{label} divisor crosses zero")
+    quotients = (
+        left.lower / right.lower,
+        left.lower / right.upper,
+        left.upper / right.lower,
+        left.upper / right.upper,
+    )
+    return _interval(
+        _directed(min(quotients), upward=False, label=label),
+        _directed(max(quotients), upward=True, label=label),
+        label=label,
+    )
+
+
+def _midpoint(left: _Interval, right: _Interval) -> _Interval:
+    half = _singleton(0.5)
+    return _add(
+        _multiply(left, half, label="cubic quaternion subdivision"),
+        _multiply(right, half, label="cubic quaternion subdivision"),
+        label="cubic quaternion subdivision",
+    )
+
+
+def _controls(
     value0: Sequence[float], tangent0: Sequence[float],
     value1: Sequence[float], tangent1: Sequence[float], duration: float,
-) -> float:
-    scaled_tangents = tuple(duration * tangent for tangent in (*tangent0, *tangent1))
-    if not all(math.isfinite(value) for value in scaled_tangents):
-        raise ContractError("cubic interval tangent scale overflow")
-    return max(1.0, *(abs(value) for value in (*value0, *value1, *scaled_tangents)))
-
-
-def _derivative_scale(source_scale: float, duration: float) -> float:
-    scale = source_scale / duration
-    if not math.isfinite(scale):
-        raise ContractError("cubic interval derivative scale overflow")
-    return scale
-
-
-def _bezier(value0: Sequence[float], tangent0: Sequence[float], value1: Sequence[float], tangent1: Sequence[float], duration: float) -> tuple[tuple[float, ...], ...]:
-    controls = tuple(tuple(values[index] for index in range(len(value0))) for values in (
-        value0,
-        tuple(value0[index] + duration * tangent0[index] / 3.0 for index in range(len(value0))),
-        tuple(value1[index] - duration * tangent1[index] / 3.0 for index in range(len(value0))),
-        value1,
-    ))
-    if not all(math.isfinite(value) for row in controls for value in row):
-        raise ContractError("cubic interval controls overflow")
-    return controls
-
-
-def _derivative_controls(control: Sequence[Sequence[float]], duration: float) -> tuple[tuple[float, ...], ...]:
-    derivatives = tuple(
-        tuple(3.0 * (right[index] - left[index]) / duration for index in range(len(left)))
-        for left, right in zip(control, control[1:])
+) -> tuple[tuple[_Interval, ...], ...]:
+    h = _singleton(duration)
+    third = _singleton(3.0)
+    first = tuple(_singleton(value) for value in value0)
+    second = tuple(_singleton(value) for value in value1)
+    outgoing = tuple(_singleton(value) for value in tangent0)
+    incoming = tuple(_singleton(value) for value in tangent1)
+    return (
+        first,
+        tuple(_add(value, _divide(_multiply(h, tangent, label="cubic control"), third, label="cubic control"), label="cubic control")
+              for value, tangent in zip(first, outgoing)),
+        tuple(_subtract(value, _divide(_multiply(h, tangent, label="cubic control"), third, label="cubic control"), label="cubic control")
+              for value, tangent in zip(second, incoming)),
+        second,
     )
-    if not all(math.isfinite(value) for row in derivatives for value in row):
-        raise ContractError("cubic interval derivative bounds overflow")
-    return derivatives
+
+
+def _derivative_controls(
+    controls: Sequence[Sequence[_Interval]], duration: float,
+) -> tuple[tuple[_Interval, ...], ...]:
+    h = _singleton(duration)
+    three = _singleton(3.0)
+    return tuple(
+        tuple(
+            _divide(
+                _multiply(_subtract(right, left, label="cubic derivative"), three, label="cubic derivative"),
+                h,
+                label="cubic derivative",
+            )
+            for left, right in zip(left_row, right_row)
+        )
+        for left_row, right_row in zip(controls, controls[1:])
+    )
 
 
 def _control_box(
-    control: Sequence[Sequence[float]], *, source_scale: float = 1.0,
+    controls: Sequence[Sequence[_Interval]],
 ) -> tuple[tuple[float, ...], tuple[float, ...]]:
-    lower, upper = [], []
-    for axis in range(len(control[0])):
-        values = [row[axis] for row in control]
-        lo, hi = (_inflate(min(values), *values, source_scale),
-                  _inflate(max(values), *values, source_scale))
-        lower.append(lo[0])
-        upper.append(hi[1])
-    return tuple(lower), tuple(upper)
+    return (
+        tuple(min(row[axis].lower for row in controls) for axis in range(len(controls[0]))),
+        tuple(max(row[axis].upper for row in controls) for axis in range(len(controls[0]))),
+    )
 
 
-def _speed_upper(lower: Sequence[float], upper: Sequence[float]) -> float:
-    speed = math.hypot(*(max(abs(lo), abs(hi)) for lo, hi in zip(lower, upper)))
-    if not math.isfinite(speed):
-        raise ContractError("cubic interval speed bound overflow")
-    return speed
+def _speed_upper(lower: Sequence[float], upper: Sequence[float], *, label: str) -> float:
+    # ``math.hypot`` is accurate to within one ulp; the directed successor
+    # converts that finite nearest result into an enclosing upper endpoint.
+    speed = math.hypot(*(max(abs(low), abs(high)) for low, high in zip(lower, upper)))
+    return _directed(speed, upward=True, label=label)
+
+
+def _display_controls(controls: Sequence[Sequence[_Interval]]) -> tuple[tuple[float, ...], ...]:
+    """Return nominal diagnostic controls; interval endpoints remain authority."""
+    return tuple(
+        tuple(lower.lower * 0.5 + lower.upper * 0.5 for lower in row)
+        for row in controls
+    )
 
 
 @dataclass(frozen=True)
@@ -125,78 +190,82 @@ class CubicVectorBounds:
     bezier_controls: tuple[tuple[float, ...], ...]
 
 
-def cubic_vector_bounds(
+def _vector_data(
     value0: Sequence[float], tangent0: Sequence[float],
     value1: Sequence[float], tangent1: Sequence[float], duration_s: float,
-) -> CubicVectorBounds:
-    """Bound finite Hermite data with 64-epsilon plus ULP outward envelopes."""
+) -> tuple[tuple[tuple[_Interval, ...], ...], tuple[tuple[_Interval, ...], ...], float]:
     width = len(value0) if isinstance(value0, (tuple, list)) else 0
     if width < 1:
         raise ContractError("cubic vector values must be nonempty")
     first = _numbers(value0, width=width, label="cubic first value")
     second = _numbers(value1, width=width, label="cubic second value")
-    incoming = _numbers(tangent0, width=width, label="cubic first tangent")
-    outgoing = _numbers(tangent1, width=width, label="cubic second tangent")
+    outgoing = _numbers(tangent0, width=width, label="cubic first tangent")
+    incoming = _numbers(tangent1, width=width, label="cubic second tangent")
     duration = _duration(duration_s)
-    controls = _bezier(first, incoming, second, outgoing, duration)
-    source_scale = _source_scale(first, incoming, second, outgoing, duration)
-    value_lower, value_upper = _control_box(controls, source_scale=source_scale)
-    derivatives = _derivative_controls(controls, duration)
-    derivative_lower, derivative_upper = _control_box(
-        derivatives, source_scale=_derivative_scale(source_scale, duration),
+    controls = _controls(first, outgoing, second, incoming, duration)
+    return controls, _derivative_controls(controls, duration), duration
+
+
+def cubic_vector_bounds(
+    value0: Sequence[float], tangent0: Sequence[float],
+    value1: Sequence[float], tangent1: Sequence[float], duration_s: float,
+) -> CubicVectorBounds:
+    """Bound finite Hermite data through directed binary64 interval arithmetic."""
+    controls, derivatives, _ = _vector_data(value0, tangent0, value1, tangent1, duration_s)
+    value_lower, value_upper = _control_box(controls)
+    derivative_lower, derivative_upper = _control_box(derivatives)
+    return CubicVectorBounds(
+        value_lower,
+        value_upper,
+        derivative_lower,
+        derivative_upper,
+        _speed_upper(derivative_lower, derivative_upper, label="cubic interval speed bound"),
+        _display_controls(controls),
     )
-    return CubicVectorBounds(value_lower, value_upper, derivative_lower, derivative_upper,
-                             _speed_upper(derivative_lower, derivative_upper), controls)
 
 
-def _split(control: Sequence[Sequence[float]]) -> tuple[tuple[tuple[float, ...], ...], tuple[tuple[float, ...], ...]]:
-    rows = [tuple(tuple(float(value) for value in row) for row in control)]
+def _split(
+    controls: Sequence[Sequence[_Interval]],
+) -> tuple[tuple[tuple[_Interval, ...], ...], tuple[tuple[_Interval, ...], ...]]:
+    rows = [tuple(tuple(value for value in row) for row in controls)]
     while len(rows[-1]) > 1:
         rows.append(tuple(
-            tuple(left[index] * .5 + right[index] * .5 for index in range(len(left)))
-            for left, right in zip(rows[-1], rows[-1][1:])
+            tuple(_midpoint(left, right) for left, right in zip(left_row, right_row))
+            for left_row, right_row in zip(rows[-1], rows[-1][1:])
         ))
-        if not all(math.isfinite(value) for row in rows[-1] for value in row):
-            raise ContractError("cubic quaternion subdivision overflow")
     return tuple(row[0] for row in rows), tuple(row[-1] for row in reversed(rows))
 
 
 def _nonzero_leaves(
-    control: Sequence[Sequence[float]], *, minimum_norm: float, depth: int,
-    maximum_depth: int, remaining_nodes: list[int], source_scale: float,
-) -> tuple[float, list[tuple[tuple[tuple[float, ...], ...], int]]]:
+    controls: Sequence[Sequence[_Interval]], *, minimum_norm: float, depth: int,
+    maximum_depth: int, remaining_nodes: list[int],
+) -> tuple[float, list[int]]:
     remaining_nodes[0] -= 1
     if remaining_nodes[0] < 0:
         raise ContractError("cubic quaternion interval exceeds subdivision node budget")
-    lower, upper = _control_box(control, source_scale=source_scale)
-    proven = max((lo for lo in lower if lo > 0), default=0.0)
-    proven = max(proven, max((-hi for hi in upper if hi < 0), default=0.0))
+    lower, upper = _control_box(controls)
+    proven = max((value for value in lower if value > 0.0), default=0.0)
+    proven = max(proven, max((-value for value in upper if value < 0.0), default=0.0))
     if proven >= minimum_norm:
-        return proven, [(tuple(tuple(row) for row in control), depth)]
+        return proven, [depth]
     if depth >= maximum_depth:
         raise ContractError("cubic quaternion interval cannot prove a nonzero raw norm within subdivision budget")
-    left, right = _split(control)
-    left_lower, left_leaves = _nonzero_leaves(
-        left, minimum_norm=minimum_norm, depth=depth + 1,
-        maximum_depth=maximum_depth, remaining_nodes=remaining_nodes,
-        source_scale=source_scale,
+    left, right = _split(controls)
+    left_lower, left_depths = _nonzero_leaves(
+        left,
+        minimum_norm=minimum_norm,
+        depth=depth + 1,
+        maximum_depth=maximum_depth,
+        remaining_nodes=remaining_nodes,
     )
-    right_lower, right_leaves = _nonzero_leaves(
-        right, minimum_norm=minimum_norm, depth=depth + 1,
-        maximum_depth=maximum_depth, remaining_nodes=remaining_nodes,
-        source_scale=source_scale,
+    right_lower, right_depths = _nonzero_leaves(
+        right,
+        minimum_norm=minimum_norm,
+        depth=depth + 1,
+        maximum_depth=maximum_depth,
+        remaining_nodes=remaining_nodes,
     )
-    return min(left_lower, right_lower), left_leaves + right_leaves
-
-
-def _subdivision_derivative_upper(
-    control: Sequence[Sequence[float]], duration: float, depth: int, *, source_scale: float,
-) -> float:
-    derivatives = _derivative_controls(control, duration / (2 ** depth))
-    lower, upper = _control_box(
-        derivatives, source_scale=_derivative_scale(source_scale, duration / (2 ** depth)),
-    )
-    return _speed_upper(lower, upper)
+    return min(left_lower, right_lower), left_depths + right_depths
 
 
 @dataclass(frozen=True)
@@ -229,24 +298,35 @@ def cubic_quaternion_bounds(
         raise ContractError("cubic quaternion subdivision node budget must be an integer in 1..1000000")
     if not isinstance(value0_xyzw, (tuple, list)) or len(value0_xyzw) != 4:
         raise ContractError("cubic quaternion values must contain four xyzw values")
-    bounds = cubic_vector_bounds(value0_xyzw, out_tangent0_xyzw, value1_xyzw, in_tangent1_xyzw, duration_s)
-    controls = bounds.bezier_controls
-    source_scale = _source_scale(
-        _numbers(value0_xyzw, width=4, label="cubic first quaternion"),
-        _numbers(out_tangent0_xyzw, width=4, label="cubic first quaternion tangent"),
-        _numbers(value1_xyzw, width=4, label="cubic second quaternion"),
-        _numbers(in_tangent1_xyzw, width=4, label="cubic second quaternion tangent"),
-        _duration(duration_s),
+    controls, derivatives, _ = _vector_data(
+        value0_xyzw,
+        out_tangent0_xyzw,
+        value1_xyzw,
+        in_tangent1_xyzw,
+        duration_s,
     )
-    raw_lower, leaves = _nonzero_leaves(
-        controls, minimum_norm=minimum_raw_norm, depth=0,
-        maximum_depth=maximum_depth, remaining_nodes=[maximum_nodes], source_scale=source_scale,
+    raw_lower, depths = _nonzero_leaves(
+        controls,
+        minimum_norm=minimum_raw_norm,
+        depth=0,
+        maximum_depth=maximum_depth,
+        remaining_nodes=[maximum_nodes],
     )
-    derivative_upper = max(
-        _subdivision_derivative_upper(control, _duration(duration_s), depth, source_scale=source_scale)
-        for control, depth in leaves
+    derivative_lower, derivative_upper = _control_box(derivatives)
+    derivative_speed = _speed_upper(
+        derivative_lower,
+        derivative_upper,
+        label="cubic quaternion derivative bound",
     )
-    angular_upper = math.nextafter(2.0 * derivative_upper / raw_lower, math.inf)
-    if not math.isfinite(angular_upper):
-        raise ContractError("cubic quaternion angular-speed bound overflow")
-    return CubicQuaternionBounds(raw_lower, angular_upper, max(depth for _, depth in leaves), derivative_upper, controls)
+    angular_upper = _divide(
+        _multiply(_singleton(2.0), _singleton(derivative_speed), label="cubic quaternion angular-speed bound"),
+        _singleton(raw_lower),
+        label="cubic quaternion angular-speed bound",
+    ).upper
+    return CubicQuaternionBounds(
+        raw_lower,
+        angular_upper,
+        max(depths),
+        derivative_speed,
+        _display_controls(controls),
+    )

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from fractions import Fraction
 import math
 
 import pytest
@@ -18,8 +19,25 @@ def _hermite(v0, m0, v1, m1, duration, amount):
 def _derivative(v0, m0, v1, m1, duration, amount):
     t2 = amount * amount
     return tuple(((6*t2 - 6*amount) * a / duration + (3*t2 - 4*amount + 1) * b
-                  + (-6*t2 + 6*amount) * c / duration + (3*t2 - 2*amount) * d)
+                 + (-6*t2 + 6*amount) * c / duration + (3*t2 - 2*amount) * d)
                  for a, b, c, d in zip(v0, m0, v1, m1))
+
+
+def _exact_controls(v0, m0, v1, m1, duration):
+    h = Fraction.from_float(duration)
+    return tuple(
+        (Fraction.from_float(start),
+         Fraction.from_float(start) + h * Fraction.from_float(outgoing) / 3,
+         Fraction.from_float(end) - h * Fraction.from_float(incoming) / 3,
+         Fraction.from_float(end))
+        for start, outgoing, end, incoming in zip(v0, m0, v1, m1)
+    )
+
+
+def _exact_derivatives(controls, duration):
+    h = Fraction.from_float(duration)
+    return tuple(tuple(3 * (right - left) / h for left, right in zip(axis, axis[1:]))
+                 for axis in controls)
 
 
 def test_scalar_hidden_overshoot_and_derivative_hull_are_bounded():
@@ -48,11 +66,25 @@ def test_outward_rounding_envelope_contains_exact_constant_zero():
     assert bound.derivative_lower_per_s[0] < 0. < bound.derivative_upper_per_s[0]
 
 
-def test_rounding_envelope_retains_source_scale_after_control_cancellation():
+def test_directed_intervals_retain_source_scale_after_control_cancellation():
     """A unit tangent is lost in a 1e16 control addition but remains bounded."""
     bound = cubic_vector_bounds((1.e16,), (3.,), (1.e16,), (0.,), 1.)
     assert _derivative((1.e16,), (3.,), (1.e16,), (0.,), 1., 0.) == (3.,)
     assert bound.derivative_lower_per_s[0] <= 3. <= bound.derivative_upper_per_s[0]
+
+
+def test_directed_vector_bounds_contain_exact_rational_controls_and_derivatives():
+    duration = 1 / 120
+    values = ((.1, -.2, .3), (7., -5., 2.), (.4, .6, -.1), (-3., 4., .5))
+    bound = cubic_vector_bounds(*values, duration)
+    controls = _exact_controls(*values, duration)
+    derivatives = _exact_derivatives(controls, duration)
+    for axis, control in enumerate(controls):
+        lower, upper = map(Fraction.from_float, (bound.value_lower[axis], bound.value_upper[axis]))
+        assert all(lower <= value <= upper for value in control)
+    for axis, derivative in enumerate(derivatives):
+        lower, upper = map(Fraction.from_float, (bound.derivative_lower_per_s[axis], bound.derivative_upper_per_s[axis]))
+        assert all(lower <= value <= upper for value in derivative)
 
 
 def test_quaternion_bound_subdivides_and_contains_dense_normalized_rate():
@@ -123,3 +155,21 @@ def test_vector_input_validation_fails_closed(args):
 def test_bound_calculation_overflow_fails_closed():
     with pytest.raises(ContractError, match="overflow"):
         cubic_vector_bounds((1.e308,) * 3, (1.e308,) * 3, (1.e308,) * 3, (1.e308,) * 3, 1.)
+
+
+def test_subnormal_duration_with_unbounded_rate_fails_closed():
+    with pytest.raises(ContractError, match="overflow"):
+        cubic_vector_bounds((1.,), (0.,), (0.,), (0.,), math.ulp(0.))
+
+
+@pytest.mark.parametrize("call", [
+    lambda: cubic_vector_bounds((10 ** 10000,), (0.,), (0.,), (0.,), 1.),
+    lambda: cubic_vector_bounds((0.,), (0.,), (0.,), (0.,), 10 ** 10000),
+    lambda: cubic_quaternion_bounds(
+        (0., 0., 0., 1.), (0., 0., 0., 0.),
+        (0., 0., 0., 1.), (0., 0., 0., 0.), 1., minimum_raw_norm=10 ** 10000,
+    ),
+])
+def test_huge_numbers_fail_as_contract_inputs(call):
+    with pytest.raises(ContractError):
+        call()
