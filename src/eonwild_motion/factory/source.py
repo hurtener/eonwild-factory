@@ -39,8 +39,17 @@ def _accessor_index(
 ) -> int:
     accessors = glb.document.get("accessors")
     views = glb.document.get("bufferViews")
-    if not isinstance(accessors, list) or not isinstance(views, list):
-        raise ContractError("bind-pose recovery requires accessor and buffer-view arrays")
+    buffers = glb.document.get("buffers")
+    if (not isinstance(accessors, list) or not isinstance(views, list)
+            or not isinstance(buffers, list) or len(buffers) != 1
+            or not isinstance(buffers[0], Mapping) or "uri" in buffers[0]):
+        raise ContractError(
+            "bind-pose recovery requires one embedded buffer and accessor arrays")
+    declared_buffer_length = buffers[0].get("byteLength")
+    if (type(declared_buffer_length) is not int
+            or declared_buffer_length <= 0
+            or declared_buffer_length > len(glb.binary)):
+        raise ContractError("bind-pose recovery buffer byteLength is invalid")
     index = _exact_index(value, size=len(accessors), label=label)
     accessor = accessors[index]
     if not isinstance(accessor, Mapping):
@@ -63,12 +72,32 @@ def _accessor_index(
     buffer_index = view.get("buffer", 0)
     if type(buffer_index) is not int or buffer_index != 0:
         raise ContractError(f"{label} bufferView must reference the GLB binary buffer")
-    for owner, key in ((accessor, "byteOffset"), (view, "byteOffset"),
-                       (view, "byteLength"), (view, "byteStride")):
-        if key in owner and (type(owner[key]) is not int or owner[key] < 0):
-            raise ContractError(f"{label} {key} must be a non-negative integer")
-    if "byteLength" not in view or view["byteLength"] <= 0:
+    accessor_offset = accessor.get("byteOffset", 0)
+    view_offset = view.get("byteOffset", 0)
+    view_length = view.get("byteLength")
+    values = ((accessor_offset, "accessor byteOffset"),
+              (view_offset, "bufferView byteOffset"),
+              (view_length, "bufferView byteLength"))
+    if any(type(item) is not int or item < 0 for item, _ in values):
+        raise ContractError(f"{label} accessor offsets and lengths must be non-negative integers")
+    if view_length <= 0:
         raise ContractError(f"{label} bufferView needs a positive byteLength")
+    component_size = {5121: 1, 5123: 2, 5126: 4}[component]
+    element_width = {"VEC3": 3, "VEC4": 4, "MAT4": 16}[accessor_type]
+    element_size = component_size * element_width
+    stride = view.get("byteStride", element_size)
+    if (type(stride) is not int or stride < element_size or stride > 252
+            or stride % component_size != 0):
+        raise ContractError(f"{label} accessor byteStride is invalid")
+    absolute_start = view_offset + accessor_offset
+    used_end_in_view = accessor_offset + (count - 1) * stride + element_size
+    view_end = view_offset + view_length
+    if (absolute_start % component_size != 0
+            or used_end_in_view > view_length
+            or view_end > declared_buffer_length
+            or view_end > len(glb.binary)
+            or absolute_start + (count - 1) * stride + element_size > view_end):
+        raise ContractError(f"{label} accessor span is outside its declared buffer bounds")
     return index
 
 

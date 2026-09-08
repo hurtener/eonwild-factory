@@ -166,6 +166,34 @@ def test_recovery_rejects_nonexact_indices_and_accessor_schemas(case):
         recover(Glb.from_bytes(_encode(document, source.binary)))
 
 
+@pytest.mark.parametrize("case", [
+    "short_inverse_view", "short_position_view", "short_declared_buffer",
+    "short_stride", "misaligned_position", "view_outside_buffer",
+])
+def test_recovery_rejects_accessors_outside_declared_storage(case):
+    source = Glb(SOURCE)
+    document = deepcopy(source.document)
+    inverse_accessor = document["skins"][0]["inverseBindMatrices"]
+    position_accessor = document["meshes"][0]["primitives"][0][
+        "attributes"]["POSITION"]
+    inverse_view = document["accessors"][inverse_accessor]["bufferView"]
+    position_view = document["accessors"][position_accessor]["bufferView"]
+    if case == "short_inverse_view":
+        document["bufferViews"][inverse_view]["byteLength"] = 4
+    elif case == "short_position_view":
+        document["bufferViews"][position_view]["byteLength"] = 4
+    elif case == "short_declared_buffer":
+        document["buffers"][0]["byteLength"] = 4
+    elif case == "short_stride":
+        document["bufferViews"][position_view]["byteStride"] = 4
+    elif case == "misaligned_position":
+        document["accessors"][position_accessor]["byteOffset"] = 1
+    else:
+        document["bufferViews"][position_view]["byteOffset"] = len(source.binary)
+    with pytest.raises(ContractError, match="byteLength|byteStride|bounds"):
+        recover(Glb.from_bytes(_encode(document, source.binary)))
+
+
 @pytest.mark.parametrize("translation", [[0.0, 0.0, 0.0], [0.1, -0.2, 0.05]])
 def test_recovery_propagates_through_non_skin_joint_intermediary(translation):
     source = Glb(SOURCE)
