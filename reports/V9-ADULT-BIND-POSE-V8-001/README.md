@@ -29,7 +29,7 @@ The adult input stays within all strict projection and reopened-reconstruction l
 | Reopened world-matrix element error | `5.27842e-7` | `2e-6` |
 | Reopened weighted-skin position | `1.13533e-6 m` | `3e-6 m` |
 
-The independent source inspection measured all 59,169 vertices, a maximum bilateral semantic-leg landmark residual of `0.445053 µm`, and explicit `+Z` forward evidence from the bilateral X plane and rostral head-tail geometry. Its independent Blender 5.2 import found `3.01989 µm` maximum and `0.698223 µm` RMS same-index skin difference from factory FK/LBS. All four static views were inspected: the skeleton remains inside the body/leg silhouettes with no obvious rupture or inversion. This is static import evidence; walking deformation remains pending.
+The independent source inspection measured all 59,169 vertices, a maximum bilateral semantic-leg landmark residual of `0.445053 µm`, and explicit `+Z` forward evidence from the bilateral X plane and rostral head-tail geometry. Its independent Blender 5.2 import found `3.01989 µm` maximum and `0.698223 µm` RMS same-index skin difference from factory FK/LBS. All four static views were inspected: the skeleton remains inside the body/leg silhouettes with no obvious rupture or inversion. Static evidence alone does not establish walking deformation; the later frame review is recorded below.
 
 The recovered bind jaw is visibly wide open. Its world rotation differs from the historical animation-free snapshot by `51.666°`; the unchanged performance profile adds no jaw delta. This is an explicit visual finding, not a recovery failure. A behavior-owned jaw closure would be a separate calibration and is absent here.
 
