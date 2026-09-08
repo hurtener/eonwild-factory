@@ -8,8 +8,15 @@ import numpy as np
 import pytest
 
 from eonwild_motion.errors import ContractError
+from eonwild_motion.planning.airborne_gait import AirborneGait, build_airborne_plan
+from eonwild_motion.planning.gait_transition import GaitTransition, build_transition_plan
 from eonwild_motion.planning.grounded_gait import GroundedGait, sample_grounded_gait, build_grounded_plan
-from eonwild_motion.solve.performance import Performance, decorate_plan, load_performance
+from eonwild_motion.factory.io import digest, json_bytes
+from eonwild_motion.layers.leg_contact_resolve_v3 import _world_matrices, _world_position
+from eonwild_motion.solve.performance import (
+    Performance, apply_performance, decorate_plan, load_performance,
+)
+from test_v9_airborne_gait import fixture
 from eonwild_motion.solve.skin_targets import cyclic_authority, _cyclic_fill
 from eonwild_motion.dynamics.contact_authority import PatchFrame, AuthorityThresholds
 
@@ -55,6 +62,190 @@ def test_performance_has_no_shared_mutable_plan_state():
     assert json.dumps(plan,sort_keys=True)==before
     assert b['samples'][0]['feet']['left']['forward_m']!=99
     with pytest.raises(ContractError): load_performance({'schema':'eonwild.motion.performance.v1','parameters':{'mystery':3}})
+
+
+def test_opt_in_body_carriers_preserve_legacy_plan_bytes():
+    plan = build_grounded_plan(GroundedGait(), 2.)
+    assert digest(json_bytes(plan)) == "d072715a03d517df64c43553d69311fec94b020b002bce46ce1a0215ca9e066c"
+    assert "pelvis_height_carrier" not in plan["parameters"]
+    decorated = decorate_plan(plan, Performance())
+    assert digest(json_bytes(decorated)) == "cb07b756443ee231d12bec2a5e948a23f8a31ea8048a937966c0ed2e90e4dce3"
+    assert "support_directed_pelvis_carrier" not in decorated["performance"]
+
+
+@pytest.mark.parametrize("value", [True, False, 0, "bounce", float("nan")])
+def test_grounded_rejects_malformed_pelvis_height_carrier(value):
+    with pytest.raises(ContractError):
+        GroundedGait(pelvis_height_carrier=value)
+
+
+@pytest.mark.parametrize("value", [0, 1, "yes", float("nan")])
+def test_performance_rejects_malformed_support_carrier(value):
+    with pytest.raises(ContractError):
+        Performance(support_directed_pelvis_carrier=value)
+
+
+def test_support_carrier_is_grounded_only_even_when_explicitly_false():
+    airborne = build_airborne_plan(AirborneGait(cycles=1, sample_hz=24), 2.)
+    for value in (False, True):
+        with pytest.raises(ContractError, match="requires grounded locomotion"):
+            decorate_plan(
+                airborne,
+                Performance(support_directed_pelvis_carrier=value),
+            )
+
+
+def test_stance_vault_proxy_uses_declared_support_clock_and_analytic_velocity():
+    height = 2.3
+    gait = GroundedGait(
+        step_period_s=1.23,
+        duty_factor=.62,
+        pelvis_crouch_body_heights=.01,
+        pelvis_excursion_body_heights=.016,
+        pelvis_height_carrier="stance_vault_proxy",
+    )
+    amplitude = gait.pelvis_excursion_body_heights * height
+    standing = -gait.pelvis_crouch_body_heights * height
+    for cycle in (0, 1):
+        stance_mid = (cycle + gait.duty_factor) * gait.step_period_s
+        row = sample_grounded_gait(gait, stance_mid, height)
+        assert row["stage"] == "SINGLE_SUPPORT"
+        assert row["pelvis_height_offset_m"] == pytest.approx(standing, abs=1e-14)
+        assert row["pelvis_vertical_velocity_mps"] == pytest.approx(0, abs=1e-14)
+        double_mid = (cycle + gait.duty_factor - .5) * gait.step_period_s
+        row = sample_grounded_gait(gait, double_mid, height)
+        assert row["stage"] == "DOUBLE_SUPPORT"
+        assert row["pelvis_height_offset_m"] == pytest.approx(standing - amplitude, abs=1e-14)
+        assert row["pelvis_vertical_velocity_mps"] == pytest.approx(0, abs=1e-14)
+    cycle = 2 * gait.step_period_s
+    for t in (.317, .941):
+        a = sample_grounded_gait(gait, t, height)
+        b = sample_grounded_gait(gait, t + cycle, height)
+        assert b["pelvis_height_offset_m"] == pytest.approx(a["pelvis_height_offset_m"], abs=1e-14)
+        assert b["pelvis_vertical_velocity_mps"] == pytest.approx(a["pelvis_vertical_velocity_mps"], abs=1e-14)
+    t = .49
+    h = 1e-6
+    before = sample_grounded_gait(gait, t - h, height)["pelvis_height_offset_m"]
+    after = sample_grounded_gait(gait, t + h, height)["pelvis_height_offset_m"]
+    expected = sample_grounded_gait(gait, t, height)["pelvis_vertical_velocity_mps"]
+    assert (after - before) / (2 * h) == pytest.approx(expected, abs=1e-10)
+
+
+def _performance_pose(source, roles, plan, row, up, forward):
+    base_worlds = _world_matrices(
+        source,
+        source.rest_translation,
+        source.rest_rotation,
+        source.rest_scale,
+    )
+    translations = source.rest_translation[:]
+    rotations = source.rest_rotation[:]
+    scales = source.rest_scale[:]
+    apply_performance(
+        source,
+        translations,
+        rotations,
+        scales,
+        base_worlds,
+        roles,
+        plan,
+        row,
+        up,
+        forward,
+    )
+    return base_worlds, _world_matrices(source, translations, rotations, scales)
+
+
+@pytest.mark.parametrize("mirrored_roles", [False, True])
+def test_support_carrier_follows_semantic_hips_in_a_non_axis_aligned_frame(mirrored_roles):
+    source, roles = fixture("support", upper_body=True)
+    if mirrored_roles:
+        roles["legs"]["left"], roles["legs"]["right"] = (
+            roles["legs"]["right"], roles["legs"]["left"])
+    up = np.array([0., 1., 0.])
+    forward = np.array([1., 0., 1.]) / math.sqrt(2)
+    lateral = np.cross(up, forward)
+    gait = GroundedGait(step_period_s=1.23, duty_factor=.62)
+    performance = Performance(
+        pelvis_sway_body_heights=.006,
+        pelvis_roll_degrees=.6,
+        support_directed_pelvis_carrier=True,
+    )
+    plan = decorate_plan(build_grounded_plan(gait, 2.), performance)
+    pelvis = source.name_to_node[roles["pelvis"]]
+    for cycle, side in ((0, "left"), (1, "right")):
+        t = (cycle + gait.duty_factor) * gait.step_period_s
+        row = sample_grounded_gait(gait, t, 2.)
+        assert row["support_count"] == 1 and row["feet"][side]["contact"]
+        base, posed = _performance_pose(source, roles, plan, row, up, forward)
+        support_hip = source.name_to_node[roles["legs"][side]["contactChain"][0]]
+        support_direction = np.asarray(_world_position(base[support_hip])) - np.asarray(
+            _world_position(base[pelvis]))
+        shift = np.asarray(_world_position(posed[pelvis])) - np.asarray(
+            _world_position(base[pelvis]))
+        assert shift @ support_direction > 0
+        assert abs(shift @ lateral) == pytest.approx(
+            performance.pelvis_sway_body_heights * plan["body_height_m"],
+            abs=1e-10,
+        )
+        local_up = np.linalg.solve(np.asarray(base[pelvis])[:3, :3], up)
+        posed_up = np.asarray(posed[pelvis])[:3, :3] @ local_up
+        assert (posed_up - up) @ support_direction > 0
+    double_mid = (gait.duty_factor - .5) * gait.step_period_s
+    row = sample_grounded_gait(gait, double_mid, 2.)
+    assert row["support_count"] == 2
+    base, posed = _performance_pose(source, roles, plan, row, up, forward)
+    shift = np.asarray(_world_position(posed[pelvis])) - np.asarray(
+        _world_position(base[pelvis]))
+    assert np.linalg.norm(shift) < 1e-12
+    local_up = np.linalg.solve(np.asarray(base[pelvis])[:3, :3], up)
+    posed_up = np.asarray(posed[pelvis])[:3, :3] @ local_up
+    assert abs((posed_up - up) @ lateral) < 1e-12
+
+
+@pytest.mark.parametrize("kind", ["start", "stop"])
+def test_opt_in_body_carriers_match_grounded_transition_interface(kind):
+    source, roles = fixture("transition", upper_body=True)
+    up = np.array([0., 1., 0.])
+    forward = np.array([0., 0., 1.])
+    gait = GroundedGait(
+        cycles=1,
+        sample_hz=120,
+        pelvis_height_carrier="stance_vault_proxy",
+    )
+    performance = Performance(support_directed_pelvis_carrier=True)
+    steady = decorate_plan(build_grounded_plan(gait, 2.), performance)
+    transition = decorate_plan(
+        build_transition_plan(GaitTransition(kind), gait, 2.),
+        performance,
+    )
+    transition_row = transition["samples"][-1 if kind == "start" else 0]
+    steady_row = steady["samples"][0]
+    assert transition_row["locomotion_time_s"] == pytest.approx(0)
+    assert transition_row["performance_gain"] == pytest.approx(1)
+    assert transition_row["pelvis_height_offset_m"] == pytest.approx(
+        steady_row["pelvis_height_offset_m"], abs=1e-12)
+    _, transition_pose = _performance_pose(
+        source, roles, transition, transition_row, up, forward)
+    _, steady_pose = _performance_pose(
+        source, roles, steady, steady_row, up, forward)
+    pelvis = source.name_to_node[roles["pelvis"]]
+    assert np.asarray(transition_pose[pelvis]) == pytest.approx(
+        np.asarray(steady_pose[pelvis]), abs=1e-12)
+
+
+def test_support_carrier_rejects_hips_without_declared_lateral_separation():
+    source, roles = fixture("support", upper_body=True)
+    up = np.array([0., 1., 0.])
+    forward = np.array([1., 0., 0.])
+    gait = GroundedGait()
+    plan = decorate_plan(
+        build_grounded_plan(gait, 2.),
+        Performance(support_directed_pelvis_carrier=True),
+    )
+    row = sample_grounded_gait(gait, gait.duty_factor * gait.step_period_s, 2.)
+    with pytest.raises(ContractError, match="separated along the declared lateral axis"):
+        _performance_pose(source, roles, plan, row, up, forward)
 
 
 def patch(time,x,y=0):

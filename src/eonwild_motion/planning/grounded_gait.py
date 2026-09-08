@@ -32,6 +32,7 @@ class GroundedGait:
     swing_clearance_body_heights: float = 0.055
     pelvis_crouch_body_heights: float = 0.025
     pelvis_excursion_body_heights: float = 0.004
+    pelvis_height_carrier: str | None = None
     cycles: int = 2
     sample_hz: int = 60
     toe_flex_degrees: float = 0.0
@@ -51,6 +52,11 @@ class GroundedGait:
     def __post_init__(self) -> None:
         for key, value in asdict(self).items():
             if key in ('handoff_phase_fraction', 'handoff_sample_hz') and value is None:
+                continue
+            if key == 'pelvis_height_carrier':
+                if value is not None and value != 'stance_vault_proxy':
+                    raise ContractError(
+                        "grounded pelvis height carrier must be stance_vault_proxy or null")
                 continue
             if key == 'centered_stance':
                 if type(value) is not bool:
@@ -167,10 +173,16 @@ def sample_grounded_gait(gait: GroundedGait, time_s: float, body_height_m: float
     if support == 0:
         raise ContractError("grounded program produced unsupported flight")
     phase = time_s / gait.step_period_s
+    # The opt-in walking carrier places the pelvis-height proxy at its high
+    # point at each declared stance midpoint and its low point at each
+    # double-support midpoint. It is kinematic choreography, not a COM or
+    # force model. The omitted field retains the original clock exactly.
+    height_phase = (phase if gait.pelvis_height_carrier is None
+                    else phase - gait.duty_factor)
     amplitude = gait.pelvis_excursion_body_heights * body_height_m
     return {"time_s": time_s, "root_forward_m": velocity * time_s,
-        "pelvis_height_offset_m": -gait.pelvis_crouch_body_heights * body_height_m - amplitude * (1 - math.cos(2 * math.pi * phase)) / 2,
-        "pelvis_vertical_velocity_mps": -amplitude * math.pi / gait.step_period_s * math.sin(2 * math.pi * phase),
+        "pelvis_height_offset_m": -gait.pelvis_crouch_body_heights * body_height_m - amplitude * (1 - math.cos(2 * math.pi * height_phase)) / 2,
+        "pelvis_vertical_velocity_mps": -amplitude * math.pi / gait.step_period_s * math.sin(2 * math.pi * height_phase),
         "flight": False, "support_count": support, "feet": feet,
         "stage": "DOUBLE_SUPPORT" if support == 2 else "SINGLE_SUPPORT"}
 

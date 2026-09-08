@@ -26,13 +26,16 @@ class Performance:
     gaze_elevation_degrees: float = 3.0
     center_tail: bool = True
     center_lanes_on_bilateral_hip_midpoint: bool | None = None
+    support_directed_pelvis_carrier: bool | None = None
     skin_refinement: bool = True
 
     def __post_init__(self):
         for key, value in asdict(self).items():
-            if key == "center_lanes_on_bilateral_hip_midpoint" and value is None:
+            if key in ("center_lanes_on_bilateral_hip_midpoint",
+                       "support_directed_pelvis_carrier") and value is None:
                 continue
-            if key in ("center_tail", "center_lanes_on_bilateral_hip_midpoint", "skin_refinement"):
+            if key in ("center_tail", "center_lanes_on_bilateral_hip_midpoint",
+                       "support_directed_pelvis_carrier", "skin_refinement"):
                 if type(value) is not bool:
                     raise ContractError(f"{key} must be boolean")
             elif isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
@@ -58,6 +61,12 @@ def load_performance(document: Mapping[str, Any]) -> Performance:
 
 def decorate_plan(plan: dict, performance: Performance) -> dict:
     from copy import deepcopy
+    if performance.support_directed_pelvis_carrier is not None:
+        grounded = (plan.get("program") == "grounded_gait"
+                    or plan.get("locomotion_program") == "grounded_gait")
+        if not grounded:
+            raise ContractError(
+                "support-directed pelvis carrier requires grounded locomotion")
     result = deepcopy(plan)
     result["performance"] = {key: value for key, value in asdict(performance).items()
                              if value is not None}
@@ -87,6 +96,43 @@ def _world_delta(source, translations, rotations, scales, node, axis, degrees):
     rotations[node] = _world_rotation(source, worlds, node, _qmul(delta, _rotation_from_matrix(worlds[node])))
 
 
+def _support_directed_pulse(source, base_worlds, roles, plan, phase, gain, lateral):
+    """Smooth signed support carrier derived from semantic bilateral hips.
+
+    Positive values follow the declared lateral axis; which sign names the
+    semantic left support comes from the admitted bilateral hip geometry.
+    Extrema occur at declared stance midpoints, with zero at
+    double-support midpoints. This is authored coordination, not load or COM.
+    """
+    parameters = plan.get("parameters")
+    if not isinstance(parameters, Mapping):
+        raise ContractError("support-directed pelvis carrier requires gait parameters")
+    duty = parameters.get("duty_factor")
+    cycle = plan.get("same_foot_cycle_s")
+    if (isinstance(duty, bool) or not isinstance(duty, (int, float))
+            or not math.isfinite(duty) or not .5 < duty < 1
+            or isinstance(cycle, bool) or not isinstance(cycle, (int, float))
+            or not math.isfinite(cycle) or cycle <= 0):
+        raise ContractError(
+            "support-directed pelvis carrier requires finite grounded timing")
+    try:
+        hips = {side: source.name_to_node[roles["legs"][side]["contactChain"][0]]
+                for side in ("left", "right")}
+    except (KeyError, TypeError, IndexError) as exc:
+        raise ContractError(
+            "support-directed pelvis carrier requires semantic bilateral hips") from exc
+    hip_positions = {side: np.asarray(_world_position(base_worlds[node]), dtype=float)
+                     for side, node in hips.items()}
+    separation = float((hip_positions["right"] - hip_positions["left"]) @ lateral)
+    if not math.isfinite(separation) or abs(separation) <= 1e-8:
+        raise ContractError(
+            "semantic hips must be separated along the declared lateral axis")
+    left_sign = -math.copysign(1.0, separation)
+    step = float(cycle) / 2
+    stance_clock = phase / step - float(duty)
+    return gain * left_sign * math.cos(math.pi * stance_clock)
+
+
 def apply_performance(source, translations, rotations, scales, base_worlds, roles, plan, row, up, forward):
     """Resolve rest-tail bias, lateral support response, and forward attention.
 
@@ -106,12 +152,20 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
         raise ContractError("performance requires a positive finite gait period")
     angle = 2 * math.pi * phase / cycle
     pulse = gain * math.sin(angle)
+    sway_pulse = pulse
+    roll_pulse = pulse
+    if p.support_directed_pelvis_carrier:
+        sway_pulse = _support_directed_pulse(
+            source, base_worlds, roles, plan, phase, gain, lateral)
+        # Positive world rotation about forward leans the pelvis top toward
+        # negative lateral, so invert the translation carrier for the lean.
+        roll_pulse = -sway_pulse
     parent = source.parents[pelvis]
     parent_basis = np.eye(3) if parent is None else np.asarray(base_worlds[parent])[:3, :3]
-    shift = lateral * (p.pelvis_sway_body_heights * plan["body_height_m"] * pulse)
+    shift = lateral * (p.pelvis_sway_body_heights * plan["body_height_m"] * sway_pulse)
     translations[pelvis] = tuple(np.asarray(translations[pelvis]) + np.linalg.solve(parent_basis, shift))
     _world_delta(source, translations, rotations, scales, pelvis, up, p.pelvis_yaw_degrees * pulse)
-    _world_delta(source, translations, rotations, scales, pelvis, forward, p.pelvis_roll_degrees * pulse)
+    _world_delta(source, translations, rotations, scales, pelvis, forward, p.pelvis_roll_degrees * roll_pulse)
     chest = source.name_to_node[roles["chest"]]
     _world_delta(source, translations, rotations, scales, chest, up, -.65 * p.pelvis_yaw_degrees * pulse)
     tail = [source.name_to_node[n] for n in roles["tail"]]
