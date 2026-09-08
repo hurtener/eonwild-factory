@@ -45,6 +45,20 @@
       "axis_frame": "joint_parent_local"
     }
   ],
+  "weight_transfers": [
+    {
+      "role": "upper_skull",
+      "from_articulation": "jaw_lower",
+      "to_node": "Bone_045",
+      "selector": {
+        "frame": "source_world",
+        "halfspaces": [
+          {"normal": [0.0, 0.9889363528682975, 0.14834045293024462], "minimum_dot_m": 1.672917706490115},
+          {"normal": [0.0, 0.0, 1.0], "minimum_dot_m": 1.95}
+        ]
+      }
+    }
+  ],
   "evidence": [
     {
       "kind": "measured_source_geometry",
@@ -60,11 +74,17 @@
       "kind": "primary_comparative_measurement",
       "reference": "White et al. 2013, PLOS ONE 8:e68649, Table 2, Allosaurus fragilis UUVP 6000r",
       "claim": "Femur, tibia and metatarsus lengths 880, 730 and 375 mm give 44.33%, 36.77% and 18.90% of their sum; used only as a specimen-specific segment-proportion sanity check along the source chain."
+    },
+    {
+      "kind": "measured_source_geometry",
+      "reference": "ARC/audits/allosaurus-jaw-ownership-probe.json",
+      "claim": "The declared source-world upper-skull halfspace isolates the dorsal rostrum and upper mouth surface independently of skin weights; the original jaw branch incorrectly moves this region."
     }
   ],
   "limitations": [
     "The artist model is not established as UUVP 6000r and the published lengths do not determine exact surface landmarks.",
     "The jaw hinge is an inferred engineering landmark supported by existing hierarchy and weights, not a fossil-derived joint center.",
+    "The upper-skull weight halfspace is an engineering ownership boundary requiring static articulation review; it is not fossil anatomy or tooth-contact evidence.",
     "Hand and pedal digit anatomy remains unresolved; no independent digit pivots are invented.",
     "The candidate is not admitted to a baseline, motion catalog, Unity project or production asset set."
   ]

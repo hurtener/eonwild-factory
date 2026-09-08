@@ -3,6 +3,7 @@ from __future__ import annotations
 from copy import deepcopy
 import hashlib
 from pathlib import Path
+import struct
 
 import numpy as np
 import pytest
@@ -11,6 +12,7 @@ from eonwild_motion.errors import ContractError
 from eonwild_motion.factory.rig_preparation import prepare_rig
 from eonwild_motion.glb.container import Glb
 from eonwild_motion.layers.leg_contact_resolve_v3 import _world_matrices
+from eonwild_motion.solve.whole_body_gait_transition import _encode
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -35,6 +37,7 @@ def config(source: Glb) -> dict:
             "descendants": ["Bone_073"], "axis": [1.0, 0.0, 0.0],
             "axis_frame": "joint_parent_local",
         }],
+        "weight_transfers": [],
         "evidence": [{"kind": "fixture", "reference": "test", "claim": "test"}],
         "limitations": ["fixture only"],
     }
@@ -83,3 +86,64 @@ def test_preparation_is_deterministic_and_config_bound():
     altered, c = prepare_rig(source, changed)
     assert altered != first
     assert c["config_sha256"] != a["config_sha256"]
+
+
+def test_preparation_rejects_noncanonical_input_skin():
+    source = Glb(SOURCE)
+    inverse = source.document["skins"][0]["inverseBindMatrices"]
+    offset, _, _ = source.accessor_region(inverse)
+    raw = bytearray(source.raw)
+    # Column-major MAT4 translation x is element 12.
+    value_offset = source.bin_start + offset + 12 * 4
+    value = struct.unpack_from("<f", raw, value_offset)[0]
+    struct.pack_into("<f", raw, value_offset, value + 0.01)
+    changed = Glb.from_bytes(bytes(raw))
+    changed_config = config(changed)
+    with pytest.raises(ContractError, match="not canonical POSITION"):
+        prepare_rig(changed, changed_config)
+
+
+def test_preparation_rejects_multiple_skins_before_mutation():
+    source = Glb(SOURCE)
+    document = deepcopy(source.document)
+    document["skins"].append(deepcopy(document["skins"][0]))
+    changed = Glb.from_bytes(_encode(document, source.binary))
+    with pytest.raises(ContractError, match="exactly one skin"):
+        prepare_rig(changed, config(changed))
+
+
+def test_preparation_transfers_selected_branch_weights_and_preserves_neutral_skin():
+    source = Glb(SOURCE)
+    candidate = config(source)
+    candidate["weight_transfers"] = [{
+        "role": "upper_head",
+        "from_articulation": "jaw_lower",
+        "to_node": "Bone_035",
+        "selector": {
+            "frame": "source_world",
+            "halfspaces": [{"normal": [0, 1, 0], "minimum_dot_m": -1000.0}],
+        },
+    }]
+    raw, receipt = prepare_rig(source, candidate)
+    assert receipt["weight_transfers"][0]["changed_vertex_count"] > 0
+    assert receipt["measurements"]["maximum_reopened_neutral_skin_error_m"] < 3e-6
+    reopened = Glb.from_bytes(raw)
+    assert reopened.document.get("animations") is None
+    primitive = reopened.document["meshes"][0]["primitives"][0]
+    for suffix in ("0", "1"):
+        joints = np.asarray(reopened.accessor_values(
+            primitive["attributes"][f"JOINTS_{suffix}"]))
+        weights = np.asarray(reopened.accessor_values(
+            primitive["attributes"][f"WEIGHTS_{suffix}"]))
+        assert np.all(joints[weights == 0] == 0)
+
+
+def test_preparation_rejects_duplicate_articulation_node():
+    source = Glb(SOURCE)
+    candidate = config(source)
+    duplicate = deepcopy(candidate["articulations"][0])
+    duplicate["role"] = "second_role"
+    duplicate["axis"] = [-1.0, 0.0, 0.0]
+    candidate["articulations"].append(duplicate)
+    with pytest.raises(ContractError, match="roles and nodes"):
+        prepare_rig(source, candidate)

@@ -94,7 +94,8 @@ def _is_descendant(node: int, ancestor: int, parents: list[int | None]) -> bool:
 def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str, Any]]:
     config = _exact_object(config, {
         "schema", "id", "source_sha256", "skin_index", "reparents",
-        "coordinate", "pivot_relocations", "articulations", "evidence", "limitations",
+        "coordinate", "pivot_relocations", "articulations", "weight_transfers",
+        "evidence", "limitations",
     }, "rig preparation")
     if config["schema"] != SCHEMA:
         raise ContractError("unsupported rig preparation schema")
@@ -112,6 +113,8 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
     if (type(skin_index) is not int or not isinstance(skins, list)
             or not 0 <= skin_index < len(skins)):
         raise ContractError("rig preparation skin index is invalid")
+    if len(skins) != 1:
+        raise ContractError("rig preparation supports exactly one skin")
     skin = skins[skin_index]
     if not isinstance(skin, Mapping) or not isinstance(skin.get("joints"), list):
         raise ContractError("rig preparation requires a joint skin")
@@ -144,6 +147,16 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
         source, source.rest_translation, source.rest_rotation, source.rest_scale), dtype=float)
     if not np.isfinite(original_world).all():
         raise ContractError("rig preparation source world matrices are non-finite")
+    mesh_nodes = [index for index, node in enumerate(source.nodes)
+                  if node.get("skin") == skin_index]
+    if len(mesh_nodes) != 1:
+        raise ContractError("rig preparation requires exactly one mesh node for the selected skin")
+    mesh_node = mesh_nodes[0]
+    source_skin_error, source_vertex_count = _skin_reconstruction_error(
+        source, skin_index=skin_index, mesh_node=mesh_node)
+    if source_skin_error > 3e-6:
+        raise ContractError(
+            "rig preparation source neutral skin is not canonical POSITION geometry")
 
     reparents = config["reparents"]
     if not isinstance(reparents, list):
@@ -192,6 +205,7 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
     if not isinstance(articulations, list):
         raise ContractError("rig preparation articulations must be an array")
     articulation_rows = []
+    articulation_nodes: dict[str, int] = {}
     for index, raw in enumerate(articulations):
         row = _exact_object(raw, {"role", "node", "parent", "descendants", "axis", "axis_frame"},
                             f"articulation[{index}]")
@@ -217,6 +231,9 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
         norm = float(np.linalg.norm(axis))
         if not math.isclose(norm, 1.0, abs_tol=1e-6, rel_tol=0.0):
             raise ContractError("rig preparation articulation axis must be unit length")
+        if role in articulation_nodes or node in articulation_nodes.values():
+            raise ContractError("rig preparation articulation roles and nodes must be unique")
+        articulation_nodes[role] = node
         articulation_rows.append({"role": role, "node": node_name, "parent": parent_name,
                                   "descendants": list(descendants), "axis": axis.tolist(),
                                   "axis_frame": row["axis_frame"]})
@@ -263,15 +280,158 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
             projection_errors.append(diagnostic["linear_projection_error"])
         output_world[node] = target
 
-    mesh_nodes = [index for index, node in enumerate(nodes) if node.get("skin") == skin_index]
-    if len(mesh_nodes) != 1:
-        raise ContractError("rig preparation requires exactly one mesh node for the selected skin")
-    mesh_node = mesh_nodes[0]
     mesh_world = output_world[mesh_node]
     inverse_accessor = _accessor_index(
         source, skin.get("inverseBindMatrices"), label="rig preparation inverse bind",
         accessor_type="MAT4", component_types=(5126,), expected_count=len(joints))
     binary = bytearray(source.binary)
+    weight_transfer_rows = []
+    transfers = config["weight_transfers"]
+    if not isinstance(transfers, list):
+        raise ContractError("rig preparation weight transfers must be an array")
+    if len(transfers) > 1:
+        raise ContractError("rig preparation supports at most one weight transfer")
+    meshes = source.document.get("meshes")
+    mesh_index = source.nodes[mesh_node].get("mesh")
+    if (type(mesh_index) is not int or not isinstance(meshes, list)
+            or not 0 <= mesh_index < len(meshes)):
+        raise ContractError("rig preparation selected skin has an invalid mesh")
+    primitives = meshes[mesh_index].get("primitives")
+    if not isinstance(primitives, list) or not primitives:
+        raise ContractError("rig preparation selected skin requires mesh primitives")
+    for transfer_index, raw in enumerate(transfers):
+        row = _exact_object(
+            raw, {"role", "from_articulation", "to_node", "selector"},
+            f"weight_transfer[{transfer_index}]")
+        role = _name(row["role"], f"weight_transfer[{transfer_index}] role")
+        from_role = _name(
+            row["from_articulation"], f"weight_transfer[{transfer_index}] articulation")
+        target_name = _name(row["to_node"], f"weight_transfer[{transfer_index}] target")
+        if from_role not in articulation_nodes or target_name not in names:
+            raise ContractError("rig preparation weight transfer references an unknown role or node")
+        branch_node, target_node = articulation_nodes[from_role], names[target_name]
+        if target_node not in joint_set or _is_descendant(target_node, branch_node, new_parents):
+            raise ContractError("rig preparation weight transfer target must lie outside its branch")
+        selector = _exact_object(
+            row["selector"], {"frame", "halfspaces"},
+            f"weight_transfer[{transfer_index}] selector")
+        if selector["frame"] != "source_world":
+            raise ContractError("rig preparation weight selector frame is unsupported")
+        halfspaces = selector["halfspaces"]
+        if not isinstance(halfspaces, list) or not halfspaces:
+            raise ContractError("rig preparation weight selector requires halfspaces")
+        planes = []
+        for plane_index, raw_plane in enumerate(halfspaces):
+            plane = _exact_object(
+                raw_plane, {"normal", "minimum_dot_m"},
+                f"weight_transfer[{transfer_index}] halfspace[{plane_index}]")
+            normal = _vec3(
+                plane["normal"],
+                f"weight_transfer[{transfer_index}] halfspace[{plane_index}] normal")
+            minimum = plane["minimum_dot_m"]
+            if (isinstance(minimum, bool) or not isinstance(minimum, (int, float))
+                    or not math.isfinite(float(minimum))
+                    or not math.isclose(float(np.linalg.norm(normal)), 1.0,
+                                        abs_tol=1e-6, rel_tol=0.0)):
+                raise ContractError("rig preparation weight halfspace must have a unit normal and finite offset")
+            planes.append((normal, float(minimum)))
+        branch_nodes = {
+            node for node in range(len(nodes))
+            if _is_descendant(node, branch_node, new_parents)
+        }
+        branch_slots = {slot for slot, node in enumerate(joints) if node in branch_nodes}
+        target_slot = joints.index(target_node)
+        selected_count = changed_count = 0
+        transferred_weights = []
+        for primitive_index, primitive in enumerate(primitives):
+            attributes = primitive.get("attributes") if isinstance(primitive, Mapping) else None
+            if not isinstance(attributes, Mapping) or "POSITION" not in attributes:
+                raise ContractError("rig preparation weight transfer requires POSITION")
+            suffixes = sorted(
+                key.removeprefix("JOINTS_") for key in attributes
+                if key.startswith("JOINTS_"))
+            if (not suffixes or any(not suffix.isdecimal() for suffix in suffixes)
+                    or any(f"WEIGHTS_{suffix}" not in attributes for suffix in suffixes)):
+                raise ContractError("rig preparation weight transfer requires paired joint weights")
+            position_accessor = _accessor_index(
+                source, attributes["POSITION"],
+                label=f"weight transfer primitive[{primitive_index}] POSITION",
+                accessor_type="VEC3", component_types=(5126,))
+            count = source.document["accessors"][position_accessor]["count"]
+            joint_accessors = [_accessor_index(
+                source, attributes[f"JOINTS_{suffix}"],
+                label=f"weight transfer primitive[{primitive_index}] JOINTS_{suffix}",
+                accessor_type="VEC4", component_types=(5121, 5123),
+                expected_count=count) for suffix in suffixes]
+            weight_accessors = [_accessor_index(
+                source, attributes[f"WEIGHTS_{suffix}"],
+                label=f"weight transfer primitive[{primitive_index}] WEIGHTS_{suffix}",
+                accessor_type="VEC4", component_types=(5126,),
+                expected_count=count) for suffix in suffixes]
+            positions = np.asarray(source.accessor_values(position_accessor), dtype=float)
+            world_positions = (
+                original_world[mesh_node] @
+                np.column_stack((positions, np.ones(len(positions)))).T
+            ).T[:, :3]
+            selected = np.ones(len(positions), dtype=bool)
+            for normal, minimum in planes:
+                selected &= world_positions @ normal >= minimum
+            joint_rows = [np.asarray(source.accessor_values(index), dtype=int)
+                          for index in joint_accessors]
+            weight_rows = [np.asarray(source.accessor_values(index), dtype=float)
+                           for index in weight_accessors]
+            selected_count += int(np.sum(selected))
+            for vertex in np.flatnonzero(selected):
+                entries = [
+                    (set_index, column)
+                    for set_index, joints_row in enumerate(joint_rows)
+                    for column in range(4)
+                    if int(joints_row[vertex, column]) in branch_slots
+                    and weight_rows[set_index][vertex, column] > 0.0
+                ]
+                amount = float(sum(
+                    weight_rows[set_index][vertex, column]
+                    for set_index, column in entries))
+                if amount <= 0.0:
+                    continue
+                targets = [
+                    (set_index, column)
+                    for set_index, joints_row in enumerate(joint_rows)
+                    for column in range(4)
+                    if int(joints_row[vertex, column]) == target_slot
+                ]
+                destination = targets[0] if targets else entries[0]
+                for set_index, column in entries:
+                    weight_rows[set_index][vertex, column] = 0.0
+                    joint_rows[set_index][vertex, column] = 0
+                if not targets:
+                    joint_rows[destination[0]][vertex, destination[1]] = target_slot
+                weight_rows[destination[0]][vertex, destination[1]] += amount
+                changed_count += 1
+                transferred_weights.append(amount)
+            for accessor, rows in zip(joint_accessors, joint_rows):
+                _, _, _, _, code = source.accessor_layout(accessor)
+                offset, row_count, stride = source.accessor_region(accessor)
+                for vertex in range(row_count):
+                    struct.pack_into("<" + code * 4, binary, offset + vertex * stride,
+                                     *rows[vertex].tolist())
+            for accessor, rows in zip(weight_accessors, weight_rows):
+                _, _, _, _, code = source.accessor_layout(accessor)
+                offset, row_count, stride = source.accessor_region(accessor)
+                for vertex in range(row_count):
+                    struct.pack_into("<" + code * 4, binary, offset + vertex * stride,
+                                     *rows[vertex].tolist())
+        if changed_count == 0:
+            raise ContractError("rig preparation weight transfer selects no branch influence")
+        weight_transfer_rows.append({
+            "role": role,
+            "from_articulation": from_role,
+            "to_node": target_name,
+            "selector": deepcopy(selector),
+            "selected_vertex_count": selected_count,
+            "changed_vertex_count": changed_count,
+            "maximum_transferred_weight": max(transferred_weights),
+        })
     offset, count, stride = source.accessor_region(inverse_accessor)
     if count != len(joints):
         raise ContractError("rig preparation inverse bind count changed")
@@ -317,7 +477,9 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
         "relocated_pivots": [source.nodes[node].get("name", str(node)) for node in sorted(pivot_nodes)],
         "touched_local_transforms": touched,
         "articulations": articulation_rows,
+        "weight_transfers": weight_transfer_rows,
         "measurements": {
+            "maximum_input_neutral_skin_error_m": source_skin_error,
             "maximum_local_trs_projection_error": max(projection_errors, default=0.0),
             "maximum_reopened_world_matrix_error": maximum_world_error,
             "maximum_reopened_neutral_skin_error_m": maximum_skin_error,
@@ -325,6 +487,8 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
         "limits": {"reopened_world_matrix": 3e-6, "neutral_skin_m": 3e-6},
         "limitations": list(config["limitations"]),
     }
+    if vertex_count != source_vertex_count:
+        raise ContractError("rig preparation changed the measured skin vertex count")
     return raw, receipt
 
 
