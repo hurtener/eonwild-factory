@@ -20,6 +20,7 @@ import sys
 
 import bpy
 import numpy as np
+from mathutils import Vector
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from eonwild_motion.blender.native_playback import import_gltf_for_native_playback
@@ -126,13 +127,49 @@ def main() -> None:
                     "expected_m": expected[index, witness].tolist(),
                 }
             )
-        maximum = max(row["maximum_same_index_error_m"] for row in records)
+        # A real render evaluation must preserve the direct exact sample.  An
+        # active approximate importer action can otherwise overwrite it only
+        # when Cycles updates the dependency graph.
+        render_index = 1 if len(sample_times) > 1 else 0
+        render_time = sample_times[render_index]
+        playback.apply(render_time)
+        camera_data = bpy.data.cameras.new("NativePlaybackParityCamera")
+        camera = bpy.data.objects.new("NativePlaybackParityCamera", camera_data)
+        scene.collection.objects.link(camera)
+        scene.camera = camera
+        camera.location = (10.0, -10.0, 6.0)
+        camera.rotation_euler = (
+            Vector((0.0, 0.0, 1.0)) - camera.location
+        ).to_track_quat("-Z", "Y").to_euler()
+        scene.render.engine = "CYCLES"
+        scene.cycles.samples = 1
+        scene.cycles.device = "CPU"
+        scene.render.resolution_x = scene.render.resolution_y = 64
+        scene.render.resolution_percentage = 100
+        bpy.ops.render.render(write_still=False)
+        evaluated = mesh.evaluated_get(bpy.context.evaluated_depsgraph_get())
+        evaluated_mesh = evaluated.to_mesh()
+        try:
+            rendered = np.asarray(
+                [evaluated.matrix_world @ vertex.co for vertex in evaluated_mesh.vertices],
+                dtype=float,
+            )
+        finally:
+            evaluated.to_mesh_clear()
+        render_error = float(
+            np.max(np.linalg.norm(rendered - expected[render_index], axis=1))
+        )
+        maximum = max(
+            max(row["maximum_same_index_error_m"] for row in records), render_error
+        )
         result["modes"][mode] = {
             "glb_sha256": _sha(source),
             "expected_sha256": _sha(expected_path),
             "vertex_count": int(expected.shape[1]),
             "sample_count": len(records),
             "maximum_same_index_error_m": maximum,
+            "post_cycles_render_error_m": render_error,
+            "post_cycles_render_time_s": render_time,
             "samples": records,
             "native_playback": playback.receipt(),
             "status": "PASS" if maximum <= limit else "FAIL",

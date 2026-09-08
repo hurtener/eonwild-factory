@@ -12,11 +12,11 @@ import json
 from pathlib import Path
 import re
 import subprocess
-import sys
 import traceback
 from typing import Any
 
 from eonwild_motion.factory.compiler import compile_recipe, verify_package
+from eonwild_motion.blender.native_playback import requires_exact_cubic_playback
 
 VIEWS = ("side", "front", "rear", "three-quarter")
 DEFAULT_RECIPES = ("walk.v2", "reverse-walk.v3", "run.v3", "sprint.v3")
@@ -52,10 +52,12 @@ def exit_status(results: list[dict[str, Any]], *, required_views: tuple[str, ...
 
 def render_view(package: Path, output: Path, *, root: Path, blender: str,
                 view: str, mode: str, fps: int, fbx: bool, camera_lock: Path | None = None) -> dict:
+    source = package / ("root_motion.glb" if mode == "root_motion" else "in_place.glb")
+    cubic_without_fbx = fbx and requires_exact_cubic_playback(source)
     command = [blender, "-b", "-t", "2", "--python-exit-code", "1", "--python",
                str(root / "tools/render_candidate.py"), "--", "--package", str(package),
                "--output", str(output), "--view", view, "--mode", mode, "--fps", str(fps)]
-    if fbx:
+    if fbx and not cubic_without_fbx:
         command.append("--fbx")
     if camera_lock is not None:
         command.extend(["--camera-lock", str(camera_lock)])
@@ -73,6 +75,8 @@ def render_view(package: Path, output: Path, *, root: Path, blender: str,
     log_path.write_text(log)
     result = {"status": "PASS" if returncode == 0 else "FAIL", "exit_code": returncode,
               "log": str(log_path), "mode": mode, "view": view}
+    if cubic_without_fbx:
+        result["fbx_transport"] = "UNSUPPORTED_TASK_OWNED_CUBIC_SAMPLING"
     if returncode:
         print(log[-5000:], flush=True)
     else:

@@ -115,6 +115,63 @@ class ShowcaseAcceptanceTests(unittest.TestCase):
             self.assertEqual(result["status"], "FAIL")
             self.assertIn("RENDER_TIMEOUT", Path(result["log"]).read_text())
 
+    def test_cubic_native_render_omits_unsupported_fbx_transport(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            output = root / "views/side"
+
+            def successful_render(command, **_kwargs):
+                self.assertNotIn("--fbx", command)
+                output.mkdir(parents=True, exist_ok=True)
+                (output / "render-receipt.json").write_text("{}")
+                return subprocess.CompletedProcess(command, 0, "rendered", "")
+
+            with patch.object(
+                showcase, "requires_exact_cubic_playback", return_value=True
+            ), patch.object(showcase.subprocess, "run", side_effect=successful_render):
+                result = showcase.render_view(
+                    root / "package",
+                    output,
+                    root=ROOT,
+                    blender="blender",
+                    view="side",
+                    mode="root_motion",
+                    fps=24,
+                    fbx=True,
+                )
+            self.assertEqual(result["status"], "PASS")
+            self.assertEqual(
+                result["fbx_transport"],
+                "UNSUPPORTED_TASK_OWNED_CUBIC_SAMPLING",
+            )
+
+    def test_linear_render_preserves_requested_fbx_transport(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            output = root / "views/side"
+
+            def successful_render(command, **_kwargs):
+                self.assertIn("--fbx", command)
+                output.mkdir(parents=True, exist_ok=True)
+                (output / "render-receipt.json").write_text("{}")
+                return subprocess.CompletedProcess(command, 0, "rendered", "")
+
+            with patch.object(
+                showcase, "requires_exact_cubic_playback", return_value=False
+            ), patch.object(showcase.subprocess, "run", side_effect=successful_render):
+                result = showcase.render_view(
+                    root / "package",
+                    output,
+                    root=ROOT,
+                    blender="blender",
+                    view="side",
+                    mode="root_motion",
+                    fps=24,
+                    fbx=True,
+                )
+            self.assertEqual(result["status"], "PASS")
+            self.assertNotIn("fbx_transport", result)
+
 
 if __name__ == "__main__":
     unittest.main()

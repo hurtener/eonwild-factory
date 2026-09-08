@@ -21,6 +21,7 @@ import sys
 import bpy
 from mathutils import Vector
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from eonwild_motion.blender.native_playback import reject_stock_cubic_playback
 
 

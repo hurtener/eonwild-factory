@@ -61,6 +61,7 @@ class ExactCubicPlayback:
     timeline: tuple[float, ...]
     importer: Any
     vnode_type: Any
+    detached_action_owner_count: int = 0
 
     def _converted_value(self, node: int, path: str, raw: Any) -> tuple[Any, Any]:
         # These are the same local conversions used by BlenderNodeAnim for key
@@ -156,7 +157,61 @@ class ExactCubicPlayback:
             "cubic_track_count": sum(
                 track.interpolation == "CUBICSPLINE" for track in self.tracks.values()
             ),
+            "detached_action_owner_count": self.detached_action_owner_count,
         }
+
+
+def _detach_approximate_imported_actions(
+    importer: Any,
+    vnode_type: Any,
+    tracks: dict[tuple[int, str], TrsTrack],
+) -> int:
+    """Detach stock-imported actions from every exact playback target owner.
+
+    Blender's render dependency graph reevaluates active AUTO curves even after
+    direct pose assignment.  The action datablocks remain in ``bpy.data`` for
+    source-clock inspection; only their bindings to CUBICSPLINE target owners
+    are removed.  This adapter does not claim to create native cubic curves.
+    """
+    owners: dict[int, Any] = {}
+    for node, _ in tracks:
+        vnode = importer.vnodes[node]
+        if vnode.type == vnode_type.Bone:
+            owner = importer.vnodes[vnode.bone_arma].blender_object
+        elif vnode.type == vnode_type.Object:
+            owner = vnode.blender_object
+        else:
+            raise ContractError(
+                "native playback animation targets an unsupported virtual node"
+            )
+        if owner is None:
+            raise ContractError("native playback cannot resolve an animation owner")
+        owners[id(owner)] = owner
+
+    detached = 0
+    for owner in owners.values():
+        animation_data = owner.animation_data
+        if animation_data is None:
+            continue
+        if animation_data.action is not None:
+            animation_data.action = None
+            detached += 1
+        active_strips = [
+            strip
+            for track in animation_data.nla_tracks
+            if not track.mute
+            for strip in track.strips
+            if not strip.mute and strip.action is not None
+        ]
+        if animation_data.action is not None or active_strips:
+            raise ContractError(
+                "native playback could not detach approximate imported animation"
+            )
+    if detached == 0:
+        raise ContractError(
+            "native playback found no imported action to detach from cubic targets"
+        )
+    return detached
 
 
 def import_gltf_for_native_playback(source: Path) -> ExactCubicPlayback | None:
@@ -196,4 +251,5 @@ def import_gltf_for_native_playback(source: Path) -> ExactCubicPlayback | None:
     for node, _ in tracks:
         if node not in importer.vnodes:
             raise ContractError("native playback import mapping omits an animated node")
-    return ExactCubicPlayback(source, glb, tracks, timeline, importer, VNode)
+    detached = _detach_approximate_imported_actions(importer, VNode, tracks)
+    return ExactCubicPlayback(source, glb, tracks, timeline, importer, VNode, detached)
