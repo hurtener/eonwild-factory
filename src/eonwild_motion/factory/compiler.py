@@ -851,7 +851,9 @@ def _verify_motion_set_provenance(
         if (path / "gait-profile.json").exists():
             raise ContractError("grounded intent contains a transition gait snapshot")
         gait = load_grounded_gait(json.loads(program_bytes))
+        transition = None
     elif recipe["program"] == "gait_transition":
+        transition = load_gait_transition(json.loads(program_bytes))
         gait_bytes = (path / "gait-profile.json").read_bytes()
         if digest(gait_bytes) != intent["gait_profile"]["sha256"]:
             raise ContractError("motion intent gait snapshot differs")
@@ -860,6 +862,12 @@ def _verify_motion_set_provenance(
         raise ContractError("motion set contains an unsupported program")
     if plan.get("parameters") != gait_parameters(gait):
         raise ContractError("motion plan parameters differ from the bound gait snapshot")
+    if transition is not None and plan.get("transition_parameters") != gait_parameters(
+        transition
+    ):
+        raise ContractError(
+            "motion plan transition parameters differ from the bound program snapshot"
+        )
     performance, gait_receipt = resolve_gait_response(
         performance, gait, baseline["gait_response_policy"]
     )

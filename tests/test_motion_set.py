@@ -18,6 +18,10 @@ from eonwild_motion.factory.handoff import require_shared_motion_baseline
 from eonwild_motion.factory.compiler import _verify_motion_set_provenance, compile_recipe
 from eonwild_motion.factory.__main__ import main as factory_main
 from eonwild_motion.planning.grounded_gait import build_grounded_plan, load_grounded_gait
+from eonwild_motion.planning.gait_transition import (
+    build_transition_plan,
+    load_gait_transition,
+)
 from eonwild_motion.solve.gait_response import (
     assemble_baseline_performance,
     resolve_gait_response,
@@ -448,6 +452,84 @@ def test_package_local_snapshots_rebuild_effective_performance(tmp_path):
             tmp_path, recipe=resolution.recipe, lock=lock,
             runtime=runtime, receipt=substituted_receipt,
             plan=substituted_plan,
+        )
+
+
+@pytest.mark.parametrize("motion", ["walk-start", "walk-stop"])
+def test_transition_plan_is_bound_to_packaged_program_snapshot(tmp_path, motion):
+    resolution = resolve_motion_set(
+        ROOT,
+        ROOT / "catalog/motion-sets/tarbosaurus-pin-552-1-adult-grounded.v1.json",
+        motion,
+    )
+    baseline = json.loads(resolution.baseline_bytes)
+    style_bytes = (ROOT / baseline["performance_profile"]["path"]).read_bytes()
+    performance, assembly = assemble_baseline_performance(
+        json.loads(style_bytes), json.loads(resolution.neutral_pose_bytes)
+    )
+    gait = load_grounded_gait(json.loads(resolution.gait_profile_bytes))
+    transition = load_gait_transition(json.loads(resolution.program_profile_bytes))
+    performance, gait_receipt = resolve_gait_response(
+        performance, gait, baseline["gait_response_policy"]
+    )
+    solve = baseline["solve_policy"]
+    performance = replace(
+        performance,
+        canonical_support_anchors=solve["canonical_support_anchors"],
+        skin_refinement=solve["skin_refinement"],
+    )
+    plan = decorate_plan(build_transition_plan(transition, gait, 2.0), performance)
+    plan["solve_policy"] = solve
+    for name, raw in {
+        **resolution.payloads,
+        "performance-profile.json": style_bytes,
+        "neutral-pose-profile.json": resolution.neutral_pose_bytes,
+    }.items():
+        (tmp_path / name).write_bytes(raw)
+    lock = {"motion_set_resolution": resolution.lock}
+    runtime = {"motion_set": resolution.lock["identities"], "solve_policy": solve}
+    receipt = {
+        "solve_policy": solve,
+        "baseline_performance_resolution": {
+            "assembly": assembly,
+            "gait_response": gait_receipt,
+        },
+    }
+    _verify_motion_set_provenance(
+        tmp_path,
+        recipe=resolution.recipe,
+        lock=lock,
+        runtime=runtime,
+        receipt=receipt,
+        plan=plan,
+    )
+    substitutions = {
+        "kind": "stop" if transition.kind == "start" else "start",
+        "ramp_cycles": 3 if transition.ramp_cycles != 3 else 4,
+        "anticipation_seconds": 1.5,
+    }
+    for field, value in substitutions.items():
+        altered = deepcopy(plan)
+        altered["transition_parameters"][field] = value
+        with pytest.raises(ContractError, match="bound program snapshot"):
+            _verify_motion_set_provenance(
+                tmp_path,
+                recipe=resolution.recipe,
+                lock=lock,
+                runtime=runtime,
+                receipt=receipt,
+                plan=altered,
+            )
+    missing = deepcopy(plan)
+    del missing["transition_parameters"]
+    with pytest.raises(ContractError, match="bound program snapshot"):
+        _verify_motion_set_provenance(
+            tmp_path,
+            recipe=resolution.recipe,
+            lock=lock,
+            runtime=runtime,
+            receipt=receipt,
+            plan=missing,
         )
 
 
