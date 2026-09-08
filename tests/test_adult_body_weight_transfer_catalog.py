@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import json
 from pathlib import Path
 
@@ -102,3 +103,15 @@ def test_adult_v5_changes_only_restrained_body_response_inputs():
     assert performance.upper_trunk_counterroll_degrees == .9
     assert performance.pelvis_yaw_degrees == 2
     assert performance.tail_yaw_degrees == 16
+
+
+def test_adult_v5_is_checked_alongside_v3_in_animal_benchmarks(monkeypatch):
+    monkeypatch.syspath_prepend(str(ROOT / "tools"))
+    spec = importlib.util.spec_from_file_location(
+        "verify_catalog", ROOT / "tools/verify_catalog.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    assert module.GROUPS["animal-benchmarks"] == [
+        "tarbosaurus-pin-552-1-adult-walk.v3",
+        "tarbosaurus-pin-552-1-adult-walk.v5",
+    ]
