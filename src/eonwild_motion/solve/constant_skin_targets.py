@@ -393,28 +393,12 @@ class CanonicalConstantSkinTargetLaw:
         self, query: SourceMotionQuery, time_s: float
     ) -> dict[str, dict[str, Any]]:
         """Reuse one owned query and row solve for the two material patches."""
-        result = query.evaluate(time_s)
+        result = query.evaluate_with_target_offsets(time_s, self._constants)
         if isinstance(result, SourceMotionUnavailable):
             raise ContractError("constant skin target source value is unavailable")
         row = _thaw(result.row)
-        for side, correction in self._constants.items():
-            row["feet"][side]["target_offset_m"] = np.asarray(
-                correction, dtype=float
-            ).tolist()
-        pose = solve_airborne_plan_sample(
-            query.context,
-            row,
-            body_response_sample=query._body_sample(query._exact_index(time_s), row),
-        )
-        worlds = np.asarray(
-            _world_matrices(
-                query._source,
-                pose.translations,
-                pose.rotations,
-                query.context.base_s,
-            ),
-            dtype=float,
-        )
+        pose = result.pose
+        worlds = np.asarray(result.worlds)
         up_index = int(np.argmax(np.abs(query.context.up)))
         data = {}
         for side in ("left", "right"):
@@ -445,7 +429,15 @@ class CanonicalConstantSkinTargetLaw:
     ) -> ConstantSkinTargetValue | ConstantSkinTargetUnavailable:
         active_query = self._query if query is None else query
         observer = getattr(self._observe, "__func__", None)
-        if observer is _DEFAULT_OBSERVE:
+        owned_evaluate = (
+            getattr(active_query.evaluate, "__func__", None)
+            is SourceMotionQuery.evaluate
+            and getattr(
+                active_query.evaluate_with_target_offsets, "__func__", None
+            )
+            is SourceMotionQuery.evaluate_with_target_offsets
+        )
+        if observer is _DEFAULT_OBSERVE and owned_evaluate:
             data = self._observe_pair(active_query, time_s)
         else:
             # Preserve independently injected failure witnesses and subclasses.

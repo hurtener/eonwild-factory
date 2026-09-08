@@ -712,17 +712,73 @@ class SourceMotionQuery:
         self, time_s: Any, *, side: str = "value"
     ) -> SourceMotionResult | SourceMotionUnavailable:
         time = _finite_time(time_s)
+        return self._evaluate_owned(time, side=side, target_offsets=None)
+
+    @staticmethod
+    def _target_offsets(value: Mapping[str, Any]) -> dict[str, list[float]]:
+        if not isinstance(value, Mapping) or set(value) != {"left", "right"}:
+            raise ContractError(
+                "source motion query target offsets require left and right vectors"
+            )
+        result = {}
+        for side in ("left", "right"):
+            raw_value = value[side]
+            try:
+                contains_boolean = any(
+                    isinstance(item, (bool, np.bool_)) for item in raw_value
+                )
+            except TypeError:
+                contains_boolean = False
+            try:
+                raw = np.asarray(raw_value)
+            except (TypeError, ValueError) as exc:
+                raise ContractError(
+                    "source motion query target offsets must be finite real vectors"
+                ) from exc
+            if (
+                contains_boolean
+                or raw.dtype.kind not in "fiu"
+                or raw.shape != (3,)
+                or not np.isfinite(raw).all()
+            ):
+                raise ContractError(
+                    "source motion query target offsets must be finite real vectors"
+                )
+            result[side] = np.asarray(raw, dtype=float).tolist()
+        return result
+
+    def evaluate_with_target_offsets(
+        self,
+        time_s: Any,
+        target_offsets: Mapping[str, Any],
+        *,
+        side: str = "value",
+    ) -> SourceMotionResult | SourceMotionUnavailable:
+        """Apply owned per-foot offsets before the query's single pose solve."""
+        time = _finite_time(time_s)
+        offsets = self._target_offsets(target_offsets)
+        return self._evaluate_owned(time, side=side, target_offsets=offsets)
+
+    def _evaluate_owned(
+        self,
+        time: float,
+        *,
+        side: str,
+        target_offsets: Mapping[str, list[float]] | None,
+    ) -> SourceMotionResult | SourceMotionUnavailable:
         if side not in ("value", "left_limit", "right_limit"):
             raise ContractError(
                 "source motion query side must be value, left_limit, or right_limit"
             )
         self._validate_domain(time)
         index = self._exact_index(time)
-        if self._refined and (index is None or side != "value"):
+        if self._refined and (
+            target_offsets is not None or index is None or side != "value"
+        ):
             return SourceMotionUnavailable(
                 CONTINUOUS_SKIN_TARGET_UNAVAILABLE,
                 time,
-                "current skin-target refinement defines corrections only at retained plan keys",
+                "current skin-target refinement defines corrections only at retained plan keys and cannot accept another offset operation",
             )
         sampled_time = self._limit_time(time, side)
         if side != "value":
@@ -732,6 +788,11 @@ class SourceMotionQuery:
             if index is not None
             else self._sample_row(sampled_time)
         )
+        if target_offsets is not None:
+            for foot_side in ("left", "right"):
+                row["feet"][foot_side]["target_offset_m"] = list(
+                    target_offsets[foot_side]
+                )
         body = self._body_sample(index, row)
         pose = solve_airborne_plan_sample(self._context, row, body_response_sample=body)
         worlds = _readonly(

@@ -161,6 +161,61 @@ def test_existing_plan_key_matches_direct_phase_local_solve_and_off_grid_is_sour
     )
 
 
+def test_owned_target_offsets_apply_before_one_solve_and_are_detached(monkeypatch):
+    query, _, _, _, plan, _ = _grounded_query()
+    index = 7
+    time_s = plan["samples"][index]["time_s"]
+    offsets = {
+        "left": np.array([0.001, -0.002, 0.003]),
+        "right": np.array([-0.004, 0.005, -0.006]),
+    }
+    row = deepcopy(plan["samples"][index])
+    for side in ("left", "right"):
+        row["feet"][side]["target_offset_m"] = offsets[side].tolist()
+    expected = solve_airborne_plan_sample(
+        query.context,
+        row,
+        body_response_sample=query._body_sample(index, row),
+    )
+    import eonwild_motion.solve.source_motion_query as source_query_module
+    original = source_query_module.solve_airborne_plan_sample
+    calls = []
+
+    def counted(*args, **kwargs):
+        calls.append(1)
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(source_query_module, "solve_airborne_plan_sample", counted)
+    result = query.evaluate_with_target_offsets(time_s, offsets)
+    assert len(calls) == 1
+    assert result.pose == expected
+    assert result.row["feet"]["left"]["target_offset_m"] == (0.001, -0.002, 0.003)
+    assert "target_offset_m" not in query.evaluate(time_s).row["feet"]["left"]
+    offsets["left"][0] = 99.0
+    result.pose.translations[0] = (99.0, 99.0, 99.0)
+    repeat = query.evaluate_with_target_offsets(
+        time_s,
+        {"left": [0.001, -0.002, 0.003], "right": [-0.004, 0.005, -0.006]},
+    )
+    assert repeat.pose == expected
+    assert repeat.pose.translations[0] != (99.0, 99.0, 99.0)
+
+
+@pytest.mark.parametrize(
+    "offsets",
+    [
+        {"left": [0, 0, 0]},
+        {"left": [0, 0, 0], "right": [0, 0]},
+        {"left": [0, 0, 0], "right": [0, float("nan"), 0]},
+        {"left": [0, 0, 0], "right": [False, 0, 0]},
+    ],
+)
+def test_owned_target_offsets_reject_malformed_vectors(offsets):
+    query, *_ = _grounded_query()
+    with pytest.raises(ContractError, match="target offsets"):
+        query.evaluate_with_target_offsets(0.1, offsets)
+
+
 def test_scaled_adult_neutral_jaw_query_keeps_raw_identity_and_rejects_stale_state(
     monkeypatch,
 ):
@@ -419,6 +474,13 @@ def test_refined_queries_expose_only_exact_grid_values_without_target_interpolat
     assert refined_query.evaluate(refined["samples"][3]["time_s"]).status == "AVAILABLE"
     for result in (
         refined_query.evaluate(0.123),
+        refined_query.evaluate_with_target_offsets(
+            0.123, {"left": [0, 0, 0], "right": [0, 0, 0]}
+        ),
+        refined_query.evaluate_with_target_offsets(
+            refined["samples"][3]["time_s"],
+            {"left": [0, 0, 0], "right": [0, 0, 0]},
+        ),
         refined_query.derivative(refined["samples"][3]["time_s"]),
         refined_query.raw_probe(0.123),
     ):

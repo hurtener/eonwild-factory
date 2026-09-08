@@ -18,6 +18,7 @@ from eonwild_motion.solve.constant_skin_targets import (
     CanonicalConstantSkinTargetLaw,
     ConstantSkinTargetUnavailable,
 )
+from eonwild_motion.solve.airborne_gait import _world_matrices
 from eonwild_motion.solve.performance import Performance, decorate_plan
 from eonwild_motion.solve.skin_rig import SkinRig
 from eonwild_motion.solve.source_motion_query import SourceMotionQuery
@@ -111,6 +112,110 @@ def test_batch_matches_pointwise_and_returns_independent_owned_values(law_and_in
     batch[0].corrections_m["left"][0] += 1.0
     assert batch[2].pose.translations[0] != (999.0, 999.0, 999.0)
     assert not np.array_equal(batch[0].corrections_m["left"], batch[2].corrections_m["left"])
+
+
+def test_owned_fastpath_matches_prior_corrected_solve_at_keys_boundaries_and_offgrid(
+    law_and_inputs, monkeypatch
+):
+    law, inputs = law_and_inputs
+    times = (
+        float(inputs["plan"]["samples"][0]["time_s"]),
+        float(inputs["plan"]["samples"][7]["time_s"]),
+        0.2,
+        float(inputs["plan"]["samples"][-1]["time_s"]),
+    )
+    fast = tuple(law.value(time_s) for time_s in times)
+    original = law._observe
+
+    def injected(query, provider, skin, side, time_s, constants):
+        return original(query, provider, skin, side, time_s, constants)
+
+    monkeypatch.setattr(law, "_observe", injected)
+    prior = tuple(law.value(time_s) for time_s in times)
+    for current, previous in zip(fast, prior):
+        assert current.status == previous.status
+        assert current.row == previous.row
+        assert current.pose.translations == previous.pose.translations
+        assert current.pose.rotations == previous.pose.rotations
+        assert current.observations == previous.observations
+        current_worlds = np.asarray(
+            _world_matrices(
+                law._query._source,
+                current.pose.translations,
+                current.pose.rotations,
+                law._query.context.base_s,
+            )
+        )
+        previous_worlds = np.asarray(
+            _world_matrices(
+                law._query._source,
+                previous.pose.translations,
+                previous.pose.rotations,
+                law._query.context.base_s,
+            )
+        )
+        for side in ("left", "right"):
+            assert np.array_equal(
+                law._patch(law._skin, current_worlds, side),
+                law._patch(law._skin, previous_worlds, side),
+            )
+
+
+def test_default_law_value_uses_one_row_solve(law_and_inputs, monkeypatch):
+    law, _ = law_and_inputs
+    import eonwild_motion.solve.source_motion_query as source_query_module
+    original = source_query_module.solve_airborne_plan_sample
+    calls = []
+
+    def counted(*args, **kwargs):
+        calls.append(1)
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(source_query_module, "solve_airborne_plan_sample", counted)
+    assert law.value(0.2).status == "AVAILABLE"
+    assert len(calls) == 1
+
+
+def test_query_subclass_evaluate_override_retains_prior_fallback():
+    inputs = _inputs()
+
+    class ObservedQuery(SourceMotionQuery):
+        calls = 0
+
+        def evaluate(self, time_s, *, side="value"):
+            type(self).calls += 1
+            return super().evaluate(time_s, side=side)
+
+    query = ObservedQuery(
+        inputs["source"],
+        semantic_roles=inputs["semantic_roles"],
+        solver_gait=inputs["solver_gait"],
+        locomotion_gait=inputs["locomotion_gait"],
+        transition=inputs["transition"],
+        plan=inputs["plan"],
+        up_axis=inputs["up_axis"],
+        forward_axis=inputs["forward_axis"],
+        articulation_profile=inputs["articulation_profile"],
+        contact_profile=inputs["contact_profile"],
+    )
+    law = _build({**inputs, "query": query})
+    ObservedQuery.calls = 0
+    assert law.value(0.2).status == "AVAILABLE"
+    assert ObservedQuery.calls == 2
+
+
+def test_injected_query_evaluate_retains_prior_fallback(law_and_inputs, monkeypatch):
+    law, _ = law_and_inputs
+    original = law._query.evaluate
+    calls = []
+
+    def observed(time_s, *, side="value"):
+        calls.append((time_s, side))
+        return original(time_s, side=side)
+
+    monkeypatch.setattr(law._query, "evaluate", observed)
+    assert law.value(0.2).status == "AVAILABLE"
+    assert calls == [(0.2, "value"), (0.2, "value")]
 
 
 def test_actual_query_yaw_contact_and_articulation_are_bound_to_provider():
