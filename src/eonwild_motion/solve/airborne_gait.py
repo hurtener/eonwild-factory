@@ -260,7 +260,6 @@ def driven_body_response(gait: AirborneGait, plan: Mapping[str, Any], roles: Map
 
 def _validate_plan_override(plan: Mapping[str, Any], gait: AirborneGait) -> dict[str, Any]:
     """Fail-closed validation for caller-built (one-shot) plan samples."""
-    from ..planning.airborne_gait import build_airborne_plan as _rebuild
     if not isinstance(plan, Mapping):
         raise ContractError("plan override must be a mapping")
     samples = plan.get("samples")
@@ -446,6 +445,9 @@ class AirborneSolveContext:
     base_w: tuple[np.ndarray, ...]
     jaw: int | None
     jaw_axis: tuple[float, ...] | None
+    jaw_neutral_close_degrees: float
+    neutral_jaw_admission: Any | None
+    neutral_jaw_calibration: Any | None
     anatomical_normals: Mapping[str, np.ndarray]
     toe_normals: Mapping[int, np.ndarray]
 
@@ -460,6 +462,150 @@ class SolvedAirbornePose:
     maximum_foot_target_residual_m: float
     maximum_unreachable_extension_m: float
     maximum_articulation_envelope_violation_degrees: float
+
+
+def _snapshot_articulation_profile(
+    profile: ArticulationProfile | None,
+) -> ArticulationProfile | None:
+    """Detach the mutable mapping fields before retaining a query context."""
+    if profile is None:
+        return None
+    if not isinstance(profile, ArticulationProfile):
+        raise ContractError("articulation_profile must be a validated ArticulationProfile")
+    return ArticulationProfile(
+        profile_id=profile.profile_id,
+        version=profile.version,
+        classification=profile.classification,
+        angle_conventions=_freeze_data(profile.angle_conventions),
+        evidence=_freeze_data(profile.evidence),
+        support=MappingProxyType(dict(profile.support)),
+        swing=MappingProxyType(dict(profile.swing)),
+    )
+
+
+def build_airborne_solve_context(
+    source: Glb,
+    *,
+    source_clip: str | None,
+    semantic_roles: Mapping[str, Any],
+    gait: AirborneGait,
+    up_axis: tuple[float, float, float] = (0, 1, 0),
+    plan: Mapping[str, Any],
+    forward_axis: tuple[float, float, float] | None = None,
+    legacy_overlay: bool = True,
+    articulation_profile: ArticulationProfile | None = None,
+) -> AirborneSolveContext:
+    """Create the immutable source-owned state consumed by a plan-row solve.
+
+    The caller supplies an already-built plan.  This constructor intentionally
+    does not sample a new clock, encode a GLB, or retain caller-owned profile
+    maps.  ``solve_airborne_gait`` uses the same constructor below so its
+    legacy serialized payload remains the regression authority.
+    """
+    articulation_profile = _snapshot_articulation_profile(articulation_profile)
+    roles = semantic_roles
+    try:
+        root, pelvis = (source.name_to_node[roles[k]] for k in ("root", "pelvis"))
+        legs = {s: [source.name_to_node[n] for n in roles["legs"][s]["contactChain"]] for s in ("left", "right")}
+        toes = {s: [[source.name_to_node[n] for n in chain] for chain in roles["legs"][s]["toeChains"]] for s in legs}
+    except (KeyError, TypeError) as exc:
+        raise ContractError("airborne gait needs complete semantic root/pelvis/leg/toe bindings") from exc
+    if any(len(chain) != 4 for chain in legs.values()):
+        raise ContractError("airborne gait requires hip/knee/ankle/foot chains")
+    if any(len(chain) != 3 for digit_chains in toes.values() for chain in digit_chains):
+        raise ContractError("airborne digit endpoint solve requires three-node toe chains")
+    for chain in legs.values():
+        if any(source.parents[b] != a for a, b in zip(chain, chain[1:])):
+            raise ContractError("semantic contact chain must follow actual parent topology")
+    for side, chains in toes.items():
+        for chain in chains:
+            if source.parents[chain[0]] != legs[side][-1] or any(source.parents[b] != a for a, b in zip(chain, chain[1:])):
+                raise ContractError("semantic toe chains must follow actual foot-parent topology")
+    up = _unit(up_axis)
+    if source_clip is None:
+        if forward_axis is None:
+            raise ContractError("neutral geometry requires an explicit forward axis")
+        translations, rotations, scales = source.rest_translation, source.rest_rotation, source.rest_scale
+        worlds = _world_matrices(source, translations, rotations, scales)
+        travel = np.asarray(forward_axis, dtype=float)
+    else:
+        tracks, source_times = _clip_state(source, source_clip)
+        translations, rotations, scales = _pose(source, tracks, 0)
+        worlds = _world_matrices(source, translations, rotations, scales)
+        final_worlds = _world_matrices(source, *_pose(source, tracks, len(source_times) - 1))
+        travel = (np.asarray(forward_axis, dtype=float) if forward_axis is not None else
+                  np.asarray(_world_position(final_worlds[root])) - np.asarray(_world_position(worlds[root])))
+    if travel.shape != (3,) or not np.isfinite(travel).all():
+        raise ContractError("forward axis must be a finite three-vector")
+    forward = _unit(travel - up * (travel @ up))
+    lateral = _unit(np.cross(up, forward))
+    origin = np.asarray(_world_position(worlds[pelvis]))
+    hip_positions = {side: np.asarray(_world_position(worlds[chain[0]]))
+                     for side, chain in legs.items()}
+    hip_midpoint = .5 * (hip_positions["left"] + hip_positions["right"])
+    hip_lane_center = float((hip_midpoint - origin) @ lateral)
+    hip_offsets = {side: float((position - hip_midpoint) @ lateral)
+                   for side, position in hip_positions.items()}
+    toe_nodes = [n for chains in toes.values() for chain in chains for n in chain]
+    ground = min(float(np.asarray(_world_position(worlds[n])) @ up) for n in toe_nodes)
+    body_height = float(origin @ up - ground)
+    if body_height <= 0:
+        raise ContractError("semantic pelvis must be above the toe plane")
+    base_t, base_r, base_s, base_w = translations[:], rotations[:], scales[:], worlds
+    jaw = jaw_axis = None
+    jaw_neutral_close_degrees = 0.0
+    neutral_jaw_admission = None
+    neutral_jaw_calibration = None
+    if "performance" in plan:
+        from .performance import _performance_from_parameters
+
+        neutral_jaw_calibration = _performance_from_parameters(
+            plan["performance"]
+        ).neutral_jaw_calibration
+        if (
+            neutral_jaw_calibration is not None
+            and neutral_jaw_calibration.close_degrees
+        ):
+            from .jaw_response import admit_neutral_jaw
+
+            neutral_jaw_admission = admit_neutral_jaw(
+                source, roles, neutral_jaw_calibration, forward, up
+            )
+            jaw = neutral_jaw_admission.node
+            jaw_axis = neutral_jaw_admission.local_axis
+            jaw_neutral_close_degrees = neutral_jaw_admission.close_degrees
+    if gait.jaw_breathing_max_degrees and jaw is None:
+        if roles.get("jaw_lower") not in source.name_to_node:
+            raise ContractError("breathing requires a bound semantic lower jaw")
+        jaw = source.name_to_node[roles["jaw_lower"]]
+        jaw_axis = _qrotate(_qinv(_rotation_from_matrix(base_w[jaw])), tuple(lateral))
+    anatomical_normals = {}
+    for side, (hip, knee, ankle, foot) in legs.items():
+        hp, kp, ap = (np.asarray(_world_position(base_w[n])) for n in (hip, knee, ankle))
+        anatomical_normals[side] = _unit(np.cross(kp - hp, ap - kp))
+    toe_normals = {}
+    if "performance" in plan:
+        for side, chains in toes.items():
+            for a, b, c in chains:
+                pa, pb, pc = (np.asarray(_world_position(base_w[n])) for n in (a, b, c))
+                normal = np.cross(pb - pa, pc - pb)
+                toe_normals[a] = _unit(normal if np.linalg.norm(normal) > 1e-8 else lateral)
+    return AirborneSolveContext(
+        source=_frozen_source_topology(source), roles=_freeze_data(roles), gait=gait,
+        plan=_freeze_data(plan), articulation_profile=articulation_profile,
+        legacy_overlay=legacy_overlay, root=root, pelvis=pelvis,
+        legs=_freeze_data(legs), toes=_freeze_data(toes), up=_frozen_array(up),
+        forward=_frozen_array(forward), lateral=_frozen_array(lateral),
+        origin=_frozen_array(origin), ground=ground, body_height=body_height,
+        hip_offsets=_freeze_data(hip_offsets), hip_lane_center=hip_lane_center,
+        base_t=tuple(base_t), base_r=tuple(base_r), base_s=tuple(base_s),
+        base_w=tuple(_frozen_array(value) for value in base_w), jaw=jaw,
+        jaw_axis=jaw_axis, jaw_neutral_close_degrees=jaw_neutral_close_degrees,
+        neutral_jaw_admission=neutral_jaw_admission,
+        neutral_jaw_calibration=neutral_jaw_calibration,
+        anatomical_normals=_freeze_data(anatomical_normals),
+        toe_normals=_freeze_data(toe_normals),
+    )
 
 
 def solve_airborne_plan_sample(
@@ -526,10 +672,18 @@ def solve_airborne_plan_sample(
             axis = _qrotate(_qinv(_rotation_from_matrix(base_w[n])), tuple(lateral))
             rot[n] = _qmul(rot[n], _qrotvec(tuple(np.asarray(axis) * math.radians(performance_gain * total / len(names)))))
     if jaw is not None:
-        # Rotate the lower jaw about the rig-derived sagittal axis only.
-        # The full-cycle cosine is C2 at the loop; no head/neck compensation
-        # is added, so the accepted whole-body motion remains unchanged.
-        rot[jaw] = _qmul(base_r[jaw], _qrotvec(tuple(np.asarray(jaw_axis) * math.radians(performance_gain * jaw_breathing_angle(gait, motion_time)))))
+        # Compose the behavior-owned neutral pose and cyclic breathing once in
+        # the admitted jaw-local frame. Head/gaze motion then carries the jaw
+        # through hierarchy without rotating the hinge axis in world space.
+        from .jaw_response import compose_jaw_rotation
+        breathing = (jaw_breathing_angle(gait, motion_time)
+                     if gait.jaw_breathing_max_degrees else 0.0)
+        rot[jaw] = compose_jaw_rotation(
+            base_r[jaw], jaw_axis,
+            neutral_close_degrees=context.jaw_neutral_close_degrees,
+            breathing_gape_degrees=breathing,
+            gain=performance_gain,
+        )
     from .performance import apply_performance
     apply_performance(source, tr, rot, base_s, base_w, roles, plan, row, up, forward)
     facts = {}
@@ -850,98 +1004,39 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
     """
     if articulation_profile is not None and not isinstance(articulation_profile, ArticulationProfile):
         raise ContractError("articulation_profile must be a validated ArticulationProfile")
-    roles = semantic_roles
-    try:
-        root, pelvis = (source.name_to_node[roles[k]] for k in ("root", "pelvis"))
-        legs = {s: [source.name_to_node[n] for n in roles["legs"][s]["contactChain"]] for s in ("left", "right")}
-        toes = {s: [[source.name_to_node[n] for n in chain] for chain in roles["legs"][s]["toeChains"]] for s in legs}
-    except (KeyError, TypeError) as exc:
-        raise ContractError("airborne gait needs complete semantic root/pelvis/leg/toe bindings") from exc
-    if any(len(chain) != 4 for chain in legs.values()):
-        raise ContractError("airborne gait requires hip/knee/ankle/foot chains")
-    if any(len(chain) != 3 for digit_chains in toes.values() for chain in digit_chains):
-        raise ContractError("airborne digit endpoint solve requires three-node toe chains")
-    for chain in legs.values():
-        if any(source.parents[b] != a for a, b in zip(chain, chain[1:])):
-            raise ContractError("semantic contact chain must follow actual parent topology")
-    for side, chains in toes.items():
-        for chain in chains:
-            if source.parents[chain[0]] != legs[side][-1] or any(source.parents[b] != a for a, b in zip(chain, chain[1:])):
-                raise ContractError("semantic toe chains must follow actual foot-parent topology")
-    up = _unit(up_axis)
-    if source_clip is None:
-        if forward_axis is None:
-            raise ContractError("neutral geometry requires an explicit forward axis")
-        translations, rotations, scales = source.rest_translation, source.rest_rotation, source.rest_scale
-        worlds = _world_matrices(source, translations, rotations, scales)
-        travel = np.asarray(forward_axis, dtype=float)
-    else:
-        tracks, source_times = _clip_state(source, source_clip)
-        translations, rotations, scales = _pose(source, tracks, 0)
-        worlds = _world_matrices(source, translations, rotations, scales)
-        final_worlds = _world_matrices(source, *_pose(source, tracks, len(source_times) - 1))
-        travel = (np.asarray(forward_axis, dtype=float) if forward_axis is not None else
-                  np.asarray(_world_position(final_worlds[root])) - np.asarray(_world_position(worlds[root])))
-    if travel.shape != (3,) or not np.isfinite(travel).all():
-        raise ContractError("forward axis must be a finite three-vector")
-    forward = _unit(travel - up * (travel @ up))
-    lateral = _unit(np.cross(up, forward))
-    origin = np.asarray(_world_position(worlds[pelvis]))
-    hip_positions = {side: np.asarray(_world_position(worlds[chain[0]]))
-                     for side, chain in legs.items()}
-    hip_midpoint = .5 * (hip_positions["left"] + hip_positions["right"])
-    hip_lane_center = float((hip_midpoint - origin) @ lateral)
-    hip_offsets = {side: float((position - hip_midpoint) @ lateral)
-                   for side, position in hip_positions.items()}
-    # A common toe-joint plane is a provisional engineering carrier, never a
-    # substitute for evaluating the final skinned sole/contact patches.
-    toe_nodes = [n for chains in toes.values() for chain in chains for n in chain]
-    ground = min(float(np.asarray(_world_position(worlds[n])) @ up) for n in toe_nodes)
-    body_height = float(origin @ up - ground)
-    if body_height <= 0:
-        raise ContractError("semantic pelvis must be above the toe plane")
     # Behavior programs own support choreography; an override never runs
     # the airborne planner. Legacy calls retain their original default path.
-    plan = (build_airborne_plan(gait, body_height) if plan_override is None else
-            _validate_plan_override(plan_override, gait))
-    body_response = driven_body_response(gait, plan, roles)
-    base_t, base_r, base_s = translations[:], rotations[:], scales[:]
-    base_w = worlds
-    jaw = None
-    jaw_axis = None
-    if gait.jaw_breathing_max_degrees:
-        if roles.get("jaw_lower") not in source.name_to_node:
-            raise ContractError("breathing requires a bound semantic lower jaw")
-        jaw = source.name_to_node[roles["jaw_lower"]]
-        jaw_axis = _qrotate(_qinv(_rotation_from_matrix(base_w[jaw])), tuple(lateral))
-    anatomical_normals = {}
-    for side, (hip, knee, ankle, foot) in legs.items():
-        hp, kp, ap = (np.asarray(_world_position(base_w[n])) for n in (hip, knee, ankle))
-        anatomical_normals[side] = _unit(np.cross(kp - hp, ap - kp))
-    # Digit bend planes belong to neutral anatomy. Projecting the *moving*
-    # toe elbow becomes ill-conditioned at extension and can choose the other
-    # branch on the last loop sample despite identical endpoint targets.
-    toe_normals = {}
-    if "performance" in plan:
-        for side, chains in toes.items():
-            for a, b, c in chains:
-                pa, pb, pc = (np.asarray(_world_position(base_w[n])) for n in (a, b, c))
-                normal = np.cross(pb - pa, pc - pb)
-                toe_normals[a] = _unit(normal if np.linalg.norm(normal) > 1e-8 else lateral)
-    context = AirborneSolveContext(
-        source=_frozen_source_topology(source), roles=_freeze_data(roles), gait=gait,
-        plan=_freeze_data(plan),
-        articulation_profile=articulation_profile, legacy_overlay=legacy_overlay,
-        root=root, pelvis=pelvis, legs=_freeze_data(legs), toes=_freeze_data(toes),
-        up=_frozen_array(up), forward=_frozen_array(forward),
-        lateral=_frozen_array(lateral), origin=_frozen_array(origin), ground=ground,
-        body_height=body_height, hip_offsets=_freeze_data(hip_offsets),
-        hip_lane_center=hip_lane_center,
-        base_t=tuple(base_t), base_r=tuple(base_r), base_s=tuple(base_s),
-        base_w=tuple(_frozen_array(value) for value in base_w), jaw=jaw,
-        jaw_axis=jaw_axis, anatomical_normals=_freeze_data(anatomical_normals),
-        toe_normals=_freeze_data(toe_normals),
+    provisional_plan = (
+        {"parameters": {}, "samples": []}
+        if plan_override is None
+        else {
+            key: value
+            for key, value in _validate_plan_override(plan_override, gait).items()
+            if key != "performance"
+        }
     )
+    # This pass establishes geometry height only. The final context below owns
+    # performance-dependent jaw admission and its receipt exactly once.
+    provisional_context = build_airborne_solve_context(
+        source, source_clip=source_clip, semantic_roles=semantic_roles, gait=gait,
+        up_axis=up_axis, plan=provisional_plan, forward_axis=forward_axis,
+        legacy_overlay=legacy_overlay, articulation_profile=articulation_profile,
+    )
+    # The planner needs the admitted semantic height. Rebuild the context with
+    # its actual plan exactly as the historical solver did.
+    plan = (build_airborne_plan(gait, provisional_context.body_height)
+            if plan_override is None else _validate_plan_override(plan_override, gait))
+    body_response = driven_body_response(gait, plan, semantic_roles)
+    context = build_airborne_solve_context(
+        source, source_clip=source_clip, semantic_roles=semantic_roles, gait=gait,
+        up_axis=up_axis, plan=plan, forward_axis=forward_axis,
+        legacy_overlay=legacy_overlay, articulation_profile=articulation_profile,
+    )
+    roles = semantic_roles
+    root, legs, toes = context.root, context.legs, context.toes
+    up, forward, ground, body_height = context.up, context.forward, context.ground, context.body_height
+    neutral_jaw_admission = context.neutral_jaw_admission
+    neutral_calibration = context.neutral_jaw_calibration
     frames_t, frames_r, emitted = [], [], []
     max_residual, max_extension = 0.0, 0.0
     max_envelope_violation = 0.0
@@ -1023,6 +1118,24 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
         receipt["articulation_profile"] = articulation_profile.receipt()
     if body_response:
         receipt["body_response"] = body_response
+    if neutral_jaw_admission is not None:
+        receipt["neutral_jaw_calibration"] = {
+            "source_geometry_sha256": neutral_calibration.source_geometry_sha256,
+            "jaw_node": neutral_jaw_admission.node,
+            "local_hinge_axis": list(neutral_jaw_admission.local_axis),
+            "close_degrees": neutral_jaw_admission.close_degrees,
+            "clearance_body_heights": neutral_calibration.clearance_body_heights,
+            "measured_source_minimum_gap_m": (
+                neutral_jaw_admission.measured_source_minimum_gap_m),
+            "admitted_geometry_minimum_gap_m": neutral_jaw_admission.current_minimum_gap_m,
+            "measured_source_body_height_m": (
+                neutral_jaw_admission.measured_source_body_height_m),
+            "admitted_geometry_body_height_m": neutral_jaw_admission.current_body_height_m,
+            "admitted_uniform_scale": neutral_jaw_admission.admitted_uniform_scale,
+            "classification": (
+                "authored engineering neutral-pose clearance; not tooth contact, "
+                "biological measurement, or visual approval"),
+        }
     return authority, in_place, plan, receipt
 
 

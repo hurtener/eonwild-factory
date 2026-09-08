@@ -1,4 +1,5 @@
 """Regression witnesses for articulation, recipe reuse, and real cyclic contact."""
+from copy import deepcopy
 from dataclasses import replace
 import math
 from pathlib import Path
@@ -7,6 +8,7 @@ import json
 import numpy as np
 import pytest
 
+import eonwild_motion.solve.performance as performance_module
 from eonwild_motion.errors import ContractError
 from eonwild_motion.planning.airborne_gait import AirborneGait, build_airborne_plan
 from eonwild_motion.planning.gait_transition import GaitTransition, build_transition_plan
@@ -20,9 +22,10 @@ from eonwild_motion.layers.leg_contact_resolve_v3 import (
 )
 from eonwild_motion.solve.airborne_gait import solve_airborne_gait
 from eonwild_motion.solve.performance import (
-    Performance, _support_timed_pelvis_forward_carrier,
+    Performance, _support_timed_axial_clock,
+    _support_timed_pelvis_forward_carrier,
     _support_timed_sagittal_pulse, apply_performance,
-    decorate_plan, load_performance,
+    decorate_plan, load_performance, phase_and_gain,
 )
 from test_v9_airborne_gait import fixture
 from eonwild_motion.solve.skin_rig import rotation_matrix
@@ -80,6 +83,7 @@ def test_opt_in_body_carriers_preserve_legacy_plan_bytes():
     decorated = decorate_plan(plan, Performance())
     assert digest(json_bytes(decorated)) == "cb07b756443ee231d12bec2a5e948a23f8a31ea8048a937966c0ed2e90e4dce3"
     assert "support_directed_pelvis_carrier" not in decorated["performance"]
+    assert "support_timed_axial_carrier" not in decorated["performance"]
 
 
 @pytest.mark.parametrize("value", [True, False, 0, "bounce", float("nan")])
@@ -102,6 +106,327 @@ def test_support_carrier_is_grounded_only_even_when_explicitly_false():
                 airborne,
                 Performance(support_directed_pelvis_carrier=value),
             )
+
+
+@pytest.mark.parametrize("value", [0, 1, "yes", float("nan")])
+def test_performance_rejects_malformed_support_timed_axial_carrier(value):
+    with pytest.raises(ContractError):
+        Performance(support_timed_axial_carrier=value)
+
+
+def test_support_timed_axial_carrier_requires_centered_tail_and_grounded_plan():
+    with pytest.raises(ContractError, match="requires centered tail semantics"):
+        Performance(support_timed_axial_carrier=True, center_tail=False)
+    airborne = build_airborne_plan(AirborneGait(cycles=1, sample_hz=24), 2.)
+    for value in (False, True):
+        with pytest.raises(ContractError, match="requires grounded locomotion"):
+            decorate_plan(
+                airborne,
+                Performance(support_timed_axial_carrier=value),
+            )
+
+
+def _axial_performance_plan(gait, **changes):
+    values = {
+        "pelvis_sway_body_heights": 0,
+        "pelvis_roll_degrees": 0,
+        "pelvis_yaw_degrees": 2,
+        "tail_yaw_degrees": 16,
+        "gaze_elevation_degrees": 0,
+        "center_tail": True,
+        "support_timed_axial_carrier": True,
+        "skin_refinement": False,
+    }
+    values.update(changes)
+    return decorate_plan(build_grounded_plan(gait, 2.), Performance(**values))
+
+
+def _forward_position(worlds, node, forward):
+    return float(np.asarray(_world_position(worlds[node])) @ forward)
+
+
+@pytest.mark.parametrize("mirrored_roles", [False, True])
+def test_axial_clock_advances_leading_semantic_hip_in_renamed_scaled_frame(
+        mirrored_roles):
+    source, roles = fixture("renamed_axial_", 1.6, upper_body=True)
+    if mirrored_roles:
+        roles["legs"]["left"], roles["legs"]["right"] = (
+            roles["legs"]["right"], roles["legs"]["left"])
+    up = np.array([0., 1., 0.])
+    forward = np.array([1., 0., 1.]) / math.sqrt(2)
+    lateral = np.cross(up, forward)
+    gait = GroundedGait(
+        step_period_s=1.23,
+        duty_factor=.62,
+        step_length_body_heights=.6,
+        cycles=1,
+        sample_hz=120,
+    )
+    plan = _axial_performance_plan(gait)
+    hips = {
+        side: source.name_to_node[roles["legs"][side]["contactChain"][0]]
+        for side in ("left", "right")
+    }
+    base = _world_matrices(
+        source, source.rest_translation, source.rest_rotation, source.rest_scale)
+    hip_midpoint = sum(
+        (np.asarray(_world_position(base[node])) for node in hips.values()),
+        np.zeros(3),
+    ) / 2
+    left_offset = float(
+        (np.asarray(_world_position(base[hips["left"]])) - hip_midpoint) @ lateral)
+
+    for side, time in (
+            ("left", (gait.duty_factor - .5) * gait.step_period_s),
+            ("right", (gait.duty_factor + .5) * gait.step_period_s)):
+        row = sample_grounded_gait(gait, time, 2.)
+        _, posed = _performance_pose(source, roles, plan, row, up, forward)
+        other = "right" if side == "left" else "left"
+        leading_advance = (
+            _forward_position(posed, hips[side], forward)
+            - _forward_position(base, hips[side], forward))
+        trailing_advance = (
+            _forward_position(posed, hips[other], forward)
+            - _forward_position(base, hips[other], forward))
+        assert leading_advance > trailing_advance
+        _, _, pulse = _support_timed_axial_clock(
+            source, base, roles, plan, time, 1., lateral)
+        expected_sign = -math.copysign(1., left_offset) if side == "left" else math.copysign(1., left_offset)
+        assert math.copysign(1., pulse) == expected_sign
+
+
+def test_axial_clock_is_periodic_zero_at_single_support_and_scales_with_gain():
+    source, roles = fixture("axial_clock_", 1.3, upper_body=True)
+    up = np.array([0., 1., 0.])
+    forward = np.array([.6, 0., .8])
+    lateral = np.cross(up, forward)
+    gait = GroundedGait(
+        step_period_s=1.23, duty_factor=.62,
+        step_length_body_heights=.6, cycles=1, sample_hz=120)
+    plan = _axial_performance_plan(gait)
+    base = _world_matrices(
+        source, source.rest_translation, source.rest_rotation, source.rest_scale)
+    cycle = 2 * gait.step_period_s
+    for step_index in (0, 1):
+        stance = (step_index + gait.duty_factor) * gait.step_period_s
+        _, _, pulse = _support_timed_axial_clock(
+            source, base, roles, plan, stance, 1., lateral)
+        assert pulse == pytest.approx(0, abs=1e-14)
+    for time in (.1476, .611, 1.3776):
+        full = _support_timed_axial_clock(
+            source, base, roles, plan, time, 1., lateral)[2]
+        half = _support_timed_axial_clock(
+            source, base, roles, plan, time, .5, lateral)[2]
+        repeated = _support_timed_axial_clock(
+            source, base, roles, plan, time + cycle, 1., lateral)[2]
+        assert half == pytest.approx(.5 * full, abs=1e-14)
+        assert repeated == pytest.approx(full, abs=1e-14)
+    h = 1e-5
+    values = [
+        _support_timed_axial_clock(
+            source, base, roles, plan, offset, 1., lateral)[2]
+        for offset in (-h, 0., h, cycle - h, cycle, cycle + h)
+    ]
+    assert values[:3] == pytest.approx(values[3:], abs=1e-12)
+
+
+def test_axial_clock_rejects_conflicting_or_malformed_choreography():
+    source, roles = fixture("axial_bad_", 1., upper_body=True)
+    up = np.array([0., 1., 0.])
+    forward = np.array([0., 0., 1.])
+    lateral = np.cross(up, forward)
+    gait = GroundedGait(
+        step_length_body_heights=.6, cycles=1, sample_hz=120)
+    plan = _axial_performance_plan(gait)
+    base = _world_matrices(
+        source, source.rest_translation, source.rest_rotation, source.rest_scale)
+
+    bad = deepcopy(plan)
+    bad["parameters"]["step_length_body_heights"] = -.6
+    with pytest.raises(ContractError, match="conflicts with foot choreography"):
+        _support_timed_axial_clock(
+            source, base, roles, bad, .1, 1., lateral)
+
+    malformed = deepcopy(plan)
+    malformed["parameters"]["duty_factor"] = "wide"
+    with pytest.raises(ContractError, match="finite two-step grounded clock"):
+        _support_timed_axial_clock(
+            source, base, roles, malformed, .1, 1., lateral)
+
+    reverse = _axial_performance_plan(replace(gait, step_length_body_heights=-.6))
+    with pytest.raises(ContractError, match="conflicts with foot choreography"):
+        _support_timed_axial_clock(
+            source, base, roles, reverse, .1, 1., lateral)
+
+
+@pytest.mark.parametrize("kind", ["start", "stop"])
+def test_axial_clock_admission_is_independent_of_sparse_transition_grid(kind):
+    source, roles = fixture("axial_sparse_", 1., upper_body=True)
+    up = np.array([0., 1., 0.])
+    forward = np.array([0., 0., 1.])
+    lateral = np.cross(up, forward)
+    gait = GroundedGait(
+        step_period_s=1.23, duty_factor=.62,
+        step_length_body_heights=.6, cycles=1, sample_hz=120)
+    performance = Performance(
+        center_tail=True, support_timed_axial_carrier=True)
+    full = decorate_plan(
+        build_transition_plan(GaitTransition(kind), gait, 2.), performance)
+    sparse = deepcopy(full)
+    sparse["samples"] = [full["samples"][-1 if kind == "start" else 0]]
+    row = sparse["samples"][0]
+    base = _world_matrices(
+        source, source.rest_translation, source.rest_rotation, source.rest_scale)
+    phase, gain = phase_and_gain(row)
+    assert _support_timed_axial_clock(
+        source, base, roles, sparse, phase, gain, lateral) == pytest.approx(
+            _support_timed_axial_clock(
+                source, base, roles, full, phase, gain, lateral), abs=1e-15)
+
+
+def test_axial_clock_requires_distinct_hips_beneath_pelvis_but_allows_helpers():
+    source, roles = fixture("axial_hierarchy_", 1., upper_body=True)
+    up = np.array([0., 1., 0.])
+    forward = np.array([0., 0., 1.])
+    lateral = np.cross(up, forward)
+    gait = GroundedGait(
+        step_length_body_heights=.6, cycles=1, sample_hz=120)
+    plan = _axial_performance_plan(gait)
+    pelvis = source.name_to_node[roles["pelvis"]]
+    root = source.name_to_node[roles["root"]]
+    hips = [
+        source.name_to_node[roles["legs"][side]["contactChain"][0]]
+        for side in ("left", "right")
+    ]
+
+    invalid = deepcopy(source)
+    for hip in hips:
+        invalid.parents[hip] = root
+    base = _world_matrices(
+        invalid, invalid.rest_translation, invalid.rest_rotation, invalid.rest_scale)
+    with pytest.raises(ContractError, match="hips beneath its pelvis"):
+        _support_timed_axial_clock(
+            invalid, base, roles, plan, .1, 1., lateral)
+
+    admitted = deepcopy(source)
+    for side, hip in zip(("left", "right"), hips):
+        helper = len(admitted.nodes)
+        admitted.nodes.append({"name": f"axial_{side}_hip_helper"})
+        admitted.name_to_node[f"axial_{side}_hip_helper"] = helper
+        admitted.parents.append(pelvis)
+        admitted.rest_translation.append((0., 0., 0.))
+        admitted.rest_rotation.append((0., 0., 0., 1.))
+        admitted.rest_scale.append((1., 1., 1.))
+        admitted.parents[hip] = helper
+    base = _world_matrices(
+        admitted, admitted.rest_translation,
+        admitted.rest_rotation, admitted.rest_scale)
+    assert math.isfinite(_support_timed_axial_clock(
+        admitted, base, roles, plan, .1, 1., lateral)[2])
+
+
+def test_axial_clock_phases_proximal_tail_after_centering():
+    source, roles = fixture("axial_tail_", 1., upper_body=True)
+    up = np.array([0., 1., 0.])
+    forward = np.array([0., 0., 1.])
+    gait = GroundedGait(
+        step_period_s=1.23, duty_factor=.62,
+        step_length_body_heights=.6, cycles=1, sample_hz=120)
+    plan = _axial_performance_plan(gait)
+    first, child = [source.name_to_node[name] for name in roles["tail"][:2]]
+
+    def tail_yaw(time):
+        row = sample_grounded_gait(gait, time, 2.)
+        _, posed = _performance_pose(source, roles, plan, row, up, forward)
+        direction = np.asarray(_world_position(posed[child])) - np.asarray(
+            _world_position(posed[first]))
+        direction -= up * float(direction @ up)
+        direction /= np.linalg.norm(direction)
+        target = -forward
+        return math.degrees(math.atan2(
+            float(up @ np.cross(target, direction)), float(target @ direction)))
+
+    double = (gait.duty_factor - .5) * gait.step_period_s
+    stance = gait.duty_factor * gait.step_period_s
+    weights = np.linspace(.6, 1.4, len(roles["tail"]))
+    weights /= weights.sum()
+    assert tail_yaw(double) == pytest.approx(-16 * weights[0], abs=1e-8)
+    assert tail_yaw(stance) == pytest.approx(0, abs=1e-8)
+
+
+def test_omitted_axial_clock_preserves_exact_legacy_tail_arithmetic(monkeypatch):
+    source, roles = fixture("axial_legacy_", 1., upper_body=True)
+    up = np.array([0., 1., 0.])
+    forward = np.array([0., 0., 1.])
+    gait = GroundedGait(
+        step_period_s=1.23, duty_factor=.62,
+        step_length_body_heights=.6, cycles=1, sample_hz=120)
+    performance = Performance(
+        pelvis_yaw_degrees=0, pelvis_roll_degrees=0,
+        pelvis_sway_body_heights=0, tail_yaw_degrees=9.994991664328396,
+        tail_lag_fraction=.16, gaze_elevation_degrees=0,
+        skin_refinement=False)
+    plan = decorate_plan(build_grounded_plan(gait, 2.), performance)
+    row = sample_grounded_gait(gait, .371, 2.)
+    row["performance_gain"] = .1087256783870183
+    row["locomotion_time_s"] = 1.881
+    tail = [source.name_to_node[name] for name in roles["tail"]]
+    captured = {}
+    original = performance_module._world_delta
+
+    def capture(source_, translations, rotations, scales, node, axis, degrees):
+        if node == tail[0]:
+            captured["degrees"] = degrees
+        return original(
+            source_, translations, rotations, scales, node, axis, degrees)
+
+    monkeypatch.setattr(performance_module, "_world_delta", capture)
+    _performance_pose(source, roles, plan, row, up, forward)
+    weights = np.linspace(.6, 1.4, len(tail))
+    weights /= weights.sum()
+    phase, gain = phase_and_gain(row)
+    angle = 2 * math.pi * phase / plan["same_foot_cycle_s"]
+    expected = (-gain * performance.tail_yaw_degrees * weights[0]
+                * math.sin(angle))
+    assert captured["degrees"] == expected
+
+
+@pytest.mark.parametrize("kind", ["start", "stop"])
+def test_support_timed_axial_carrier_matches_grounded_transition_interface(kind):
+    source, roles = fixture("axial_transition_", 1., upper_body=True)
+    up = np.array([0., 1., 0.])
+    forward = np.array([0., 0., 1.])
+    gait = GroundedGait(
+        step_period_s=1.23, duty_factor=.62,
+        step_length_body_heights=.6, cycles=1, sample_hz=120)
+    performance = Performance(
+        pelvis_sway_body_heights=0,
+        pelvis_roll_degrees=0,
+        pelvis_yaw_degrees=2,
+        tail_yaw_degrees=16,
+        gaze_elevation_degrees=0,
+        center_tail=True,
+        support_timed_axial_carrier=True,
+    )
+    steady = decorate_plan(build_grounded_plan(gait, 2.), performance)
+    transition = decorate_plan(
+        build_transition_plan(GaitTransition(kind), gait, 2.), performance)
+    transition_row = transition["samples"][-1 if kind == "start" else 0]
+    steady_row = steady["samples"][0]
+    assert transition_row["locomotion_time_s"] == pytest.approx(0)
+    assert transition_row["performance_gain"] == pytest.approx(1)
+    _, transition_pose = _performance_pose(
+        source, roles, transition, transition_row, up, forward)
+    _, steady_pose = _performance_pose(
+        source, roles, steady, steady_row, up, forward)
+    body_names = list(dict.fromkeys([
+        roles["pelvis"], *roles.get("spine", []), roles["chest"],
+        *roles.get("neck", []), roles["head"], *roles.get("tail", []),
+    ]))
+    for name in body_names:
+        node = source.name_to_node[name]
+        assert np.asarray(transition_pose[node]) == pytest.approx(
+            np.asarray(steady_pose[node]), abs=1e-12)
 
 
 def test_stance_vault_proxy_uses_declared_support_clock_and_analytic_velocity():

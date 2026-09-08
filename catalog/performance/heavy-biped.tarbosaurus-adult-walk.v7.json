@@ -1,0 +1,196 @@
+{
+  "classification": "art-directed support-timed pelvis travel, upper-trunk, neck and tail coordination; kinematic pelvis proxy only, with no COM, force, work, mass-response or biological claim",
+  "parameters": {
+    "center_lanes_on_bilateral_hip_midpoint": true,
+    "center_tail": true,
+    "gaze_elevation_degrees": 3.0,
+    "lane_width_body_heights": 0.24,
+    "pelvis_roll_degrees": 1.5,
+    "pelvis_sway_body_heights": 0.018,
+    "pelvis_yaw_degrees": 2.0,
+    "skin_refinement": true,
+    "tail_lag_fraction": 0.16,
+    "tail_yaw_degrees": 16.0,
+    "support_directed_pelvis_carrier": true,
+    "upper_trunk_counterroll_degrees": 0.9,
+    "support_timed_sagittal_carrier": true,
+    "pelvis_support_pitch_degrees": 1.2,
+    "upper_trunk_counterpitch_degrees": 0.75,
+    "neck_counterpitch_degrees": 0.45,
+    "tail_counterpitch_degrees": 1.5,
+    "pelvis_forward_velocity_modulation_fraction": 0.14519967609352594,
+    "neutral_jaw_calibration": {
+      "source_geometry_sha256": "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f",
+      "close_degrees": 50.03933635803102,
+      "clearance_body_heights": 0.0015,
+      "measured_body_height_m": 2.657391579010845,
+      "measured_minimum_gap_m": 0.003986087368516689,
+      "method": "semantic_weighted_binned_surface_clearance.v1",
+      "axis_frame": "admitted_jaw_local_from_declared_lateral.v1",
+      "skin_index": 0,
+      "position_accessor": 0,
+      "joint_accessors": [
+        3,
+        4,
+        5
+      ],
+      "weight_accessors": [
+        6,
+        7,
+        8
+      ],
+      "surface_bins": [
+        {
+          "lower_vertex_indices": [
+            2917,
+            2947,
+            2963,
+            2997,
+            3076,
+            3077,
+            3108,
+            4551,
+            4620,
+            4690,
+            4710
+          ],
+          "upper_vertex_indices": [
+            2032,
+            2057,
+            2086,
+            7411,
+            7418
+          ]
+        },
+        {
+          "lower_vertex_indices": [
+            2929,
+            3034,
+            3056,
+            3079,
+            4491,
+            4517,
+            4552,
+            4553,
+            4595,
+            4622
+          ],
+          "upper_vertex_indices": [
+            1977,
+            2030,
+            2039,
+            2486
+          ]
+        },
+        {
+          "lower_vertex_indices": [
+            2914,
+            2920,
+            2966,
+            4541,
+            4598,
+            4605,
+            4624,
+            4647,
+            4648,
+            4683
+          ],
+          "upper_vertex_indices": [
+            2007,
+            2734,
+            2752,
+            2764
+          ]
+        },
+        {
+          "lower_vertex_indices": [
+            5635,
+            5682,
+            5714,
+            5793,
+            6186,
+            6194,
+            6216
+          ],
+          "upper_vertex_indices": [
+            1679,
+            1715,
+            2710,
+            2743
+          ]
+        },
+        {
+          "lower_vertex_indices": [
+            5639,
+            5727,
+            5746,
+            6209,
+            6852
+          ],
+          "upper_vertex_indices": [
+            1754,
+            2697,
+            2740
+          ]
+        },
+        {
+          "lower_vertex_indices": [
+            5586,
+            6439,
+            6499,
+            6500,
+            7079
+          ],
+          "upper_vertex_indices": [
+            1910,
+            2050,
+            2075,
+            2538
+          ]
+        }
+      ]
+    }
+  },
+  "reference": {
+    "classification": "visual direction and first-order energy analogy only; approximate phase pairing, not calibrated kinetics; no biological, COM, force, work or mass-response claim",
+    "source_frame_rate_hz": 24,
+    "carrier_derivation": {
+      "formula": "k = g * (pelvis_excursion_m / 2) / mean_forward_velocity_mps^2",
+      "gravitational_acceleration_mps2": 9.80665,
+      "pelvis_excursion_body_heights": 0.016,
+      "body_height_m": 2.270663281560174,
+      "pelvis_excursion_m": 0.036330612504962785,
+      "mean_forward_velocity_mps": 1.1076406251513045,
+      "result": 0.14519967609352594,
+      "mass_cancels": true,
+      "scope": "one bounded dimensionless art-direction coefficient from a first-order exchange analogy; not a fitted reference measurement, dynamics solve, force estimate or inferred center of mass"
+    },
+    "assets": [
+      {
+        "path": "assets/examples/tarbosaurus/tarbosaurus_walk.mp4",
+        "sha256": "b0401fc76a202d6ed5dc9a5515f1054eab8bed8075c04f6167ff426fd603f5ae"
+      },
+      {
+        "path": "assets/examples/tarbosaurus/Tarbosaurus#walk_side_v02.mp4",
+        "sha256": "7f981e34a38955b44df799069693c57a5b5c881083ae4cbd62419e5cdc7d3ea5"
+      },
+      {
+        "path": "assets/examples/tarbosaurus/tarbosaurus-walking-looking.mp4",
+        "sha256": "80a4d5c0c7ed9da43b2c06f5381ef95c309904ca302031c945a6c28bde29fa8a"
+      }
+    ],
+    "neutral_jaw_calibration": {
+      "classification": "Authored engineering neutral-pose response with positive sampled surface clearance; not tooth contact, biological measurement, or visual approval.",
+      "diagnostic": "external task-storage audits/adult-v8-neutral-jaw-diagnostic",
+      "diagnostic_result_sha256": "abd44cbff9a77ffb556764fdb100d58516907fc8314620a515f4e2ba7dee115c",
+      "diagnostic_report_sha256": "9d9abfcd7c0b9b10c663b9d952e0e7cbe7e39e011f11cbdec2d1007551171eec",
+      "static_blender_import_receipt_sha256": "4e4463661c0e249307b1861df900f2a363a5225d635192dd1e45c8934041c2ce",
+      "historical_snapshot_use": "Pose-only diagnostic comparison; no timing, motion, or directions are admitted from it.",
+      "normalized_calibration": "external task-storage audits/neutral-jaw-normalized-calibration-v2.json",
+      "normalized_calibration_sha256": "b5d0727f359ed32b2525b4205ebe5cf746405be1306b39aa0f40694d50e2f743",
+      "normalized_calibration_script_sha256": "4aa34df7b9f18292cf6ea8e6c0e32c390e814d0320e61e287e176a43ae13ff54",
+      "measurement_space": "Frozen raw source geometry; admitted runtime gap and body height scale together by the verified uniform animal scale."
+    }
+  },
+  "schema": "eonwild.motion.performance.v1"
+}
