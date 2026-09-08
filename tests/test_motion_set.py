@@ -410,12 +410,22 @@ def test_package_local_snapshots_rebuild_effective_performance(tmp_path):
             "assembly": assembly, "gait_response": gait_receipt,
         },
     }
+    plan = json.loads(json_bytes(plan))
     _verify_motion_set_provenance(
         tmp_path, recipe=resolution.recipe, lock=lock,
         runtime=runtime, receipt=receipt, plan=plan,
     )
     corrupted = deepcopy(plan)
     corrupted["performance"]["pelvis_yaw_degrees"] += 0.1
+    with pytest.raises(ContractError, match="solve policy provenance"):
+        _verify_motion_set_provenance(
+            tmp_path, recipe=resolution.recipe, lock=lock,
+            runtime=runtime, receipt=receipt, plan=corrupted,
+        )
+    corrupted = deepcopy(plan)
+    corrupted["performance"]["neutral_jaw_calibration"][
+        "joint_accessors"
+    ][0] += 1
     with pytest.raises(ContractError, match="solve policy provenance"):
         _verify_motion_set_provenance(
             tmp_path, recipe=resolution.recipe, lock=lock,
@@ -495,6 +505,7 @@ def test_transition_plan_is_bound_to_packaged_program_snapshot(tmp_path, motion)
             "gait_response": gait_receipt,
         },
     }
+    plan = json.loads(json_bytes(plan))
     _verify_motion_set_provenance(
         tmp_path,
         recipe=resolution.recipe,

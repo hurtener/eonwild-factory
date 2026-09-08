@@ -883,6 +883,7 @@ def _verify_motion_set_provenance(
             or (key == "neutral_jaw_calibration" and value["close_degrees"] == 0)
         )
     }
+    expected_parameters = json.loads(json_bytes(expected_parameters))
     if (
         runtime.get("motion_set") != resolution_lock["identities"]
         or runtime.get("solve_policy") != solve_policy
