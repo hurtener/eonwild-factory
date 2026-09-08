@@ -1,0 +1,40 @@
+{
+  "schema": "eonwild.motion.animal-instance.v1",
+  "id": "tarbosaurus-bataar.pin-552-1.adult.v2",
+  "version": 2,
+  "taxon": "Tarbosaurus bataar",
+  "specimen": "PIN 552-1",
+  "life_stage": "adult",
+  "morphology_comparison": {
+    "status": "UNVERIFIED",
+    "segment_order": ["femur", "tibia", "central_metatarsal"],
+    "taxon_level_lengths_m": [0.94, 0.945, 0.535],
+    "source": {"citation": "Dececchi et al. 2020, PLOS ONE 15:e0223698, doi:10.1371/journal.pone.0223698", "locator": "Supplement S4, sheet S4 row 68; taxon-level Tarbosaurus bataar row without specimen identifier"},
+    "use_policy": "comparison only; does not authorize per-bone resizing or identify these values as PIN 552-1"
+  },
+  "measurements": {
+    "body_mass": {"value": 2816.3, "unit": "kg", "evidence_kind": "volumetric body-mass model", "confidence": "published_estimate", "source": {"citation": "Snively et al. 2019, PeerJ 7:e6432, doi:10.7717/peerj.6432", "locator": "Table 2, Tarbosaurus PIN 552-1 adult model"}},
+    "hindlimb_length": {"value": 2.415, "unit": "m", "evidence_kind": "published summed femur, tibia and central metatarsal length", "confidence": "published_estimate", "source": {"citation": "Dececchi et al. 2020, PLOS ONE 15:e0223698, doi:10.1371/journal.pone.0223698", "locator": "Table 1, Tarbosaurus PIN 552-1 HL"}},
+    "hip_height_proxy": {"value": 1.932, "unit": "m", "evidence_kind": "posture proxy calculated as 0.8 times hindlimb length", "confidence": "derived_proxy", "source": {"citation": "Dececchi et al. 2020, PLOS ONE 15:e0223698, doi:10.1371/journal.pone.0223698", "locator": "Methods and Table 1, HH=0.8*HL for Tarbosaurus PIN 552-1"}}
+  },
+  "geometry_calibration": {
+    "source_geometry_sha256": "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f",
+    "scale_policy": "uniform_hindlimb_match",
+    "source_measurements": {
+      "skin_length": {"value": 11.934951987657179, "unit": "m", "evidence_kind": "reopened recovered-bind GLB skinned-vertex extent along explicit +Z forward axis", "confidence": "measured_source_geometry", "source": {"citation": "bind-pose admitted neutral geometry", "locator": "source SHA-256, full skin POSITION extent"}},
+      "left_semantic_hindlimb": {"value": 2.8095916953675136, "unit": "m", "evidence_kind": "semantic hip-knee-ankle-foot chain world-length sum", "confidence": "measured_source_geometry", "source": {"citation": "bind-pose admitted neutral geometry and heavy-biped.v9 semantic rig", "locator": "left contactChain"}},
+      "right_semantic_hindlimb": {"value": 2.8095916183412565, "unit": "m", "evidence_kind": "semantic hip-knee-ankle-foot chain world-length sum", "confidence": "measured_source_geometry", "source": {"citation": "bind-pose admitted neutral geometry and heavy-biped.v9 semantic rig", "locator": "right contactChain"}},
+      "left_semantic_segments": {"value": [0.965626903146444, 1.1552207870334077, 0.688744005187662], "unit": "m", "evidence_kind": "semantic hip-knee-ankle-foot consecutive segment lengths", "confidence": "measured_source_geometry", "source": {"citation": "bind-pose admitted neutral geometry and heavy-biped.v9 semantic rig", "locator": "left contactChain segments"}},
+      "right_semantic_segments": {"value": [0.965626987928024, 1.1552205691412778, 0.6887440612719545], "unit": "m", "evidence_kind": "semantic hip-knee-ankle-foot consecutive segment lengths", "confidence": "measured_source_geometry", "source": {"citation": "bind-pose admitted neutral geometry and heavy-biped.v9 semantic rig", "locator": "right contactChain segments"}},
+      "pelvis_to_skin_floor": {"value": 2.7563616065364025, "unit": "m", "evidence_kind": "semantic pelvis height above reopened recovered-bind skin floor", "confidence": "measured_source_geometry", "source": {"citation": "bind-pose admitted neutral geometry and heavy-biped.v9 semantic rig", "locator": "pelvis world position minus minimum skin height"}}
+    }
+  },
+  "limitations": [
+    "Body mass is a published model estimate for PIN 552-1, not a species range or direct fossil measurement.",
+    "Hip height is a 0.8 hindlimb-length posture proxy, not a direct fossil or emitted-rig measurement.",
+    "The published mass and hindlimb proxies have not been validated as corresponding to this recovered source geometry; this binding preserves them as declared diagnostic inputs.",
+    "Uniform geometry scaling does not infer segment masses, inertias, tissue stress, muscle force or contact-force distribution.",
+    "Taxon-level S4 limb proportions lack a specimen identifier and reveal a relative-segment mismatch; they are comparison evidence, not permission to resize bones.",
+    "This evidence binding does not establish biological validation or production approval."
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "schema": "eonwild.motion.factory-recipe.v1",
+  "id": "heavy-biped.tarbosaurus-pin-552-1-adult-walk.v8",
+  "version": 8,
+  "family": "heavy-predatory-biped",
+  "program": "grounded_gait",
+  "description": "One-cycle adult PIN 552-1 bind-pose geometry diagnostic using the original skin-aligned skeleton recovered from inverse-bind matrices; preserves v7 gait, timing, performance, articulation and thresholds while remeasuring source calibration and the explicit +Z/+Y frame; kinematic art direction only, with static bind appearance pending visual review and no COM, force, work, mass-response or biological claim",
+  "supersedes": "heavy-biped.tarbosaurus-pin-552-1-adult-walk.v7",
+  "source": {
+    "path": "assets/sha256/2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f.glb",
+    "sha256": "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f"
+  },
+  "rig": {"path": "catalog/rigs/heavy-biped.v9.json", "sha256": "c3de770bf7dcc68219a28fb9851e9b75f3d3eebe2c2c0c7deb0078850100fd7e"},
+  "animal": {"path": "catalog/animals/tarbosaurus-bataar-pin-552-1.adult.v2.json", "sha256": "53ffeba22e24a87504d3dcc310bedacf6db94d60a25ffe56ad028b03f41e849d"},
+  "program_profile": {"path": "catalog/programs/heavy-biped.tarbosaurus-adult-walk.v4.json", "sha256": "271ccb833a8913d3dc6bd8281e798e54b9c7bebad2080136245cb7b5e5afa725"},
+  "contact_profile": {"path": "catalog/contacts/heavy-biped.v10.json", "sha256": "61e0351fe9f7170ddce7f0b83a8f0379d119349d3c392ffec43e544adb115db5"},
+  "performance_profile": {"path": "catalog/performance/heavy-biped.tarbosaurus-adult-walk.v6.json", "sha256": "e54eecc5eb361f9472d9d7373447a3a0cd2257ace1287c9966a3e3c8dc2c77b5"},
+  "articulation_profile": {"path": "catalog/articulation/heavy-biped.tarbosaurus-adult-walk.v1.json", "sha256": "c1206143387ad4d1084a413ee031018f5a61a8e0539ef8256c6bba74a0f4bc6a"},
+  "forward_axis": [0.0, 0.0, 1.0],
+  "up_axis": [0.0, 1.0, 0.0]
+}
