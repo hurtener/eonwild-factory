@@ -1,10 +1,10 @@
 # Adult v7 support-speed pelvis diagnostic
 
-Status: **TECHNICAL PASS; VISUAL REVIEW PENDING.** This is one bounded
-kinematic pelvis-proxy candidate. It is not a center-of-mass, force, work,
-mass-response or biological model. Unity parity is `NOT_RUN`, production
-approval is false, and the existing exact-C1 transition blocker is outside
-this steady-loop experiment.
+Status: **SOURCE REVIEW CLEAN; CURRENT EXACT LOOP BLOCKED; VISUAL REVIEW
+PENDING.** This is one bounded kinematic pelvis-proxy candidate. It is not a
+center-of-mass, force, work, mass-response or biological model. Unity parity
+is `NOT_RUN`, production approval is false, and direct transition continuity
+is a separate gate from this steady-loop result.
 
 ## Bounded mechanism
 
@@ -45,8 +45,11 @@ performance input and derivation checks are commit
 
 The immutable package is retained outside Git at
 `out/continuation-adult-v7-support-speed-001`. Its 297 serialized keys span
-one 2.46-second cycle. Factory verification reports integrity and technical
-`PASS`. Key hashes are:
+one 2.46-second cycle. Factory verification reports integrity `PASS` and the
+package's historical quadratic-estimator technical status `PASS`. The current
+exact exported-channel evaluator supersedes that continuity interpretation and
+blocks this loop, as recorded below. The package and its original receipts are
+preserved byte for byte. Key hashes are:
 
 - manifest: `7c01449f874c740b7700daae5f2ada531263df23060901b9252d0d582c2861e0`
 - root-motion GLB: `9d823831c2f6bf6b3eb1482784fb75ef3532838385bf111a683ee2c7d0986e0c`
@@ -98,7 +101,19 @@ Hard articulation violation is zero. The largest preferred-envelope departure
 is `3.364556 degrees`; solved foot-pitch speed is `479.869184 degrees/s` under
 the unchanged `600 degrees/s` limit. The toe-joint proxy reaches
 `-0.011004394 m`; this is not skin penetration, and the independent final
-skinned-contact measurement passes. Cyclic continuity passes in both modes.
+skinned-contact measurement passes.
+
+The current exact adjacent-LINEAR/shortest-SLERP evaluator reports local linear
+seam mismatch `0.0032116449766123154 m/s` against the unchanged `0.001 m/s`
+limit in both root-motion and in-place exports. The witness is pelvis
+`Bone_001`. Angular mismatch is `3.652031815499178 degrees/s` and remains under
+the `10 degrees/s` limit. Current exact local-loop status is therefore
+`BLOCKED`. This is a local serialized-channel result; it does not replace the
+separate direct start/stop transition checks. The attached
+`host-exact-continuity-status.json` is SHA-256
+`1e2e7bc13746b0af232a764c00cd905c90aa09791ff71ae9ea270e3b663483be`
+and identifies evaluator source
+`61c7ffc99ac2c5166345c5b690328c55bce2aefd`.
 
 ## Verification and remaining decision
 
@@ -106,12 +121,21 @@ The focused carrier tests exercise coefficient rejection, grounded and vault
 scope, both stride signs, the analytic derivative, periodic closure, zero net
 travel, a rotated production coordinate frame, the actual production
 root-to-pelvis hierarchy, a forged hierarchy and zero/omitted byte identity.
-The complete performance test module passes 86 tests. Together with the three
-versioned-input checks, the focused candidate set passes 16 tests. Ruff passes
+The reproduced combined invocation passes 89 tests: 86 in the complete
+performance test module plus three versioned-input checks. The narrower 16-test
+selection covers the newly added carrier and catalog cases only. Ruff passes
 for the changed source and new catalog test, and `git diff --check` is clean.
+
+Two independent round-one reviews found no P0/P1 source defect and converged on
+the report-only continuity correction above. Their preserved files are
+`review-root-round1.md` (SHA-256
+`88a34e4cfe645b4e3928f7a332527212e6fd02cce9a36c152c8a390dcf36bbc7`)
+and `review-independent-round1.md` (SHA-256
+`cd8168a8a842f9ac798ca5e3444d6afd29fa9557879234d01e0c0bbd9a39105f`).
 
 The mechanical result establishes that the new local pelvis speed wave is
 present, phase-aligned, periodic, root-neutral and compatible with the existing
-contact and engineering gates. Whether it reduces the visible glide and
-communicates the intended effort remains a native-time visual decision. No
-amplitude sweep or production claim follows from this candidate.
+contact and articulation gates. The current exact local-loop continuity gate
+remains blocked. Whether the mechanism reduces visible glide and communicates
+the intended effort remains a native-time visual decision. No amplitude sweep
+or production claim follows from this candidate.
