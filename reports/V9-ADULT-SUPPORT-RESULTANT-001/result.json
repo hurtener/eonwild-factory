@@ -1,0 +1,1102 @@
+{
+  "classification": "Sampled engineering sensitivity diagnostic; not exact LINEAR-key dynamics, measured CoP/load, fossil segment properties, stability certification, or motion approval",
+  "engineering_assumptions": {
+    "contact_load_alternatives": {
+      "double_support": [
+        {
+          "left": 0.5,
+          "right": 0.5
+        },
+        {
+          "leading": 0.6,
+          "trailing": 0.4
+        }
+      ],
+      "single_support": [
+        {
+          "stance": 1.0
+        }
+      ]
+    },
+    "cop_proxy": "distal node of the semantic toe chain whose neutral lateral offset from the foot root is smallest, projected to the declared ground plane",
+    "cop_scope": "Authored engineering point only; sole material ranges are geometric availability and neither input is measured pressure",
+    "inertia_basis": "Existing provisional normalized node-frame diagonal engineering values; results report their static yaw check against the published axial-body value rather than treating them as fossil measurements",
+    "local_com_alternatives": [
+      "semantic_joint_origin",
+      "semantic_link_midpoint"
+    ],
+    "segment_profile": "profiles/v9/tarbosaurus-provisional.json",
+    "tail_mass_fraction_delta": 0.03,
+    "tail_sensitivity_basis": "Snively et al. report that changing tail depth by +/-10% changed total body mass by no more than 3%; this diagnostic conservatively redistributes 3% of total mass between axial center and tail while holding total mass fixed"
+  },
+  "limitations": [
+    "The existing segment fractions, local COM alternatives, and diagonal inertias are engineering assumptions, not published PIN 552-1 segment measurements.",
+    "Finite differences of sampled centroidal velocity and momentum are sensitivity estimates; LINEAR emitted keys have velocity discontinuities.",
+    "The material support envelope is geometric availability, not pressure or center of pressure.",
+    "A resultant inside that envelope does not prove a feasible pressure distribution, muscle force, tissue stress, or biological validity."
+  ],
+  "models": {
+    "baseline_joint_origin": {
+      "landmarks": {
+        "double_support_left_leads": {
+          "angular_momentum_rate_f_u_l_nm": [
+            -153.96141890699988,
+            2152.119999269263,
+            -2395.456685629621
+          ],
+          "central_toe_distal_cop_proxies_root_relative_f_u_l_m": {
+            "left": [
+              1.0436892204136068,
+              -2.289099359906612,
+              -0.15388127874761623
+            ],
+            "right": [
+              -0.3268158469775104,
+              -2.289099359906612,
+              0.15388116767410515
+            ]
+          },
+          "declared_contacts": [
+            "left",
+            "right"
+          ],
+          "free_up_axis_moment_nm": 2221.8494947877853,
+          "geometric_support_forward_range_m": [
+            -0.6967769576787438,
+            1.290659498163995
+          ],
+          "geometric_support_lateral_range_m": [
+            -0.8333599247920116,
+            0.7932867260604307
+          ],
+          "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
+            "equal_0.5_0.5": [
+              0.3584366867180482,
+              -2.289099359906612,
+              -5.553675554159643e-08
+            ],
+            "leading_0.6_trailing_0.4": [
+              0.49548719345715986,
+              -2.289099359906612,
+              -0.030776300178927678
+            ]
+          },
+          "native_key_index": 18,
+          "outside_geometric_support_m": {
+            "forward": 0.0,
+            "lateral": 0.0
+          },
+          "required_force_f_u_l_n": [
+            -347.4273800330126,
+            28941.30680707015,
+            -820.1243306515404
+          ],
+          "required_minus_cop_proxy_f_l_m": {
+            "equal_0.5_0.5": [
+              -0.12598725563439905,
+              0.07599035995934413
+            ],
+            "leading_0.6_trailing_0.4": [
+              -0.26303776237351073,
+              0.10676660460151627
+            ]
+          },
+          "required_resultant_root_relative_f_u_l_m": [
+            0.23244943108364913,
+            -2.289099359906612,
+            0.07599030442258858
+          ],
+          "time_s": 0.14959459006786346
+        },
+        "double_support_right_leads": {
+          "angular_momentum_rate_f_u_l_nm": [
+            135.19543613911776,
+            -2117.568847068526,
+            -2403.69890354225
+          ],
+          "central_toe_distal_cop_proxies_root_relative_f_u_l_m": {
+            "left": [
+              -0.3268161475574227,
+              -2.289099359906612,
+              -0.153881372222474
+            ],
+            "right": [
+              1.0436893719460851,
+              -2.289099359906612,
+              0.15388123886980115
+            ]
+          },
+          "declared_contacts": [
+            "left",
+            "right"
+          ],
+          "free_up_axis_moment_nm": -2187.842193057994,
+          "geometric_support_forward_range_m": [
+            -0.7038746732015055,
+            1.2944321789668218
+          ],
+          "geometric_support_lateral_range_m": [
+            -0.8333600317748582,
+            0.7932867977127409
+          ],
+          "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
+            "equal_0.5_0.5": [
+              0.3584366121943312,
+              -2.289099359906612,
+              -6.667633642432058e-08
+            ],
+            "leading_0.6_trailing_0.4": [
+              0.49548716414468197,
+              -2.289099359906612,
+              0.03077619443289109
+            ]
+          },
+          "native_key_index": 166,
+          "outside_geometric_support_m": {
+            "forward": 0.0,
+            "lateral": 0.0
+          },
+          "required_force_f_u_l_n": [
+            -460.17043660830353,
+            28956.10751988476,
+            820.6641923705592
+          ],
+          "required_minus_cop_proxy_f_l_m": {
+            "equal_0.5_0.5": [
+              -0.11155075310744089,
+              -0.1224482362802251
+            ],
+            "leading_0.6_trailing_0.4": [
+              -0.24860130505779165,
+              -0.1532244973894526
+            ]
+          },
+          "required_resultant_root_relative_f_u_l_m": [
+            0.2468858590868903,
+            -2.289099359906612,
+            -0.12244830295656152
+          ],
+          "time_s": 1.3795945644378662
+        },
+        "left_declared_sole_support_midpoint": {
+          "angular_momentum_rate_f_u_l_nm": [
+            -750.9934808247223,
+            1471.77077222753,
+            5206.087304177321
+          ],
+          "central_toe_distal_cop_proxies_root_relative_f_u_l_m": {
+            "left": [
+              0.3584368222573344,
+              -2.289099359906612,
+              -0.1538813391134426
+            ]
+          },
+          "declared_contacts": [
+            "left"
+          ],
+          "free_up_axis_moment_nm": 1651.944816212445,
+          "geometric_support_forward_range_m": [
+            -0.018621726115823023,
+            0.6054071425088612
+          ],
+          "geometric_support_lateral_range_m": [
+            -0.8333599908369771,
+            -0.0964294651888579
+          ],
+          "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
+            "single_support_1.0": [
+              0.3584368222573344,
+              -2.289099359906612,
+              -0.1538813391134426
+            ]
+          },
+          "native_key_index": 92,
+          "outside_geometric_support_m": {
+            "forward": 0.0,
+            "lateral": 0.0
+          },
+          "required_force_f_u_l_n": [
+            -1568.971194584472,
+            24567.807636023255,
+            623.9223288254777
+          ],
+          "required_minus_cop_proxy_f_l_m": {
+            "single_support_1.0": [
+              -0.2896805356948664,
+              0.016122462260803383
+            ]
+          },
+          "required_resultant_root_relative_f_u_l_m": [
+            0.06875628656246802,
+            -2.289099359906612,
+            -0.1377588768526392
+          ],
+          "time_s": 0.7645946145057678
+        },
+        "right_declared_sole_support_midpoint": {
+          "angular_momentum_rate_f_u_l_nm": [
+            695.460422281722,
+            -1439.3919177513346,
+            5237.321585003696
+          ],
+          "central_toe_distal_cop_proxies_root_relative_f_u_l_m": {
+            "right": [
+              0.35843680865246696,
+              -2.289099359906612,
+              0.15388142466865756
+            ]
+          },
+          "declared_contacts": [
+            "right"
+          ],
+          "free_up_axis_moment_nm": -1617.8297944192796,
+          "geometric_support_forward_range_m": [
+            -0.011524294857736095,
+            0.6091796311180566
+          ],
+          "geometric_support_lateral_range_m": [
+            0.050051857235154845,
+            0.7932869932900247
+          ],
+          "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
+            "single_support_1.0": [
+              0.35843680865246696,
+              -2.289099359906612,
+              0.15388142466865756
+            ]
+          },
+          "native_key_index": 240,
+          "outside_geometric_support_m": {
+            "forward": 0.0,
+            "lateral": 0.0
+          },
+          "required_force_f_u_l_n": [
+            -1598.2867653975109,
+            24626.053965428717,
+            -626.7851874725702
+          ],
+          "required_minus_cop_proxy_f_l_m": {
+            "single_support_1.0": [
+              -0.28823445693054106,
+              -0.06423508979350559
+            ]
+          },
+          "required_resultant_root_relative_f_u_l_m": [
+            0.0702023517219259,
+            -2.289099359906612,
+            0.08964633487515197
+          ],
+          "time_s": 1.9945945739746094
+        }
+      },
+      "local_com_variant": "semantic_joint_origin",
+      "mass_variant": "baseline",
+      "published_axial_body_yaw_inertia_kg_m2": 4486.0,
+      "static_sample_yaw_inertia_kg_m2": 9332.350425735578
+    },
+    "baseline_link_midpoint": {
+      "landmarks": {
+        "double_support_left_leads": {
+          "angular_momentum_rate_f_u_l_nm": [
+            -65.99277994405297,
+            2830.7397789379297,
+            -2658.609122909623
+          ],
+          "central_toe_distal_cop_proxies_root_relative_f_u_l_m": {
+            "left": [
+              1.0436892204136068,
+              -2.289099359906612,
+              -0.15388127874761623
+            ],
+            "right": [
+              -0.3268158469775104,
+              -2.289099359906612,
+              0.15388116767410515
+            ]
+          },
+          "declared_contacts": [
+            "left",
+            "right"
+          ],
+          "free_up_axis_moment_nm": 2922.751142788611,
+          "geometric_support_forward_range_m": [
+            -0.6967769576787438,
+            1.290659498163995
+          ],
+          "geometric_support_lateral_range_m": [
+            -0.8333599247920116,
+            0.7932867260604307
+          ],
+          "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
+            "equal_0.5_0.5": [
+              0.3584366867180482,
+              -2.289099359906612,
+              -5.553675554159643e-08
+            ],
+            "leading_0.6_trailing_0.4": [
+              0.49548719345715986,
+              -2.289099359906612,
+              -0.030776300178927678
+            ]
+          },
+          "native_key_index": 18,
+          "outside_geometric_support_m": {
+            "forward": 0.0,
+            "lateral": 0.0
+          },
+          "required_force_f_u_l_n": [
+            -851.671655669247,
+            28874.12998300903,
+            -978.1595486046006
+          ],
+          "required_minus_cop_proxy_f_l_m": {
+            "equal_0.5_0.5": [
+              -0.055718924458870944,
+              0.11149043553945005
+            ],
+            "leading_0.6_trailing_0.4": [
+              -0.19276943119798262,
+              0.1422666801816222
+            ]
+          },
+          "required_resultant_root_relative_f_u_l_m": [
+            0.30271776225917724,
+            -2.289099359906612,
+            0.11149038000269451
+          ],
+          "time_s": 0.14959459006786346
+        },
+        "double_support_right_leads": {
+          "angular_momentum_rate_f_u_l_nm": [
+            46.27490732298041,
+            -2801.0976890350134,
+            -2670.8143533570806
+          ],
+          "central_toe_distal_cop_proxies_root_relative_f_u_l_m": {
+            "left": [
+              -0.3268161475574227,
+              -2.289099359906612,
+              -0.153881372222474
+            ],
+            "right": [
+              1.0436893719460851,
+              -2.289099359906612,
+              0.15388123886980115
+            ]
+          },
+          "declared_contacts": [
+            "left",
+            "right"
+          ],
+          "free_up_axis_moment_nm": -2893.1336891690407,
+          "geometric_support_forward_range_m": [
+            -0.7038746732015055,
+            1.2944321789668218
+          ],
+          "geometric_support_lateral_range_m": [
+            -0.8333600317748582,
+            0.7932867977127409
+          ],
+          "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
+            "equal_0.5_0.5": [
+              0.3584366121943312,
+              -2.289099359906612,
+              -6.667633642432058e-08
+            ],
+            "leading_0.6_trailing_0.4": [
+              0.49548716414468197,
+              -2.289099359906612,
+              0.03077619443289109
+            ]
+          },
+          "native_key_index": 166,
+          "outside_geometric_support_m": {
+            "forward": 0.0,
+            "lateral": 0.0
+          },
+          "required_force_f_u_l_n": [
+            -971.686686216318,
+            28891.084608529774,
+            978.7483552593128
+          ],
+          "required_minus_cop_proxy_f_l_m": {
+            "equal_0.5_0.5": [
+              -0.040684201147130894,
+              -0.12698246911307978
+            ],
+            "leading_0.6_trailing_0.4": [
+              -0.17773475309748166,
+              -0.1577587302223073
+            ]
+          },
+          "required_resultant_root_relative_f_u_l_m": [
+            0.3177524110472003,
+            -2.289099359906612,
+            -0.1269825357894162
+          ],
+          "time_s": 1.3795945644378662
+        },
+        "left_declared_sole_support_midpoint": {
+          "angular_momentum_rate_f_u_l_nm": [
+            -1144.2071978234108,
+            2368.534871552665,
+            5676.272985190436
+          ],
+          "central_toe_distal_cop_proxies_root_relative_f_u_l_m": {
+            "left": [
+              0.3584368222573344,
+              -2.289099359906612,
+              -0.1538813391134426
+            ]
+          },
+          "declared_contacts": [
+            "left"
+          ],
+          "free_up_axis_moment_nm": 2684.227859096721,
+          "geometric_support_forward_range_m": [
+            -0.018621726115823023,
+            0.6054071425088612
+          ],
+          "geometric_support_lateral_range_m": [
+            -0.8333599908369771,
+            -0.0964294651888579
+          ],
+          "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
+            "single_support_1.0": [
+              0.3584368222573344,
+              -2.289099359906612,
+              -0.1538813391134426
+            ]
+          },
+          "native_key_index": 92,
+          "outside_geometric_support_m": {
+            "forward": 0.0,
+            "lateral": 0.0
+          },
+          "required_force_f_u_l_n": [
+            -3533.614542707886,
+            23769.37924075699,
+            609.6674982882793
+          ],
+          "required_minus_cop_proxy_f_l_m": {
+            "single_support_1.0": [
+              -0.10994608370381709,
+              0.01974510630595938
+            ]
+          },
+          "required_resultant_root_relative_f_u_l_m": [
+            0.24849073855351733,
+            -2.289099359906612,
+            -0.1341362328074832
+          ],
+          "time_s": 0.7645946145057678
+        },
+        "right_declared_sole_support_midpoint": {
+          "angular_momentum_rate_f_u_l_nm": [
+            1117.05462949115,
+            -2366.3237597233074,
+            5678.119358634889
+          ],
+          "central_toe_distal_cop_proxies_root_relative_f_u_l_m": {
+            "right": [
+              0.35843680865246696,
+              -2.289099359906612,
+              0.15388142466865756
+            ]
+          },
+          "declared_contacts": [
+            "right"
+          ],
+          "free_up_axis_moment_nm": -2679.5469855576857,
+          "geometric_support_forward_range_m": [
+            -0.011524294857736095,
+            0.6091796311180566
+          ],
+          "geometric_support_lateral_range_m": [
+            0.050051857235154845,
+            0.7932869932900247
+          ],
+          "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
+            "single_support_1.0": [
+              0.35843680865246696,
+              -2.289099359906612,
+              0.15388142466865756
+            ]
+          },
+          "native_key_index": 240,
+          "outside_geometric_support_m": {
+            "forward": 0.0,
+            "lateral": 0.0
+          },
+          "required_force_f_u_l_n": [
+            -3568.1884440018125,
+            23836.34434585952,
+            -612.9204104432256
+          ],
+          "required_minus_cop_proxy_f_l_m": {
+            "single_support_1.0": [
+              -0.10776730206845064,
+              -0.035832382519267514
+            ]
+          },
+          "required_resultant_root_relative_f_u_l_m": [
+            0.2506695065840163,
+            -2.289099359906612,
+            0.11804904214939005
+          ],
+          "time_s": 1.9945945739746094
+        }
+      },
+      "local_com_variant": "semantic_link_midpoint",
+      "mass_variant": "baseline",
+      "published_axial_body_yaw_inertia_kg_m2": 4486.0,
+      "static_sample_yaw_inertia_kg_m2": 10776.338581205211
+    },
+    "tail_heavy_link_midpoint": {
+      "landmarks": {
+        "double_support_left_leads": {
+          "angular_momentum_rate_f_u_l_nm": [
+            -106.07634178500504,
+            3257.0842862482746,
+            -2994.6500272423455
+          ],
+          "central_toe_distal_cop_proxies_root_relative_f_u_l_m": {
+            "left": [
+              1.0436892204136068,
+              -2.289099359906612,
+              -0.15388127874761623
+            ],
+            "right": [
+              -0.3268158469775104,
+              -2.289099359906612,
+              0.15388116767410515
+            ]
+          },
+          "declared_contacts": [
+            "left",
+            "right"
+          ],
+          "free_up_axis_moment_nm": 3371.107670818669,
+          "geometric_support_forward_range_m": [
+            -0.6967769576787438,
+            1.290659498163995
+          ],
+          "geometric_support_lateral_range_m": [
+            -0.8333599247920116,
+            0.7932867260604307
+          ],
+          "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
+            "equal_0.5_0.5": [
+              0.3584366867180482,
+              -2.289099359906612,
+              -5.553675554159643e-08
+            ],
+            "leading_0.6_trailing_0.4": [
+              0.49548719345715986,
+              -2.289099359906612,
+              -0.030776300178927678
+            ]
+          },
+          "native_key_index": 18,
+          "outside_geometric_support_m": {
+            "forward": 0.0,
+            "lateral": 0.0
+          },
+          "required_force_f_u_l_n": [
+            -871.6355612137172,
+            28756.056351895015,
+            -1064.031833920511
+          ],
+          "required_minus_cop_proxy_f_l_m": {
+            "equal_0.5_0.5": [
+              -0.14931717657201404,
+              0.1218804191956497
+            ],
+            "leading_0.6_trailing_0.4": [
+              -0.2863676833111257,
+              0.15265666383782184
+            ]
+          },
+          "required_resultant_root_relative_f_u_l_m": [
+            0.20911951014603414,
+            -2.289099359906612,
+            0.12188036365889415
+          ],
+          "time_s": 0.14959459006786346
+        },
+        "double_support_right_leads": {
+          "angular_momentum_rate_f_u_l_nm": [
+            85.52387478414997,
+            -3228.785351077198,
+            -3006.5692999001603
+          ],
+          "central_toe_distal_cop_proxies_root_relative_f_u_l_m": {
+            "left": [
+              -0.3268161475574227,
+              -2.289099359906612,
+              -0.153881372222474
+            ],
+            "right": [
+              1.0436893719460851,
+              -2.289099359906612,
+              0.15388123886980115
+            ]
+          },
+          "declared_contacts": [
+            "left",
+            "right"
+          ],
+          "free_up_axis_moment_nm": -3342.9817212219446,
+          "geometric_support_forward_range_m": [
+            -0.7038746732015055,
+            1.2944321789668218
+          ],
+          "geometric_support_lateral_range_m": [
+            -0.8333600317748582,
+            0.7932867977127409
+          ],
+          "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
+            "equal_0.5_0.5": [
+              0.3584366121943312,
+              -2.289099359906612,
+              -6.667633642432058e-08
+            ],
+            "leading_0.6_trailing_0.4": [
+              0.49548716414468197,
+              -2.289099359906612,
+              0.03077619443289109
+            ]
+          },
+          "native_key_index": 166,
+          "outside_geometric_support_m": {
+            "forward": 0.0,
+            "lateral": 0.0
+          },
+          "required_force_f_u_l_n": [
+            -992.807209933746,
+            28773.218735348444,
+            1064.631511256608
+          ],
+          "required_minus_cop_proxy_f_l_m": {
+            "equal_0.5_0.5": [
+              -0.13411322990958685,
+              -0.13580758807146442
+            ],
+            "leading_0.6_trailing_0.4": [
+              -0.2711637818599376,
+              -0.16658384918069194
+            ]
+          },
+          "required_resultant_root_relative_f_u_l_m": [
+            0.22432338228474435,
+            -2.289099359906612,
+            -0.13580765474780085
+          ],
+          "time_s": 1.3795945644378662
+        },
+        "left_declared_sole_support_midpoint": {
+          "angular_momentum_rate_f_u_l_nm": [
+            -1143.8541075328264,
+            2489.1167615925897,
+            6282.7117656078235
+          ],
+          "central_toe_distal_cop_proxies_root_relative_f_u_l_m": {
+            "left": [
+              0.3584368222573344,
+              -2.289099359906612,
+              -0.1538813391134426
+            ]
+          },
+          "declared_contacts": [
+            "left"
+          ],
+          "free_up_axis_moment_nm": 2811.780591247884,
+          "geometric_support_forward_range_m": [
+            -0.018621726115823023,
+            0.6054071425088612
+          ],
+          "geometric_support_lateral_range_m": [
+            -0.8333599908369771,
+            -0.0964294651888579
+          ],
+          "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
+            "single_support_1.0": [
+              0.3584368222573344,
+              -2.289099359906612,
+              -0.1538813391134426
+            ]
+          },
+          "native_key_index": 92,
+          "outside_geometric_support_m": {
+            "forward": 0.0,
+            "lateral": 0.0
+          },
+          "required_force_f_u_l_n": [
+            -3517.1587042869655,
+            23887.212155952155,
+            586.4383184747425
+          ],
+          "required_minus_cop_proxy_f_l_m": {
+            "single_support_1.0": [
+              -0.2451481961545876,
+              0.02440974106690491
+            ]
+          },
+          "required_resultant_root_relative_f_u_l_m": [
+            0.11328862610274681,
+            -2.289099359906612,
+            -0.12947159804653768
+          ],
+          "time_s": 0.7645946145057678
+        },
+        "right_declared_sole_support_midpoint": {
+          "angular_momentum_rate_f_u_l_nm": [
+            1121.5369459268884,
+            -2492.7296729598825,
+            6289.273185615792
+          ],
+          "central_toe_distal_cop_proxies_root_relative_f_u_l_m": {
+            "right": [
+              0.35843680865246696,
+              -2.289099359906612,
+              0.15388142466865756
+            ]
+          },
+          "declared_contacts": [
+            "right"
+          ],
+          "free_up_axis_moment_nm": -2813.8321555936327,
+          "geometric_support_forward_range_m": [
+            -0.011524294857736095,
+            0.6091796311180566
+          ],
+          "geometric_support_lateral_range_m": [
+            0.050051857235154845,
+            0.7932869932900247
+          ],
+          "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
+            "single_support_1.0": [
+              0.35843680865246696,
+              -2.289099359906612,
+              0.15388142466865756
+            ]
+          },
+          "native_key_index": 240,
+          "outside_geometric_support_m": {
+            "forward": 0.0,
+            "lateral": 0.0
+          },
+          "required_force_f_u_l_n": [
+            -3551.8057501647972,
+            23954.78431172513,
+            -589.6483155425951
+          ],
+          "required_minus_cop_proxy_f_l_m": {
+            "single_support_1.0": [
+              -0.24309731537407275,
+              -0.03868993603855464
+            ]
+          },
+          "required_resultant_root_relative_f_u_l_m": [
+            0.11533949327839421,
+            -2.289099359906612,
+            0.11519148863010292
+          ],
+          "time_s": 1.9945945739746094
+        }
+      },
+      "local_com_variant": "semantic_link_midpoint",
+      "mass_variant": "tail_heavy",
+      "published_axial_body_yaw_inertia_kg_m2": 4486.0,
+      "static_sample_yaw_inertia_kg_m2": 11863.46682507125
+    },
+    "tail_light_link_midpoint": {
+      "landmarks": {
+        "double_support_left_leads": {
+          "angular_momentum_rate_f_u_l_nm": [
+            -24.976714830120407,
+            2385.739202188982,
+            -2297.133090873636
+          ],
+          "central_toe_distal_cop_proxies_root_relative_f_u_l_m": {
+            "left": [
+              1.0436892204136068,
+              -2.289099359906612,
+              -0.15388127874761623
+            ],
+            "right": [
+              -0.3268158469775104,
+              -2.289099359906612,
+              0.15388116767410515
+            ]
+          },
+          "declared_contacts": [
+            "left",
+            "right"
+          ],
+          "free_up_axis_moment_nm": 2457.154123038753,
+          "geometric_support_forward_range_m": [
+            -0.6967769576787438,
+            1.290659498163995
+          ],
+          "geometric_support_lateral_range_m": [
+            -0.8333599247920116,
+            0.7932867260604307
+          ],
+          "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
+            "equal_0.5_0.5": [
+              0.3584366867180482,
+              -2.289099359906612,
+              -5.553675554159643e-08
+            ],
+            "leading_0.6_trailing_0.4": [
+              0.49548719345715986,
+              -2.289099359906612,
+              -0.030776300178927678
+            ]
+          },
+          "native_key_index": 18,
+          "outside_geometric_support_m": {
+            "forward": 0.0,
+            "lateral": 0.0
+          },
+          "required_force_f_u_l_n": [
+            -831.707750131549,
+            28992.203614114,
+            -892.2872632886201
+          ],
+          "required_minus_cop_proxy_f_l_m": {
+            "equal_0.5_0.5": [
+              0.03711695121627301,
+              0.10118507979261838
+            ],
+            "leading_0.6_trailing_0.4": [
+              -0.09993355552283867,
+              0.13196132443479053
+            ]
+          },
+          "required_resultant_root_relative_f_u_l_m": [
+            0.3955536379343212,
+            -2.289099359906612,
+            0.10118502425586284
+          ],
+          "time_s": 0.14959459006786346
+        },
+        "double_support_right_leads": {
+          "angular_momentum_rate_f_u_l_nm": [
+            6.471046192990987,
+            -2354.8172999451976,
+            -2309.6792544859077
+          ],
+          "central_toe_distal_cop_proxies_root_relative_f_u_l_m": {
+            "left": [
+              -0.3268161475574227,
+              -2.289099359906612,
+              -0.153881372222474
+            ],
+            "right": [
+              1.0436893719460851,
+              -2.289099359906612,
+              0.15388123886980115
+            ]
+          },
+          "declared_contacts": [
+            "left",
+            "right"
+          ],
+          "free_up_axis_moment_nm": -2426.1188586361186,
+          "geometric_support_forward_range_m": [
+            -0.7038746732015055,
+            1.2944321789668218
+          ],
+          "geometric_support_lateral_range_m": [
+            -0.8333600317748582,
+            0.7932867977127409
+          ],
+          "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
+            "equal_0.5_0.5": [
+              0.3584366121943312,
+              -2.289099359906612,
+              -6.667633642432058e-08
+            ],
+            "leading_0.6_trailing_0.4": [
+              0.49548716414468197,
+              -2.289099359906612,
+              0.03077619443289109
+            ]
+          },
+          "native_key_index": 166,
+          "outside_geometric_support_m": {
+            "forward": 0.0,
+            "lateral": 0.0
+          },
+          "required_force_f_u_l_n": [
+            -950.5661625169489,
+            29008.95048171564,
+            892.8651992615921
+          ],
+          "required_minus_cop_proxy_f_l_m": {
+            "equal_0.5_0.5": [
+              0.051985607173853365,
+              -0.11822906442717676
+            ],
+            "leading_0.6_trailing_0.4": [
+              -0.0850649447764974,
+              -0.14900532553640428
+            ]
+          },
+          "required_resultant_root_relative_f_u_l_m": [
+            0.41042221936818457,
+            -2.289099359906612,
+            -0.11822913110351319
+          ],
+          "time_s": 1.3795945644378662
+        },
+        "left_declared_sole_support_midpoint": {
+          "angular_momentum_rate_f_u_l_nm": [
+            -1144.9961290846456,
+            2243.0113915095603,
+            5044.458730098089
+          ],
+          "central_toe_distal_cop_proxies_root_relative_f_u_l_m": {
+            "left": [
+              0.3584368222573344,
+              -2.289099359906612,
+              -0.1538813391134426
+            ]
+          },
+          "declared_contacts": [
+            "left"
+          ],
+          "free_up_axis_moment_nm": 2549.8597437300646,
+          "geometric_support_forward_range_m": [
+            -0.018621726115823023,
+            0.6054071425088612
+          ],
+          "geometric_support_lateral_range_m": [
+            -0.8333599908369771,
+            -0.0964294651888579
+          ],
+          "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
+            "single_support_1.0": [
+              0.3584368222573344,
+              -2.289099359906612,
+              -0.1538813391134426
+            ]
+          },
+          "native_key_index": 92,
+          "outside_geometric_support_m": {
+            "forward": 0.0,
+            "lateral": 0.0
+          },
+          "required_force_f_u_l_n": [
+            -3550.070381119778,
+            23651.546325543717,
+            632.8966781016236
+          ],
+          "required_minus_cop_proxy_f_l_m": {
+            "single_support_1.0": [
+              0.0266031930423809,
+              0.01503399284799703
+            ]
+          },
+          "required_resultant_root_relative_f_u_l_m": [
+            0.3850400152997153,
+            -2.289099359906612,
+            -0.13884734626544556
+          ],
+          "time_s": 0.7645946145057678
+        },
+        "right_declared_sole_support_midpoint": {
+          "angular_momentum_rate_f_u_l_nm": [
+            1112.6312344622365,
+            -2234.914499005254,
+            5041.460340974339
+          ],
+          "central_toe_distal_cop_proxies_root_relative_f_u_l_m": {
+            "right": [
+              0.35843680865246696,
+              -2.289099359906612,
+              0.15388142466865756
+            ]
+          },
+          "declared_contacts": [
+            "right"
+          ],
+          "free_up_axis_moment_nm": -2538.299021506149,
+          "geometric_support_forward_range_m": [
+            -0.011524294857736095,
+            0.6091796311180566
+          ],
+          "geometric_support_lateral_range_m": [
+            0.050051857235154845,
+            0.7932869932900247
+          ],
+          "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
+            "single_support_1.0": [
+              0.35843680865246696,
+              -2.289099359906612,
+              0.15388142466865756
+            ]
+          },
+          "native_key_index": 240,
+          "outside_geometric_support_m": {
+            "forward": 0.0,
+            "lateral": 0.0
+          },
+          "required_force_f_u_l_n": [
+            -3584.5711378523733,
+            23717.90437998033,
+            -636.1925053437905
+          ],
+          "required_minus_cop_proxy_f_l_m": {
+            "single_support_1.0": [
+              0.028914304756268105,
+              -0.03294629020968376
+            ]
+          },
+          "required_resultant_root_relative_f_u_l_m": [
+            0.38735111340873507,
+            -2.289099359906612,
+            0.1209351344589738
+          ],
+          "time_s": 1.9945945739746094
+        }
+      },
+      "local_com_variant": "semantic_link_midpoint",
+      "mass_variant": "tail_light",
+      "published_axial_body_yaw_inertia_kg_m2": 4486.0,
+      "static_sample_yaw_inertia_kg_m2": 9623.984229992
+    }
+  },
+  "published_constraints": {
+    "axial_body_com_from_rostrum_m": [
+      3.01,
+      0.87
+    ],
+    "axial_body_yaw_inertia_kg_m2": 4486.0,
+    "body_plus_swing_leg_yaw_inertia_kg_m2": 4515.1,
+    "citation": "Snively et al. 2019, PeerJ 7:e6432, doi:10.7717/peerj.6432",
+    "locators": [
+      "Table 3, adult Tarbosaurus PIN 552-1",
+      "Table 4, adult Tarbosaurus PIN row"
+    ],
+    "scope": "Published superellipse/frustum volumetric model estimates; the COM and yaw inertia describe the paper's axial-body model, not this GLB's segment frames",
+    "total_mass_kg": 2816.3
+  },
+  "schema": "eonwild.motion.adult-v9-support-resultant-sensitivity.v1",
+  "source": {
+    "animal_profile_sha256": "53ffeba22e24a87504d3dcc310bedacf6db94d60a25ffe56ad028b03f41e849d",
+    "assumptions_sha256": "3436202850a0488fc96076f1ee724d5c5d233f996db6519b3c867768b5def7e0",
+    "contact_profile_sha256": "61e0351fe9f7170ddce7f0b83a8f0379d119349d3c392ffec43e544adb115db5",
+    "package": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/continuation-adult-v9-axial-jaw-001",
+    "plan_sha256": "48e68639efd930c4209fd38fb484f4712461b5945cfbc90dd35fa047d1a7c513",
+    "provisional_segment_profile_sha256": "58e7ce3001df9eacc3da7c642dd50c9793ed8e2d843dcc730a781552881662c2",
+    "recipe_sha256": "f55da91847dc63489f9655cfc3641bee665bf8ce6122755a61748d98fabf3ccd",
+    "root_motion_glb_sha256": "db5b2123e156fa218cc426cf8774972a8c02f9cfce7eea9c80fcf91a8c129ebe",
+    "runtime_sha256": "317fc65f52ad48a0992e0c6d59f4dc79efc4a6e7969ac1b22dc9c9804e13e5be",
+    "sample_count": 297,
+    "support_geometry_audit_sha256": "03c1b83103ce4f72d9542a7dc320cc181a50a1ff53cdccf030b1220f2c96251f",
+    "support_resultant_module_sha256": "0706932a7e48a40c78aed08d7bce6e7ed0f537e919fe0949ce3a24c588673465"
+  }
+}
