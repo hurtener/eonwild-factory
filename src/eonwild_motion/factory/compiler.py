@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from dataclasses import replace
 import json
+import math
 from pathlib import Path
 import platform
 import shutil
@@ -609,6 +610,57 @@ def _serialized_interpolation(glb: Glb) -> str:
     return modes.pop()
 
 
+def _midpoint_contact_verdict(result: Any, *, sample_count: int) -> str:
+    expected = {
+        "verdict", "authority", "maximum_penetration_m",
+        "maximum_stance_gap_m", "ground_level_m", "sample_count",
+        "classification",
+    }
+    if not isinstance(result, dict) or set(result) != expected:
+        raise ContractError("CUBICSPLINE midpoint contact result shape is invalid")
+    verdict = result.get("verdict")
+    if verdict not in {"PASS", "FAIL"}:
+        raise ContractError("CUBICSPLINE midpoint contact verdict is invalid")
+    if type(result.get("sample_count")) is not int or result["sample_count"] != sample_count:
+        raise ContractError("CUBICSPLINE midpoint contact sample count is invalid")
+    for field in (
+        "maximum_penetration_m", "maximum_stance_gap_m", "ground_level_m"
+    ):
+        value = result.get(field)
+        if (
+            isinstance(value, bool)
+            or not isinstance(value, (int, float))
+            or not math.isfinite(float(value))
+        ):
+            raise ContractError("CUBICSPLINE midpoint contact scalar is invalid")
+    if result["maximum_penetration_m"] < 0:
+        raise ContractError("CUBICSPLINE midpoint penetration is invalid")
+    if result.get("classification") != (
+        "final serialized skin, fixed floor, full multi-influence weights, "
+        "unchanged engineering thresholds"
+    ):
+        raise ContractError("CUBICSPLINE midpoint contact classification is invalid")
+    authority = result.get("authority")
+    per_foot = authority.get("per_foot") if isinstance(authority, dict) else None
+    if (
+        not isinstance(authority, dict)
+        or set(authority) != {"per_foot"}
+        or not isinstance(per_foot, dict)
+        or set(per_foot) != {"left", "right"}
+        or any(
+            not isinstance(foot, dict)
+            or foot.get("verdict") not in {"PASS", "FAIL"}
+            for foot in per_foot.values()
+        )
+    ):
+        raise ContractError("CUBICSPLINE midpoint contact authority is invalid")
+    if verdict == "PASS" and any(
+        foot["verdict"] != "PASS" for foot in per_foot.values()
+    ):
+        raise ContractError("CUBICSPLINE midpoint contact verdict is inconsistent")
+    return verdict
+
+
 def verify_package(path: Path) -> dict:
     manifest = read_json(path / "manifest.json")
     if manifest.get("schema") != "eonwild.motion.factory-package.v1":
@@ -678,18 +730,18 @@ def verify_package(path: Path) -> dict:
         ):
             raise ContractError("CUBICSPLINE midpoint plan timeline is inconsistent")
         midpoint_contact = validation.get("cubic_midpoint_skinned_contact")
-        if (
-            not isinstance(midpoint_contact, dict)
-            or set(midpoint_contact) != {"root_motion", "in_place"}
-            or any(
-                not isinstance(result, dict)
-                or result.get("verdict") not in {"PASS", "FAIL"}
-                for result in midpoint_contact.values()
-            )
-        ):
+        if not isinstance(midpoint_contact, dict) or set(midpoint_contact) != {
+            "root_motion", "in_place"
+        }:
             raise ContractError("CUBICSPLINE package lacks midpoint contact evidence")
+        midpoint_verdicts = {
+            mode: _midpoint_contact_verdict(
+                result, sample_count=len(midpoint_times)
+            )
+            for mode, result in midpoint_contact.items()
+        }
         if (
-            any(result["verdict"] == "FAIL" for result in midpoint_contact.values())
+            "FAIL" in midpoint_verdicts.values()
             and validation.get("technical_status") == "PASS"
         ):
             raise ContractError("technical status ignores midpoint contact failure")

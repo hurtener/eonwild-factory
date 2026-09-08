@@ -24,6 +24,26 @@ from eonwild_motion.solve.whole_body_gait_transition import _append_accessor, _e
 from test_v9_airborne_gait import fixture
 
 
+def _midpoint_contact_result(verdict: str, sample_count: int) -> dict:
+    return {
+        "verdict": verdict,
+        "authority": {
+            "per_foot": {
+                side: {"verdict": verdict, "phases": [], "reasons": []}
+                for side in ("left", "right")
+            }
+        },
+        "maximum_penetration_m": 1.0 if verdict == "FAIL" else 0.0,
+        "maximum_stance_gap_m": 0.0001,
+        "ground_level_m": 0.0,
+        "sample_count": sample_count,
+        "classification": (
+            "final serialized skin, fixed floor, full multi-influence weights, "
+            "unchanged engineering thresholds"
+        ),
+    }
+
+
 def make_recipe(root: Path, *, prefix="fixture", scale=1.0, program="grounded_gait") -> Path:
     source, roles = fixture(prefix, scale, upper_body=True)
     raw, geometry = admit_geometry(source, roles, reference_clip="source")
@@ -191,13 +211,30 @@ def test_profile_free_cubic_metadata_and_midpoint_verdict_are_bound(
     validation = json.loads((output / "validation.json").read_text())
     validation["technical_status"] = "PASS"
     validation["cubic_midpoint_skinned_contact"] = {
-        "root_motion": {"verdict": "FAIL", "maximum_penetration_m": 1.0},
-        "in_place": {"verdict": "PASS"},
+        "root_motion": _midpoint_contact_result("FAIL", len(midpoint["samples"])),
+        "in_place": _midpoint_contact_result("PASS", len(midpoint["samples"])),
     }
     write_json(output / "validation.json", validation)
     manifest["technical_status"] = "PASS"
     for filename in ("cubic-midpoint-plan.json", "validation.json"):
         manifest["files"][filename] = digest((output / filename).read_bytes())
+    write_json(output / "manifest.json", manifest)
+    bare = deepcopy(validation)
+    bare["cubic_midpoint_skinned_contact"] = {
+        "root_motion": {"verdict": "PASS"},
+        "in_place": {"verdict": "PASS"},
+    }
+    write_json(output / "validation.json", bare)
+    manifest["files"]["validation.json"] = digest(
+        (output / "validation.json").read_bytes()
+    )
+    write_json(output / "manifest.json", manifest)
+    with pytest.raises(ContractError, match="result shape is invalid"):
+        verify_package(output)
+    write_json(output / "validation.json", validation)
+    manifest["files"]["validation.json"] = digest(
+        (output / "validation.json").read_bytes()
+    )
     write_json(output / "manifest.json", manifest)
     with pytest.raises(ContractError, match="ignores midpoint contact failure"):
         verify_package(output)

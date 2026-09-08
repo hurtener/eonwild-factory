@@ -21,7 +21,7 @@ from eonwild_motion.planning.articulation_profile import (
 )
 from eonwild_motion.solve.airborne_gait import solve_airborne_gait
 from eonwild_motion.solve.whole_body_gait_transition import _encode
-from test_factory import make_recipe
+from test_factory import _midpoint_contact_result, make_recipe
 from test_v9_airborne_gait import fixture
 
 
@@ -222,8 +222,12 @@ def test_recipe_hash_binds_profile_and_supported_actions_reject_it(tmp_path, mon
         "root_motion": failed, "in_place": failed,
     }
     cubic_validation["cubic_midpoint_skinned_contact"] = {
-        "root_motion": {"verdict": "PASS"},
-        "in_place": {"verdict": "PASS"},
+        "root_motion": _midpoint_contact_result(
+            "PASS", len(midpoint_plan["samples"])
+        ),
+        "in_place": _midpoint_contact_result(
+            "PASS", len(midpoint_plan["samples"])
+        ),
     }
     write_json(cubic / "validation.json", cubic_validation)
     cubic_receipt = json.loads((cubic / "solver-receipt.json").read_text())
