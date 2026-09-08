@@ -13,6 +13,7 @@ import numpy as np
 
 from ..errors import ContractError
 from ..layers.leg_contact_resolve_v3 import _world_matrices, _world_position, _rotation_from_matrix, _qmul, _qinv
+from ..planning.grounded_gait import GroundedGait, sample_grounded_gait
 from .airborne_gait import _qrotate, _qrotvec, _world_rotation, _unit
 
 
@@ -28,6 +29,7 @@ class Performance:
     center_tail: bool = True
     center_lanes_on_bilateral_hip_midpoint: bool | None = None
     support_directed_pelvis_carrier: bool | None = None
+    support_timed_axial_carrier: bool | None = None
     upper_trunk_counterroll_degrees: float | None = None
     support_timed_sagittal_carrier: bool | None = None
     pelvis_support_pitch_degrees: float | None = None
@@ -41,6 +43,7 @@ class Performance:
         for key, value in asdict(self).items():
             if key in ("center_lanes_on_bilateral_hip_midpoint",
                        "support_directed_pelvis_carrier",
+                       "support_timed_axial_carrier",
                        "upper_trunk_counterroll_degrees",
                        "support_timed_sagittal_carrier",
                        "pelvis_support_pitch_degrees",
@@ -51,6 +54,7 @@ class Performance:
                 continue
             if key in ("center_tail", "center_lanes_on_bilateral_hip_midpoint",
                        "support_directed_pelvis_carrier",
+                       "support_timed_axial_carrier",
                        "support_timed_sagittal_carrier", "skin_refinement"):
                 if type(value) is not bool:
                     raise ContractError(f"{key} must be boolean")
@@ -71,6 +75,9 @@ class Performance:
                 and self.support_directed_pelvis_carrier is not True):
             raise ContractError(
                 "upper-trunk counterroll requires the support-directed pelvis carrier")
+        if self.support_timed_axial_carrier is True and self.center_tail is not True:
+            raise ContractError(
+                "support-timed axial carrier requires centered tail semantics")
         sagittal = (
             self.pelvis_support_pitch_degrees,
             self.upper_trunk_counterpitch_degrees,
@@ -122,6 +129,12 @@ def decorate_plan(plan: dict, performance: Performance) -> dict:
         if not grounded:
             raise ContractError(
                 "support-timed sagittal carrier requires grounded locomotion")
+    if performance.support_timed_axial_carrier is not None:
+        grounded = (plan.get("program") == "grounded_gait"
+                    or plan.get("locomotion_program") == "grounded_gait")
+        if not grounded:
+            raise ContractError(
+                "support-timed axial carrier requires grounded locomotion")
     if performance.pelvis_forward_velocity_modulation_fraction not in (None, 0):
         grounded = (plan.get("program") == "grounded_gait"
                     or plan.get("locomotion_program") == "grounded_gait")
@@ -229,6 +242,116 @@ def _support_timed_sagittal_pulse(plan, phase, gain):
     step = float(cycle) / 2
     stance_clock = phase / step - float(duty)
     return -gain * math.cos(2 * math.pi * stance_clock)
+
+
+def _support_timed_axial_clock(source, base_worlds, roles, plan, phase, gain, lateral):
+    """Admit and sample one grounded pelvis/chest/tail axial clock.
+
+    The signed sine advances the hemipelvis of the foot leading during double
+    support and vanishes at declared single-support midpoints.  This is
+    art-directed kinematic coordination, not a COM, load or force estimate.
+    """
+    grounded = (plan.get("program") == "grounded_gait"
+                or plan.get("locomotion_program") == "grounded_gait")
+    if not grounded:
+        raise ContractError(
+            "support-timed axial carrier requires grounded locomotion")
+    parameters = plan.get("parameters")
+    if not isinstance(parameters, Mapping):
+        raise ContractError(
+            "support-timed axial carrier requires gait parameters")
+    duty = parameters.get("duty_factor")
+    step = parameters.get("step_period_s")
+    cycle = plan.get("same_foot_cycle_s")
+    if (isinstance(duty, bool) or not isinstance(duty, (int, float))
+            or not math.isfinite(duty) or not .5 < duty < 1
+            or isinstance(step, bool) or not isinstance(step, (int, float))
+            or not math.isfinite(step) or step <= 0
+            or isinstance(cycle, bool) or not isinstance(cycle, (int, float))
+            or not math.isfinite(cycle) or cycle <= 0
+            or not math.isclose(float(cycle), 2 * float(step), rel_tol=0., abs_tol=1e-9)):
+        raise ContractError(
+            "support-timed axial carrier requires a finite two-step grounded clock")
+    body_height = plan.get("body_height_m")
+    if (isinstance(body_height, bool) or not isinstance(body_height, (int, float))
+            or not math.isfinite(body_height) or body_height <= 0):
+        raise ContractError(
+            "support-timed axial carrier requires positive finite body height")
+    try:
+        hips = {
+            side: source.name_to_node[roles["legs"][side]["contactChain"][0]]
+            for side in ("left", "right")
+        }
+    except (KeyError, TypeError, IndexError) as exc:
+        raise ContractError(
+            "support-timed axial carrier requires semantic bilateral hips") from exc
+    hip_positions = {
+        side: np.asarray(_world_position(base_worlds[node]), dtype=float)
+        for side, node in hips.items()
+    }
+    lateral_array = np.asarray(lateral, dtype=float)
+    if (lateral_array.shape != (3,) or not np.isfinite(lateral_array).all()
+            or abs(np.linalg.norm(lateral_array) - 1) > 1e-8
+            or any(position.shape != (3,) or not np.isfinite(position).all()
+                   for position in hip_positions.values())):
+        raise ContractError(
+            "support-timed axial carrier requires finite admitted geometry and frame")
+    hip_midpoint = (hip_positions["left"] + hip_positions["right"]) / 2
+    offsets = {
+        side: float((position - hip_midpoint) @ lateral_array)
+        for side, position in hip_positions.items()
+    }
+    if (abs(offsets["left"]) <= 1e-8 or abs(offsets["right"]) <= 1e-8
+            or offsets["left"] * offsets["right"] >= 0):
+        raise ContractError(
+            "support-timed axial carrier requires separated bilateral hips")
+    left_sign = math.copysign(1., offsets["left"])
+
+    # Admit the source choreography at its canonical alternating double-support
+    # events. Validation must not depend on whether a finite output grid happens
+    # to contain either event (short and sparse transitions need not).
+    try:
+        gait = GroundedGait(**dict(parameters))
+    except (TypeError, ValueError, ContractError) as exc:
+        raise ContractError(
+            "support-timed axial carrier requires valid grounded gait parameters") from exc
+    if (not math.isclose(gait.step_period_s, float(step), rel_tol=0., abs_tol=1e-12)
+            or not math.isclose(gait.duty_factor, float(duty), rel_tol=0., abs_tol=1e-12)):
+        raise ContractError(
+            "support-timed axial carrier gait parameters conflict with its clock")
+    for event_phase in (float(duty) - .5, float(duty) + .5):
+        event_time = event_phase * float(step)
+        witness = sample_grounded_gait(gait, event_time, float(body_height))
+        feet = witness.get("feet")
+        if (witness.get("support_count") != 2 or not isinstance(feet, Mapping)
+                or any(not isinstance(feet.get(side), Mapping)
+                       or feet[side].get("contact") is not True
+                       for side in ("left", "right"))):
+            raise ContractError(
+                "support-timed axial carrier requires double-support event witnesses")
+        forward_values = [feet[side].get("forward_m") for side in ("left", "right")]
+        if any(isinstance(value, bool) or not isinstance(value, (int, float))
+               or not math.isfinite(value) for value in forward_values):
+            raise ContractError(
+                "support-timed axial carrier requires finite bilateral foot placement")
+        foot_separation = float(forward_values[0] - forward_values[1])
+        event_pulse = left_sign * math.sin(
+            math.pi * (event_time / float(step) - float(duty)))
+        leading_advance = -left_sign * foot_separation
+        if (abs(event_pulse) <= 1e-10 or abs(foot_separation) <= 1e-8
+                or event_pulse * leading_advance <= 0):
+            raise ContractError(
+                "support-timed axial carrier conflicts with foot choreography")
+
+    values = (phase, gain)
+    if any(isinstance(value, bool) or not isinstance(value, (int, float))
+           or not math.isfinite(value) for value in values) or not 0 <= gain <= 1:
+        raise ContractError(
+            "support-timed axial carrier requires finite phase and bounded gain")
+
+    stance_clock = float(phase) / float(step) - float(duty)
+    return left_sign, math.pi * stance_clock, float(gain) * left_sign * math.sin(
+        math.pi * stance_clock)
 
 
 def _support_timed_pelvis_forward_carrier(plan, phase, coefficient):
@@ -451,6 +574,8 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
         raise ContractError("performance requires a positive finite gait period")
     angle = 2 * math.pi * phase / cycle
     pulse = gain * math.sin(angle)
+    yaw_pulse = pulse
+    axial_clock = None
     sway_pulse = pulse
     roll_pulse = pulse
     sagittal_pulse = 0.
@@ -463,12 +588,18 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
     if p.support_timed_sagittal_carrier:
         sagittal_pulse = _support_timed_sagittal_pulse(
             plan, phase, gain)
+    if p.support_timed_axial_carrier:
+        axial_clock = _support_timed_axial_clock(
+            source, base_worlds, roles, plan, phase, gain, lateral)
+        yaw_pulse = axial_clock[2]
     parent = source.parents[pelvis]
     parent_basis = np.eye(3) if parent is None else np.asarray(base_worlds[parent])[:3, :3]
     shift = (lateral * (p.pelvis_sway_body_heights * plan["body_height_m"] * sway_pulse)
              + np.asarray(forward) * forward_displacement)
     translations[pelvis] = tuple(np.asarray(translations[pelvis]) + np.linalg.solve(parent_basis, shift))
-    _world_delta(source, translations, rotations, scales, pelvis, up, p.pelvis_yaw_degrees * pulse)
+    _world_delta(
+        source, translations, rotations, scales, pelvis, up,
+        p.pelvis_yaw_degrees * yaw_pulse)
     _world_delta(source, translations, rotations, scales, pelvis, forward, p.pelvis_roll_degrees * roll_pulse)
     if p.pelvis_support_pitch_degrees is not None:
         # Positive rotation about lateral tips the pelvis up axis toward
@@ -477,7 +608,9 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
             source, translations, rotations, scales, pelvis, lateral,
             p.pelvis_support_pitch_degrees * sagittal_pulse)
     chest = source.name_to_node[roles["chest"]]
-    _world_delta(source, translations, rotations, scales, chest, up, -.65 * p.pelvis_yaw_degrees * pulse)
+    _world_delta(
+        source, translations, rotations, scales, chest, up,
+        -.65 * p.pelvis_yaw_degrees * yaw_pulse)
     if p.upper_trunk_counterroll_degrees is not None:
         assert trunk_names is not None
         if any(name not in source.name_to_node for name in trunk_names):
@@ -515,7 +648,11 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
         weights /= weights.sum()
     for i, node in enumerate(tail):
         lag = p.tail_lag_fraction * i / max(1, len(tail) - 1)
-        degrees = -gain * p.tail_yaw_degrees * weights[i] * math.sin(angle - 2 * math.pi * lag)
+        tail_pulse = (gain * axial_clock[0] * math.sin(
+            axial_clock[1] - 2 * math.pi * lag)
+            if axial_clock is not None else
+            gain * math.sin(angle - 2 * math.pi * lag))
+        degrees = -p.tail_yaw_degrees * weights[i] * tail_pulse
         _world_delta(source, translations, rotations, scales, node, up, degrees)
     if p.tail_counterpitch_degrees is not None:
         assert sagittal_chains is not None
