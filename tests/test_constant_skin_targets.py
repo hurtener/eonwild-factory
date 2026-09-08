@@ -21,7 +21,10 @@ from eonwild_motion.solve.constant_skin_targets import (
 from eonwild_motion.solve.airborne_gait import _world_matrices
 from eonwild_motion.solve.performance import Performance, decorate_plan
 from eonwild_motion.solve.skin_rig import SkinRig
-from eonwild_motion.solve.source_motion_query import SourceMotionQuery
+from eonwild_motion.solve.source_motion_query import (
+    SourceMotionQuery,
+    SourceMotionUnavailable,
+)
 from test_canonical_support_anchors import _bound_walk, _provider
 
 
@@ -202,6 +205,39 @@ def test_query_subclass_evaluate_override_retains_prior_fallback():
     ObservedQuery.calls = 0
     assert law.value(0.2).status == "AVAILABLE"
     assert ObservedQuery.calls == 2
+
+
+def test_query_subclass_private_evaluator_override_retains_prior_fallback():
+    inputs = _inputs()
+
+    class OwnedOverrideQuery(SourceMotionQuery):
+        offset_calls = 0
+
+        def _evaluate_owned(self, time, *, side, target_offsets):
+            if target_offsets is not None:
+                type(self).offset_calls += 1
+                return SourceMotionUnavailable(
+                    "UNAVAILABLE", time, "subclass rejects combined offset evaluation"
+                )
+            return super()._evaluate_owned(
+                time, side=side, target_offsets=target_offsets
+            )
+
+    query = OwnedOverrideQuery(
+        inputs["source"],
+        semantic_roles=inputs["semantic_roles"],
+        solver_gait=inputs["solver_gait"],
+        locomotion_gait=inputs["locomotion_gait"],
+        transition=inputs["transition"],
+        plan=inputs["plan"],
+        up_axis=inputs["up_axis"],
+        forward_axis=inputs["forward_axis"],
+        articulation_profile=inputs["articulation_profile"],
+        contact_profile=inputs["contact_profile"],
+    )
+    law = _build({**inputs, "query": query})
+    assert law.value(0.2).status == "AVAILABLE"
+    assert OwnedOverrideQuery.offset_calls == 0
 
 
 def test_injected_query_evaluate_retains_prior_fallback(law_and_inputs, monkeypatch):

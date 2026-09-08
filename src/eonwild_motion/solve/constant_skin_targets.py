@@ -430,7 +430,8 @@ class CanonicalConstantSkinTargetLaw:
         active_query = self._query if query is None else query
         observer = getattr(self._observe, "__func__", None)
         owned_evaluate = (
-            getattr(active_query.evaluate, "__func__", None)
+            type(active_query) is SourceMotionQuery
+            and getattr(active_query.evaluate, "__func__", None)
             is SourceMotionQuery.evaluate
             and getattr(
                 active_query.evaluate_with_target_offsets, "__func__", None
