@@ -283,7 +283,9 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
         root_raw, inplace_raw, plan, receipt = solve_with_skin_targets(source, semantic_roles=roles,
             gait=gait, up_axis=up, forward_axis=forward, plan=plan,
             contact_profile=contact_profile, articulation_profile=articulation_profile,
-            canonical_support_anchor_provider=support_anchor_provider)
+            canonical_support_anchor_provider=support_anchor_provider,
+            canonical_locomotion_gait=locomotion_gait,
+            canonical_transition=transition)
     else:
         root_raw, inplace_raw, _, receipt = solve_airborne_gait(source, source_clip=None,
             semantic_roles=roles, gait=gait, up_axis=tuple(up), forward_axis=tuple(forward),

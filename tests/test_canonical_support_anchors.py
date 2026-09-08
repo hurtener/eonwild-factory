@@ -197,3 +197,53 @@ def test_opt_in_is_typed_and_omitted_performance_payload_stays_absent():
         Performance(canonical_support_anchors=True),
     )
     assert enabled["performance"]["canonical_support_anchors"] is True
+
+
+def _canonical_plan(grounded, height):
+    return decorate_plan(
+        build_grounded_plan(grounded, height),
+        Performance(canonical_support_anchors=True),
+    )
+
+
+def _consume(provider, source, roles, contact, grounded, solver, plan, forward):
+    from eonwild_motion.solve.skin_targets import solve_with_skin_targets
+    return solve_with_skin_targets(
+        source, semantic_roles=roles, gait=solver, up_axis=(0, 1, 0),
+        forward_axis=forward, plan=plan, contact_profile=contact, iterations=0,
+        canonical_support_anchor_provider=provider,
+        canonical_locomotion_gait=grounded,
+    )
+
+
+def test_provider_consumption_binds_ordered_material_request_and_anchor_payload():
+    source, roles, contact, grounded, solver, steady, forward = _bound_walk()
+    plan = _canonical_plan(grounded, float(steady["body_height_m"]))
+    provider = _provider(source, roles, contact, grounded, solver, plan, forward)
+    _consume(provider, source, roles, contact, grounded, solver, plan, forward)
+
+    reordered = deepcopy(contact)
+    for side in ("left", "right"):
+        feet = reordered["geometry"]["feet"][side]
+        feet["sole_joints"], feet["toe_joints"] = feet["toe_joints"], feet["sole_joints"]
+    wrong_order = _provider(source, roles, reordered, grounded, solver, plan, forward)
+    with pytest.raises(ContractError, match="consuming request|material correspondence"):
+        _consume(wrong_order, source, roles, contact, grounded, solver, plan, forward)
+
+    provider._anchors["left"].material_origin_m.setflags(write=True)
+    provider._anchors["left"].material_origin_m[0, 0] += .01
+    with pytest.raises(ContractError, match="payload differs"):
+        _consume(provider, source, roles, contact, grounded, solver, plan, forward)
+
+
+def test_provider_requires_matching_bound_solver_and_explicit_opt_in_context():
+    source, roles, contact, grounded, solver, steady, forward = _bound_walk()
+    plan = _canonical_plan(grounded, float(steady["body_height_m"]))
+    provider = _provider(source, roles, contact, grounded, solver, plan, forward)
+    with pytest.raises(ContractError, match="require a bound provider"):
+        _consume(None, source, roles, contact, grounded, solver, plan, forward)
+    incompatible = replace(solver, step_period_s=solver.step_period_s * 2)
+    with pytest.raises(ContractError, match="solver cadence"):
+        _provider(source, roles, contact, grounded, incompatible, plan, forward)
+    with pytest.raises(ContractError, match="solver cadence"):
+        _consume(provider, source, roles, contact, grounded, incompatible, plan, forward)

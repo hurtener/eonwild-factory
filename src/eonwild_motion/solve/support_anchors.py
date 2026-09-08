@@ -8,7 +8,7 @@ first-loaded-row reference exactly.
 from __future__ import annotations
 
 from copy import deepcopy
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass, is_dataclass
 import hashlib
 import json
 import math
@@ -46,6 +46,55 @@ class CanonicalSupportAnchor:
     material_vertex_indices: tuple[int, ...]
 
 
+@dataclass(frozen=True)
+class _CanonicalSupportBinding:
+    request_sha256: str
+    source_sha256: str
+    uniform_scale: float
+    material_vertex_sha256: tuple[str, str]
+    material_vertex_counts: tuple[int, int]
+    anchor_origin_sha256: tuple[str, str]
+
+
+def _canonical_value(value: Any) -> Any:
+    if is_dataclass(value):
+        return {"dataclass": f"{type(value).__module__}.{type(value).__qualname__}", "value": _canonical_value(asdict(value))}
+    if isinstance(value, np.ndarray):
+        if not np.isfinite(value).all():
+            raise ContractError("canonical support anchor binding contains non-finite arrays")
+        return _canonical_value(value.tolist())
+    if isinstance(value, Mapping):
+        if any(not isinstance(key, str) for key in value):
+            raise ContractError("canonical support anchor binding requires string mapping keys")
+        return {key: _canonical_value(value[key]) for key in sorted(value)}
+    if isinstance(value, (list, tuple)):
+        return [_canonical_value(item) for item in value]
+    if isinstance(value, bool) or value is None or isinstance(value, str):
+        return value
+    if isinstance(value, (int, float)):
+        if not math.isfinite(float(value)):
+            raise ContractError("canonical support anchor binding requires finite numeric values")
+        return value
+    raise ContractError("canonical support anchor binding contains unsupported data")
+
+
+def _digest(value: Any) -> str:
+    return hashlib.sha256(json.dumps(_canonical_value(value), sort_keys=True, separators=(",", ":"), allow_nan=False).encode()).hexdigest()
+
+
+def _vector_bytes(value: np.ndarray) -> bytes:
+    array = np.asarray(value, dtype="<f8")
+    if array.ndim != 2 or array.shape[1] != 3 or not len(array) or not np.isfinite(array).all():
+        raise ContractError("canonical support anchor material origin is invalid")
+    return array.tobytes()
+
+
+def _index_bytes(value: tuple[int, ...]) -> bytes:
+    if not value or any(type(index) is not int or index < 0 for index in value):
+        raise ContractError("canonical support anchor material indices are invalid")
+    return np.asarray(value, dtype="<i8").tobytes()
+
+
 class CanonicalSupportAnchorProvider:
     """Evaluate stable support anchors from the bound source gait law.
 
@@ -54,10 +103,25 @@ class CanonicalSupportAnchorProvider:
     rows, and transition rows never replace the sustained source event.
     """
 
-    def __init__(self, anchors: Mapping[str, CanonicalSupportAnchor]) -> None:
-        if set(anchors) != {"left", "right"}:
-            raise ContractError("canonical support anchors require both semantic feet")
-        self._anchors = MappingProxyType(dict(anchors))
+    def __init__(self, anchors: Mapping[str, CanonicalSupportAnchor], binding: _CanonicalSupportBinding) -> None:
+        if set(anchors) != {"left", "right"} or not isinstance(binding, _CanonicalSupportBinding):
+            raise ContractError("canonical support anchors require a validated binding")
+        copied: dict[str, CanonicalSupportAnchor] = {}
+        for side in ("left", "right"):
+            anchor = anchors[side]
+            if not isinstance(anchor, CanonicalSupportAnchor) or anchor.side != side:
+                raise ContractError("canonical support anchors require semantic anchor records")
+            origin = np.array(anchor.material_origin_m, dtype=float, copy=True)
+            ids = tuple(anchor.material_vertex_indices)
+            _vector_bytes(origin)
+            _index_bytes(ids)
+            if type(anchor.lowest_patch_index) is not int or not 0 <= anchor.lowest_patch_index < len(ids):
+                raise ContractError("canonical support anchor witness index is invalid")
+            origin.setflags(write=False)
+            copied[side] = CanonicalSupportAnchor(side, str(anchor.gait_family_sha256), float(anchor.touchdown_phase_s), str(anchor.contact_side_convention), anchor.lowest_patch_index, origin, ids)
+        self._anchors = MappingProxyType(copied)
+        self._binding = binding
+        self._validate_anchor_integrity()
 
     @classmethod
     def build(
@@ -82,14 +146,12 @@ class CanonicalSupportAnchorProvider:
             raise ContractError("canonical support anchors require bound solver and locomotion gaits")
         if transition is not None and not isinstance(transition, GaitTransition):
             raise ContractError("canonical support anchors require a validated transition")
-        if not isinstance(plan, Mapping) or not isinstance(contact_profile, Mapping):
-            raise ContractError("canonical support anchors require bound plan and contact data")
-        try:
-            source_hash = contact_profile["source"]["sha256"]
-        except (KeyError, TypeError) as exc:
-            raise ContractError("canonical support anchors require contact source provenance") from exc
-        validate_frozen_source_with_uniform_scale(source, source_hash)
-        cls._validate_active_program(plan, locomotion_gait, transition)
+        cls._validate_solver_cadence(solver_gait, locomotion_gait)
+        binding_inputs, material_ids = cls._binding_inputs(
+            source, semantic_roles=semantic_roles, solver_gait=solver_gait,
+            locomotion_gait=locomotion_gait, transition=transition, plan=plan,
+            contact_profile=contact_profile, up_axis=up_axis, forward_axis=forward_axis,
+            articulation_profile=articulation_profile)
         body_height = cls._body_height(plan)
         sustained = cls._sustained_plan(locomotion_gait, body_height, plan)
         context = build_airborne_solve_context(
@@ -127,7 +189,80 @@ class CanonicalSupportAnchorProvider:
                 material_origin_m=origin,
                 material_vertex_indices=vertex_ids,
             )
-        return cls(anchors)
+        binding = _CanonicalSupportBinding(
+            request_sha256=_digest(binding_inputs),
+            source_sha256=str(binding_inputs["source_sha256"]),
+            uniform_scale=float(binding_inputs["uniform_scale"]),
+            material_vertex_sha256=tuple(hashlib.sha256(_index_bytes(material_ids[side])).hexdigest() for side in ("left", "right")),
+            material_vertex_counts=tuple(len(material_ids[side]) for side in ("left", "right")),
+            anchor_origin_sha256=tuple(hashlib.sha256(_vector_bytes(anchors[side].material_origin_m)).hexdigest() for side in ("left", "right")),
+        )
+        return cls(anchors, binding)
+
+    @staticmethod
+    def _validate_solver_cadence(solver_gait: AirborneGait, locomotion_gait: GroundedGait | AirborneGait) -> None:
+        if not math.isclose(solver_gait.step_period_s, locomotion_gait.step_period_s, rel_tol=0, abs_tol=1e-12):
+            raise ContractError("canonical support anchors solver cadence differs from bound locomotion program")
+
+    @staticmethod
+    def _axes(up_axis: tuple[float, float, float], forward_axis: tuple[float, float, float]) -> tuple[tuple[float, float, float], tuple[float, float, float]]:
+        try:
+            up, forward = np.asarray(up_axis, dtype=float), np.asarray(forward_axis, dtype=float)
+        except (TypeError, ValueError) as exc:
+            raise ContractError("canonical support anchors require finite coordinate axes") from exc
+        if (up.shape != (3,) or forward.shape != (3,) or not np.isfinite(up).all() or not np.isfinite(forward).all()):
+            raise ContractError("canonical support anchors require finite coordinate axes")
+        un, fn = float(np.linalg.norm(up)), float(np.linalg.norm(forward))
+        if un <= 1e-12 or fn <= 1e-12:
+            raise ContractError("canonical support anchors require nonzero coordinate axes")
+        up, forward = up / un, forward / fn
+        if abs(float(up @ forward)) > 1e-8:
+            raise ContractError("canonical support anchors require orthogonal coordinate axes")
+        return tuple(map(float, up)), tuple(map(float, forward))
+
+    @staticmethod
+    def _contact_source_hash(contact_profile: Mapping[str, Any]) -> str:
+        try:
+            value = contact_profile["source"]["sha256"]
+        except (KeyError, TypeError) as exc:
+            raise ContractError("canonical support anchors require contact source provenance") from exc
+        if not isinstance(value, str) or len(value) != 64:
+            raise ContractError("canonical support anchors require a frozen contact source hash")
+        return value
+
+    @classmethod
+    def _binding_inputs(cls, source: Glb, *, semantic_roles: Mapping[str, Any], solver_gait: AirborneGait, locomotion_gait: GroundedGait | AirborneGait, transition: GaitTransition | None, plan: Mapping[str, Any], contact_profile: Mapping[str, Any], up_axis: tuple[float, float, float], forward_axis: tuple[float, float, float], articulation_profile: Any) -> tuple[dict[str, Any], dict[str, tuple[int, ...]]]:
+        if not isinstance(source, Glb) or not isinstance(solver_gait, AirborneGait) or not isinstance(locomotion_gait, (GroundedGait, AirborneGait)) or transition is not None and not isinstance(transition, GaitTransition):
+            raise ContractError("canonical support anchors require bound source and gait contracts")
+        if not isinstance(semantic_roles, Mapping) or not isinstance(plan, Mapping) or not isinstance(contact_profile, Mapping):
+            raise ContractError("canonical support anchors require bound source, plan, and contact data")
+        cls._validate_solver_cadence(solver_gait, locomotion_gait)
+        source_hash = cls._contact_source_hash(contact_profile)
+        _, uniform_scale = validate_frozen_source_with_uniform_scale(source, source_hash)
+        cls._validate_active_program(plan, locomotion_gait, transition)
+        up, forward = cls._axes(up_axis, forward_axis)
+        skin = SkinRig(source, semantic_roles, forward, up, contact_profile)
+        ids = {side: tuple(int(index) for region in ("sole", "toe") for index in skin.foot_regions[side][region]) for side in ("left", "right")}
+        for value in ids.values():
+            _index_bytes(value)
+        active = {key: plan.get(key) for key in ("program", "locomotion_program", "body_height_m", "parameters", "transition_parameters", "transition_contract", "same_foot_cycle_s", "duration_s", "performance", "gaze_calibration", "loop") if key in plan}
+        return {"source_sha256": source_hash, "uniform_scale": uniform_scale, "semantic_roles": semantic_roles, "solver_parameters": gait_parameters(solver_gait), "locomotion_parameters": gait_parameters(locomotion_gait), "transition_parameters": None if transition is None else asdict(transition), "active_program": active, "contact_profile": contact_profile, "up_axis": up, "forward_axis": forward, "articulation_profile": articulation_profile}, ids
+
+    def _validate_anchor_integrity(self) -> None:
+        for index, side in enumerate(("left", "right")):
+            anchor = self._anchors[side]
+            if (hashlib.sha256(_index_bytes(anchor.material_vertex_indices)).hexdigest() != self._binding.material_vertex_sha256[index] or len(anchor.material_vertex_indices) != self._binding.material_vertex_counts[index] or hashlib.sha256(_vector_bytes(anchor.material_origin_m)).hexdigest() != self._binding.anchor_origin_sha256[index]):
+                raise ContractError("canonical support anchor payload differs from its validated binding")
+
+    def validate_for_consumption(self, source: Glb, *, semantic_roles: Mapping[str, Any], solver_gait: AirborneGait, locomotion_gait: GroundedGait | AirborneGait, transition: GaitTransition | None, plan: Mapping[str, Any], contact_profile: Mapping[str, Any], up_axis: tuple[float, float, float], forward_axis: tuple[float, float, float], articulation_profile: Any = None) -> None:
+        inputs, material_ids = self._binding_inputs(source, semantic_roles=semantic_roles, solver_gait=solver_gait, locomotion_gait=locomotion_gait, transition=transition, plan=plan, contact_profile=contact_profile, up_axis=up_axis, forward_axis=forward_axis, articulation_profile=articulation_profile)
+        if (inputs["source_sha256"] != self._binding.source_sha256 or not math.isclose(float(inputs["uniform_scale"]), self._binding.uniform_scale, rel_tol=0, abs_tol=1e-12) or _digest(inputs) != self._binding.request_sha256):
+            raise ContractError("canonical support anchors differ from the consuming request")
+        self._validate_anchor_integrity()
+        for index, side in enumerate(("left", "right")):
+            value = material_ids[side]
+            if len(value) != self._binding.material_vertex_counts[index] or hashlib.sha256(_index_bytes(value)).hexdigest() != self._binding.material_vertex_sha256[index]:
+                raise ContractError("canonical support anchor material correspondence differs from the consuming request")
 
     @staticmethod
     def _family_sha256(gait: GroundedGait | AirborneGait) -> str:
@@ -273,7 +408,10 @@ class CanonicalSupportAnchorProvider:
     def anchor_for(self, side: str) -> CanonicalSupportAnchor:
         if side not in ("left", "right"):
             raise ContractError("canonical support anchor side must be left or right")
-        return self._anchors[side]
+        anchor = self._anchors[side]
+        origin = np.array(anchor.material_origin_m, dtype=float, copy=True)
+        origin.setflags(write=False)
+        return CanonicalSupportAnchor(anchor.side, anchor.gait_family_sha256, anchor.touchdown_phase_s, anchor.contact_side_convention, anchor.lowest_patch_index, origin, tuple(anchor.material_vertex_indices))
 
     def receipt(self) -> dict[str, Any]:
         """Bound event and patch identity, never a contact-quality verdict."""
@@ -282,6 +420,7 @@ class CanonicalSupportAnchorProvider:
                 "exact sustained source-law touchdown material reference; "
                 "not an emitted-contact, dynamics, or visual acceptance claim"
             ),
+            "request_binding_sha256": self._binding.request_sha256,
             "sides": {
                 side: {
                     "touchdown_phase_s": anchor.touchdown_phase_s,
