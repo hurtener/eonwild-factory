@@ -1,0 +1,64 @@
+{
+  "acceptance_boundary": {
+    "classification": "pure source-side binary64 interval helper; not used by current generation or admission",
+    "continuous_fk_lbs_contact_interval_authority": "NOT_IMPLEMENTED",
+    "cubic_emitter": "NOT_IMPLEMENTED",
+    "cubic_technical_admission": "BLOCKED",
+    "float32_export_binding": "NOT_IMPLEMENTED",
+    "hosted_ci_for_publication_head": "PENDING",
+    "motion_changes": false,
+    "production_approved": false,
+    "recipe_changes": false,
+    "threshold_changes": false,
+    "unity_parity": "NOT_RUN"
+  },
+  "branch": "codex/cubic-b1-publication",
+  "captured_utc": "2026-09-08T08:43:03.272498+00:00",
+  "clean_after": true,
+  "clean_before": true,
+  "code_head": "003504af55657562e95d5a560e70812913893330",
+  "full_suite": {
+    "blender_file_sha256": "52c01d7bf836c18f15f4128ad91811fe49852ef3f1befc8e53be0d159126ff1c",
+    "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=2 uv run --frozen python -m pytest tests -q --tb=short --basetemp=out/continuation-cubic-b1-final-003504a/pytest-temp --junitxml=out/continuation-cubic-b1-final-003504a/full-tests.xml",
+    "gltf_validator_file_sha256": "e90bc5c47641cb2e9d35c166a676f4848e4e10fdd6c176028c734a683721c28a",
+    "junit_case_elements": 808,
+    "log_sha256": "a5adf2620615df9882dffee9f78fbbd53a68191912fb0ecf4fd17b5926abca2a",
+    "platform": "macOS-26.3-arm64-arm-64bit",
+    "python": "3.12.10",
+    "scope": "complete mandatory tests directory, full external-SSD checkout, real Blender and Khronos validator, no exclusions",
+    "seconds": 230.51,
+    "source_file_sha256": "9315b5f96b6c16b7013596e233002c2831835305cbd18893ead44c21139ee213",
+    "status": "PASS",
+    "subtest_count_source": "pytest summary; successful subtests are not separate testcase elements in this JUnit output",
+    "subtests_passed": 21,
+    "tests_passed": 808,
+    "tool_versions": [
+      "Blender 5.2.0 LTS",
+      "glTF 2.0 Validator, version 2.0.0-dev.3.10"
+    ],
+    "tree_file_sha256": "c9b666cefa29a40d0c492a5ef9af2f4e6c0013b313ac0548273aa046c53c6231",
+    "xml_sha256": "e5b65451744b3ff417f425eb6348052bad34fa8f243178047efc72786cd9f4ab"
+  },
+  "integration": {
+    "published_parent": "cc7b3d9e199d1679d28bbcbefb61bcea5407b129",
+    "round_one_cherry_pick": "f67a75a0fd2f42eee2cfb73f34706f8cb903b920",
+    "round_one_original": "d18de689a10f81e8f1a1cb0fd3cd2c8c5fa5431f",
+    "round_two_cherry_pick": "003504af55657562e95d5a560e70812913893330",
+    "round_two_original": "50aa941b016566945455e7dccd229e35570ba44f"
+  },
+  "review": {
+    "maximum_independent_reviewers_per_round": 2,
+    "outstanding_p0_p1": 0,
+    "receipts": {
+      "independent_round1": "5365e753bce431e441dec7b548e06e09354d44fbd9b05eaa3dca9be7f5cb6948",
+      "independent_round2": "6943072c8f513cd1a832798dd92b27d8b211de91dbf1f3d7c00ce0af6294dabe",
+      "root_round1_diagnostic": "5fa7a7f32b0a985a90c2c5a85b51567d6a35f149a695826d1b90afb4c11d64d2",
+      "root_round1_markdown": "7a1f4fc29294a18b9bc2331370f33232136ad4e769fa049a513b648388fc56c8",
+      "root_round2_diagnostic": "41f62610861a8226999b8521074b36b0e725a1e84a33f226634034a9619ebda7",
+      "root_round2_markdown": "ae5bfdd288094f7e1ef8afda1b15d6360408353836b8d2608584311e40ef1b99"
+    },
+    "rounds": 2
+  },
+  "schema": "eonwild.motion.host-cubicspline-b1-integration-verification.v1",
+  "source_tree": "37e7fd457193ec67409c9e1719531582f823245a"
+}

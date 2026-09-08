@@ -62,3 +62,7 @@ whose source residual or contact identity changes under the derivative probes.
 Only after source tangents and continuous FK/LBS contact, clearance,
 articulation, and rate authority are bound to the exact float32 export can the
 existing full technical CUBICSPLINE guard be removed.
+
+The integrated helper, two-round review and complete-suite receipt are retained
+in
+[V9-CUBICSPLINE-B1-INTERVAL-001](../reports/V9-CUBICSPLINE-B1-INTERVAL-001/README.md).
