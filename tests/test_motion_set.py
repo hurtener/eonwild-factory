@@ -287,6 +287,8 @@ def test_real_shared_walk_preserves_v10_effective_body_parameters():
     assert gait_receipt["resolved_pelvis_forward_velocity_modulation_fraction"] == (
         legacy.pelvis_forward_velocity_modulation_fraction
     )
+    assert "program-profile.json" in resolution.payloads
+    assert "gait-profile.json" not in resolution.payloads
 
 
 def test_real_fast_intent_uses_same_baseline_with_gait_derived_response():
@@ -318,6 +320,8 @@ def test_real_fast_intent_uses_same_baseline_with_gait_derived_response():
         "parameters"
     ]
     assert {key: value for key, value in selected.items() if key != "pelvis_height_carrier"} == original
+    transition = resolve_motion_set(ROOT, set_path, "walk-start")
+    assert set(transition.payloads) >= {"program-profile.json", "gait-profile.json"}
 
 
 def test_motion_set_cli_rejects_unsupported_representation_before_output(tmp_path):
@@ -336,6 +340,29 @@ def test_motion_set_cli_rejects_unsupported_representation_before_output(tmp_pat
         "LINEAR",
     ]) == 1
     assert not output.exists()
+
+
+def test_motion_set_rejects_path_name_before_output_creation(tmp_path):
+    _, _, motion_set = _documents(tmp_path)
+    motion_set["motions"][0]["name"] = "../escaped-package"
+    write_json(tmp_path / "set.json", motion_set)
+    output = tmp_path / "output"
+    assert factory_main([
+        "compile-set", "--motion-set", str(tmp_path / "set.json"),
+        "--motions", "../escaped-package", "--root", str(tmp_path),
+        "--output", str(output),
+    ]) == 1
+    assert not output.exists()
+
+
+def test_motion_set_rejects_numeric_string_axes(tmp_path):
+    baseline, _, motion_set = _documents(tmp_path)
+    baseline["forward_axis"] = ["0", "0", "1"]
+    write_json(tmp_path / "baseline.json", baseline)
+    motion_set["baseline"] = bind(tmp_path, tmp_path / "baseline.json")
+    write_json(tmp_path / "set.json", motion_set)
+    with pytest.raises(ContractError, match="finite numeric vector"):
+        resolve_motion_set(tmp_path, tmp_path / "set.json", "walk")
 
 
 def test_package_local_snapshots_rebuild_effective_performance(tmp_path):
@@ -389,6 +416,38 @@ def test_package_local_snapshots_rebuild_effective_performance(tmp_path):
         _verify_motion_set_provenance(
             tmp_path, recipe=resolution.recipe, lock=lock,
             runtime=runtime, receipt=receipt, plan=corrupted,
+        )
+    fast = resolve_motion_set(
+        ROOT,
+        ROOT / "catalog/motion-sets/tarbosaurus-pin-552-1-adult-grounded.v1.json",
+        "fast-walk",
+    )
+    fast_gait = load_grounded_gait(json.loads(fast.program_profile_bytes))
+    substituted, substituted_response = resolve_gait_response(
+        assemble_baseline_performance(
+            json.loads(style_bytes), json.loads(resolution.neutral_pose_bytes)
+        )[0],
+        fast_gait,
+        baseline["gait_response_policy"],
+    )
+    substituted = replace(
+        substituted,
+        canonical_support_anchors=True,
+        skin_refinement=True,
+    )
+    substituted_plan = decorate_plan(
+        build_grounded_plan(fast_gait, 2.0), substituted
+    )
+    substituted_plan["solve_policy"] = solve
+    substituted_receipt = deepcopy(receipt)
+    substituted_receipt["baseline_performance_resolution"][
+        "gait_response"
+    ] = substituted_response
+    with pytest.raises(ContractError, match="bound gait snapshot"):
+        _verify_motion_set_provenance(
+            tmp_path, recipe=resolution.recipe, lock=lock,
+            runtime=runtime, receipt=substituted_receipt,
+            plan=substituted_plan,
         )
 
 

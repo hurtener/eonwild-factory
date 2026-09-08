@@ -23,9 +23,10 @@ from ..glb.animation import read_animation_tracks
 from ..layers.leg_contact_resolve_v3 import _clip_state, _pose, _world_matrices, _world_position
 from ..planning.airborne_gait import AirborneGait, build_airborne_plan, load_airborne_gait
 from ..planning.grounded_gait import GroundedGait, build_grounded_plan, load_grounded_gait
+from ..planning.parameters import gait_parameters
 from ..solve.airborne_gait import solve_airborne_gait, evaluate_airborne_skin_with_authority
 from ..solve.whole_body_gait_transition import _encode
-from .io import digest, frame_axes, json_bytes, locked_file, read_json, write_json
+from .io import confined, digest, frame_axes, json_bytes, locked_file, read_json, write_json
 from .quality import (emitted_articulation_envelopes, emitted_rotation_rates,
                       emitted_cyclic_continuity, require_supported_geometry, solver_checks)
 from .source import geometry_height
@@ -717,13 +718,18 @@ def compile_motion_set_selection(
         raise ContractError(
             "motion-set solve policy currently requires CUBICSPLINE output"
         )
+    output = output.resolve()
     if output.exists():
         raise ContractError("motion-set output already exists; never overwrite")
     resolutions = resolve_motion_set_selection(root, motion_set_path, motions)
+    destinations = {
+        resolution.motion: confined(output, resolution.motion)
+        for resolution in resolutions
+    }
     output.mkdir(parents=True)
     results = {}
     for resolution in resolutions:
-        package = output / resolution.motion
+        package = destinations[resolution.motion]
         results[resolution.motion] = compile_recipe(
             None,
             root=root,
@@ -837,10 +843,23 @@ def _verify_motion_set_provenance(
         != recipe["source"]["sha256"]
     ):
         raise ContractError("motion baseline neutral calibration source differs")
-    gait = load_grounded_gait({
-        "schema": "eonwild.motion.v9.grounded-gait.v1",
-        "parameters": plan.get("parameters"),
-    })
+    intent = read_json(path / "motion-intent.json")
+    program_bytes = (path / "program-profile.json").read_bytes()
+    if digest(program_bytes) != intent["program_profile"]["sha256"]:
+        raise ContractError("motion intent program snapshot differs")
+    if recipe["program"] == "grounded_gait":
+        if (path / "gait-profile.json").exists():
+            raise ContractError("grounded intent contains a transition gait snapshot")
+        gait = load_grounded_gait(json.loads(program_bytes))
+    elif recipe["program"] == "gait_transition":
+        gait_bytes = (path / "gait-profile.json").read_bytes()
+        if digest(gait_bytes) != intent["gait_profile"]["sha256"]:
+            raise ContractError("motion intent gait snapshot differs")
+        gait = load_grounded_gait(json.loads(gait_bytes))
+    else:
+        raise ContractError("motion set contains an unsupported program")
+    if plan.get("parameters") != gait_parameters(gait):
+        raise ContractError("motion plan parameters differ from the bound gait snapshot")
     performance, gait_receipt = resolve_gait_response(
         performance, gait, baseline["gait_response_policy"]
     )
@@ -876,12 +895,16 @@ def verify_package(path: Path) -> dict:
         raise ContractError("unsupported package manifest")
     recipe = read_json(path / "recipe.json")
     required = {"root_motion.glb", "in_place.glb", "plan.json", "solver-receipt.json", "runtime.json", "validation.json", "inputs.lock.json", "recipe.json"}
-    provenance_files = {
+    provenance_universe = {
         "motion-set.json", "motion-baseline.json", "motion-intent.json",
         "performance-profile.json", "neutral-pose-profile.json",
+        "program-profile.json", "gait-profile.json",
     }
-    present_provenance = provenance_files & set(manifest.get("files", {}))
-    if present_provenance and present_provenance != provenance_files:
+    present_provenance = provenance_universe & set(manifest.get("files", {}))
+    expected_provenance = provenance_universe - {"gait-profile.json"}
+    if recipe.get("program") == "gait_transition":
+        expected_provenance.add("gait-profile.json")
+    if present_provenance and present_provenance != expected_provenance:
         raise ContractError("motion set package provenance is incomplete")
     required.update(present_provenance)
     if "cubic-midpoint-plan.json" in manifest.get("files", {}):

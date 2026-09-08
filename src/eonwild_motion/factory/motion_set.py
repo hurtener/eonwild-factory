@@ -8,7 +8,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import json
+import math
 from pathlib import Path
+import re
 from typing import Any, Mapping
 
 from ..errors import ContractError
@@ -68,8 +70,8 @@ def _validate_set(value: Any) -> Mapping[str, Any]:
         if not isinstance(entry, Mapping) or set(entry) != {"name", "intent"}:
             raise ContractError("motion set entries require exactly name and intent")
         name = entry["name"]
-        if not isinstance(name, str) or not name:
-            raise ContractError("motion set entry name is required")
+        if not isinstance(name, str) or re.fullmatch(r"[a-z][a-z0-9-]*", name) is None:
+            raise ContractError("motion set entry name must be a safe catalog component")
         names.append(name)
     if len(names) != len(set(names)):
         raise ContractError("motion set entry names must be unique")
@@ -89,6 +91,19 @@ def _validate_baseline(value: Any) -> Mapping[str, Any]:
     )
     if not isinstance(result["family"], str) or not result["family"]:
         raise ContractError("motion baseline family is required")
+    for label in ("forward_axis", "up_axis"):
+        axis = result[label]
+        if (
+            not isinstance(axis, list)
+            or len(axis) != 3
+            or any(
+                isinstance(component, bool)
+                or not isinstance(component, (int, float))
+                or not math.isfinite(component)
+                for component in axis
+            )
+        ):
+            raise ContractError(f"motion baseline {label} must be a finite numeric vector")
     frame_axes(result["forward_axis"], result["up_axis"])
     programs = result["supported_programs"]
     if (
@@ -181,14 +196,20 @@ class MotionSetResolution:
     baseline_bytes: bytes
     intent_bytes: bytes
     neutral_pose_bytes: bytes
+    program_profile_bytes: bytes
+    gait_profile_bytes: bytes | None
 
     @property
     def payloads(self) -> dict[str, bytes]:
-        return {
+        result = {
             _PROVENANCE_FILES["set"]: self.set_bytes,
             _PROVENANCE_FILES["baseline"]: self.baseline_bytes,
             _PROVENANCE_FILES["intent"]: self.intent_bytes,
+            "program-profile.json": self.program_profile_bytes,
         }
+        if self.gait_profile_bytes is not None:
+            result["gait-profile.json"] = self.gait_profile_bytes
+        return result
 
     @property
     def lock(self) -> dict[str, Any]:
@@ -259,9 +280,16 @@ def resolve_motion_set_selection(
         if digest(intent_bytes) != entry["intent"]["sha256"]:
             raise ContractError("motion intent changed during resolution")
         intent = _validate_intent(json.loads(intent_bytes))
-        locked_file(root, intent["program_profile"])
+        program_profile_path = locked_file(root, intent["program_profile"])
+        program_profile_bytes = program_profile_path.read_bytes()
+        if digest(program_profile_bytes) != intent["program_profile"]["sha256"]:
+            raise ContractError("motion program profile changed during resolution")
+        gait_profile_bytes = None
         if "gait_profile" in intent:
-            locked_file(root, intent["gait_profile"])
+            gait_profile_path = locked_file(root, intent["gait_profile"])
+            gait_profile_bytes = gait_profile_path.read_bytes()
+            if digest(gait_profile_bytes) != intent["gait_profile"]["sha256"]:
+                raise ContractError("motion gait profile changed during resolution")
         resolutions.append(MotionSetResolution(
             motion=motion,
             recipe=_recipe(baseline, intent),
@@ -272,6 +300,8 @@ def resolve_motion_set_selection(
             baseline_bytes=baseline_bytes,
             intent_bytes=intent_bytes,
             neutral_pose_bytes=neutral_pose_bytes,
+            program_profile_bytes=program_profile_bytes,
+            gait_profile_bytes=gait_profile_bytes,
         ))
     if set_path.read_bytes() != set_bytes or baseline_path.read_bytes() != baseline_bytes:
         raise ContractError("motion set or baseline changed during selection")
