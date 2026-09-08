@@ -1,0 +1,33 @@
+{
+  "review": "shared-motion-set transition authority exceptional narrow closure",
+  "result": "PASS",
+  "findings": {
+    "P0": 0,
+    "P1": 0
+  },
+  "head": "62e4b60a399672fc68f9817aeabc6bff8c300912",
+  "tree": "bf814e4536ece37d963f35cdc8693f3feba4b09c",
+  "parent": "0330d8ae7acbf7a6300e1e991658f78544d9886c",
+  "worktree_clean": true,
+  "diff_check": "PASS",
+  "focused_test": {
+    "nodeid": "tests/test_motion_set.py::test_transition_plan_is_bound_to_packaged_program_snapshot",
+    "result": "2 passed in 1.75s",
+    "log": "focused.log",
+    "log_sha256": "95c10eec5341a7e00b9aa4717292459334fef7532764b627ca8311f0eb362c72"
+  },
+  "author_receipt_sha256": "79c83c80be79bad8ea6e51c05d82819f53d768ececb45fd2b375ed74f922b290",
+  "prior_actual_witness": {
+    "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/shared-motion-set-round2-reviewer2-0330d8a/transition-program-repro.json",
+    "sha256": "124df10fc7a768f52bccd2b61bf66b3bbd6a1e4a216422e8861f8fce9f99e865",
+    "closure": "covered by exact actual start/stop positive and mutation-negative regression"
+  },
+  "interrupted_export": {
+    "classification": "NOT_COMPLETED",
+    "former_path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/shared-motion-set-round2-reviewer2-0330d8a/actual-walk",
+    "retained_bytes": false,
+    "note": "empty directory removed after interruption during CUBICSPLINE midpoint skin evaluation"
+  },
+  "report": "review.md",
+  "report_sha256": "ef7d7f387c647e3872de54d19bede3d858893680ada6f46eb9ff6d24b2c5ce3d"
+}

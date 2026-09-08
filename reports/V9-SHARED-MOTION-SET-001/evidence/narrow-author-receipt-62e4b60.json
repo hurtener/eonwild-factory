@@ -1,0 +1,29 @@
+{
+  "complete_suite_base": {
+    "head": "0330d8ae7acbf7a6300e1e991658f78544d9886c",
+    "log_sha256": "ce6703fa4f2b8d2b15115e7727e2921ff4115902d988ad9211133d1bdcd25aee",
+    "result": "1045 tests plus 21 subtests PASS"
+  },
+  "coverage": [
+    "real walk-start positive",
+    "real walk-stop positive",
+    "kind contradiction",
+    "ramp_cycles contradiction",
+    "anticipation_seconds contradiction",
+    "missing transition_parameters"
+  ],
+  "diff_check": "PASS",
+  "focused_tests": {
+    "elapsed_s": 2.58,
+    "log": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/shared-motion-set-transition-authority-narrow/focused-tests.log",
+    "result": "29 passed",
+    "sha256": "4f14c794775acb0d8cd94d2864c2efb5317c9eafd15c8294b889c1029c945f01"
+  },
+  "git_status": "clean",
+  "head": "62e4b60a399672fc68f9817aeabc6bff8c300912",
+  "parent": "0330d8ae7acbf7a6300e1e991658f78544d9886c",
+  "ruff": "PASS",
+  "schema": "eonwild.motion.transition-authority-narrow-receipt.v1",
+  "tree": "bf814e4536ece37d963f35cdc8693f3feba4b09c",
+  "worktree": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/worktrees/eonwild-shared-motion-set-transition-authority-narrow"
+}

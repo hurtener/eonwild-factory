@@ -59,6 +59,10 @@ revision, so this remains a candidate. Body timing is authored kinematics;
 mass-response physics is unavailable.
 The final SourceMotionQuery union passed 907 tests plus 21 subtests; see the
 [integration report](reports/V9-SOURCE-MOTION-QUERY-V9-INTEGRATION-001/README.md).
+The closed shared animal motion-set configuration and first source-bound fast
+package are recorded in [V9-SHARED-MOTION-SET-001](reports/V9-SHARED-MOTION-SET-001/README.md);
+the fast package is ready for user review, with visual approval and Unity parity
+still open.
 
 Current explicit review candidates are `walk.v3`, `reverse-walk.v4`, `run.v4`,
 `sprint.v4`, `fast-walk.v2`, `tarbosaurus-pin-552-1-adult-walk.v9`,
