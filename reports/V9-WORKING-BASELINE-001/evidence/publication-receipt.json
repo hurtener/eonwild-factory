@@ -1,0 +1,44 @@
+{
+  "base_head": "ff85ddd59da5da8d62f769b447f8accb87800124",
+  "base_tree": "d51cc3b54a74e465a9aef3e7815aa8e53c37f743",
+  "catalog_migration": "PENDING",
+  "claims": {
+    "all_movements_ready": false,
+    "connected_start_stop_film": false,
+    "production_approved": false,
+    "tail_rig_change": false,
+    "unity_parity": false
+  },
+  "fastpath": {
+    "corrected_speedup": 1.8069422702585032,
+    "head": "ff85ddd59da5da8d62f769b447f8accb87800124",
+    "outputs_exact": true,
+    "tree": "d51cc3b54a74e465a9aef3e7815aa8e53c37f743"
+  },
+  "native_review_films": {
+    "v10_front": "0ff6974bc546a8fea4093952caa49bcfdff3349d7538917f509d3ce6271eaa14",
+    "v10_side": "d685701a6a56a0750de0b63c480191dec73655e26dcbabb7722297e5c4db9aa8",
+    "v9_front": "d2da1acbb5f27612a69a34a34a38806f3512de471bc194581b4c3cafe5800da7",
+    "v9_side": "afed56bb4062a235811745bfe087590d6728b55e9d1cf7eaa834331ff3c2d3b4"
+  },
+  "schema": "eonwild.motion.working-baseline-publication.v1",
+  "selection_status": "USER_SELECTED_WORKING_BASELINE",
+  "tail_receipt_sha256": "0737e254a94222275b93908589a3c25a96e8028f3efb0a8b646e4123652c35ff",
+  "walk_start": {
+    "handoff_sha256": "861c8e77e8dc966fc856fb066764f700bb9af4520bf82dec04a66874f6499983",
+    "receipt_sha256": "4f576abd4a126b7bb6608b97a8cb6510f7a3d228322f64cd609ad3f6da2248b6"
+  },
+  "walk_stop": {
+    "handoff_sha256": "3e51ae9eaf6763ca7b4893eb4a9b8bd1753facea55b67590f21d911ef068ec7f",
+    "receipt_sha256": "264e2287d9b0dd0b31509bb94fe514961721c77ed41e7d42fe10ef67bb4211c6"
+  },
+  "working_baseline": {
+    "id": "heavy-biped.tarbosaurus-pin-552-1-adult-walk.v10",
+    "in_place_cubic_sha256": "ced935c771749922cbfa3209ec76ba9a2699ec7c928797753fb94c967c31cd97",
+    "inputs_lock_sha256": "a20a434116e2005a231235a046dcdffb26b70f5f6f6e2b79790db12bc76bd102",
+    "manifest_sha256": "80b15c5d7dba7aa294335c46e55e8e8776aa7d177507c3c7fb3f96628252153d",
+    "production_approved": false,
+    "root_motion_cubic_sha256": "85f19b01805153269988865752737e368be292f8fc49d5e527dfcf5f3ec4b2a4",
+    "technical_status": "PASS"
+  }
+}

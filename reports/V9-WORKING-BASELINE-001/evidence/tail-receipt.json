@@ -1,0 +1,32 @@
+{
+  "schema": "eonwild.motion.adult-v10-tail-bilateral-receipt.v1",
+  "status": "CAMERA_OCCLUSION_CAUSE_SUPPORTED_NO_TAIL_RIG_FIX",
+  "classification": "read-only exact geometry plus two camera-only native stills",
+  "source_reader": {
+    "head": "f9ca924bcc79943d2d2b7eeab28bef8763c18ec4",
+    "tree": "91f63ac2efb1bbc49e0ae85cadb13fcac97722b2"
+  },
+  "evidence": {
+    "analyze.py": "769a6d7a970fe48119851db49241b6148052e931d5358559814ed5ddd246fd05",
+    "result.json": "d953ed95b3a310d010e27767c6a39e58f75582dd89bc5142c091c7f03dd516b9",
+    "run.log": "5b9ef3e2fa932c6b663af44852603daacd80ecbcf226105e5f3d5678270195a5",
+    "result-superseded-camera-basis.json": "1a1c9a5b7ae586e5e0dc449cd8cdb416ee7f835e82743eb015da16a2a3fe2940",
+    "camera-corrected-axis-front.json": "b8eac2214afab09d2e5d1a0be01224bd7c641cbe2e5e8522bfcb7842b824f859",
+    "corrected-axis-stills/render-receipt.json": "1d48d1dd758bb3750f8026df7da84eeb57c2925b84c2c5630e4188d72064332b",
+    "corrected-axis-stills/frames/00000.png": "0fc6f7c7d8628042a8fdb8db107025d4845aeeaac466c4352645f858f1a3fdde",
+    "corrected-axis-stills/frames/00001.png": "0ff6434101cc792617f15fffc681ac3651a8ca967b502b748f6827d79aed7f00"
+  },
+  "original_camera_witnesses": {
+    "frame4_sha256": "df98b2935c46c9b1f98ca339fb98fcd2991960f779c40247160a8fbb712af727",
+    "frame41_sha256": "2c8f7dabb0726f78c2b32eaa9a801d05794a32fc98610a0941e85406fe844a74"
+  },
+  "finding": "tail joints alternate bilaterally; inherited 2.231181-degree camera azimuth makes one tail side visible while the paired side is body-occluded; neutral skin is not claimed perfectly symmetric",
+  "decision": "do not modify tail rig or motion from this front-view evidence",
+  "claims": {
+    "biological_accuracy": false,
+    "mass_or_force_physics": false,
+    "production_approved": false,
+    "unity_parity": false,
+    "full_cycle_visual_approval": false
+  }
+}

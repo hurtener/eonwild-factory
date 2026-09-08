@@ -1,0 +1,72 @@
+{
+  "verifier_head": "60426de40279e81291b3e0affbf9bb465066b267",
+  "elapsed_s": 174.19939525000518,
+  "sha256": "861c8e77e8dc966fc856fb066764f700bb9af4520bf82dec04a66874f6499983",
+  "status": "PASS",
+  "modes": {
+    "root_motion": {
+      "status": "PASS",
+      "values": {
+        "position_m": 2.624349151975279e-07,
+        "skin_position_m": 2.6243491519769425e-07,
+        "rotation_degrees": 2.4148365394514667e-06,
+        "linear_velocity_mps": 1.2362932090936358e-05,
+        "skin_velocity_mps": 9.994949094217266e-06,
+        "angular_velocity_degrees_per_s": 0.001080734100576072
+      },
+      "classification": "exact serialized TRS endpoint FK/LBS tangents",
+      "source_interpolation": {
+        "before": [
+          "CUBICSPLINE"
+        ],
+        "after": [
+          "CUBICSPLINE"
+        ]
+      },
+      "serialized_motor_velocity_mps": {
+        "before": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "after": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "in_place": {
+      "status": "PASS",
+      "values": {
+        "position_m": 1.784146017590271e-15,
+        "skin_position_m": 1.7798229048217483e-15,
+        "rotation_degrees": 2.4148365394514667e-06,
+        "linear_velocity_mps": 1.236293209097407e-05,
+        "skin_velocity_mps": 9.99494909424745e-06,
+        "angular_velocity_degrees_per_s": 0.001080734100576072
+      },
+      "classification": "exact serialized TRS endpoint FK/LBS tangents",
+      "source_interpolation": {
+        "before": [
+          "CUBICSPLINE"
+        ],
+        "after": [
+          "CUBICSPLINE"
+        ]
+      },
+      "serialized_motor_velocity_mps": {
+        "before": [
+          0.05016807155008405,
+          0.0,
+          1.2876432948519174
+        ],
+        "after": [
+          0.05016807155008405,
+          0.0,
+          1.2876432948519174
+        ]
+      }
+    }
+  }
+}
