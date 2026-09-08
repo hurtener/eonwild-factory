@@ -1,0 +1,301 @@
+{
+  "schema": "eonwild.motion.adult-v10-tail-bilateral-audit.v1",
+  "classification": "read-only kinematic, skin-weight and camera-projection diagnostic",
+  "source": {
+    "engine_head": "f9ca924bcc79943d2d2b7eeab28bef8763c18ec4",
+    "engine_tree": "91f63ac2efb1bbc49e0ae85cadb13fcac97722b2",
+    "root_motion_glb_sha256": "85f19b01805153269988865752737e368be292f8fc49d5e527dfcf5f3ec4b2a4",
+    "manifest_sha256": "80b15c5d7dba7aa294335c46e55e8e8776aa7d177507c3c7fb3f96628252153d",
+    "plan_sha256": "07332c1245a11ffb254a163571b3bba01dcfdfc1367eae96ca8d8c0fbddeb753",
+    "runtime_sha256": "23dbe69ebf66ecde4ee62ee147b55178798b6e44460db310e85f9c74a3d34171",
+    "duration_s": 2.4600000381469727,
+    "key_count": 297,
+    "shallow_linear_film_sha256": "ff52c0d7c6783c4af8f0c7065619c30e238cbfbb35e42f8c5fe12cbc0a4c5202"
+  },
+  "declared_frame": {
+    "forward": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "up": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "lateral": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "positive_lateral_semantic": "right according to admitted bilateral hip ordering"
+  },
+  "neutral_rig_and_skin": {
+    "tail_roles": [
+      "Bone_024",
+      "Bone_023",
+      "Bone_022",
+      "Bone_021",
+      "Bone_020",
+      "Bone_019",
+      "Bone_018",
+      "Bone_017",
+      "Bone_016"
+    ],
+    "tail_parent_indices": [
+      73,
+      72,
+      71,
+      70,
+      69,
+      68,
+      67,
+      66,
+      65
+    ],
+    "tail_joint_lateral_m": [
+      8.277143670812337e-08,
+      5.6959159319691643e-08,
+      6.339212064998545e-09,
+      -4.959079039773551e-08,
+      -1.1308029401052577e-07,
+      -1.8062523831144373e-07,
+      -2.5490790389604e-07,
+      -3.2454216477434406e-07,
+      -3.4178840620929796e-07
+    ],
+    "tail_material_definition": "all normalized skin influences; aggregate semantic-tail weight >= 0.5",
+    "tail_material_vertex_count": 10557,
+    "tail_material_negative_positive_lateral_counts": [
+      6471,
+      4086
+    ],
+    "tail_material_lateral_quantiles_m": {
+      "0.0": -0.5328906811331483,
+      "0.01": -0.45991887458181663,
+      "0.1": -0.34531394888191597,
+      "0.5": -0.028073775087603104,
+      "0.9": 0.279717601686036,
+      "0.99": 0.4200016685129547,
+      "1.0": 0.5340014312147151
+    },
+    "reflected_nearest_vertex_distance_quantiles_m": {
+      "0.0": 2.028875061481361e-05,
+      "0.5": 0.03539460599534591,
+      "0.9": 0.050640556677772286,
+      "0.95": 0.05433043381026443,
+      "0.99": 0.06594104620207092,
+      "1.0": 0.18795435624423343
+    },
+    "reflection_limit": "nearest-vertex distance is tessellation-sensitive; it does not pair topology or prove a symmetric volume"
+  },
+  "animated_bilateral": {
+    "half_cycle_s": 1.2300000190734863,
+    "exact_pair_count": 149,
+    "tail_tip_lateral_min_max_m": [
+      -0.5246513980622305,
+      0.5245089211401885
+    ],
+    "tail_tip_lateral_peak_to_peak_m": 1.049160319202419,
+    "tail_material_centroid_lateral_min_max_m": [
+      -0.12146646793527292,
+      0.05423504770896996
+    ],
+    "tail_material_centroid_lateral_peak_to_peak_m": 0.17570151564424288,
+    "joint_half_cycle_antisymmetry_residual_m": {
+      "maximum": 3.21636240030454e-05,
+      "rms": 2.2658218775223685e-05
+    },
+    "corresponding_material_half_cycle_antisymmetry_residual_m": {
+      "maximum": 0.024090552253799136,
+      "p99": 0.011941410263546927,
+      "rms": 0.0028786794951930006
+    }
+  },
+  "cameras": {
+    "current_cubic_front": {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/source-cubic-adult-v10-f9ca924-native-review-001/front-body/camera.json",
+      "sha256": "a22c30074f40c40c485236306da5dd57acd562bc8e41fad906fcee1798e9d111",
+      "camera": {
+        "schema": "eonwild.motion.review-camera.v1",
+        "view": "front",
+        "focus": "body",
+        "center_relative_root": [
+          -0.036882709711790085,
+          1.2180604934692383,
+          -1.000304937362671
+        ],
+        "position_relative_root": [
+          0.6193681955337524,
+          -15.625662803649902,
+          1.5537104606628418
+        ],
+        "orthographic_scale": 9.284965867102146
+      },
+      "declared_axis_yaw_degrees": 2.2311812162324656,
+      "screen_right_canonical_f_u_l": [
+        -0.03893161713219058,
+        0.0,
+        0.9992418772186604
+      ],
+      "axis_aligned_position_relative_root": [
+        -0.036882709711790085,
+        -15.638442102281452,
+        1.5537104606628418
+      ],
+      "axis_aligned_position_preserves_target_distance_elevation": true,
+      "double_support_projection_witnesses": [
+        {
+          "frame": 4,
+          "time_s": 0.13333333333333333,
+          "inherited_yaw_camera": {
+            "classification": "point-sampled projected extent; not triangle raster visibility or depth proof",
+            "screen_left_vertex_count": 361,
+            "screen_right_vertex_count": 1493,
+            "maximum_screen_left_extent_pixels": 6.14938710249271,
+            "maximum_screen_right_extent_pixels": 23.188195100747123,
+            "tail_screen_x_range_pixels": [
+              299.35277862164475,
+              352.95277623485083
+            ]
+          },
+          "corrected_axis_camera": {
+            "classification": "point-sampled projected extent; not triangle raster visibility or depth proof",
+            "screen_left_vertex_count": 527,
+            "screen_right_vertex_count": 683,
+            "maximum_screen_left_extent_pixels": 7.874656404808434,
+            "maximum_screen_right_extent_pixels": 16.678378720512796,
+            "tail_screen_x_range_pixels": [
+              300.43923300652125,
+              345.31817939099915
+            ]
+          }
+        },
+        {
+          "frame": 41,
+          "time_s": 1.3666666666666667,
+          "inherited_yaw_camera": {
+            "classification": "point-sampled projected extent; not triangle raster visibility or depth proof",
+            "screen_left_vertex_count": 379,
+            "screen_right_vertex_count": 639,
+            "maximum_screen_left_extent_pixels": 10.829848102215749,
+            "maximum_screen_right_extent_pixels": 10.325993806506858,
+            "tail_screen_x_range_pixels": [
+              300.0106133619885,
+              341.10553037578484
+            ]
+          },
+          "corrected_axis_camera": {
+            "classification": "point-sampled projected extent; not triangle raster visibility or depth proof",
+            "screen_left_vertex_count": 629,
+            "screen_right_vertex_count": 509,
+            "maximum_screen_left_extent_pixels": 17.275576770280566,
+            "maximum_screen_right_extent_pixels": 7.928499309869096,
+            "tail_screen_x_range_pixels": [
+              295.69931857237384,
+              342.3647698909824
+            ]
+          }
+        }
+      ]
+    },
+    "older_shallow_front": {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/continuation-adult-v10-load-acceptance-low-front-shallow-001/camera/front-low-shallow.json",
+      "sha256": "330368a43338838e157c4b09d4999553bc23c983532659a290df133fd87310b1",
+      "camera": {
+        "schema": "eonwild.motion.review-camera.v1",
+        "view": "front",
+        "focus": "body",
+        "center_relative_root": [
+          -0.036882709711790085,
+          1.2180604934692383,
+          -1.000304937362671
+        ],
+        "position_relative_root": [
+          0.6193681955337524,
+          -15.625662803649902,
+          0.030682927966881213
+        ],
+        "orthographic_scale": 9.284965867102146
+      },
+      "declared_axis_yaw_degrees": 2.2311812162324656,
+      "screen_right_canonical_f_u_l": [
+        -0.03893161713219059,
+        0.0,
+        0.9992418772186604
+      ],
+      "axis_aligned_position_relative_root": [
+        -0.036882709711790085,
+        -15.638442102281452,
+        0.030682927966881213
+      ],
+      "axis_aligned_position_preserves_target_distance_elevation": true,
+      "double_support_projection_witnesses": [
+        {
+          "frame": 4,
+          "time_s": 0.13333333333333333,
+          "inherited_yaw_camera": {
+            "classification": "point-sampled projected extent; not triangle raster visibility or depth proof",
+            "screen_left_vertex_count": 0,
+            "screen_right_vertex_count": 359,
+            "maximum_screen_left_extent_pixels": 0.0,
+            "maximum_screen_right_extent_pixels": 6.857559447695678,
+            "tail_screen_x_range_pixels": [
+              299.35277862164475,
+              352.95277623485083
+            ]
+          },
+          "corrected_axis_camera": {
+            "classification": "point-sampled projected extent; not triangle raster visibility or depth proof",
+            "screen_left_vertex_count": 0,
+            "screen_right_vertex_count": 0,
+            "maximum_screen_left_extent_pixels": 0.0,
+            "maximum_screen_right_extent_pixels": 0.0,
+            "tail_screen_x_range_pixels": [
+              300.43923300652125,
+              345.31817939099915
+            ]
+          }
+        },
+        {
+          "frame": 41,
+          "time_s": 1.3666666666666667,
+          "inherited_yaw_camera": {
+            "classification": "point-sampled projected extent; not triangle raster visibility or depth proof",
+            "screen_left_vertex_count": 0,
+            "screen_right_vertex_count": 36,
+            "maximum_screen_left_extent_pixels": 0.0,
+            "maximum_screen_right_extent_pixels": 1.893223918872593,
+            "tail_screen_x_range_pixels": [
+              300.0106133619885,
+              341.10553037578484
+            ]
+          },
+          "corrected_axis_camera": {
+            "classification": "point-sampled projected extent; not triangle raster visibility or depth proof",
+            "screen_left_vertex_count": 0,
+            "screen_right_vertex_count": 4,
+            "maximum_screen_left_extent_pixels": 0.0,
+            "maximum_screen_right_extent_pixels": 0.8398256549041321,
+            "tail_screen_x_range_pixels": [
+              295.69931857237384,
+              342.3647698909824
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "conclusion": {
+    "one_sided_tail_joint_motion": "NOT_OBSERVED",
+    "perfect_neutral_material_symmetry": "NOT_ESTABLISHED",
+    "camera_alignment": "Both reviewed front cameras retain a 2.231-degree azimuth from the old source axis; the admitted corrected model forward is exact +Z. Screen right maps almost exactly to negative declared lateral. The inherited yaw changes projected tail exposure and can make one half-cycle more legible through body occlusion.",
+    "action": "Do not change the rig or tail law from this evidence. Compare the two double-support poses with one corrected-axis camera at the same target, distance, elevation and scale."
+  },
+  "limitations": [
+    "The point-sampled exposure proxy does not rasterize triangles or prove pixel visibility.",
+    "Neutral nearest-vertex reflection is sensitive to asymmetric tessellation and does not prove a symmetric volume.",
+    "The older shallow movie uses the prior LINEAR package; it is presentation evidence only.",
+    "This audit does not establish tail mass, inertia, force, COM, biological accuracy, production approval or Unity parity."
+  ]
+}

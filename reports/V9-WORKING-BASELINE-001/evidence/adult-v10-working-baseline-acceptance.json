@@ -1,0 +1,27 @@
+{
+  "catalog_migration": "PENDING",
+  "decision": "USER_SELECTED_WORKING_BASELINE",
+  "excluded_claims": [
+    "production approval",
+    "Unity validation",
+    "biological or mass-physics validation",
+    "approval of other movements",
+    "replacement or invalidation of older approved reference identities"
+  ],
+  "manifest_sha256": "80b15c5d7dba7aa294335c46e55e8e8776aa7d177507c3c7fb3f96628252153d",
+  "motion": "adult Tarbosaurus walk V10",
+  "package_path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/source-cubic-adult-v10-f9ca924",
+  "recorded_date": "2026-09-08",
+  "remaining_work": [
+    "body weight transfer needs revision",
+    "front-camera and tail visibility remain under review",
+    "exact LINEAR continuity remains blocked"
+  ],
+  "schema": "eonwild.motion.user-working-baseline-acceptance.v1",
+  "selection_boundary": "User-selected review baseline; catalog selection, Unity integration, and production approval remain pending.",
+  "selection_status": "USER_SELECTED_WORKING_BASELINE",
+  "source_sha256": "ced935c771749922cbfa3209ec76ba9a2699ec7c928797753fb94c967c31cd97",
+  "supersedes_receipt_sha256": "b7f3d0e4807c4d3abf9950d1b2bacf49ff9aa326ad950f920c76ca25245f5457",
+  "technical_status": "PASS",
+  "user_statement": "V10 walking is the new working baseline and is still unfinished."
+}
