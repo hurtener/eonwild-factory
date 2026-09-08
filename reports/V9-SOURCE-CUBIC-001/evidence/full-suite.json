@@ -1,0 +1,15 @@
+{
+  "schema": "eonwild.motion.source-cubic-combined-fullsuite.v1",
+  "head": "f9ca924bcc79943d2d2b7eeab28bef8763c18ec4",
+  "tree": "91f63ac2efb1bbc49e0ae85cadb13fcac97722b2",
+  "command": "pytest tests -q --tb=short",
+  "status": "PASS",
+  "tests_passed": 988,
+  "subtests_passed": 21,
+  "elapsed_seconds": 836.73,
+  "pytest_log_sha256": "f69336f274dc6682baf0da0f60c9a3255d27bbbe1b65fdd64b6b3d449c6e38b0",
+  "junit_sha256": "00d2cdb75621c5cf72605e6979e331eb224eff2eb538e72a1b24ed10588cb240",
+  "source_equivalence_sha256": "fd5d01073843fe3386b7404033a01d23bbbe829d8cc7b81608fbeda47cf71cbb",
+  "note": "Corrected repository test selection. The earlier broad invocation collected archived toolkit copies and is not acceptance evidence."
+}
+
