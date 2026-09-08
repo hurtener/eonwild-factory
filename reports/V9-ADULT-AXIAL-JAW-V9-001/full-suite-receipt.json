@@ -1,0 +1,51 @@
+{
+  "schema": "eonwild.motion.local-full-suite-receipt.v1",
+  "source_head": "2c5dc911d15e60b4a37a0d6b9248fa547168672b",
+  "command": "PYTHONPATH=src <python> -m pytest -q tests --junitxml=<junit.xml>",
+  "result": "PASS",
+  "tests": 896,
+  "subtests": 21,
+  "elapsed_s": 385.56,
+  "junit_attributes": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "tests": "917",
+    "time": "385.493",
+    "timestamp": "2026-09-08T08:39:54.188604-03:00",
+    "hostname": "192.168.1.26"
+  },
+  "pytest_log": {
+    "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/combined-v9-full-suite-2c5dc91/pytest.log",
+    "sha256": "a27d81a327dee800d12643bf8fcaaee55a76ee9f7b5338e4a009c1478abb35d1"
+  },
+  "junit": {
+    "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/combined-v9-full-suite-2c5dc91/junit.xml",
+    "sha256": "a34f0b8137e100c36a5ce38b08d7a12d18a498f138e47835cab8de317257ee5a"
+  },
+  "python": {
+    "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/worktrees/eonwild-neutral-jaw-calibration/.venv/bin/python",
+    "version": "3.12.10"
+  },
+  "pytest_version": "pytest 9.1.1",
+  "blender": {
+    "path": "/opt/homebrew/bin/blender",
+    "version": "5.2.0 LTS",
+    "exercised_by_full_suite": true
+  },
+  "gltf_validator": {
+    "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/tmp/phase-local-publication-real-tools-5da9b60-retry1/gltf-validator-2.0.0-dev.3.10/gltf_validator",
+    "version": "2.0.0-dev.3.10",
+    "separate_candidate_reopen_receipts": [
+      "audits/combined-v9-real-tools-2c5dc91/root-motion-gltf-validator.json",
+      "audits/combined-v9-real-tools-2c5dc91/in-place-gltf-validator.json"
+    ]
+  },
+  "scope_note": "Suite began at clean exact HEAD 2c5dc91. During execution only README.md and docs/MOTION_QUALITY_STATUS.md were edited for the subsequent docs-only publication commit; runtime source, tests, recipes and catalog inputs were unchanged.",
+  "prior_unpersisted_observation": {
+    "result": "896 passed, 21 subtests passed",
+    "elapsed_s": 449.48,
+    "classification": "tool output observed; no raw log or JUnit was persisted for that earlier run"
+  }
+}

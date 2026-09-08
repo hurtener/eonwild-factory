@@ -1,0 +1,92 @@
+{
+  "schema": "eonwild.motion.paired-native-review-index.v1",
+  "classification": "review evidence only; no technical, native, Unity or production approval",
+  "source_head": "2c5dc911d15e60b4a37a0d6b9248fa547168672b",
+  "v8_label": "before body timing",
+  "v9_label": "support-timed body + neutral jaw",
+  "playback_rate": 1.0,
+  "technical_loop_status": "BLOCKED",
+  "exact_linear_translation_seam_mps": 0.00323101227406632,
+  "native_playback": "PENDING",
+  "views": [
+    {
+      "view": "side-body",
+      "camera_v8_sha256": "28d3d6045e34896398ef07a030acee4978b95662f410a8b52aba16ec7db32910",
+      "camera_v9_sha256": "28d3d6045e34896398ef07a030acee4978b95662f410a8b52aba16ec7db32910",
+      "camera_bytes_equal": true,
+      "timeline_v8_sha256": "7a7a71a5b420f4e61bc1cd9617180300ff409b590500b9247193ff46dd95616a",
+      "timeline_v9_sha256": "7a7a71a5b420f4e61bc1cd9617180300ff409b590500b9247193ff46dd95616a",
+      "source_timestamps_equal": true,
+      "rendered_frame_count": 74,
+      "first_source_time_s": 0.0,
+      "last_source_time_s": 2.433333333333333,
+      "v8_video_sha256": "b23467bff4f91b9d646e0cb6e68606cbed8ec453851dadd3bd5e72ed36757447",
+      "v9_video_sha256": "bc5cb77ce0da2425fa0c5dfbbd17623c116649b32378cf2e4bbef416f0e70139"
+    },
+    {
+      "view": "front-body",
+      "camera_v8_sha256": "a22c30074f40c40c485236306da5dd57acd562bc8e41fad906fcee1798e9d111",
+      "camera_v9_sha256": "a22c30074f40c40c485236306da5dd57acd562bc8e41fad906fcee1798e9d111",
+      "camera_bytes_equal": true,
+      "timeline_v8_sha256": "7a7a71a5b420f4e61bc1cd9617180300ff409b590500b9247193ff46dd95616a",
+      "timeline_v9_sha256": "7a7a71a5b420f4e61bc1cd9617180300ff409b590500b9247193ff46dd95616a",
+      "source_timestamps_equal": true,
+      "rendered_frame_count": 74,
+      "first_source_time_s": 0.0,
+      "last_source_time_s": 2.433333333333333,
+      "v8_video_sha256": "ea3b6c8c35c9ea560973f35e9d43b86f16548030541572fa82f0a41ebad54683",
+      "v9_video_sha256": "98e0ab92066b6ddfecf5b5e6cbc872bef4debf481aa456505d7ae60c0e866d44"
+    },
+    {
+      "view": "rear-body",
+      "camera_v8_sha256": "22a28338857a20a62f39d2ac28bf28c9e9ab1860e29c6f85d9b08149bc8d5c61",
+      "camera_v9_sha256": "22a28338857a20a62f39d2ac28bf28c9e9ab1860e29c6f85d9b08149bc8d5c61",
+      "camera_bytes_equal": true,
+      "timeline_v8_sha256": "7a7a71a5b420f4e61bc1cd9617180300ff409b590500b9247193ff46dd95616a",
+      "timeline_v9_sha256": "7a7a71a5b420f4e61bc1cd9617180300ff409b590500b9247193ff46dd95616a",
+      "source_timestamps_equal": true,
+      "rendered_frame_count": 74,
+      "first_source_time_s": 0.0,
+      "last_source_time_s": 2.433333333333333,
+      "v8_video_sha256": "e3da9943814d3475edaba77ef62c787ebc256c4174ee04f2e0d3dc5972375077",
+      "v9_video_sha256": "047944a7222b8c3580218b1b6a2826b2e56505a1f06152f7933e0d9545bf3c37"
+    },
+    {
+      "view": "three-quarter-body",
+      "camera_v8_sha256": "c08642f3ae6f028f73f1f050dd397f97ab59e505ffe328d7e00d53f695891f59",
+      "camera_v9_sha256": "c08642f3ae6f028f73f1f050dd397f97ab59e505ffe328d7e00d53f695891f59",
+      "camera_bytes_equal": true,
+      "timeline_v8_sha256": "7a7a71a5b420f4e61bc1cd9617180300ff409b590500b9247193ff46dd95616a",
+      "timeline_v9_sha256": "7a7a71a5b420f4e61bc1cd9617180300ff409b590500b9247193ff46dd95616a",
+      "source_timestamps_equal": true,
+      "rendered_frame_count": 74,
+      "first_source_time_s": 0.0,
+      "last_source_time_s": 2.433333333333333,
+      "v8_video_sha256": "e63eb4ce0da45451c9ab4adbd4c1f7ebc2007d133432d54440172ca324f7f643",
+      "v9_video_sha256": "14eb1cf01b55088f169eea417794723d08c7075b73073fbd2ae43bd2cb981e12"
+    },
+    {
+      "view": "root-motion-side",
+      "camera_v8_sha256": "fae769d9ae648172c588a82eef9d153d6173e1ddfeea20905b8e57151a1a5373",
+      "camera_v9_sha256": "fae769d9ae648172c588a82eef9d153d6173e1ddfeea20905b8e57151a1a5373",
+      "camera_bytes_equal": true,
+      "timeline_v8_sha256": "7b02168c414b8c847b798d8463420e3398ed1c8d6227af568cebcb04a565caf6",
+      "timeline_v9_sha256": "7b02168c414b8c847b798d8463420e3398ed1c8d6227af568cebcb04a565caf6",
+      "source_timestamps_equal": true,
+      "rendered_frame_count": 74,
+      "first_source_time_s": 0.0,
+      "last_source_time_s": 2.433333333333333,
+      "v8_video_sha256": "d80bad0bf3301b63ccc35450b87c8c4d93e55d9036c65ec7e1e66384bb8ffdc4",
+      "v9_video_sha256": "941772987a181fc8b5b058dc332e43fff41d515bc0183ba82b886a81c90a286c"
+    }
+  ],
+  "index_sha256": "12f45d4521df0ca8446624144fe272a14aec76808473be1d208af9f9a043d990",
+  "http_base": "http://127.0.0.1:8877/out",
+  "http_head_verified_film_count": 10,
+  "rendered_at_local": {
+    "v8": "2026-09-08T05:59:59-03:00",
+    "v9": "2026-09-08T08:25:06-03:00",
+    "source": "render-receipt file modification timestamps"
+  },
+  "playback_policy": "independent native 1x playback; drift is displayed and never auto-corrected; explicit restart resynchronizes at t=0"
+}
