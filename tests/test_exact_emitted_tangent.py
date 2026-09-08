@@ -9,7 +9,7 @@ import numpy as np
 import pytest
 
 from eonwild_motion.errors import ContractError
-from eonwild_motion.contact_gauge import _animation_channels
+from eonwild_motion.contact_gauge import _animation_channels, _pose_matrices
 from eonwild_motion.factory.emitted_tangent import endpoint_tangent, local_cyclic_tangents, skinned_velocity
 from eonwild_motion.factory.quality import emitted_cyclic_continuity, emitted_rotation_rates
 from eonwild_motion.glb.animation import read_animation_tracks
@@ -88,6 +88,34 @@ def test_shortest_slerp_is_sign_equivalent_and_body_framed():
     assert endpoint_tangent(antipodal, "q", endpoint=0, terminal=False).angular_velocity[root, 1] == pytest.approx(expected)
 
 
+def test_linear_rotation_sampling_and_derivative_follow_shortest_slerp_in_fk():
+    base, roles = fixture()
+    root = base.name_to_node[roles["root"]]
+    hip = base.name_to_node[roles["legs"]["left"]["contactChain"][0]]
+    angle = np.radians(90.)
+    rows = np.array([[0., 0., 0., 1.], [0., np.sin(angle / 2), 0., np.cos(angle / 2)]])
+    glb = Glb.from_bytes(_build_glb(base, "slerp", np.array([0., 2.]), {(root, "rotation"): rows}, "q", {}))
+    parsed, _ = read_animation_tracks(glb, "slerp", require_common_timeline=True)
+    track = parsed[(root, "rotation")]
+    assert track.sample(1.) == pytest.approx([0., np.sin(np.radians(45.) / 2), 0., np.cos(np.radians(45.) / 2)])
+    assert track.derivative_at_key(0, terminal=False)[1] == pytest.approx(angle / 4)
+    channels, _ = _animation_channels(glb, "slerp")
+    world = _pose_matrices(glb, channels, 1.)
+    rest = _pose_matrices(glb, {}, 0.)
+    pivot, point = np.asarray(rest[root])[:3, 3], np.asarray(rest[hip])[:3, 3]
+    relative = point - pivot
+    half = angle / 2
+    expected = pivot + np.array((
+        np.cos(half) * relative[0] + np.sin(half) * relative[2],
+        relative[1],
+        -np.sin(half) * relative[0] + np.cos(half) * relative[2],
+    ))
+    assert np.asarray(world[hip])[:3, 3] == pytest.approx(expected)
+    antipodal = Glb.from_bytes(_build_glb(base, "slerp", np.array([0., 2.]), {(root, "rotation"): rows * np.array([[1.], [-1.]])}, "q", {}))
+    antipodal_track, _ = read_animation_tracks(antipodal, "slerp", require_common_timeline=True)
+    assert antipodal_track[(root, "rotation")].sample(1.) == pytest.approx(track.sample(1.))
+
+
 def test_fk_rotation_product_rule_uses_the_parent_world_frame():
     base, roles = fixture()
     root = base.name_to_node[roles["root"]]
@@ -109,6 +137,28 @@ def test_rejects_non_linear_and_duplicate_channels():
         endpoint_tangent(glb, "exact-tangent", endpoint=0, terminal=False)
     animation["samplers"][0]["interpolation"] = []
     with pytest.raises(ContractError, match="unsupported"):
+        endpoint_tangent(glb, "exact-tangent", endpoint=0, terminal=False)
+
+
+@pytest.mark.parametrize("field, value", [("input", -2), ("output", -1), ("input", 999999), ("output", 999999)])
+def test_animation_sampler_rejects_out_of_range_accessor_indices(field, value):
+    glb, _ = _asset_clip()
+    glb.document["animations"][0]["samplers"][0][field] = value
+    with pytest.raises(ContractError, match="accessor"):
+        endpoint_tangent(glb, "exact-tangent", endpoint=0, terminal=False)
+
+
+@pytest.mark.parametrize("target, change", [
+    ("input", {"componentType": 5123}),
+    ("input", {"normalized": False}),
+    ("output", {"componentType": 5123}),
+    ("output", {"normalized": False}),
+])
+def test_animation_sampler_requires_float_unnormalized_accessor_metadata(target, change):
+    glb, _ = _asset_clip()
+    sampler = glb.document["animations"][0]["samplers"][0]
+    glb.document["accessors"][sampler[target]].update(change)
+    with pytest.raises(ContractError, match="metadata"):
         endpoint_tangent(glb, "exact-tangent", endpoint=0, terminal=False)
 
 
@@ -212,5 +262,26 @@ def test_cubicspline_cyclic_tangent_is_exact_but_rate_gate_remains_fail_closed()
         (root, "rotation"): (np.zeros((2, 4)), unit, np.zeros((2, 4))),
     })
     assert emitted_cyclic_continuity(glb, loop=True)["status"] == "PASS"
-    with pytest.raises(ContractError, match="LINEAR quaternion"):
+    with pytest.raises(ContractError, match="CUBICSPLINE TRS"):
+        emitted_rotation_rates(glb, 600.)
+
+
+@pytest.mark.parametrize("path", ["translation", "scale"])
+def test_full_technical_rate_gate_rejects_cubic_even_when_rotation_is_linear(path):
+    profile = json.loads((ROOT / "catalog/contacts/heavy-biped.v9.json").read_text())
+    base = Glb(ROOT / profile["source"]["path"])
+    root = base.name_to_node[profile["geometry"]["landmarks"]["root_node"]]
+    channels = {
+        (root, "translation"): np.array([[0., 0., 0.], [1., 0., 0.]]),
+        (root, "rotation"): np.array([[0., 0., 0., 1.], [0., 0., 0., 1.]]),
+        (root, "scale"): np.ones((2, 3)),
+    }
+    glb = Glb.from_bytes(_build_glb(base, "mixed", np.array([0., 1.]), channels, "q", {}))
+    animation = glb.document["animations"][0]
+    sampler = next(
+        animation["samplers"][channel["sampler"]]
+        for channel in animation["channels"] if channel["target"]["path"] == path
+    )
+    sampler["interpolation"] = "CUBICSPLINE"
+    with pytest.raises(ContractError, match="CUBICSPLINE TRS"):
         emitted_rotation_rates(glb, 600.)

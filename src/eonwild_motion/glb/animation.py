@@ -35,6 +35,60 @@ def _unit_quaternion(value: np.ndarray, *, label: str) -> np.ndarray:
     return value / norm
 
 
+def _quaternion_product(left: np.ndarray, right: np.ndarray) -> np.ndarray:
+    lx, ly, lz, lw = left
+    rx, ry, rz, rw = right
+    return np.array((
+        lw * rx + rw * lx + ly * rz - lz * ry,
+        lw * ry + rw * ly + lz * rx - lx * rz,
+        lw * rz + rw * lz + lx * ry - ly * rx,
+        lw * rw - lx * rx - ly * ry - lz * rz,
+    ))
+
+
+def _shortest_slerp(left: np.ndarray, right: np.ndarray, amount: float) -> np.ndarray:
+    """Match glTF LINEAR quaternion playback, including antipodal encoding."""
+    first, second = _unit_quaternion(left, label="animation quaternion"), _unit_quaternion(right, label="animation quaternion")
+    cosine = float(np.dot(first, second))
+    if cosine < 0.0:
+        second, cosine = -second, -cosine
+    cosine = min(1.0, max(-1.0, cosine))
+    if cosine > 0.9995:
+        return _unit_quaternion(first + amount * (second - first), label="interpolated animation quaternion")
+    angle = math.acos(cosine)
+    sine = math.sin(angle)
+    return _unit_quaternion(
+        (math.sin((1.0 - amount) * angle) * first + math.sin(amount * angle) * second) / sine,
+        label="interpolated animation quaternion",
+    )
+
+
+def _linear_rotation_derivative(left: np.ndarray, right: np.ndarray, anchor: np.ndarray, duration: float) -> np.ndarray:
+    """Exact shortest-SLERP derivative expressed at ``anchor``."""
+    first, second = _unit_quaternion(left, label="animation quaternion"), _unit_quaternion(right, label="animation quaternion")
+    if float(np.dot(first, second)) < 0.0:
+        second = -second
+    relative = _quaternion_product(np.array((-first[0], -first[1], -first[2], first[3])), second)
+    sine = float(np.linalg.norm(relative[:3]))
+    if sine <= 1.0e-12:
+        angular = 2.0 * relative[:3] / duration
+    else:
+        angle = 2.0 * math.atan2(sine, max(-1.0, min(1.0, float(relative[3]))))
+        angular = angle * relative[:3] / (sine * duration)
+    return 0.5 * _quaternion_product(_unit_quaternion(anchor, label="animation quaternion"), np.append(angular, 0.0))
+
+
+def _animation_accessor(glb: Glb, index: int, *, label: str, kind: str) -> None:
+    accessors = glb.document.get("accessors")
+    if not isinstance(accessors, list) or index < 0 or index >= len(accessors):
+        raise ContractError(f"{label} accessor index is invalid")
+    accessor = accessors[index]
+    expected_type = "SCALAR" if kind == "input" else kind
+    if (not isinstance(accessor, Mapping) or accessor.get("componentType") != 5126
+            or accessor.get("type") != expected_type or "normalized" in accessor):
+        raise ContractError(f"{label} accessor metadata is invalid")
+
+
 @dataclass(frozen=True)
 class TrsTrack:
     """One fully validated emitted TRS channel.
@@ -82,8 +136,12 @@ class TrsTrack:
         duration = abs(float(self.times[index] - self.times[neighbor]))
         if not math.isfinite(duration) or duration <= 0:
             raise ContractError("animation adjacent duration is invalid")
-        return ((self.values[index] - self.values[neighbor]) / duration if terminal
-                else (self.values[neighbor] - self.values[index]) / duration)
+        if self.path != "rotation":
+            return ((self.values[index] - self.values[neighbor]) / duration if terminal
+                    else (self.values[neighbor] - self.values[index]) / duration)
+        left, right = ((self.values[neighbor], self.values[index]) if terminal
+                       else (self.values[index], self.values[neighbor]))
+        return _linear_rotation_derivative(left, right, self.values[index], duration)
 
     def sample(self, time_s: float) -> np.ndarray:
         time = float(time_s)
@@ -98,6 +156,8 @@ class TrsTrack:
         duration = float(self.times[right] - self.times[left])
         amount = (time - float(self.times[left])) / duration
         if self.interpolation == "LINEAR":
+            if self.path == "rotation":
+                return _shortest_slerp(self.values[left], self.values[right], amount)
             result = self.values[left] + amount * (self.values[right] - self.values[left])
         else:
             assert self.in_tangents is not None and self.out_tangents is not None
@@ -120,8 +180,12 @@ def read_trs_sampler(glb: Glb, sampler: Mapping[str, Any], path: str, *, label: 
         raise ContractError(f"{label} interpolation {interpolation!r} is unsupported")
     input_index, output_index = sampler.get("input"), sampler.get("output")
     if (isinstance(input_index, bool) or not isinstance(input_index, int)
-            or isinstance(output_index, bool) or not isinstance(output_index, int)):
+            or input_index < 0 or isinstance(output_index, bool) or not isinstance(output_index, int)
+            or output_index < 0):
         raise ContractError(f"{label} sampler accessors are invalid")
+    _animation_accessor(glb, input_index, label=f"{label} input", kind="input")
+    output_kind = "VEC4" if _PATH_WIDTH[path] == 4 else "VEC3"
+    _animation_accessor(glb, output_index, label=f"{label} output", kind=output_kind)
     try:
         times = _numbers(glb.accessor_values(input_index), label=f"{label} timestamps")
         raw = _numbers(glb.accessor_values(output_index), label=f"{label} output")

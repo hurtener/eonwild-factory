@@ -179,9 +179,13 @@ def emitted_rotation_rates(glb: Glb, maximum_degrees_per_s: float) -> dict:
     channel_count = 0
     for animation in glb.document.get("animations", []):
         for channel in animation["channels"]:
+            sampler = animation["samplers"][channel["sampler"]]
+            if sampler.get("interpolation", "LINEAR") == "CUBICSPLINE":
+                raise ContractError(
+                    "factory technical rate authority rejects CUBICSPLINE TRS channels until interval extrema are validated"
+                )
             if channel["target"]["path"] != "rotation":
                 continue
-            sampler = animation["samplers"][channel["sampler"]]
             if sampler.get("interpolation", "LINEAR") != "LINEAR":
                 raise ContractError("factory rate witness requires emitted LINEAR quaternion channels")
             times = np.asarray(glb.accessor_values(sampler["input"]), dtype=float).reshape(-1)
