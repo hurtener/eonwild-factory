@@ -103,9 +103,12 @@ def signed_recovery_pitch(phase: float, pitch_degrees: float, peak_fraction: flo
     return math.copysign(-recovery_pitch(phase, abs(pitch_degrees), peak_fraction), pitch_degrees)
 
 
-def declare_pad_recovery(plan: dict) -> None:
-    """Annotate an already-private plan copy, never historical input assets."""
-    parameters=plan.get('parameters',{})
+def declare_pad_recovery_sample(parameters: dict, row: dict) -> None:
+    """Decorate one private plan row with the existing pad-recovery law.
+
+    This is deliberately row-local: callers own copying a sampled row, and no
+    offset or pose interpolation is introduced between source samples.
+    """
     amplitude=parameters.get('foot_recovery_pitch_degrees',0.)
     signed_pitch=parameters.get('pad_recovery_pitch_degrees')
     peak=parameters.get('swing_recovery_peak_fraction',.42)
@@ -115,11 +118,19 @@ def declare_pad_recovery(plan: dict) -> None:
     # Existing zero sentinel denotes an unshifted mid-swing recovery.
     if peak == 0 and not isinstance(peak, bool):
         peak = .5
+    if not isinstance(row, dict) or not isinstance(row.get('feet'), dict):
+        raise ContractError('pad recovery row requires feet')
+    for foot in row['feet'].values():
+        scale=foot.get('articulation_scale',1.)
+        if isinstance(scale,bool) or not isinstance(scale,Real) or not math.isfinite(scale) or not 0<=scale<=1:
+            raise ContractError('pad recovery scale must be finite in [0,1]')
+        foot['pad_pitch_degrees']=(0. if foot['contact'] else scale * (
+            recovery_pitch(foot['swing_phase'],amplitude,peak) if signed_pitch is None
+            else signed_recovery_pitch(foot['swing_phase'],signed_pitch,peak)))
+
+
+def declare_pad_recovery(plan: dict) -> None:
+    """Annotate an already-private plan copy, never historical input assets."""
+    parameters=plan.get('parameters',{})
     for row in plan['samples']:
-        for foot in row['feet'].values():
-            scale=foot.get('articulation_scale',1.)
-            if isinstance(scale,bool) or not isinstance(scale,Real) or not math.isfinite(scale) or not 0<=scale<=1:
-                raise ContractError('pad recovery scale must be finite in [0,1]')
-            foot['pad_pitch_degrees']=(0. if foot['contact'] else scale * (
-                recovery_pitch(foot['swing_phase'],amplitude,peak) if signed_pitch is None
-                else signed_recovery_pitch(foot['swing_phase'],signed_pitch,peak)))
+        declare_pad_recovery_sample(parameters, row)
