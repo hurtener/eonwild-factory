@@ -27,7 +27,7 @@
     ],
     "segment_profile": "profiles/v9/tarbosaurus-provisional.json",
     "tail_mass_fraction_delta": 0.03,
-    "tail_sensitivity_basis": "Snively et al. report that changing tail depth by +/-10% changed total body mass by no more than 3%; this diagnostic conservatively redistributes 3% of total mass between axial center and tail while holding total mass fixed"
+    "tail_sensitivity_basis": "Authored sensitivity: redistribute 3% of total mass between axial center and tail while holding total mass fixed. Snively et al. separately report that their +/-10% tail-depth geometry experiment changed whole-model mass by no more than 3%; that experiment does not establish this redistribution as a bound."
   },
   "limitations": [
     "The existing segment fractions, local COM alternatives, and diagonal inertias are engineering assumptions, not published PIN 552-1 segment measurements.",
@@ -70,15 +70,15 @@
             0.7932867260604307
           ],
           "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
-            "equal_0.5_0.5": [
-              0.3584366867180482,
-              -2.289099359906612,
-              -5.553675554159643e-08
-            ],
             "leading_0.6_trailing_0.4": [
               0.49548719345715986,
               -2.289099359906612,
               -0.030776300178927678
+            ],
+            "left_0.5_right_0.5": [
+              0.3584366867180482,
+              -2.289099359906612,
+              -5.553675554159643e-08
             ]
           },
           "native_key_index": 18,
@@ -92,13 +92,13 @@
             -820.1243306515404
           ],
           "required_minus_cop_proxy_f_l_m": {
-            "equal_0.5_0.5": [
-              -0.12598725563439905,
-              0.07599035995934413
-            ],
             "leading_0.6_trailing_0.4": [
               -0.26303776237351073,
               0.10676660460151627
+            ],
+            "left_0.5_right_0.5": [
+              -0.12598725563439905,
+              0.07599035995934413
             ]
           },
           "required_resultant_root_relative_f_u_l_m": [
@@ -140,15 +140,15 @@
             0.7932867977127409
           ],
           "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
-            "equal_0.5_0.5": [
-              0.3584366121943312,
-              -2.289099359906612,
-              -6.667633642432058e-08
-            ],
             "leading_0.6_trailing_0.4": [
               0.49548716414468197,
               -2.289099359906612,
               0.03077619443289109
+            ],
+            "left_0.5_right_0.5": [
+              0.3584366121943312,
+              -2.289099359906612,
+              -6.667633642432058e-08
             ]
           },
           "native_key_index": 166,
@@ -162,13 +162,13 @@
             820.6641923705592
           ],
           "required_minus_cop_proxy_f_l_m": {
-            "equal_0.5_0.5": [
-              -0.11155075310744089,
-              -0.1224482362802251
-            ],
             "leading_0.6_trailing_0.4": [
               -0.24860130505779165,
               -0.1532244973894526
+            ],
+            "left_0.5_right_0.5": [
+              -0.11155075310744089,
+              -0.1224482362802251
             ]
           },
           "required_resultant_root_relative_f_u_l_m": [
@@ -204,7 +204,7 @@
             -0.0964294651888579
           ],
           "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
-            "single_support_1.0": [
+            "stance_1": [
               0.3584368222573344,
               -2.289099359906612,
               -0.1538813391134426
@@ -221,7 +221,7 @@
             623.9223288254777
           ],
           "required_minus_cop_proxy_f_l_m": {
-            "single_support_1.0": [
+            "stance_1": [
               -0.2896805356948664,
               0.016122462260803383
             ]
@@ -259,7 +259,7 @@
             0.7932869932900247
           ],
           "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
-            "single_support_1.0": [
+            "stance_1": [
               0.35843680865246696,
               -2.289099359906612,
               0.15388142466865756
@@ -276,7 +276,7 @@
             -626.7851874725702
           ],
           "required_minus_cop_proxy_f_l_m": {
-            "single_support_1.0": [
+            "stance_1": [
               -0.28823445693054106,
               -0.06423508979350559
             ]
@@ -328,15 +328,15 @@
             0.7932867260604307
           ],
           "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
-            "equal_0.5_0.5": [
-              0.3584366867180482,
-              -2.289099359906612,
-              -5.553675554159643e-08
-            ],
             "leading_0.6_trailing_0.4": [
               0.49548719345715986,
               -2.289099359906612,
               -0.030776300178927678
+            ],
+            "left_0.5_right_0.5": [
+              0.3584366867180482,
+              -2.289099359906612,
+              -5.553675554159643e-08
             ]
           },
           "native_key_index": 18,
@@ -350,13 +350,13 @@
             -978.1595486046006
           ],
           "required_minus_cop_proxy_f_l_m": {
-            "equal_0.5_0.5": [
-              -0.055718924458870944,
-              0.11149043553945005
-            ],
             "leading_0.6_trailing_0.4": [
               -0.19276943119798262,
               0.1422666801816222
+            ],
+            "left_0.5_right_0.5": [
+              -0.055718924458870944,
+              0.11149043553945005
             ]
           },
           "required_resultant_root_relative_f_u_l_m": [
@@ -398,15 +398,15 @@
             0.7932867977127409
           ],
           "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
-            "equal_0.5_0.5": [
-              0.3584366121943312,
-              -2.289099359906612,
-              -6.667633642432058e-08
-            ],
             "leading_0.6_trailing_0.4": [
               0.49548716414468197,
               -2.289099359906612,
               0.03077619443289109
+            ],
+            "left_0.5_right_0.5": [
+              0.3584366121943312,
+              -2.289099359906612,
+              -6.667633642432058e-08
             ]
           },
           "native_key_index": 166,
@@ -420,13 +420,13 @@
             978.7483552593128
           ],
           "required_minus_cop_proxy_f_l_m": {
-            "equal_0.5_0.5": [
-              -0.040684201147130894,
-              -0.12698246911307978
-            ],
             "leading_0.6_trailing_0.4": [
               -0.17773475309748166,
               -0.1577587302223073
+            ],
+            "left_0.5_right_0.5": [
+              -0.040684201147130894,
+              -0.12698246911307978
             ]
           },
           "required_resultant_root_relative_f_u_l_m": [
@@ -462,7 +462,7 @@
             -0.0964294651888579
           ],
           "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
-            "single_support_1.0": [
+            "stance_1": [
               0.3584368222573344,
               -2.289099359906612,
               -0.1538813391134426
@@ -479,7 +479,7 @@
             609.6674982882793
           ],
           "required_minus_cop_proxy_f_l_m": {
-            "single_support_1.0": [
+            "stance_1": [
               -0.10994608370381709,
               0.01974510630595938
             ]
@@ -517,7 +517,7 @@
             0.7932869932900247
           ],
           "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
-            "single_support_1.0": [
+            "stance_1": [
               0.35843680865246696,
               -2.289099359906612,
               0.15388142466865756
@@ -534,7 +534,7 @@
             -612.9204104432256
           ],
           "required_minus_cop_proxy_f_l_m": {
-            "single_support_1.0": [
+            "stance_1": [
               -0.10776730206845064,
               -0.035832382519267514
             ]
@@ -586,15 +586,15 @@
             0.7932867260604307
           ],
           "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
-            "equal_0.5_0.5": [
-              0.3584366867180482,
-              -2.289099359906612,
-              -5.553675554159643e-08
-            ],
             "leading_0.6_trailing_0.4": [
               0.49548719345715986,
               -2.289099359906612,
               -0.030776300178927678
+            ],
+            "left_0.5_right_0.5": [
+              0.3584366867180482,
+              -2.289099359906612,
+              -5.553675554159643e-08
             ]
           },
           "native_key_index": 18,
@@ -608,13 +608,13 @@
             -1064.031833920511
           ],
           "required_minus_cop_proxy_f_l_m": {
-            "equal_0.5_0.5": [
-              -0.14931717657201404,
-              0.1218804191956497
-            ],
             "leading_0.6_trailing_0.4": [
               -0.2863676833111257,
               0.15265666383782184
+            ],
+            "left_0.5_right_0.5": [
+              -0.14931717657201404,
+              0.1218804191956497
             ]
           },
           "required_resultant_root_relative_f_u_l_m": [
@@ -656,15 +656,15 @@
             0.7932867977127409
           ],
           "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
-            "equal_0.5_0.5": [
-              0.3584366121943312,
-              -2.289099359906612,
-              -6.667633642432058e-08
-            ],
             "leading_0.6_trailing_0.4": [
               0.49548716414468197,
               -2.289099359906612,
               0.03077619443289109
+            ],
+            "left_0.5_right_0.5": [
+              0.3584366121943312,
+              -2.289099359906612,
+              -6.667633642432058e-08
             ]
           },
           "native_key_index": 166,
@@ -678,13 +678,13 @@
             1064.631511256608
           ],
           "required_minus_cop_proxy_f_l_m": {
-            "equal_0.5_0.5": [
-              -0.13411322990958685,
-              -0.13580758807146442
-            ],
             "leading_0.6_trailing_0.4": [
               -0.2711637818599376,
               -0.16658384918069194
+            ],
+            "left_0.5_right_0.5": [
+              -0.13411322990958685,
+              -0.13580758807146442
             ]
           },
           "required_resultant_root_relative_f_u_l_m": [
@@ -720,7 +720,7 @@
             -0.0964294651888579
           ],
           "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
-            "single_support_1.0": [
+            "stance_1": [
               0.3584368222573344,
               -2.289099359906612,
               -0.1538813391134426
@@ -737,7 +737,7 @@
             586.4383184747425
           ],
           "required_minus_cop_proxy_f_l_m": {
-            "single_support_1.0": [
+            "stance_1": [
               -0.2451481961545876,
               0.02440974106690491
             ]
@@ -775,7 +775,7 @@
             0.7932869932900247
           ],
           "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
-            "single_support_1.0": [
+            "stance_1": [
               0.35843680865246696,
               -2.289099359906612,
               0.15388142466865756
@@ -792,7 +792,7 @@
             -589.6483155425951
           ],
           "required_minus_cop_proxy_f_l_m": {
-            "single_support_1.0": [
+            "stance_1": [
               -0.24309731537407275,
               -0.03868993603855464
             ]
@@ -844,15 +844,15 @@
             0.7932867260604307
           ],
           "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
-            "equal_0.5_0.5": [
-              0.3584366867180482,
-              -2.289099359906612,
-              -5.553675554159643e-08
-            ],
             "leading_0.6_trailing_0.4": [
               0.49548719345715986,
               -2.289099359906612,
               -0.030776300178927678
+            ],
+            "left_0.5_right_0.5": [
+              0.3584366867180482,
+              -2.289099359906612,
+              -5.553675554159643e-08
             ]
           },
           "native_key_index": 18,
@@ -866,13 +866,13 @@
             -892.2872632886201
           ],
           "required_minus_cop_proxy_f_l_m": {
-            "equal_0.5_0.5": [
-              0.03711695121627301,
-              0.10118507979261838
-            ],
             "leading_0.6_trailing_0.4": [
               -0.09993355552283867,
               0.13196132443479053
+            ],
+            "left_0.5_right_0.5": [
+              0.03711695121627301,
+              0.10118507979261838
             ]
           },
           "required_resultant_root_relative_f_u_l_m": [
@@ -914,15 +914,15 @@
             0.7932867977127409
           ],
           "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
-            "equal_0.5_0.5": [
-              0.3584366121943312,
-              -2.289099359906612,
-              -6.667633642432058e-08
-            ],
             "leading_0.6_trailing_0.4": [
               0.49548716414468197,
               -2.289099359906612,
               0.03077619443289109
+            ],
+            "left_0.5_right_0.5": [
+              0.3584366121943312,
+              -2.289099359906612,
+              -6.667633642432058e-08
             ]
           },
           "native_key_index": 166,
@@ -936,13 +936,13 @@
             892.8651992615921
           ],
           "required_minus_cop_proxy_f_l_m": {
-            "equal_0.5_0.5": [
-              0.051985607173853365,
-              -0.11822906442717676
-            ],
             "leading_0.6_trailing_0.4": [
               -0.0850649447764974,
               -0.14900532553640428
+            ],
+            "left_0.5_right_0.5": [
+              0.051985607173853365,
+              -0.11822906442717676
             ]
           },
           "required_resultant_root_relative_f_u_l_m": [
@@ -978,7 +978,7 @@
             -0.0964294651888579
           ],
           "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
-            "single_support_1.0": [
+            "stance_1": [
               0.3584368222573344,
               -2.289099359906612,
               -0.1538813391134426
@@ -995,7 +995,7 @@
             632.8966781016236
           ],
           "required_minus_cop_proxy_f_l_m": {
-            "single_support_1.0": [
+            "stance_1": [
               0.0266031930423809,
               0.01503399284799703
             ]
@@ -1033,7 +1033,7 @@
             0.7932869932900247
           ],
           "load_weighted_cop_proxy_models_root_relative_f_u_l_m": {
-            "single_support_1.0": [
+            "stance_1": [
               0.35843680865246696,
               -2.289099359906612,
               0.15388142466865756
@@ -1050,7 +1050,7 @@
             -636.1925053437905
           ],
           "required_minus_cop_proxy_f_l_m": {
-            "single_support_1.0": [
+            "stance_1": [
               0.028914304756268105,
               -0.03294629020968376
             ]
@@ -1087,7 +1087,8 @@
   "schema": "eonwild.motion.adult-v9-support-resultant-sensitivity.v1",
   "source": {
     "animal_profile_sha256": "53ffeba22e24a87504d3dcc310bedacf6db94d60a25ffe56ad028b03f41e849d",
-    "assumptions_sha256": "3436202850a0488fc96076f1ee724d5c5d233f996db6519b3c867768b5def7e0",
+    "assumptions_sha256": "119a88e8fdcb765500a693742c333aa28a3495d277b9b7039aa1a187300334ba",
+    "biomechanics_sha256": "bc5368ac1785e1d941e8b5c7cd7d045dc9f3f30b68bec2a8df084c68e7b241ec",
     "contact_profile_sha256": "61e0351fe9f7170ddce7f0b83a8f0379d119349d3c392ffec43e544adb115db5",
     "package": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/continuation-adult-v9-axial-jaw-001",
     "plan_sha256": "48e68639efd930c4209fd38fb484f4712461b5945cfbc90dd35fa047d1a7c513",

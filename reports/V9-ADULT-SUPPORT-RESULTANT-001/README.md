@@ -2,13 +2,13 @@
 
 ## Scope
 
-This diagnostic evaluates the immutable adult V9 root-motion package with four explicit engineering segment models. It adds no motion control, recipe binding, emitter behavior, threshold, or approval. Code head `0e4cfa45c192b43716fc223924cfec3e021ba9b4` is based on published integration `83aa5e5391848493c902af0c6bd4ecab6228afe6`.
+This diagnostic evaluates the immutable adult V9 root-motion package with four explicit engineering segment models. It adds no motion control, recipe binding, emitter behavior, threshold, or approval. The postfix code head is `860233f339ff0b49cb3a1e9f525aa4b3e5d28119`, based on published integration `83aa5e5391848493c902af0c6bd4ecab6228afe6`.
 
 The calculation reuses `compute_centroidal_series` for world COM and angular momentum, then differentiates its sampled velocity and momentum. Tangential moment balance locates a single ground-force resultant on the declared plane; the unrepresented normal-axis moment remains explicit. Because the GLB uses LINEAR channels with velocity jumps at keys, these are native-sample sensitivity values, not exact runtime dynamics.
 
-All inputs are hash-bound to the V9 package, source geometry, recipe, runtime, animal, contact profile, provisional segment profile, and prior material-envelope audit. The total mass is the published `2816.3 kg` PIN 552-1 volumetric estimate. Snively et al. also report axial-body yaw inertia `4486 kg·m²`, body-plus-swing-leg yaw inertia `4515.1 kg·m²`, and an axial-body COM location for their reconstructed model. Those values come from a connected-frustum/superellipse reconstruction with regional density assumptions; they are neither fossil measurements nor segment properties for this GLB ([Snively et al. 2019](https://doi.org/10.7717/peerj.6432), [open primary full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC6387760/)).
+All consumed inputs are hash-bound to the V9 root-motion GLB, plan, recipe, runtime, biomechanics payload, animal profile, contact profile, provisional segment profile, and retained support-geometry audit. The total mass is the published `2816.3 kg` PIN 552-1 volumetric estimate. Snively et al. also report axial-body yaw inertia `4486 kg·m²`, body-plus-swing-leg yaw inertia `4515.1 kg·m²`, and an axial-body COM location for their reconstructed model. Those values come from a connected-frustum/superellipse reconstruction with regional density assumptions; they are neither fossil measurements nor segment properties for this GLB ([Snively et al. 2019](https://doi.org/10.7717/peerj.6432), [open primary full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC6387760/)).
 
-The paper and its PIN-level tables do not supply a full set of segment masses, three-dimensional local COMs, or node-frame inertia tensors transferable to this rig. The diagnostic therefore labels the existing 17-segment normalized profile as engineering data. It compares joint-origin and semantic-link-midpoint local COMs, plus a conservative `±0.03` total-mass redistribution between the axial center and tail. The latter is a sensitivity bound motivated by the paper's result that changing tail depth by ±10% changed whole-body mass by no more than 3%; it is not a measured PIN tail mass.
+The paper and its PIN-level tables do not supply a full set of segment masses, three-dimensional local COMs, or node-frame inertia tensors transferable to this rig. The diagnostic therefore labels the existing 17-segment normalized profile as engineering data. It compares joint-origin and semantic-link-midpoint local COMs, plus an authored `±0.03` total-mass redistribution between the axial center and tail. Snively et al. separately report that a ±10% tail-depth geometry experiment changed whole-model mass by no more than 3%; that experiment does not establish the redistribution used here as a paper-derived bound.
 
 ## Actual V9 result
 
@@ -27,25 +27,29 @@ The forward result is not robust. At sole support it ranges from `68.76` to `387
 
 ## Actionable control boundary
 
-The robust lateral result does not support increasing lateral pelvis sway: the inferred resultant already stays close to the explicit central-toe proxy across the tested mass and local-COM alternatives. The forward uncertainty and yaw-inertia mismatch also do not support a tail-phase or trunk counterrotation change from this evidence.
+Under this single authored central-toe proxy and the four stated mass/COM alternatives, the required lateral point differs by `15.03–64.24 mm`. This conditional result does not motivate increased lateral pelvis sway; it cannot rule out sway changes under an actual pressure trajectory. The forward uncertainty and yaw-inertia mismatch also do not support a tail-phase or trunk counterrotation change from this evidence.
 
 The supported next comparison is one bounded, authored **double-support load-acceptance response**: add `0.01 body height` (`22.84 mm` for V9) of extra pelvis compression centered on each double-support load peak, with a matched small trunk response owned by the same support clock and zero added displacement at sole-support midpoint. Preserve root travel, contact timing, lateral carrier, tail phase, jaw, gaze, and configured limits; then source-re-solve both feet and reopen the emitted material-contact and support-resultant receipts. This is an engineering visual hypothesis tied to the phase where the sampled resultant is `~1.05 BW`, not a claim that fossils prescribe 22.84 mm or that the model predicts muscle force.
 
-If that comparison is implemented, use one fixed trunk response rather than an amplitude sweep. A reasonable local gate is: required lateral resultant remains within the admitted semantic toe-proxy neighborhood and geometric support patch, planted material checks remain unchanged, and the sampled double-support/sole-support force ordering remains truthful. Visual review must decide whether the added load acceptance communicates mass.
+If that comparison is implemented, use one fixed trunk response rather than an amplitude sweep. Re-run the exact central-toe proxy distances and the existing geometric support, planted-material, and contact checks; preserve the sampled double-support/sole-support force ordering. These checks add no pressure-distribution or convex-support admission threshold. Visual review must decide whether the added load acceptance communicates mass.
 
 ## Reproduction
 
 ```sh
 source /Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/task-env.sh
 PYTHONPATH=src python tools/diagnose_support_resultant.py \
+  --package /Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/continuation-adult-v9-axial-jaw-001 \
+  --support-audit reports/V9-ADULT-SUPPORT-RESULTANT-001/support-geometry-audit.json \
   --output /Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/adult-v9-support-resultant-sensitivity.json
 ```
 
-Focused verification: `70 passed in 11.39s` across `tests/test_support_resultant.py`, `tests/test_v9_dynamics_slice.py`, and `tests/test_v9_dynamics_fixtures.py`; Ruff passed for the new module, CLI, and tests. Analytic checks independently cover stationary projection, known horizontal acceleration, known pitch-momentum rate, a rotated coordinate frame, normalized-mass rejection, zero-up-axis rejection, and loss of positive normal support.
+Focused verification: `73 passed in 5.68s` across `tests/test_support_resultant.py`, `tests/test_support_resultant_cli.py`, `tests/test_v9_dynamics_slice.py`, and `tests/test_v9_dynamics_fixtures.py`; Ruff passed for the module, CLI, and tests. Analytic checks independently cover stationary projection, known horizontal acceleration, known pitch-momentum rate, a rotated coordinate frame, normalized-mass rejection, zero-up-axis rejection, and loss of positive normal support. CLI regressions reject a changed consumed biomechanics payload before output and exercise declared 90/10 double-support loading and joint-origin-only COM configuration. Actual-package probe receipt SHA-256 is `59a926a0c7762bc36b3522f4c14c039350a020f4aba6adfa5bc74734ed89e9fe`: 90/10 emits `leading_0.9_trailing_0.1`, while joint-origin-only emits only `baseline_joint_origin`. The complete postfix verification receipt SHA-256 is `3c1472f277e09c0d4a55434d5f4740adb03fc5c769c8be50c3e4f0bf6f44bb90`.
 
-- `result.json` SHA-256 `ccf44ab5d32cca5c9e6255e6ba5ce718202a234f55fbb5ba04654d9516caa648`
-- Assumption profile SHA-256 `3436202850a0488fc96076f1ee724d5c5d233f996db6519b3c867768b5def7e0`
+- `result.json` SHA-256 `eae74608267fd618a13446406e92ffc61a9fb2fc6ba2511a359a59adc31cdb30`
+- Retained `support-geometry-audit.json` SHA-256 `03c1b83103ce4f72d9542a7dc320cc181a50a1ff53cdccf030b1220f2c96251f`
+- Assumption profile SHA-256 `119a88e8fdcb765500a693742c333aa28a3495d277b9b7039aa1a187300334ba`
 - Diagnostic module SHA-256 `0706932a7e48a40c78aed08d7bce6e7ed0f537e919fe0949ce3a24c588673465`
-- CLI SHA-256 `979673f3b3f1fafe7a2af1e7b71467e0478dbdedf809557357a34bb3c7d3a787`
+- CLI SHA-256 `57626ef91897ad376eaba1a319ffc8257f9ee06c9432b2950b7aa8a0830ab1ca`
+- CLI regression test SHA-256 `782216cf33a7529390ffda95fc73f9612c0cabf8f688dbe895cd193360699bb0`
 
 This result does not establish measured CoP/load, fossil segment properties, stability certification, mass dynamics, biological validity, contact preservation after a future change, native playback, Unity parity, or production approval.
