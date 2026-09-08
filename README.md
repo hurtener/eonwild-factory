@@ -96,7 +96,15 @@ uv run python tools/review_compiled_candidate.py \
 On macOS pass
 `--blender /Applications/Blender.app/Contents/MacOS/Blender` when needed.
 The command renders an existing immutable package without regenerating or
-repairing it. It uses the explicit floor, keeps native timing, locks each camera
+repairing it. To serve retained review pages and seekable media locally with
+single-range HTTP support, run:
+
+```sh
+uv run python tools/serve_review.py --root . --bind 127.0.0.1 --port 8877
+```
+
+The review server uses the explicit document root and loopback binding; it is a
+local evidence viewer, not a production or multiplayer server. The renderer uses the explicit floor, keeps native timing, locks each camera
 from the preserved V9 reference before drawing the candidate, and checks the
 candidate again after rendering. Review outputs contain actual MP4s, timing,
 camera and render receipts; FBX transport is **not** Unity validation.
