@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
+from dataclasses import replace
 import json
 import math
 from pathlib import Path
@@ -9,7 +10,10 @@ import numpy as np
 import pytest
 
 from eonwild_motion.errors import ContractError
-from eonwild_motion.factory.animal import apply_uniform_geometry_scale
+from eonwild_motion.factory.animal import (
+    apply_uniform_geometry_scale,
+    load_animal_instance,
+)
 from eonwild_motion.factory.source import geometry_height
 from eonwild_motion.glb.container import Glb
 from eonwild_motion.planning.airborne_gait import AirborneGait, build_airborne_plan
@@ -18,11 +22,18 @@ from eonwild_motion.planning.gait_transition import (
     GaitTransition,
     build_transition_plan,
 )
-from eonwild_motion.planning.grounded_gait import GroundedGait, build_grounded_plan
+from eonwild_motion.planning.grounded_gait import (
+    GroundedGait,
+    build_grounded_plan,
+    load_grounded_gait,
+)
 from eonwild_motion.solve.airborne_gait import (
     build_airborne_solve_context,
+    solve_airborne_gait,
     solve_airborne_plan_sample,
 )
+from eonwild_motion.solve import jaw_response
+from eonwild_motion.solve.performance import decorate_plan, load_performance
 from eonwild_motion.solve.source_motion_query import (
     BRANCH_OR_CONVERGENCE_UNAVAILABLE,
     CONTINUOUS_SKIN_TARGET_UNAVAILABLE,
@@ -40,6 +51,12 @@ HEAVY = (
     ROOT
     / "assets/sha256/044a8be907eb650fa71c613f19655eb10a0dd23c1d6bce86dfef93cd8d9575f6.glb"
 )
+ADULT_SOURCE_SHA = "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f"
+ADULT_SOURCE = ROOT / "assets/sha256" / f"{ADULT_SOURCE_SHA}.glb"
+ADULT_RIG = ROOT / "catalog/rigs/heavy-biped.v9.json"
+ADULT_PROGRAM = ROOT / "catalog/programs/heavy-biped.tarbosaurus-adult-walk.v4.json"
+ADULT_PERFORMANCE = ROOT / "catalog/performance/heavy-biped.tarbosaurus-adult-walk.v7.json"
+ADULT_ANIMAL = ROOT / "catalog/animals/tarbosaurus-bataar-pin-552-1.adult.v2.json"
 FIXTURE_HEIGHT_M = 1.6
 
 
@@ -81,6 +98,47 @@ def _grounded_query(
     )
 
 
+def _scaled_adult_v7_query(*, source: Glb | None = None):
+    if source is None:
+        source = Glb.from_bytes(ADULT_SOURCE.read_bytes())
+        animal = load_animal_instance(
+            json.loads(ADULT_ANIMAL.read_text()), source_sha256=ADULT_SOURCE_SHA
+        )
+        apply_uniform_geometry_scale(source, animal["uniform_scale"])
+    roles = json.loads(ADULT_RIG.read_text())["roles"]
+    grounded = replace(
+        load_grounded_gait(json.loads(ADULT_PROGRAM.read_text())), sample_hz=24
+    )
+    solver = AirborneGait(
+        step_period_s=grounded.step_period_s,
+        cycles=grounded.cycles,
+        sample_hz=grounded.sample_hz,
+        swing_hip_lift_degrees=grounded.swing_hip_lift_degrees,
+    )
+    performance = replace(
+        load_performance(json.loads(ADULT_PERFORMANCE.read_text())), skin_refinement=False
+    )
+    plan = decorate_plan(
+        build_grounded_plan(grounded, geometry_height(source, roles, (0, 1, 0))),
+        performance,
+    )
+    return (
+        SourceMotionQuery(
+            source,
+            semantic_roles=roles,
+            solver_gait=solver,
+            locomotion_gait=grounded,
+            plan=plan,
+            up_axis=(0, 1, 0),
+            forward_axis=(0, 0, 1),
+            legacy_overlay=False,
+        ),
+        source,
+        roles,
+        plan,
+    )
+
+
 def test_existing_plan_key_matches_direct_phase_local_solve_and_off_grid_is_source_sampled():
     query, _, _, _, plan, _ = _grounded_query()
     row = plan["samples"][7]
@@ -101,6 +159,65 @@ def test_existing_plan_key_matches_direct_phase_local_solve_and_off_grid_is_sour
         )
         < 1e-9
     )
+
+
+def test_scaled_adult_neutral_jaw_query_keeps_raw_identity_and_rejects_stale_state(
+    monkeypatch,
+):
+    query, source, roles, plan = _scaled_adult_v7_query()
+    jaw = source.name_to_node[roles["jaw_lower"]]
+    row = plan["samples"][7]
+
+    assert query._source is not source
+    assert query._source.document is not source.document
+    assert query._source.raw == source.raw
+    assert query.context.jaw == jaw
+    assert query.context.jaw_axis is not None
+    assert query.context.jaw_neutral_close_degrees > 0
+    exact = query.evaluate(row["time_s"])
+    assert exact.status == "AVAILABLE"
+    body_response = (
+        None
+        if query._body_response is None
+        else query._body_response["samples"][7]
+    )
+    assert exact.pose == solve_airborne_plan_sample(
+        query.context, row, body_response_sample=body_response
+    )
+    assert query.evaluate(0.123).status == "AVAILABLE"
+
+    observed_admissions = []
+    original_admit = jaw_response.admit_neutral_jaw
+
+    def observe_admission(*args, **kwargs):
+        observed_admissions.append((args, kwargs))
+        return original_admit(*args, **kwargs)
+
+    monkeypatch.setattr(jaw_response, "admit_neutral_jaw", observe_admission)
+    _, _, _, receipt = solve_airborne_gait(
+        source,
+        source_clip=None,
+        semantic_roles=roles,
+        gait=query._solver_gait,
+        up_axis=(0, 1, 0),
+        forward_axis=(0, 0, 1),
+        plan_override=plan,
+        legacy_overlay=False,
+    )
+    jaw_receipt = receipt["neutral_jaw_calibration"]
+    assert len(observed_admissions) == 1
+    assert jaw_receipt["source_geometry_sha256"] == ADULT_SOURCE_SHA
+    assert jaw_receipt["jaw_node"] == jaw
+    assert jaw_receipt["admitted_uniform_scale"] > 0
+
+    stale = Glb.from_bytes(ADULT_SOURCE.read_bytes())
+    animal = load_animal_instance(
+        json.loads(ADULT_ANIMAL.read_text()), source_sha256=ADULT_SOURCE_SHA
+    )
+    apply_uniform_geometry_scale(stale, animal["uniform_scale"])
+    stale.document["accessors"][0]["count"] += 1
+    with pytest.raises(ContractError, match="frozen geometry plus one uniform scale"):
+        _scaled_adult_v7_query(source=stale)
 
 
 def test_query_retains_source_plan_roles_and_articulation_guardrails_without_aliases():

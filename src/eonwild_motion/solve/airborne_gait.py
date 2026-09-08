@@ -1006,14 +1006,21 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
         raise ContractError("articulation_profile must be a validated ArticulationProfile")
     # Behavior programs own support choreography; an override never runs
     # the airborne planner. Legacy calls retain their original default path.
+    provisional_plan = (
+        {"parameters": {}, "samples": []}
+        if plan_override is None
+        else {
+            key: value
+            for key, value in _validate_plan_override(plan_override, gait).items()
+            if key != "performance"
+        }
+    )
+    # This pass establishes geometry height only. The final context below owns
+    # performance-dependent jaw admission and its receipt exactly once.
     provisional_context = build_airborne_solve_context(
         source, source_clip=source_clip, semantic_roles=semantic_roles, gait=gait,
-        up_axis=up_axis,
-        plan=({"parameters": {}, "samples": []} if plan_override is None else
-              _validate_plan_override(plan_override, gait)),
-        forward_axis=forward_axis, legacy_overlay=legacy_overlay,
-        articulation_profile=articulation_profile,
-    )
+        up_axis=up_axis, plan=provisional_plan, forward_axis=forward_axis,
+        legacy_overlay=legacy_overlay, articulation_profile=articulation_profile,
     )
     # The planner needs the admitted semantic height. Rebuild the context with
     # its actual plan exactly as the historical solver did.

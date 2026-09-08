@@ -35,7 +35,6 @@ from ..planning.parameters import gait_parameters
 from .airborne_gait import (
     AirborneSolveContext,
     SolvedAirbornePose,
-    _encode,
     _freeze_data,
     _qinv,
     _qmul,
@@ -74,7 +73,13 @@ def _thaw(value: Any) -> Any:
 def _clone_source(source: Glb) -> Glb:
     if not isinstance(source, Glb):
         raise ContractError("source motion query requires a GLB source")
-    return Glb.from_bytes(_encode(deepcopy(source.document), bytes(source.binary)))
+    # ``raw`` is the frozen geometry identity used by optional source-bound
+    # admissions (for example, the neutral jaw calibration). Re-encoding the
+    # current document would silently replace that identity even when the only
+    # current-state difference is the explicitly admitted uniform animal scale.
+    # A complete deep copy instead retains raw provenance while detaching the
+    # document, binary data, topology caches, and local-rest caches together.
+    return deepcopy(source)
 
 
 def _finite_time(time_s: Any) -> float:
