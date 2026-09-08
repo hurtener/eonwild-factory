@@ -39,6 +39,7 @@ class Performance:
     tail_counterpitch_degrees: float | None = None
     pelvis_forward_velocity_modulation_fraction: float | None = None
     neutral_jaw_calibration: NeutralJawCalibration | None = None
+    canonical_support_anchors: bool | None = None
     skin_refinement: bool = True
 
     def __post_init__(self):
@@ -57,12 +58,14 @@ class Performance:
                        "upper_trunk_counterpitch_degrees",
                        "neck_counterpitch_degrees",
                        "tail_counterpitch_degrees",
-                       "pelvis_forward_velocity_modulation_fraction") and value is None:
+                       "pelvis_forward_velocity_modulation_fraction",
+                       "canonical_support_anchors") and value is None:
                 continue
             if key in ("center_tail", "center_lanes_on_bilateral_hip_midpoint",
                        "support_directed_pelvis_carrier",
                        "support_timed_axial_carrier",
-                       "support_timed_sagittal_carrier", "skin_refinement"):
+                       "support_timed_sagittal_carrier",
+                       "canonical_support_anchors", "skin_refinement"):
                 if type(value) is not bool:
                     raise ContractError(f"{key} must be boolean")
             elif isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
@@ -111,6 +114,9 @@ class Performance:
         if coefficient is not None and not 0 <= coefficient < 1:
             raise ContractError(
                 "pelvis forward velocity modulation must be in [0, 1)")
+        if self.canonical_support_anchors is True and self.skin_refinement is not True:
+            raise ContractError(
+                "canonical support anchors require skin refinement")
 
 
 def _performance_from_parameters(parameters: Mapping[str, Any]) -> Performance:

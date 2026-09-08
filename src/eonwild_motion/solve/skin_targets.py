@@ -236,7 +236,7 @@ def _cyclic_fill(times, values, loaded, *, loop=True):
     return result
 
 
-def solve_with_skin_targets(source, *, semantic_roles, gait, up_axis, forward_axis, plan, contact_profile, iterations=7, articulation_profile=None):
+def solve_with_skin_targets(source, *, semantic_roles, gait, up_axis, forward_axis, plan, contact_profile, iterations=7, articulation_profile=None, canonical_support_anchor_provider=None, canonical_locomotion_gait=None, canonical_transition=None):
     from .airborne_gait import solve_airborne_gait
     if type(iterations) is not int or iterations < 0:
         raise ContractError('skin refinement iterations must be a non-negative integer')
@@ -257,6 +257,19 @@ def solve_with_skin_targets(source, *, semantic_roles, gait, up_axis, forward_ax
     masks = {side: _contacts([r['feet'][side]['contact'] for r in samples], count) for side in ('left', 'right')}
     if any(not mask.any() for mask in masks.values()):
         raise ContractError('skin refinement requires loaded samples for each foot')
+    performance = current.get('performance', {})
+    canonical_requested = isinstance(performance, dict) and performance.get('canonical_support_anchors') is True
+    if canonical_requested and canonical_support_anchor_provider is None:
+        raise ContractError('skin refinement canonical support anchors require a bound provider')
+    if canonical_support_anchor_provider is not None:
+        from .support_anchors import CanonicalSupportAnchorProvider
+        if not canonical_requested or not isinstance(canonical_support_anchor_provider, CanonicalSupportAnchorProvider):
+            raise ContractError('skin refinement canonical support anchors must be a bound provider')
+        canonical_support_anchor_provider.validate_for_consumption(
+            source, semantic_roles=semantic_roles, solver_gait=gait,
+            locomotion_gait=canonical_locomotion_gait, transition=canonical_transition,
+            plan=current, contact_profile=contact_profile, up_axis=tuple(up),
+            forward_axis=tuple(forward), articulation_profile=articulation_profile)
     anchors = {}
     offsets = {side: np.zeros((count, 3)) for side in masks}
     trace = []
@@ -273,11 +286,16 @@ def solve_with_skin_targets(source, *, semantic_roles, gait, up_axis, forward_ax
         corrections = {}
         for side in offsets:
             loaded = masks[side]
-            first = int(np.flatnonzero(loaded)[0])
             if side not in anchors:
-                patch = points(frames[first], side)
-                witness = int(patch[:, index_up].argmin())
-                origin = patch - forward * samples[first]['feet'][side]['forward_m']
+                if canonical_support_anchor_provider is None:
+                    first = int(np.flatnonzero(loaded)[0])
+                    patch = points(frames[first], side)
+                    witness = int(patch[:, index_up].argmin())
+                    origin = patch - forward * samples[first]['feet'][side]['forward_m']
+                else:
+                    anchor = canonical_support_anchor_provider.anchor_for(side)
+                    witness = anchor.lowest_patch_index
+                    origin = anchor.material_origin_m.copy()
                 anchors[side] = (witness, origin)
             _, origin = anchors[side]
             correction = np.zeros_like(offsets[side])
@@ -326,4 +344,7 @@ def solve_with_skin_targets(source, *, semantic_roles, gait, up_axis, forward_ax
         'witnesses': {side: {'initial_lowest_patch_index': int(value[0]), 'material_anchor_origins_m': value[1].tolist()}
                       for side, value in anchors.items()},
         'ground_level_m': ground}
+    if canonical_support_anchor_provider is not None:
+        receipt['skin_target_refinement']['anchor_selection'] = (
+            canonical_support_anchor_provider.receipt())
     return root_raw, inplace_raw, current, receipt
