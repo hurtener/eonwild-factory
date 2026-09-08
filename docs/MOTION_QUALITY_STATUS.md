@@ -89,7 +89,7 @@ The complete review page is
 and summary are in
 [reports/V9-ADULT-RECOVERY-V3-HOST-001](../reports/V9-ADULT-RECOVERY-V3-HOST-001/README.md).
 
-The latest body-response diagnostic is
+The v6 body-response diagnostic is
 `tarbosaurus-pin-552-1-adult-walk.v6`. It preserves v3's leg, contact and
 articulation inputs and v5's support-directed lateral response, then adds a
 modest support-timed pelvis pitch with opposing distributed trunk, neck and
@@ -103,6 +103,19 @@ User art-direction approval, biological validation, Unity parity and production
 approval are absent. See
 [reports/V9-ADULT-SAGITTAL-RESPONSE-V6-001](../reports/V9-ADULT-SAGITTAL-RESPONSE-V6-001/README.md).
 The v5 Candidate B report remains a historical diagnostic.
+
+The latest body-response review candidate is
+`tarbosaurus-pin-552-1-adult-walk.v7`. It retains v6 and adds a periodic
+support-timed pelvis-forward speed carrier with zero net travel. The host
+inspected all 370 rendered frames across five native-time views and completed
+all five paired v6/v7 native-speed playbacks. The motion shows a modest
+travel-rhythm improvement and preserves the recovered leg behavior, but the
+body response remains too subtle for the requested several-ton presentation.
+Its status is **WHOLE_BODY_POLISH_REQUIRED**. The current exact local-loop gate
+is `BLOCKED` at `3.2116449766123154 mm/s` against the unchanged `1 mm/s`
+limit. This remains authored kinematics without force, COM, inertia or mass
+simulation. See
+[reports/V9-ADULT-SUPPORT-SPEED-V7-001](../reports/V9-ADULT-SUPPORT-SPEED-V7-001/README.md).
 
 The exact integrated source `5304b1967ad350737cf7e9ee6555a5f4de9e9bff`
 passed 658 tests plus 21 subtests in 225.75 seconds. The new adult v3 catalog
@@ -133,6 +146,16 @@ LINEAR/SLERP endpoint slopes. Generic joins and local steady loops, adult v6
 and fast recovery v3 are blocked where those measurements exceed unchanged
 limits. See
 [V9-EXACT-EMITTED-TANGENT-001](../reports/V9-EXACT-EMITTED-TANGENT-001/README.md).
+
+The current combined code and CI head
+`3b1f55602ba2d8d177c42ec15ccb02d401f92b7d` adds the strict shared
+CUBICSPLINE-capable TRS reader and selects adult v7 alongside its historical
+body diagnostics. The complete mandatory suite passed 788 tests plus 21
+subtests in 237.65 seconds with real Blender 5.2.0 and Khronos glTF Validator
+2.0.0-dev.3.10. Stage A is consumer-side validation only: no CUBICSPLINE
+emitter or interval-rate authority is included, and current motion remains
+blocked under the exact gates. See
+[V9-CUBICSPLINE-CONSUMER-STAGE-A-001](../reports/V9-CUBICSPLINE-CONSUMER-STAGE-A-001/README.md).
 
 ## Evidence-bound adult benchmark
 
@@ -217,7 +240,7 @@ and local steady loops. The corrected evaluator is integrated; a future
 motion-representation change must pass the unchanged limits. Retain user
 art-direction approval separately; adult v3
 has been accepted only as the current factory recovery candidate, while adult
-v6 and fast recovery v3 still require whole-body polish. Then validate the
+v7 and fast recovery v3 still require whole-body polish. Then validate the
 intended Unity consumer, root authority, phase handoff, event delivery,
 import/compression and target-device performance.
 Hosted CI for the ensuing published documentation head remains pending; draft

@@ -19,3 +19,7 @@ interval's angular extrema. Consequently no CUBICSPLINE package can receive a
 complete technical pass until a later source/emitter and interval-rate/contact
 stage supplies that authority. This stage does not invent zero endpoint
 velocities or fit completed GLBs.
+
+The integrated implementation, independent reviews and full-suite receipt are
+preserved in
+[V9-CUBICSPLINE-CONSUMER-STAGE-A-001](../reports/V9-CUBICSPLINE-CONSUMER-STAGE-A-001/README.md).

@@ -1,0 +1,30 @@
+{
+  "linear_antipodal_contact_midpoint": {
+    "exception": "ContractError",
+    "message": "interpolated animation quaternion is zero",
+    "expected": "identity quaternion for a valid sign-equivalent LINEAR interval"
+  },
+  "negative_input": {
+    "accepted": true,
+    "index": -2
+  },
+  "negative_output": {
+    "accepted": true,
+    "index": -1
+  },
+  "cubic_translation_rotation_gate": {
+    "rate": {
+      "status": "PASS",
+      "maximum_degrees_per_s": 0.0,
+      "limit_degrees_per_s": 600.0,
+      "peak_witness": null,
+      "classification": "serialized per-channel rotation rate; not joint torque or muscle capacity"
+    },
+    "midpoint_translation": [
+      25.0,
+      0.0,
+      0.0
+    ],
+    "note": "The claimed whole-CUBIC full-technical blocker only checks rotation interpolation."
+  }
+}

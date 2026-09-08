@@ -47,18 +47,20 @@ the grounded walk. See [animal configuration](docs/ANIMAL_CONFIGURATION.md)
 for the reusable data contract and its current biomechanical limits.
 
 The latest body-response review candidate is
-`recipes/heavy-biped/tarbosaurus-pin-552-1-adult-walk.v6.json`. It preserves the
-v3 leg recovery and v5 lateral response, then adds modest support-timed pelvis,
-trunk, neck and tail pitch. Host review found clearer coordination, while the
-constant forward travel still requires whole-body polish for the requested
-heavy-animal effort. Mass-response physics is not implemented. See
-[the v6 report](reports/V9-ADULT-SAGITTAL-RESPONSE-V6-001/README.md).
+`recipes/heavy-biped/tarbosaurus-pin-552-1-adult-walk.v7.json`. It preserves the
+v6 leg and body response and adds a periodic support-timed pelvis-forward speed
+carrier with zero net travel. Host review of 370 rendered frames and five
+paired native-speed playbacks found a modest travel-rhythm improvement, while
+whole-body polish is still required for the requested heavy-animal effort.
+Mass-response physics is not implemented. See
+[the v7 report](reports/V9-ADULT-SUPPORT-SPEED-V7-001/README.md).
 
 Current explicit review candidates are `walk.v3`, `reverse-walk.v4`, `run.v4`,
-`sprint.v4`, `fast-walk.v2`, `tarbosaurus-pin-552-1-adult-walk.v6`,
+`sprint.v4`, `fast-walk.v2`, `tarbosaurus-pin-552-1-adult-walk.v7`,
 `tarbosaurus-pin-552-1-adult-fast-walk-recovery.v3`, `feeding.v2`, and
 `bite-miss.v2`, alongside `idle.v1`, `alert.v1`, and `call.v1`. Historical
-adult v3 and body-diagnostic v5 remain in CI as regression witnesses. The eight
+adult v3 and body diagnostics v5/v6 remain in CI as regression witnesses. The
+eight
 start/stop recipes are now `.v3`, bound to those exact sustained gait/performance
 inputs. All remain candidates, not automatically accepted animations. Passing
 the individual start, steady-gait and stop clips is insufficient: the permanent
@@ -107,15 +109,12 @@ Both tools retain mechanical rejection even when diagnostic rendering succeeds.
 uv run python -m pytest tests -q --tb=short
 ```
 
-The 2026-09-08 exact-tangent integration head
-`61c7ffc99ac2c5166345c5b690328c55bce2aefd` passed 758 tests plus 21
-subtests in 211.81 seconds with the pinned real tools. Hosted CI for the
+The 2026-09-08 v7 and CUBICSPLINE-consumer Stage A integration head
+`3b1f55602ba2d8d177c42ec15ccb02d401f92b7d` passed 788 tests plus 21
+subtests in 237.65 seconds with the pinned real tools. Hosted CI for the
 publication head is pending; the local result does not approve motion or
-authorize merging draft PR #2. The receipts are in the
-[adult v6](reports/V9-ADULT-SAGITTAL-RESPONSE-V6-001/README.md) and
-[fast recovery v3](reports/V9-ADULT-FAST-WALK-RECOVERY-V3-001/README.md)
-reports, with the corrected acceptance boundary in the
-[exact tangent report](reports/V9-EXACT-EMITTED-TANGENT-001/README.md).
+authorize merging draft PR #2. The receipt and bounded review closure are in
+[the Stage A integration report](reports/V9-CUBICSPLINE-CONSUMER-STAGE-A-001/README.md).
 
 The earlier 2026-09-08 final continuation head
 `4ae0fe92ec3ffd49dfeca14085756cc7cbe7d852` passed 683 tests plus 21
@@ -134,11 +133,13 @@ native multi-view reviews. There are no self-committing recovery workflows,
 production imports of staging scripts, or omitted integration tests. A green
 test suite is not itself a green motion catalog or a visual approval.
 
-The integration now validates actual exported LINEAR/SLERP tangents. Generic
-gait joins and local steady loops remain outside their unchanged governed
-velocity limits. Earlier quadratic finite-difference values remain diagnostics
-only; this head makes no exact runtime C1 claim and changes no motion
-representation.
+The integration validates actual exported LINEAR/SLERP tangents and now shares
+a strict CUBICSPLINE-capable reader across contact and tangent consumers.
+Generic gait joins and local steady loops remain outside their unchanged
+governed velocity limits. Stage A does not add a CUBICSPLINE emitter or interval
+rate authority, so it grants no CUBICSPLINE technical pass. Earlier quadratic
+finite-difference values remain diagnostics only; this head makes no exact
+runtime C1 claim and changes no motion representation.
 
 ## Preserve what worked
 

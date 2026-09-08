@@ -1,0 +1,15 @@
+{
+  "head": "76219543f5bc5982a77df1435fe1668e39de821a",
+  "scope": "two-file narrow P1 diff only; not a third full review",
+  "reviewed_counterexample": {
+    "rotation_rad": 0.06,
+    "duration_s": 0.008333333333333333,
+    "sampled_rad_s": 7.2,
+    "expected_rad_s": 7.2,
+    "one_meter_velocity_error_mm_s": 0.0
+  },
+  "analytic_axis_rotation_cases": 48,
+  "antipodal_identity_and_quartertime": "PASS",
+  "status": "P1_CLOSED",
+  "additional_p0_p1": 0
+}

@@ -1,7 +1,8 @@
 # Adult v7 support-speed pelvis diagnostic
 
-Status: **SOURCE REVIEW CLEAN; CURRENT EXACT LOOP BLOCKED; VISUAL REVIEW
-PENDING.** This is one bounded kinematic pelvis-proxy candidate. It is not a
+Status: **SOURCE REVIEW CLEAN; MODEST TRAVEL-RHYTHM IMPROVEMENT;
+WHOLE-BODY POLISH REQUIRED; CURRENT EXACT LOOP BLOCKED.** This is one bounded
+kinematic pelvis-proxy candidate. It is not a
 center-of-mass, force, work, mass-response or biological model. Unity parity
 is `NOT_RUN`, production approval is false, and direct transition continuity
 is a separate gate from this steady-loop result.
@@ -115,6 +116,53 @@ separate direct start/stop transition checks. The attached
 and identifies evaluator source
 `61c7ffc99ac2c5166345c5b690328c55bce2aefd`.
 
+The host inspected all 370 rendered frames across five native-time views and
+completed five paired v6/v7 native-speed playbacks. The forward carrier is
+smooth, preserves the accepted leg recovery, and gives a modest improvement in
+travel rhythm. It remains too subtle to establish convincing whole-body effort.
+The scoped decision is therefore `MODEST_TRAVEL_RHYTHM_IMPROVEMENT;
+WHOLE_BODY_POLISH_REQUIRED`. The byte-for-byte host receipt is
+`host-review.json`, SHA-256
+`710795062f32ff29fe8d51d51d0338adfb0223908e5f2377afc3a948e3df6ad8`.
+It grants no user art-direction, biological, Unity or production approval.
+
+## Combined-source regeneration
+
+The v7 diagnostic was regenerated once after integrating the shared
+CUBICSPLINE-capable reader at source
+`3b1f55602ba2d8d177c42ec15ccb02d401f92b7d`. The regenerated package remains
+truthfully `BLOCKED` by the same exact local-loop witness. It is not byte
+identical to the package used for the films because the corrected shared SLERP
+sampling changes skin-refinement arithmetic at float precision.
+
+Across all 297 serialized keys in both movement modes, translations and scales
+are exact and only eight hindlimb rotation tracks differ. The maximum local
+quaternion angle difference is `1.1542389828584848e-7 rad`; maximum world bone
+origin displacement is `1.6123272999182854e-7 m`; and maximum displacement over
+all 59,169 skinned vertices is `1.753765605561636e-7 m`. The independent
+exact-key receipt is `combined-source-equivalence.json`.
+
+The host independently checked all 59,169 vertices at all 74 native render
+sample times in both modes and found a maximum displacement of
+`9.63609056e-8 m` at frame 66 (`t = 2.2 s`). That receipt is
+`root-render-sample-equivalence.json`, SHA-256
+`392e54a83ba3e6ceefb9848b9bdd137556b5fb3fba344086c57f08d647e9a6cb`.
+These numerical witnesses support reuse of the original films' observations;
+they do not claim that new films were rendered or expand the original review
+scope.
+
+The combined package identities are:
+
+- manifest: `af3f7ed57ca31d4272b38ecbc65c0fafe2ab65bb4a1439988d8876ad556faa09`
+- root-motion GLB: `03da1a7ed5d8d38fc190307ae2e41efa23156158b837c27445ec5809e14878e9`
+- in-place GLB: `3d984b535ae22ea776d9111e9bdd52f55cfb05bf7a2cd1741c3354df75d9bdcc`
+- plan: `d3fa822226fef7b477837ba008e907b47f76f648e307747596a3d7376066d229`
+- solver receipt: `5425714dee66216a0f3b04be91318a2670a13f921eb0489ae031609709be0a7d`
+- runtime: `a4a49279ecf648e5b0d5fb396bf9b3a071ce4af752a76abf891ae7fe2be62005`
+- validation: `5b5be14b898cafb9ebbbc519ddc9984533e98a90474b658a4fcdbc6f1074a5f6`
+- input lock: `21cef43105bd3ae089e7835282b620f19014f7b30fabf8893ace5692b75ad20c`
+- numerical equivalence receipt: `d39c73811a56ab1f5999cfc0c25f9d92338c6e3d50ed9e6e87e6d90a859ca79c`
+
 ## Verification and remaining decision
 
 The focused carrier tests exercise coefficient rejection, grounded and vault
@@ -133,9 +181,9 @@ the report-only continuity correction above. Their preserved files are
 and `review-independent-round1.md` (SHA-256
 `cd8168a8a842f9ac798ca5e3444d6afd29fa9557879234d01e0c0bbd9a39105f`).
 
-The mechanical result establishes that the new local pelvis speed wave is
+The mechanical result and host review establish that the new local pelvis speed wave is
 present, phase-aligned, periodic, root-neutral and compatible with the existing
-contact and articulation gates. The current exact local-loop continuity gate
-remains blocked. Whether the mechanism reduces visible glide and communicates
-the intended effort remains a native-time visual decision. No amplitude sweep
-or production claim follows from this candidate.
+contact and articulation gates, with a modest visible rhythm improvement. The
+current exact local-loop continuity gate remains blocked and whole-body polish
+is still required. No amplitude sweep or production claim follows from this
+candidate.
