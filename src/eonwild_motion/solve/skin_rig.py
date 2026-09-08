@@ -71,15 +71,22 @@ class SkinRig:
         self.weights = self.weights / total[:, None]
         self.node_ids = self.joints[self.ids]
         self.foot_masks = {}
+        self.foot_regions = {}
         for side, mask in geometry["feet"].items():
             selected = []
-            for label in ("sole_joints", "toe_joints"):
+            regions = {}
+            for region, label in (("sole", "sole_joints"), ("toe", "toe_joints")):
                 nodes = [glb.name_to_node[n] for n in mask[label]]
                 strength = np.where(np.isin(self.node_ids, nodes), self.weights, 0).max(axis=1)
                 indices = np.flatnonzero(strength >= mask["weight_threshold"])
                 if not len(indices):
                     raise ContractError("skin contact mask is empty")
+                regions[region] = indices
                 selected.append(indices)
+            # Keep the historic unique union for existing callers. The named
+            # region arrays retain contact-gauge sole-then-toe ordering for
+            # the explicit canonical support-anchor provider.
+            self.foot_regions[side] = regions
             self.foot_masks[side] = np.unique(np.concatenate(selected))
         self.ground = float(geometry["ground"]["level_m"])
         self.neutral = tuple(np.asarray(v, dtype=float) for v in (glb.rest_translation, glb.rest_rotation, glb.rest_scale))

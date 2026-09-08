@@ -30,6 +30,7 @@ from .animal import (apply_uniform_geometry_scale,biomechanics_report,
     load_animal_instance,scaled_contact_profile,verify_source_calibration)
 from ..solve.performance import load_performance, decorate_plan
 from ..solve.skin_targets import solve_with_skin_targets, evaluate_skin
+from ..solve.support_anchors import CanonicalSupportAnchorProvider
 from ..planning.supported_action import load_supported_action
 from ..planning.gait_transition import load_gait_transition, build_transition_plan
 from ..planning.articulation_profile import load_articulation_profile
@@ -222,8 +223,11 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
                             if "articulation_profile" in snapshots else None)
     height = geometry_height(source, roles, up)
     supported = recipe["program"] == "supported_action"
+    locomotion_gait = None
+    transition = None
     if recipe["program"] == "airborne_gait":
         gait = load_airborne_gait(profile)
+        locomotion_gait = gait
         plan = build_airborne_plan(gait, height)
         plan["program"] = "airborne_gait"
     elif recipe["program"] == "gait_transition":
@@ -231,14 +235,17 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
         locomotion = json.loads(snapshots["gait_profile"])
         if locomotion.get("schema") == "eonwild.motion.v9.grounded-gait.v1":
             grounded = load_grounded_gait(locomotion)
+            locomotion_gait = grounded
             gait = AirborneGait(step_period_s=grounded.step_period_s, cycles=grounded.cycles,
                 sample_hz=transition.sample_hz, swing_hip_lift_degrees=grounded.swing_hip_lift_degrees)
             plan = build_transition_plan(transition, grounded, height)
         else:
             gait = load_airborne_gait(locomotion)
+            locomotion_gait = gait
             plan = build_transition_plan(transition, gait, height)
     elif not supported:
         grounded = load_grounded_gait(profile)
+        locomotion_gait = grounded
         plan = build_grounded_plan(grounded, height)
         # Only articulation settings are reused. plan_override prevents the
         # airborne support schedule from being evaluated for grounded walking.
@@ -264,9 +271,19 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
     elif plan.get("performance", {}).get("skin_refinement", False):
         if "contact_profile" not in snapshots:
             raise ContractError("skin refinement requires a locked contact profile")
+        support_anchor_provider = None
+        if plan["performance"].get("canonical_support_anchors") is True:
+            if locomotion_gait is None:
+                raise ContractError("canonical support anchors require bound locomotion gait")
+            support_anchor_provider = CanonicalSupportAnchorProvider.build(
+                source, semantic_roles=roles, solver_gait=gait,
+                locomotion_gait=locomotion_gait, transition=transition, plan=plan,
+                contact_profile=contact_profile, up_axis=tuple(up),
+                forward_axis=tuple(forward), articulation_profile=articulation_profile)
         root_raw, inplace_raw, plan, receipt = solve_with_skin_targets(source, semantic_roles=roles,
             gait=gait, up_axis=up, forward_axis=forward, plan=plan,
-            contact_profile=contact_profile, articulation_profile=articulation_profile)
+            contact_profile=contact_profile, articulation_profile=articulation_profile,
+            canonical_support_anchor_provider=support_anchor_provider)
     else:
         root_raw, inplace_raw, _, receipt = solve_airborne_gait(source, source_clip=None,
             semantic_roles=roles, gait=gait, up_axis=tuple(up), forward_axis=tuple(forward),
