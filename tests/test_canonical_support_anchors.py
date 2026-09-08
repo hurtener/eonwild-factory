@@ -247,3 +247,26 @@ def test_provider_requires_matching_bound_solver_and_explicit_opt_in_context():
         _provider(source, roles, contact, grounded, incompatible, plan, forward)
     with pytest.raises(ContractError, match="solver cadence"):
         _consume(provider, source, roles, contact, grounded, incompatible, plan, forward)
+
+
+def test_provider_rejects_corrupted_bound_rows_without_binding_output_grid():
+    source, roles, contact, grounded, solver, steady, forward = _bound_walk()
+    plan = _canonical_plan(grounded, float(steady["body_height_m"]))
+    provider = _provider(source, roles, contact, grounded, solver, plan, forward)
+    corrupted = deepcopy(plan)
+    corrupted["samples"][0]["root_forward_m"] += .25
+    corrupted["samples"][0]["feet"]["left"]["forward_m"] += .5
+    with pytest.raises(ContractError, match=r"sample\[0\].*differs"):
+        provider.validate_for_consumption(
+            source, semantic_roles=roles, solver_gait=solver,
+            locomotion_gait=grounded, transition=None, plan=corrupted,
+            contact_profile=contact, up_axis=(0, 1, 0), forward_axis=forward,
+        )
+    shifted = deepcopy(plan)
+    shifted["samples"][0]["feet"]["left"]["target_offset_m"] = [0., 0., 0.]
+    with pytest.raises(ContractError, match="caller-owned refinement offsets"):
+        provider.validate_for_consumption(
+            source, semantic_roles=roles, solver_gait=solver,
+            locomotion_gait=grounded, transition=None, plan=shifted,
+            contact_profile=contact, up_axis=(0, 1, 0), forward_axis=forward,
+        )

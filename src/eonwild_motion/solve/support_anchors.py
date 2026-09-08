@@ -258,6 +258,22 @@ class CanonicalSupportAnchorProvider:
         inputs, material_ids = self._binding_inputs(source, semantic_roles=semantic_roles, solver_gait=solver_gait, locomotion_gait=locomotion_gait, transition=transition, plan=plan, contact_profile=contact_profile, up_axis=up_axis, forward_axis=forward_axis, articulation_profile=articulation_profile)
         if (inputs["source_sha256"] != self._binding.source_sha256 or not math.isclose(float(inputs["uniform_scale"]), self._binding.uniform_scale, rel_tol=0, abs_tol=1e-12) or _digest(inputs) != self._binding.request_sha256):
             raise ContractError("canonical support anchors differ from the consuming request")
+        # The event identity intentionally excludes a particular output grid,
+        # but every supplied row must still be an exact sample of the bound
+        # planner. Reuse SourceMotionQuery's production source-law comparison
+        # for sustained and transition programs rather than a parallel sampler.
+        for row in plan["samples"]:
+            for foot in row["feet"].values():
+                if "target_offset_m" in foot:
+                    raise ContractError("canonical support anchors do not accept caller-owned refinement offsets")
+        from .source_motion_query import SourceMotionQuery
+        SourceMotionQuery(
+            source, semantic_roles=semantic_roles, solver_gait=solver_gait,
+            locomotion_gait=locomotion_gait, plan=plan, up_axis=up_axis,
+            forward_axis=forward_axis, transition=transition, source_clip=None,
+            legacy_overlay=False, articulation_profile=articulation_profile,
+            contact_profile=contact_profile,
+        )
         self._validate_anchor_integrity()
         for index, side in enumerate(("left", "right")):
             value = material_ids[side]
