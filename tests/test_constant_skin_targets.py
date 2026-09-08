@@ -1,27 +1,355 @@
 from copy import deepcopy
+from dataclasses import replace
+import json
+from pathlib import Path
+
+import numpy as np
 import pytest
+
 from eonwild_motion.errors import ContractError
+from eonwild_motion.factory.animal import apply_uniform_geometry_scale
+from eonwild_motion.planning.articulation_profile import load_articulation_profile
+from eonwild_motion.planning.gait_transition import (
+    build_transition_plan,
+    load_gait_transition,
+)
+from eonwild_motion.planning.grounded_gait import build_grounded_plan
+from eonwild_motion.solve.constant_skin_targets import (
+    CanonicalConstantSkinTargetLaw,
+    ConstantSkinTargetUnavailable,
+)
+from eonwild_motion.solve.performance import Performance, decorate_plan
+from eonwild_motion.solve.skin_rig import SkinRig
 from eonwild_motion.solve.source_motion_query import SourceMotionQuery
-from eonwild_motion.solve.constant_skin_targets import CanonicalConstantSkinTargetLaw
-from test_canonical_support_anchors import _bound_walk, _canonical_plan, _provider
+from test_canonical_support_anchors import _bound_walk, _provider
 
-def _law():
- s,r,c,g,solver,steady,f=_bound_walk(); plan=_canonical_plan(g,float(steady['body_height_m'])); p=_provider(s,r,c,g,solver,plan,f)
- q=SourceMotionQuery(s,semantic_roles=r,solver_gait=solver,locomotion_gait=g,plan=plan,up_axis=(0,1,0),forward_axis=f,contact_profile=c)
- return CanonicalConstantSkinTargetLaw.build(q,p,source=s,semantic_roles=r,solver_gait=solver,locomotion_gait=g,transition=None,plan=plan,contact_profile=c,up_axis=(0,1,0),forward_axis=f),q
 
-def test_constant_law_is_bound_immutable_and_history_independent():
- law,q=_law(); first=law.value(.2); later=law.value(.6); repeat=law.value(.2)
- for side in ('left','right'):
-  assert first.corrections_m[side].flags.writeable is False
-  assert (first.corrections_m[side] == repeat.corrections_m[side]).all()
-  assert first.observations[side]['residual_m'] <= .0002
-  assert later.observations[side]['minimum_gap_m'] >= 0
- assert 'UNAVAILABLE' in first.branch_witness['status']
+ROOT = Path(__file__).resolve().parents[1]
 
-def test_constant_law_rejects_refined_or_mismatched_request():
- law,q=_law(); s,r,c,g,solver,steady,f=_bound_walk(); plan=_canonical_plan(g,float(steady['body_height_m'])); plan['samples'][0]['feet']['left']['target_offset_m']=[0,0,0]
- refined=SourceMotionQuery(s,semantic_roles=r,solver_gait=solver,locomotion_gait=g,plan=plan,up_axis=(0,1,0),forward_axis=f,contact_profile=c)
- with pytest.raises(ContractError,match='unrefined'):
-  CanonicalConstantSkinTargetLaw.build(refined,law._provider,source=s,semantic_roles=r,solver_gait=solver,locomotion_gait=g,transition=None,plan=plan,contact_profile=c,up_axis=(0,1,0),forward_axis=f)
- with pytest.raises(ContractError): law.value(float('nan'))
+
+def _inputs(*, performance=None, articulation_profile=None, contact=None):
+    source, roles, default_contact, gait, solver, steady, forward = _bound_walk()
+    contact = default_contact if contact is None else contact
+    plan = decorate_plan(
+        build_grounded_plan(gait, float(steady["body_height_m"])),
+        performance or Performance(canonical_support_anchors=True),
+    )
+    provider = _provider(source, roles, contact, gait, solver, plan, forward)
+    query = SourceMotionQuery(
+        source,
+        semantic_roles=roles,
+        solver_gait=solver,
+        locomotion_gait=gait,
+        plan=plan,
+        up_axis=(0, 1, 0),
+        forward_axis=forward,
+        contact_profile=contact,
+        articulation_profile=articulation_profile,
+    )
+    return {
+        "source": source,
+        "semantic_roles": roles,
+        "contact_profile": contact,
+        "locomotion_gait": gait,
+        "solver_gait": solver,
+        "plan": plan,
+        "provider": provider,
+        "query": query,
+        "up_axis": (0, 1, 0),
+        "forward_axis": forward,
+        "transition": None,
+        "articulation_profile": articulation_profile,
+    }
+
+
+def _build(inputs):
+    values = dict(inputs)
+    query = values.pop("query")
+    provider = values.pop("provider")
+    return CanonicalConstantSkinTargetLaw.build(query, provider, **values)
+
+
+@pytest.fixture(scope="module")
+def law_and_inputs():
+    inputs = _inputs()
+    return _build(inputs), inputs
+
+
+def test_constant_law_returns_checked_pose_and_is_history_independent(law_and_inputs):
+    law, _ = law_and_inputs
+    first = law.value(0.2)
+    later = law.value(0.6)
+    repeat = law.value(0.2)
+    assert first.status == later.status == repeat.status == "AVAILABLE"
+    assert first.pose.maximum_unreachable_extension_m <= 1e-9
+    assert "GLOBAL_C1_AUTHORITY_UNAVAILABLE" in first.branch_witness["status"]
+    for side in ("left", "right"):
+        assert first.corrections_m[side].flags.writeable is False
+        assert np.array_equal(first.corrections_m[side], repeat.corrections_m[side])
+        if first.observations[side]["loaded"]:
+            assert first.observations[side]["residual_m"] <= 0.0002
+        else:
+            assert first.observations[side]["minimum_gap_m"] >= 0.0001
+
+
+def test_actual_query_yaw_contact_and_articulation_are_bound_to_provider():
+    admitted = _inputs()
+    wrong_yaw = _inputs(
+        performance=Performance(
+            canonical_support_anchors=True, pelvis_yaw_degrees=3.0
+        )
+    )["query"]
+    with pytest.raises(ContractError, match="consuming request"):
+        CanonicalConstantSkinTargetLaw.build(
+            wrong_yaw,
+            admitted["provider"],
+            **{
+                key: value
+                for key, value in admitted.items()
+                if key not in {"query", "provider"}
+            },
+        )
+
+    changed_contact = deepcopy(admitted["contact_profile"])
+    feet = changed_contact["geometry"]["feet"]["left"]
+    feet["sole_joints"], feet["toe_joints"] = (
+        feet["toe_joints"],
+        feet["sole_joints"],
+    )
+    wrong_contact = SourceMotionQuery(
+        admitted["source"],
+        semantic_roles=admitted["semantic_roles"],
+        solver_gait=admitted["solver_gait"],
+        locomotion_gait=admitted["locomotion_gait"],
+        plan=admitted["plan"],
+        up_axis=admitted["up_axis"],
+        forward_axis=admitted["forward_axis"],
+        contact_profile=changed_contact,
+    )
+    with pytest.raises(ContractError, match="consuming request|material correspondence"):
+        CanonicalConstantSkinTargetLaw.build(
+            wrong_contact,
+            admitted["provider"],
+            **{
+                key: value
+                for key, value in admitted.items()
+                if key not in {"query", "provider"}
+            },
+        )
+
+    profile = load_articulation_profile(
+        json.loads(
+            (
+                ROOT
+                / "catalog/articulation/heavy-biped.tarbosaurus-adult-walk.v1.json"
+            ).read_text()
+        )
+    )
+    wrong_articulation = SourceMotionQuery(
+        admitted["source"],
+        semantic_roles=admitted["semantic_roles"],
+        solver_gait=admitted["solver_gait"],
+        locomotion_gait=admitted["locomotion_gait"],
+        plan=admitted["plan"],
+        up_axis=admitted["up_axis"],
+        forward_axis=admitted["forward_axis"],
+        contact_profile=admitted["contact_profile"],
+        articulation_profile=profile,
+    )
+    with pytest.raises(ContractError, match="consuming request"):
+        CanonicalConstantSkinTargetLaw.build(
+            wrong_articulation,
+            admitted["provider"],
+            **{
+                key: value
+                for key, value in admitted.items()
+                if key not in {"query", "provider"}
+            },
+        )
+
+
+def test_current_query_uniform_scale_mutation_fails_closed():
+    inputs = _inputs()
+    law = _build(inputs)
+    apply_uniform_geometry_scale(inputs["query"]._source, 1.01)
+    with pytest.raises(ContractError, match="query differs"):
+        law.value(0.2)
+
+
+def test_start_and_steady_share_canonical_sustained_constants():
+    steady_inputs = _inputs()
+    steady_law = _build(steady_inputs)
+    transition = load_gait_transition(
+        json.loads((ROOT / "catalog/programs/heavy-biped.start.v2.json").read_text())
+    )
+    plan = decorate_plan(
+        build_transition_plan(
+            transition,
+            steady_inputs["locomotion_gait"],
+            float(steady_inputs["plan"]["body_height_m"]),
+        ),
+        Performance(canonical_support_anchors=True),
+    )
+    provider = _provider(
+        steady_inputs["source"],
+        steady_inputs["semantic_roles"],
+        steady_inputs["contact_profile"],
+        steady_inputs["locomotion_gait"],
+        steady_inputs["solver_gait"],
+        plan,
+        steady_inputs["forward_axis"],
+        transition,
+    )
+    query = SourceMotionQuery(
+        steady_inputs["source"],
+        semantic_roles=steady_inputs["semantic_roles"],
+        solver_gait=steady_inputs["solver_gait"],
+        locomotion_gait=steady_inputs["locomotion_gait"],
+        transition=transition,
+        plan=plan,
+        up_axis=steady_inputs["up_axis"],
+        forward_axis=steady_inputs["forward_axis"],
+        contact_profile=steady_inputs["contact_profile"],
+    )
+    transition_inputs = {
+        **steady_inputs,
+        "plan": plan,
+        "provider": provider,
+        "query": query,
+        "transition": transition,
+    }
+    start_law = _build(transition_inputs)
+    for side in ("left", "right"):
+        assert np.array_equal(
+            start_law.value(0.0).corrections_m[side],
+            steady_law.value(0.0).corrections_m[side],
+        )
+
+
+def test_returned_arrays_pose_and_nested_diagnostics_are_detached(law_and_inputs):
+    law, _ = law_and_inputs
+    value = law.value(0.2)
+    baseline = value.corrections_m["left"].copy()
+    value.corrections_m["left"].setflags(write=True)
+    value.corrections_m["left"][1] += 0.01
+    value.pose.translations[0] = (999.0, 999.0, 999.0)
+    with pytest.raises(TypeError):
+        value.row["feet"]["left"]["contact"] = False
+    with pytest.raises(TypeError):
+        value.observations["left"]["loaded"] = False
+    repeat = law.value(0.2)
+    assert np.array_equal(repeat.corrections_m["left"], baseline)
+    assert repeat.pose.translations[0] != (999.0, 999.0, 999.0)
+
+
+@pytest.mark.parametrize(
+    ("mode", "reason"),
+    [
+        ("loaded_residual", "loaded residual"),
+        ("clearance", "swing clearance"),
+        ("ik", "foot target residual"),
+        ("extension", "unreachable IK extension"),
+        ("rom", "articulation envelope"),
+        ("nonfinite", "non-finite"),
+    ],
+)
+def test_pointwise_failures_return_typed_unavailable(
+    law_and_inputs, monkeypatch, mode, reason
+):
+    law, _ = law_and_inputs
+    original = law._observe
+
+    def failed(query, provider, skin, side, time_s, constants):
+        result = original(query, provider, skin, side, time_s, constants)
+        if side != "right":
+            return result
+        if mode == "loaded_residual":
+            result["loaded"] = True
+            result["required_correction_m"] = np.array([0.01, 0.0, 0.0])
+        elif mode == "clearance":
+            result["loaded"] = False
+            result["gap_m"] = -0.001
+        elif mode == "ik":
+            result["pose"].feet[side]["foot_target_residual_m"] = 0.01
+        elif mode == "extension":
+            result["pose"] = replace(
+                result["pose"], maximum_unreachable_extension_m=0.01
+            )
+        elif mode == "rom":
+            result["pose"].feet[side][
+                "articulation_envelope_violation_degrees"
+            ] = 1.0
+        else:
+            result["gap_m"] = float("nan")
+        return result
+
+    monkeypatch.setattr(law, "_observe", failed)
+    value = law.value(0.37)
+    assert isinstance(value, ConstantSkinTargetUnavailable)
+    assert value.status == "UNAVAILABLE"
+    assert reason in value.reason
+    assert "GLOBAL_C1_AUTHORITY_UNAVAILABLE" in value.branch_witness["status"]
+
+
+def test_cross_foot_failure_is_checked_at_both_touchdowns(monkeypatch):
+    inputs = _inputs()
+    original = CanonicalConstantSkinTargetLaw._observe.__func__
+    opposite_phase = inputs["provider"].anchor_for("left").touchdown_phase_s
+
+    def cross_foot(cls, query, provider, skin, side, time_s, constants):
+        result = original(cls, query, provider, skin, side, time_s, constants)
+        calibrated = any(np.linalg.norm(value) > 0 for value in constants.values())
+        if calibrated and side == "right" and time_s == opposite_phase:
+            result["loaded"] = True
+            result["required_correction_m"] = np.array([0.01, 0.0, 0.0])
+        return result
+
+    monkeypatch.setattr(
+        CanonicalConstantSkinTargetLaw, "_observe", classmethod(cross_foot)
+    )
+    with pytest.raises(ContractError, match="calibration failed.*right loaded residual"):
+        _build(inputs)
+
+
+def test_constructor_refinement_and_extreme_time_cannot_bypass_validation(
+    law_and_inputs,
+):
+    law, inputs = law_and_inputs
+    with pytest.raises(ContractError, match="validated build calibration"):
+        CanonicalConstantSkinTargetLaw(
+            inputs["query"],
+            inputs["query"],
+            inputs["provider"],
+            SkinRig(
+                inputs["query"]._source,
+                inputs["semantic_roles"],
+                inputs["query"].context.forward,
+                inputs["query"].context.up,
+                inputs["contact_profile"],
+            ),
+            {"left": np.zeros(3), "right": np.zeros(3)},
+        )
+    refined = deepcopy(inputs["plan"])
+    refined["samples"][0]["feet"]["left"]["target_offset_m"] = [0, 0, 0]
+    refined_query = SourceMotionQuery(
+        inputs["source"],
+        semantic_roles=inputs["semantic_roles"],
+        solver_gait=inputs["solver_gait"],
+        locomotion_gait=inputs["locomotion_gait"],
+        plan=refined,
+        up_axis=inputs["up_axis"],
+        forward_axis=inputs["forward_axis"],
+        contact_profile=inputs["contact_profile"],
+    )
+    with pytest.raises(ContractError, match="unrefined"):
+        CanonicalConstantSkinTargetLaw.build(
+            refined_query,
+            inputs["provider"],
+            **{
+                key: value
+                for key, value in inputs.items()
+                if key not in {"query", "provider"}
+            },
+        )
+    with pytest.raises(ContractError, match="finite numeric"):
+        law.value(10**10000)
