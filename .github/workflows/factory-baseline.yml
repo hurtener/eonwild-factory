@@ -48,7 +48,7 @@ jobs:
       fail-fast: false
       max-parallel: 4
       matrix:
-        recipe: [tarbosaurus-pin-552-1-adult-walk.v1, walk.v3, reverse-walk.v4, run.v4, sprint.v4, fast-walk.v2, idle.v1, alert.v1, call.v1, bite-miss.v2, feeding.v2, walk-start.v3, walk-stop.v3, reverse-walk-start.v3, reverse-walk-stop.v3, run-start.v3, run-stop.v3, sprint-start.v3, sprint-stop.v3]
+        recipe: [tarbosaurus-pin-552-1-adult-walk.v3, walk.v3, reverse-walk.v4, run.v4, sprint.v4, fast-walk.v2, idle.v1, alert.v1, call.v1, bite-miss.v2, feeding.v2, walk-start.v3, walk-stop.v3, reverse-walk-start.v3, reverse-walk-stop.v3, run-start.v3, run-stop.v3, sprint-start.v3, sprint-stop.v3]
     env: {PYTHONPATH: src, OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '2', RECIPE: '${{ matrix.recipe }}'}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -69,7 +69,7 @@ jobs:
       fail-fast: false
       max-parallel: 3
       matrix:
-        recipe: [tarbosaurus-pin-552-1-adult-walk.v1, walk.v3, reverse-walk.v4, sprint.v4, fast-walk.v2, sprint-start.v3, sprint-stop.v3, run-start.v3, run-stop.v3, walk-start.v3, walk-stop.v3, reverse-walk-start.v3, reverse-walk-stop.v3]
+        recipe: [tarbosaurus-pin-552-1-adult-walk.v3, walk.v3, reverse-walk.v4, sprint.v4, fast-walk.v2, sprint-start.v3, sprint-stop.v3, run-start.v3, run-stop.v3, walk-start.v3, walk-stop.v3, reverse-walk-start.v3, reverse-walk-stop.v3]
     env: {PYTHONPATH: src, OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '2', RECIPE: '${{ matrix.recipe }}'}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -86,7 +86,7 @@ jobs:
           set -euo pipefail
           if [[ "$RECIPE" == walk.v3 ]]; then
             python tools/review_compiled_candidate.py --package out/candidate --output out/review --views side front rear three-quarter --fps 30 --compare-v9-walk
-          elif [[ "$RECIPE" == tarbosaurus-pin-552-1-adult-walk.v1 || "$RECIPE" == reverse-walk.v4 || "$RECIPE" == sprint.v4 || "$RECIPE" == fast-walk.v2 ]]; then
+          elif [[ "$RECIPE" == tarbosaurus-pin-552-1-adult-walk.v3 || "$RECIPE" == reverse-walk.v4 || "$RECIPE" == sprint.v4 || "$RECIPE" == fast-walk.v2 ]]; then
             python tools/review_compiled_candidate.py --package out/candidate --output out/review --views side front rear three-quarter --fps 30
           else
             python tools/review_compiled_candidate.py --package out/candidate --output out/review --views side three-quarter --fps 30

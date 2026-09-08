@@ -30,7 +30,7 @@ proportions, so anatomical fit remains `UNVERIFIED`.
 
 ```sh
 uv run python -m eonwild_motion.factory compile \
-  --recipe recipes/heavy-biped/tarbosaurus-pin-552-1-adult-walk.v1.json \
+  --recipe recipes/heavy-biped/tarbosaurus-pin-552-1-adult-walk.v3.json \
   --output out/tarbosaurus-adult-walk
 uv run python -m eonwild_motion.factory verify out/tarbosaurus-adult-walk
 ```
@@ -82,19 +82,25 @@ even when the configured joint and contact limits pass.
 
 ## Adult walking direction
 
-The adult recipe binds its own gait and performance profiles. Its 1.23 s step
-period, 0.62 duty factor and 0.6 reference-height step length produce a grounded,
-conservative walking candidate. The current profiles author 28° push-off,
-36° recovery pitch, 30° toe flex, and a 16° tail-yaw response with 0.16-cycle lag.
-These are animation controls selected from emitted-motion comparison; they are
-not fossil measurements or mass-derived physiological limits. The solver may
-adjust targets to satisfy the actual rig/contact constraints, so inspect emitted
-poses rather than assuming those values are achieved exactly.
+The adult recipe binds its own gait, performance and articulation profiles. Its
+1.23 s step period, 0.62 duty factor and 0.6 reference-height step length produce
+a grounded, conservative walking candidate. Version 3 authors 28° push-off, a
+common world-metatarsus target of -20° from down during recovery, 35° signed pad
+recovery, 25° toe flex, 0.22-reference-height swing clearance, zero crouch and a
+16° tail-yaw response with 0.16-cycle lag. Bilateral performance lanes are
+centered on the source hip midpoint. These are animation and engineering
+controls selected from emitted-motion comparison; they are not fossil
+measurements or mass-derived physiological limits. The solver may adjust targets
+to satisfy the actual rig/contact constraints, so inspect emitted poses rather
+than assuming those values are achieved exactly.
 
-The first 36° recovery-pitch polish was visually rejected: the emitted foot tucks
-upward/forward while the supplied walking reference lets the distal chain hang
-downward beneath a flexed knee. These current values are under correction and
-must not be reused as an accepted animal configuration.
+The earlier 36° recovery-pitch polish was visually rejected because its emitted
+foot tucked upward/forward. A later 60° pad/toe recovery was rejected for a
+compressed ankle and rigid hanging foot, and its lower-clearance successor was
+rejected for floor skimming. The versioned v1/v2 inputs remain historical; the
+lower-clearance probe was never selected. They must not be reused as accepted
+animal configurations. Version 3 is the current factory recovery candidate;
+user art-direction, biological, Unity and production approval remain pending.
 
 Recovery direction is evaluated in world space separately from each joint's
 flexion or extension. The [ostrich intertarsal-joint study (2009)](https://doi.org/10.1111/j.1469-7580.2009.01083.x)
@@ -102,7 +108,7 @@ reports intertarsal flexion after toe-off and extension before touchdown;
 [ostrich phalangeal measurements (2017)](https://doi.org/10.7717/peerj.2857)
 primarily describe the contact period. These extant-bird observations motivate
 separate joint controls and phase checks. They do not establish Tarbosaurus
-recovery angles, passive ligament behavior, or the candidate's 60° control values.
+recovery angles, passive ligament behavior, or the v3 target and guardrail values.
 A foot pointing downward does not imply every joint is extending.
 
 Forward head carriage is also an authored criterion. Inner-ear reconstructions

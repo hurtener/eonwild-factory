@@ -57,6 +57,39 @@ in the user's recovery comparison. See
 [EXAMPLE_VIDEO_REVIEW.md](EXAMPLE_VIDEO_REVIEW.md) for exact coverage, source
 identities, observations and the remaining candidate gaps.
 
+## Current adult recovery candidate
+
+`tarbosaurus-pin-552-1-adult-walk.v3` is now the current factory recovery
+candidate. It supersedes v2 for future candidate CI without rewriting the v1/v2
+recipes, assets, tests or receipts. The reusable solve uses a common
+world-metatarsus recovery target, geometry-derived bilateral hip lane centering
+and a hash-bound scalar articulation guardrail. The profile records its
+comparative-anatomy basis and uncertainty; it is not measured Tarbosaurus range
+of motion or biological certification.
+
+The immutable one-cycle package passed independent package verification and all
+unchanged technical gates. Reopened final skin retained 35.214 mm left and
+40.603 mm right minimum full-patch clearance through the interior recovery
+window. These final values are lower than the pre-refinement raw solve values
+and are the applicable material evidence.
+
+The host inspected all 444 frames across six native 30 fps films, twelve
+exact-time side and three-quarter stills, complete contact sheets, and complete
+original-speed browser playback of all six views. The revised recovery retains the intended trailing-to-forward progression, avoids the
+rejected compressed ankle, keeps the thigh coordinated, and shows no leg
+crossing or abrupt lateral sway. This
+accepts v3 as the revised factory candidate only. User art-direction approval,
+biological validation, Unity parity and production promotion remain pending.
+The complete review page is
+`out/continuation-adult-v3-world-recovery-001`; the tracked structured receipt
+and summary are in
+[reports/V9-ADULT-RECOVERY-V3-HOST-001](../reports/V9-ADULT-RECOVERY-V3-HOST-001/README.md).
+
+The exact integrated source `5304b1967ad350737cf7e9ee6555a5f4de9e9bff`
+passed 658 tests plus 21 subtests in 225.75 seconds. The new adult v3 catalog
+binding test then passed at exact source
+`7809ada9743818e860e096ffb38ddba3488a7d9b` in 0.26 seconds.
+
 ## Evidence-bound adult benchmark
 
 `tarbosaurus-pin-552-1-adult-walk.v1` is the first explicit animal-instance
@@ -92,13 +125,14 @@ mass-dependent solving.
 The current host uses the pinned macOS arm64 toolchain. Source tests,
 individual candidates, direct joins and native-media review are recorded separately.
 A passing individual clip never grants connected locomotion or biological approval.
-At source `7920c59dd354027b8784483bb208fd0e6229cd91`, 136 focused articulation and
-handoff tests passed. The complete local suite then passed at exact checkout
-`d6716a15f815480cee525381613dff526f9a844b`, whose engine bytes are identical to
-`7920c59`: 647 tests plus 21 subtests passed in 321.11 seconds with the real
-pinned tools and a clean tracked checkout. See the
-[source-bound full-suite report](../reports/V9-FULL-SUITE-D6716A1-001/README.md).
-Remote CI has not run for this source.
+The complete local suite passed at exact integrated source
+`5304b1967ad350737cf7e9ee6555a5f4de9e9bff`: 658 tests plus 21 subtests passed
+in 225.75 seconds with the real pinned tools and a clean tracked checkout. The
+host receipt is
+`out/continuation-full-suite-5304b19/host-validation.json`. The additional adult
+v3 catalog binding test passed at exact source
+`7809ada9743818e860e096ffb38ddba3488a7d9b` in 0.26 seconds. Remote CI has not
+run for this source.
 
 ## Verification and immutable legacy boundary
 
@@ -131,10 +165,10 @@ factory generation dependency. No historical builders are imported by new work.
 ## Still required before ready/merge
 
 The remaining direct-join source gate is sprint start and stop in both movement
-modes. Inspect native-time multi-view motion and retain human art-direction
-approval separately; the revised adult recovery has not been accepted. Then
-validate the intended Unity consumer, root authority, phase handoff, event
-delivery, import/compression and target-device performance.
+modes. Retain user art-direction approval separately; adult v3 has been accepted
+only as the current factory recovery candidate. Then validate the intended Unity
+consumer, root authority, phase handoff, event delivery, import/compression and
+target-device performance.
 
 **PR: draft. Visual approval: PENDING. Unity validation: NOT_RUN.
 Production promotion: NOT_GRANTED.**

@@ -39,8 +39,8 @@ An output directory must be new; earlier takes cannot be overwritten.
 Compilation is not approval. Verification exits nonzero for blocked technical
 acceptance. Missing evidence is not a zero-error pass.
 
-The explicit adult Tarbosaurus benchmark is
-`recipes/heavy-biped/tarbosaurus-pin-552-1-adult-walk.v1.json`.
+The current adult Tarbosaurus benchmark candidate is
+`recipes/heavy-biped/tarbosaurus-pin-552-1-adult-walk.v3.json`.
 It adds specimen-specific mass evidence and measured geometry calibration to
 the grounded walk. See [animal configuration](docs/ANIMAL_CONFIGURATION.md)
 for the reusable data contract and its current biomechanical limits.
