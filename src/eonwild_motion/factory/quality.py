@@ -10,6 +10,7 @@ from ..errors import ContractError
 from ..glb.container import Glb
 from ..layers.leg_contact_resolve_v3 import _clip_state, _pose, _world_matrices, _world_position
 from ..planning.articulation_profile import ArticulationProfile
+from ..planning.grounded_gait import grounded_phase_sample_counts
 
 
 def emitted_articulation_envelopes(
@@ -106,8 +107,18 @@ def emitted_articulation_envelopes(
                                "side": side, "phase": phase_name, "joint": joint,
                                "angle_degrees": angle,
                                "hard_degrees": [envelope.hard_min_deg, envelope.hard_max_deg]}
-    return {
-        "status": "PASS" if maximum <= tolerance_degrees else "FAIL",
+    missing_phases = []
+    if (plan.get("program") == "grounded_gait"
+            or plan.get("locomotion_program") == "grounded_gait"):
+        per_leg = grounded_phase_sample_counts(rows)
+        missing_phases = [
+            f"{side}:{phase}"
+            for side in ("left", "right")
+            for phase in ("support", "swing")
+            if per_leg[side][phase] == 0
+        ]
+    result = {
+        "status": "PASS" if not missing_phases and maximum <= tolerance_degrees else "FAIL",
         "maximum_violation_degrees": maximum,
         "tolerance_degrees": tolerance_degrees,
         "maximum_preferred_departure_degrees": preferred_departure,
@@ -121,6 +132,9 @@ def emitted_articulation_envelopes(
         "profile": profile.receipt(),
         "classification": "reopened scalar engineering guardrails; not biological ROM or 6DoF joint validation",
     }
+    if missing_phases:
+        result["missing_phase_samples"] = missing_phases
+    return result
 
 
 def require_supported_geometry(source: Glb) -> None:

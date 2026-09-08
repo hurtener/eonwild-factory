@@ -16,7 +16,13 @@ import numpy as np
 from ..errors import ContractError
 from .swing_transport import transport_progress
 from .airborne_gait import AirborneGait, sample_airborne_gait, sampled_handoff_phase
-from .grounded_gait import GroundedGait, sample_grounded_gait, smooth, touchdown_reach
+from .grounded_gait import (
+    GroundedGait,
+    require_grounded_phase_coverage,
+    sample_grounded_gait,
+    smooth,
+    touchdown_reach,
+)
 from .parameters import gait_parameters
 
 
@@ -288,6 +294,8 @@ def build_transition_plan(transition: GaitTransition, gait, body_height_m):
         if not ordered or time - ordered[-1] > 1e-7:
             ordered.append(time)
     rows = [c.sample(time) for time in ordered]
+    if c.grounded:
+        require_grounded_phase_coverage(rows)
     entry_speed, exit_speed = (0., c.speed) if c.start else (c.speed, 0.)
     cues = [{'time_s': 0., 'name': 'ANTICIPATION_START' if c.start else 'ARREST_START'},
             {'time_s': c.duration, 'name': 'LOCOMOTION_READY' if c.start else 'RECOVERY_COMPLETE'}]

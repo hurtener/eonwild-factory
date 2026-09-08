@@ -15,6 +15,7 @@ from eonwild_motion.factory.quality import emitted_articulation_envelopes
 from eonwild_motion.factory.io import bind, digest, write_json
 from eonwild_motion.glb.container import Glb
 from eonwild_motion.planning.airborne_gait import AirborneGait
+from eonwild_motion.planning.grounded_gait import GroundedGait, build_grounded_plan
 from eonwild_motion.planning.articulation_profile import (
     ANGLE_CONVENTIONS, CLASSIFICATION, SCHEMA, load_articulation_profile,
 )
@@ -252,3 +253,54 @@ def test_final_envelope_check_rejects_invalid_axes_and_impossible_reopened_angle
     assert result["status"] == "FAIL"
     assert result["witness"]["joint"] == "knee_interior_degrees"
     assert result["observed_degrees"]["support"]["knee_interior_degrees"][1] < 179
+
+
+@pytest.mark.parametrize(
+    ("program", "locomotion_program"),
+    [("grounded_gait", None), ("gait_transition", "grounded_gait")],
+)
+def test_final_grounded_envelope_check_fails_when_a_leg_has_no_swing_observation(
+    program, locomotion_program,
+):
+    source, roles = fixture()
+    gait = GroundedGait(cycles=1, sample_hz=24)
+    plan = build_grounded_plan(gait, 2.)
+    raw, _, _, _ = solve_airborne_gait(
+        source,
+        source_clip="source",
+        semantic_roles=roles,
+        gait=AirborneGait(),
+        plan_override=plan,
+        articulation_profile=load_articulation_profile(profile_payload()),
+    )
+    corrupted = deepcopy(plan)
+    corrupted["program"] = program
+    if locomotion_program is not None:
+        corrupted["locomotion_program"] = locomotion_program
+    for row in corrupted["samples"]:
+        row["feet"]["left"]["contact"] = True
+    result = emitted_articulation_envelopes(
+        Glb.from_bytes(raw),
+        semantic_roles=roles,
+        plan=corrupted,
+        profile=load_articulation_profile(profile_payload()),
+        forward_axis=[0, 0, 1],
+        up_axis=[0, 1, 0],
+    )
+    assert result["status"] == "FAIL"
+    assert result["missing_phase_samples"] == ["left:swing"]
+
+    if locomotion_program is not None:
+        return
+    supported = deepcopy(corrupted)
+    supported["program"] = "supported_action"
+    result = emitted_articulation_envelopes(
+        Glb.from_bytes(raw),
+        semantic_roles=roles,
+        plan=supported,
+        profile=load_articulation_profile(profile_payload()),
+        forward_axis=[0, 0, 1],
+        up_axis=[0, 1, 0],
+    )
+    assert result["status"] == "PASS"
+    assert "missing_phase_samples" not in result

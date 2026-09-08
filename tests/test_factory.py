@@ -14,7 +14,12 @@ from eonwild_motion.factory.compiler import compile_recipe, verify_package, vali
 from eonwild_motion.factory.io import bind, confined, frame_axes, locked_file, signed_heading_degrees, write_json
 from eonwild_motion.factory.source import admit_geometry
 from eonwild_motion.glb.container import Glb
-from eonwild_motion.planning.grounded_gait import GroundedGait, build_grounded_plan, sample_grounded_gait
+from eonwild_motion.planning.grounded_gait import (
+    GroundedGait,
+    build_grounded_plan,
+    require_grounded_phase_coverage,
+    sample_grounded_gait,
+)
 from test_v9_airborne_gait import fixture
 
 
@@ -59,6 +64,24 @@ def test_grounded_contact_boundaries_are_continuous():
         for field in ("forward_m", "height_m"):
             v = [row["feet"]["left"][field] for row in rows]
             assert abs((v[1]-v[0])/h - (v[2]-v[1])/h) < .001
+
+
+def test_grounded_plan_rejects_clock_that_never_observes_swing():
+    gait = GroundedGait(
+        step_period_s=.06,
+        duty_factor=.999,
+        cycles=1,
+        sample_hz=24,
+    )
+    raw_samples = [
+        sample_grounded_gait(gait, time_s, 1.)
+        for time_s in (0., .04, .08, .12)
+    ]
+    assert all(row["support_count"] == 2 for row in raw_samples)
+    with pytest.raises(ContractError, match="left:swing, right:swing"):
+        require_grounded_phase_coverage(raw_samples)
+    with pytest.raises(ContractError, match="observe support and swing"):
+        build_grounded_plan(gait, 1.)
 
 
 @pytest.mark.parametrize("change", [{"duty_factor": .475}, {"cycles": True}, {"step_period_s": 0}, {"step_length_body_heights": 0}, {"sample_hz": 23}, {"pelvis_crouch_body_heights": math.nan},

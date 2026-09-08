@@ -43,6 +43,9 @@ def test_committed_support_is_immutable_and_bound_gait_is_unchanged(name, kind):
     assert before == asdict(c.gait)
     assert plan['same_foot_cycle_s'] == 2 * c.gait.step_period_s
     assert all(not cue['authoritative_world_fact'] for cue in plan['events'])
+    if c.grounded:
+        for side in ('left', 'right'):
+            assert {row['feet'][side]['contact'] for row in plan['samples']} == {False, True}
     sign = np.sign(c.speed)
     assert min(sign * np.diff([r['root_forward_m'] for r in plan['samples']])) >= -1e-12
     for a, b in zip(plan['samples'], plan['samples'][1:]):

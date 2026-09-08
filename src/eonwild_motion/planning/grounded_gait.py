@@ -175,6 +175,42 @@ def sample_grounded_gait(gait: GroundedGait, time_s: float, body_height_m: float
         "stage": "DOUBLE_SUPPORT" if support == 2 else "SINGLE_SUPPORT"}
 
 
+def grounded_phase_sample_counts(samples: Any) -> dict[str, dict[str, int]]:
+    """Count actual support/swing witnesses for each grounded leg."""
+    if not isinstance(samples, list):
+        raise ContractError("grounded phase coverage requires a sample list")
+    counts = {
+        side: {"support": 0, "swing": 0}
+        for side in ("left", "right")
+    }
+    for row in samples:
+        if not isinstance(row, Mapping) or not isinstance(row.get("feet"), Mapping):
+            raise ContractError("grounded phase coverage requires complete feet")
+        for side in counts:
+            foot = row["feet"].get(side)
+            if not isinstance(foot, Mapping) or type(foot.get("contact")) is not bool:
+                raise ContractError("grounded phase coverage requires boolean per-leg contact")
+            phase = "support" if foot["contact"] else "swing"
+            counts[side][phase] += 1
+    return counts
+
+
+def require_grounded_phase_coverage(samples: Any) -> None:
+    """Reject an alternating gait whose emitted clock omits a required phase."""
+    counts = grounded_phase_sample_counts(samples)
+    missing = [
+        f"{side}:{phase}"
+        for side in ("left", "right")
+        for phase in ("support", "swing")
+        if counts[side][phase] == 0
+    ]
+    if missing:
+        raise ContractError(
+            "grounded locomotion sampling must observe support and swing for each leg; "
+            f"missing {', '.join(missing)}"
+        )
+
+
 def build_grounded_plan(gait: GroundedGait, body_height_m: float) -> dict[str, Any]:
     duration = 2 * gait.step_period_s * gait.cycles
     intervals = int(math.ceil(duration * gait.sample_hz))
@@ -189,8 +225,10 @@ def build_grounded_plan(gait: GroundedGait, body_height_m: float) -> dict[str, A
     for time_s in sorted(times):
         if not unique_times or time_s - unique_times[-1] > 1e-7:
             unique_times.append(time_s)
+    samples = [sample_grounded_gait(gait, time_s, body_height_m) for time_s in unique_times]
+    require_grounded_phase_coverage(samples)
     return {"schema": "eonwild.motion.v9.contact-plan.v1", "program": "grounded_gait",
         "classification": "authored engineering contact plan; not force simulation",
         "body_height_m": body_height_m, "duration_s": duration,
         "same_foot_cycle_s": 2 * gait.step_period_s, "parameters": gait_parameters(gait),
-        "samples": [sample_grounded_gait(gait, time_s, body_height_m) for time_s in unique_times]}
+        "samples": samples}
