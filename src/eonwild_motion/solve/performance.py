@@ -34,6 +34,7 @@ class Performance:
     upper_trunk_counterpitch_degrees: float | None = None
     neck_counterpitch_degrees: float | None = None
     tail_counterpitch_degrees: float | None = None
+    pelvis_forward_velocity_modulation_fraction: float | None = None
     skin_refinement: bool = True
 
     def __post_init__(self):
@@ -45,7 +46,8 @@ class Performance:
                        "pelvis_support_pitch_degrees",
                        "upper_trunk_counterpitch_degrees",
                        "neck_counterpitch_degrees",
-                       "tail_counterpitch_degrees") and value is None:
+                       "tail_counterpitch_degrees",
+                       "pelvis_forward_velocity_modulation_fraction") and value is None:
                 continue
             if key in ("center_tail", "center_lanes_on_bilateral_hip_midpoint",
                        "support_directed_pelvis_carrier",
@@ -91,6 +93,10 @@ class Performance:
         for value, limit, label in sagittal_limits:
             if value is not None and not 0 <= value <= limit:
                 raise ContractError(f"{label} exceeds the authored envelope")
+        coefficient = self.pelvis_forward_velocity_modulation_fraction
+        if coefficient is not None and not 0 <= coefficient < 1:
+            raise ContractError(
+                "pelvis forward velocity modulation must be in [0, 1)")
 
 
 def load_performance(document: Mapping[str, Any]) -> Performance:
@@ -116,9 +122,18 @@ def decorate_plan(plan: dict, performance: Performance) -> dict:
         if not grounded:
             raise ContractError(
                 "support-timed sagittal carrier requires grounded locomotion")
+    if performance.pelvis_forward_velocity_modulation_fraction not in (None, 0):
+        grounded = (plan.get("program") == "grounded_gait"
+                    or plan.get("locomotion_program") == "grounded_gait")
+        if not grounded:
+            raise ContractError(
+                "pelvis forward velocity carrier requires grounded locomotion")
     result = deepcopy(plan)
-    result["performance"] = {key: value for key, value in asdict(performance).items()
-                             if value is not None}
+    result["performance"] = {
+        key: value for key, value in asdict(performance).items()
+        if value is not None and not (
+            key == "pelvis_forward_velocity_modulation_fraction" and value == 0)
+    }
     result["loop"] = plan.get("loop", True)
     from ..planning.foot_articulation import declare_pad_recovery
     declare_pad_recovery(result)
@@ -214,6 +229,77 @@ def _support_timed_sagittal_pulse(plan, phase, gain):
     step = float(cycle) / 2
     stance_clock = phase / step - float(duty)
     return -gain * math.cos(2 * math.pi * stance_clock)
+
+
+def _support_timed_pelvis_forward_carrier(plan, phase, coefficient):
+    """Periodic local pelvis travel and analytic speed residual.
+
+    The residual uses the same stance-vault clock as pelvis height. It changes
+    neither root travel nor mean root speed and is a kinematic pelvis proxy,
+    not a COM, force, work, or mass-response calculation.
+    """
+    grounded = (plan.get("program") == "grounded_gait"
+                or plan.get("locomotion_program") == "grounded_gait")
+    if not grounded:
+        raise ContractError(
+            "pelvis forward velocity carrier requires grounded locomotion")
+    parameters = plan.get("parameters")
+    body_height = plan.get("body_height_m")
+    if not isinstance(parameters, Mapping):
+        raise ContractError(
+            "pelvis forward velocity carrier requires gait parameters")
+    step = parameters.get("step_period_s")
+    duty = parameters.get("duty_factor")
+    stride = parameters.get("step_length_body_heights")
+    if parameters.get("pelvis_height_carrier") != "stance_vault_proxy":
+        raise ContractError(
+            "pelvis forward velocity carrier requires stance_vault_proxy")
+    values = (step, duty, stride, body_height, phase, coefficient)
+    if any(isinstance(value, bool) or not isinstance(value, (int, float))
+           or not math.isfinite(value) for value in values):
+        raise ContractError(
+            "pelvis forward velocity carrier requires finite gait inputs")
+    if (step <= 0 or not .5 < duty < 1 or body_height <= 0
+            or stride == 0 or not 0 <= coefficient < 1):
+        raise ContractError(
+            "pelvis forward velocity carrier inputs exceed physical bounds")
+    mean_velocity = stride * body_height / step
+    stance_clock = phase / step - duty
+    angle = 2 * math.pi * stance_clock
+    displacement = (-coefficient * mean_velocity * step
+                    / (2 * math.pi) * math.sin(angle))
+    velocity = -coefficient * mean_velocity * math.cos(angle)
+    return displacement, velocity
+
+
+def _validate_pelvis_forward_carrier_binding(source, roles, up, forward):
+    """Validate semantic hierarchy and coordinate frame before mutation."""
+    if not isinstance(roles, Mapping):
+        raise ContractError(
+            "pelvis forward velocity carrier requires semantic rig roles")
+    root_name, pelvis_name = roles.get("root"), roles.get("pelvis")
+    if (not isinstance(root_name, str) or not root_name
+            or not isinstance(pelvis_name, str) or not pelvis_name
+            or root_name == pelvis_name
+            or root_name not in source.name_to_node
+            or pelvis_name not in source.name_to_node):
+        raise ContractError(
+            "pelvis forward velocity carrier requires semantic root and pelvis")
+    root = source.name_to_node[root_name]
+    pelvis = source.name_to_node[pelvis_name]
+    if source.parents[pelvis] != root:
+        raise ContractError(
+            "pelvis forward velocity carrier requires actual root-to-pelvis hierarchy")
+    up_array, forward_array = np.asarray(up), np.asarray(forward)
+    if (up_array.shape != (3,) or forward_array.shape != (3,)
+            or not np.isfinite(up_array).all()
+            or not np.isfinite(forward_array).all()
+            or abs(np.linalg.norm(up_array) - 1) > 1e-8
+            or abs(np.linalg.norm(forward_array) - 1) > 1e-8
+            or abs(float(up_array @ forward_array)) > 1e-8):
+        raise ContractError(
+            "pelvis forward velocity carrier requires orthonormal declared axes")
+    return pelvis
 
 
 def _counterroll_trunk_names(roles: Mapping[str, Any]) -> list[str]:
@@ -351,6 +437,13 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
     sagittal_chains = (_sagittal_body_chains(source, roles)
                        if p.support_timed_sagittal_carrier is True else None)
     phase, gain = phase_and_gain(row)
+    forward_displacement = 0.
+    if p.pelvis_forward_velocity_modulation_fraction is not None:
+        pelvis = _validate_pelvis_forward_carrier_binding(
+            source, roles, up, forward)
+        forward_displacement, _ = _support_timed_pelvis_forward_carrier(
+            plan, phase, p.pelvis_forward_velocity_modulation_fraction)
+        forward_displacement *= gain
     lateral = _unit(np.cross(up, forward))
     pelvis = source.name_to_node[roles["pelvis"]]
     cycle = float(plan["same_foot_cycle_s"])
@@ -372,7 +465,8 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
             plan, phase, gain)
     parent = source.parents[pelvis]
     parent_basis = np.eye(3) if parent is None else np.asarray(base_worlds[parent])[:3, :3]
-    shift = lateral * (p.pelvis_sway_body_heights * plan["body_height_m"] * sway_pulse)
+    shift = (lateral * (p.pelvis_sway_body_heights * plan["body_height_m"] * sway_pulse)
+             + np.asarray(forward) * forward_displacement)
     translations[pelvis] = tuple(np.asarray(translations[pelvis]) + np.linalg.solve(parent_basis, shift))
     _world_delta(source, translations, rotations, scales, pelvis, up, p.pelvis_yaw_degrees * pulse)
     _world_delta(source, translations, rotations, scales, pelvis, forward, p.pelvis_roll_degrees * roll_pulse)

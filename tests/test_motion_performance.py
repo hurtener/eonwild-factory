@@ -20,7 +20,8 @@ from eonwild_motion.layers.leg_contact_resolve_v3 import (
 )
 from eonwild_motion.solve.airborne_gait import solve_airborne_gait
 from eonwild_motion.solve.performance import (
-    Performance, _support_timed_sagittal_pulse, apply_performance,
+    Performance, _support_timed_pelvis_forward_carrier,
+    _support_timed_sagittal_pulse, apply_performance,
     decorate_plan, load_performance,
 )
 from test_v9_airborne_gait import fixture
@@ -559,6 +560,112 @@ def test_sagittal_pulse_uses_declared_support_clock_and_closes_c2():
             repeated[2] - 2 * repeated[1] + repeated[0]) / h**2
         assert repeated_first == pytest.approx(first, abs=1e-9)
         assert repeated_second == pytest.approx(second, abs=5e-7)
+
+
+@pytest.mark.parametrize("value", [-.1, 1., True, "yes", float("nan")])
+def test_pelvis_forward_velocity_carrier_rejects_unphysical_coefficients(value):
+    with pytest.raises(ContractError):
+        Performance(pelvis_forward_velocity_modulation_fraction=value)
+
+
+def test_pelvis_forward_velocity_carrier_requires_grounded_stance_vault():
+    carrier = Performance(pelvis_forward_velocity_modulation_fraction=.145)
+    airborne = build_airborne_plan(AirborneGait(cycles=1, sample_hz=24), 2.)
+    with pytest.raises(ContractError, match="requires grounded locomotion"):
+        decorate_plan(airborne, carrier)
+    grounded = build_grounded_plan(GroundedGait(), 2.)
+    decorated = decorate_plan(grounded, carrier)
+    with pytest.raises(ContractError, match="requires stance_vault_proxy"):
+        _support_timed_pelvis_forward_carrier(decorated, .2, .145)
+
+
+@pytest.mark.parametrize("stride", [.6, -.6])
+def test_pelvis_forward_carrier_has_analytic_periodic_speed_and_net_travel(stride):
+    gait = GroundedGait(step_period_s=1.23, duty_factor=.62,
+        step_length_body_heights=stride,
+        pelvis_height_carrier="stance_vault_proxy")
+    plan = build_grounded_plan(gait, 2.270663281560174)
+    coefficient = .14519967609352594
+    step = gait.step_period_s
+    mean = stride * plan["body_height_m"] / step
+    for t in (.173, .941):
+        displacement, velocity = _support_timed_pelvis_forward_carrier(
+            plan, t, coefficient)
+        repeated = _support_timed_pelvis_forward_carrier(
+            plan, t + step, coefficient)
+        assert repeated == pytest.approx((displacement, velocity), abs=1e-14)
+        h = 1e-6
+        before = _support_timed_pelvis_forward_carrier(
+            plan, t - h, coefficient)[0]
+        after = _support_timed_pelvis_forward_carrier(
+            plan, t + h, coefficient)[0]
+        assert (after - before) / (2 * h) == pytest.approx(velocity, abs=1e-10)
+    high = (gait.duty_factor) * step
+    low = (gait.duty_factor - .5) * step
+    assert _support_timed_pelvis_forward_carrier(
+        plan, high, coefficient)[1] == pytest.approx(-coefficient * mean)
+    assert _support_timed_pelvis_forward_carrier(
+        plan, low, coefficient)[1] == pytest.approx(coefficient * mean)
+    assert plan["samples"][-1]["root_forward_m"] == pytest.approx(
+        2 * gait.cycles * stride * plan["body_height_m"])
+
+
+def test_pelvis_forward_carrier_uses_rotated_frame_and_actual_root_hierarchy():
+    source, roles = _actual_source_and_roles()
+    up = np.array([0., 1., 0.])
+    forward = np.array([.03893162055641767, 0., .9992418770852486])
+    gait = GroundedGait(step_period_s=1.23, duty_factor=.62,
+        step_length_body_heights=.6,
+        pelvis_height_carrier="stance_vault_proxy")
+    coefficient = .14519967609352594
+    plan = decorate_plan(build_grounded_plan(gait, 2.270663281560174),
+        Performance(pelvis_sway_body_heights=0, pelvis_yaw_degrees=0,
+            pelvis_roll_degrees=0, tail_yaw_degrees=0,
+            gaze_elevation_degrees=0, center_tail=False,
+            pelvis_forward_velocity_modulation_fraction=coefficient))
+    t = (gait.duty_factor + .25) * gait.step_period_s
+    row = sample_grounded_gait(gait, t, plan["body_height_m"])
+    base, posed = _performance_pose(source, roles, plan, row, up, forward)
+    pelvis = source.name_to_node[roles["pelvis"]]
+    delta = np.asarray(_world_position(posed[pelvis])) - _world_position(base[pelvis])
+    expected = _support_timed_pelvis_forward_carrier(plan, t, coefficient)[0]
+    assert delta @ forward == pytest.approx(expected, abs=1e-10)
+    assert delta @ up == pytest.approx(0, abs=1e-10)
+    assert delta @ np.cross(up, forward) == pytest.approx(0, abs=1e-10)
+    forged = dict(roles)
+    forged["root"] = roles["spine"][0]
+    with pytest.raises(ContractError, match="root-to-pelvis hierarchy"):
+        _performance_pose(source, forged, plan, row, up, forward)
+
+
+def test_zero_pelvis_forward_carrier_is_exact_motion_identity_on_actual_rig():
+    source, roles = _actual_source_and_roles()
+    up = (0., 1., 0.)
+    forward = (.03893162055641767, 0., .9992418770852486)
+    gait = GroundedGait(step_period_s=1.23, duty_factor=.62,
+        cycles=1, sample_hz=24, step_length_body_heights=.1,
+        touchdown_reach_body_heights=.05,
+        swing_clearance_body_heights=.08,
+        pelvis_height_carrier="stance_vault_proxy")
+    common = dict(pelvis_sway_body_heights=0, pelvis_yaw_degrees=0,
+        pelvis_roll_degrees=0, tail_yaw_degrees=0,
+        gaze_elevation_degrees=0, center_tail=False,
+        skin_refinement=False)
+    outputs = []
+    for coefficient in (None, 0.):
+        performance = Performance(**common,
+            pelvis_forward_velocity_modulation_fraction=coefficient)
+        plan = decorate_plan(build_grounded_plan(gait, 2.), performance)
+        if coefficient == 0:
+            assert "pelvis_forward_velocity_modulation_fraction" not in plan["performance"]
+        root_motion, in_place, _, _ = solve_airborne_gait(
+            source, source_clip=None, semantic_roles=roles,
+            gait=AirborneGait(step_period_s=gait.step_period_s,
+                cycles=1, sample_hz=gait.sample_hz),
+            up_axis=up, forward_axis=forward, plan_override=plan,
+            legacy_overlay=False)
+        outputs.append((root_motion, in_place))
+    assert outputs[0] == outputs[1]
 
 
 def _actual_source_and_roles():
