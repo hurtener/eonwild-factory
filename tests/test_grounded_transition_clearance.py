@@ -16,7 +16,7 @@ def test_material_vertex_switch_is_supported_when_minimum_gap_is_monotone():
 
     floor = _monotone_floor(measure, 0.5, "left")
     assert measure(floor)[0] >= 0.0001
-    assert 0.0004 <= floor <= 0.001
+    assert floor == pytest.approx(0.0004, abs=1e-5)
 
 
 def test_nonmonotone_distal_branch_fails_closed():
