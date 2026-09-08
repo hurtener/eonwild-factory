@@ -127,13 +127,18 @@ def compare_boundaries(before: dict, after: dict, travel_alignment_m, *, test_on
                  'angular_velocity_degrees_per_s':np.degrees(np.linalg.norm(adjacent_angular(a[0],a[2],True)-adjacent_angular(b[0],b[2],False),axis=1))}
         exact_kind = 'adjacent sampled synthetic boundary values'
     else:
-        required = {'node_names','world_velocity','skin_labels','skin_velocity','angular_velocity'}
+        required = {'node_names','world_velocity','skin_labels','skin_velocity','angular_velocity','interpolation'}
         if (not isinstance(exact_before, dict) or not isinstance(exact_after, dict)
             or set(exact_before) != required or set(exact_after) != required
             or exact_before['node_names'] != exact_after['node_names']
             or exact_before['skin_labels'] != exact_after['skin_labels']
             or not isinstance(exact_before['node_names'], list) or not isinstance(exact_before['skin_labels'], list)
             or any(not isinstance(value, str) for value in (*exact_before['node_names'], *exact_before['skin_labels']))
+            or not isinstance(exact_before['interpolation'], list) or not isinstance(exact_after['interpolation'], list)
+            or not exact_before['interpolation'] or not exact_after['interpolation']
+            or any(value not in ('LINEAR', 'CUBICSPLINE') for value in (*exact_before['interpolation'], *exact_after['interpolation']))
+            or len(set(exact_before['interpolation'])) != len(exact_before['interpolation'])
+            or len(set(exact_after['interpolation'])) != len(exact_after['interpolation'])
             or len(set(exact_before['node_names'])) != len(exact_before['node_names'])
             or len(set(exact_before['skin_labels'])) != len(exact_before['skin_labels'])):
             raise ContractError('handoff exact tangent correspondence differs')
@@ -148,7 +153,7 @@ def compare_boundaries(before: dict, after: dict, travel_alignment_m, *, test_on
         exact = {'linear_velocity_mps':np.linalg.norm(aw-bw,axis=1),
                  'skin_velocity_mps':np.linalg.norm(ask-bsk,axis=1),
                  'angular_velocity_degrees_per_s':np.degrees(np.linalg.norm(aa-ba,axis=1))}
-        exact_kind = 'exact adjacent LINEAR translation/scale and shortest-SLERP FK/LBS tangents'
+        exact_kind = 'exact serialized TRS endpoint FK/LBS tangents'
     for key, value in exact.items():
         record(key, value)
     limits = {'position_m':POSITION_TOLERANCE_M,'skin_position_m':SKIN_TOLERANCE_M,
@@ -162,6 +167,7 @@ def compare_boundaries(before: dict, after: dict, travel_alignment_m, *, test_on
         'values':errors,'limits':limits,'witness_indices':witnesses,
         'before_times_s':a[0].tolist(),'after_times_s':b[0].tolist(),
         'classification':exact_kind,
+        'source_interpolation':{'before':exact_before['interpolation'], 'after':exact_after['interpolation']} if exact_before is not None else None,
         'diagnostics':{'quadratic_three_sample_estimate':{'values':{key:float(np.max(value)) for key,value in quadratic.items()},
             'witness_indices':quadratic_witness_indices}}
         }
@@ -208,7 +214,52 @@ def _skin_boundary(glb, profile, name, times, indices):
     return [frames[i] for i in indices]
 
 
-def _boundary(package: Path, *, terminal: bool, mode: str, profile: dict, phase_s: float = 0.):
+def _endpoint_index(times: np.ndarray, *, terminal: bool, phase_s: float) -> int:
+    endpoint = len(times) - 1 if terminal else 0
+    if phase_s:
+        matches = np.flatnonzero(np.abs(times - phase_s) <= 2e-6)
+        if len(matches) != 1:
+            raise ContractError('declared handoff phase must identify one actual native sample')
+        endpoint = int(matches[0])
+    return endpoint
+
+
+def _serialized_motor_velocity(package: Path, *, terminal: bool, phase_s: float = 0.) -> np.ndarray:
+    """Recover the motor velocity from the two exact serialized root tangents."""
+    runtime, recipe = _json(package/'runtime.json'), _json(package/'recipe.json')
+    require_runtime_axes(runtime, recipe)
+    values = []
+    binding = None
+    for mode in ('root_motion', 'in_place'):
+        glb = Glb.from_bytes((package/f'{mode}.glb').read_bytes())
+        animations = glb.document.get('animations', [])
+        if len(animations) != 1:
+            raise ContractError('handoff requires exactly one exported clip')
+        tracks, times = read_animation_tracks(glb, animations[0]['name'], require_common_timeline=True)
+        times = _numeric(times)
+        endpoint = _endpoint_index(times, terminal=terminal, phase_s=phase_s)
+        root_name = runtime['rig_roles']['root']
+        try:
+            root = glb.name_to_node[root_name]
+        except (KeyError, TypeError) as exc:
+            raise ContractError('handoff serialized root binding is invalid') from exc
+        topology = tuple((node.get('name'), glb.parents[index]) for index, node in enumerate(glb.nodes))
+        interpolation = tuple(sorted(set(track.interpolation for track in tracks.values())))
+        current = (tuple(times.tolist()), topology, root_name, root, interpolation)
+        if binding is not None and current != binding:
+            raise ContractError('handoff serialized mode topology or timeline differs')
+        binding = current
+        tangent = endpoint_tangent(glb, animations[0]['name'], endpoint=endpoint, terminal=terminal)
+        if tangent.names[root] != root_name or tangent.time_s != float(times[endpoint]):
+            raise ContractError('handoff serialized root endpoint binding differs')
+        values.append(_numeric(tangent.world_velocity[root, :3, 3]))
+    motor = values[0] - values[1]
+    if motor.shape != (3,) or not np.isfinite(motor).all():
+        raise ContractError('handoff serialized motor velocity is invalid')
+    return motor
+
+
+def _boundary(package: Path, *, terminal: bool, mode: str, profile: dict, phase_s: float = 0., motor_velocity=None):
     glb = Glb.from_bytes((package/f'{mode}.glb').read_bytes())
     runtime,plan,recipe = _json(package/'runtime.json'),_json(package/'plan.json'),_json(package/'recipe.json')
     require_runtime_axes(runtime,recipe)
@@ -235,12 +286,7 @@ def _boundary(package: Path, *, terminal: bool, mode: str, profile: dict, phase_
             raise ContractError('invalid handoff serialized quaternion')
         if path == 'rotation' and track.interpolation == 'LINEAR' and np.max(np.abs(norms - 1)) > 1e-4:
             raise ContractError('invalid handoff serialized quaternion')
-    endpoint = len(times) - 1 if terminal else 0
-    if phase_s:
-        matches = np.flatnonzero(np.abs(times - phase_s) <= 2e-6)
-        if len(matches) != 1:
-            raise ContractError('declared handoff phase must identify one actual native sample')
-        endpoint = int(matches[0])
+    endpoint = _endpoint_index(times, terminal=terminal, phase_s=phase_s)
     ids = list(range(endpoint - 2, endpoint + 1)) if terminal else list(range(endpoint, endpoint + 3))
     if min(ids) < 0 or max(ids) >= len(times):
         raise ContractError('declared handoff phase has insufficient native context')
@@ -261,15 +307,22 @@ def _boundary(package: Path, *, terminal: bool, mode: str, profile: dict, phase_
     skin = [np.concatenate([points(frame,side) for side in ('left','right')])+
             (forward*distance if mode=='in_place' else np.zeros(3)) for frame,distance in zip(frames,travel)]
     tangent = endpoint_tangent(glb, animations[0]['name'], endpoint=endpoint, terminal=terminal)
-    motor_velocity = forward * ((travel[-1] - travel[-2]) / (times[ids[-1]] - times[ids[-2]]) if terminal
-                                else (travel[1] - travel[0]) / (times[ids[1]] - times[ids[0]])) if mode == 'in_place' else np.zeros(3)
+    if mode == 'in_place':
+        motor_velocity = _numeric(motor_velocity)
+        if motor_velocity.shape != (3,):
+            raise ContractError('handoff requires exact serialized motor velocity')
+    elif motor_velocity is not None:
+        raise ContractError('root-motion handoff cannot apply a separate motor velocity')
+    else:
+        motor_velocity = np.zeros(3)
     labels, skin_tangent = skinned_velocity(glb, profile, tangent)
     world_tangent = tangent.world_velocity[descendants, :3, 3] + motor_velocity
     skin_tangent = skin_tangent + motor_velocity
     exact = {'node_names':[tangent.names[index] for index in descendants],
              'world_velocity':world_tangent.tolist(), 'skin_labels':labels,
              'skin_velocity':skin_tangent.tolist(),
-             'angular_velocity':tangent.angular_velocity[descendants].tolist()}
+             'angular_velocity':tangent.angular_velocity[descendants].tolist(),
+             'interpolation':sorted(set(track.interpolation for track in parsed.values()))}
     data = {'times':times[ids],'positions':world,'rotations':rotations,'skin':skin,
         'contacts':{side:plan['samples'][endpoint]['feet'][side]['contact'] for side in ('left','right')}, 'exact':exact}
     topology = [(tangent.names[index], None if glb.parents[index] is None else tangent.names[int(glb.parents[index])])
@@ -306,12 +359,20 @@ def verify_handoff(transition: Path, steady: Path, *, root: Path) -> dict:
     before,after = paths if kind=='start' else paths[::-1]
     modes = {}
     for mode in ('root_motion','in_place'):
-        a,da,topology_a = _boundary(before,terminal=True,mode=mode,profile=profile,phase_s=phase if kind=='stop' else 0.)
-        b,db,topology_b = _boundary(after,terminal=False,mode=mode,profile=profile,phase_s=phase if kind=='start' else 0.)
+        before_phase = phase if kind=='stop' else 0.
+        after_phase = phase if kind=='start' else 0.
+        motor_a = _serialized_motor_velocity(before, terminal=True, phase_s=before_phase) if mode == 'in_place' else None
+        motor_b = _serialized_motor_velocity(after, terminal=False, phase_s=after_phase) if mode == 'in_place' else None
+        a,da,topology_a = _boundary(before,terminal=True,mode=mode,profile=profile,phase_s=before_phase,motor_velocity=motor_a)
+        b,db,topology_b = _boundary(after,terminal=False,mode=mode,profile=profile,phase_s=after_phase,motor_velocity=motor_b)
         if topology_a!=topology_b:
             raise ContractError('handoff motion-owned topology differs')
         modes[mode] = compare_boundaries(a,b,_numeric(tr['forward_axis'])*(da-db))
         modes[mode]['motion_owned_nodes'] = [name for name,_ in topology_a]
+        modes[mode]['serialized_motor_velocity_mps'] = {
+            'before': (np.zeros(3) if motor_a is None else motor_a).tolist(),
+            'after': (np.zeros(3) if motor_b is None else motor_b).tolist(),
+        }
     for p,expected in zip(paths,hashes):
         verify_package(p)
         if _digest(p/'manifest.json')!=expected:

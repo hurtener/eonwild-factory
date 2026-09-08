@@ -38,12 +38,13 @@ def _cubic_asset(
     channels: dict[tuple[int, str], tuple[np.ndarray, np.ndarray, np.ndarray]],
     *,
     clip_name: str = "cubic",
+    times: np.ndarray | None = None,
 ) -> Glb:
     profile = json.loads((ROOT / "catalog/contacts/heavy-biped.v9.json").read_text())
     base = Glb(ROOT / profile["source"]["path"])
     document = deepcopy(base.document)
     binary = bytearray(base.binary)
-    times = np.array([0.0, 2.0])
+    times = np.array([0.0, 2.0]) if times is None else np.asarray(times, dtype=float)
     time_accessor = _append_accessor(document, binary, times.reshape((-1, 1)), "SCALAR")
     samplers, animation_channels = [], []
     for (node, path), (incoming, values, outgoing) in sorted(channels.items()):

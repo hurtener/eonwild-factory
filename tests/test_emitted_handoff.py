@@ -1,10 +1,15 @@
 """Adversarial boundary tests; actual skinned joins are checked separately."""
+import json
 from copy import deepcopy
 from unittest.mock import patch
 import numpy as np
 import pytest
 from eonwild_motion.errors import ContractError
-from eonwild_motion.factory.handoff import compare_boundaries,require_pair,_skin_boundary
+from eonwild_motion.factory.emitted_tangent import endpoint_tangent
+from eonwild_motion.factory.handoff import _boundary,compare_boundaries,require_pair,_serialized_motor_velocity,_skin_boundary
+from eonwild_motion.glb.container import Glb
+from eonwild_motion.solve.whole_body_gait_transition import _build_glb
+from test_exact_emitted_tangent import ROOT, _asset_clip, _cubic_asset
 from eonwild_motion.planning.gait_transition import GaitTransition,build_transition_plan
 from eonwild_motion.planning.airborne_gait import AirborneGait
 
@@ -71,10 +76,12 @@ def test_quadratic_false_fail_is_diagnostic_not_exact_join_failure():
 def test_exact_handoff_evidence_is_bound_to_sampled_correspondence(case):
     a,b=pair()
     exact={'node_names':['node'], 'world_velocity':[[0.,0.,0.]],
-           'skin_labels':['skin'], 'skin_velocity':[[0.,0.,0.]], 'angular_velocity':[[0.,0.,0.]]}
+           'skin_labels':['skin'], 'skin_velocity':[[0.,0.,0.]], 'angular_velocity':[[0.,0.,0.]],
+           'interpolation':['CUBICSPLINE']}
     if case=='duplicate-label':
         exact={'node_names':['node','node'], 'world_velocity':[[0.,0.,0.],[0.,0.,0.]],
-               'skin_labels':['skin','skin'], 'skin_velocity':[[0.,0.,0.],[0.,0.,0.]], 'angular_velocity':[[0.,0.,0.],[0.,0.,0.]]}
+               'skin_labels':['skin','skin'], 'skin_velocity':[[0.,0.,0.],[0.,0.,0.]], 'angular_velocity':[[0.,0.,0.],[0.,0.,0.]],
+               'interpolation':['CUBICSPLINE']}
     a['exact']=exact;b['exact']=deepcopy(exact)
     with pytest.raises(ContractError, match='exact tangent'):
         compare_boundaries(a,b,[8,0,0])
@@ -186,3 +193,96 @@ def test_full_skin_timeline_corruption_cannot_hide_outside_boundary(case):
     elif case=='different-points':value[1]['feet']['left']['sole_points'].append({'point_m':[2,0,0]})
     with patch('eonwild_motion.factory.handoff._source_frames',return_value=(value,{})):
         with pytest.raises(ContractError):_skin_boundary(object(),{},'clip',times,[4,5,6])
+
+
+def _motor_package(tmp_path, root_motion: Glb, in_place: Glb):
+    profile = json.loads((ROOT / 'catalog/contacts/heavy-biped.v9.json').read_text())
+    root_name = profile['geometry']['landmarks']['root_node']
+    package = tmp_path / 'package'
+    package.mkdir()
+    (package / 'root_motion.glb').write_bytes(root_motion.raw)
+    (package / 'in_place.glb').write_bytes(in_place.raw)
+    (package / 'runtime.json').write_text(json.dumps({
+        'forward_axis':[0.,0.,1.], 'up_axis':[0.,1.,0.], 'rig_roles':{'root':root_name},
+    }))
+    (package / 'recipe.json').write_text(json.dumps({
+        'forward_axis':[0.,0.,2.], 'up_axis':[0.,1.,0.],
+    }))
+    return package, root_motion.name_to_node[root_name]
+
+
+def test_cubic_motor_uses_exact_serialized_root_tangents_not_key_slope(tmp_path):
+    profile = json.loads((ROOT / 'catalog/contacts/heavy-biped.v9.json').read_text())
+    base = Glb(ROOT / profile['source']['path'])
+    root = base.name_to_node[profile['geometry']['landmarks']['root_node']]
+    rotation = np.array([[0.,0.,0.,1.],[0.,0.,0.,1.]])
+    def clip(start_velocity, end_velocity):
+        return _cubic_asset({
+            (root,'translation'):(
+                np.array([[0.,0.,0.],[end_velocity,0.,0.]]),
+                np.array([[0.,0.,0.],[2.,0.,0.]]),
+                np.array([[start_velocity,0.,0.],[0.,0.,0.]]),
+            ),
+            (root,'rotation'):(np.zeros((2,4)),rotation,np.zeros((2,4))),
+        })
+    root_motion, in_place = clip(7.,11.), clip(1.,3.)
+    package, root = _motor_package(tmp_path, root_motion, in_place)
+    start = (endpoint_tangent(root_motion,'cubic',endpoint=0,terminal=False).world_velocity[root,:3,3]
+             - endpoint_tangent(in_place,'cubic',endpoint=0,terminal=False).world_velocity[root,:3,3])
+    end = (endpoint_tangent(root_motion,'cubic',endpoint=1,terminal=True).world_velocity[root,:3,3]
+           - endpoint_tangent(in_place,'cubic',endpoint=1,terminal=True).world_velocity[root,:3,3])
+    assert _serialized_motor_velocity(package,terminal=False) == pytest.approx(start)
+    assert _serialized_motor_velocity(package,terminal=True) == pytest.approx(end)
+    assert np.linalg.norm(start) > 5.
+    assert np.linalg.norm(end) > 7.
+    # Both clips move two metres over two seconds, so any adjacent-key or plan
+    # slope would be 1 m/s and cannot produce these endpoint motor velocities.
+
+
+def test_linear_motor_remains_supported_and_modes_bind_timeline(tmp_path):
+    linear, _ = _asset_clip()
+    package, _ = _motor_package(tmp_path, linear, Glb.from_bytes(linear.raw))
+    assert _serialized_motor_velocity(package,terminal=False) == pytest.approx([0.,0.,0.])
+    profile = json.loads((ROOT / 'catalog/contacts/heavy-biped.v9.json').read_text())
+    base = Glb(ROOT / profile['source']['path'])
+    root = base.name_to_node[profile['geometry']['landmarks']['root_node']]
+    different = _build_glb(
+        base,'exact-tangent',np.array([0.,.2,.4]),
+        {(root,'translation'):np.array([[0.,0.,0.],[.2,0.,0.],[.4,0.,0.]])},
+        'timeline-mismatch',{},
+    )
+    (package / 'in_place.glb').write_bytes(different)
+    with pytest.raises(ContractError,match='mode topology or timeline'):
+        _serialized_motor_velocity(package,terminal=False)
+
+
+def test_in_place_boundary_applies_supplied_exact_motor_not_plan_slope(tmp_path):
+    profile = json.loads((ROOT / 'catalog/contacts/heavy-biped.v9.json').read_text())
+    base = Glb(ROOT / profile['source']['path'])
+    root = base.name_to_node[profile['geometry']['landmarks']['root_node']]
+    times = np.array([0.,1.,2.])
+    zero3 = np.zeros((3,3))
+    zero4 = np.zeros((3,4))
+    unit = np.tile([0.,0.,0.,1.],(3,1))
+    glb = _cubic_asset({
+        (root,'translation'):(zero3,np.array([[0.,0.,0.],[.2,0.,0.],[2.,0.,0.]]),zero3),
+        (root,'rotation'):(zero4,unit,zero4),
+    },times=times)
+    package, _ = _motor_package(tmp_path, glb, Glb.from_bytes(glb.raw))
+    runtime = json.loads((package/'runtime.json').read_text())
+    runtime['ground_plane'] = profile['geometry']['ground']
+    (package/'runtime.json').write_text(json.dumps(runtime))
+    samples = [{'time_s':float(t),'root_forward_m':float(distance),
+                'feet':{'left':{'contact':True},'right':{'contact':False}}}
+               for t,distance in zip(times,[0.,.2,2.])]
+    (package/'plan.json').write_text(json.dumps({'samples':samples}))
+    fake_frames = [{'time_s':float(t)} for t in times]
+    motor = np.array([6.,0.,0.])
+    with (patch('eonwild_motion.factory.handoff._skin_boundary',return_value=fake_frames),
+          patch('eonwild_motion.factory.handoff.points',return_value=np.zeros((1,3))),
+          patch('eonwild_motion.factory.handoff.skinned_velocity',return_value=(['left:sole:0','right:sole:0'],np.zeros((2,3))))):
+        result,_,_ = _boundary(package,terminal=False,mode='in_place',profile=profile,motor_velocity=motor)
+    root_row = result['exact']['node_names'].index(profile['geometry']['landmarks']['root_node'])
+    local = endpoint_tangent(glb,'cubic',endpoint=0,terminal=False).world_velocity[root,:3,3]
+    assert result['exact']['world_velocity'][root_row] == pytest.approx(local+motor)
+    assert result['exact']['interpolation'] == ['CUBICSPLINE']
