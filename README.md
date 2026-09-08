@@ -55,6 +55,8 @@ cameras; native-speed playback remains pending. The exact LINEAR local-channel
 loop is `BLOCKED` at 3.231 mm/s against the unchanged 1 mm/s limit.
 Body timing is authored kinematics; mass-response physics is unavailable.
 See [the combined V9 report](reports/V9-ADULT-AXIAL-JAW-V9-001/README.md).
+The final SourceMotionQuery union passed 907 tests plus 21 subtests; see the
+[integration report](reports/V9-SOURCE-MOTION-QUERY-V9-INTEGRATION-001/README.md).
 
 Current explicit review candidates are `walk.v3`, `reverse-walk.v4`, `run.v4`,
 `sprint.v4`, `fast-walk.v2`, `tarbosaurus-pin-552-1-adult-walk.v9`,
