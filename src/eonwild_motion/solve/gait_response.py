@@ -136,9 +136,15 @@ def assemble_baseline_performance(
     )
     if not isinstance(parameters, Mapping):
         raise ContractError("baseline performance style requires parameters")
-    if "neutral_jaw_calibration" in parameters:
+    forbidden = {
+        "neutral_jaw_calibration",
+        "skin_refinement",
+        "canonical_support_anchors",
+    } & set(parameters)
+    if forbidden:
         raise ContractError(
-            "baseline performance style cannot contain source-bound neutral calibration"
+            "baseline performance style cannot contain source-bound calibration "
+            "or solver policy"
         )
     performance = load_performance(style_document)
     if performance.pelvis_forward_velocity_modulation_fraction is not None:
@@ -146,7 +152,12 @@ def assemble_baseline_performance(
             "baseline performance style cannot contain a gait-derived coefficient"
         )
     calibration = load_neutral_pose_profile(neutral_document)
-    effective = replace(performance, neutral_jaw_calibration=calibration)
+    effective = replace(
+        performance,
+        neutral_jaw_calibration=calibration,
+        skin_refinement=False,
+        canonical_support_anchors=None,
+    )
     canonical = (
         json.dumps(asdict(effective), indent=2, sort_keys=True, allow_nan=False) + "\n"
     ).encode()

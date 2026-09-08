@@ -11,7 +11,6 @@
     "pelvis_support_pitch_degrees": 1.2,
     "pelvis_sway_body_heights": 0.018,
     "pelvis_yaw_degrees": 2.0,
-    "skin_refinement": true,
     "support_directed_pelvis_carrier": true,
     "support_timed_axial_carrier": true,
     "support_timed_load_acceptance_carrier": true,

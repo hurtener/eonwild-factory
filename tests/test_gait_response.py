@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict
+from dataclasses import asdict, replace
 import json
 import math
 from pathlib import Path
@@ -199,15 +199,27 @@ def test_split_style_and_neutral_profile_reconstruct_v10_exactly():
         ).read_text()
     )
     assembled, receipt = assemble_baseline_performance(style, neutral)
+    assert assembled.skin_refinement is False
+    assert assembled.canonical_support_anchors is None
     resolved, _ = resolve_gait_response(assembled, gait(), POLICY)
-    historical = load_performance(
-        json.loads(
-            (
-                ROOT / "catalog/performance/heavy-biped.tarbosaurus-adult-walk.v9.json"
-            ).read_text()
-        )
+    historical = replace(
+        load_performance(
+            json.loads(
+                (
+                    ROOT
+                    / "catalog/performance/heavy-biped.tarbosaurus-adult-walk.v9.json"
+                ).read_text()
+            )
+        ),
+        canonical_support_anchors=True,
+        skin_refinement=True,
     )
-    assert asdict(resolved) == asdict(historical)
+    after_solve_policy = replace(
+        resolved,
+        canonical_support_anchors=True,
+        skin_refinement=True,
+    )
+    assert asdict(after_solve_policy) == asdict(historical)
     assert receipt == {
         "schema": "eonwild.motion.baseline-performance-resolution.v1",
         "neutral_pose": {
@@ -218,7 +230,7 @@ def test_split_style_and_neutral_profile_reconstruct_v10_exactly():
             ],
         },
         "effective_parameters_sha256": (
-            "42f811824e3d00917a04f5d2b2d4a1c7dc8e248502a57699ae5841c93bf3e988"
+            "c9cb7db2ff279011ef990b586c2dfe154a6028566b748291d42f228e252c8cdf"
         ),
     }
 
@@ -235,9 +247,15 @@ def test_split_profile_rejects_mixed_or_conflicting_calibration():
         ).read_text()
     )
     mixed = json.loads(json.dumps(style))
-    mixed["parameters"]["neutral_jaw_calibration"] = neutral["neutral_jaw_calibration"]
-    with pytest.raises(ContractError, match="cannot contain source-bound"):
-        assemble_baseline_performance(mixed, neutral)
+    for key, value in (
+        ("neutral_jaw_calibration", neutral["neutral_jaw_calibration"]),
+        ("skin_refinement", True),
+        ("canonical_support_anchors", True),
+    ):
+        mixed = json.loads(json.dumps(style))
+        mixed["parameters"][key] = value
+        with pytest.raises(ContractError, match="calibration or solver policy"):
+            assemble_baseline_performance(mixed, neutral)
     malformed = json.loads(json.dumps(neutral))
     malformed["source_geometry_sha256"] = "0" * 64
     with pytest.raises(ContractError, match="unsupported neutral-pose profile"):
