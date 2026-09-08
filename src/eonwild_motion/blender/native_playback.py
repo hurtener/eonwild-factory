@@ -15,7 +15,7 @@ from dataclasses import dataclass
 import hashlib
 import math
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 from ..errors import ContractError
 from ..glb.animation import TrsTrack, read_animation_tracks
@@ -37,9 +37,29 @@ def _source_animation(
 
 
 def requires_exact_cubic_playback(source: Path) -> bool:
-    """Return whether strict playback finds any serialized CUBICSPLINE TRS."""
-    _, tracks, _ = _source_animation(Path(source))
-    return any(track.interpolation == "CUBICSPLINE" for track in tracks.values())
+    """Return whether any serialized animation sampler uses CUBICSPLINE.
+
+    Detection deliberately supports legacy multi-clip LINEAR assets.  The
+    stricter one-animation/common-timeline contract belongs to the task-owned
+    cubic adapter and is applied only after this check finds cubic input.
+    """
+    animations = Glb(Path(source)).document.get("animations")
+    if animations is None:
+        return False
+    if not isinstance(animations, list):
+        raise ContractError("native playback animations metadata is malformed")
+    for animation in animations:
+        if not isinstance(animation, Mapping):
+            raise ContractError("native playback animation metadata is malformed")
+        samplers = animation.get("samplers")
+        if not isinstance(samplers, list):
+            raise ContractError("native playback animation samplers are malformed")
+        for sampler in samplers:
+            if not isinstance(sampler, Mapping):
+                raise ContractError("native playback animation sampler is malformed")
+            if sampler.get("interpolation", "LINEAR") == "CUBICSPLINE":
+                return True
+    return False
 
 
 def reject_stock_cubic_playback(source: Path, *, consumer: str) -> None:
@@ -217,12 +237,12 @@ def _detach_approximate_imported_actions(
 def import_gltf_for_native_playback(source: Path) -> ExactCubicPlayback | None:
     """Import one GLB and return an exact adapter only when cubic TRS exists."""
     source = Path(source).resolve()
-    glb, tracks, timeline = _source_animation(source)
-    if not any(track.interpolation == "CUBICSPLINE" for track in tracks.values()):
+    if not requires_exact_cubic_playback(source):
         import bpy
 
         bpy.ops.import_scene.gltf(filepath=str(source))
         return None
+    glb, tracks, timeline = _source_animation(source)
 
     import bpy
     from io_scene_gltf2.blender.imp.animation_node import BlenderNodeAnim

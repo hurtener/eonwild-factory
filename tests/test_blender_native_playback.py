@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 import struct
@@ -89,6 +90,18 @@ def test_linear_detection_preserves_the_existing_stock_path(tmp_path: Path) -> N
     assert requires_exact_cubic_playback(path) is False
     reject_stock_cubic_playback(path, consumer="test renderer")
     assert path.read_bytes() == original
+
+
+def test_approved_multiclip_linear_capsule_preserves_stock_path() -> None:
+    path = (
+        Path(__file__).resolve().parents[1]
+        / "legacy/capsules/v8.2/asset/tarbosaurus_v8_2_approved.glb"
+    )
+    original_sha = "a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5"
+    assert hashlib.sha256(path.read_bytes()).hexdigest() == original_sha
+    assert requires_exact_cubic_playback(path) is False
+    reject_stock_cubic_playback(path, consumer="legacy review renderer")
+    assert hashlib.sha256(path.read_bytes()).hexdigest() == original_sha
 
 
 @pytest.mark.parametrize("value", [True, float("nan"), float("inf"), -0.1, 1.1])
