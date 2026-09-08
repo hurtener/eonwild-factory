@@ -82,6 +82,75 @@ def test_complete_old_package_remains_inspectable_without_recompiling(candidate)
     assert result['production_approved'] is False
 
 
+@pytest.mark.parametrize('case', [
+    'status-missing', 'status-approved',
+    'production-missing', 'production-true', 'production-integer-zero',
+    'claims-missing', 'claims-malformed', 'claims-missing-name',
+    'claims-true', 'claims-integer-zero', 'claims-unknown-name',
+])
+def test_manifest_candidate_claims_fail_closed(candidate, tmp_path, case):
+    out = tmp_path / 'candidate'
+    shutil.copytree(candidate, out)
+    manifest_path = out / 'manifest.json'
+    manifest = json.loads(manifest_path.read_text())
+    if case == 'status-missing':
+        del manifest['status']
+    elif case == 'status-approved':
+        manifest['status'] = 'APPROVED'
+    elif case == 'production-missing':
+        del manifest['production_approved']
+    elif case == 'production-true':
+        manifest['production_approved'] = True
+    elif case == 'production-integer-zero':
+        manifest['production_approved'] = 0
+    elif case == 'claims-missing':
+        del manifest['claims']
+    elif case == 'claims-malformed':
+        manifest['claims'] = []
+    elif case == 'claims-missing-name':
+        del manifest['claims']['scientific']
+    elif case == 'claims-true':
+        manifest['claims']['biological'] = True
+    elif case == 'claims-integer-zero':
+        manifest['claims']['physical'] = 0
+    else:
+        manifest['claims']['visual'] = False
+    write_json(manifest_path, manifest)
+    with pytest.raises(ContractError, match='package metadata'):
+        verify_package(out)
+
+
+@pytest.mark.parametrize('case', [
+    'schema', 'visual-missing', 'visual-pass', 'unity-missing', 'unity-pass',
+    'production-missing', 'production-true', 'production-integer-zero',
+])
+def test_generated_validation_cannot_claim_external_approval(candidate, tmp_path, case):
+    out = tmp_path / 'candidate'
+    shutil.copytree(candidate, out)
+    validation_path = out / 'validation.json'
+    validation = json.loads(validation_path.read_text())
+    if case == 'schema':
+        validation['schema'] = 'eonwild.motion.factory-validation.v0'
+    elif case == 'visual-missing':
+        del validation['visual_review']
+    elif case == 'visual-pass':
+        validation['visual_review'] = 'PASS'
+    elif case == 'unity-missing':
+        del validation['unity_parity']
+    elif case == 'unity-pass':
+        validation['unity_parity'] = 'PASS'
+    elif case == 'production-missing':
+        del validation['production_approved']
+    elif case == 'production-true':
+        validation['production_approved'] = True
+    else:
+        validation['production_approved'] = 0
+    write_json(validation_path, validation)
+    rehash(out, 'validation.json')
+    with pytest.raises(ContractError, match='package metadata'):
+        verify_package(out)
+
+
 def test_animal_package_rejects_rehashed_emitted_scale_corruption(adult_candidate, tmp_path):
     out = tmp_path / 'candidate'
     shutil.copytree(adult_candidate, out)

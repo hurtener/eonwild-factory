@@ -20,11 +20,27 @@ _INPUTS = ('source', 'rig', 'program_profile', 'animal', 'contact_profile',
 
 def require_metadata(path: Path, manifest: dict) -> None:
     from .compiler import event_track, validate_plan
-    recipe, runtime, plan, lock = (read_json(path / name) for name in
-        ('recipe.json', 'runtime.json', 'plan.json', 'inputs.lock.json'))
+    recipe, runtime, plan, lock, validation = (read_json(path / name) for name in
+        ('recipe.json', 'runtime.json', 'plan.json', 'inputs.lock.json', 'validation.json'))
     def require(condition, reason):
         if not condition:
             raise ContractError('package metadata: ' + reason)
+    require(manifest.get('status') == 'CANDIDATE', 'package status is not CANDIDATE')
+    require(manifest.get('production_approved') is False,
+            'package cannot claim production approval')
+    claims = manifest.get('claims')
+    claim_names = {'physical', 'scientific', 'biological'}
+    require(isinstance(claims, dict) and set(claims) == claim_names
+            and all(claims[name] is False for name in claim_names),
+            'package claims must be the exact false candidate claim set')
+    require(validation.get('schema') == 'eonwild.motion.factory-validation.v1',
+            'unsupported validation data')
+    require(validation.get('visual_review') == 'PENDING',
+            'generated validation cannot claim visual review')
+    require(validation.get('unity_parity') == 'NOT_RUN',
+            'generated validation cannot claim Unity parity')
+    require(validation.get('production_approved') is False,
+            'generated validation cannot claim production approval')
     require(manifest.get('id') == recipe.get('id') and manifest.get('version') == recipe.get('version'),
             'recipe and package identity differ')
     require(recipe.get('schema') == 'eonwild.motion.factory-recipe.v1', 'unsupported recipe')
