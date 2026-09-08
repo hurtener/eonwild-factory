@@ -419,9 +419,10 @@ class SourceMotionQuery:
         if "performance" in self._plan:
             declare_pad_recovery_sample(_thaw(self._plan["parameters"]), row)
         if apply_clearance and self._transition_clearance is not None:
-            row = self._transition_clearance.resolve(
-                row,
-                integrity_proved=transition_clearance_integrity_proved,
+            row = (
+                self._transition_clearance._resolve_owned(row)
+                if transition_clearance_integrity_proved
+                else self._transition_clearance.resolve(row)
             )
         return row
 
@@ -835,9 +836,10 @@ class SourceMotionQuery:
                 )
             )
             if index is not None and self._transition_clearance is not None:
-                row = self._transition_clearance.resolve(
-                    row,
-                    integrity_proved=transition_clearance_integrity_proved,
+                row = (
+                    self._transition_clearance._resolve_owned(row)
+                    if transition_clearance_integrity_proved
+                    else self._transition_clearance.resolve(row)
                 )
         except GroundedTransitionClearanceUnavailable as exc:
             return SourceMotionUnavailable(

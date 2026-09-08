@@ -8,7 +8,7 @@ from eonwild_motion.solve.grounded_transition_clearance import (
 
 def test_material_vertex_switch_is_supported_when_minimum_gap_is_monotone():
     def measure(height):
-        # The minimum witness switches at 0.2 m, but both material branches
+        # The minimum witness switches at 0.0004 m, but both material branches
         # increase with target height and the lower envelope remains monotone.
         a = height - 0.0003
         b = 0.5 * height - 0.0001

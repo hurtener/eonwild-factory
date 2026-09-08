@@ -206,13 +206,13 @@ class GroundedTransitionClearanceResolver:
             lambda height: self._gap(row, side, height), ceiling, side
         )
 
-    def resolve(
-        self, row: Mapping[str, Any], *, integrity_proved: bool = False
-    ) -> dict[str, Any]:
-        if type(integrity_proved) is not bool:
-            raise ContractError("transition clearance integrity proof flag must be boolean")
-        if not integrity_proved:
-            self._law._validate_integrity()
+    def resolve(self, row: Mapping[str, Any]) -> dict[str, Any]:
+        """Resolve one row after independently validating the owned context."""
+        self._law._validate_integrity()
+        return self._resolve_owned(row)
+
+    def _resolve_owned(self, row: Mapping[str, Any]) -> dict[str, Any]:
+        """Resolve after the containing constant law proved this binding."""
         key = _digest(row)
         cached = self._cache.get(key)
         if cached is not None:

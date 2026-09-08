@@ -145,7 +145,6 @@ def test_transition_clearance_resolver_is_bound_and_returns_detached_rows():
     endpoint = query.evaluate(float(plan["duration_s"]))
     assert endpoint.status == "AVAILABLE"
     assert endpoint.row["feet"] == plan["samples"][-1]["feet"]
-
     mismatched = deepcopy(plan)
     mismatched["performance"]["pelvis_yaw_degrees"] = 3.0
     with pytest.raises(
@@ -154,6 +153,11 @@ def test_transition_clearance_resolver_is_bound_and_returns_detached_rows():
         SourceMotionQuery(
             **dict(kwargs, plan=mismatched), transition_clearance=resolver
         )
+    raw_law._query._source.document["nodes"][0]["translation"] = [9, 9, 9]
+    with pytest.raises(
+        ContractError, match="differs from its validated request|frozen geometry"
+    ):
+        resolver.resolve(again)
 
 
 @pytest.fixture(scope="module")
