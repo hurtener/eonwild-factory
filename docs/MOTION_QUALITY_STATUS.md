@@ -93,8 +93,12 @@ The current host uses the pinned macOS arm64 toolchain. Source tests,
 individual candidates, direct joins and native-media review are recorded separately.
 A passing individual clip never grants connected locomotion or biological approval.
 At source `7920c59dd354027b8784483bb208fd0e6229cd91`, 136 focused articulation and
-handoff tests passed. This is a focused local result; the current full suite and
-remote CI have not yet run for that exact head.
+handoff tests passed. The complete local suite then passed at exact checkout
+`d6716a15f815480cee525381613dff526f9a844b`, whose engine bytes are identical to
+`7920c59`: 647 tests plus 21 subtests passed in 321.11 seconds with the real
+pinned tools and a clean tracked checkout. See the
+[source-bound full-suite report](../reports/V9-FULL-SUITE-D6716A1-001/README.md).
+Remote CI has not run for this source.
 
 ## Verification and immutable legacy boundary
 

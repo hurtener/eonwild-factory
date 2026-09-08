@@ -93,12 +93,17 @@ are `0.001202134 m/s` and `0.001199715 m/s`. The unchanged limit is
 [exact-source pair report](../reports/V9-NATIVE-CLOCK-PAIR-STATUS-001/README.md)
 for report, handoff, package and engine-lock hashes.
 
-The same exact head passed 136 focused articulation and handoff tests. That is
-not a current full-suite or remote-CI result. Native media review remains
-`PENDING`, Unity validation remains `NOT_RUN`, and production approval remains
-false. The adult recovery correction has not been visually accepted, and these
-mechanical results do not validate anatomy or biology. The older remote baseline
-in [MOTION_QUALITY_STATUS.md](MOTION_QUALITY_STATUS.md) remains labeled as an
+The pair source passed 136 focused articulation and handoff tests. A subsequent
+complete local suite at exact checkout
+`d6716a15f815480cee525381613dff526f9a844b`, with engine bytes identical to the
+pair source, passed 647 tests plus 21 subtests in 321.11 seconds using the real
+pinned tools. See the
+[source-bound full-suite report](../reports/V9-FULL-SUITE-D6716A1-001/README.md).
+Remote CI has not run for this source. Native media review remains `PENDING`,
+Unity validation remains `NOT_RUN`, and production approval remains false. The
+adult recovery correction has not been visually accepted, and these mechanical
+results do not validate anatomy or biology. The older remote baseline in
+[MOTION_QUALITY_STATUS.md](MOTION_QUALITY_STATUS.md) remains labeled as an
 earlier result.
 
 Fast-walk v2 was already integrated at the recovered branch head. Reopened
