@@ -1,0 +1,58 @@
+{
+  "artifacts": {
+    "junit.xml": {
+      "bytes": 127638,
+      "sha256": "5628439e0414387c1c254a1f94db60bd3a35e830f12f8371abb96beeac49414d"
+    },
+    "pytest.log": {
+      "bytes": 1674,
+      "sha256": "cb0e41cd81262b38e7a2d9a7cb13f5c02ad35782e64075e255d410aabea2ed62"
+    }
+  },
+  "claims_excluded": [
+    "recipe activation",
+    "source continuity approval",
+    "native or Unity approval",
+    "rerender evidence"
+  ],
+  "code_head": "806e3398c0f41a3c9c0a9dd2707887c284267611",
+  "code_tree": "679f0c0367ab75bee406a4df2b28e29cb99ed6b8",
+  "command": ".venv/bin/python -m pytest -q tests --junitxml=/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/review-server-provider-final-suite-806e3398/junit.xml",
+  "parents": [
+    "c2e610d8a5d1913dec1f90a55963ad2bbebb8cef",
+    "f847630b901d86b4aeb895fe50fd9523b13d79e6"
+  ],
+  "result": {
+    "elapsed_seconds": 408.98,
+    "errors": 0,
+    "exit_status": 0,
+    "failures": 0,
+    "junit_tests_total": 949,
+    "junit_time_seconds": 408.924,
+    "junit_timestamp": "2026-09-08T09:57:40.035952-03:00",
+    "pytest_cases_passed": 928,
+    "skipped": 0,
+    "subtests_passed": 21
+  },
+  "schema": "eonwild.final-suite-receipt.v1",
+  "scope": "One mandatory real-tools suite for the merged local review server and opt-in canonical support-anchor provider code union.",
+  "tools": {
+    "blender": {
+      "path": "/opt/homebrew/bin/blender",
+      "version": "5.2.0 LTS"
+    },
+    "gltf_validator": {
+      "path": "/opt/homebrew/bin/gltf_validator",
+      "version": "2.0.0-dev.3.10"
+    },
+    "pytest": {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/worktrees/eonwild-review-server-provider-integration/.venv/bin/python -m pytest",
+      "version": "9.1.1"
+    },
+    "python": {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/worktrees/eonwild-review-server-provider-integration/.venv/bin/python",
+      "version": "3.12.10"
+    }
+  },
+  "worktree": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/worktrees/eonwild-review-server-provider-integration"
+}
