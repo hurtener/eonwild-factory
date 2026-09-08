@@ -1056,6 +1056,10 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
             "measured_source_minimum_gap_m": (
                 neutral_jaw_admission.measured_source_minimum_gap_m),
             "admitted_geometry_minimum_gap_m": neutral_jaw_admission.current_minimum_gap_m,
+            "measured_source_body_height_m": (
+                neutral_jaw_admission.measured_source_body_height_m),
+            "admitted_geometry_body_height_m": neutral_jaw_admission.current_body_height_m,
+            "admitted_uniform_scale": neutral_jaw_admission.admitted_uniform_scale,
             "classification": (
                 "authored engineering neutral-pose clearance; not tooth contact, "
                 "biological measurement, or visual approval"),

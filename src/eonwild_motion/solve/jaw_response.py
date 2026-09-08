@@ -3,13 +3,13 @@ from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-import hashlib
 import math
 
 import numpy as np
 
 from ..contact_gauge import _read_glb_accessor
 from ..errors import ContractError
+from ..factory.source_identity import validate_frozen_source_with_uniform_scale
 from ..glb.container import Glb
 from ..layers.leg_contact_resolve_v3 import (
     _qinv,
@@ -18,6 +18,7 @@ from ..layers.leg_contact_resolve_v3 import (
     _qrotate,
     _rotation_from_matrix,
     _world_matrices,
+    _world_position,
 )
 from ..planning.jaw_response import NeutralJawCalibration
 
@@ -29,6 +30,9 @@ class AdmittedNeutralJaw:
     close_degrees: float
     measured_source_minimum_gap_m: float
     current_minimum_gap_m: float
+    measured_source_body_height_m: float
+    current_body_height_m: float
+    admitted_uniform_scale: float
 
 
 def _unit(value, label: str) -> np.ndarray:
@@ -45,15 +49,24 @@ def _semantic_jaw(source: Glb, roles: Mapping) -> tuple[int, int]:
     if not isinstance(roles, Mapping):
         raise ContractError("neutral jaw requires semantic rig roles")
     head_name, jaw_name = roles.get("head"), roles.get("jaw_lower")
-    other_scalar_roles = {
-        value for key, value in roles.items()
-        if key not in {"head", "jaw_lower"} and isinstance(value, str)
+    def names(value):
+        if isinstance(value, str):
+            return (value,)
+        if isinstance(value, Mapping):
+            return tuple(name for item in value.values() for name in names(item))
+        if isinstance(value, Sequence) and not isinstance(value, (str, bytes)):
+            return tuple(name for item in value for name in names(item))
+        raise ContractError("neutral jaw semantic roles must contain node-name containers")
+
+    other_role_names = {
+        name for key, value in roles.items() if key not in {"head", "jaw_lower"}
+        for name in names(value)
     }
     if (not isinstance(head_name, str) or not head_name
             or not isinstance(jaw_name, str) or not jaw_name
             or head_name == jaw_name
-            or head_name in other_scalar_roles
-            or jaw_name in other_scalar_roles
+            or head_name in other_role_names
+            or jaw_name in other_role_names
             or head_name not in source.name_to_node
             or jaw_name not in source.name_to_node):
         raise ContractError("neutral jaw requires distinct admitted head and lower-jaw roles")
@@ -68,6 +81,31 @@ def _semantic_jaw(source: Glb, roles: Mapping) -> tuple[int, int]:
     if parent != head:
         raise ContractError("semantic lower jaw must descend from the semantic head")
     return head, jaw
+
+
+def _semantic_body_height(source: Glb, roles: Mapping, up) -> float:
+    up_array = _unit(up, "up axis")
+    try:
+        pelvis = source.name_to_node[roles["pelvis"]]
+        toe_nodes = [
+            source.name_to_node[name]
+            for leg in roles["legs"].values()
+            for chain in leg["toeChains"]
+            for name in chain
+        ]
+    except (KeyError, TypeError, AttributeError) as exc:
+        raise ContractError("neutral jaw calibration requires semantic body-height roles") from exc
+    if not toe_nodes:
+        raise ContractError("neutral jaw calibration requires semantic toe geometry")
+    worlds = _world_matrices(
+        source, source.rest_translation, source.rest_rotation, source.rest_scale)
+    pelvis_height = float(np.asarray(_world_position(worlds[pelvis])) @ up_array)
+    floor = min(float(np.asarray(_world_position(worlds[node])) @ up_array)
+                for node in toe_nodes)
+    height = pelvis_height - floor
+    if not math.isfinite(height) or height <= 0:
+        raise ContractError("neutral jaw semantic body height must be positive")
+    return height
 
 
 def _bound_skin_data(source: Glb, calibration: NeutralJawCalibration):
@@ -226,25 +264,34 @@ def admit_neutral_jaw(
 ) -> AdmittedNeutralJaw:
     if not isinstance(calibration, NeutralJawCalibration):
         raise ContractError("neutral jaw calibration must be typed")
-    source_sha256 = hashlib.sha256(source.raw).hexdigest()
-    if source_sha256 != calibration.source_geometry_sha256:
-        raise ContractError("neutral jaw calibration source geometry hash is stale")
-    raw_source = Glb.from_bytes(source.raw)
+    raw_source, uniform_scale = validate_frozen_source_with_uniform_scale(
+        source, calibration.source_geometry_sha256)
     raw_jaw, raw_axis, measured_gap = _posed_gap(
         raw_source, roles, calibration, forward, up)
+    measured_height = _semantic_body_height(raw_source, roles, up)
     tolerance = max(1e-9, calibration.measured_minimum_gap_m * 1e-7)
     if abs(measured_gap - calibration.measured_minimum_gap_m) > tolerance:
         raise ContractError("neutral jaw source gap evidence does not reproduce")
+    if abs(measured_height - calibration.measured_body_height_m) > max(1e-9, measured_height * 1e-9):
+        raise ContractError("neutral jaw source body-height evidence does not reproduce")
     jaw, local_axis, current_gap = _posed_gap(
         source, roles, calibration, forward, up)
     if jaw != raw_jaw:
         raise ContractError("neutral jaw semantic binding changed after source admission")
+    current_height = _semantic_body_height(source, roles, up)
+    if (not np.allclose(local_axis, raw_axis, rtol=0, atol=2e-7)
+            or abs(current_gap - measured_gap * uniform_scale) > max(1e-9, current_gap * 1e-7)
+            or abs(current_height - measured_height * uniform_scale) > max(1e-9, current_height * 1e-9)):
+        raise ContractError("neutral jaw admitted scale does not preserve calibrated geometry")
     return AdmittedNeutralJaw(
         node=jaw,
         local_axis=local_axis,
         close_degrees=float(calibration.close_degrees),
         measured_source_minimum_gap_m=measured_gap,
         current_minimum_gap_m=current_gap,
+        measured_source_body_height_m=measured_height,
+        current_body_height_m=current_height,
+        admitted_uniform_scale=uniform_scale,
     )
 
 
@@ -265,7 +312,7 @@ def compose_jaw_rotation(
             or not 0 <= gain <= 1):
         raise ContractError("jaw response exceeds the authored envelope")
     axis = _unit(local_axis, "local hinge axis")
-    degrees = gain * (breathing_gape_degrees - neutral_close_degrees)
+    degrees = gain * breathing_gape_degrees - neutral_close_degrees
     return _qmul(
         tuple(base_rotation),
         _qrotvec(tuple(axis * math.radians(degrees))),

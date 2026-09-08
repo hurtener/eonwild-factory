@@ -20,7 +20,12 @@ from eonwild_motion.planning.airborne_gait import AirborneGait
 from eonwild_motion.planning.grounded_gait import build_grounded_plan, load_grounded_gait
 from eonwild_motion.planning.jaw_response import load_neutral_jaw_calibration
 from eonwild_motion.solve.airborne_gait import solve_airborne_gait
-from eonwild_motion.solve.jaw_response import _posed_gap, admit_neutral_jaw
+from eonwild_motion.solve.jaw_response import (
+    _posed_gap,
+    _semantic_body_height,
+    admit_neutral_jaw,
+    compose_jaw_rotation,
+)
 from eonwild_motion.solve.performance import decorate_plan, load_performance
 from eonwild_motion.solve.skin_rig import SkinRig
 from eonwild_motion.solve.whole_body_gait_transition import _encode
@@ -59,9 +64,13 @@ def test_profile_is_exactly_source_bound_and_reopens_positive_clearance():
     admitted = admit_neutral_jaw(
         source, roles, calibration(), (0.0, 0.0, 1.0), (0.0, 1.0, 0.0))
     assert hashlib.sha256(source.raw).hexdigest() == SOURCE_SHA
-    assert admitted.close_degrees == pytest.approx(50.10730272766756, abs=1e-12)
+    assert admitted.close_degrees == pytest.approx(50.03933635803102, abs=1e-12)
     assert admitted.measured_source_minimum_gap_m == pytest.approx(
-        0.0034262633758470606, abs=2e-12)
+        0.003986087368516689, abs=2e-12)
+    assert admitted.measured_source_body_height_m == pytest.approx(
+        2.657391579010845, abs=2e-12)
+    ratio = admitted.measured_source_minimum_gap_m / admitted.measured_source_body_height_m
+    assert ratio == pytest.approx(0.0015, abs=2e-15)
     assert admitted.current_minimum_gap_m > 0
     assert np.asarray(admitted.local_axis) == pytest.approx([1.0, 0.0, 0.0], abs=2e-7)
 
@@ -79,6 +88,10 @@ def test_v7_performance_adds_only_the_bound_neutral_jaw_calibration():
         "abd44cbff9a77ffb556764fdb100d58516907fc8314620a515f4e2ba7dee115c")
     assert reference["diagnostic_report_sha256"] == (
         "9d9abfcd7c0b9b10c663b9d952e0e7cbe7e39e011f11cbdec2d1007551171eec")
+    assert reference["normalized_calibration_sha256"] == (
+        "b5d0727f359ed32b2525b4205ebe5cf746405be1306b39aa0f40694d50e2f743")
+    assert reference["normalized_calibration_script_sha256"] == (
+        "4aa34df7b9f18292cf6ea8e6c0e32c390e814d0320e61e287e176a43ae13ff54")
 
 
 def test_frozen_mapping_and_sequence_payload_load_and_caller_mutation_isolated():
@@ -130,6 +143,31 @@ def test_missing_or_forged_semantic_jaw_binding_rejects():
             admit_neutral_jaw(source, changed, calibration(), (0, 0, 1), (0, 1, 0))
 
 
+@pytest.mark.parametrize("role,path", [
+    ("neck", (0,)),
+    ("spine", (1,)),
+    ("tail", (2,)),
+    ("legs", ("left", "toeChains", 0, 1)),
+])
+def test_head_and_jaw_cannot_masquerade_inside_nested_semantic_roles(role, path):
+    source, roles = source_and_roles()
+    changed = deepcopy(roles)
+    target = changed[role]
+    for key in path[:-1]:
+        target = target[key]
+    target[path[-1]] = roles["jaw_lower"]
+    with pytest.raises(ContractError, match="distinct admitted"):
+        admit_neutral_jaw(source, changed, calibration(), (0, 0, 1), (0, 1, 0))
+
+
+def test_jaw_admission_rejects_cached_rest_pose_mutation_despite_frozen_raw_hash():
+    source, roles = source_and_roles()
+    jaw = source.name_to_node[roles["jaw_lower"]]
+    source.rest_rotation[jaw] = (0.043619387, 0.0, 0.0, 0.999048222)
+    with pytest.raises(ContractError, match="cached source state"):
+        admit_neutral_jaw(source, roles, calibration(), (0, 0, 1), (0, 1, 0))
+
+
 def test_renamed_rotated_translated_scaled_source_uses_explicit_admitted_frame():
     source, roles = source_and_roles()
     data = deepcopy(source.document)
@@ -147,10 +185,12 @@ def test_renamed_rotated_translated_scaled_source_uses_explicit_admitted_frame()
     forward = (math.sin(angle), 0.0, math.cos(angle))
     old = calibration()
     _, _, measured = _posed_gap(changed, changed_roles, old, forward, (0, 1, 0))
+    measured_height = _semantic_body_height(changed, changed_roles, (0, 1, 0))
     rebound = replace(
         old,
         source_geometry_sha256=hashlib.sha256(changed.raw).hexdigest(),
-        measured_body_height_m=measured / old.clearance_body_heights,
+        clearance_body_heights=measured / measured_height,
+        measured_body_height_m=measured_height,
         measured_minimum_gap_m=measured,
     )
     admitted = admit_neutral_jaw(changed, changed_roles, rebound, forward, (0, 1, 0))
@@ -220,6 +260,26 @@ def test_neutral_and_breathing_compose_once_on_actual_rig():
     dot = abs(float(np.dot(neutral_q, breathing_q)
                     / (np.linalg.norm(neutral_q) * np.linalg.norm(breathing_q))))
     assert math.degrees(2 * math.acos(min(1.0, dot))) == pytest.approx(2.0, abs=2e-5)
+
+
+def test_neutral_closure_is_constant_while_only_breathing_tracks_gain():
+    base = (0.0, 0.0, 0.0, 1.0)
+    axis = (1.0, 0.0, 0.0)
+
+    def signed_x_degrees(value):
+        return math.degrees(2 * math.atan2(value[0], value[3]))
+
+    neutral = calibration().close_degrees
+    for gain in (0.0, 0.25, 1.0):
+        no_breath = compose_jaw_rotation(
+            base, axis, neutral_close_degrees=neutral,
+            breathing_gape_degrees=0.0, gain=gain)
+        with_breath = compose_jaw_rotation(
+            base, axis, neutral_close_degrees=neutral,
+            breathing_gape_degrees=4.0, gain=gain)
+        assert signed_x_degrees(no_breath) == pytest.approx(-neutral, abs=1e-12)
+        assert signed_x_degrees(with_breath) == pytest.approx(
+            -neutral + 4.0 * gain, abs=1e-12)
 
 
 def test_omitted_and_zero_calibration_preserve_plan_identity():
