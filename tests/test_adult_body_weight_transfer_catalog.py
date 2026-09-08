@@ -162,5 +162,6 @@ def test_adult_body_candidates_are_checked_alongside_v3_in_animal_benchmarks(mon
         "tarbosaurus-pin-552-1-adult-walk.v3",
         "tarbosaurus-pin-552-1-adult-walk.v5",
         "tarbosaurus-pin-552-1-adult-walk.v6",
+        "tarbosaurus-pin-552-1-adult-walk.v7",
         "tarbosaurus-pin-552-1-adult-fast-walk-recovery.v3",
     ]
