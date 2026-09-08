@@ -47,21 +47,23 @@ the grounded walk. See [animal configuration](docs/ANIMAL_CONFIGURATION.md)
 for the reusable data contract and its current biomechanical limits.
 
 The latest body-response review candidate is
-`recipes/heavy-biped/tarbosaurus-pin-552-1-adult-walk.v7.json`. It preserves the
-v6 leg and body response and adds a periodic support-timed pelvis-forward speed
-carrier with zero net travel. Host review of 370 rendered frames and five
-paired native-speed playbacks found a modest travel-rhythm improvement, while
-whole-body polish is still required for the requested heavy-animal effort.
-Mass-response physics is not implemented. See
-[the v7 report](reports/V9-ADULT-SUPPORT-SPEED-V7-001/README.md).
+`recipes/heavy-biped/tarbosaurus-pin-552-1-adult-walk.v9.json`. It preserves the
+reviewed V8 bind geometry, gait, legs, contacts, articulation, travel and
+configured amplitudes, then combines the support-timed axial clock with the calibrated
+neutral jaw. The host inspected all 370 rendered frames across five locked
+cameras; native-speed playback remains pending. The exact LINEAR local-channel
+loop is `BLOCKED` at 3.231 mm/s against the unchanged 1 mm/s limit.
+Body timing is authored kinematics; mass-response physics is unavailable.
+See [the combined V9 report](reports/V9-ADULT-AXIAL-JAW-V9-001/README.md).
+The final SourceMotionQuery union passed 907 tests plus 21 subtests; see the
+[integration report](reports/V9-SOURCE-MOTION-QUERY-V9-INTEGRATION-001/README.md).
 
 Current explicit review candidates are `walk.v3`, `reverse-walk.v4`, `run.v4`,
-`sprint.v4`, `fast-walk.v2`, `tarbosaurus-pin-552-1-adult-walk.v7`,
+`sprint.v4`, `fast-walk.v2`, `tarbosaurus-pin-552-1-adult-walk.v9`,
 `tarbosaurus-pin-552-1-adult-fast-walk-recovery.v3`, `feeding.v2`, and
 `bite-miss.v2`, alongside `idle.v1`, `alert.v1`, and `call.v1`. Historical
-adult v3 and body diagnostics v5/v6 remain in CI as regression witnesses. The
-eight
-start/stop recipes are now `.v3`, bound to those exact sustained gait/performance
+adult v3 and body diagnostics v5/v6/v7/v8 remain in CI as regression witnesses.
+The eight start/stop recipes are now `.v3`, bound to those exact sustained gait/performance
 inputs. All remain candidates, not automatically accepted animations. Passing
 the individual start, steady-gait and stop clips is insufficient: the permanent
 transition-pair jobs independently check both actual

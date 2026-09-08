@@ -104,8 +104,7 @@ approval are absent. See
 [reports/V9-ADULT-SAGITTAL-RESPONSE-V6-001](../reports/V9-ADULT-SAGITTAL-RESPONSE-V6-001/README.md).
 The v5 Candidate B report remains a historical diagnostic.
 
-The latest body-response review candidate is
-`tarbosaurus-pin-552-1-adult-walk.v7`. It retains v6 and adds a periodic
+The v7 body-response review candidate retains v6 and adds a periodic
 support-timed pelvis-forward speed carrier with zero net travel. The host
 inspected all 370 rendered frames across five native-time views and completed
 all five paired v6/v7 native-speed playbacks. The motion shows a modest
@@ -116,6 +115,20 @@ is `BLOCKED` at `3.2116449766123154 mm/s` against the unchanged `1 mm/s`
 limit. This remains authored kinematics without force, COM, inertia or mass
 simulation. See
 [reports/V9-ADULT-SUPPORT-SPEED-V7-001](../reports/V9-ADULT-SUPPORT-SPEED-V7-001/README.md).
+
+The latest combined review candidate is
+`tarbosaurus-pin-552-1-adult-walk.v9`. V8 preserves the recovered, skin-aligned
+bind geometry; v9 keeps its gait, legs, contacts, articulation, root travel and
+configured amplitudes while enabling the reviewed support-timed axial clock and
+neutral-jaw calibration. The host inspected all 370 rendered frames across five
+byte-identical camera locks and found the bilateral recovery and support-timed
+chest carriage visible, with no gross mesh rupture or adjacent-frame body jump.
+Native-speed playback remains `PENDING_MAC_UI_LOCK`, so perceived weight is not
+accepted. The exact emitted LINEAR translation loop remains `BLOCKED` at
+`3.23101227406632 mm/s` against the unchanged `1 mm/s` limit. This is authored
+body timing; mass physics, measured force, Unity parity and production approval
+remain unavailable. See
+[reports/V9-ADULT-AXIAL-JAW-V9-001](../reports/V9-ADULT-AXIAL-JAW-V9-001/README.md).
 
 The exact integrated source `5304b1967ad350737cf7e9ee6555a5f4de9e9bff`
 passed 658 tests plus 21 subtests in 225.75 seconds. The new adult v3 catalog

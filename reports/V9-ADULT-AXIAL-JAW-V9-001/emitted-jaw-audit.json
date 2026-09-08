@@ -1,0 +1,61 @@
+{
+  "schema": "eonwild.motion.host-emitted-jaw-clearance.v1",
+  "manifest_sha256": "1b89ef55a89be040e12eb714ee391f31c5fca8f4b896bbe722e1eb26d5872b83",
+  "source_head": "2c5dc911d15e60b4a37a0d6b9248fa547168672b",
+  "engine_lock_all_files_verified": true,
+  "scope": "Actual reopened GLB all-key all-influence LBS at the declared jaw surface witnesses. Positive quantile gaps are engineering surface witnesses, not tooth collision, biological validity or dynamic balance.",
+  "modes": {
+    "root_motion": {
+      "sha256": "db5b2123e156fa218cc426cf8774972a8c02f9cfce7eea9c80fcf91a8c129ebe",
+      "sample_count": 297,
+      "selected_vertices": 72,
+      "local_channels_changed_from_closed_body_only": [
+        [
+          "Bone_074",
+          "rotation"
+        ]
+      ],
+      "all_other_channels_and_key_times_identical": true,
+      "world_up_gap_minmax_m": [
+        -0.0035132359656087075,
+        0.09750132939655964
+      ],
+      "head_carried_up_gap_minmax_m": [
+        0.003426268953839351,
+        0.09976700140297412
+      ],
+      "head_carried_worst_witness": {
+        "index": 238,
+        "time_s": 1.9779729843139648,
+        "bin": 2
+      },
+      "positive_head_carried_gap_all_keys": true
+    },
+    "in_place": {
+      "sha256": "5a16382521ebf06e73662b37d53151048df5c7f430b776fb7950d2c480abec51",
+      "sample_count": 297,
+      "selected_vertices": 72,
+      "local_channels_changed_from_closed_body_only": [
+        [
+          "Bone_074",
+          "rotation"
+        ]
+      ],
+      "all_other_channels_and_key_times_identical": true,
+      "world_up_gap_minmax_m": [
+        -0.0035132359656087075,
+        0.09750132939655964
+      ],
+      "head_carried_up_gap_minmax_m": [
+        0.003426268953839351,
+        0.09976700140297368
+      ],
+      "head_carried_worst_witness": {
+        "index": 238,
+        "time_s": 1.9779729843139648,
+        "bin": 2
+      },
+      "positive_head_carried_gap_all_keys": true
+    }
+  }
+}
