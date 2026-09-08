@@ -14,7 +14,7 @@ from typing import Any, Mapping
 
 from ..errors import ContractError
 from .airborne_gait import rounded_swing_height, sampled_handoff_phase
-from .foot_articulation import recovery_pitch
+from .foot_articulation import rate_limited_recovery_gain, recovery_pitch
 from .parameters import gait_parameters
 
 
@@ -40,6 +40,7 @@ class GroundedGait:
     foot_recovery_pitch_degrees: float = 0.0
     metatarsal_recovery_world_degrees_from_down: float | None = None
     metatarsal_recovery_release_fraction: float | None = None
+    metatarsal_recovery_carrier: str | None = None
     pad_recovery_pitch_degrees: float | None = None
     push_off_pitch_degrees: float = 0.0
     push_off_start_fraction: float = 0.60
@@ -57,6 +58,11 @@ class GroundedGait:
                 if value is not None and value != 'stance_vault_proxy':
                     raise ContractError(
                         "grounded pelvis height carrier must be stance_vault_proxy or null")
+                continue
+            if key == 'metatarsal_recovery_carrier':
+                if value is not None and value != 'rate_limited_c2':
+                    raise ContractError(
+                        'grounded metatarsal recovery carrier must be rate_limited_c2 or null')
                 continue
             if key == 'centered_stance':
                 if type(value) is not bool:
@@ -85,8 +91,11 @@ class GroundedGait:
                 and not -90 <= self.metatarsal_recovery_world_degrees_from_down <= 90):
             raise ContractError("grounded world metatarsal recovery target must lie within -90..90 degrees")
         if ((self.metatarsal_recovery_world_degrees_from_down is None)
-                != (self.metatarsal_recovery_release_fraction is None)):
+            != (self.metatarsal_recovery_release_fraction is None)):
             raise ContractError("grounded world metatarsal recovery target and release must be authored together")
+        if (self.metatarsal_recovery_carrier is not None
+            and self.metatarsal_recovery_world_degrees_from_down is None):
+            raise ContractError("grounded metatarsal recovery carrier requires a world target and release")
         if self.metatarsal_recovery_release_fraction is not None:
             peak = self.toe_recovery_peak_fraction or self.rounded_swing_peak_fraction or .42
             if not peak < self.metatarsal_recovery_release_fraction <= .9:
@@ -167,8 +176,10 @@ def sample_grounded_gait(gait: GroundedGait, time_s: float, body_height_m: float
         if not contact and gait.metatarsal_recovery_world_degrees_from_down is not None:
             peak = gait.toe_recovery_peak_fraction or gait.rounded_swing_peak_fraction or .42
             feet[side]["metatarsal_recovery_world_degrees_from_down"] = gait.metatarsal_recovery_world_degrees_from_down
-            feet[side]["metatarsal_recovery_gain"] = -recovery_pitch(
-                swing, 1.0, peak, gait.metatarsal_recovery_release_fraction)
+            feet[side]["metatarsal_recovery_gain"] = (
+                rate_limited_recovery_gain(swing, peak, gait.metatarsal_recovery_release_fraction)
+                if gait.metatarsal_recovery_carrier == 'rate_limited_c2' else
+                -recovery_pitch(swing, 1.0, peak, gait.metatarsal_recovery_release_fraction))
     support = sum(int(foot["contact"]) for foot in feet.values())
     if support == 0:
         raise ContractError("grounded program produced unsupported flight")

@@ -12,6 +12,7 @@ from eonwild_motion.glb.container import Glb
 from eonwild_motion.planning.grounded_gait import (
     GroundedGait, build_grounded_plan, sample_grounded_gait,
 )
+from eonwild_motion.planning.foot_articulation import rate_limited_recovery_gain
 from eonwild_motion.planning.gait_transition import (
     GaitTransition, build_transition_plan, declared_handoff_phase,
 )
@@ -78,6 +79,50 @@ def test_grounded_world_target_is_c2_and_omission_preserves_old_plan():
     peak = sample_grounded_gait(gait, start + .42 * swing_duration, 2)["feet"]["left"]
     assert peak["metatarsal_recovery_gain"] == pytest.approx(1)
     assert peak["metatarsal_recovery_world_degrees_from_down"] == 27.5
+
+
+def test_rate_limited_world_recovery_is_c2_and_has_a_lower_analytic_slope_bound():
+    peak, release = .42, .9
+    branch = min(peak, release - peak)
+    h = 1e-5
+    gain = lambda phase: rate_limited_recovery_gain(phase, peak, release)
+    assert gain(0) == 0
+    assert gain(peak) == 1
+    assert gain(release) == 0
+
+    # The quintic velocity ramps meet their constant-speed middle without a
+    # value, velocity, or acceleration seam.  This is deliberately checked at
+    # every join rather than only at the historical lift/peak/release bounds.
+    joins = (peak * .25, peak * .75, peak,
+             peak + (release - peak) * .25,
+             peak + (release - peak) * .75)
+    for at in joins:
+        before, current, after = gain(at - h), gain(at), gain(at + h)
+        assert abs((after - current) / h - (current - before) / h) < 2e-4
+        assert abs((after - 2 * current + before) / h**2) < .2
+
+    # A branch's maximum phase speed is exactly 1 / (.75 * length), compared
+    # with 1.875 / length for the historical full-branch quintic.  The fast
+    # cycle therefore has a real timing headroom, rather than a release-only
+    # parameter move that transfers the witness to the other branch.
+    limited = 1 / (.75 * branch)
+    historical = 1.875 / branch
+    assert limited / historical == pytest.approx(32 / 45)
+    samples = np.linspace(0, release, 20001)
+    observed = max(abs(gain(float(b)) - gain(float(a))) / (b - a)
+                   for a, b in zip(samples, samples[1:]))
+    assert observed <= limited * 1.0001
+
+
+def test_rate_limited_world_recovery_is_opt_in_and_rejects_unpaired_or_unknown_controls():
+    base = GroundedGait(cycles=1, sample_hz=24)
+    assert build_grounded_plan(base, 2) == build_grounded_plan(
+        replace(base, metatarsal_recovery_carrier=None), 2)
+    assert 'metatarsal_recovery_carrier' not in build_grounded_plan(base, 2)['parameters']
+    with pytest.raises(ContractError, match='requires a world target'):
+        GroundedGait(metatarsal_recovery_carrier='rate_limited_c2')
+    with pytest.raises(ContractError, match='must be rate_limited_c2'):
+        GroundedGait(metatarsal_recovery_carrier='quintic')
 
 
 def test_geometry_centered_lanes_use_hip_midpoint_and_keep_stance_fixed():
@@ -234,6 +279,7 @@ def test_grounded_transition_propagates_scaled_world_recovery_and_exact_interfac
         cycles=1, sample_hz=120, rounded_swing_peak_fraction=.42,
         metatarsal_recovery_world_degrees_from_down=20,
         metatarsal_recovery_release_fraction=.7,
+        metatarsal_recovery_carrier='rate_limited_c2',
         handoff_phase_fraction=.125, handoff_sample_hz=960,
     )
     transition = GaitTransition(
