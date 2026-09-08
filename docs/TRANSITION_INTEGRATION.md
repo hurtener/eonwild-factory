@@ -82,12 +82,24 @@ visual approval and Unity validation.
 
 ## Current evidence and unfinished work
 
-Local preliminary generation with the revised shared engine produced mechanically
-passing sprint-start v3, sprint-stop v3 and run-start v3. Their direct handoffs
-remain BLOCKED by velocity mismatch; pose and contact equality alone are not
-completion. The permanent CI suite and all four pair jobs retain those failures.
-Use their exact source/output receipts rather than treating this text as a
-final-head acceptance report. Native media and Unity acceptance remain separate.
+The host generated all four transition trios at exact local source
+`7920c59dd354027b8784483bb208fd0e6229cd91`. All 12 individual start, steady and
+stop packages passed integrity and technical verification. Walk v3,
+reverse-walk v4 and run v4 pass start and stop joins in root-motion and in-place
+modes. Sprint v4 remains `BLOCKED`: its start world-velocity mismatch is
+`0.001412795 m/s` in root motion and `0.001493701 m/s` in place; its stop values
+are `0.001202134 m/s` and `0.001199715 m/s`. The unchanged limit is
+`0.001 m/s`. See the
+[exact-source pair report](../reports/V9-NATIVE-CLOCK-PAIR-STATUS-001/README.md)
+for report, handoff, package and engine-lock hashes.
+
+The same exact head passed 136 focused articulation and handoff tests. That is
+not a current full-suite or remote-CI result. Native media review remains
+`PENDING`, Unity validation remains `NOT_RUN`, and production approval remains
+false. The adult recovery correction has not been visually accepted, and these
+mechanical results do not validate anatomy or biology. The older remote baseline
+in [MOTION_QUALITY_STATUS.md](MOTION_QUALITY_STATUS.md) remains labeled as an
+earlier result.
 
 Fast-walk v2 was already integrated at the recovered branch head. Reopened
 metadata verification of its actual CI package passes. The preview clock now

@@ -22,7 +22,11 @@ articulation limits; no limit change is accepted merely to make a candidate
 feasible. See
 [HINDLIMB_ARTICULATION_EVIDENCE.md](HINDLIMB_ARTICULATION_EVIDENCE.md) for the
 current evidence and angle conventions. Raw direct-join limits remain unchanged
-and unresolved; see [TRANSITION_INTEGRATION.md](TRANSITION_INTEGRATION.md).
+and the sprint joins remain unresolved. At exact local source
+`7920c59dd354027b8784483bb208fd0e6229cd91`, walk, reverse-walk and run pass
+both direct joins in both movement modes; sprint remains `BLOCKED` in both.
+See [TRANSITION_INTEGRATION.md](TRANSITION_INTEGRATION.md) and the
+[exact-source pair report](../reports/V9-NATIVE-CLOCK-PAIR-STATUS-001/README.md).
 
 The host has inspected every native frame of the baseline sprint and the corrected
 side preview. Upward craning is corrected. The aggressive sprint's persistent
@@ -85,9 +89,12 @@ See [ANIMAL_CONFIGURATION.md](ANIMAL_CONFIGURATION.md) for the reusable instance
 contract, generation command and the distinction between recorded mass and
 mass-dependent solving.
 
-The current host uses the pinned macOS arm64 toolchain. Final source tests,
+The current host uses the pinned macOS arm64 toolchain. Source tests,
 individual candidates, direct joins and native-media review are recorded separately.
 A passing individual clip never grants connected locomotion or biological approval.
+At source `7920c59dd354027b8784483bb208fd0e6229cd91`, 136 focused articulation and
+handoff tests passed. This is a focused local result; the current full suite and
+remote CI have not yet run for that exact head.
 
 ## Verification and immutable legacy boundary
 
@@ -119,10 +126,11 @@ factory generation dependency. No historical builders are imported by new work.
 
 ## Still required before ready/merge
 
-Pass all current individual candidates AND both direct joins for all four gait
-pairs. Inspect native-time multi-view motion and retain human art-direction
-approval separately. Then validate the intended Unity consumer, root authority,
-phase handoff, event delivery, import/compression and target-device performance.
+The remaining direct-join source gate is sprint start and stop in both movement
+modes. Inspect native-time multi-view motion and retain human art-direction
+approval separately; the revised adult recovery has not been accepted. Then
+validate the intended Unity consumer, root authority, phase handoff, event
+delivery, import/compression and target-device performance.
 
 **PR: draft. Visual approval: PENDING. Unity validation: NOT_RUN.
 Production promotion: NOT_GRANTED.**
