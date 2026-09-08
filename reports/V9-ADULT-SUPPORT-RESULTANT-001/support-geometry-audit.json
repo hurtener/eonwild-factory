@@ -1,0 +1,672 @@
+{
+  "axes": {
+    "forward": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "lateral": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "up": [
+      0.0,
+      1.0,
+      0.0
+    ]
+  },
+  "classification": "Read-only emitted geometry and declared-contact diagnostic. The bilateral hip midpoint, trunk vertex mean, and conditional ZMP are kinematic proxies, not COM, CoP, GRF, load share, inertia, stability, biological validity, or visual approval.",
+  "cycle": {
+    "chest_origin_lateral_peak_to_peak_m": 0.117046127619406,
+    "duty_factor": 0.62,
+    "head_origin_lateral_peak_to_peak_m": 0.14827684618481654,
+    "hip_midpoint_lateral_peak_to_peak_m": 0.07823424736301782,
+    "material_track_width_at_double_support_m": {
+      "mean": 0.8536597534806002,
+      "values": [
+        0.8536596646162036,
+        0.8536598423449968
+      ]
+    },
+    "pelvis_origin_lateral_peak_to_peak_m": 0.08222925814185766,
+    "pelvis_pivot_minus_hip_midpoint_lateral_range_m": [
+      -0.12365440523579016,
+      -0.11666155575177789
+    ],
+    "same_foot_cycle_s": 2.46,
+    "step_period_s": 1.23,
+    "tail_tip_origin_lateral_peak_to_peak_m": 1.049146848575718
+  },
+  "definitions": {
+    "native_acceleration": "Periodic three-key second difference of emitted native translation keys. It is not the exact runtime acceleration of LINEAR interpolation.",
+    "support_material": "All emitted high-weight sole/toe material vertices for declared contact feet whose floor gap is within the bound contact profile's existing 0.03 m tolerance. Their projected union is a geometric availability region, not measured pressure or CoP."
+  },
+  "landmarks": {
+    "double_support_left_leads": {
+      "body_role_origins": {
+        "chest": {
+          "lateral_shift_from_own_cycle_mean_m": 0.04736943474380087,
+          "native_three_key_acceleration_f_u_l_mps2": [
+            0.1759814638108066,
+            1.0402641893511644,
+            -0.30914804177896055
+          ],
+          "root_relative_f_u_l_m": [
+            1.2732664784353755,
+            -0.29858054520285493,
+            0.007253216479022991
+          ]
+        },
+        "head": {
+          "lateral_shift_from_own_cycle_mean_m": 0.06089385008377359,
+          "native_three_key_acceleration_f_u_l_mps2": [
+            0.12040957874342333,
+            1.2189347481220827,
+            -0.38845885247143064
+          ],
+          "root_relative_f_u_l_m": [
+            2.994006520597301,
+            0.08574217270549678,
+            0.08329493511583842
+          ]
+        },
+        "hip_midpoint": {
+          "lateral_shift_from_own_cycle_mean_m": 0.002582249822078069,
+          "native_three_key_acceleration_f_u_l_mps2": [
+            0.06410306026169771,
+            0.5169838978822516,
+            -0.016645664137902017
+          ],
+          "root_relative_f_u_l_m": [
+            -0.005616307961147093,
+            -0.03810112017744194,
+            0.0025251097476756725
+          ]
+        },
+        "pelvis": {
+          "lateral_shift_from_own_cycle_mean_m": -0.00020945634078922692,
+          "native_three_key_acceleration_f_u_l_mps2": [
+            -0.008515115589788843,
+            0.4767782746369496,
+            0.0012583116398020115
+          ],
+          "root_relative_f_u_l_m": [
+            -0.07982378125615774,
+            0.04360067057620798,
+            -0.12042910973433987
+          ]
+        },
+        "tail_tip": {
+          "lateral_shift_from_own_cycle_mean_m": 0.5109932794748607,
+          "native_three_key_acceleration_f_u_l_mps2": [
+            -0.31467231436030113,
+            -1.3190711266100517,
+            -3.400859645768377
+          ],
+          "root_relative_f_u_l_m": [
+            -5.823746748444776,
+            -0.6891340067985308,
+            0.5109360823270779
+          ]
+        }
+      },
+      "conditional_zero_Hdot_hip_proxy": {
+        "assumptions": "Treat bilateral hip midpoint as whole-body COM; flat ground; net contact resultant acts at a single ZMP; zero whole-body angular-momentum rate. Mass cancels. These assumptions are not established.",
+        "distance_outside_declared_support_lateral_union_m": {
+          "above_max_m": 0.0,
+          "below_min_m": 0.0
+        },
+        "formula": "zmp_lateral = hip_lateral - hip_height*hip_lateral_acceleration/(g + hip_vertical_acceleration)",
+        "hip_proxy_height_above_ground_m": 2.25099823972917,
+        "inferred_zmp_lateral_root_relative_m": 0.0061545837336939805
+      },
+      "declared_contacts": [
+        "left",
+        "right"
+      ],
+      "declared_support_lateral_midrange_root_relative_m": -0.020036599365790442,
+      "declared_support_near_ground_forward_union_root_relative_m": [
+        -0.6967769576787438,
+        1.290659498163995
+      ],
+      "declared_support_near_ground_lateral_union_root_relative_m": [
+        -0.8333599247920116,
+        0.7932867260604307
+      ],
+      "material_patches": {
+        "left": {
+          "contact_declared": true,
+          "foot_root_origin_root_relative_f_u_l_m": [
+            0.602883571920952,
+            -2.104465643157779,
+            -0.2741010328552994
+          ],
+          "material_vertex_count": 1564,
+          "minimum_floor_gap_m": 0.00011426020852326351,
+          "near_ground_centroid_root_relative_f_u_l_m": [
+            0.9712904404415312,
+            -2.272292767255995,
+            -0.4355045101381991
+          ],
+          "near_ground_forward_range_root_relative_m": [
+            0.6666306356134741,
+            1.290659498163995
+          ],
+          "near_ground_lateral_range_root_relative_m": [
+            -0.8333599247920116,
+            -0.09642940114753132
+          ],
+          "near_ground_tolerance_m": 0.03,
+          "near_ground_vertex_count": 279
+        },
+        "right": {
+          "contact_declared": true,
+          "foot_root_origin_root_relative_f_u_l_m": [
+            -0.7676216556039365,
+            -2.105172633402702,
+            0.2741009403884267
+          ],
+          "material_vertex_count": 1417,
+          "minimum_floor_gap_m": 0.0001305653231878116,
+          "near_ground_centroid_root_relative_f_u_l_m": [
+            -0.3992428404740983,
+            -2.272969530098881,
+            0.41815515447800455
+          ],
+          "near_ground_forward_range_root_relative_m": [
+            -0.6967769576787438,
+            -0.0760730266637415
+          ],
+          "near_ground_lateral_range_root_relative_m": [
+            0.05005159289181828,
+            0.7932867260604307
+          ],
+          "near_ground_tolerance_m": 0.03,
+          "near_ground_vertex_count": 352
+        }
+      },
+      "native_key_index": 18,
+      "native_key_time_s": 0.14959459006786346,
+      "native_three_key_hip_midpoint_acceleration_f_u_l_mps2": [
+        0.06410306026169771,
+        0.5169838978822516,
+        -0.016645664137902017
+      ],
+      "stage": "DOUBLE_SUPPORT",
+      "target_time_s": 0.14759999999999998,
+      "trunk_weighted_surface_mean_root_relative_f_u_l_m": [
+        0.8398499142963078,
+        0.1438479903459755,
+        0.050724806883735735
+      ]
+    },
+    "double_support_right_leads": {
+      "body_role_origins": {
+        "chest": {
+          "lateral_shift_from_own_cycle_mean_m": -0.04738099763219294,
+          "native_three_key_acceleration_f_u_l_mps2": [
+            0.13943779992852123,
+            1.0436370974136473,
+            0.30805767352607705
+          ],
+          "root_relative_f_u_l_m": [
+            1.2788583768680826,
+            -0.29875198493213295,
+            -0.08749721589697082
+          ]
+        },
+        "head": {
+          "lateral_shift_from_own_cycle_mean_m": -0.06086911436410667,
+          "native_three_key_acceleration_f_u_l_mps2": [
+            0.07577132530843514,
+            1.224164888723022,
+            0.38499199700162023
+          ],
+          "root_relative_f_u_l_m": [
+            3.0008816934259017,
+            0.08550321482672629,
+            -0.03846802933204184
+          ]
+        },
+        "hip_midpoint": {
+          "lateral_shift_from_own_cycle_mean_m": -0.0026142899398211416,
+          "native_three_key_acceleration_f_u_l_mps2": [
+            0.009723527166499324,
+            0.5228104008953162,
+            0.01750526150909156
+          ],
+          "root_relative_f_u_l_m": [
+            0.0027722839239969765,
+            -0.038308881002706574,
+            -0.002671430014223538
+          ]
+        },
+        "pelvis": {
+          "lateral_shift_from_own_cycle_mean_m": 0.0002094566896508332,
+          "native_three_key_acceleration_f_u_l_mps2": [
+            -0.008342898139786423,
+            0.476664226879917,
+            -0.0012362906550025556
+          ],
+          "root_relative_f_u_l_m": [
+            -0.07982378536560164,
+            0.04360067254212385,
+            -0.12001019670389981
+          ]
+        },
+        "tail_tip": {
+          "lateral_shift_from_own_cycle_mean_m": -0.5110250894482675,
+          "native_three_key_acceleration_f_u_l_mps2": [
+            -0.3694678540098988,
+            -1.3055072601490838,
+            3.3961611178063293
+          ],
+          "root_relative_f_u_l_m": [
+            -5.815358089318918,
+            -0.6893419947815975,
+            -0.5110822865960504
+          ]
+        }
+      },
+      "conditional_zero_Hdot_hip_proxy": {
+        "assumptions": "Treat bilateral hip midpoint as whole-body COM; flat ground; net contact resultant acts at a single ZMP; zero whole-body angular-momentum rate. Mass cancels. These assumptions are not established.",
+        "distance_outside_declared_support_lateral_union_m": {
+          "above_max_m": 0.0,
+          "below_min_m": 0.0
+        },
+        "formula": "zmp_lateral = hip_lateral - hip_height*hip_lateral_acceleration/(g + hip_vertical_acceleration)",
+        "hip_proxy_height_above_ground_m": 2.2507904789039053,
+        "inferred_zmp_lateral_root_relative_m": -0.006485828289274885
+      },
+      "declared_contacts": [
+        "left",
+        "right"
+      ],
+      "declared_support_lateral_midrange_root_relative_m": -0.020036617031058634,
+      "declared_support_near_ground_forward_union_root_relative_m": [
+        -0.7038746732015055,
+        1.2944321789668218
+      ],
+      "declared_support_near_ground_lateral_union_root_relative_m": [
+        -0.8333600317748582,
+        0.7932867977127409
+      ],
+      "material_patches": {
+        "left": {
+          "contact_declared": true,
+          "foot_root_origin_root_relative_f_u_l_m": [
+            -0.7676218172554121,
+            -2.1044656200829603,
+            -0.2741011449034025
+          ],
+          "material_vertex_count": 1564,
+          "minimum_floor_gap_m": 0.00011426199939204413,
+          "near_ground_centroid_root_relative_f_u_l_m": [
+            -0.39921487452907334,
+            -2.272292736294256,
+            -0.4355046173683043
+          ],
+          "near_ground_forward_range_root_relative_m": [
+            -0.7038746732015055,
+            -0.07984579915999745
+          ],
+          "near_ground_lateral_range_root_relative_m": [
+            -0.8333600317748582,
+            -0.09642950523425747
+          ],
+          "near_ground_tolerance_m": 0.03,
+          "near_ground_vertex_count": 279
+        },
+        "right": {
+          "contact_declared": true,
+          "foot_root_origin_root_relative_f_u_l_m": [
+            0.6028835736060056,
+            -2.105172740617512,
+            0.274101023561293
+          ],
+          "material_vertex_count": 1417,
+          "minimum_floor_gap_m": 0.0001305079345167158,
+          "near_ground_centroid_root_relative_f_u_l_m": [
+            0.9712623655390447,
+            -2.2729695967091965,
+            0.41815522497669255
+          ],
+          "near_ground_forward_range_root_relative_m": [
+            0.6737282479146032,
+            1.2944321789668218
+          ],
+          "near_ground_lateral_range_root_relative_m": [
+            0.050051662130809305,
+            0.7932867977127409
+          ],
+          "near_ground_tolerance_m": 0.03,
+          "near_ground_vertex_count": 352
+        }
+      },
+      "native_key_index": 166,
+      "native_key_time_s": 1.3795945644378662,
+      "native_three_key_hip_midpoint_acceleration_f_u_l_mps2": [
+        0.009723527166499324,
+        0.5228104008953162,
+        0.01750526150909156
+      ],
+      "stage": "DOUBLE_SUPPORT",
+      "target_time_s": 1.3776000000000002,
+      "trunk_weighted_surface_mean_root_relative_f_u_l_m": [
+        0.8489385014812543,
+        0.14974810077829082,
+        -0.012883902558412262
+      ]
+    },
+    "left_declared_sole_support_midpoint": {
+      "body_role_origins": {
+        "chest": {
+          "lateral_shift_from_own_cycle_mean_m": -0.03413087475606045,
+          "native_three_key_acceleration_f_u_l_mps2": [
+            -0.1375941969815654,
+            -1.0661555833501426,
+            0.21630912652810583
+          ],
+          "root_relative_f_u_l_m": [
+            1.2873987675310032,
+            -0.21598562965743628,
+            -0.07424709302083833
+          ]
+        },
+        "head": {
+          "lateral_shift_from_own_cycle_mean_m": -0.04127505789497975,
+          "native_three_key_acceleration_f_u_l_mps2": [
+            -0.07530252153527787,
+            -1.2512789538873967,
+            0.24927524154748265
+          ],
+          "root_relative_f_u_l_m": [
+            3.004180871261731,
+            0.18266906531770966,
+            -0.018873972862914916
+          ]
+        },
+        "hip_midpoint": {
+          "lateral_shift_from_own_cycle_mean_m": -0.03901490070823076,
+          "native_three_key_acceleration_f_u_l_mps2": [
+            -0.03299426185176708,
+            -0.5424028547389564,
+            0.2542882535499426
+          ],
+          "root_relative_f_u_l_m": [
+            0.0012930487418403303,
+            0.004869053963614256,
+            -0.039072040782633155
+          ]
+        },
+        "pelvis": {
+          "lateral_shift_from_own_cycle_mean_m": -0.04111462720943729,
+          "native_three_key_acceleration_f_u_l_mps2": [
+            0.008475581012831777,
+            -0.4767896177174986,
+            0.2683002697728148
+          ],
+          "root_relative_f_u_l_m": [
+            -0.08046916953715733,
+            0.0801455852972861,
+            -0.16133428060298793
+          ]
+        },
+        "tail_tip": {
+          "lateral_shift_from_own_cycle_mean_m": 0.1191242217142548,
+          "native_three_key_acceleration_f_u_l_mps2": [
+            0.2812563469787893,
+            1.27564075687902,
+            -0.765915990452989
+          ],
+          "root_relative_f_u_l_m": [
+            -5.843376260457447,
+            -0.7861965256523615,
+            0.11906702456647197
+          ]
+        }
+      },
+      "conditional_zero_Hdot_hip_proxy": {
+        "assumptions": "Treat bilateral hip midpoint as whole-body COM; flat ground; net contact resultant acts at a single ZMP; zero whole-body angular-momentum rate. Mass cancels. These assumptions are not established.",
+        "distance_outside_declared_support_lateral_union_m": {
+          "above_max_m": 0.0,
+          "below_min_m": 0.0
+        },
+        "formula": "zmp_lateral = hip_lateral - hip_height*hip_lateral_acceleration/(g + hip_vertical_acceleration)",
+        "hip_proxy_height_above_ground_m": 2.293968413870226,
+        "inferred_zmp_lateral_root_relative_m": -0.10203767765688075
+      },
+      "declared_contacts": [
+        "left"
+      ],
+      "declared_support_lateral_midrange_root_relative_m": -0.4648947280129175,
+      "declared_support_near_ground_forward_union_root_relative_m": [
+        -0.018621726115823023,
+        0.6054071425088612
+      ],
+      "declared_support_near_ground_lateral_union_root_relative_m": [
+        -0.8333599908369771,
+        -0.0964294651888579
+      ],
+      "material_patches": {
+        "left": {
+          "contact_declared": true,
+          "foot_root_origin_root_relative_f_u_l_m": [
+            -0.08236883785511928,
+            -2.104465630985241,
+            -0.2741011195149588
+          ],
+          "material_vertex_count": 1564,
+          "minimum_floor_gap_m": 0.00011429315541668629,
+          "near_ground_centroid_root_relative_f_u_l_m": [
+            0.2860380743866129,
+            -2.272292725694947,
+            -0.4355045762877178
+          ],
+          "near_ground_forward_range_root_relative_m": [
+            -0.018621726115823023,
+            0.6054071425088612
+          ],
+          "near_ground_lateral_range_root_relative_m": [
+            -0.8333599908369771,
+            -0.0964294651888579
+          ],
+          "near_ground_tolerance_m": 0.03,
+          "near_ground_vertex_count": 279
+        },
+        "right": {
+          "contact_declared": false,
+          "foot_root_origin_root_relative_f_u_l_m": [
+            -0.07140284124053231,
+            -1.609388562283634,
+            0.2741010320206826
+          ],
+          "material_vertex_count": 1417,
+          "minimum_floor_gap_m": 0.060675267997658405,
+          "near_ground_tolerance_m": 0.03,
+          "near_ground_vertex_count": 0
+        }
+      },
+      "native_key_index": 92,
+      "native_key_time_s": 0.7645946145057678,
+      "native_three_key_hip_midpoint_acceleration_f_u_l_mps2": [
+        -0.03299426185176708,
+        -0.5424028547389564,
+        0.2542882535499426
+      ],
+      "stage": "SINGLE_SUPPORT",
+      "target_time_s": 0.7626,
+      "trunk_weighted_surface_mean_root_relative_f_u_l_m": [
+        0.8401356043043497,
+        0.2416120743573975,
+        -0.017069661597204105
+      ]
+    },
+    "right_declared_sole_support_midpoint": {
+      "body_role_origins": {
+        "chest": {
+          "lateral_shift_from_own_cycle_mean_m": 0.03414256926706037,
+          "native_three_key_acceleration_f_u_l_mps2": [
+            -0.14060565411192444,
+            -1.031513806384144,
+            -0.2191157664727947
+          ],
+          "root_relative_f_u_l_m": [
+            1.2874694970667937,
+            -0.22114604921888192,
+            -0.005973648997717511
+          ]
+        },
+        "head": {
+          "lateral_shift_from_own_cycle_mean_m": 0.04125027094022816,
+          "native_three_key_acceleration_f_u_l_mps2": [
+            -0.0794398372266301,
+            -1.205567430923185,
+            -0.25756680180089253
+          ],
+          "root_relative_f_u_l_m": [
+            3.004176780151303,
+            0.1761963489459175,
+            0.06365135597229299
+          ]
+        },
+        "hip_midpoint": {
+          "lateral_shift_from_own_cycle_mean_m": 0.0390469373638664,
+          "native_three_key_acceleration_f_u_l_mps2": [
+            -0.037152476380393144,
+            -0.5011880097386879,
+            -0.2551350202748065
+          ],
+          "root_relative_f_u_l_m": [
+            0.0013821094078743101,
+            -0.0014243560057578541,
+            0.038989797289464
+          ]
+        },
+        "pelvis": {
+          "lateral_shift_from_own_cycle_mean_m": 0.041114630932420376,
+          "native_three_key_acceleration_f_u_l_mps2": [
+            0.00834008420936728,
+            -0.4766739729461484,
+            -0.268308117819541
+          ],
+          "root_relative_f_u_l_m": [
+            -0.08046916301381346,
+            0.08014558050868059,
+            -0.07910502246113027
+          ]
+        },
+        "tail_tip": {
+          "lateral_shift_from_own_cycle_mean_m": -0.11909223502553548,
+          "native_three_key_acceleration_f_u_l_mps2": [
+            0.2770495130487647,
+            1.3176641002647005,
+            0.7608912464832644
+          ],
+          "root_relative_f_u_l_m": [
+            -5.8432872177125965,
+            -0.792489740394249,
+            -0.1191494321733183
+          ]
+        }
+      },
+      "conditional_zero_Hdot_hip_proxy": {
+        "assumptions": "Treat bilateral hip midpoint as whole-body COM; flat ground; net contact resultant acts at a single ZMP; zero whole-body angular-momentum rate. Mass cancels. These assumptions are not established.",
+        "distance_outside_declared_support_lateral_union_m": {
+          "above_max_m": 0.0,
+          "below_min_m": 0.0
+        },
+        "formula": "zmp_lateral = hip_lateral - hip_height*hip_lateral_acceleration/(g + hip_vertical_acceleration)",
+        "hip_proxy_height_above_ground_m": 2.287675003900854,
+        "inferred_zmp_lateral_root_relative_m": 0.10171274528637718
+      },
+      "declared_contacts": [
+        "right"
+      ],
+      "declared_support_lateral_midrange_root_relative_m": 0.42166942526258977,
+      "declared_support_near_ground_forward_union_root_relative_m": [
+        -0.011524294857736095,
+        0.6091796311180566
+      ],
+      "declared_support_near_ground_lateral_union_root_relative_m": [
+        0.050051857235154845,
+        0.7932869932900247
+      ],
+      "material_patches": {
+        "left": {
+          "contact_declared": false,
+          "foot_root_origin_root_relative_f_u_l_m": [
+            -0.07140273246997397,
+            -1.6086816238583435,
+            -0.27410111746714816
+          ],
+          "material_vertex_count": 1564,
+          "minimum_floor_gap_m": 0.06085837283181602,
+          "near_ground_tolerance_m": 0.03,
+          "near_ground_vertex_count": 0
+        },
+        "right": {
+          "contact_declared": true,
+          "foot_root_origin_root_relative_f_u_l_m": [
+            -0.08236898999438313,
+            -2.105172715867993,
+            0.27410121484129657
+          ],
+          "material_vertex_count": 1417,
+          "minimum_floor_gap_m": 0.00013051095679438292,
+          "near_ground_centroid_root_relative_f_u_l_m": [
+            0.28600981758250166,
+            -2.2729695626243442,
+            0.4181554208867507
+          ],
+          "near_ground_forward_range_root_relative_m": [
+            -0.011524294857736095,
+            0.6091796311180566
+          ],
+          "near_ground_lateral_range_root_relative_m": [
+            0.050051857235154845,
+            0.7932869932900247
+          ],
+          "near_ground_tolerance_m": 0.03,
+          "near_ground_vertex_count": 352
+        }
+      },
+      "native_key_index": 240,
+      "native_key_time_s": 1.9945945739746094,
+      "native_three_key_hip_midpoint_acceleration_f_u_l_mps2": [
+        -0.037152476380393144,
+        -0.5011880097386879,
+        -0.2551350202748065
+      ],
+      "stage": "SINGLE_SUPPORT",
+      "target_time_s": 1.9926000000000001,
+      "trunk_weighted_surface_mean_root_relative_f_u_l_m": [
+        0.8414405191866017,
+        0.2295986312677627,
+        0.05634523386404014
+      ]
+    }
+  },
+  "limitations": [
+    "The mesh has no admitted segment masses, segment COM locations, or inertia tensors; whole-body COM and angular momentum rate cannot be reconstructed.",
+    "Near-ground material availability does not identify pressure distribution or the actual center of pressure.",
+    "The published 2816.3 kg body-mass estimate cannot determine lateral balance by itself; it cancels from the conditional point-mass relation.",
+    "The emitted clip is kinematic and its current linear key interpolation has no finite classical acceleration at key boundaries."
+  ],
+  "schema": "eonwild.motion.adult-v9-support-balance-audit.v1",
+  "source": {
+    "animal_profile_sha256": "53ffeba22e24a87504d3dcc310bedacf6db94d60a25ffe56ad028b03f41e849d",
+    "contact_profile_path": "/Volumes/m2-extended-disk/Repos/eonwild-factory/catalog/contacts/heavy-biped.v10.json",
+    "contact_profile_sha256": "61e0351fe9f7170ddce7f0b83a8f0379d119349d3c392ffec43e544adb115db5",
+    "duration_s": 2.4600000381469727,
+    "maximum_glb_vs_plan_time_difference_s": 1.1908041486208276e-07,
+    "package": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/continuation-adult-v9-axial-jaw-001",
+    "performance_profile_sha256": "e133819dddf19bd224ddec7419687208e01abf8f3906fa147837813710dc2dfc",
+    "plan_sha256": "48e68639efd930c4209fd38fb484f4712461b5945cfbc90dd35fa047d1a7c513",
+    "recipe_sha256": "f55da91847dc63489f9655cfc3641bee665bf8ce6122755a61748d98fabf3ccd",
+    "root_motion_glb_sha256": "db5b2123e156fa218cc426cf8774972a8c02f9cfce7eea9c80fcf91a8c129ebe",
+    "sample_count": 297,
+    "unique_native_intervals": 296
+  }
+}
