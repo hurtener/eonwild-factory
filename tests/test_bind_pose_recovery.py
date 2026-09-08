@@ -38,6 +38,14 @@ def mutate_inverse(source: Glb, transform) -> Glb:
     return Glb.from_bytes(_encode(document, bytes(binary)))
 
 
+def mutate_position(source: Glb, value: float) -> Glb:
+    binary = bytearray(source.binary)
+    position = source.document["meshes"][0]["primitives"][0]["attributes"]["POSITION"]
+    offset, _, _ = source.accessor_region(position)
+    struct.pack_into("<f", binary, offset, value)
+    return Glb.from_bytes(_encode(source.document, bytes(binary)))
+
+
 def test_production_bind_recovery_is_deterministic_skin_aligned_and_bilateral():
     source = Glb(SOURCE)
     first, metadata = recover(source)
@@ -128,6 +136,89 @@ def test_recovery_rejects_malformed_inverse_bind(case):
     malformed = mutate_inverse(source, change)
     with pytest.raises(ContractError, match="singular|shear|projection"):
         recover(malformed)
+
+
+@pytest.mark.parametrize("value", [math.nan, math.inf, -math.inf])
+def test_recovery_rejects_nonfinite_skin_positions(value):
+    with pytest.raises(ContractError, match="POSITION|non-finite"):
+        recover(mutate_position(Glb(SOURCE), value))
+
+
+@pytest.mark.parametrize("case", [
+    "boolean_joint", "fractional_joint", "negative_inverse_accessor",
+    "boolean_position_accessor", "malformed_inverse_schema",
+])
+def test_recovery_rejects_nonexact_indices_and_accessor_schemas(case):
+    source = Glb(SOURCE)
+    document = deepcopy(source.document)
+    if case == "boolean_joint":
+        document["skins"][0]["joints"][1] = True
+    elif case == "fractional_joint":
+        document["skins"][0]["joints"][-1] = 74.5
+    elif case == "negative_inverse_accessor":
+        document["accessors"].append(deepcopy(document["accessors"][10]))
+        document["skins"][0]["inverseBindMatrices"] = -1
+    elif case == "boolean_position_accessor":
+        document["meshes"][0]["primitives"][0]["attributes"]["POSITION"] = True
+    else:
+        document["accessors"][10]["type"] = "VEC4"
+    with pytest.raises(ContractError, match="index|schema"):
+        recover(Glb.from_bytes(_encode(document, source.binary)))
+
+
+@pytest.mark.parametrize("translation", [[0.0, 0.0, 0.0], [0.1, -0.2, 0.05]])
+def test_recovery_propagates_through_non_skin_joint_intermediary(translation):
+    source = Glb(SOURCE)
+    document = deepcopy(source.document)
+    parent = source.name_to_node["Bone_043"]
+    child = source.name_to_node["Bone_042"]
+    helper = len(document["nodes"])
+    document["nodes"][parent]["children"] = [
+        helper if value == child else value
+        for value in document["nodes"][parent]["children"]
+    ]
+    document["nodes"].append({
+        "name": "semantic_agnostic_helper",
+        "translation": translation,
+        "children": [child],
+    })
+    old = document["nodes"][child].get("translation", [0.0, 0.0, 0.0])
+    document["nodes"][child]["translation"] = [
+        float(value - shift) for value, shift in zip(old, translation)
+    ]
+    raw, metadata = recover(Glb.from_bytes(_encode(document, source.binary)))
+    assert metadata["bind_pose_recovery"]["measurements"][
+        "maximum_reopened_skin_position_error_m"] < 3e-6
+    assert len(Glb.from_bytes(raw).nodes) == len(source.nodes) + 1
+
+
+def test_recovery_preserves_mesh_world_when_mesh_descends_from_recovered_joint():
+    source = Glb(SOURCE)
+    document = deepcopy(source.document)
+    worlds = [np.asarray(value) for value in _world_matrices(
+        source, source.rest_translation, source.rest_rotation, source.rest_scale)]
+    mesh = next(index for index, node in enumerate(source.nodes) if node.get("skin") == 0)
+    old_parent = source.parents[mesh]
+    new_parent = source.name_to_node["Bone_043"]
+    document["nodes"][old_parent]["children"].remove(mesh)
+    document["nodes"][new_parent].setdefault("children", []).append(mesh)
+    local = np.linalg.solve(worlds[new_parent], worlds[mesh])
+    scales = np.linalg.norm(local[:3, :3], axis=0)
+    rotation = local[:3, :3] / scales
+    rotation4 = np.eye(4)
+    rotation4[:3, :3] = rotation
+    from eonwild_motion.layers.leg_contact_resolve_v3 import _rotation_from_matrix
+    document["nodes"][mesh]["translation"] = local[:3, 3].tolist()
+    document["nodes"][mesh]["rotation"] = list(_rotation_from_matrix(
+        tuple(tuple(float(value) for value in row) for row in rotation4)))
+    document["nodes"][mesh]["scale"] = scales.tolist()
+    raw, metadata = recover(Glb.from_bytes(_encode(document, source.binary)))
+    assert metadata["bind_pose_recovery"]["measurements"][
+        "maximum_reopened_skin_position_error_m"] < 3e-6
+    reopened = Glb.from_bytes(raw)
+    reopened_worlds = _world_matrices(
+        reopened, reopened.rest_translation, reopened.rest_rotation, reopened.rest_scale)
+    assert np.allclose(reopened_worlds[mesh], worlds[mesh], rtol=0, atol=2e-6)
 
 
 def test_recovery_requires_explicit_mode_inputs_and_matching_semantics():
