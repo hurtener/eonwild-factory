@@ -12,10 +12,13 @@ from eonwild_motion.glb.container import Glb
 from eonwild_motion.planning.grounded_gait import (
     GroundedGait, build_grounded_plan, sample_grounded_gait,
 )
+from eonwild_motion.planning.gait_transition import (
+    GaitTransition, build_transition_plan, declared_handoff_phase,
+)
 from eonwild_motion.planning.airborne_gait import AirborneGait
 from eonwild_motion.planning.articulation_profile import load_articulation_profile
 from eonwild_motion.solve.airborne_gait import (
-    _world_metatarsus_recovery, solve_airborne_gait,
+    _validate_plan_override, _world_metatarsus_recovery, solve_airborne_gait,
 )
 from eonwild_motion.solve.performance import Performance, decorate_plan
 from eonwild_motion.solve.whole_body_gait_transition import _encode
@@ -223,3 +226,60 @@ def test_bound_profile_selects_feasible_pitch_before_soft_objectives():
         plan_override=build_grounded_plan(gait, 1.8), legacy_overlay=False,
         articulation_profile=load_articulation_profile(raw))[3]
     assert receipt["maximum_articulation_envelope_violation_degrees"] == 0
+
+
+@pytest.mark.parametrize("kind", ("start", "stop"))
+def test_grounded_transition_propagates_scaled_world_recovery_and_exact_interface(kind):
+    gait = GroundedGait(
+        cycles=1, sample_hz=120, rounded_swing_peak_fraction=.42,
+        metatarsal_recovery_world_degrees_from_down=20,
+        metatarsal_recovery_release_fraction=.7,
+        handoff_phase_fraction=.125, handoff_sample_hz=960,
+    )
+    transition = GaitTransition(
+        kind, handoff_phase_fraction=.125, handoff_sample_hz=960)
+    plan = build_transition_plan(transition, gait, 2.0)
+    swing = [foot for row in plan["samples"] for foot in row["feet"].values()
+             if not foot["contact"]]
+    assert swing
+    for foot in swing:
+        assert foot["metatarsal_recovery_world_degrees_from_down"] == 20
+        assert 0 <= foot["metatarsal_recovery_gain"] <= 1
+    assert any(foot["metatarsal_recovery_gain"] == 0 for foot in swing)
+    assert any(foot["metatarsal_recovery_gain"] > 0 for foot in swing)
+
+    phase = declared_handoff_phase(transition, gait)
+    steady = sample_grounded_gait(gait, phase, 2.0)
+    interface = plan["samples"][-1] if kind == "start" else plan["samples"][0]
+    for side in ("left", "right"):
+        for key in (
+            "contact", "height_m", "foot_pitch_degrees", "toe_flex_degrees",
+            "swing_phase", "metatarsal_recovery_world_degrees_from_down",
+            "metatarsal_recovery_gain",
+        ):
+            assert interface["feet"][side].get(key) == pytest.approx(
+                steady["feet"][side].get(key), abs=1e-12)
+
+
+def test_plan_override_rejects_world_recovery_outside_grounded_swing():
+    gait = GroundedGait(
+        cycles=1, sample_hz=24,
+        metatarsal_recovery_world_degrees_from_down=20,
+        metatarsal_recovery_release_fraction=.7,
+    )
+    grounded = build_grounded_plan(gait, 2.0)
+    _validate_plan_override(grounded, AirborneGait(cycles=1, sample_hz=24))
+
+    airborne = {**grounded, "program": "airborne_gait"}
+    with pytest.raises(ContractError, match="only on grounded swing"):
+        _validate_plan_override(airborne, AirborneGait(cycles=1, sample_hz=24))
+
+    contacted = {**grounded, "samples": [dict(row) for row in grounded["samples"]]}
+    row = next(row for row in contacted["samples"] if row["feet"]["left"]["contact"])
+    row["feet"] = {**row["feet"], "left": dict(row["feet"]["left"])}
+    row["feet"]["left"].update(
+        metatarsal_recovery_world_degrees_from_down=20,
+        metatarsal_recovery_gain=.5,
+    )
+    with pytest.raises(ContractError, match="only on grounded swing"):
+        _validate_plan_override(contacted, AirborneGait(cycles=1, sample_hz=24))

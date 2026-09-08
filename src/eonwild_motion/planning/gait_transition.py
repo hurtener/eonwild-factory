@@ -221,10 +221,20 @@ class _Choreography:
             height = original['height_m'] * amplitude
             toe = original['toe_flex_degrees'] * pitch_scale
             pitch = original['foot_pitch_degrees'] * pitch_scale
-        return {'contact': contact, 'forward_m': float(forward), 'height_m': float(height),
+        result = {'contact': contact, 'forward_m': float(forward), 'height_m': float(height),
             'toe_flex_degrees': float(toe), 'foot_pitch_degrees': float(pitch), 'swing_phase': float(swing),
             'touchdown_time_s': float(self.delay + max(0., touchdown) if self.start else touchdown),
             'articulation_scale': float(amplitude), 'liftoff_time_s': float(lift), 'next_touchdown_time_s': float(next_touchdown)}
+        if (self.grounded and not contact
+                and self.gait.metatarsal_recovery_world_degrees_from_down is not None):
+            result['metatarsal_recovery_world_degrees_from_down'] = float(
+                self.gait.metatarsal_recovery_world_degrees_from_down)
+            # Use the same C2 transition scale as the existing distal pitch
+            # controls.  Full-amplitude transition boundaries remain exactly
+            # equal to the bound steady gait.
+            result['metatarsal_recovery_gain'] = float(
+                original.get('metatarsal_recovery_gain', 0.) * pitch_scale)
+        return result
 
     def sample(self, time):
         active = time - self.delay

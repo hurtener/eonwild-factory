@@ -264,6 +264,7 @@ def _validate_plan_override(plan: Mapping[str, Any], gait: AirborneGait) -> dict
     samples = plan.get("samples")
     if not isinstance(samples, list) or len(samples) < 2:
         raise ContractError("plan override needs at least two samples")
+    locomotion_program = plan.get("locomotion_program", plan.get("program"))
     required_row = ("time_s", "root_forward_m", "pelvis_height_offset_m", "flight", "support_count")
     required_foot = ("contact", "forward_m", "height_m", "toe_flex_degrees", "foot_pitch_degrees", "swing_phase")
     previous = None
@@ -300,6 +301,18 @@ def _validate_plan_override(plan: Mapping[str, Any], gait: AirborneGait) -> dict
                     raise ContractError(f"plan override {side} foot {key} must be finite numeric")
             if not isinstance(foot["contact"], bool):
                 raise ContractError("plan override foot contact must be bool")
+            recovery_keys = (
+                "metatarsal_recovery_world_degrees_from_down",
+                "metatarsal_recovery_gain",
+            )
+            present = tuple(key in foot for key in recovery_keys)
+            if any(present):
+                if not all(present):
+                    raise ContractError("plan override world metatarsal recovery requires target and gain")
+                if locomotion_program != "grounded_gait" or foot["contact"]:
+                    raise ContractError(
+                        "world metatarsal recovery is valid only on grounded swing rows")
+                _world_metatarsus_recovery(foot)
     out = dict(plan)
     out.setdefault("schema", "eonwild.motion.v9.airborne-gait-plan.v1")
     out.setdefault("program", "airborne_gait")
