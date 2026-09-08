@@ -21,6 +21,8 @@ GROUPS = {
         'tarbosaurus-pin-552-1-adult-walk.v5',
         'tarbosaurus-pin-552-1-adult-walk.v6',
         'tarbosaurus-pin-552-1-adult-walk.v7',
+        'tarbosaurus-pin-552-1-adult-walk.v8',
+        'tarbosaurus-pin-552-1-adult-walk.v9',
         'tarbosaurus-pin-552-1-adult-fast-walk-recovery.v3',
     ],
     'locomotion': ['walk.v3', 'reverse-walk.v4', 'run.v4', 'sprint.v4', 'fast-walk.v2'],
