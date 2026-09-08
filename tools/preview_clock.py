@@ -55,9 +55,13 @@ class TransportClock:
         frame when a valid clip ends between source ticks.  This changes only
         sampling density; transport key times retain their exact source clock.
         """
-        # A half-frame ceiling makes a binary fractional terminal endpoint
-        # representable to Blender's FBX baker while preserving its timestamp.
-        return self.duration_frames / math.ceil(self.duration_frames * 2)
+        # The operator stores bake_anim_step as float32 before its exporter
+        # calls np.arange.  Dividing the float32 glTF endpoint by an arbitrary
+        # count can round the step upward, causing arange to omit the endpoint.
+        # A power-of-two count keeps that division exact in binary while the
+        # half-frame-or-denser policy bounds interpolation between source keys.
+        intervals = 1 << max(0, math.ceil(math.log2(self.duration_frames * 2)))
+        return self.duration_frames / intervals
 
     def receipt(self) -> dict[str, float | int | str]:
         return {
