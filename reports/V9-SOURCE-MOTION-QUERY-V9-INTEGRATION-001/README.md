@@ -2,7 +2,7 @@
 
 This integration combines the closed adult axial-clock and neutral-jaw V9 publication head with the closed `SourceMotionQuery` extraction. Its exact merge head is `ae25a5106b378773e991a168c8883e33e2c44ab7`, with parents `9f6e93f0ac1a06e3a3d6c121c99ef84ae4cd7830` and `b31bcf655d72883d98e899e70f86213d3cec9730`.
 
-`SourceMotionQuery` exposes deterministic solved poses under the admitted source, plan and event contracts. Admitted unrefined plans support off-grid evaluation within their bound domain; plans with `refined_target_offset_m` remain exact-key-only, and formal derivatives are unavailable. This stage does not claim a new emitter, new gait acceptance, native playback, Unity parity or production approval. It adds no canonical support-anchor provider.
+`SourceMotionQuery` exposes deterministic solved poses under the admitted source, plan and event contracts. Admitted unrefined plans support off-grid evaluation within their bound domain; plans with `target_offset_m` refinements remain exact-key-only, and formal derivatives are unavailable. This stage does not claim a new emitter, new gait acceptance, native playback, Unity parity or production approval. It adds no canonical support-anchor provider.
 
 ## Closed integration review
 
