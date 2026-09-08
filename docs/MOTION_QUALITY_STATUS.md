@@ -27,6 +27,10 @@ and the sprint joins remain unresolved. At exact local source
 both direct joins in both movement modes; sprint remains `BLOCKED` in both.
 See [TRANSITION_INTEGRATION.md](TRANSITION_INTEGRATION.md) and the
 [exact-source pair report](../reports/V9-NATIVE-CLOCK-PAIR-STATUS-001/README.md).
+The later final evidence set independently reopened the twelve retained pair
+packages and re-ran their handoffs: walk, reverse-walk and run remain `PASS`,
+while sprint start and stop remain `BLOCKED`. See the
+[final continuation report](../reports/V9-CONTINUATION-FINAL-4AE0FE9-001/README.md).
 
 The host has inspected every native frame of the baseline sprint and the corrected
 side preview. Upward craning is corrected. The aggressive sprint's persistent
@@ -90,6 +94,13 @@ passed 658 tests plus 21 subtests in 225.75 seconds. The new adult v3 catalog
 binding test then passed at exact source
 `7809ada9743818e860e096ffb38ddba3488a7d9b` in 0.26 seconds.
 
+Fast-walk v2 remains a separate candidate. The host inspected all 192 frames
+across four native views and completed four original-speed playbacks. Its
+recovery still reads folded and relatively flat, and its stance remains more
+crouched than adult v3, so visual polish is required and it is not accepted as
+the adult benchmark. The structured receipt is copied into the
+[final continuation report](../reports/V9-CONTINUATION-FINAL-4AE0FE9-001/fast-walk-host-review.json).
+
 ## Evidence-bound adult benchmark
 
 `tarbosaurus-pin-552-1-adult-walk.v1` is the first explicit animal-instance
@@ -125,14 +136,15 @@ mass-dependent solving.
 The current host uses the pinned macOS arm64 toolchain. Source tests,
 individual candidates, direct joins and native-media review are recorded separately.
 A passing individual clip never grants connected locomotion or biological approval.
-The complete local suite passed at exact integrated source
-`5304b1967ad350737cf7e9ee6555a5f4de9e9bff`: 658 tests plus 21 subtests passed
-in 225.75 seconds with the real pinned tools and a clean tracked checkout. The
-host receipt is
-`out/continuation-full-suite-5304b19/host-validation.json`. The additional adult
-v3 catalog binding test passed at exact source
-`7809ada9743818e860e096ffb38ddba3488a7d9b` in 0.26 seconds. Remote CI has not
-run for this source.
+The historical adult-v3 results above remain part of that candidate's evidence.
+The complete final local suite passed at exact integrated source
+`4ae0fe92ec3ffd49dfeca14085756cc7cbe7d852`: 683 tests plus 21 subtests in
+212.65 seconds with the real pinned tools and a clean tracked checkout. Both
+final-round P1 reproductions are rejected, their narrow re-reviews are clean,
+and all 14 retained packages verify without gaining approval claims. The
+tracked receipt and reviewer reports are in
+[V9-CONTINUATION-FINAL-4AE0FE9-001](../reports/V9-CONTINUATION-FINAL-4AE0FE9-001/README.md).
+Hosted CI for the ensuing published documentation head is pending.
 
 ## Verification and immutable legacy boundary
 
@@ -166,9 +178,11 @@ factory generation dependency. No historical builders are imported by new work.
 
 The remaining direct-join source gate is sprint start and stop in both movement
 modes. Retain user art-direction approval separately; adult v3 has been accepted
-only as the current factory recovery candidate. Then validate the intended Unity
-consumer, root authority, phase handoff, event delivery, import/compression and
-target-device performance.
+only as the current factory recovery candidate. Fast-walk v2 still requires
+visual polish. Then validate the intended Unity consumer, root authority, phase
+handoff, event delivery, import/compression and target-device performance.
+Hosted CI for the ensuing published documentation head remains pending; draft
+PR #2 must not merge yet.
 
 **PR: draft. Visual approval: PENDING. Unity validation: NOT_RUN.
 Production promotion: NOT_GRANTED.**

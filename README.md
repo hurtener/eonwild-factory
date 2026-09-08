@@ -5,7 +5,8 @@ continues V9 and the merged factory baseline, not another numbered toolkit.
 
 PR #2 is still a draft: **quality-01 is rejected** and new candidates do not
 inherit the approval of the preserved V9 takes. Execution is restored. Read
-[the current motion/evidence status](docs/MOTION_QUALITY_STATUS.md) for the
+[the final local continuation evidence](reports/V9-CONTINUATION-FINAL-4AE0FE9-001/README.md)
+and [the current motion/evidence status](docs/MOTION_QUALITY_STATUS.md) for the
 verified improvements and remaining transition/handoff acceptance work.
 
 ## One active generation path
@@ -94,6 +95,13 @@ Both tools retain mechanical rejection even when diagnostic rendering succeeds.
 ```sh
 uv run python -m pytest tests -q --tb=short
 ```
+
+The final clean local head
+`4ae0fe92ec3ffd49dfeca14085756cc7cbe7d852` passed 683 tests plus 21
+subtests in 212.65 seconds with the pinned real tools. Hosted CI for the ensuing
+published documentation head is pending; the local result does not approve
+motion or authorize merging draft PR #2. The receipts and final review closure
+are tracked in [V9-CONTINUATION-FINAL-4AE0FE9-001](reports/V9-CONTINUATION-FINAL-4AE0FE9-001/README.md).
 
 The complete mandatory suite includes historical integration, exact duplicate
 builds, promotion rejection and real rendering. Its canonical CI is macOS

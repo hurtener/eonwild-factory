@@ -1,0 +1,99 @@
+{
+  "schema": "eonwild.motion.host-visual-review.v1",
+  "captured_utc": "2026-09-08T03:37:30.350888+00:00",
+  "reviewer": "Codex root host visual review",
+  "candidate": "fast-walk.v2",
+  "decision": "POLISH_REQUIRED",
+  "adult_benchmark_decision": "NOT_ACCEPTED_AS_ADULT_BENCHMARK",
+  "scope": "Visual review of the retained Linux CI root-motion films. This does not certify the separate macOS export, anatomy, biological dynamics, Unity or production readiness.",
+  "ci_run": 34175445729,
+  "workflow_trigger_sha": "c43d426ca8e5a2610c37ad7ae235ef623cb3f3fa",
+  "render_source_checkout_sha": "6a7d23c4bafc6818f26188ce1297b32b487118b9",
+  "candidate_manifest_sha256": "1a3ece0a3ae6605145736086eeac5b9e4d18f7794c685c309bcf850bbfaa300b",
+  "reviewed_source_glb_sha256": "cb7fe1e79febedb9130695b23275713baf80f85175d65ae38f24bf406ae0b330",
+  "separate_macos_export": {
+    "generation_sha": "3219d65d66f4408e1eaf05d4eccec39409b474e1",
+    "root_motion_glb_sha256": "38c8ccd04d944f355d038e523b1769756a4e855b439fd82c803c1beb8e9f5a87",
+    "visual_review_of_this_exact_glb": "NOT_RUN"
+  },
+  "native_review": {
+    "views": [
+      "front",
+      "rear",
+      "side",
+      "three-quarter"
+    ],
+    "frames_per_view": 48,
+    "review_frames_inspected": 192,
+    "method": "All review frames examined on 12 contact sheets and four complete browser playbacks at native 1x speed. No claim that all 193 serialized keys were individually viewed.",
+    "four_browser_playbacks_at_1x": "COMPLETE",
+    "full_decode": "PASS",
+    "fps": 30,
+    "source_duration_s": 1.6,
+    "encoded_duration_s": 1.6,
+    "media_and_receipts": {
+      "front": {
+        "frames": 48,
+        "full_decode": "PASS",
+        "movie_sha256": "19310979e242f83481ac9122ee204d418ad8ddfca92e44463f6345ead4cba076",
+        "source_sha256": "cb7fe1e79febedb9130695b23275713baf80f85175d65ae38f24bf406ae0b330",
+        "receipt_sha256": "755762cf44cd42b96ac76b55c25bea4fcbb7c4de57316c5bbb1818c1459372f3",
+        "contact_sheets": [
+          "/Volumes/m2-extended-disk/Repos/eonwild-factory/out/continuation-fast-walk-c43d426-ci-media/review/candidate/front/contact-sheets/000-015.png",
+          "/Volumes/m2-extended-disk/Repos/eonwild-factory/out/continuation-fast-walk-c43d426-ci-media/review/candidate/front/contact-sheets/016-031.png",
+          "/Volumes/m2-extended-disk/Repos/eonwild-factory/out/continuation-fast-walk-c43d426-ci-media/review/candidate/front/contact-sheets/032-047.png"
+        ]
+      },
+      "rear": {
+        "frames": 48,
+        "full_decode": "PASS",
+        "movie_sha256": "0153456bee971950cf12119d67e9cfc0f18e6eff0dd6aca8b48e12a3f5d3d6f8",
+        "source_sha256": "cb7fe1e79febedb9130695b23275713baf80f85175d65ae38f24bf406ae0b330",
+        "receipt_sha256": "b7aa1b4d4959aea5aaa87d3ef56baf779e6b3b714440d876b412c95a331cdab8",
+        "contact_sheets": [
+          "/Volumes/m2-extended-disk/Repos/eonwild-factory/out/continuation-fast-walk-c43d426-ci-media/review/candidate/rear/contact-sheets/000-015.png",
+          "/Volumes/m2-extended-disk/Repos/eonwild-factory/out/continuation-fast-walk-c43d426-ci-media/review/candidate/rear/contact-sheets/016-031.png",
+          "/Volumes/m2-extended-disk/Repos/eonwild-factory/out/continuation-fast-walk-c43d426-ci-media/review/candidate/rear/contact-sheets/032-047.png"
+        ]
+      },
+      "side": {
+        "frames": 48,
+        "full_decode": "PASS",
+        "movie_sha256": "1cc2555ddd7c43db24df98ad0598c6a97a07236d0865964e19558e68f12c9038",
+        "source_sha256": "cb7fe1e79febedb9130695b23275713baf80f85175d65ae38f24bf406ae0b330",
+        "receipt_sha256": "31fef3e43e1fd1dde6fca4ad685ac14ce68efb62629d083a831de0c1d4383f2f",
+        "contact_sheets": [
+          "/Volumes/m2-extended-disk/Repos/eonwild-factory/out/continuation-fast-walk-c43d426-ci-media/review/candidate/side/contact-sheets/000-015.png",
+          "/Volumes/m2-extended-disk/Repos/eonwild-factory/out/continuation-fast-walk-c43d426-ci-media/review/candidate/side/contact-sheets/016-031.png",
+          "/Volumes/m2-extended-disk/Repos/eonwild-factory/out/continuation-fast-walk-c43d426-ci-media/review/candidate/side/contact-sheets/032-047.png"
+        ]
+      },
+      "three-quarter": {
+        "frames": 48,
+        "full_decode": "PASS",
+        "movie_sha256": "35c7e3a63822d4e2cd4ab66cfb0ad01025abf816267b8fd4182f50cc55a38e1d",
+        "source_sha256": "cb7fe1e79febedb9130695b23275713baf80f85175d65ae38f24bf406ae0b330",
+        "receipt_sha256": "db08b2d81f1f9583ee2cf8c24afcc1751a6233b05ca566f956450b2c67968f59",
+        "contact_sheets": [
+          "/Volumes/m2-extended-disk/Repos/eonwild-factory/out/continuation-fast-walk-c43d426-ci-media/review/candidate/three-quarter/contact-sheets/000-015.png",
+          "/Volumes/m2-extended-disk/Repos/eonwild-factory/out/continuation-fast-walk-c43d426-ci-media/review/candidate/three-quarter/contact-sheets/016-031.png",
+          "/Volumes/m2-extended-disk/Repos/eonwild-factory/out/continuation-fast-walk-c43d426-ci-media/review/candidate/three-quarter/contact-sheets/032-047.png"
+        ]
+      }
+    },
+    "media_verification_sha256": "18e1fba0aec37f0b183f253fbfda4d7ddbef44564135bb23ca8f6eb8926ac8c0"
+  },
+  "observations": [
+    "The faster stride and head/trunk motion remain visually stable at the reviewed scale; no leg crossing was observed in front and rear views.",
+    "The side-view recovery foot remains folded and relatively flat around 0.267-0.467 s and 1.067-1.400 s.",
+    "The candidate is more crouched than the revised adult v3 benchmark and does not adopt its coordinated open-ankle recovery.",
+    "Technical acceptance does not resolve these motion-quality concerns."
+  ],
+  "remaining": {
+    "visual_polish": "REQUIRED",
+    "biological_validation": "NOT_VALIDATED",
+    "unity_parity": "NOT_RUN",
+    "production_approved": false
+  },
+  "immutable_candidate_status_unchanged": true
+}
