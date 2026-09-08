@@ -7,6 +7,7 @@
     "plan_sha256": "48e68639efd930c4209fd38fb484f4712461b5945cfbc90dd35fa047d1a7c513",
     "recipe_sha256": "f55da91847dc63489f9655cfc3641bee665bf8ce6122755a61748d98fabf3ccd",
     "runtime_sha256": "317fc65f52ad48a0992e0c6d59f4dc79efc4a6e7969ac1b22dc9c9804e13e5be",
+    "biomechanics_sha256": "bc5368ac1785e1d941e8b5c7cd7d045dc9f3f30b68bec2a8df084c68e7b241ec",
     "animal_profile_sha256": "53ffeba22e24a87504d3dcc310bedacf6db94d60a25ffe56ad028b03f41e849d",
     "contact_profile_sha256": "61e0351fe9f7170ddce7f0b83a8f0379d119349d3c392ffec43e544adb115db5",
     "provisional_segment_profile_sha256": "58e7ce3001df9eacc3da7c642dd50c9793ed8e2d843dcc730a781552881662c2",
@@ -25,7 +26,7 @@
     "segment_profile": "profiles/v9/tarbosaurus-provisional.json",
     "local_com_alternatives": ["semantic_joint_origin", "semantic_link_midpoint"],
     "tail_mass_fraction_delta": 0.03,
-    "tail_sensitivity_basis": "Snively et al. report that changing tail depth by +/-10% changed total body mass by no more than 3%; this diagnostic conservatively redistributes 3% of total mass between axial center and tail while holding total mass fixed",
+    "tail_sensitivity_basis": "Authored sensitivity: redistribute 3% of total mass between axial center and tail while holding total mass fixed. Snively et al. separately report that their +/-10% tail-depth geometry experiment changed whole-model mass by no more than 3%; that experiment does not establish this redistribution as a bound.",
     "inertia_basis": "Existing provisional normalized node-frame diagonal engineering values; results report their static yaw check against the published axial-body value rather than treating them as fossil measurements",
     "contact_load_alternatives": {
       "single_support": [{"stance": 1.0}],

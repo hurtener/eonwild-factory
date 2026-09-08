@@ -18,10 +18,7 @@ from eonwild_motion.solve.skin_rig import SkinRig
 
 
 REPO = Path(__file__).resolve().parents[1]
-TASK = Path("/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521")
-DEFAULT_PACKAGE = TASK / "out/continuation-adult-v9-axial-jaw-001"
 DEFAULT_ASSUMPTIONS = REPO / "profiles/v9/tarbosaurus-pin-552-1-support-resultant-engineering.v1.json"
-SUPPORT_AUDIT = TASK / "audits/adult-v9-support-balance-audit.json"
 
 
 def sha(path: Path) -> str:
@@ -51,18 +48,66 @@ def mass_variant(segments: list[dict], variant: str, delta: float) -> list[dict]
     return result
 
 
+def evaluation_configuration(assumptions: dict) -> dict:
+    engineering = assumptions["engineering_model"]
+    alternatives = engineering["local_com_alternatives"]
+    if (not isinstance(alternatives, list) or not alternatives
+            or len(set(alternatives)) != len(alternatives)
+            or any(value not in {"semantic_joint_origin", "semantic_link_midpoint"} for value in alternatives)):
+        raise ValueError("local COM alternatives are unsupported")
+    models = []
+    for value in alternatives:
+        suffix = "joint_origin" if value == "semantic_joint_origin" else "link_midpoint"
+        models.append({"id": f"baseline_{suffix}", "mass_variant": "baseline", "local_com_variant": value})
+        if value == "semantic_link_midpoint":
+            for mass in ("tail_heavy", "tail_light"):
+                models.append({"id": f"{mass}_{suffix}", "mass_variant": mass, "local_com_variant": value})
+    loads = engineering["contact_load_alternatives"]
+    if not isinstance(loads, dict) or set(loads) != {"single_support", "double_support"}:
+        raise ValueError("contact load alternatives are incomplete")
+    checked_loads = {}
+    for phase, allowed_keys in (("single_support", {"stance"}), ("double_support", {"left", "right", "leading", "trailing"})):
+        rows = loads[phase]
+        if not isinstance(rows, list) or not rows:
+            raise ValueError(f"{phase} load alternatives are empty")
+        checked = []
+        for row in rows:
+            if not isinstance(row, dict) or not row or not set(row) <= allowed_keys:
+                raise ValueError(f"{phase} load alternative is unsupported")
+            if phase == "single_support" and set(row) != {"stance"}:
+                raise ValueError("single-support load requires stance")
+            if phase == "double_support" and set(row) not in ({"left", "right"}, {"leading", "trailing"}):
+                raise ValueError("double-support load needs left/right or leading/trailing")
+            values = list(row.values())
+            if any(isinstance(value, bool) or not isinstance(value, (int, float)) or not np.isfinite(value) or value < 0 for value in values):
+                raise ValueError(f"{phase} load weights must be finite and non-negative")
+            if not np.isclose(sum(values), 1.0, rtol=0, atol=1e-12):
+                raise ValueError(f"{phase} load weights must sum to one")
+            checked.append({key: float(value) for key, value in row.items()})
+        checked_loads[phase] = checked
+    return {"models": models, "loads": checked_loads}
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--package", type=Path, default=DEFAULT_PACKAGE)
+    parser.add_argument("--package", type=Path)
+    parser.add_argument("--support-audit", type=Path)
     parser.add_argument("--assumptions", type=Path, default=DEFAULT_ASSUMPTIONS)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--configuration-only", action="store_true")
     args = parser.parse_args()
     assumptions = json.loads(args.assumptions.read_text())
+    configuration = evaluation_configuration(assumptions)
+    if args.configuration_only:
+        args.output.write_text(json.dumps(configuration, indent=2, sort_keys=True) + "\n")
+        return
+    if args.package is None or args.support_audit is None:
+        parser.error("--package and --support-audit are required for evaluation")
     recipe = json.loads((args.package / "recipe.json").read_text())
     runtime = json.loads((args.package / "runtime.json").read_text())
     plan = json.loads((args.package / "plan.json").read_text())
     biomechanics = json.loads((args.package / "biomechanics.json").read_text())
-    support_audit = json.loads(SUPPORT_AUDIT.read_text())
+    support_audit = json.loads(args.support_audit.read_text())
     provisional_path = REPO / assumptions["engineering_model"]["segment_profile"]
     provisional = json.loads(provisional_path.read_text())
     contact_path = REPO / recipe["contact_profile"]["path"]
@@ -73,10 +118,11 @@ def main() -> None:
         "plan_sha256": sha(args.package / "plan.json"),
         "recipe_sha256": sha(args.package / "recipe.json"),
         "runtime_sha256": sha(args.package / "runtime.json"),
+        "biomechanics_sha256": sha(args.package / "biomechanics.json"),
         "animal_profile_sha256": sha(animal_path),
         "contact_profile_sha256": sha(contact_path),
         "provisional_segment_profile_sha256": sha(provisional_path),
-        "support_geometry_audit_sha256": sha(SUPPORT_AUDIT),
+        "support_geometry_audit_sha256": sha(args.support_audit),
     }
     if actual != expected:
         raise ValueError(f"source identity mismatch: {actual!r}")
@@ -131,11 +177,10 @@ def main() -> None:
 
     total_mass = float(assumptions["published_constraints"]["total_mass_kg"])
     height = float(biomechanics["geometry"]["actual_semantic_pelvis_to_toe_plane_m"])
+    offset_variants = {"semantic_joint_origin": zero_offsets, "semantic_link_midpoint": midpoint_offsets}
     model_specs = [
-        ("baseline_joint_origin", "baseline", zero_offsets),
-        ("baseline_link_midpoint", "baseline", midpoint_offsets),
-        ("tail_heavy_link_midpoint", "tail_heavy", midpoint_offsets),
-        ("tail_light_link_midpoint", "tail_light", midpoint_offsets),
+        (item["id"], item["mass_variant"], offset_variants[item["local_com_variant"]])
+        for item in configuration["models"]
     ]
     root_index = name_to_node[roles["root"]]
     ground = float(contact["geometry"]["ground"]["level_m"])
@@ -185,14 +230,21 @@ def main() -> None:
             load_models = {}
             if len(contact_proxies) == 1:
                 only = next(iter(contact_proxies.values()))
-                load_models["single_support_1.0"] = only
+                for weights in configuration["loads"]["single_support"]:
+                    load_models[f"stance_{weights['stance']:g}"] = (weights["stance"] * np.asarray(only)).tolist()
             else:
                 left, right = np.asarray(contact_proxies["left"]), np.asarray(contact_proxies["right"])
-                load_models["equal_0.5_0.5"] = (0.5 * left + 0.5 * right).tolist()
                 leading = "left" if "left_leads" in phase else "right"
                 lead = left if leading == "left" else right
                 trail = right if leading == "left" else left
-                load_models["leading_0.6_trailing_0.4"] = (0.6 * lead + 0.4 * trail).tolist()
+                for weights in configuration["loads"]["double_support"]:
+                    if set(weights) == {"left", "right"}:
+                        key = f"left_{weights['left']:g}_right_{weights['right']:g}"
+                        value = weights["left"] * left + weights["right"] * right
+                    else:
+                        key = f"leading_{weights['leading']:g}_trailing_{weights['trailing']:g}"
+                        value = weights["leading"] * lead + weights["trailing"] * trail
+                    load_models[key] = value.tolist()
             phase_rows[phase] = {
                 "native_key_index": index,
                 "time_s": item.time_s,
