@@ -85,7 +85,8 @@ def test_rate_limited_world_recovery_is_c2_and_has_a_lower_analytic_slope_bound(
     peak, release = .42, .9
     branch = min(peak, release - peak)
     h = 1e-5
-    gain = lambda phase: rate_limited_recovery_gain(phase, peak, release)
+    def gain(phase):
+        return rate_limited_recovery_gain(phase, peak, release)
     assert gain(0) == 0
     assert gain(peak) == 1
     assert gain(release) == 0
