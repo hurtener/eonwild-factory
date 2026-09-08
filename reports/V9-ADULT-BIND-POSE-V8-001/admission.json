@@ -1,0 +1,52 @@
+{
+  "biological_validation": false,
+  "files": {
+    "geometry.glb": "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f",
+    "rig.json": "c3de770bf7dcc68219a28fb9851e9b75f3d3eebe2c2c0c7deb0078850100fd7e"
+  },
+  "geometry": {
+    "bind_pose_recovery": {
+      "binary_buffer_preserved": true,
+      "input_animation_tracks_used": false,
+      "inverse_bind_matrices_preserved": true,
+      "joint_count": 75,
+      "measurements": {
+        "maximum_input_normalized_orthogonality_error": 2.278046807509667e-07,
+        "maximum_local_projection_error": 1.2645671690347804e-07,
+        "maximum_reopened_skin_position_error_m": 1.1353242509093592e-06,
+        "maximum_reopened_world_matrix_error": 5.278416126998364e-07,
+        "minimum_input_normalized_determinant": 0.9999999999999457
+      },
+      "mesh_node": 75,
+      "method": "skin_bind_pose_from_inverse_bind_matrices.v1",
+      "skin_index": 0,
+      "tolerances": {
+        "local_projection": 1e-06,
+        "normalized_orthogonality": 1e-06,
+        "reopened_skin_position_m": 3e-06,
+        "reopened_world_matrix": 2e-06
+      },
+      "vertex_count": 59169
+    },
+    "claim": "calibrated geometry; no behavioral or biological validation",
+    "forward_axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "reference_clip": null,
+    "schema": "eonwild.motion.geometry.v1",
+    "up_axis": [
+      0.0,
+      1.0,
+      0.0
+    ]
+  },
+  "input": {
+    "rig_sha256": "c3de770bf7dcc68219a28fb9851e9b75f3d3eebe2c2c0c7deb0078850100fd7e",
+    "source_sha256": "044a8be907eb650fa71c613f19655eb10a0dd23c1d6bce86dfef93cd8d9575f6"
+  },
+  "schema": "eonwild.motion.admission.v1",
+  "status": "ADMITTED_GEOMETRY",
+  "visual_approval": "PENDING"
+}

@@ -1,0 +1,212 @@
+{
+  "schema": "eonwild.motion.host-exact-local-loop-probe.v1",
+  "captured_utc": "2026-09-08T07:31:14.218755+00:00",
+  "evaluator_source": "61c7ffc99ac2c5166345c5b690328c55bce2aefd",
+  "scope": "actual LINEAR/SLERP local-channel loop derivatives; original package unchanged",
+  "results": {
+    "root_motion": {
+      "glb_sha256": "9d823831c2f6bf6b3eb1482784fb75ef3532838385bf111a683ee2c7d0986e0c",
+      "evaluation": {
+        "status": "FAIL",
+        "checks": {
+          "angular_velocity": true,
+          "linear_velocity": false
+        },
+        "maximum_angular_velocity_seam_degrees_per_s": 3.652031815499178,
+        "maximum_linear_velocity_seam_m_per_s": 0.0032116449766123154,
+        "limits": {
+          "angular_degrees_per_s": 10.0,
+          "linear_m_per_s": 0.001
+        },
+        "peak_witnesses": {
+          "linear": {
+            "node": 73,
+            "bone": "Bone_001",
+            "incoming": [
+              -0.09322129245797235,
+              -0.012734702220437202,
+              -0.011025535745022663
+            ],
+            "outgoing": [
+              -0.09504323615913417,
+              -0.01298210992904821,
+              -0.008392291732152652
+            ],
+            "incoming_key": {
+              "time_s": 2.4600000381469727,
+              "neighbor_time_s": 2.4516892433166504
+            },
+            "outgoing_key": {
+              "time_s": 0.0,
+              "neighbor_time_s": 0.008310810662806034
+            },
+            "unit": "m/s"
+          },
+          "angular": {
+            "node": 49,
+            "bone": "Bone_010",
+            "incoming": [
+              1.1364910385593237,
+              6.034426442720766e-08,
+              -0.24515231578388866
+            ],
+            "outgoing": [
+              1.0741841586503298,
+              -2.1093727483347655e-07,
+              -0.23171216283581403
+            ],
+            "incoming_key": {
+              "time_s": 2.4600000381469727,
+              "neighbor_time_s": 2.4516892433166504
+            },
+            "outgoing_key": {
+              "time_s": 0.0,
+              "neighbor_time_s": 0.008310810662806034
+            },
+            "unit": "rad/s"
+          }
+        },
+        "classification": "exact adjacent LINEAR translation and shortest-SLERP local-channel tangents; constant scale is admitted and nonconstant animated scale rejects; not a world or skinned-loop claim",
+        "diagnostics": {
+          "quadratic_three_sample_estimate": {
+            "maximum_angular_velocity_seam_degrees_per_s": 2.311791554308345,
+            "maximum_linear_velocity_seam_m_per_s": 2.0295017618752294e-05,
+            "peak_witnesses": {
+              "angular": {
+                "node": 49,
+                "bone": "Bone_010",
+                "incoming": [
+                  1.1332098261655585,
+                  -3.0060178797110247e-07,
+                  -0.24444398621239757
+                ],
+                "outgoing": [
+                  1.0937685742302417,
+                  -2.74149456288121e-07,
+                  -0.23593640431239699
+                ]
+              },
+              "linear": {
+                "node": 74,
+                "bone": "Bone_000",
+                "incoming": [
+                  0.02497543605485111,
+                  -0.0,
+                  0.6410149750415973
+                ],
+                "outgoing": [
+                  0.024975556567845163,
+                  0.0,
+                  0.6410352697014063
+                ]
+              }
+            },
+            "classification": "diagnostic quadratic fit through three native samples; not an emitted LINEAR pass claim"
+          }
+        }
+      }
+    },
+    "in_place": {
+      "glb_sha256": "1110f89eed7a4de38245a4620d0c10f92e589fb4c703e9360011b3be03e12ce0",
+      "evaluation": {
+        "status": "FAIL",
+        "checks": {
+          "angular_velocity": true,
+          "linear_velocity": false
+        },
+        "maximum_angular_velocity_seam_degrees_per_s": 3.652031815499178,
+        "maximum_linear_velocity_seam_m_per_s": 0.0032116449766123154,
+        "limits": {
+          "angular_degrees_per_s": 10.0,
+          "linear_m_per_s": 0.001
+        },
+        "peak_witnesses": {
+          "linear": {
+            "node": 73,
+            "bone": "Bone_001",
+            "incoming": [
+              -0.09322129245797235,
+              -0.012734702220437202,
+              -0.011025535745022663
+            ],
+            "outgoing": [
+              -0.09504323615913417,
+              -0.01298210992904821,
+              -0.008392291732152652
+            ],
+            "incoming_key": {
+              "time_s": 2.4600000381469727,
+              "neighbor_time_s": 2.4516892433166504
+            },
+            "outgoing_key": {
+              "time_s": 0.0,
+              "neighbor_time_s": 0.008310810662806034
+            },
+            "unit": "m/s"
+          },
+          "angular": {
+            "node": 49,
+            "bone": "Bone_010",
+            "incoming": [
+              1.1364910385593237,
+              6.034426442720766e-08,
+              -0.24515231578388866
+            ],
+            "outgoing": [
+              1.0741841586503298,
+              -2.1093727483347655e-07,
+              -0.23171216283581403
+            ],
+            "incoming_key": {
+              "time_s": 2.4600000381469727,
+              "neighbor_time_s": 2.4516892433166504
+            },
+            "outgoing_key": {
+              "time_s": 0.0,
+              "neighbor_time_s": 0.008310810662806034
+            },
+            "unit": "rad/s"
+          }
+        },
+        "classification": "exact adjacent LINEAR translation and shortest-SLERP local-channel tangents; constant scale is admitted and nonconstant animated scale rejects; not a world or skinned-loop claim",
+        "diagnostics": {
+          "quadratic_three_sample_estimate": {
+            "maximum_angular_velocity_seam_degrees_per_s": 2.311791554308345,
+            "maximum_linear_velocity_seam_m_per_s": 2.8774177806796392e-06,
+            "peak_witnesses": {
+              "angular": {
+                "node": 49,
+                "bone": "Bone_010",
+                "incoming": [
+                  1.1332098261655585,
+                  -3.0060178797110247e-07,
+                  -0.24444398621239757
+                ],
+                "outgoing": [
+                  1.0937685742302417,
+                  -2.74149456288121e-07,
+                  -0.23593640431239699
+                ]
+              },
+              "linear": {
+                "node": 73,
+                "bone": "Bone_001",
+                "incoming": [
+                  -0.09419096315766826,
+                  -0.012896519450341386,
+                  -0.009710714721154399
+                ],
+                "outgoing": [
+                  -0.09419235258159064,
+                  -0.012896943128187802,
+                  -0.009708230867026048
+                ]
+              }
+            },
+            "classification": "diagnostic quadratic fit through three native samples; not an emitted LINEAR pass claim"
+          }
+        }
+      }
+    }
+  }
+}
