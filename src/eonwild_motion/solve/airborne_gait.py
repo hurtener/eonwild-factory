@@ -85,6 +85,29 @@ def _interior(a: np.ndarray, b: np.ndarray) -> float:
     return math.degrees(math.acos(float(np.clip(_unit(a) @ _unit(b), -1, 1))))
 
 
+def _world_sagittal_degrees(direction: Any, forward: np.ndarray, up: np.ndarray) -> float:
+    """Signed direction from down: positive points toward declared forward."""
+    vector = _unit(direction)
+    return math.degrees(math.atan2(float(vector @ forward), -float(vector @ up)))
+
+
+def _world_metatarsus_recovery(foot_plan: Mapping[str, Any]) -> tuple[float, float] | None:
+    """Return the common world target and its C2 recovery gain, when authored."""
+    peak = foot_plan.get("metatarsal_recovery_world_degrees_from_down")
+    gain = foot_plan.get("metatarsal_recovery_gain")
+    if peak is None and gain is None:
+        return None
+    if (peak is None) != (gain is None):
+        raise ContractError("world metatarsal recovery target and gain must be declared together")
+    for value, label in ((peak, "world metatarsal recovery target"),
+                         (gain, "world metatarsal recovery gain")):
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+            raise ContractError(f"{label} must be finite numeric")
+    if not -90 <= peak <= 90 or not 0 <= gain <= 1:
+        raise ContractError("world metatarsal recovery target or gain is outside its authored envelope")
+    return float(peak), float(gain)
+
+
 def _recovery_pitch_target(gait: AirborneGait, foot_plan: Mapping[str, Any], *, airborne: bool) -> float:
     """Phase-pure pitch carrier for the returning half of swing.
 
@@ -338,6 +361,12 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
     forward = _unit(travel - up * (travel @ up))
     lateral = _unit(np.cross(up, forward))
     origin = np.asarray(_world_position(worlds[pelvis]))
+    hip_positions = {side: np.asarray(_world_position(worlds[chain[0]]))
+                     for side, chain in legs.items()}
+    hip_midpoint = .5 * (hip_positions["left"] + hip_positions["right"])
+    hip_lane_center = float((hip_midpoint - origin) @ lateral)
+    hip_offsets = {side: float((position - hip_midpoint) @ lateral)
+                   for side, position in hip_positions.items()}
     # A common toe-joint plane is a provisional engineering carrier, never a
     # substitute for evaluating the final skinned sole/contact patches.
     toe_nodes = [n for chains in toes.values() for chain in chains for n in chain]
@@ -444,7 +473,13 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
             hp, kp, ap, fp = (np.asarray(_world_position(w[n])) for n in chain)
             side_lane = float((np.asarray(_world_position(base_w[foot])) - origin) @ lateral)
             if "performance" in plan:
-                side_lane = math.copysign(.5 * plan["performance"]["lane_width_body_heights"] * body_height, side_lane)
+                half_lane = .5 * plan["performance"]["lane_width_body_heights"] * body_height
+                if plan["performance"].get("center_lanes_on_bilateral_hip_midpoint", False):
+                    if min(abs(value) for value in hip_offsets.values()) < 1e-8 * body_height:
+                        raise ContractError("bilateral hip midpoint lane calibration requires separated hip origins")
+                    side_lane = hip_lane_center + math.copysign(half_lane, hip_offsets[side])
+                else:
+                    side_lane = math.copysign(half_lane, side_lane)
             foot_height = float(np.asarray(_world_position(base_w[foot])) @ up - ground)
             desired_foot = origin + forward * foot_plan["forward_m"] + lateral * side_lane
             desired_foot += up * (ground + foot_height + foot_plan["height_m"] - float(desired_foot @ up))
@@ -475,13 +510,14 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
             # envelope before the leg solve. This small rigid foot adjustment
             # is realized by hip/knee/ankle rotations, never translations.
             base_offset = np.asarray(_world_position(base_w[foot])) - np.asarray(_world_position(base_w[ankle]))
+            world_metatarsus_recovery = _world_metatarsus_recovery(foot_plan)
             upper, lower = np.linalg.norm(kp - hp), np.linalg.norm(ap - kp)
             toe_geometry = []
             for a, b, c in toes[side]:
                 pa, pb, pc = (np.asarray(_world_position(w[n])) for n in (a, b, c))
                 toe_geometry.append((pa - fp, np.asarray(_world_position(base_w[c])) + nominal_foot - np.asarray(_world_position(base_w[foot])), np.linalg.norm(pb - pa) + np.linalg.norm(pc - pb) - 1e-7))
 
-            def pitch_candidate(degrees):
+            def pitch_candidate(degrees, world_metatarsus_target=None):
                 candidate_q = _qrotvec(tuple(lateral * math.radians(degrees)))
                 candidate_foot = (nominal_foot.copy() if material_partition else
                                   nominal_foot + initial_tip_offset - np.asarray(_qrotate(candidate_q, tuple(flexed_tip_offset))))
@@ -502,6 +538,8 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
                 hip_angle = math.degrees(math.atan2(float((candidate_knee - hp) @ forward), -float((candidate_knee - hp) @ up)))
                 knee_angle = _interior(hp - candidate_knee, candidate_end - candidate_knee)
                 ankle_angle = _interior(candidate_knee - candidate_end, candidate_foot - candidate_end)
+                metatarsus_world_degrees = _world_sagittal_degrees(
+                    candidate_foot - candidate_end, forward, up)
                 if articulation_profile is None:
                     slacks = [hip_angle + gait.hip_extension_limit_degrees, gait.hip_flexion_limit_degrees - hip_angle, knee_angle - gait.knee_min_interior_degrees, gait.knee_max_interior_degrees - knee_angle, ankle_angle - gait.ankle_min_interior_degrees, gait.ankle_max_interior_degrees - ankle_angle]
                     preferred = None
@@ -539,12 +577,24 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
                               and "flight_fraction" in plan.get("parameters", {})),
                 )
                 preferred_gain = recovery if articulation_profile is None else 1.0
-                score = (degrees - pitch_target) ** 2 + recovery * (hip_angle - hip_target) ** 2 + preferred_gain * gait.articulation_preferred_margin_weight * preferred + 1e5 * sum(e * e for e in errors) + 1e8 * extension * extension
+                authored_pitch_cost = (degrees - pitch_target) ** 2
+                if world_metatarsus_target is None:
+                    pitch_cost = authored_pitch_cost
+                else:
+                    # Blend the objectives, not only their targets. As the C2
+                    # recovery gain tends to zero, both the value and gradient
+                    # converge to the existing per-side authored-pitch solve.
+                    world_cost = 100.0 * (
+                        metatarsus_world_degrees - world_metatarsus_target) ** 2
+                    pitch_cost = ((1 - world_metatarsus_gain) * authored_pitch_cost
+                                  + world_metatarsus_gain * world_cost)
+                score = pitch_cost + recovery * (hip_angle - hip_target) ** 2 + preferred_gain * gait.articulation_preferred_margin_weight * preferred + 1e5 * sum(e * e for e in errors) + 1e8 * extension * extension
                 return (score, candidate_q, candidate_foot, target_ankle,
                         candidate_knee, candidate_end, extension, max(errors),
                         {"hip_sagittal_degrees": hip_angle,
                          "knee_interior_degrees": knee_angle,
-                         "ankle_interior_degrees": ankle_angle}, degrees)
+                         "ankle_interior_degrees": ankle_angle},
+                        metatarsus_world_degrees, degrees)
 
             # A one-dimensional sagittal articulation solve coordinates the
             # thigh and metatarsal around the unchanged toe target. It does not
@@ -556,21 +606,54 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
             # Rate compliance is measured on the completed trajectory below;
             # it must never alter this pose as a function of query order.
             lo, hi = -45.0, 85.0
-            candidates = [pitch_candidate(degrees) for degrees in np.linspace(lo, hi, 27)]
-            # Preserve an exactly feasible authored pitch (especially flat
-            # stance=0). A refined grid alone can leave a few millidegrees of
-            # negative pitch and depress a distal joint on a straight toe rig.
-            candidates.append(pitch_candidate(float(np.clip(foot_plan["foot_pitch_degrees"], lo, hi))))
-            best = min(candidates, key=lambda candidate: candidate[0])
-            step = (hi - lo) / 52
-            # Resolve the actual articulation more accurately, rather than
-            # filtering serialized rotations after contact validation. The
-            # old reproduction path retains its exact seven refinements.
-            for _ in range(22 if material_partition else 7):
-                best = min([best, pitch_candidate(max(lo, best[-1] - step)), pitch_candidate(min(hi, best[-1] + step))], key=lambda candidate: candidate[0])
-                step *= .5
+
+            def candidate_key(candidate):
+                if articulation_profile is None:
+                    return (candidate[0],)
+                # Bound profiles are constraints, not score suggestions. A
+                # feasible candidate always outranks one outside a hard bound;
+                # only a genuinely infeasible pitch domain minimizes violation.
+                violation = candidate[7]
+                return ((0, candidate[0]) if violation <= 1e-10
+                        else (1, violation, candidate[0]))
+
+            def minimize_pitch(world_target=None):
+                candidates = [pitch_candidate(degrees, world_target)
+                              for degrees in np.linspace(lo, hi, 27)]
+                # Preserve an exactly feasible authored pitch (especially flat
+                # stance=0). A refined grid alone can leave a few millidegrees of
+                # negative pitch and depress a distal joint on a straight toe rig.
+                candidates.append(pitch_candidate(
+                    float(np.clip(foot_plan["foot_pitch_degrees"], lo, hi)), world_target))
+                best_candidate = min(candidates, key=candidate_key)
+                step = (hi - lo) / 52
+                # Resolve the actual articulation more accurately, rather than
+                # filtering serialized rotations after contact validation. The
+                # old reproduction path retains its exact seven refinements.
+                for _ in range(22 if material_partition else 7):
+                    best_candidate = min([
+                        best_candidate,
+                        pitch_candidate(max(lo, best_candidate[-1] - step), world_target),
+                        pitch_candidate(min(hi, best_candidate[-1] + step), world_target),
+                    ], key=candidate_key)
+                    step *= .5
+                return best_candidate
+
+            baseline_best = minimize_pitch()
+            if world_metatarsus_recovery is None:
+                world_metatarsus_baseline = None
+                world_metatarsus_target = None
+                world_metatarsus_gain = None
+                best = baseline_best
+            else:
+                peak_target, world_metatarsus_gain = world_metatarsus_recovery
+                world_metatarsus_baseline = baseline_best[-2]
+                world_metatarsus_target = ((1 - world_metatarsus_gain) * world_metatarsus_baseline
+                                            + world_metatarsus_gain * peak_target)
+                best = minimize_pitch(world_metatarsus_target)
             (_, pitch, desired_foot, target, desired_knee, desired_end,
-             extension, envelope_error, articulation_angles, solved_pitch) = best
+             extension, envelope_error, articulation_angles,
+             metatarsus_world_degrees, solved_pitch) = best
             max_extension = max(max_extension, extension)
             max_envelope_violation = max(max_envelope_violation, envelope_error)
             desired_normal = _unit(np.cross(desired_knee - hp, desired_end - desired_knee))
@@ -651,7 +734,13 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
             if articulation_profile is not None:
                 facts[side]["articulation_phase"] = "support" if foot_plan["contact"] else "swing"
                 facts[side]["articulation_angles_degrees"] = articulation_angles
-        frames_t.append(tr); frames_r.append(rot)
+            if world_metatarsus_target is not None:
+                facts[side]["metatarsus_world_degrees_from_down"] = metatarsus_world_degrees
+                facts[side]["metatarsus_world_baseline_degrees_from_down"] = world_metatarsus_baseline
+                facts[side]["metatarsus_world_target_degrees_from_down"] = world_metatarsus_target
+                facts[side]["metatarsus_world_target_gain"] = world_metatarsus_gain
+        frames_t.append(tr)
+        frames_r.append(rot)
         emitted.append({"time_s": row["time_s"], "flight": row["flight"], "feet": facts})
     times = np.asarray([r["time_s"] for r in plan["samples"]])
     ta, ra = np.asarray(frames_t), np.asarray(frames_r)

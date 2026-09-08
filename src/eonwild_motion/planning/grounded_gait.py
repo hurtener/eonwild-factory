@@ -37,6 +37,8 @@ class GroundedGait:
     toe_flex_degrees: float = 0.0
     toe_recovery_peak_fraction: float | None = None
     foot_recovery_pitch_degrees: float = 0.0
+    metatarsal_recovery_world_degrees_from_down: float | None = None
+    metatarsal_recovery_release_fraction: float | None = None
     pad_recovery_pitch_degrees: float | None = None
     push_off_pitch_degrees: float = 0.0
     push_off_start_fraction: float = 0.60
@@ -53,7 +55,8 @@ class GroundedGait:
             if key == 'centered_stance':
                 if type(value) is not bool:
                     raise ContractError('centered_stance must be boolean')
-            elif key in ('toe_recovery_peak_fraction', 'pad_recovery_pitch_degrees'):
+            elif key in ('toe_recovery_peak_fraction', 'metatarsal_recovery_world_degrees_from_down',
+                         'metatarsal_recovery_release_fraction', 'pad_recovery_pitch_degrees'):
                 if value is not None and (isinstance(value, bool) or not isinstance(value, (int, float))
                                           or not math.isfinite(value)):
                     raise ContractError(f'grounded optional control {key} must be finite numeric or null')
@@ -72,6 +75,16 @@ class GroundedGait:
                 raise ContractError(f"grounded {key} exceeds the articulation envelope")
         if self.pad_recovery_pitch_degrees is not None and not -60 <= self.pad_recovery_pitch_degrees <= 60:
             raise ContractError("grounded pad recovery pitch exceeds the signed articulation envelope")
+        if (self.metatarsal_recovery_world_degrees_from_down is not None
+                and not -90 <= self.metatarsal_recovery_world_degrees_from_down <= 90):
+            raise ContractError("grounded world metatarsal recovery target must lie within -90..90 degrees")
+        if ((self.metatarsal_recovery_world_degrees_from_down is None)
+                != (self.metatarsal_recovery_release_fraction is None)):
+            raise ContractError("grounded world metatarsal recovery target and release must be authored together")
+        if self.metatarsal_recovery_release_fraction is not None:
+            peak = self.toe_recovery_peak_fraction or self.rounded_swing_peak_fraction or .42
+            if not peak < self.metatarsal_recovery_release_fraction <= .9:
+                raise ContractError("grounded world metatarsal recovery release must follow its peak and not exceed .9")
         if self.toe_recovery_peak_fraction is not None and not .3 <= self.toe_recovery_peak_fraction <= .5:
             raise ContractError("grounded toe recovery peak must lie in [.3,.5]")
         if not 0 < self.push_off_start_fraction < 1:
@@ -133,7 +146,10 @@ def sample_grounded_gait(gait: GroundedGait, time_s: float, body_height_m: float
             height = 0.0
         else:
             recovery = math.sin(math.pi * smooth(swing)) ** 2
-            pitch = gait.push_off_pitch_degrees * (1 - smooth(swing / .35)) - gait.foot_recovery_pitch_degrees * recovery
+            push_off = gait.push_off_pitch_degrees * (1 - smooth(swing / .35))
+            pitch = (push_off - gait.foot_recovery_pitch_degrees * recovery
+                     if gait.metatarsal_recovery_world_degrees_from_down is None
+                     else push_off)
             flex = (-recovery_pitch(swing, gait.toe_flex_degrees, gait.toe_recovery_peak_fraction)
                     if gait.toe_recovery_peak_fraction is not None else gait.toe_flex_degrees * recovery)
             crown = (rounded_swing_height(swing, gait.rounded_swing_peak_fraction)
@@ -142,6 +158,11 @@ def sample_grounded_gait(gait: GroundedGait, time_s: float, body_height_m: float
         feet[side] = {"contact": contact, "forward_m": anchor + (0 if contact else velocity * period * smooth(swing)),
             "height_m": height, "toe_flex_degrees": flex, "foot_pitch_degrees": pitch,
             "swing_phase": swing, "touchdown_time_s": touchdown}
+        if not contact and gait.metatarsal_recovery_world_degrees_from_down is not None:
+            peak = gait.toe_recovery_peak_fraction or gait.rounded_swing_peak_fraction or .42
+            feet[side]["metatarsal_recovery_world_degrees_from_down"] = gait.metatarsal_recovery_world_degrees_from_down
+            feet[side]["metatarsal_recovery_gain"] = -recovery_pitch(
+                swing, 1.0, peak, gait.metatarsal_recovery_release_fraction)
     support = sum(int(foot["contact"]) for foot in feet.values())
     if support == 0:
         raise ContractError("grounded program produced unsupported flight")

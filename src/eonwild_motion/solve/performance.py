@@ -25,11 +25,14 @@ class Performance:
     tail_lag_fraction: float = .12
     gaze_elevation_degrees: float = 3.0
     center_tail: bool = True
+    center_lanes_on_bilateral_hip_midpoint: bool | None = None
     skin_refinement: bool = True
 
     def __post_init__(self):
         for key, value in asdict(self).items():
-            if key in ("center_tail", "skin_refinement"):
+            if key == "center_lanes_on_bilateral_hip_midpoint" and value is None:
+                continue
+            if key in ("center_tail", "center_lanes_on_bilateral_hip_midpoint", "skin_refinement"):
                 if type(value) is not bool:
                     raise ContractError(f"{key} must be boolean")
             elif isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
@@ -56,7 +59,8 @@ def load_performance(document: Mapping[str, Any]) -> Performance:
 def decorate_plan(plan: dict, performance: Performance) -> dict:
     from copy import deepcopy
     result = deepcopy(plan)
-    result["performance"] = asdict(performance)
+    result["performance"] = {key: value for key, value in asdict(performance).items()
+                             if value is not None}
     result["loop"] = plan.get("loop", True)
     from ..planning.foot_articulation import declare_pad_recovery
     declare_pad_recovery(result)
