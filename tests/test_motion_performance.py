@@ -8,6 +8,7 @@ import json
 import numpy as np
 import pytest
 
+import eonwild_motion.solve.performance as performance_module
 from eonwild_motion.errors import ContractError
 from eonwild_motion.planning.airborne_gait import AirborneGait, build_airborne_plan
 from eonwild_motion.planning.gait_transition import GaitTransition, build_transition_plan
@@ -283,6 +284,47 @@ def test_axial_clock_admission_is_independent_of_sparse_transition_grid(kind):
                 source, base, roles, full, phase, gain, lateral), abs=1e-15)
 
 
+def test_axial_clock_requires_distinct_hips_beneath_pelvis_but_allows_helpers():
+    source, roles = fixture("axial_hierarchy_", 1., upper_body=True)
+    up = np.array([0., 1., 0.])
+    forward = np.array([0., 0., 1.])
+    lateral = np.cross(up, forward)
+    gait = GroundedGait(
+        step_length_body_heights=.6, cycles=1, sample_hz=120)
+    plan = _axial_performance_plan(gait)
+    pelvis = source.name_to_node[roles["pelvis"]]
+    root = source.name_to_node[roles["root"]]
+    hips = [
+        source.name_to_node[roles["legs"][side]["contactChain"][0]]
+        for side in ("left", "right")
+    ]
+
+    invalid = deepcopy(source)
+    for hip in hips:
+        invalid.parents[hip] = root
+    base = _world_matrices(
+        invalid, invalid.rest_translation, invalid.rest_rotation, invalid.rest_scale)
+    with pytest.raises(ContractError, match="hips beneath its pelvis"):
+        _support_timed_axial_clock(
+            invalid, base, roles, plan, .1, 1., lateral)
+
+    admitted = deepcopy(source)
+    for side, hip in zip(("left", "right"), hips):
+        helper = len(admitted.nodes)
+        admitted.nodes.append({"name": f"axial_{side}_hip_helper"})
+        admitted.name_to_node[f"axial_{side}_hip_helper"] = helper
+        admitted.parents.append(pelvis)
+        admitted.rest_translation.append((0., 0., 0.))
+        admitted.rest_rotation.append((0., 0., 0., 1.))
+        admitted.rest_scale.append((1., 1., 1.))
+        admitted.parents[hip] = helper
+    base = _world_matrices(
+        admitted, admitted.rest_translation,
+        admitted.rest_rotation, admitted.rest_scale)
+    assert math.isfinite(_support_timed_axial_clock(
+        admitted, base, roles, plan, .1, 1., lateral)[2])
+
+
 def test_axial_clock_phases_proximal_tail_after_centering():
     source, roles = fixture("axial_tail_", 1., upper_body=True)
     up = np.array([0., 1., 0.])
@@ -310,6 +352,43 @@ def test_axial_clock_phases_proximal_tail_after_centering():
     weights /= weights.sum()
     assert tail_yaw(double) == pytest.approx(-16 * weights[0], abs=1e-8)
     assert tail_yaw(stance) == pytest.approx(0, abs=1e-8)
+
+
+def test_omitted_axial_clock_preserves_exact_legacy_tail_arithmetic(monkeypatch):
+    source, roles = fixture("axial_legacy_", 1., upper_body=True)
+    up = np.array([0., 1., 0.])
+    forward = np.array([0., 0., 1.])
+    gait = GroundedGait(
+        step_period_s=1.23, duty_factor=.62,
+        step_length_body_heights=.6, cycles=1, sample_hz=120)
+    performance = Performance(
+        pelvis_yaw_degrees=0, pelvis_roll_degrees=0,
+        pelvis_sway_body_heights=0, tail_yaw_degrees=9.994991664328396,
+        tail_lag_fraction=.16, gaze_elevation_degrees=0,
+        skin_refinement=False)
+    plan = decorate_plan(build_grounded_plan(gait, 2.), performance)
+    row = sample_grounded_gait(gait, .371, 2.)
+    row["performance_gain"] = .1087256783870183
+    row["locomotion_time_s"] = 1.881
+    tail = [source.name_to_node[name] for name in roles["tail"]]
+    captured = {}
+    original = performance_module._world_delta
+
+    def capture(source_, translations, rotations, scales, node, axis, degrees):
+        if node == tail[0]:
+            captured["degrees"] = degrees
+        return original(
+            source_, translations, rotations, scales, node, axis, degrees)
+
+    monkeypatch.setattr(performance_module, "_world_delta", capture)
+    _performance_pose(source, roles, plan, row, up, forward)
+    weights = np.linspace(.6, 1.4, len(tail))
+    weights /= weights.sum()
+    phase, gain = phase_and_gain(row)
+    angle = 2 * math.pi * phase / plan["same_foot_cycle_s"]
+    expected = (-gain * performance.tail_yaw_degrees * weights[0]
+                * math.sin(angle))
+    assert captured["degrees"] == expected
 
 
 @pytest.mark.parametrize("kind", ["start", "stop"])

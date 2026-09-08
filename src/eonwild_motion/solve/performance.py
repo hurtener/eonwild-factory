@@ -278,13 +278,38 @@ def _support_timed_axial_clock(source, base_worlds, roles, plan, phase, gain, la
         raise ContractError(
             "support-timed axial carrier requires positive finite body height")
     try:
-        hips = {
-            side: source.name_to_node[roles["legs"][side]["contactChain"][0]]
-            for side in ("left", "right")
-        }
+        pelvis_name = roles["pelvis"]
+        legs = roles["legs"]
+        if (not isinstance(pelvis_name, str) or not pelvis_name
+                or not isinstance(legs, Mapping)):
+            raise TypeError
+        pelvis = source.name_to_node[pelvis_name]
+        hip_names = {}
+        for side in ("left", "right"):
+            leg = legs[side]
+            chain = leg["contactChain"]
+            if (not isinstance(leg, Mapping)
+                    or not isinstance(chain, Sequence)
+                    or isinstance(chain, (str, bytes)) or not chain
+                    or not isinstance(chain[0], str) or not chain[0]):
+                raise TypeError
+            hip_names[side] = chain[0]
+        hips = {side: source.name_to_node[name] for side, name in hip_names.items()}
     except (KeyError, TypeError, IndexError) as exc:
         raise ContractError(
-            "support-timed axial carrier requires semantic bilateral hips") from exc
+            "support-timed axial carrier requires typed semantic pelvis and hips") from exc
+    if pelvis in hips.values() or len(set(hips.values())) != 2:
+        raise ContractError(
+            "support-timed axial carrier requires distinct pelvis and bilateral hips")
+    for hip in hips.values():
+        seen = set()
+        node = hip
+        while node != pelvis:
+            if node in seen or node is None:
+                raise ContractError(
+                    "support-timed axial carrier requires hips beneath its pelvis")
+            seen.add(node)
+            node = source.parents[node]
     hip_positions = {
         side: np.asarray(_world_position(base_worlds[node]), dtype=float)
         for side, node in hips.items()
@@ -648,11 +673,13 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
         weights /= weights.sum()
     for i, node in enumerate(tail):
         lag = p.tail_lag_fraction * i / max(1, len(tail) - 1)
-        tail_pulse = (gain * axial_clock[0] * math.sin(
-            axial_clock[1] - 2 * math.pi * lag)
-            if axial_clock is not None else
-            gain * math.sin(angle - 2 * math.pi * lag))
-        degrees = -p.tail_yaw_degrees * weights[i] * tail_pulse
+        if axial_clock is None:
+            degrees = (-gain * p.tail_yaw_degrees * weights[i]
+                       * math.sin(angle - 2 * math.pi * lag))
+        else:
+            tail_pulse = gain * axial_clock[0] * math.sin(
+                axial_clock[1] - 2 * math.pi * lag)
+            degrees = -p.tail_yaw_degrees * weights[i] * tail_pulse
         _world_delta(source, translations, rotations, scales, node, up, degrees)
     if p.tail_counterpitch_degrees is not None:
         assert sagittal_chains is not None
