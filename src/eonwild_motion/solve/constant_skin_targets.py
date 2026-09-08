@@ -72,7 +72,7 @@ class CanonicalConstantSkinTargetLaw:
         row={k:v for k,v in result.row.items()}; row['feet']={s:dict(f) for s,f in result.row['feet'].items()}
         for s,v in constants.items(): row['feet'][s]['target_offset_m']=v.tolist()
         pose=solve_airborne_plan_sample(query.context,row,body_response_sample=query._body_sample(query._exact_index(time),row))
-        worlds=_world_matrices(query._source,pose.translations,pose.rotations,query.context.base_s)
+        worlds=np.asarray(_world_matrices(query._source,pose.translations,pose.rotations,query.context.base_s), dtype=float)
         patch=cls._patch(skin,worlds,side); anchor=provider.anchor_for(side)
         target=anchor.material_origin_m+query.context.forward*row['feet'][side]['forward_m']
         active=patch[:,np.argmax(np.abs(query.context.up))] <= patch[:,np.argmax(np.abs(query.context.up))].min()+.001
