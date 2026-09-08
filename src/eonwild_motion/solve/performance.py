@@ -27,12 +27,14 @@ class Performance:
     center_tail: bool = True
     center_lanes_on_bilateral_hip_midpoint: bool | None = None
     support_directed_pelvis_carrier: bool | None = None
+    upper_trunk_counterroll_degrees: float | None = None
     skin_refinement: bool = True
 
     def __post_init__(self):
         for key, value in asdict(self).items():
             if key in ("center_lanes_on_bilateral_hip_midpoint",
-                       "support_directed_pelvis_carrier") and value is None:
+                       "support_directed_pelvis_carrier",
+                       "upper_trunk_counterroll_degrees") and value is None:
                 continue
             if key in ("center_tail", "center_lanes_on_bilateral_hip_midpoint",
                        "support_directed_pelvis_carrier", "skin_refinement"):
@@ -48,6 +50,13 @@ class Performance:
             raise ContractError("tail performance exceeds the envelope")
         if not -10 <= self.gaze_elevation_degrees <= 20:
             raise ContractError("gaze performance exceeds the envelope")
+        if (self.upper_trunk_counterroll_degrees is not None
+                and not 0 <= self.upper_trunk_counterroll_degrees <= 3):
+            raise ContractError("upper-trunk counterroll exceeds the authored envelope")
+        if (self.upper_trunk_counterroll_degrees is not None
+                and self.support_directed_pelvis_carrier is not True):
+            raise ContractError(
+                "upper-trunk counterroll requires the support-directed pelvis carrier")
 
 
 def load_performance(document: Mapping[str, Any]) -> Performance:
@@ -104,6 +113,11 @@ def _support_directed_pulse(source, base_worlds, roles, plan, phase, gain, later
     Extrema occur at declared stance midpoints, with zero at
     double-support midpoints. This is authored coordination, not load or COM.
     """
+    grounded = (plan.get("program") == "grounded_gait"
+                or plan.get("locomotion_program") == "grounded_gait")
+    if not grounded:
+        raise ContractError(
+            "support-directed pelvis carrier requires grounded locomotion")
     parameters = plan.get("parameters")
     if not isinstance(parameters, Mapping):
         raise ContractError("support-directed pelvis carrier requires gait parameters")
@@ -168,6 +182,24 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
     _world_delta(source, translations, rotations, scales, pelvis, forward, p.pelvis_roll_degrees * roll_pulse)
     chest = source.name_to_node[roles["chest"]]
     _world_delta(source, translations, rotations, scales, chest, up, -.65 * p.pelvis_yaw_degrees * pulse)
+    if p.upper_trunk_counterroll_degrees is not None:
+        names = [*roles.get("spine", []), roles["chest"]]
+        if (not names or len(names) != len(set(names))
+                or any(name not in source.name_to_node for name in names)):
+            raise ContractError(
+                "upper-trunk counterroll requires a unique semantic spine/chest chain")
+        trunk = [source.name_to_node[name] for name in names]
+        if (source.parents[trunk[0]] != pelvis
+                or any(source.parents[child] != parent
+                       for parent, child in zip(trunk, trunk[1:]))):
+            raise ContractError(
+                "upper-trunk counterroll semantic roles must follow actual topology")
+        weights = np.linspace(.6, 1.4, len(trunk))
+        weights /= weights.sum()
+        for node, weight in zip(trunk, weights):
+            _world_delta(
+                source, translations, rotations, scales, node, forward,
+                p.upper_trunk_counterroll_degrees * sway_pulse * float(weight))
     tail = [source.name_to_node[n] for n in roles["tail"]]
     if p.center_tail:
         for node, child in zip(tail, tail[1:]):

@@ -12,11 +12,18 @@ from eonwild_motion.planning.airborne_gait import AirborneGait, build_airborne_p
 from eonwild_motion.planning.gait_transition import GaitTransition, build_transition_plan
 from eonwild_motion.planning.grounded_gait import GroundedGait, sample_grounded_gait, build_grounded_plan
 from eonwild_motion.factory.io import digest, json_bytes
-from eonwild_motion.layers.leg_contact_resolve_v3 import _world_matrices, _world_position
+from eonwild_motion.factory.source import geometry_height
+from eonwild_motion.glb.container import Glb
+from eonwild_motion.layers.leg_contact_resolve_v3 import (
+    _clip_state, _pose, _rotation_from_matrix, _world_matrices,
+    _world_position,
+)
+from eonwild_motion.solve.airborne_gait import solve_airborne_gait
 from eonwild_motion.solve.performance import (
     Performance, apply_performance, decorate_plan, load_performance,
 )
 from test_v9_airborne_gait import fixture
+from eonwild_motion.solve.skin_rig import rotation_matrix
 from eonwild_motion.solve.skin_targets import cyclic_authority, _cyclic_fill
 from eonwild_motion.dynamics.contact_authority import PatchFrame, AuthorityThresholds
 
@@ -246,6 +253,176 @@ def test_support_carrier_rejects_hips_without_declared_lateral_separation():
     row = sample_grounded_gait(gait, gait.duty_factor * gait.step_period_s, 2.)
     with pytest.raises(ContractError, match="separated along the declared lateral axis"):
         _performance_pose(source, roles, plan, row, up, forward)
+
+
+@pytest.mark.parametrize("value", [-.1, 3.1, True, float("nan")])
+def test_upper_trunk_counterroll_rejects_invalid_values(value):
+    with pytest.raises(ContractError):
+        Performance(
+            support_directed_pelvis_carrier=True,
+            upper_trunk_counterroll_degrees=value,
+        )
+
+
+def test_upper_trunk_counterroll_requires_support_carrier():
+    for carrier in (None, False):
+        with pytest.raises(ContractError, match="requires the support-directed"):
+            Performance(
+                support_directed_pelvis_carrier=carrier,
+                upper_trunk_counterroll_degrees=.9,
+            )
+
+
+def test_support_counterroll_is_distributed_over_unique_actual_trunk_chain():
+    root = Path(__file__).resolve().parents[1]
+    source = Glb.from_bytes((root / "assets/sha256/044a8be907eb650fa71c613f19655eb10a0dd23c1d6bce86dfef93cd8d9575f6.glb").read_bytes())
+    roles = json.loads((root / "catalog/rigs/heavy-biped.v9.json").read_text())["roles"]
+    up = np.array([0., 1., 0.])
+    forward = np.array([.03893162055641767, 0., .9992418770852486])
+    gait = GroundedGait(step_period_s=1.23, duty_factor=.62)
+    performance = Performance(
+        pelvis_sway_body_heights=.018,
+        pelvis_yaw_degrees=0,
+        pelvis_roll_degrees=1.5,
+        tail_yaw_degrees=0,
+        gaze_elevation_degrees=0,
+        center_tail=False,
+        support_directed_pelvis_carrier=True,
+        upper_trunk_counterroll_degrees=.9,
+    )
+    plan = decorate_plan(build_grounded_plan(gait, 2.), performance)
+    row = sample_grounded_gait(
+        gait, gait.duty_factor * gait.step_period_s, 2.)
+    base, posed = _performance_pose(source, roles, plan, row, up, forward)
+    names = [roles["pelvis"], *roles["spine"], roles["chest"]]
+    nodes = [source.name_to_node[name] for name in names]
+    angles = []
+    for node in nodes:
+        base_rotation = rotation_matrix(_rotation_from_matrix(base[node]))
+        posed_rotation = rotation_matrix(_rotation_from_matrix(posed[node]))
+        local_up = base_rotation.T @ up
+        posed_up = posed_rotation @ local_up
+        angles.append(math.degrees(math.atan2(
+            forward @ np.cross(up, posed_up),
+            up @ posed_up,
+        )))
+    weights = np.linspace(.6, 1.4, len(nodes) - 1)
+    weights /= weights.sum()
+    expected = [1.5]
+    for weight in weights:
+        expected.append(expected[-1] - .9 * weight)
+    assert angles == pytest.approx(expected, abs=5e-6)
+    assert angles[-1] == pytest.approx(.6, abs=5e-6)
+    assert all(a > b for a, b in zip(angles, angles[1:]))
+
+
+def test_upper_trunk_counterroll_is_present_in_serialized_actual_rig_motion():
+    root = Path(__file__).resolve().parents[1]
+    source = Glb.from_bytes((root / "assets/sha256/044a8be907eb650fa71c613f19655eb10a0dd23c1d6bce86dfef93cd8d9575f6.glb").read_bytes())
+    roles = json.loads((root / "catalog/rigs/heavy-biped.v9.json").read_text())["roles"]
+    up = (0., 1., 0.)
+    forward = (.03893162055641767, 0., .9992418770852486)
+    height = geometry_height(source, roles, up)
+    gait = GroundedGait(
+        step_period_s=1.23,
+        duty_factor=.62,
+        cycles=1,
+        sample_hz=24,
+        step_length_body_heights=.1,
+        touchdown_reach_body_heights=.05,
+        swing_clearance_body_heights=.08,
+    )
+    performance = Performance(
+        pelvis_sway_body_heights=.018,
+        pelvis_yaw_degrees=0,
+        pelvis_roll_degrees=1.5,
+        tail_yaw_degrees=0,
+        gaze_elevation_degrees=0,
+        center_tail=False,
+        support_directed_pelvis_carrier=True,
+        upper_trunk_counterroll_degrees=.9,
+        skin_refinement=False,
+    )
+    plan = decorate_plan(build_grounded_plan(gait, height), performance)
+    raw, _, _, _ = solve_airborne_gait(
+        source,
+        source_clip=None,
+        semantic_roles=roles,
+        gait=AirborneGait(
+            step_period_s=gait.step_period_s,
+            cycles=1,
+            sample_hz=gait.sample_hz,
+        ),
+        up_axis=up,
+        forward_axis=forward,
+        plan_override=plan,
+        legacy_overlay=False,
+    )
+    emitted = Glb.from_bytes(raw)
+    tracks, times = _clip_state(
+        emitted, emitted.document["animations"][0]["name"])
+    index = int(np.argmin(np.abs(
+        np.asarray(times) - gait.duty_factor * gait.step_period_s)))
+    translations, rotations, scales = _pose(emitted, tracks, index)
+    posed = _world_matrices(emitted, translations, rotations, scales)
+    base = _world_matrices(
+        source, source.rest_translation, source.rest_rotation, source.rest_scale)
+    names = [roles["pelvis"], *roles["spine"], roles["chest"]]
+    nodes = [source.name_to_node[name] for name in names]
+    forward_array = np.asarray(forward)
+    up_array = np.asarray(up)
+    angles = []
+    for node in nodes:
+        base_rotation = rotation_matrix(_rotation_from_matrix(base[node]))
+        posed_rotation = rotation_matrix(_rotation_from_matrix(posed[node]))
+        posed_up = posed_rotation @ (base_rotation.T @ up_array)
+        angles.append(math.degrees(math.atan2(
+            forward_array @ np.cross(up_array, posed_up),
+            up_array @ posed_up,
+        )))
+    sample_time = float(times[index])
+    carrier = -math.cos(math.pi * (sample_time / gait.step_period_s - gait.duty_factor))
+    expected = [-1.5 * carrier]
+    weights = np.linspace(.6, 1.4, len(nodes) - 1)
+    weights /= weights.sum()
+    for weight in weights:
+        expected.append(expected[-1] + .9 * carrier * weight)
+    assert angles == pytest.approx(expected, abs=2e-4)
+    assert all(a > b for a, b in zip(angles, angles[1:]))
+    assert angles[-1] == pytest.approx(-.6 * carrier, abs=2e-4)
+
+
+def test_upper_trunk_counterroll_rejects_duplicate_or_disconnected_roles():
+    source, roles = fixture("counter", upper_body=True)
+    roles["spine"] = [roles["chest"]]
+    up = np.array([0., 1., 0.])
+    forward = np.array([0., 0., 1.])
+    gait = GroundedGait()
+    plan = decorate_plan(
+        build_grounded_plan(gait, 2.),
+        Performance(
+            support_directed_pelvis_carrier=True,
+            upper_trunk_counterroll_degrees=.9,
+        ),
+    )
+    row = sample_grounded_gait(
+        gait, gait.duty_factor * gait.step_period_s, 2.)
+    with pytest.raises(ContractError, match="unique semantic spine/chest chain"):
+        _performance_pose(source, roles, plan, row, up, forward)
+
+
+def test_direct_airborne_override_cannot_forge_support_carrier_identity():
+    source, roles = fixture("airborne", upper_body=True)
+    plan = build_airborne_plan(AirborneGait(cycles=1, sample_hz=24), 2.)
+    plan["performance"] = {
+        key: value for key, value in Performance(
+            support_directed_pelvis_carrier=True,
+        ).__dict__.items() if value is not None
+    }
+    with pytest.raises(ContractError, match="requires grounded locomotion"):
+        _performance_pose(
+            source, roles, plan, plan["samples"][0],
+            np.array([0., 1., 0.]), np.array([0., 0., 1.]))
 
 
 def patch(time,x,y=0):
