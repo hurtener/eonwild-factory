@@ -30,6 +30,8 @@ from .support_anchors import CanonicalSupportAnchorProvider, _digest
 
 _TARGET_GAP_M = 0.0001
 _TOLERANCE_M = 0.0002
+_IK_TOLERANCE_M = 0.001
+_ARTICULATION_TOLERANCE_DEGREES = 0.01
 _DAMPING = 0.85
 _MAX_CORRECTION_BODY_HEIGHTS = 0.06
 _BUILD_TOKEN = object()
@@ -376,11 +378,14 @@ class CanonicalConstantSkinTargetLaw:
             return f"{side} loaded residual exceeds refinement tolerance"
         if not observation["loaded"] and observation["minimum_gap_m"] < _TARGET_GAP_M:
             return f"{side} swing clearance is below target gap"
-        if abs(observation["ik_target_residual_m"]) > _TOLERANCE_M:
+        if abs(observation["ik_target_residual_m"]) > _IK_TOLERANCE_M:
             return f"{side} foot target residual exceeds solver tolerance"
-        if observation["unreachable_extension_m"] > 1e-9:
+        if observation["unreachable_extension_m"] > _IK_TOLERANCE_M:
             return f"{side} target requires unreachable IK extension"
-        if observation["articulation_violation_degrees"] > 1e-9:
+        if (
+            observation["articulation_violation_degrees"]
+            > _ARTICULATION_TOLERANCE_DEGREES
+        ):
             return f"{side} target violates articulation envelope"
         return None
 

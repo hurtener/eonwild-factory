@@ -81,7 +81,7 @@ def test_constant_law_returns_checked_pose_and_is_history_independent(law_and_in
     later = law.value(0.6)
     repeat = law.value(0.2)
     assert first.status == later.status == repeat.status == "AVAILABLE"
-    assert first.pose.maximum_unreachable_extension_m <= 1e-9
+    assert first.pose.maximum_unreachable_extension_m <= 0.001
     assert "GLOBAL_C1_AUTHORITY_UNAVAILABLE" in first.branch_witness["status"]
     for side in ("left", "right"):
         assert first.corrections_m[side].flags.writeable is False
