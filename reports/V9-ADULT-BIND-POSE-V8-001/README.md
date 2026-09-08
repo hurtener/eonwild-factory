@@ -9,6 +9,8 @@ This bounded candidate tests one geometry-admission change. It recovers the orig
 - Base: `cc7b3d9e199d1679d28bbcbefb61bcea5407b129`
 - Recovery implementation and focused production-shaped tests: `0a6ca91`
 - Frozen source, calibration, contact binding, recipe, and catalog tests: `7d3945b7083c1e04dbf360e852d401e29d3e98fa`
+- Reviewed source head after strict malformed-input and hierarchy fixes: `1b5a13e9c703a67470288901291aff65aa9faa4a`
+- Final accessor-conformance source head: `4fc8c9cb9e6f48a266c516f1c4328ad91a19b1a5`
 - Input source: `044a8be907eb650fa71c613f19655eb10a0dd23c1d6bce86dfef93cd8d9575f6`
 - Recovered source: `2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f`
 - Immutable package: `/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/continuation-adult-v8-bind-pose-001`
@@ -58,10 +60,15 @@ The current exact serialized local-channel evaluator rejects both V8 modes on th
 
 ## Verification
 
-- `13 passed`: bind recovery, adult catalog binding, and factory admission focused tests.
+- Author final focused gate: `47 passed` covering bind recovery, adult catalog binding, factory admission, and animal-instance compatibility.
+- Root final accessor closure: `43 passed`; all five retained malformed-accessor reproductions reject with `ContractError`; valid recovered geometry remains byte-identical.
+- Reviewer 2 final accessor closure: `34 passed`; the value-preserving `JOINTS_0` offset case and the complete independent accessor receipt reject; valid recovered geometry remains byte-identical.
 - Ruff and `git diff --check`: pass.
 - Package verifier: integrity `PASS`; technical `BLOCKED`; visual `PENDING`; Unity `NOT_RUN`; production approval `false`.
-- Static Blender import review: complete; native walking review remains pending with the host.
+- Static Blender import review: complete.
+- Host inspected all `370` rendered frames across five views plus five full-resolution critical frames. Decision: `BILATERAL_GEOMETRY_IMPROVED; WHOLE_BODY_POLISH_AND_JAW_CALIBRATION_REQUIRED`. This scoped frame review is not visual approval; native-speed playback remains `PENDING` because the Mac was locked.
+
+Two full adversarial rounds and the bounded P1 accessor closures are preserved below. The final two independent narrow closures found no remaining P0/P1 issue at `4fc8c9c`; earlier reports remain evidence of the defects they found at their exact reviewed heads.
 
 Evidence files:
 
@@ -70,3 +77,17 @@ Evidence files:
 - `host-static-import-review.json` SHA-256 `4e4463661c0e249307b1861df900f2a363a5225d635192dd1e45c8934041c2ce`
 - `comparison.json` SHA-256 `f699b26e7f3441f44f86ce9229c92f5bc6643e103c7ce08484efab80d8f94e92`
 - `v7-host-exact-continuity-status.json` SHA-256 `1e2e7bc13746b0af232a764c00cd905c90aa09791ff71ae9ea270e3b663483be`
+- `host-frame-review.json` SHA-256 `7a1f5b234f270cfc788b3073eef20727923d5946f5aaed67a3a48ee8d4226632`
+- `review-round1-root.md` SHA-256 `785c1945801d2098d7f59ac7c6992d836003eedae92b0d42ea551e195985c276`
+- `review-round1-root-repro.json` SHA-256 `bc7bcfc1073b1981693d5f9cc8f1cae310a5cf3feef368ccf10b19d3b27f3447`
+- `review-round1-reviewer2.md` SHA-256 `e5c4f3c0e7c210c7c49694bac3131e9b52c84ab9a091bf1cb5fa95c576478345`
+- `review-round2-root.md` SHA-256 `27838eaa719e7eefeb0333ab132b9a913861a3facea4c651d6b85ec4ec3f58bc`
+- `review-round2-root-repro.json` SHA-256 `dc788245ecaf94ae90a7ede2a7fa66a2cfdcef8cb429f9901c939ccf2931d248`
+- `review-round2-reviewer2.md` SHA-256 `c94eda361ef96fb1748eaba50dcfedf9218304c43c62b31e24e8d763ad687fb4`
+- `review-round2-reviewer2-probe.json` SHA-256 `357d8bf5f4bbbd1f9a7d6b69afd6c4d1e2a009a7776e9bedaa2e00a10184ab32`
+- `review-narrow-closure-root.md` SHA-256 `6bad0a0982afdfd18c24963eee11e1aff92f3b22c256dea0ea009cdcbc10edc7`
+- `review-narrow-closure-root.json` SHA-256 `667d9cf8abd03693cbbb8aca332946624146b94bb537717e5b8b59a992382972`
+- `review-narrow-closure-reviewer2.json` SHA-256 `18e526fb1ec2f4274def08d250f68c06f662ba5ed4a56270f6a4ec3229a47097`
+- `review-accessor-final-root.md` SHA-256 `93d88d879b0d462a3b483ea2701bfeecc63a344803e2453bb7306e7c4d7e8d2e`
+- `review-accessor-final-root.json` SHA-256 `353b932cf566933a8b82263b61cb6e0d33719538c61a824c8a3fc3e43be32d02`
+- `review-accessor-final-reviewer2.md` SHA-256 `87b1615e8a34e76b6de1c9e2a706963db4cec3a8a4dc26e97dabed26d915b769`
