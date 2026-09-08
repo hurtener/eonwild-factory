@@ -169,6 +169,8 @@ def test_recovery_rejects_nonexact_indices_and_accessor_schemas(case):
 @pytest.mark.parametrize("case", [
     "short_inverse_view", "short_position_view", "short_declared_buffer",
     "short_stride", "misaligned_position", "view_outside_buffer",
+    "missing_view_buffer", "relative_misalignment", "excess_bin_padding",
+    "misaligned_vertex_stride",
 ])
 def test_recovery_rejects_accessors_outside_declared_storage(case):
     source = Glb(SOURCE)
@@ -188,9 +190,25 @@ def test_recovery_rejects_accessors_outside_declared_storage(case):
         document["bufferViews"][position_view]["byteStride"] = 4
     elif case == "misaligned_position":
         document["accessors"][position_accessor]["byteOffset"] = 1
-    else:
+    elif case == "view_outside_buffer":
         document["bufferViews"][position_view]["byteOffset"] = len(source.binary)
-    with pytest.raises(ContractError, match="byteLength|byteStride|bounds"):
+    elif case == "missing_view_buffer":
+        document["bufferViews"][position_view].pop("buffer")
+    elif case == "relative_misalignment":
+        joint_accessor = document["meshes"][0]["primitives"][0][
+            "attributes"]["JOINTS_0"]
+        joint_view = document["accessors"][joint_accessor]["bufferView"]
+        document["bufferViews"][joint_view]["byteOffset"] -= 1
+        document["accessors"][joint_accessor]["byteOffset"] = 1
+    elif case == "excess_bin_padding":
+        source = Glb.from_bytes(_encode(document, source.binary + b"\x00" * 4))
+        document = source.document
+    else:
+        joint_accessor = document["meshes"][0]["primitives"][0][
+            "attributes"]["JOINTS_0"]
+        joint_view = document["accessors"][joint_accessor]["bufferView"]
+        document["bufferViews"][joint_view]["byteStride"] = 5
+    with pytest.raises(ContractError, match="buffer|byteLength|byteStride|bounds"):
         recover(Glb.from_bytes(_encode(document, source.binary)))
 
 

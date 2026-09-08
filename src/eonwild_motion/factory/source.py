@@ -48,7 +48,7 @@ def _accessor_index(
     declared_buffer_length = buffers[0].get("byteLength")
     if (type(declared_buffer_length) is not int
             or declared_buffer_length <= 0
-            or declared_buffer_length > len(glb.binary)):
+            or not 0 <= len(glb.binary) - declared_buffer_length <= 3):
         raise ContractError("bind-pose recovery buffer byteLength is invalid")
     index = _exact_index(value, size=len(accessors), label=label)
     accessor = accessors[index]
@@ -69,7 +69,7 @@ def _accessor_index(
     view = views[view_index]
     if not isinstance(view, Mapping):
         raise ContractError(f"{label} bufferView must be an object")
-    buffer_index = view.get("buffer", 0)
+    buffer_index = view.get("buffer")
     if type(buffer_index) is not int or buffer_index != 0:
         raise ContractError(f"{label} bufferView must reference the GLB binary buffer")
     accessor_offset = accessor.get("byteOffset", 0)
@@ -87,12 +87,14 @@ def _accessor_index(
     element_size = component_size * element_width
     stride = view.get("byteStride", element_size)
     if (type(stride) is not int or stride < element_size or stride > 252
-            or stride % component_size != 0):
+            or stride % component_size != 0
+            or ("byteStride" in view and accessor_type != "MAT4" and stride % 4 != 0)):
         raise ContractError(f"{label} accessor byteStride is invalid")
     absolute_start = view_offset + accessor_offset
     used_end_in_view = accessor_offset + (count - 1) * stride + element_size
     view_end = view_offset + view_length
-    if (absolute_start % component_size != 0
+    if (accessor_offset % component_size != 0
+            or absolute_start % component_size != 0
             or used_end_in_view > view_length
             or view_end > declared_buffer_length
             or view_end > len(glb.binary)
