@@ -170,7 +170,7 @@ emitter or interval-rate authority is included, and current motion remains
 blocked under the exact gates. See
 [V9-CUBICSPLINE-CONSUMER-STAGE-A-001](../reports/V9-CUBICSPLINE-CONSUMER-STAGE-A-001/README.md).
 
-The current published source is
+The published checkpoint underlying this integration is
 `83aa5e5391848493c902af0c6bd4ecab6228afe6`. Its local real-tool suite and
 hosted macOS arm64 CI each passed 928 tests plus 21 subtests; the CI source tree
 is identical to the published tree. This head includes the opt-in canonical
@@ -201,9 +201,11 @@ The unselected adult V10 load-acceptance diagnostic adds a bounded authored
 double-support compression and trunk response on top of V9. Its implementation
 passed two independent code reviews and its reopened package preserves contact,
 articulation, extension and rotation-rate checks, but exact LINEAR loop velocity
-remains `BLOCKED` at `3.965012792580725 mm/s`. Normal-speed front/side visual
-review is pending. It changes no selected recipe or default and grants no
-mass-physics, biological, Unity, visual or production approval. See
+remains `BLOCKED` at `3.965012792580725 mm/s`. Root inspected all 148 front/side
+frames and exercised both paired comparisons at 1x without finding a P0/P1
+regression; the response remains restrained and perceptual weight acceptance is
+open. It changes no selected recipe or default and grants no mass-physics,
+biological, Unity or production approval. See
 [V9-ADULT-LOAD-ACCEPTANCE-V10-001](../reports/V9-ADULT-LOAD-ACCEPTANCE-V10-001/README.md).
 
 ## Evidence-bound adult benchmark

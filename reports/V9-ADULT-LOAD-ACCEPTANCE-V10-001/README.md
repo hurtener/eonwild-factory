@@ -31,9 +31,13 @@ plan contract, a `22.841036 mm` reopened peak pelvis displacement, approximately
 near-zero added displacement at both sole-support landmarks. It grants no
 full-surface pressure, mass-physics or force authority.
 
-Normal-speed front/side visual review is `PENDING`. The implementation is
-accepted here only as an unselected diagnostic for integration testing. It has
-no visual, Unity, biological or production approval.
+Root inspected all 148 front/side frames and paired same-size double-support,
+sole-support and control stills. Both comparison pairs passed scrub, frame
+step, 1x play, pause and restart-to-end browser controls. No P0/P1 visual
+regression was found; the added compression remains restrained. This completes
+the recorded frame and control review, while perceptual weight acceptance stays
+open. The implementation is accepted only as an unselected diagnostic. It has
+no Unity, biological or production approval.
 
 ## Retained evidence
 
@@ -41,7 +45,11 @@ no visual, Unity, biological or production approval.
 - `result.json` SHA-256 `de5947e1c4bf9cac3be027c59c0cbf923185c96e83f5ed385b66b8dd4219d9bf`
 - Root R1 review SHA-256 `c07bfe1f8e3601676d0e9271dca83358868a3524e5fd76721f04cbf673fc52c3`
 - Reviewer 2 R1 review SHA-256 `1287b681090cd023f3b9af47ec24f7aa42409c443df277a6b79b2efd0ec311f0`
+- Root frame review SHA-256 `45cbad3d354da12e77d3305910acb0073ab59d5e80263655950b9585dc689880`
+- Root browser-control receipt SHA-256 `c1f49a442b827f02b207665484cd0b5d168a3aa0d6a82e5ae493457d4239fb0e`
 
-The copied audit and both reviews are byte-identical to the task-storage
-receipts. The complete mandatory suite is recorded only at the final combined
-integration checkpoint.
+The copied audit and reviews are byte-identical to the task-storage receipts.
+The final combined integration suite passed 969 tests plus 21 subtests in
+795.48 seconds at exact head `4e41689671bb9787c743c72334bcd61334fd5aac`;
+its source-bound receipt is retained in
+`reports/V9-CLOSED-DIAGNOSTICS-83AA5E5-001/`.
