@@ -13,6 +13,7 @@ from eonwild_motion.solve.performance import load_performance
 ROOT = Path(__file__).resolve().parents[1]
 V3 = ROOT / "recipes/heavy-biped/tarbosaurus-pin-552-1-adult-walk.v3.json"
 V4 = ROOT / "recipes/heavy-biped/tarbosaurus-pin-552-1-adult-walk.v4.json"
+V5 = ROOT / "recipes/heavy-biped/tarbosaurus-pin-552-1-adult-walk.v5.json"
 
 
 def read(path):
@@ -58,5 +59,46 @@ def test_adult_v4_changes_only_opt_in_body_coordination_inputs():
     assert performance.support_directed_pelvis_carrier is True
     assert performance.pelvis_sway_body_heights == .006
     assert performance.pelvis_roll_degrees == .6
+    assert performance.pelvis_yaw_degrees == 2
+    assert performance.tail_yaw_degrees == 16
+
+
+def test_adult_v5_changes_only_restrained_body_response_inputs():
+    old, _ = load_recipe(V4, ROOT)
+    recipe, _ = load_recipe(V5, ROOT)
+    assert recipe["id"] == "heavy-biped.tarbosaurus-pin-552-1-adult-walk.v5"
+    assert recipe["version"] == 5
+    assert recipe["supersedes"] == old["id"]
+    for key in (
+        "source",
+        "rig",
+        "animal",
+        "program_profile",
+        "contact_profile",
+        "articulation_profile",
+        "forward_axis",
+        "up_axis",
+    ):
+        assert recipe[key] == old[key]
+    for binding in recipe.values():
+        if isinstance(binding, dict) and {"path", "sha256"} <= set(binding):
+            actual = hashlib.sha256((ROOT / binding["path"]).read_bytes()).hexdigest()
+            assert actual == binding["sha256"]
+
+    old_performance = read(ROOT / old["performance_profile"]["path"])["parameters"]
+    new_performance = read(
+        ROOT / recipe["performance_profile"]["path"])["parameters"]
+    assert new_performance == {
+        **old_performance,
+        "pelvis_roll_degrees": 1.5,
+        "pelvis_sway_body_heights": .018,
+        "upper_trunk_counterroll_degrees": .9,
+    }
+    performance = load_performance(
+        read(ROOT / recipe["performance_profile"]["path"]))
+    assert performance.support_directed_pelvis_carrier is True
+    assert performance.pelvis_sway_body_heights == .018
+    assert performance.pelvis_roll_degrees == 1.5
+    assert performance.upper_trunk_counterroll_degrees == .9
     assert performance.pelvis_yaw_degrees == 2
     assert performance.tail_yaw_degrees == 16
