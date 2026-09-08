@@ -7,6 +7,7 @@ from typing import Any
 import bpy
 from mathutils import Vector
 
+from eonwild_motion.blender.native_playback import reject_stock_cubic_playback
 from eonwild_motion.media.png import canonicalize_png
 
 
@@ -27,6 +28,9 @@ def execute_render_request(request_path: Path) -> dict[str, Any]:
     request = json.loads(request_path.read_text())
     for item in list(bpy.data.objects):
         bpy.data.objects.remove(item, do_unlink=True)
+    reject_stock_cubic_playback(
+        Path(request["artifactPath"]), consumer="canonical single-frame renderer"
+    )
     bpy.ops.import_scene.gltf(filepath=request["artifactPath"])
     clip_name = request["clipName"]
     action = bpy.data.actions.get(clip_name)

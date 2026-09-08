@@ -24,7 +24,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from connected_schedule import validate_connected_schedule
 from connected_timeline import plan_distance, segment_at
 from preview_clock import source_frame as mapped_source_frame, transport_clock
-from render_candidate import area_light, camera_spec, projected_camera_frame, set_frame
+from render_candidate import (
+    area_light,
+    camera_spec,
+    import_gltf_for_native_playback,
+    projected_camera_frame,
+    set_frame,
+)
 from review_timing import native_sample_times
 
 
@@ -112,7 +118,7 @@ def mesh_geometry_digest(obj) -> str:
 def import_source(package: Path, mode: str, runtime: dict, plan: dict, index: int) -> dict:
     before_objects = set(bpy.data.objects)
     before_actions = set(bpy.data.actions)
-    bpy.ops.import_scene.gltf(filepath=str(package / (mode + ".glb")))
+    playback = import_gltf_for_native_playback(package / (mode + ".glb"))
     objects = [obj for obj in bpy.data.objects if obj not in before_objects]
     actions = [action for action in bpy.data.actions if action not in before_actions]
     if not objects or not actions:
@@ -140,7 +146,7 @@ def import_source(package: Path, mode: str, runtime: dict, plan: dict, index: in
         obj.hide_render = True
     signature = sorted(mesh_geometry_digest(obj) for obj in meshes)
     root_position = semantic_root(objects, runtime)
-    set_frame(bpy.context.scene, start)
+    set_frame(bpy.context.scene, start, playback=playback, source_time_s=0.0)
     bpy.context.view_layer.update()
     return {
         "package": package,
@@ -156,6 +162,7 @@ def import_source(package: Path, mode: str, runtime: dict, plan: dict, index: in
         "action_fps": action_fps,
         "geometry_signature": signature,
         "source_zero_root": root_position(),
+        "playback": playback,
     }
 
 
@@ -240,7 +247,12 @@ def main() -> None:
         distance = plan_distance(source["plan"]["samples"], time_s)
         offset = float(row["root_motion_parent_offset_m"])
         source["parent"].location = forward * (offset if args.mode == "root_motion" else offset + distance)
-        set_frame(scene, source_frame(source, time_s))
+        set_frame(
+            scene,
+            source_frame(source, time_s),
+            playback=source["playback"],
+            source_time_s=time_s,
+        )
         bpy.context.view_layer.update()
         return source, source["root_position"](), offset + distance
 
@@ -423,8 +435,18 @@ def main() -> None:
         "engine": "CYCLES_CPU", "samples": args.samples, "denoising": False,
         "fps": args.fps, "review_fps": args.fps, "frames": len(timeline),
         "verified_encoded_frames": int(probe["nb_read_frames"]),
-        "source_clocks": [{"package": str(source["package"]), **source["clock"].receipt()}
-                          for source in packages.values()],
+        "source_clocks": [
+            {
+                "package": str(source["package"]),
+                **source["clock"].receipt(),
+                **(
+                    {"native_playback": source["playback"].receipt()}
+                    if source["playback"] is not None
+                    else {}
+                ),
+            }
+            for source in packages.values()
+        ],
         "camera_extent_sources": [{
             "package": str(source["package"]),
             "declared_armature_meshes": [obj.name for obj in source["framing_meshes"]],

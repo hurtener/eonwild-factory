@@ -21,6 +21,8 @@ import sys
 import bpy
 from mathutils import Vector
 
+from eonwild_motion.blender.native_playback import reject_stock_cubic_playback
+
 
 # These directions are expressed in Blender's Z-up scene after the glTF
 # importer conversion.  "side" is a lateral view, "front" follows the
@@ -149,6 +151,7 @@ def _select_exact_action(actions, clip_name: str):
 
 
 def import_character(path: Path, clip_name: str, frame_count: int, fps: int):
+    reject_stock_cubic_playback(path, consumer="legacy walk review renderer")
     before_objects = set(bpy.data.objects)
     before_actions = set(bpy.data.actions)
     bpy.ops.import_scene.gltf(filepath=str(path))

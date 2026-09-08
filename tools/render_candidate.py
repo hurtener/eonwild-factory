@@ -20,6 +20,11 @@ from mathutils import Vector
 
 # Blender does not reliably add a --python script's directory to sys.path.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
+from eonwild_motion.blender.native_playback import (
+    import_gltf_for_native_playback,
+    requires_exact_cubic_playback,
+)
 from preview_clock import SOURCE_FPS, source_frame, transport_clock
 from review_timing import native_sample_times, native_still_times
 
@@ -28,9 +33,13 @@ def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def set_frame(scene, value):
+def set_frame(scene, value, *, playback=None, source_time_s=None):
     frame = math.floor(value)
     scene.frame_set(frame, subframe=value - frame)
+    if playback is not None:
+        if source_time_s is None:
+            raise ValueError('exact native playback requires source seconds')
+        playback.apply(source_time_s)
 
 
 def area_light(scene, name, position, target, power, size):
@@ -197,6 +206,11 @@ def main():
     still_mode = args.still_times is not None
     if still_mode and args.fbx:
         raise ValueError('native still diagnosis cannot export FBX')
+    if args.fbx and requires_exact_cubic_playback(source):
+        raise ValueError(
+            'FBX transport is unsupported for task-owned CUBICSPLINE sampling; '
+            'native source-time rendering does not create authoritative Blender curves'
+        )
     sample_times = (native_still_times(duration, args.still_times) if still_mode
                     else native_sample_times(duration, args.fps))
     if not math.isfinite(duration) or not 0 < duration <= 60:
@@ -208,7 +222,7 @@ def main():
     scene = bpy.context.scene
     scene.render.fps, scene.render.fps_base = SOURCE_FPS, 1
     scene.unit_settings.system, scene.unit_settings.scale_length = 'METRIC', 1
-    bpy.ops.import_scene.gltf(filepath=str(source))
+    playback = import_gltf_for_native_playback(source)
     # Blender's glTF importer owns its action-frame representation and may
     # reset scene FPS (currently 24).  Seconds remain the package authority;
     # never mistake the factory's 120 Hz plan samples for imported frame IDs.
@@ -227,7 +241,7 @@ def main():
     source_duration = clock.duration_s
     count = len(sample_times)
     scene.frame_start, scene.frame_end = math.floor(start), round(end)
-    set_frame(scene, start)
+    set_frame(scene, start, playback=playback, source_time_s=0.0)
     root_position = semantic_root(scene, runtime)
     initial_root = root_position()
     exports = {}
@@ -235,7 +249,7 @@ def main():
     # Camera coverage is a whole-clip claim: inspect every native review
     # sample and the exact source endpoint, never nine representative probes.
     for time in [*sample_times, source_duration]:
-        set_frame(scene, start + time * action_fps)
+        set_frame(scene, start + time * action_fps, playback=playback, source_time_s=time)
         shift = root_position() - initial_root if args.mode == 'root_motion' else Vector((0, 0, 0))
         deps = bpy.context.evaluated_depsgraph_get()
         for obj in meshes:
@@ -328,7 +342,7 @@ def main():
     scene.render.film_transparent = False
     timeline = []
     for index, time in enumerate(sample_times):
-        set_frame(scene, start + time * action_fps)
+        set_frame(scene, start + time * action_fps, playback=playback, source_time_s=time)
         shift = root_position() - initial_root if args.mode == 'root_motion' else Vector((0, 0, 0))
         camera.location = camera_base + shift
         scene.render.filepath = str(frames / f'{index:05d}.png')
@@ -361,12 +375,15 @@ def main():
             'visual_approval': 'PENDING', 'unity_import_validation': 'NOT_RUN',
             'ground_level_m': ground_level,
             'presentation': 'fixed declared floor and 0.5 m world checker; camera-only root tracking; no bbox floor fitting or animal rescaling'}
+        if playback is not None:
+            receipt['native_playback'] = playback.receipt()
         (output / 'render-receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
         print(json.dumps(receipt, indent=2))
         return
     terminal = None
     if runtime.get('loop') is False:
-        set_frame(scene, start + source_duration * action_fps)
+        set_frame(scene, start + source_duration * action_fps,
+                  playback=playback, source_time_s=source_duration)
         shift = root_position() - initial_root if args.mode == 'root_motion' else Vector((0, 0, 0))
         camera.location = camera_base + shift
         scene.render.filepath = str(output / 'terminal.png')
@@ -403,6 +420,8 @@ def main():
         'exports': exports, 'visual_approval': 'PENDING', 'unity_import_validation': 'NOT_RUN',
         'ground_level_m': ground_level,
         'presentation': 'fixed declared floor and 0.5 m world checker; camera-only root tracking; no bbox floor fitting or animal rescaling'}
+    if playback is not None:
+        receipt['native_playback'] = playback.receipt()
     (output / 'render-receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
     print(json.dumps(receipt, indent=2))
 
