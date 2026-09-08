@@ -14,6 +14,7 @@ for the next accepted integration gate.
 | Canonical constant skin-target law | `990aef08c18d2cb8cc5dbaaf5c268f1b290a7cdc` (`a6253053b2592ad0dffeb37ca41c2a2f5b3ab783` source) | Two reviewers, R1 changes required, R2 P0/P1=0 | Pointwise source geometry for opt-in callers; non-emitting; derivative, branch and global-C1 authority unavailable |
 | Adult V9 support-resultant sensitivity | `b4e54d48d067307d6a8c5017f4eaeba303299eb7` (`860233f339ff0b49cb3a1e9f525aa4b3e5d28119` code/input/tests) | Two reviewers, R1 changes required, R2 P0/P1=0 | Sampled engineering sensitivity; no measured CoP/load, fossil segment properties, mass dynamics or motion approval |
 | Current continuity evidence | `bd8c5a0d954b1dfb379fb7462d72c277996199e3` | Accepted evidence record | Exact emitted LINEAR failures remain authoritative; bounded source-interface convergence is not a formal derivative or C1 pass |
+| Adult V10 load-acceptance diagnostic | `94c81e7e3bb00e2e6057fd1babb183adb70ff9e3` | Two independent R1 reviews, P0/P1=0 | Unselected authored kinematic comparison; technical continuity blocked and normal-speed front/side visual review pending |
 
 The constant-law review receipts are retained byte-for-byte in
 `reports/V9-CONSTANT-SKIN-TARGET-LAW-001/`:

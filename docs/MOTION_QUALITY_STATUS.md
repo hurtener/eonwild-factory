@@ -197,6 +197,15 @@ LINEAR continuity failures remain authoritative, and neither diagnostic grants
 C1, mass-physics, biological, visual, Unity or production approval. See
 [V9-CLOSED-DIAGNOSTICS-83AA5E5-001](../reports/V9-CLOSED-DIAGNOSTICS-83AA5E5-001/README.md).
 
+The unselected adult V10 load-acceptance diagnostic adds a bounded authored
+double-support compression and trunk response on top of V9. Its implementation
+passed two independent code reviews and its reopened package preserves contact,
+articulation, extension and rotation-rate checks, but exact LINEAR loop velocity
+remains `BLOCKED` at `3.965012792580725 mm/s`. Normal-speed front/side visual
+review is pending. It changes no selected recipe or default and grants no
+mass-physics, biological, Unity, visual or production approval. See
+[V9-ADULT-LOAD-ACCEPTANCE-V10-001](../reports/V9-ADULT-LOAD-ACCEPTANCE-V10-001/README.md).
+
 ## Evidence-bound adult benchmark
 
 `tarbosaurus-pin-552-1-adult-walk.v1` is the first explicit animal-instance
