@@ -91,7 +91,8 @@ def validate_frozen_source_with_uniform_scale(
         parsed = Glb.from_bytes(_encode(source.document, bytes(source.binary)))
     except (TypeError, ValueError, ValidationFailure) as exc:
         raise ContractError("admitted source state is malformed") from exc
-    if (source.document != parsed.document or source.parents != parsed.parents
+    if (source.document != parsed.document or source.nodes != parsed.nodes
+            or source.parents != parsed.parents
             or source.name_to_node != parsed.name_to_node
             or source.rest_translation != parsed.rest_translation
             or source.rest_rotation != parsed.rest_rotation

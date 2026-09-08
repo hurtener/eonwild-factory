@@ -38,6 +38,8 @@ def test_frozen_source_accepts_exact_state_and_one_uniform_root_scale():
 
 @pytest.mark.parametrize("mutation", [
     lambda value: value.rest_rotation.__setitem__(0, (0.0, 0.0, 1.0, 0.0)),
+    lambda value: setattr(value, "nodes", [{**value.nodes[0], "name": "detached"}]
+                         + deepcopy(value.nodes[1:])),
     lambda value: value.name_to_node.__setitem__("forged", 0),
     lambda value: value.parents.__setitem__(1, None),
     lambda value: value.document["nodes"][0].__setitem__("translation", [1.0, 0.0, 0.0]),
