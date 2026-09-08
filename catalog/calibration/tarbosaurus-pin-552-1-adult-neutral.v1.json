@@ -1,0 +1,137 @@
+{
+  "classification": "source-bound authored neutral-jaw calibration with measured raw-surface clearance; no tooth-contact, biological, Unity, or production claim",
+  "id": "tarbosaurus-pin-552-1-adult-neutral.v1",
+  "neutral_jaw_calibration": {
+    "axis_frame": "admitted_jaw_local_from_declared_lateral.v1",
+    "clearance_body_heights": 0.0015,
+    "close_degrees": 50.03933635803102,
+    "joint_accessors": [
+      3,
+      4,
+      5
+    ],
+    "measured_body_height_m": 2.657391579010845,
+    "measured_minimum_gap_m": 0.003986087368516689,
+    "method": "semantic_weighted_binned_surface_clearance.v1",
+    "position_accessor": 0,
+    "skin_index": 0,
+    "source_geometry_sha256": "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f",
+    "surface_bins": [
+      {
+        "lower_vertex_indices": [
+          2917,
+          2947,
+          2963,
+          2997,
+          3076,
+          3077,
+          3108,
+          4551,
+          4620,
+          4690,
+          4710
+        ],
+        "upper_vertex_indices": [
+          2032,
+          2057,
+          2086,
+          7411,
+          7418
+        ]
+      },
+      {
+        "lower_vertex_indices": [
+          2929,
+          3034,
+          3056,
+          3079,
+          4491,
+          4517,
+          4552,
+          4553,
+          4595,
+          4622
+        ],
+        "upper_vertex_indices": [
+          1977,
+          2030,
+          2039,
+          2486
+        ]
+      },
+      {
+        "lower_vertex_indices": [
+          2914,
+          2920,
+          2966,
+          4541,
+          4598,
+          4605,
+          4624,
+          4647,
+          4648,
+          4683
+        ],
+        "upper_vertex_indices": [
+          2007,
+          2734,
+          2752,
+          2764
+        ]
+      },
+      {
+        "lower_vertex_indices": [
+          5635,
+          5682,
+          5714,
+          5793,
+          6186,
+          6194,
+          6216
+        ],
+        "upper_vertex_indices": [
+          1679,
+          1715,
+          2710,
+          2743
+        ]
+      },
+      {
+        "lower_vertex_indices": [
+          5639,
+          5727,
+          5746,
+          6209,
+          6852
+        ],
+        "upper_vertex_indices": [
+          1754,
+          2697,
+          2740
+        ]
+      },
+      {
+        "lower_vertex_indices": [
+          5586,
+          6439,
+          6499,
+          6500,
+          7079
+        ],
+        "upper_vertex_indices": [
+          1910,
+          2050,
+          2075,
+          2538
+        ]
+      }
+    ],
+    "weight_accessors": [
+      6,
+      7,
+      8
+    ]
+  },
+  "schema": "eonwild.motion.neutral-pose-profile.v1",
+  "version": 1
+}
