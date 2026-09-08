@@ -1,0 +1,49 @@
+{
+  "schema": "eonwild.motion.support-resultant-assumptions.v1",
+  "id": "tarbosaurus-pin-552-1-adult-v9-engineering-v1",
+  "classification": "Engineering sensitivity inputs bound to the adult V9 source; only total mass and axial yaw inertia are published specimen estimates",
+  "source": {
+    "root_motion_glb_sha256": "db5b2123e156fa218cc426cf8774972a8c02f9cfce7eea9c80fcf91a8c129ebe",
+    "plan_sha256": "48e68639efd930c4209fd38fb484f4712461b5945cfbc90dd35fa047d1a7c513",
+    "recipe_sha256": "f55da91847dc63489f9655cfc3641bee665bf8ce6122755a61748d98fabf3ccd",
+    "runtime_sha256": "317fc65f52ad48a0992e0c6d59f4dc79efc4a6e7969ac1b22dc9c9804e13e5be",
+    "animal_profile_sha256": "53ffeba22e24a87504d3dcc310bedacf6db94d60a25ffe56ad028b03f41e849d",
+    "contact_profile_sha256": "61e0351fe9f7170ddce7f0b83a8f0379d119349d3c392ffec43e544adb115db5",
+    "provisional_segment_profile_sha256": "58e7ce3001df9eacc3da7c642dd50c9793ed8e2d843dcc730a781552881662c2",
+    "support_geometry_audit_sha256": "03c1b83103ce4f72d9542a7dc320cc181a50a1ff53cdccf030b1220f2c96251f"
+  },
+  "published_constraints": {
+    "total_mass_kg": 2816.3,
+    "axial_body_yaw_inertia_kg_m2": 4486.0,
+    "body_plus_swing_leg_yaw_inertia_kg_m2": 4515.1,
+    "axial_body_com_from_rostrum_m": [3.01, 0.87],
+    "citation": "Snively et al. 2019, PeerJ 7:e6432, doi:10.7717/peerj.6432",
+    "locators": ["Table 3, adult Tarbosaurus PIN 552-1", "Table 4, adult Tarbosaurus PIN row"],
+    "scope": "Published superellipse/frustum volumetric model estimates; the COM and yaw inertia describe the paper's axial-body model, not this GLB's segment frames"
+  },
+  "engineering_model": {
+    "segment_profile": "profiles/v9/tarbosaurus-provisional.json",
+    "local_com_alternatives": ["semantic_joint_origin", "semantic_link_midpoint"],
+    "tail_mass_fraction_delta": 0.03,
+    "tail_sensitivity_basis": "Snively et al. report that changing tail depth by +/-10% changed total body mass by no more than 3%; this diagnostic conservatively redistributes 3% of total mass between axial center and tail while holding total mass fixed",
+    "inertia_basis": "Existing provisional normalized node-frame diagonal engineering values; results report their static yaw check against the published axial-body value rather than treating them as fossil measurements",
+    "contact_load_alternatives": {
+      "single_support": [{"stance": 1.0}],
+      "double_support": [{"left": 0.5, "right": 0.5}, {"leading": 0.6, "trailing": 0.4}]
+    },
+    "cop_proxy": "distal node of the semantic toe chain whose neutral lateral offset from the foot root is smallest, projected to the declared ground plane",
+    "cop_scope": "Authored engineering point only; sole material ranges are geometric availability and neither input is measured pressure"
+  },
+  "segment_to_node": {
+    "pelvis": "Bone_001", "trunk": "Bone_005", "chest": "Bone_002", "neck": "Bone_039", "head": "Bone_036",
+    "tail_01": "Bone_024", "tail_02": "Bone_022", "tail_03": "Bone_019", "tail_04": "Bone_016",
+    "thigh_l": "Bone_011", "thigh_r": "Bone_015", "shin_l": "Bone_010", "shin_r": "Bone_014",
+    "foot_l": "Bone_008", "foot_r": "Bone_012", "forelimb_l": "Bone_002", "forelimb_r": "Bone_002"
+  },
+  "midpoint_target_node": {
+    "pelvis": "Bone_007", "trunk": "Bone_003", "chest": "Bone_041", "neck": "Bone_036", "head": null,
+    "tail_01": "Bone_023", "tail_02": "Bone_021", "tail_03": "Bone_017", "tail_04": null,
+    "thigh_l": "Bone_010", "thigh_r": "Bone_014", "shin_l": "Bone_009", "shin_r": "Bone_013",
+    "foot_l": "Bone_046", "foot_r": "Bone_055", "forelimb_l": null, "forelimb_r": null
+  }
+}
