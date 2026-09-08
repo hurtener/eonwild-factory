@@ -22,7 +22,8 @@ def admit(args) -> dict:
     source_bytes, rig_bytes = args.source.read_bytes(), args.rig.read_bytes()
     binding = read_json(args.rig)
     geometry, metadata = admit_geometry(Glb.from_bytes(source_bytes), binding["roles"],
-        reference_clip=args.reference_clip, forward_axis=args.forward, up_axis=args.up)
+        reference_clip=args.reference_clip, forward_axis=args.forward, up_axis=args.up,
+        recover_bind_pose=args.recover_bind_pose, skin_index=args.skin_index)
     output.parent.mkdir(parents=True, exist_ok=True)
     stage = Path(tempfile.mkdtemp(prefix=".admission-", dir=output.parent))
     receipt = {"schema": "eonwild.motion.admission.v1", "status": "ADMITTED_GEOMETRY",
@@ -49,6 +50,10 @@ def main(argv: list[str] | None = None) -> int:
     admission.add_argument("--forward", type=float, nargs=3)
     admission.add_argument("--up", type=float, nargs=3, default=[0, 1, 0])
     admission.add_argument("--reference-clip", help="optional declared pose source; never inherited choreography")
+    admission.add_argument("--recover-bind-pose", action="store_true",
+        help="recover an animation-independent skin bind pose from an explicit skin index")
+    admission.add_argument("--skin-index", type=int,
+        help="selected glTF skin for --recover-bind-pose")
     admission.add_argument("--output", type=Path, required=True)
     compile_parser = sub.add_parser("compile", help="generate an immutable candidate; inspect acceptance with verify")
     compile_parser.add_argument("--recipe", type=Path, required=True)
