@@ -14,6 +14,7 @@ import numpy as np
 from ..errors import ContractError
 from ..layers.leg_contact_resolve_v3 import _world_matrices, _world_position, _rotation_from_matrix, _qmul, _qinv
 from ..planning.grounded_gait import GroundedGait, sample_grounded_gait
+from ..planning.jaw_response import NeutralJawCalibration, load_neutral_jaw_calibration
 from .airborne_gait import _qrotate, _qrotvec, _world_rotation, _unit
 
 
@@ -37,10 +38,16 @@ class Performance:
     neck_counterpitch_degrees: float | None = None
     tail_counterpitch_degrees: float | None = None
     pelvis_forward_velocity_modulation_fraction: float | None = None
+    neutral_jaw_calibration: NeutralJawCalibration | None = None
     skin_refinement: bool = True
 
     def __post_init__(self):
-        for key, value in asdict(self).items():
+        for key in self.__dataclass_fields__:
+            value = getattr(self, key)
+            if key == "neutral_jaw_calibration":
+                if value is not None and not isinstance(value, NeutralJawCalibration):
+                    raise ContractError("neutral jaw calibration must be typed")
+                continue
             if key in ("center_lanes_on_bilateral_hip_midpoint",
                        "support_directed_pelvis_carrier",
                        "support_timed_axial_carrier",
@@ -106,13 +113,21 @@ class Performance:
                 "pelvis forward velocity modulation must be in [0, 1)")
 
 
+def _performance_from_parameters(parameters: Mapping[str, Any]) -> Performance:
+    if not isinstance(parameters, Mapping) or set(parameters) - set(Performance.__dataclass_fields__):
+        raise ContractError("unknown performance parameters")
+    values = dict(parameters)
+    if values.get("neutral_jaw_calibration") is not None:
+        values["neutral_jaw_calibration"] = load_neutral_jaw_calibration(
+            values["neutral_jaw_calibration"])
+    return Performance(**values)
+
+
 def load_performance(document: Mapping[str, Any]) -> Performance:
     if not isinstance(document, Mapping) or document.get("schema") != "eonwild.motion.performance.v1" or set(document) - {"schema", "parameters", "reference", "classification"}:
         raise ContractError("unsupported performance profile")
     parameters = document.get("parameters")
-    if not isinstance(parameters, Mapping) or set(parameters) - set(Performance.__dataclass_fields__):
-        raise ContractError("unknown performance parameters")
-    return Performance(**parameters)
+    return _performance_from_parameters(parameters)
 
 
 def decorate_plan(plan: dict, performance: Performance) -> dict:
@@ -145,7 +160,9 @@ def decorate_plan(plan: dict, performance: Performance) -> dict:
     result["performance"] = {
         key: value for key, value in asdict(performance).items()
         if value is not None and not (
-            key == "pelvis_forward_velocity_modulation_fraction" and value == 0)
+            (key == "pelvis_forward_velocity_modulation_fraction" and value == 0)
+            or (key == "neutral_jaw_calibration" and value["close_degrees"] == 0)
+        )
     }
     result["loop"] = plan.get("loop", True)
     from ..planning.foot_articulation import declare_pad_recovery
@@ -579,7 +596,7 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
     """
     if "performance" not in plan:
         return
-    p = Performance(**plan["performance"])
+    p = _performance_from_parameters(plan["performance"])
     trunk_names = (_counterroll_trunk_names(roles)
                    if p.upper_trunk_counterroll_degrees is not None else None)
     sagittal_chains = (_sagittal_body_chains(source, roles)

@@ -446,6 +446,7 @@ class AirborneSolveContext:
     base_w: tuple[np.ndarray, ...]
     jaw: int | None
     jaw_axis: tuple[float, ...] | None
+    jaw_neutral_close_degrees: float
     anatomical_normals: Mapping[str, np.ndarray]
     toe_normals: Mapping[int, np.ndarray]
 
@@ -526,10 +527,18 @@ def solve_airborne_plan_sample(
             axis = _qrotate(_qinv(_rotation_from_matrix(base_w[n])), tuple(lateral))
             rot[n] = _qmul(rot[n], _qrotvec(tuple(np.asarray(axis) * math.radians(performance_gain * total / len(names)))))
     if jaw is not None:
-        # Rotate the lower jaw about the rig-derived sagittal axis only.
-        # The full-cycle cosine is C2 at the loop; no head/neck compensation
-        # is added, so the accepted whole-body motion remains unchanged.
-        rot[jaw] = _qmul(base_r[jaw], _qrotvec(tuple(np.asarray(jaw_axis) * math.radians(performance_gain * jaw_breathing_angle(gait, motion_time)))))
+        # Compose the behavior-owned neutral pose and cyclic breathing once in
+        # the admitted jaw-local frame. Head/gaze motion then carries the jaw
+        # through hierarchy without rotating the hinge axis in world space.
+        from .jaw_response import compose_jaw_rotation
+        breathing = (jaw_breathing_angle(gait, motion_time)
+                     if gait.jaw_breathing_max_degrees else 0.0)
+        rot[jaw] = compose_jaw_rotation(
+            base_r[jaw], jaw_axis,
+            neutral_close_degrees=context.jaw_neutral_close_degrees,
+            breathing_gape_degrees=breathing,
+            gain=performance_gain,
+        )
     from .performance import apply_performance
     apply_performance(source, tr, rot, base_s, base_w, roles, plan, row, up, forward)
     facts = {}
@@ -909,7 +918,20 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
     base_w = worlds
     jaw = None
     jaw_axis = None
-    if gait.jaw_breathing_max_degrees:
+    jaw_neutral_close_degrees = 0.0
+    neutral_jaw_admission = None
+    if "performance" in plan:
+        from .performance import _performance_from_parameters
+        neutral_calibration = _performance_from_parameters(
+            plan["performance"]).neutral_jaw_calibration
+        if neutral_calibration is not None and neutral_calibration.close_degrees:
+            from .jaw_response import admit_neutral_jaw
+            neutral_jaw_admission = admit_neutral_jaw(
+                source, roles, neutral_calibration, forward, up)
+            jaw = neutral_jaw_admission.node
+            jaw_axis = neutral_jaw_admission.local_axis
+            jaw_neutral_close_degrees = neutral_jaw_admission.close_degrees
+    if gait.jaw_breathing_max_degrees and jaw is None:
         if roles.get("jaw_lower") not in source.name_to_node:
             raise ContractError("breathing requires a bound semantic lower jaw")
         jaw = source.name_to_node[roles["jaw_lower"]]
@@ -939,7 +961,8 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
         hip_lane_center=hip_lane_center,
         base_t=tuple(base_t), base_r=tuple(base_r), base_s=tuple(base_s),
         base_w=tuple(_frozen_array(value) for value in base_w), jaw=jaw,
-        jaw_axis=jaw_axis, anatomical_normals=_freeze_data(anatomical_normals),
+        jaw_axis=jaw_axis, jaw_neutral_close_degrees=jaw_neutral_close_degrees,
+        anatomical_normals=_freeze_data(anatomical_normals),
         toe_normals=_freeze_data(toe_normals),
     )
     frames_t, frames_r, emitted = [], [], []
@@ -1023,6 +1046,20 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
         receipt["articulation_profile"] = articulation_profile.receipt()
     if body_response:
         receipt["body_response"] = body_response
+    if neutral_jaw_admission is not None:
+        receipt["neutral_jaw_calibration"] = {
+            "source_geometry_sha256": neutral_calibration.source_geometry_sha256,
+            "jaw_node": neutral_jaw_admission.node,
+            "local_hinge_axis": list(neutral_jaw_admission.local_axis),
+            "close_degrees": neutral_jaw_admission.close_degrees,
+            "clearance_body_heights": neutral_calibration.clearance_body_heights,
+            "measured_source_minimum_gap_m": (
+                neutral_jaw_admission.measured_source_minimum_gap_m),
+            "admitted_geometry_minimum_gap_m": neutral_jaw_admission.current_minimum_gap_m,
+            "classification": (
+                "authored engineering neutral-pose clearance; not tooth contact, "
+                "biological measurement, or visual approval"),
+        }
     return authority, in_place, plan, receipt
 
 
