@@ -17,7 +17,6 @@ from .airborne_gait import solve_airborne_plan_sample, _world_matrices
 
 POLICY = "material_floor_scaled_excess.v1"
 TARGET_GAP_M = 0.0001
-_GAP_TOLERANCE_M = 1e-5
 _HEIGHT_TOLERANCE_M = 1e-6
 _MONOTONIC_TOLERANCE_M = 1e-8
 _MAX_ITERATIONS = 20
@@ -34,34 +33,33 @@ def _monotone_floor(measure: Any, ceiling: float, side: str) -> float:
     gap_lo, _ = measure(lo)
     if gap_lo >= TARGET_GAP_M:
         return 0.0
-    gap_hi, _ = measure(hi)
+
+    def checked(height: float, lower_gap: float, upper_gap: float) -> float:
+        gap, _ = measure(height)
+        if (
+            gap < lower_gap - _MONOTONIC_TOLERANCE_M
+            or gap > upper_gap + _MONOTONIC_TOLERANCE_M
+        ):
+            raise GroundedTransitionClearanceUnavailable(
+                f"{side} transition material gap is nonmonotone"
+            )
+        return gap
+
+    gap_hi = checked(hi, gap_lo, math.inf)
     if gap_hi < TARGET_GAP_M:
         raise GroundedTransitionClearanceUnavailable(
             f"{side} transition steady target does not clear the material floor"
         )
     for _ in range(_MAX_ITERATIONS):
-        if hi - lo <= _HEIGHT_TOLERANCE_M:
-            return hi
         fraction = (TARGET_GAP_M - gap_lo) / (gap_hi - gap_lo)
-        fraction = min(0.9, max(0.1, fraction))
         mid = lo + fraction * (hi - lo)
-        gap_mid, _ = measure(mid)
-        if (
-            gap_mid < gap_lo - _MONOTONIC_TOLERANCE_M
-            or gap_mid > gap_hi + _MONOTONIC_TOLERANCE_M
-        ):
-            raise GroundedTransitionClearanceUnavailable(
-                f"{side} transition material gap is nonmonotone"
-            )
+        if not lo < mid < hi or hi - lo <= _HEIGHT_TOLERANCE_M:
+            return hi
+        gap_mid = checked(mid, gap_lo, gap_hi)
         if gap_mid >= TARGET_GAP_M:
-            hi, gap_hi = mid, gap_mid
-            if gap_mid <= TARGET_GAP_M + _GAP_TOLERANCE_M:
-                return hi
-        else:
-            lo, gap_lo = mid, gap_mid
-    raise GroundedTransitionClearanceUnavailable(
-        f"{side} transition material floor did not converge"
-    )
+            return mid
+        lo, gap_lo = mid, gap_mid
+    return hi
 
 
 def _digest(value: Any) -> str:
