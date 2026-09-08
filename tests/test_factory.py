@@ -1,10 +1,12 @@
 """Factory contracts and adversarial regressions; not visual acceptance."""
 from __future__ import annotations
 
+from copy import deepcopy
 from pathlib import Path
 import json
 import math
 
+import numpy as np
 import pytest
 
 from eonwild_motion.errors import ContractError
@@ -18,6 +20,7 @@ from eonwild_motion.planning.grounded_gait import (
     require_grounded_phase_coverage,
     sample_grounded_gait,
 )
+from eonwild_motion.solve.whole_body_gait_transition import _append_accessor, _encode
 from test_v9_airborne_gait import fixture
 
 
@@ -147,7 +150,9 @@ def test_repeat_compile_is_exact_and_reopened_receipts_are_bound(tmp_path, progr
     with pytest.raises(ContractError): verify_package(a)
 
 
-def test_profile_free_cubic_metadata_requires_midpoint_inventory(tmp_path):
+def test_profile_free_cubic_metadata_and_midpoint_verdict_are_bound(
+    tmp_path, monkeypatch
+):
     recipe = make_recipe(tmp_path)
     output = tmp_path / "candidate"
     compile_recipe(recipe, root=tmp_path, output=output)
@@ -165,7 +170,77 @@ def test_profile_free_cubic_metadata_requires_midpoint_inventory(tmp_path):
     for filename in ("runtime.json", "inputs.lock.json"):
         manifest["files"][filename] = digest((output / filename).read_bytes())
     write_json(output / "manifest.json", manifest)
+    monkeypatch.setattr(
+        "eonwild_motion.factory.compiler._serialized_interpolation",
+        lambda glb: "CUBICSPLINE",
+    )
     with pytest.raises(ContractError, match="lacks midpoint plan evidence"):
+        verify_package(output)
+
+    plan = json.loads((output / "plan.json").read_text())
+    midpoint = deepcopy(plan)
+    midpoint["samples"] = [
+        item
+        for left, right in zip(plan["samples"][:-1], plan["samples"][1:])
+        for item in (
+            deepcopy(left),
+            {**deepcopy(left), "time_s": (left["time_s"] + right["time_s"]) / 2},
+        )
+    ] + [deepcopy(plan["samples"][-1])]
+    write_json(output / "cubic-midpoint-plan.json", midpoint)
+    validation = json.loads((output / "validation.json").read_text())
+    validation["technical_status"] = "PASS"
+    validation["cubic_midpoint_skinned_contact"] = {
+        "root_motion": {"verdict": "FAIL", "maximum_penetration_m": 1.0},
+        "in_place": {"verdict": "PASS"},
+    }
+    write_json(output / "validation.json", validation)
+    manifest["technical_status"] = "PASS"
+    for filename in ("cubic-midpoint-plan.json", "validation.json"):
+        manifest["files"][filename] = digest((output / filename).read_bytes())
+    write_json(output / "manifest.json", manifest)
+    with pytest.raises(ContractError, match="ignores midpoint contact failure"):
+        verify_package(output)
+    validation["technical_status"] = "BLOCKED"
+    write_json(output / "validation.json", validation)
+    manifest["technical_status"] = "BLOCKED"
+    manifest["files"]["validation.json"] = digest(
+        (output / "validation.json").read_bytes()
+    )
+    write_json(output / "manifest.json", manifest)
+    assert verify_package(output)["technical_status"] == "BLOCKED"
+
+
+def test_serialized_cubic_exports_cannot_be_declared_linear(tmp_path):
+    recipe = make_recipe(tmp_path)
+    output = tmp_path / "candidate"
+    compile_recipe(recipe, root=tmp_path, output=output)
+    for mode in ("root_motion", "in_place"):
+        path = output / f"{mode}.glb"
+        glb = Glb.from_bytes(path.read_bytes())
+        binary = bytearray(glb.binary)
+        animation = glb.document["animations"][0]
+        for channel in animation["channels"]:
+            sampler = animation["samplers"][channel["sampler"]]
+            values = np.asarray(glb.accessor_values(sampler["output"]), dtype=float)
+            records = np.stack(
+                (np.zeros_like(values), values, np.zeros_like(values)), axis=1
+            )
+            sampler["output"] = _append_accessor(
+                glb.document,
+                binary,
+                records.reshape((-1, values.shape[1])),
+                {3: "VEC3", 4: "VEC4"}[values.shape[1]],
+            )
+            sampler["interpolation"] = "CUBICSPLINE"
+        glb.document["buffers"][0]["byteLength"] = len(binary)
+        path.write_bytes(_encode(glb.document, binary))
+    manifest = json.loads((output / "manifest.json").read_text())
+    for mode in ("root_motion", "in_place"):
+        filename = f"{mode}.glb"
+        manifest["files"][filename] = digest((output / filename).read_bytes())
+    write_json(output / "manifest.json", manifest)
+    with pytest.raises(ContractError, match="declaration differs from serialized"):
         verify_package(output)
 
 

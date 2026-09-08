@@ -18,6 +18,7 @@ import numpy as np
 
 from ..errors import ContractError
 from ..glb.container import Glb
+from ..glb.animation import read_animation_tracks
 from ..layers.leg_contact_resolve_v3 import _clip_state, _pose, _world_matrices, _world_position
 from ..planning.airborne_gait import AirborneGait, build_airborne_plan, load_airborne_gait
 from ..planning.grounded_gait import build_grounded_plan, load_grounded_gait
@@ -591,6 +592,23 @@ def compile_recipe(
     return manifest
 
 
+def _serialized_interpolation(glb: Glb) -> str:
+    animations = glb.document.get("animations")
+    if (
+        not isinstance(animations, list)
+        or len(animations) != 1
+        or not isinstance(animations[0].get("name"), str)
+    ):
+        raise ContractError("package interpolation requires one named animation")
+    tracks, _ = read_animation_tracks(
+        glb, animations[0]["name"], require_common_timeline=True
+    )
+    modes = {track.interpolation for track in tracks.values()}
+    if len(modes) != 1:
+        raise ContractError("package mixes serialized interpolation modes")
+    return modes.pop()
+
+
 def verify_package(path: Path) -> dict:
     manifest = read_json(path / "manifest.json")
     if manifest.get("schema") != "eonwild.motion.factory-package.v1":
@@ -616,6 +634,14 @@ def verify_package(path: Path) -> dict:
     interpolation = runtime.get("interpolation", "LINEAR")
     if interpolation not in ("LINEAR", "CUBICSPLINE"):
         raise ContractError("package declares unsupported interpolation")
+    serialized_interpolation = {}
+    for mode in ("root_motion", "in_place"):
+        glb = Glb.from_bytes((path / f"{mode}.glb").read_bytes())
+        serialized_interpolation[mode] = _serialized_interpolation(glb)
+    if set(serialized_interpolation.values()) != {interpolation}:
+        raise ContractError(
+            "package interpolation declaration differs from serialized exports"
+        )
     is_cubic = interpolation == "CUBICSPLINE"
     has_midpoint_plan = "cubic-midpoint-plan.json" in manifest["files"]
     if is_cubic != has_midpoint_plan:
@@ -652,10 +678,21 @@ def verify_package(path: Path) -> dict:
         ):
             raise ContractError("CUBICSPLINE midpoint plan timeline is inconsistent")
         midpoint_contact = validation.get("cubic_midpoint_skinned_contact")
-        if not isinstance(midpoint_contact, dict) or set(midpoint_contact) != {
-            "root_motion", "in_place"
-        }:
+        if (
+            not isinstance(midpoint_contact, dict)
+            or set(midpoint_contact) != {"root_motion", "in_place"}
+            or any(
+                not isinstance(result, dict)
+                or result.get("verdict") not in {"PASS", "FAIL"}
+                for result in midpoint_contact.values()
+            )
+        ):
             raise ContractError("CUBICSPLINE package lacks midpoint contact evidence")
+        if (
+            any(result["verdict"] == "FAIL" for result in midpoint_contact.values())
+            and validation.get("technical_status") == "PASS"
+        ):
+            raise ContractError("technical status ignores midpoint contact failure")
     elif emission is not None:
         raise ContractError("LINEAR package contains CUBICSPLINE emission metadata")
     if "articulation_profile" in recipe:

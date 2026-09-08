@@ -248,6 +248,10 @@ def test_recipe_hash_binds_profile_and_supported_actions_reject_it(tmp_path, mon
     write_json(cubic / "manifest.json", cubic_manifest)
     with monkeypatch.context() as local:
         local.setattr(
+            "eonwild_motion.factory.compiler._serialized_interpolation",
+            lambda glb: "CUBICSPLINE",
+        )
+        local.setattr(
             "eonwild_motion.factory.compiler.emitted_articulation_envelopes",
             lambda *args, sample_times=None, **kwargs: (
                 failed if sample_times is not None else passed
