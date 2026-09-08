@@ -19,6 +19,8 @@ GROUPS = {
     'animal-benchmarks': [
         'tarbosaurus-pin-552-1-adult-walk.v3',
         'tarbosaurus-pin-552-1-adult-walk.v5',
+        'tarbosaurus-pin-552-1-adult-walk.v6',
+        'tarbosaurus-pin-552-1-adult-fast-walk-recovery.v3',
     ],
     'locomotion': ['walk.v3', 'reverse-walk.v4', 'run.v4', 'sprint.v4', 'fast-walk.v2'],
     'supported': ['idle.v1', 'alert.v1', 'call.v1', 'bite-miss.v2', 'feeding.v2'],

@@ -1,0 +1,17 @@
+{
+  "rendered_source": "7e90292c4bd92c35bd40906537371d072a4c2899",
+  "authoritative_fixed_source": "4ea2ad2a9e2e73fdb7bfc2b0cd34445c044c1ae4",
+  "files_differing": [
+    "inputs.lock.json",
+    "manifest.json"
+  ],
+  "original_manifest_sha256": "1ec5cf25b456f258bb50c120f323c972b1ce6f58aeb9aee4ddad3d96ee6e09ad",
+  "postfix_manifest_sha256": "5c745c9b15fb43ae2a12d18e37957a6fd6fe50ea73cd8dcfaf2b768ff77d3041",
+  "all_other_payloads_byte_identical": true,
+  "postfix_inputs_lock_sha256": "f47bb451cb9a667cf36a1e53c05e0345b0745df060a9a019f812532710a49af9",
+  "glb_sha256": {
+    "root_motion": "4a2c3587d932a8c8bab002b9e536f1ed22a28388e928cbe18fe8845b553e7e7b",
+    "in_place": "2878670fbeacfd7e99014e8a75537d5711deea5ceafc96362b5fbc545a63aa0b"
+  },
+  "result": "PASS"
+}

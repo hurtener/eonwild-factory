@@ -90,31 +90,41 @@ and summary are in
 [reports/V9-ADULT-RECOVERY-V3-HOST-001](../reports/V9-ADULT-RECOVERY-V3-HOST-001/README.md).
 
 The latest body-response diagnostic is
-`tarbosaurus-pin-552-1-adult-walk.v5`. It preserves v3's leg, contact and
-articulation inputs while using support-timed pelvis transfer and a restrained
-distributed trunk counterroll. The host inspected all 370 rendered review
-frames across five native-time views and completed native-speed v3/A/B and
-root-motion comparisons. Lateral coordination and torso response improve over
-v3 and Candidate A, but the sagittal body, neck and tail profile still reads too
-level and even for the requested several-ton effort. Its status is
-**POLISH_REQUIRED**. Mass-response physics, user art-direction approval,
-biological validation, Unity parity and production approval are absent. See
-[reports/V9-ADULT-BODY-TRANSFER-B-001](../reports/V9-ADULT-BODY-TRANSFER-B-001/README.md).
-The exact B review/CI head `2199e7f2fb4040b4988a7a267f2b0a9b7eb5a2a5`
-passed 716 tests plus 21 subtests in 306.42 seconds with the pinned real tools;
-hosted CI remains pending.
+`tarbosaurus-pin-552-1-adult-walk.v6`. It preserves v3's leg, contact and
+articulation inputs and v5's support-directed lateral response, then adds a
+modest support-timed pelvis pitch with opposing distributed trunk, neck and
+tail response. The host inspected all 370 rendered frames across five
+native-time views and completed all five paired v5/v6 native-speed playbacks.
+Coordination improves without losing recovery clearance or gaze, but constant
+forward travel and body effort remain too even for the requested several-ton
+presentation. Its status is **WHOLE_BODY_POLISH_REQUIRED**. This is authored
+kinematic response, not a center-of-mass, force, inertia or mass simulation.
+User art-direction approval, biological validation, Unity parity and production
+approval are absent. See
+[reports/V9-ADULT-SAGITTAL-RESPONSE-V6-001](../reports/V9-ADULT-SAGITTAL-RESPONSE-V6-001/README.md).
+The v5 Candidate B report remains a historical diagnostic.
 
 The exact integrated source `5304b1967ad350737cf7e9ee6555a5f4de9e9bff`
 passed 658 tests plus 21 subtests in 225.75 seconds. The new adult v3 catalog
 binding test then passed at exact source
 `7809ada9743818e860e096ffb38ddba3488a7d9b` in 0.26 seconds.
 
-Fast-walk v2 remains a separate candidate. The host inspected all 192 frames
-across four native views and completed four original-speed playbacks. Its
-recovery still reads folded and relatively flat, and its stance remains more
-crouched than adult v3, so visual polish is required and it is not accepted as
-the adult benchmark. The structured receipt is copied into the
-[final continuation report](../reports/V9-CONTINUATION-FINAL-4AE0FE9-001/fast-walk-host-review.json).
+Adult fast-walk recovery v3 is the current bounded fast-cadence diagnostic. It
+preserves the 1.6-second cycle, stride, duty, clearance, world-metatarsus target
+and articulation guardrails while replacing the onset/return recovery envelope
+with an opt-in rate-limited C2 carrier. The host inspected all 192 frames across
+four native views and completed four native-speed playbacks. The distal
+recovery improves without the earlier pinched ankle, floor skim or lateral
+crossing. Its older body profile remains level and even, so the status is
+**WHOLE_BODY_POLISH_REQUIRED**; it is not the adult benchmark and has no
+biological, Unity or production approval. See
+[reports/V9-ADULT-FAST-WALK-RECOVERY-V3-001](../reports/V9-ADULT-FAST-WALK-RECOVERY-V3-001/README.md).
+
+The combined exact source
+`30f434ce914b6392f1438f0ff234718c82d2e985` passed 749 tests plus 21
+subtests in 502.90 seconds with the pinned real Blender and Khronos tools.
+Both new recipes are retained alongside adult v3, body diagnostic v5 and generic
+fast-walk v2 in candidate/native CI matrices.
 
 ## Evidence-bound adult benchmark
 
@@ -171,10 +181,13 @@ float32 rounding values; the approved output hash is unchanged:
 
 `b5fc582e3bae3b2708735e7ae68cc31da65599f6d155d3b6d089a44ed5517d03`
 
-Current V9 candidates independently compile and verify on Linux. The new pair
-jobs compile each bound start, steady and stop and check both native serialized
-joins in root-motion and in-place reconstructed-world modes. No tolerance is
-relaxed, failing witness discarded, or Unity result inferred from this work.
+Current V9 candidates independently compile and verify on Linux. The pair jobs
+compile each bound start, steady and stop and apply the historical quadratic
+finite-difference estimator to both root-motion and in-place reconstructed-world
+modes. Independent exact LINEAR/SLERP tangent evaluation now shows that the
+generic gait joins and local steady loops remain outside the governed velocity
+limits. No tolerance is relaxed, failing witness discarded, or Unity result
+inferred from this work.
 
 ## Preserved V9 walking comparison
 
@@ -191,11 +204,14 @@ factory generation dependency. No historical builders are imported by new work.
 
 ## Still required before ready/merge
 
-The remaining direct-join source gate is sprint start and stop in both movement
-modes. Retain user art-direction approval separately; adult v3 has been accepted
-only as the current factory recovery candidate. Fast-walk v2 still requires
-visual polish. Then validate the intended Unity consumer, root authority, phase
-handoff, event delivery, import/compression and target-device performance.
+The exact exported-tangent source gate remains blocked for generic gait joins
+and local steady loops. The reviewed evaluator correction is still a separate,
+unintegrated stage on this head; a future motion-representation change must pass
+the unchanged limits. Retain user art-direction approval separately; adult v3
+has been accepted only as the current factory recovery candidate, while adult
+v6 and fast recovery v3 still require whole-body polish. Then validate the
+intended Unity consumer, root authority, phase handoff, event delivery,
+import/compression and target-device performance.
 Hosted CI for the ensuing published documentation head remains pending; draft
 PR #2 must not merge yet.
 

@@ -152,7 +152,7 @@ def test_adult_v6_changes_only_opt_in_sagittal_body_response_inputs():
     assert performance.upper_trunk_counterroll_degrees == .9
 
 
-def test_adult_v5_is_checked_alongside_v3_in_animal_benchmarks(monkeypatch):
+def test_adult_body_candidates_are_checked_alongside_v3_in_animal_benchmarks(monkeypatch):
     monkeypatch.syspath_prepend(str(ROOT / "tools"))
     spec = importlib.util.spec_from_file_location(
         "verify_catalog", ROOT / "tools/verify_catalog.py")
@@ -161,4 +161,6 @@ def test_adult_v5_is_checked_alongside_v3_in_animal_benchmarks(monkeypatch):
     assert module.GROUPS["animal-benchmarks"] == [
         "tarbosaurus-pin-552-1-adult-walk.v3",
         "tarbosaurus-pin-552-1-adult-walk.v5",
+        "tarbosaurus-pin-552-1-adult-walk.v6",
+        "tarbosaurus-pin-552-1-adult-fast-walk-recovery.v3",
     ]

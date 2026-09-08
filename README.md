@@ -47,15 +47,18 @@ the grounded walk. See [animal configuration](docs/ANIMAL_CONFIGURATION.md)
 for the reusable data contract and its current biomechanical limits.
 
 The latest body-response review candidate is
-`recipes/heavy-biped/tarbosaurus-pin-552-1-adult-walk.v5.json`. It preserves the
-v3 leg recovery and adds support-timed pelvis and distributed trunk response.
-Host review found clearer lateral coordination but still requires whole-body
-polish for the requested heavy-animal effort; mass-response physics is not
-implemented. See [the Candidate B report](reports/V9-ADULT-BODY-TRANSFER-B-001/README.md).
+`recipes/heavy-biped/tarbosaurus-pin-552-1-adult-walk.v6.json`. It preserves the
+v3 leg recovery and v5 lateral response, then adds modest support-timed pelvis,
+trunk, neck and tail pitch. Host review found clearer coordination, while the
+constant forward travel still requires whole-body polish for the requested
+heavy-animal effort. Mass-response physics is not implemented. See
+[the v6 report](reports/V9-ADULT-SAGITTAL-RESPONSE-V6-001/README.md).
 
 Current explicit review candidates are `walk.v3`, `reverse-walk.v4`, `run.v4`,
-`sprint.v4`, `fast-walk.v2`, `tarbosaurus-pin-552-1-adult-walk.v5`, `feeding.v2`,
-and `bite-miss.v2`, alongside `idle.v1`, `alert.v1`, and `call.v1`. The eight
+`sprint.v4`, `fast-walk.v2`, `tarbosaurus-pin-552-1-adult-walk.v6`,
+`tarbosaurus-pin-552-1-adult-fast-walk-recovery.v3`, `feeding.v2`, and
+`bite-miss.v2`, alongside `idle.v1`, `alert.v1`, and `call.v1`. Historical
+adult v3 and body-diagnostic v5 remain in CI as regression witnesses. The eight
 start/stop recipes are now `.v3`, bound to those exact sustained gait/performance
 inputs. All remain candidates, not automatically accepted animations. Passing
 the individual start, steady-gait and stop clips is insufficient: the permanent
@@ -104,11 +107,14 @@ Both tools retain mechanical rejection even when diagnostic rendering succeeds.
 uv run python -m pytest tests -q --tb=short
 ```
 
-The 2026-09-08 adult body-diagnostic head
-`2199e7f2fb4040b4988a7a267f2b0a9b7eb5a2a5` passed 716 tests plus 21
-subtests in 306.42 seconds with the pinned real tools. Hosted CI for this B
-candidate head is pending; the local result does not approve motion or authorize
-merging draft PR #2.
+The 2026-09-08 sagittal-body and fast-recovery integration head
+`30f434ce914b6392f1438f0ff234718c82d2e985` passed 749 tests plus 21
+subtests in 502.90 seconds with the pinned real tools. Hosted CI for the
+publication head is pending; the local result does not approve motion or
+authorize merging draft PR #2. The receipts are in the
+[adult v6](reports/V9-ADULT-SAGITTAL-RESPONSE-V6-001/README.md) and
+[fast recovery v3](reports/V9-ADULT-FAST-WALK-RECOVERY-V3-001/README.md)
+reports.
 
 The earlier 2026-09-08 final continuation head
 `4ae0fe92ec3ffd49dfeca14085756cc7cbe7d852` passed 683 tests plus 21
@@ -126,6 +132,12 @@ CI is read-only, runs one job per recipe, retains failed receipts, and generates
 native multi-view reviews. There are no self-committing recovery workflows,
 production imports of staging scripts, or omitted integration tests. A green
 test suite is not itself a green motion catalog or a visual approval.
+
+Package continuity on this integration head is the historical quadratic
+finite-difference estimator. Independent evaluation of the actual exported
+LINEAR/SLERP tangents finds generic gait joins and local steady loops outside
+their governed velocity limits. The reviewed exact evaluator remains a separate
+unintegrated stage, so this head makes no exact runtime C1 claim.
 
 ## Preserve what worked
 
