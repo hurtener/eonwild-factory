@@ -22,6 +22,7 @@ import struct
 from typing import Any, Mapping, Sequence
 
 from ..errors import ContractError, ValidationFailure
+from ..glb.animation import read_animation_tracks
 from .narrow_gauge_target_space_v1 import TargetSample
 
 
@@ -565,22 +566,18 @@ def _clip_state(
     glb: Any,
     clip_name: str,
 ) -> tuple[dict[tuple[str, str], tuple[tuple[float, ...], ...]], tuple[float, ...]]:
+    parsed, timeline = read_animation_tracks(glb, clip_name, require_common_timeline=True)
     tracks: dict[tuple[str, str], tuple[tuple[float, ...], ...]] = {}
-    timeline: tuple[float, ...] | None = None
-    for name, property_name, sampler in glb.animation_channels(clip_name):
-        key = (name, property_name)
-        values = tuple(tuple(float(item) for item in row) for row in glb.accessor_values(int(sampler["output"])))
-        candidate_timeline = tuple(float(row[0]) for row in glb.accessor_values(int(sampler["input"])))
-        if timeline is None:
-            timeline = candidate_timeline
-        elif timeline != candidate_timeline:
-            raise ContractError(f"{clip_name}: animation channels do not share a timeline")
-        tracks[key] = values
-    if timeline is None or len(timeline) < 2:
-        raise ContractError(f"{clip_name}: no animation timeline")
-    if any(right <= left for left, right in zip(timeline, timeline[1:])):
-        raise ContractError(f"{clip_name}: animation timeline is not strictly increasing")
-    return tracks, timeline
+    names: dict[str, int] = {}
+    for (index, property_name), track in parsed.items():
+        name = glb.nodes[index].get("name")
+        if not isinstance(name, str) or (name in names and names[name] != index):
+            raise ContractError(f"{clip_name}: animation targets require unique named nodes")
+        names[name] = index
+        tracks[(name, property_name)] = tuple(
+            tuple(float(item) for item in row) for row in track.values
+        )
+    return tracks, tuple(float(value) for value in timeline)
 
 
 def _pose(
@@ -593,7 +590,11 @@ def _pose(
     scales = [_vec3(value, label="rest scale") for value in glb.rest_scale]
     for index, node in enumerate(glb.nodes):
         name = node.get("name", f"node_{index}")
-        for property_name, target in (("translation", translations), ("rotation", rotations)):
+        for property_name, target in (
+            ("translation", translations),
+            ("rotation", rotations),
+            ("scale", scales),
+        ):
             values = tracks.get((name, property_name))
             if values is None:
                 continue
@@ -601,7 +602,7 @@ def _pose(
                 raise ContractError(f"animation sample exceeds {name}.{property_name} track")
             target[index] = (
                 _vec3(values[sample], label=f"{name}.{property_name}")
-                if property_name == "translation"
+                if property_name in {"translation", "scale"}
                 else _q(values[sample], label=f"{name}.{property_name}")
             )
     return translations, rotations, scales

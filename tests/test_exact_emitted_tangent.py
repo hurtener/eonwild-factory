@@ -2,15 +2,20 @@
 from __future__ import annotations
 
 import json
+from copy import deepcopy
 from pathlib import Path
 
 import numpy as np
 import pytest
 
 from eonwild_motion.errors import ContractError
-from eonwild_motion.factory.emitted_tangent import endpoint_tangent, skinned_velocity
+from eonwild_motion.contact_gauge import _animation_channels
+from eonwild_motion.factory.emitted_tangent import endpoint_tangent, local_cyclic_tangents, skinned_velocity
+from eonwild_motion.factory.quality import emitted_cyclic_continuity, emitted_rotation_rates
+from eonwild_motion.glb.animation import read_animation_tracks
 from eonwild_motion.glb.container import Glb
-from eonwild_motion.solve.whole_body_gait_transition import _build_glb
+from eonwild_motion.layers.leg_contact_resolve_v3 import _clip_state
+from eonwild_motion.solve.whole_body_gait_transition import _append_accessor, _build_glb, _encode
 from test_v9_airborne_gait import fixture
 
 
@@ -27,6 +32,28 @@ def _asset_clip(*, scale: bool = False) -> tuple[Glb, dict]:
         channels[root, "scale"] = np.array([[1., 1., 1.], [1.1, 1., 1.], [1.4, 1., 1.]])
     raw = _build_glb(base, "exact-tangent", times, channels, "exact-test", {})
     return Glb.from_bytes(raw), profile
+
+
+def _cubic_asset(
+    channels: dict[tuple[int, str], tuple[np.ndarray, np.ndarray, np.ndarray]],
+    *,
+    clip_name: str = "cubic",
+) -> Glb:
+    profile = json.loads((ROOT / "catalog/contacts/heavy-biped.v9.json").read_text())
+    base = Glb(ROOT / profile["source"]["path"])
+    document = deepcopy(base.document)
+    binary = bytearray(base.binary)
+    times = np.array([0.0, 2.0])
+    time_accessor = _append_accessor(document, binary, times.reshape((-1, 1)), "SCALAR")
+    samplers, animation_channels = [], []
+    for (node, path), (incoming, values, outgoing) in sorted(channels.items()):
+        rows = np.stack((incoming, values, outgoing), axis=1).reshape((-1, values.shape[1]))
+        output = _append_accessor(document, binary, rows, {3: "VEC3", 4: "VEC4"}[values.shape[1]])
+        samplers.append({"input": time_accessor, "output": output, "interpolation": "CUBICSPLINE"})
+        animation_channels.append({"sampler": len(samplers) - 1, "target": {"node": node, "path": path}})
+    document["animations"] = [{"name": clip_name, "samplers": samplers, "channels": animation_channels}]
+    document["buffers"][0]["byteLength"] = len(binary)
+    return Glb.from_bytes(_encode(document, binary))
 
 
 def test_exact_translation_scale_fk_lbs_nonuniform_clock():
@@ -78,5 +105,112 @@ def test_rejects_non_linear_and_duplicate_channels():
     glb, _ = _asset_clip()
     animation = glb.document["animations"][0]
     animation["samplers"][0]["interpolation"] = "STEP"
-    with pytest.raises(ContractError, match="LINEAR"):
+    with pytest.raises(ContractError, match="unsupported"):
         endpoint_tangent(glb, "exact-tangent", endpoint=0, terminal=False)
+    animation["samplers"][0]["interpolation"] = []
+    with pytest.raises(ContractError, match="unsupported"):
+        endpoint_tangent(glb, "exact-tangent", endpoint=0, terminal=False)
+
+
+def test_linear_reader_is_nonmutating_for_legacy_serialized_bytes():
+    glb, _ = _asset_clip(scale=True)
+    before = glb.raw
+    animation = glb.document["animations"][0]
+    output_bytes = [glb.accessor_bytes(sampler["output"]) for sampler in animation["samplers"]]
+    _clip_state(glb, "exact-tangent")
+    _animation_channels(glb, "exact-tangent")
+    endpoint_tangent(glb, "exact-tangent", endpoint=0, terminal=False)
+    assert glb.raw == before
+    assert [glb.accessor_bytes(sampler["output"]) for sampler in animation["samplers"]] == output_bytes
+
+
+def test_cubicspline_translation_scale_and_lbs_use_serialized_endpoint_tangents():
+    profile = json.loads((ROOT / "catalog/contacts/heavy-biped.v9.json").read_text())
+    base = Glb(ROOT / profile["source"]["path"])
+    root = base.name_to_node[profile["geometry"]["landmarks"]["root_node"]]
+    glb = _cubic_asset({
+        (root, "translation"): (
+            np.zeros((2, 3)), np.array([[0., 0., 0.], [2., 0., 0.]]), np.array([[3., 0., 0.], [0., 0., 0.]]),
+        ),
+        (root, "scale"): (
+            np.zeros((2, 3)), np.ones((2, 3)), np.array([[1., 0., 0.], [0., 0., 0.]]),
+        ),
+        (root, "rotation"): (
+            np.zeros((2, 4)), np.array([[0., 0., 0., 1.], [0., 0., 0., 1.]]), np.zeros((2, 4)),
+        ),
+    })
+    tangent = endpoint_tangent(glb, "cubic", endpoint=0, terminal=False)
+    assert tangent.translation_velocity[root, 0] == pytest.approx(3.)
+    assert tangent.scale_velocity[root, 0] == pytest.approx(1.)
+    _, skin = skinned_velocity(glb, profile, tangent)
+    assert np.isfinite(skin).all()
+    tracks, timeline = _clip_state(glb, "cubic")
+    assert timeline == (0., 2.)
+    assert len(tracks[(base.nodes[root]["name"], "translation")]) == 2
+    channels, _ = _animation_channels(glb, "cubic")
+    assert channels[(root, "translation")].sample(1.)[0] == pytest.approx(1.75)
+
+
+def test_cubicspline_quaternion_derivative_normalizes_and_does_not_slerp_flip():
+    profile = json.loads((ROOT / "catalog/contacts/heavy-biped.v9.json").read_text())
+    base = Glb(ROOT / profile["source"]["path"])
+    root = base.name_to_node[profile["geometry"]["landmarks"]["root_node"]]
+    identity = np.array([[0., 0., 0., 2.], [0., 0., 0., 2.]])
+    glb = _cubic_asset({
+        (root, "translation"): (np.zeros((2, 3)), np.array([[0., 0., 0.], [2., 0., 0.]]), np.zeros((2, 3))),
+        (root, "rotation"): (
+            np.zeros((2, 4)), identity, np.array([[0., 2., 0., 2.], [0., 0., 0., 0.]]),
+        ),
+    })
+    tangent = endpoint_tangent(glb, "cubic", endpoint=0, terminal=False)
+    # Raw qdot=(0,2,0,2) at q=(0,0,0,2); normalization removes the radial
+    # component, then body angular velocity is 2*q^-1*qdot = (0,2,0).
+    assert tangent.angular_velocity[root] == pytest.approx([0., 2., 0.])
+    parsed, _ = read_animation_tracks(glb, "cubic", require_common_timeline=True)
+    assert parsed[(root, "rotation")].sample(1.)[3] < 1.
+
+
+def test_cubicspline_rejects_triplet_mismatch_zero_interior_quaternion_and_dynamic_scale():
+    profile = json.loads((ROOT / "catalog/contacts/heavy-biped.v9.json").read_text())
+    base = Glb(ROOT / profile["source"]["path"])
+    root = base.name_to_node[profile["geometry"]["landmarks"]["root_node"]]
+    unit = np.array([[0., 0., 0., 1.], [0., 0., 0., 1.]])
+    glb = _cubic_asset({
+        (root, "translation"): (np.zeros((2, 3)), np.array([[0., 0., 0.], [2., 0., 0.]]), np.zeros((2, 3))),
+        (root, "rotation"): (np.zeros((2, 4)), unit, np.zeros((2, 4))),
+        (root, "scale"): (np.zeros((2, 3)), np.ones((2, 3)), np.array([[.1, 0., 0.], [0., 0., 0.]])),
+    })
+    with pytest.raises(ContractError, match="nonconstant animated scale"):
+        local_cyclic_tangents(glb, "cubic")
+    malformed = Glb.from_bytes(glb.raw)
+    output = malformed.document["animations"][0]["samplers"][0]["output"]
+    malformed.document["accessors"][output]["count"] = 2
+    with pytest.raises(ContractError, match="CUBICSPLINE output"):
+        read_animation_tracks(malformed, "cubic", require_common_timeline=True)
+    nonfinite = _cubic_asset({
+        (root, "translation"): (np.zeros((2, 3)), np.array([[0., 0., 0.], [2., 0., 0.]]), np.array([[np.nan, 0., 0.], [0., 0., 0.]])),
+        (root, "rotation"): (np.zeros((2, 4)), unit, np.zeros((2, 4))),
+    })
+    with pytest.raises(ContractError, match="finite real"):
+        read_animation_tracks(nonfinite, "cubic", require_common_timeline=True)
+    opposite = _cubic_asset({
+        (root, "translation"): (np.zeros((2, 3)), np.array([[0., 0., 0.], [2., 0., 0.]]), np.zeros((2, 3))),
+        (root, "rotation"): (np.zeros((2, 4)), np.array([[0., 0., 0., 1.], [0., 0., 0., -1.]]), np.zeros((2, 4))),
+    })
+    track, _ = read_animation_tracks(opposite, "cubic", require_common_timeline=True)
+    with pytest.raises(ContractError, match="interpolated animation quaternion"):
+        track[(root, "rotation")].sample(1.)
+
+
+def test_cubicspline_cyclic_tangent_is_exact_but_rate_gate_remains_fail_closed():
+    profile = json.loads((ROOT / "catalog/contacts/heavy-biped.v9.json").read_text())
+    base = Glb(ROOT / profile["source"]["path"])
+    root = base.name_to_node[profile["geometry"]["landmarks"]["root_node"]]
+    unit = np.array([[0., 0., 0., 1.], [0., 0., 0., 1.]])
+    glb = _cubic_asset({
+        (root, "translation"): (np.zeros((2, 3)), np.array([[0., 0., 0.], [2., 0., 0.]]), np.zeros((2, 3))),
+        (root, "rotation"): (np.zeros((2, 4)), unit, np.zeros((2, 4))),
+    })
+    assert emitted_cyclic_continuity(glb, loop=True)["status"] == "PASS"
+    with pytest.raises(ContractError, match="LINEAR quaternion"):
+        emitted_rotation_rates(glb, 600.)

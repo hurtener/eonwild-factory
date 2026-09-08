@@ -1,9 +1,10 @@
-"""Exact one-sided tangents for emitted glTF LINEAR animation channels.
+"""Exact one-sided tangents for emitted glTF TRS animation channels.
 
 This module measures the interpolation actually serialized in a GLB.  It does
-not alter animation keys, timing, limits, or source artifacts.  Translation and
-scale are differentiated over their adjacent LINEAR segment; rotations use the
-shortest SLERP angular velocity.  FK and LBS derivatives use the product rule.
+not alter animation keys, timing, limits, or source artifacts. LINEAR
+translations/scales use adjacent segments, LINEAR rotations use shortest
+SLERP, and CUBICSPLINE channels use their serialized one-sided tangents. FK
+and LBS derivatives use the product rule.
 """
 from __future__ import annotations
 
@@ -15,10 +16,9 @@ import numpy as np
 
 from ..contact_gauge import _column_major_matrix, _normalize_skin_weights, _read_glb_accessor
 from ..errors import ContractError
+from ..glb.animation import TrsTrack, read_animation_tracks
 from ..glb.container import Glb
 from ..layers.leg_contact_resolve_v3 import _qinv, _qmatrix, _qmul, _q_to_rotvec
-
-_PATHS = ("translation", "rotation", "scale")
 
 
 def _numeric(value: Any, label: str) -> np.ndarray:
@@ -35,42 +35,10 @@ def _names(glb: Glb) -> list[str]:
     return names
 
 
-def _tracks(glb: Glb, animation_name: str) -> tuple[dict[tuple[int, str], np.ndarray], np.ndarray]:
-    animations = [animation for animation in glb.document.get("animations", []) if animation.get("name") == animation_name]
-    if len(animations) != 1:
-        raise ContractError("exact tangent witness requires one named animation")
-    tracks: dict[tuple[int, str], np.ndarray] = {}
-    timeline: np.ndarray | None = None
-    for channel in animations[0].get("channels", []):
-        if not isinstance(channel, Mapping) or not isinstance(channel.get("target"), Mapping):
-            raise ContractError("exact tangent animation channel is malformed")
-        target = channel["target"]
-        node, path = target.get("node"), target.get("path")
-        sampler_index = channel.get("sampler")
-        if (isinstance(node, bool) or not isinstance(node, int) or node < 0 or node >= len(glb.nodes)
-                or path not in _PATHS or isinstance(sampler_index, bool) or not isinstance(sampler_index, int)):
-            raise ContractError("exact tangent animation target is invalid")
-        samplers = animations[0].get("samplers", [])
-        if sampler_index < 0 or sampler_index >= len(samplers):
-            raise ContractError("exact tangent sampler is invalid")
-        sampler = samplers[sampler_index]
-        if sampler.get("interpolation", "LINEAR") != "LINEAR":
-            raise ContractError("exact tangent witness requires emitted LINEAR channels")
-        times = _numeric(glb.accessor_values(sampler["input"]), "exact tangent timestamps").reshape(-1)
-        values = _numeric(glb.accessor_values(sampler["output"]), "exact tangent channel")
-        width = 4 if path == "rotation" else 3
-        if len(times) < 2 or values.shape != (len(times), width) or np.any(np.diff(times) <= 0):
-            raise ContractError("exact tangent channel timeline is invalid")
-        if timeline is None:
-            timeline = times
-        elif not np.array_equal(timeline, times):
-            raise ContractError("exact tangent channels must share one timeline")
-        key = (node, path)
-        if key in tracks:
-            raise ContractError("exact tangent animation duplicates a node path")
-        tracks[key] = values
-    if timeline is None:
-        raise ContractError("exact tangent witness has no animated channels")
+def _tracks(glb: Glb, animation_name: str) -> tuple[dict[tuple[int, str], TrsTrack], np.ndarray]:
+    tracks, timeline = read_animation_tracks(
+        glb, animation_name, require_common_timeline=True
+    )
     _names(glb)
     return tracks, timeline
 
@@ -82,6 +50,20 @@ def _rotation_matrix(quaternion: np.ndarray) -> np.ndarray:
 def _skew(value: np.ndarray) -> np.ndarray:
     x, y, z = value
     return np.array(((0., -z, y), (z, 0., -x), (-y, x, 0.)))
+
+
+def _normalized_quaternion_angular_velocity(quaternion: np.ndarray, derivative: np.ndarray) -> np.ndarray:
+    """Map a normalized quaternion derivative to local/body angular velocity."""
+    x, y, z, w = quaternion
+    dx, dy, dz, dw = derivative
+    # Do not use the normalizing quaternion product: qdot may be zero and is
+    # a tangent, not itself a valid unit quaternion.
+    body_half = np.array((
+        w * dx - x * dw - y * dz + z * dy,
+        w * dy + x * dz - y * dw - z * dx,
+        w * dz - x * dy + y * dx - z * dw,
+    ))
+    return 2.0 * body_half
 
 
 def _local_matrix(translation: np.ndarray, rotation: np.ndarray, scale: np.ndarray) -> np.ndarray:
@@ -131,22 +113,34 @@ def endpoint_tangent(glb: Glb, animation_name: str, *, endpoint: int, terminal: 
     other_t, other_q, other_s = translation.copy(), rotation.copy(), scale.copy()
     for node in range(count):
         for path, target, other in (("translation", translation, other_t), ("rotation", rotation, other_q), ("scale", scale, other_s)):
-            values = tracks.get((node, path))
-            if values is not None:
-                target[node], other[node] = values[endpoint], values[neighbor]
+            track = tracks.get((node, path))
+            if track is not None:
+                target[node], other[node] = track.value_at_key(endpoint), track.value_at_key(neighbor)
     norms = np.linalg.norm(rotation, axis=1)
     other_norms = np.linalg.norm(other_q, axis=1)
     if np.any(norms <= 1e-15) or np.any(other_norms <= 1e-15):
         raise ContractError("exact tangent quaternion is zero")
     rotation /= norms[:, None]
     other_q /= other_norms[:, None]
-    if terminal:
-        tdot, sdot, first, second = (translation - other_t) / dt, (scale - other_s) / dt, other_q, rotation
-    else:
-        tdot, sdot, first, second = (other_t - translation) / dt, (other_s - scale) / dt, rotation, other_q
-    omega = np.asarray([
-        _q_to_rotvec(_qmul(_qinv(tuple(a)), tuple(b))) for a, b in zip(first, second)
-    ], dtype=float) / dt
+    tdot, sdot, omega = np.zeros((count, 3)), np.zeros((count, 3)), np.zeros((count, 3))
+    for node in range(count):
+        translation_track = tracks.get((node, "translation"))
+        scale_track = tracks.get((node, "scale"))
+        rotation_track = tracks.get((node, "rotation"))
+        if translation_track is not None:
+            tdot[node] = translation_track.derivative_at_key(endpoint, terminal=terminal)
+        if scale_track is not None:
+            sdot[node] = scale_track.derivative_at_key(endpoint, terminal=terminal)
+        if rotation_track is None:
+            continue
+        if rotation_track.interpolation == "LINEAR":
+            first, second = (other_q[node], rotation[node]) if terminal else (rotation[node], other_q[node])
+            omega[node] = np.asarray(_q_to_rotvec(_qmul(_qinv(tuple(first)), tuple(second))), dtype=float) / dt
+        else:
+            qdot = rotation_track.derivative_at_key(endpoint, terminal=terminal)
+            # qdot is after glTF's required quaternion normalization. q^-1*qdot
+            # is the pure-imaginary half-angular velocity in the local frame.
+            omega[node] = _normalized_quaternion_angular_velocity(rotation[node], qdot)
     local, local_dot = [], []
     for node in range(count):
         r = _rotation_matrix(rotation[node])
@@ -251,8 +245,14 @@ def skinned_velocity(glb: Glb, profile: Mapping[str, Any], tangent: EndpointTang
 def local_cyclic_tangents(glb: Glb, animation_name: str) -> dict[str, Any]:
     """Exact local-channel loop metric; intentionally does not claim world/LBS scope."""
     tracks, times = _tracks(glb, animation_name)
-    for (node, path), values in tracks.items():
-        if path == "scale" and not np.all(values == values[0]):
+    for (node, path), track in tracks.items():
+        scale_changes = (
+            not np.all(track.values == track.values[0])
+            or (track.interpolation == "CUBICSPLINE" and (
+                not np.all(track.in_tangents == 0) or not np.all(track.out_tangents == 0)
+            ))
+        )
+        if path == "scale" and scale_changes:
             raise ContractError("cyclic tangent witness does not govern nonconstant animated scale channels")
     end = endpoint_tangent(glb, animation_name, endpoint=len(times) - 1, terminal=True)
     start = endpoint_tangent(glb, animation_name, endpoint=0, terminal=False)
@@ -269,4 +269,4 @@ def local_cyclic_tangents(glb: Glb, animation_name: str) -> dict[str, Any]:
     rotation, angular_witness = maximum(angular, end.angular_velocity, start.angular_velocity, "rad/s")
     return {"linear_m_per_s": linear, "angular_degrees_per_s": rotation,
             "witnesses": {"linear": linear_witness, "angular": angular_witness},
-            "classification": "exact adjacent LINEAR translation and shortest-SLERP local-channel tangents; constant scale is admitted and nonconstant animated scale rejects; not a world or skinned-loop claim"}
+            "classification": "exact serialized local-channel tangents: adjacent LINEAR translation and shortest-SLERP, or glTF CUBICSPLINE one-sided tangents with normalized quaternion derivatives; constant scale is admitted and nonconstant animated scale rejects; not a world or skinned-loop claim"}

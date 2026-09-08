@@ -14,6 +14,7 @@ import numpy as np
 
 from ..contact_gauge import _source_frames
 from ..errors import ContractError
+from ..glb.animation import read_animation_tracks
 from ..glb.container import Glb
 from ..layers.leg_contact_resolve_v3 import (
     _clip_state, _pose, _world_matrices, _world_position,
@@ -221,16 +222,18 @@ def _boundary(package: Path, *, terminal: bool, mode: str, profile: dict, phase_
     pt = _numeric([row['time_s'] for row in plan['samples']])
     if len(times)<3 or pt.shape!=times.shape or np.any(np.diff(times)<=0) or np.max(np.abs(pt-times))>2e-6:
         raise ContractError('handoff serialized and planned timelines differ')
-    for channel in animations[0]['channels']:
-        sampler = animations[0]['samplers'][channel['sampler']]
-        tt = _numeric(glb.accessor_values(sampler['input'])).reshape(-1)
-        values = _numeric(glb.accessor_values(sampler['output']))
-        path = channel['target']['path']
-        width = 4 if path=='rotation' else 3
-        if (sampler.get('interpolation','LINEAR')!='LINEAR' or path not in ('rotation','translation','scale')
-            or not np.array_equal(tt,times) or values.shape!=(len(times),width)):
+    parsed, parsed_times = read_animation_tracks(
+        glb, animations[0]['name'], require_common_timeline=True
+    )
+    if not np.array_equal(parsed_times, times):
+        raise ContractError('invalid handoff serialized channel timeline')
+    for (_, path), track in parsed.items():
+        if path not in ('rotation','translation','scale') or track.values.shape != (len(times), 4 if path == 'rotation' else 3):
             raise ContractError('invalid handoff serialized channel')
-        if path=='rotation' and np.max(np.abs(np.linalg.norm(values,axis=1)-1))>1e-4:
+        norms = np.linalg.norm(track.values, axis=1) if path == 'rotation' else None
+        if path == 'rotation' and np.any(norms <= 1e-15):
+            raise ContractError('invalid handoff serialized quaternion')
+        if path == 'rotation' and track.interpolation == 'LINEAR' and np.max(np.abs(norms - 1)) > 1e-4:
             raise ContractError('invalid handoff serialized quaternion')
     endpoint = len(times) - 1 if terminal else 0
     if phase_s:

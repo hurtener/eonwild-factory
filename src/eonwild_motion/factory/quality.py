@@ -7,6 +7,7 @@ from typing import Any, Mapping
 import numpy as np
 
 from ..errors import ContractError
+from ..glb.animation import read_animation_tracks
 from ..glb.container import Glb
 from ..layers.leg_contact_resolve_v3 import _clip_state, _pose, _world_matrices, _world_position
 from ..planning.articulation_profile import ArticulationProfile
@@ -193,7 +194,8 @@ def emitted_rotation_rates(glb: Glb, maximum_degrees_per_s: float) -> dict:
             quaternions /= norms[:, None]
             angles = np.degrees(2 * np.arccos(np.clip(np.abs(np.sum(quaternions[:-1] * quaternions[1:], axis=1)), 0, 1)))
             speed = angles / np.diff(times)
-            index = int(np.argmax(speed)); channel_count += 1
+            index = int(np.argmax(speed))
+            channel_count += 1
             if float(speed[index]) > peak:
                 peak = float(speed[index])
                 node = int(channel["target"]["node"])
@@ -222,10 +224,10 @@ def _endpoint_derivative(times: np.ndarray, deltas: np.ndarray) -> np.ndarray:
 def emitted_cyclic_continuity(glb: Glb, *, loop: bool) -> dict:
     """Measure native-time incoming/outgoing velocity on final serialized TRS.
 
-    Quaternion logarithms are relative to each endpoint, use the shortest
-    rotation, and are invariant under q/-q encoding. Root displacement is not
-    erased: only its derivatives must match across a moving loop. This is a
-    sampled engineering witness, not proof of an analytic continuous curve.
+    LINEAR rotations use shortest-path endpoint logarithms; CUBICSPLINE uses
+    its authored, normalized one-sided quaternion derivatives. Root
+    displacement is not erased: only its derivatives must match across a
+    moving loop. This local seam witness does not bound interval extrema.
     """
     from ..layers.leg_contact_resolve_v3 import _qmul, _qinv, _q_to_rotvec
     if type(loop) is not bool:
@@ -239,49 +241,52 @@ def emitted_cyclic_continuity(glb: Glb, *, loop: bool) -> dict:
     if len(animations) != 1 or not isinstance(animations[0].get("name"), str):
         raise ContractError("cyclic witness requires exactly one named emitted clip")
     animation = animations[0]
-    angular = linear = 0.0
-    witnesses = {"angular": None, "linear": None}
-    counts = {"rotation": 0, "translation": 0}
-    for channel in animation["channels"]:
-        path = channel["target"]["path"]
-        if path not in counts:
-            continue
-        sampler = animation["samplers"][channel["sampler"]]
-        if sampler.get("interpolation", "LINEAR") != "LINEAR":
-            raise ContractError("continuity witness requires emitted LINEAR channels")
-        times = np.asarray(glb.accessor_values(sampler["input"]), dtype=float).reshape(-1)
-        values = np.asarray(glb.accessor_values(sampler["output"]), dtype=float)
-        width = 4 if path == "rotation" else 3
-        if (len(times) < 5 or values.shape != (len(times), width)
-            or not np.isfinite(times).all() or not np.isfinite(values).all()
-            or np.any(np.diff(times) <= 0)):
-            raise ContractError("invalid final cyclic timeline")
-        if path == "rotation":
-            norms = np.linalg.norm(values, axis=1)
-            if np.max(np.abs(norms - 1)) > 1e-4:
-                raise ContractError("invalid quaternion in cyclic witness")
-            values /= norms[:, None]
-            def deltas(endpoint, indices):
-                inverse = _qinv(tuple(values[endpoint]))
-                return np.array([_q_to_rotvec(_qmul(inverse, tuple(values[i]))) for i in indices])
-            start_delta, end_delta = deltas(0, [1, 2]), deltas(-1, [-3, -2])
-        else:
-            start_delta, end_delta = values[1:3] - values[0], values[-3:-1] - values[-1]
-        incoming = _endpoint_derivative(times[-3:-1] - times[-1], end_delta)
-        outgoing = _endpoint_derivative(times[1:3] - times[0], start_delta)
-        error = float(np.linalg.norm(incoming - outgoing))
-        node = int(channel["target"]["node"])
-        witness = {"node": node, "bone": glb.nodes[node].get("name"),
-            "incoming": incoming.tolist(), "outgoing": outgoing.tolist()}
-        if path == "rotation":
-            error = math.degrees(error)
-            if error > angular:
-                angular, witnesses["angular"] = error, witness
-        elif error > linear:
-            linear, witnesses["linear"] = error, witness
-        counts[path] += 1
+    parsed, _ = read_animation_tracks(glb, animation["name"], require_common_timeline=True)
+    counts = {
+        path: sum(1 for (_, candidate_path) in parsed if candidate_path == path)
+        for path in ("rotation", "translation")
+    }
     if not all(counts.values()):
         raise ContractError("cyclic witness requires actual rotation and translation channels")
+    has_cubic = any(track.interpolation == "CUBICSPLINE" for track in parsed.values())
+    angular = linear = 0.0
+    witnesses = {"angular": None, "linear": None}
+    if not has_cubic:
+        for channel in animation["channels"]:
+            path = channel["target"]["path"]
+            if path not in counts:
+                continue
+            sampler = animation["samplers"][channel["sampler"]]
+            times = np.asarray(glb.accessor_values(sampler["input"]), dtype=float).reshape(-1)
+            values = np.asarray(glb.accessor_values(sampler["output"]), dtype=float)
+            width = 4 if path == "rotation" else 3
+            if (len(times) < 5 or values.shape != (len(times), width)
+                or not np.isfinite(times).all() or not np.isfinite(values).all()
+                or np.any(np.diff(times) <= 0)):
+                raise ContractError("invalid final cyclic timeline")
+            if path == "rotation":
+                norms = np.linalg.norm(values, axis=1)
+                if np.max(np.abs(norms - 1)) > 1e-4:
+                    raise ContractError("invalid quaternion in cyclic witness")
+                values /= norms[:, None]
+                def deltas(endpoint, indices):
+                    inverse = _qinv(tuple(values[endpoint]))
+                    return np.array([_q_to_rotvec(_qmul(inverse, tuple(values[i]))) for i in indices])
+                start_delta, end_delta = deltas(0, [1, 2]), deltas(-1, [-3, -2])
+            else:
+                start_delta, end_delta = values[1:3] - values[0], values[-3:-1] - values[-1]
+            incoming = _endpoint_derivative(times[-3:-1] - times[-1], end_delta)
+            outgoing = _endpoint_derivative(times[1:3] - times[0], start_delta)
+            error = float(np.linalg.norm(incoming - outgoing))
+            node = int(channel["target"]["node"])
+            witness = {"node": node, "bone": glb.nodes[node].get("name"),
+                "incoming": incoming.tolist(), "outgoing": outgoing.tolist()}
+            if path == "rotation":
+                error = math.degrees(error)
+                if error > angular:
+                    angular, witnesses["angular"] = error, witness
+            elif error > linear:
+                linear, witnesses["linear"] = error, witness
     from .emitted_tangent import local_cyclic_tangents
     exact = local_cyclic_tangents(glb, animation["name"])
     checks = {"angular_velocity": exact["angular_degrees_per_s"] <= CYCLIC_ANGULAR_VELOCITY_TOLERANCE_DEG_S,
@@ -297,5 +302,6 @@ def emitted_cyclic_continuity(glb: Glb, *, loop: bool) -> dict:
             "maximum_angular_velocity_seam_degrees_per_s": angular,
             "maximum_linear_velocity_seam_m_per_s": linear,
             "peak_witnesses": witnesses,
-            "classification": "diagnostic quadratic fit through three native samples; not an emitted LINEAR pass claim",
+            "classification": ("not applicable to CUBICSPLINE; the exact serialized tangent is the acceptance value"
+                               if has_cubic else "diagnostic quadratic fit through three native samples; not an emitted LINEAR pass claim"),
         }}}
