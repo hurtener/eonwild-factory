@@ -5,6 +5,7 @@ No rig names or species branches occur here. Source geometry stays immutable.
 """
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass, asdict
 import math
 from typing import Any, Mapping
@@ -147,6 +148,67 @@ def _support_directed_pulse(source, base_worlds, roles, plan, phase, gain, later
     return gain * left_sign * math.cos(math.pi * stance_clock)
 
 
+def _counterroll_trunk_names(roles: Mapping[str, Any]) -> list[str]:
+    """Admit one semantic upper-body chain without accepting unrelated roles."""
+    if not isinstance(roles, Mapping):
+        raise ContractError("upper-trunk counterroll requires semantic rig roles")
+
+    def name(value, label):
+        if not isinstance(value, str) or not value:
+            raise ContractError(
+                f"upper-trunk counterroll requires a valid semantic {label} role")
+        return value
+
+    def names(value, label, *, nonempty=False):
+        if (not isinstance(value, Sequence) or isinstance(value, (str, bytes))
+                or (nonempty and not value)):
+            raise ContractError(
+                f"upper-trunk counterroll requires a valid semantic {label} sequence")
+        result = [name(item, label) for item in value]
+        if len(result) != len(set(result)):
+            raise ContractError(
+                f"upper-trunk counterroll requires unique semantic {label} roles")
+        return result
+
+    spine = names(roles.get("spine"), "spine", nonempty=True)
+    chest = name(roles.get("chest"), "chest")
+    trunk = [*spine, chest]
+    if len(trunk) != len(set(trunk)):
+        raise ContractError(
+            "upper-trunk counterroll requires a unique semantic spine/chest chain")
+
+    reserved = {
+        name(roles.get("root"), "root"),
+        name(roles.get("pelvis"), "pelvis"),
+        name(roles.get("head"), "head"),
+        *names(roles.get("neck"), "neck"),
+        *names(roles.get("tail"), "tail"),
+    }
+    legs = roles.get("legs")
+    if not isinstance(legs, Mapping):
+        raise ContractError(
+            "upper-trunk counterroll requires semantic bilateral leg roles")
+    for side in ("left", "right"):
+        leg = legs.get(side)
+        if not isinstance(leg, Mapping):
+            raise ContractError(
+                "upper-trunk counterroll requires semantic bilateral leg roles")
+        reserved.update(names(
+            leg.get("contactChain"), f"{side} contact chain", nonempty=True))
+        toe_chains = leg.get("toeChains")
+        if (not isinstance(toe_chains, Sequence)
+                or isinstance(toe_chains, (str, bytes))):
+            raise ContractError(
+                "upper-trunk counterroll requires semantic toe-chain roles")
+        for index, toe_chain in enumerate(toe_chains):
+            reserved.update(names(
+                toe_chain, f"{side} toe chain {index}", nonempty=True))
+    if set(trunk) & reserved:
+        raise ContractError(
+            "upper-trunk counterroll spine/chest must be disjoint from other semantic roles")
+    return trunk
+
+
 def apply_performance(source, translations, rotations, scales, base_worlds, roles, plan, row, up, forward):
     """Resolve rest-tail bias, lateral support response, and forward attention.
 
@@ -158,6 +220,8 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
     if "performance" not in plan:
         return
     p = Performance(**plan["performance"])
+    trunk_names = (_counterroll_trunk_names(roles)
+                   if p.upper_trunk_counterroll_degrees is not None else None)
     phase, gain = phase_and_gain(row)
     lateral = _unit(np.cross(up, forward))
     pelvis = source.name_to_node[roles["pelvis"]]
@@ -183,12 +247,11 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
     chest = source.name_to_node[roles["chest"]]
     _world_delta(source, translations, rotations, scales, chest, up, -.65 * p.pelvis_yaw_degrees * pulse)
     if p.upper_trunk_counterroll_degrees is not None:
-        names = [*roles.get("spine", []), roles["chest"]]
-        if (not names or len(names) != len(set(names))
-                or any(name not in source.name_to_node for name in names)):
+        assert trunk_names is not None
+        if any(name not in source.name_to_node for name in trunk_names):
             raise ContractError(
                 "upper-trunk counterroll requires a unique semantic spine/chest chain")
-        trunk = [source.name_to_node[name] for name in names]
+        trunk = [source.name_to_node[name] for name in trunk_names]
         if (source.parents[trunk[0]] != pelvis
                 or any(source.parents[child] != parent
                        for parent, child in zip(trunk, trunk[1:]))):

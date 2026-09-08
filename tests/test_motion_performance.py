@@ -392,9 +392,10 @@ def test_upper_trunk_counterroll_is_present_in_serialized_actual_rig_motion():
     assert angles[-1] == pytest.approx(-.6 * carrier, abs=2e-4)
 
 
-def test_upper_trunk_counterroll_rejects_duplicate_or_disconnected_roles():
+@pytest.mark.parametrize("spine", [None, [], 17])
+def test_upper_trunk_counterroll_rejects_malformed_or_empty_spine(spine):
     source, roles = fixture("counter", upper_body=True)
-    roles["spine"] = [roles["chest"]]
+    roles["spine"] = spine
     up = np.array([0., 1., 0.])
     forward = np.array([0., 0., 1.])
     gait = GroundedGait()
@@ -407,8 +408,50 @@ def test_upper_trunk_counterroll_rejects_duplicate_or_disconnected_roles():
     )
     row = sample_grounded_gait(
         gait, gait.duty_factor * gait.step_period_s, 2.)
-    with pytest.raises(ContractError, match="unique semantic spine/chest chain"):
+    with pytest.raises(ContractError, match="semantic spine sequence"):
         _performance_pose(source, roles, plan, row, up, forward)
+
+
+def test_upper_trunk_counterroll_rejects_leg_chain_masquerading_as_trunk():
+    source, roles = fixture("counter", upper_body=True)
+    leg = roles["legs"]["left"]["contactChain"]
+    roles["spine"] = leg[:-1]
+    roles["chest"] = leg[-1]
+    gait = GroundedGait()
+    plan = decorate_plan(
+        build_grounded_plan(gait, 2.),
+        Performance(
+            support_directed_pelvis_carrier=True,
+            upper_trunk_counterroll_degrees=.9,
+        ),
+    )
+    row = sample_grounded_gait(
+        gait, gait.duty_factor * gait.step_period_s, 2.)
+    with pytest.raises(ContractError, match="disjoint from other semantic roles"):
+        _performance_pose(
+            source, roles, plan, row,
+            np.array([0., 1., 0.]), np.array([0., 0., 1.]))
+
+
+def test_upper_trunk_counterroll_rejects_disconnected_spine_order():
+    root = Path(__file__).resolve().parents[1]
+    source = Glb.from_bytes((root / "assets/sha256/044a8be907eb650fa71c613f19655eb10a0dd23c1d6bce86dfef93cd8d9575f6.glb").read_bytes())
+    roles = json.loads((root / "catalog/rigs/heavy-biped.v9.json").read_text())["roles"]
+    roles["spine"][0], roles["spine"][1] = roles["spine"][1], roles["spine"][0]
+    gait = GroundedGait()
+    plan = decorate_plan(
+        build_grounded_plan(gait, 2.),
+        Performance(
+            support_directed_pelvis_carrier=True,
+            upper_trunk_counterroll_degrees=.9,
+        ),
+    )
+    row = sample_grounded_gait(
+        gait, gait.duty_factor * gait.step_period_s, 2.)
+    with pytest.raises(ContractError, match="must follow actual topology"):
+        _performance_pose(
+            source, roles, plan, row,
+            np.array([0., 1., 0.]), np.array([0., 0., 1.]))
 
 
 def test_direct_airborne_override_cannot_forge_support_carrier_identity():
