@@ -745,6 +745,19 @@ def test_sagittal_carrier_rejects_leg_as_neck_and_disconnected_tail():
             np.array([0., 1., 0.]), np.array([0., 0., 1.]))
 
 
+def test_sagittal_carrier_rejects_unrelated_existing_root_on_actual_rig():
+    source, roles = _actual_source_and_roles()
+    roles["root"] = "Bone_060"
+    assert roles["root"] in source.name_to_node
+    gait = GroundedGait()
+    plan = decorate_plan(build_grounded_plan(gait, 2.), _sagittal_performance())
+    row = sample_grounded_gait(gait, gait.duty_factor * gait.step_period_s, 2.)
+    with pytest.raises(ContractError, match="must follow actual topology"):
+        _performance_pose(
+            source, roles, plan, row,
+            np.array([0., 1., 0.]), np.array([0., 0., 1.]))
+
+
 def test_direct_airborne_override_cannot_forge_sagittal_carrier_identity():
     source, roles = _actual_source_and_roles()
     plan = build_airborne_plan(AirborneGait(cycles=1, sample_hz=24), 2.)

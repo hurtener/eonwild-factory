@@ -303,10 +303,12 @@ def _sagittal_body_chains(source, roles: Mapping[str, Any]):
         "neck": [source.name_to_node[name] for name in neck],
         "tail": [source.name_to_node[name] for name in tail],
     }
+    root_node = source.name_to_node[root]
     pelvis_node = source.name_to_node[pelvis]
     chest_node = source.name_to_node[trunk[-1]]
     head_node = source.name_to_node[head]
-    if (source.parents[nodes["trunk"][0]] != pelvis_node
+    if (source.parents[pelvis_node] != root_node
+            or source.parents[nodes["trunk"][0]] != pelvis_node
             or any(source.parents[child] != parent
                    for parent, child in zip(nodes["trunk"], nodes["trunk"][1:]))
             or not nodes["neck"]
