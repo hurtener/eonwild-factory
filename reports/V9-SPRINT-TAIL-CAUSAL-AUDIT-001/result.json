@@ -1,0 +1,2440 @@
+{
+  "complete_package_engine_binding": {
+    "all_three_maps_identical": true,
+    "canonical_json_sha256": "7a7b6517d43faa06d8a0216625e510d6f3f83c2b8fe624ff8724fd622b9a9b44",
+    "current_source_matches_all_entries": true,
+    "entry_count": 88
+  },
+  "definitions": {
+    "Shapley": "two-control order-independent allocation of the reconstructed mismatch to authored tail yaw and driven sagittal response; baseline retains root, pelvis, centering and static elevation",
+    "finite_stencil": "unchanged three-sample one-sided quadratic endpoint derivative used by factory.handoff",
+    "float32_reconstruction": "same reconstruction with local TRS cast to float32 before FK",
+    "float64_reconstruction": "same package plan, body-response receipt, source rest TRS, solver operation order and authored performance formulas, without GLB float32 serialization"
+  },
+  "engine_files": {
+    "factory/handoff.py": "37c13700200a4db22f5ccdd1e31a56ee84e5a680a74714f22cde2d0456794f7a",
+    "layers/leg_contact_resolve_v3.py": "274e2835b52309a53963419d3cde684c4206130282232be87c4e3fc2dd1eb21b",
+    "solve/airborne_gait.py": "1772160aa3885d5d89cb4c5455e082b15dc779982698dad20eb1371575107758",
+    "solve/performance.py": "232300a2a779aebffa1420d210bea276cffd050833cc1ec18c691cdfdc19861a"
+  },
+  "evaluator_changed": false,
+  "gate_changed": false,
+  "immutable_input_sha256": {
+    "start": {
+      "in_place.glb": "82d7889616c72b393c2f3c82847b52f61e681bf48d9ba233bb66cb76fea6a27d",
+      "inputs.lock.json": "6b90d5f31cb8c666b80a54e4b69ac01b213d212275f85587b7918c0b4fc2ce7f",
+      "manifest.json": "b73045c4f0fec239b358fa1dd84cebf32eb428b67201ee11a8ffac44dabd08bb",
+      "plan.json": "22af713bf7238f90ce9b3cf5c57ac377196437cca46a43397fedc588f4ac2197",
+      "root_motion.glb": "1a5df68c53c7f0f3c12b22411ff1e9f813ba27ba2db1ca635783e4e013a294e0",
+      "solver-receipt.json": "eb11602e68f41c3c6ca5b48a93f9f0420d37bd58da70f4065085bedcdb77fc7d"
+    },
+    "steady": {
+      "in_place.glb": "8acd1bde73275db21bf12fa12074ebe6d2e1b50359d8b5d0aab09de9725ea0fd",
+      "inputs.lock.json": "5395d2f3d82a1cb1235561340cf342ea8f22bad7c2b84570bb6a89b6de4464a8",
+      "manifest.json": "72fde739f85cce3355d5d78c0b7a1c9bd4476f2f6a9d9f94ecbc87e4f78ebe9b",
+      "plan.json": "96be5222d3bba8d73e42ae8bb6465ad9dc773b146f1895d143c94e61f5c4e13e",
+      "root_motion.glb": "703a57cd2d33b1d65f793f11e6088ab67c6f7e7aa843df05ef62c75905010bee",
+      "solver-receipt.json": "df00256b840bf1fe131e08c675742f8fe7fdd7ca3907d5aca7c53ad5702703af"
+    },
+    "stop": {
+      "in_place.glb": "79435fd0c317e21bb1b08f59c5a91c0b918464e7594b8227c80c0be8df8bbac1",
+      "inputs.lock.json": "74b1ef5719411fe0dc99b8586db9fbd9b39d041ef0de8fd9bcd3e61a1c888ef3",
+      "manifest.json": "e25e5da0b43b0529543fb9fc6dffb3f26dcc0d6cb4c5f266bc773a5b7fc7663e",
+      "plan.json": "63353f3114b8114af3af5362f2d7229aada7972d590118a99765fb653a2b862f",
+      "root_motion.glb": "2fdaee3e8d7c20b6ec03d3d5a60a5ae61efad0f118aec86496a4e27c289791b0",
+      "solver-receipt.json": "fa98c2b237d06f0c5785fe0121a94bce884d1934715a16975c5589e2cfcb488e"
+    }
+  },
+  "immutable_input_sha256_after": {
+    "start": {
+      "in_place.glb": "82d7889616c72b393c2f3c82847b52f61e681bf48d9ba233bb66cb76fea6a27d",
+      "inputs.lock.json": "6b90d5f31cb8c666b80a54e4b69ac01b213d212275f85587b7918c0b4fc2ce7f",
+      "manifest.json": "b73045c4f0fec239b358fa1dd84cebf32eb428b67201ee11a8ffac44dabd08bb",
+      "plan.json": "22af713bf7238f90ce9b3cf5c57ac377196437cca46a43397fedc588f4ac2197",
+      "root_motion.glb": "1a5df68c53c7f0f3c12b22411ff1e9f813ba27ba2db1ca635783e4e013a294e0",
+      "solver-receipt.json": "eb11602e68f41c3c6ca5b48a93f9f0420d37bd58da70f4065085bedcdb77fc7d"
+    },
+    "steady": {
+      "in_place.glb": "8acd1bde73275db21bf12fa12074ebe6d2e1b50359d8b5d0aab09de9725ea0fd",
+      "inputs.lock.json": "5395d2f3d82a1cb1235561340cf342ea8f22bad7c2b84570bb6a89b6de4464a8",
+      "manifest.json": "72fde739f85cce3355d5d78c0b7a1c9bd4476f2f6a9d9f94ecbc87e4f78ebe9b",
+      "plan.json": "96be5222d3bba8d73e42ae8bb6465ad9dc773b146f1895d143c94e61f5c4e13e",
+      "root_motion.glb": "703a57cd2d33b1d65f793f11e6088ab67c6f7e7aa843df05ef62c75905010bee",
+      "solver-receipt.json": "df00256b840bf1fe131e08c675742f8fe7fdd7ca3907d5aca7c53ad5702703af"
+    },
+    "stop": {
+      "in_place.glb": "79435fd0c317e21bb1b08f59c5a91c0b918464e7594b8227c80c0be8df8bbac1",
+      "inputs.lock.json": "74b1ef5719411fe0dc99b8586db9fbd9b39d041ef0de8fd9bcd3e61a1c888ef3",
+      "manifest.json": "e25e5da0b43b0529543fb9fc6dffb3f26dcc0d6cb4c5f266bc773a5b7fc7663e",
+      "plan.json": "63353f3114b8114af3af5362f2d7229aada7972d590118a99765fb653a2b862f",
+      "root_motion.glb": "2fdaee3e8d7c20b6ec03d3d5a60a5ae61efad0f118aec86496a4e27c289791b0",
+      "solver-receipt.json": "fa98c2b237d06f0c5785fe0121a94bce884d1934715a16975c5589e2cfcb488e"
+    }
+  },
+  "inputs_unchanged": true,
+  "interfaces": [
+    {
+      "after": {
+        "endpoint_driven_tail_degrees": {
+          "Bone_016": 0.5111514304444892,
+          "Bone_017": 0.5090623513515743,
+          "Bone_018": 0.5020112114150906,
+          "Bone_019": 0.48874208271730246,
+          "Bone_020": 0.46757802722586395,
+          "Bone_021": 0.4361805912466963,
+          "Bone_022": 0.3910482476305518,
+          "Bone_023": 0.3262298601666458,
+          "Bone_024": 0.22859779331677013
+        },
+        "endpoint_index": 20,
+        "endpoint_plan": {
+          "locomotion_time_s": null,
+          "pelvis_height_offset_m": -0.7264381106919487,
+          "pelvis_vertical_velocity_mps": -0.021784326734965435,
+          "performance_gain": null,
+          "root_forward_m": 0.9969438177995706,
+          "root_velocity_mps": null,
+          "time_s": 0.11666666666666667
+        },
+        "indices": [
+          20,
+          21,
+          22
+        ],
+        "reconstruction": {
+          "chest_is_tip_ancestor": false,
+          "endpoint_tip_position_error_m": 1.0387902029452633e-07,
+          "maximum_endpoint_path_local_rotation_error_degrees": 1.2728429583843889e-14,
+          "maximum_tip_position_error_m": 1.0387902029452633e-07,
+          "path": [
+            "RESPIN_REFERENCE_SCALE_ROOT",
+            "UniRigArmature",
+            "Bone_000",
+            "Bone_001",
+            "Bone_024",
+            "Bone_023",
+            "Bone_022",
+            "Bone_021",
+            "Bone_020",
+            "Bone_019",
+            "Bone_018",
+            "Bone_017",
+            "Bone_016"
+          ]
+        },
+        "times_s": [
+          0.11666666716337204,
+          0.11874999850988388,
+          0.12083332985639572
+        ],
+        "velocity_vectors_mps": {
+          "actual": [
+            3.2025959032049736,
+            -1.5645548877512452,
+            8.564787946929108
+          ],
+          "baseline_other_tail_only_float64": [
+            1.0732082394720566,
+            0.027167916263593352,
+            -0.04198778517494709
+          ],
+          "baseline_pelvis_only_float64": [
+            -1.0627126311299997,
+            -0.016039212510617504,
+            0.01730183626771374
+          ],
+          "baseline_root_only_float64": [
+            0.33268007524533366,
+            0.0,
+            8.538762530454894
+          ],
+          "yaw_0_driven_0_float32": [
+            0.3428340403875233,
+            0.010973364551319226,
+            8.514168802503566
+          ],
+          "yaw_0_driven_0_float64": [
+            0.3431752190380216,
+            0.011131621462581206,
+            8.514066865429305
+          ],
+          "yaw_0_driven_1_float32": [
+            0.3434103511174274,
+            -1.5642581290286521,
+            8.53267638457558
+          ],
+          "yaw_0_driven_1_float64": [
+            0.3438962474465703,
+            -1.5641961506486162,
+            8.532573320594956
+          ],
+          "yaw_1_driven_0_float32": [
+            3.196374455004373,
+            0.01109712370958769,
+            8.546066434344086
+          ],
+          "yaw_1_driven_0_float64": [
+            3.1965823426957565,
+            0.011131622353709228,
+            8.545980744462788
+          ],
+          "yaw_1_driven_1_float32": [
+            3.2025958377999033,
+            -1.564554855799067,
+            8.56478777201222
+          ],
+          "yaw_1_driven_1_float32_plan_clock": [
+            3.202592783566487,
+            -1.5645533637232745,
+            8.564779603994042
+          ],
+          "yaw_1_driven_1_float64": [
+            3.2028717505969113,
+            -1.564196153444569,
+            8.56471332584287
+          ],
+          "yaw_1_driven_1_float64_plan_clock": [
+            3.2028686961003636,
+            -1.5641946617108615,
+            8.56470515789569
+          ]
+        }
+      },
+      "baseline_kinematic_decomposition": {
+        "chest": {
+          "norm_mps": 0.0,
+          "reason": "Bone_002 chest is not an ancestor of Bone_016",
+          "vector_mps": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "composition_interaction": {
+          "norm_mps": 1.801707030933359e-07,
+          "vector_mps": [
+            6.743660019292719e-09,
+            -5.1760683491067216e-08,
+            1.7244372110120088e-07
+          ]
+        },
+        "other_tail_local_trs_including_centering_static_elevation": {
+          "norm_mps": 7.974722795304738e-05,
+          "vector_mps": [
+            7.965602789172799e-05,
+            2.0686058776753224e-06,
+            -3.202882518982264e-06
+          ]
+        },
+        "pelvis_local_trs": {
+          "norm_mps": 0.000549956456340362,
+          "vector_mps": [
+            -7.88822806461198e-05,
+            -0.000544268561186053,
+            1.192885149083056e-06
+          ]
+        },
+        "root_local_trs": {
+          "norm_mps": 0.0006111356449879574,
+          "vector_mps": [
+            2.379250104872499e-05,
+            -0.0,
+            0.0006106723290510985
+          ]
+        },
+        "sum": {
+          "norm_mps": 0.0008156718330118337,
+          "vector_mps": [
+            2.4572991954352474e-05,
+            -0.0005422517159918688,
+            0.0006088347754023005
+          ]
+        }
+      },
+      "before": {
+        "endpoint_driven_tail_degrees": {
+          "Bone_016": 0.5111514304444893,
+          "Bone_017": 0.5090623513515746,
+          "Bone_018": 0.5020112114150908,
+          "Bone_019": 0.4887420827173029,
+          "Bone_020": 0.4675780272258643,
+          "Bone_021": 0.43618059124669656,
+          "Bone_022": 0.391048247630552,
+          "Bone_023": 0.3262298601666461,
+          "Bone_024": 0.22859779331677033
+        },
+        "endpoint_index": 459,
+        "endpoint_plan": {
+          "locomotion_time_s": 0.11666666666666659,
+          "pelvis_height_offset_m": -0.7264381106919485,
+          "pelvis_vertical_velocity_mps": -0.021784326734967035,
+          "performance_gain": 1.0,
+          "root_forward_m": 17.375306538792515,
+          "root_velocity_mps": 8.54523272399632,
+          "time_s": 3.2916666666666665
+        },
+        "indices": [
+          457,
+          458,
+          459
+        ],
+        "reconstruction": {
+          "chest_is_tip_ancestor": false,
+          "endpoint_tip_position_error_m": 2.4599909920029975e-07,
+          "maximum_endpoint_path_local_rotation_error_degrees": 1.2728429583843889e-14,
+          "maximum_tip_position_error_m": 2.4599909920029975e-07,
+          "path": [
+            "RESPIN_REFERENCE_SCALE_ROOT",
+            "UniRigArmature",
+            "Bone_000",
+            "Bone_001",
+            "Bone_024",
+            "Bone_023",
+            "Bone_022",
+            "Bone_021",
+            "Bone_020",
+            "Bone_019",
+            "Bone_018",
+            "Bone_017",
+            "Bone_016"
+          ]
+        },
+        "times_s": [
+          3.2874999046325684,
+          3.289583444595337,
+          3.2916667461395264
+        ],
+        "velocity_vectors_mps": {
+          "actual": [
+            3.2033083726767324,
+            -1.5657394209426825,
+            8.565079938846472
+          ],
+          "baseline_other_tail_only_float64": [
+            1.0732878954999483,
+            0.027169984869471028,
+            -0.041990988057466073
+          ],
+          "baseline_pelvis_only_float64": [
+            -1.0627915134106458,
+            -0.016583481071803557,
+            0.017303029152862824
+          ],
+          "baseline_root_only_float64": [
+            0.3327038677463824,
+            -0.0,
+            8.539373202783946
+          ],
+          "yaw_0_driven_0_float32": [
+            0.3435196410958582,
+            0.010558282684732698,
+            8.514477923175786
+          ],
+          "yaw_0_driven_0_float64": [
+            0.34319979202997597,
+            0.010589369746589337,
+            8.514675700204707
+          ],
+          "yaw_0_driven_1_float32": [
+            0.3438859676927257,
+            -1.5659693093597609,
+            8.53293299830944
+          ],
+          "yaw_0_driven_1_float64": [
+            0.34391822327953864,
+            -1.5659669389702107,
+            8.533115495242383
+          ],
+          "yaw_1_driven_0_float32": [
+            3.196988588026254,
+            0.010615936601591033,
+            8.54640701044525
+          ],
+          "yaw_1_driven_0_float64": [
+            3.196815805802433,
+            0.010589370630430727,
+            8.546590397254894
+          ],
+          "yaw_1_driven_1_float32": [
+            3.2033083072559196,
+            -1.5657393889646702,
+            8.565079763926896
+          ],
+          "yaw_1_driven_1_float32_plan_clock": [
+            3.2030735644489683,
+            -1.565636705818272,
+            8.564459935951142
+          ],
+          "yaw_1_driven_1_float64": [
+            3.203115277609715,
+            -1.5659669417675863,
+            8.565256544239512
+          ],
+          "yaw_1_driven_1_float64_plan_clock": [
+            3.2028805384026215,
+            -1.5658642604610276,
+            8.564636700096436
+          ]
+        }
+      },
+      "chain_rule_FK_from_same_local_stencil": {
+        "norm_mps": 0.0018821848053510574,
+        "vector_mps": [
+          0.00026276757159049424,
+          -0.001754902889672394,
+          0.0006276055231069222
+        ]
+      },
+      "endpoint_source_state_continuity": {
+        "aligned_Bone_016_position_error_m": [
+          -1.3739009929736312e-15,
+          4.884981308350689e-15,
+          0.0
+        ],
+        "aligned_Bone_016_position_error_norm_m": 5.074509466089263e-15,
+        "maximum_driven_tail_angle_error_degrees": 4.440892098500626e-16,
+        "maximum_path_local_rotation_error_degrees": 3.777831295844421e-14,
+        "pelvis_declared_vertical_velocity_error_mps": -1.5994150448506161e-15,
+        "pelvis_height_error_m": 2.220446049250313e-16,
+        "phase_and_gain_reason": "both endpoints resolve phase 0.11666666666666667 s and gain 1; transition envelope first derivative is zero at its handoff"
+      },
+      "float64_shapley_decomposition": {
+        "authored_tail_yaw": {
+          "norm_mps": 0.00021522266041997052,
+          "vector_mps": [
+            0.00021522064727894086,
+            -4.354746598045356e-12,
+            9.308829591603285e-07
+          ]
+        },
+        "baseline_without_these_two": {
+          "norm_mps": 0.0008156718330118337,
+          "vector_mps": [
+            2.4572991954352474e-05,
+            -0.0005422517159918688,
+            0.0006088347754023005
+          ]
+        },
+        "driven_tail_sagittal_response": {
+          "norm_mps": 0.0012303433099027268,
+          "vector_mps": [
+            3.733373570541376e-06,
+            -0.0012285366026707429,
+            -6.654726171984038e-05
+          ]
+        },
+        "sum": {
+          "norm_mps": 0.0018681763614149707,
+          "vector_mps": [
+            0.0002435270128038347,
+            -0.0017707883230173582,
+            0.0005432183966416204
+          ]
+        }
+      },
+      "join_mismatch": {
+        "actual": {
+          "norm_mps": 0.001412795423835449,
+          "vector_mps": [
+            0.0007124694717588476,
+            -0.001184533191437298,
+            0.00029199191736317687
+          ]
+        },
+        "baseline_other_tail_only_float64": {
+          "norm_mps": 7.974722795304738e-05,
+          "vector_mps": [
+            7.965602789172799e-05,
+            2.0686058776753224e-06,
+            -3.202882518982264e-06
+          ]
+        },
+        "baseline_pelvis_only_float64": {
+          "norm_mps": 0.000549956456340362,
+          "vector_mps": [
+            -7.88822806461198e-05,
+            -0.000544268561186053,
+            1.192885149083056e-06
+          ]
+        },
+        "baseline_root_only_float64": {
+          "norm_mps": 0.0006111356449879574,
+          "vector_mps": [
+            2.379250104872499e-05,
+            -0.0,
+            0.0006106723290510985
+          ]
+        },
+        "yaw_0_driven_0_float32": {
+          "norm_mps": 0.0008590092416454091,
+          "vector_mps": [
+            0.0006856007083348992,
+            -0.00041508186658652767,
+            0.000309120672220331
+          ]
+        },
+        "yaw_0_driven_0_float64": {
+          "norm_mps": 0.0008156718330118337,
+          "vector_mps": [
+            2.4572991954352474e-05,
+            -0.0005422517159918688,
+            0.0006088347754023005
+          ]
+        },
+        "yaw_0_driven_1_float32": {
+          "norm_mps": 0.0017944915326288864,
+          "vector_mps": [
+            0.000475616575298321,
+            -0.0017111803311087304,
+            0.00025661373385865716
+          ]
+        },
+        "yaw_0_driven_1_float64": {
+          "norm_mps": 0.001852060356857255,
+          "vector_mps": [
+            2.1975832968312847e-05,
+            -0.0017707883215944964,
+            0.0005421746474265632
+          ]
+        },
+        "yaw_1_driven_0_float32": {
+          "norm_mps": 0.0008512887184448923,
+          "vector_mps": [
+            0.0006141330218811802,
+            -0.000481187107996656,
+            0.00034057610116455805
+          ]
+        },
+        "yaw_1_driven_0_float64": {
+          "norm_mps": 0.0008486568685280023,
+          "vector_mps": [
+            0.00023346310667671233,
+            -0.0005422517232785001,
+            0.0006096527921055639
+          ]
+        },
+        "yaw_1_driven_1_float32": {
+          "norm_mps": 0.0014127953936810041,
+          "vector_mps": [
+            0.0007124694560163292,
+            -0.0011845331656032965,
+            0.00029199191467554897
+          ]
+        },
+        "yaw_1_driven_1_float32_plan_clock": {
+          "norm_mps": 0.0012275862533464123,
+          "vector_mps": [
+            0.00048078088248137973,
+            -0.001083342094997608,
+            -0.0003196680429002896
+          ]
+        },
+        "yaw_1_driven_1_float64": {
+          "norm_mps": 0.0018681763614149707,
+          "vector_mps": [
+            0.0002435270128038347,
+            -0.0017707883230173582,
+            0.0005432183966416204
+          ]
+        },
+        "yaw_1_driven_1_float64_plan_clock": {
+          "norm_mps": 0.001671043595169607,
+          "vector_mps": [
+            1.1842302257925041e-05,
+            -0.0016695987501660348,
+            -6.845779925335194e-05
+          ]
+        }
+      },
+      "kind": "start",
+      "local_stencil_witness": {
+        "pelvis_translation": {
+          "norm_mps": 0.00027095987862262776,
+          "vector_mps": [
+            -6.253292342632208e-05,
+            -0.00013338970008872422,
+            -0.00022741169103893295
+          ]
+        },
+        "root_translation": {
+          "norm_mps": 0.00030424501991522276,
+          "vector_mps": [
+            1.1844751655581964e-05,
+            -0.0,
+            0.000304014364794547
+          ]
+        },
+        "tail_local_angular": [
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_024",
+            "norm_degrees_per_s": 0.002086694050375936,
+            "vector_degrees_per_s": [
+              -0.0018380469501875936,
+              -0.00025461517615947343,
+              -0.0009544876012027062
+            ]
+          },
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_023",
+            "norm_degrees_per_s": 0.0024821908800843817,
+            "vector_degrees_per_s": [
+              -0.0024351504934241154,
+              -0.00035497907766371753,
+              -0.0003245049983765758
+            ]
+          },
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_022",
+            "norm_degrees_per_s": 0.0028310451222171343,
+            "vector_degrees_per_s": [
+              -0.002760220909633841,
+              -0.000502731190181056,
+              -0.00037849486716294925
+            ]
+          },
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_021",
+            "norm_degrees_per_s": 0.003053318618446099,
+            "vector_degrees_per_s": [
+              -0.0029407191343019503,
+              -0.000637451254307964,
+              -0.0005182484513061162
+            ]
+          },
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_020",
+            "norm_degrees_per_s": 0.0031884423553789863,
+            "vector_degrees_per_s": [
+              -0.0030329346184245786,
+              -0.0007572872491552818,
+              -0.0006276848542089257
+            ]
+          },
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_019",
+            "norm_degrees_per_s": 0.0032222351125487194,
+            "vector_degrees_per_s": [
+              -0.003076378814987841,
+              -0.0007639751481184495,
+              -0.0005788216308097498
+            ]
+          },
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_018",
+            "norm_degrees_per_s": 0.003275604477390963,
+            "vector_degrees_per_s": [
+              -0.003078501796895336,
+              -0.0008263466598491666,
+              -0.0007546936971858416
+            ]
+          },
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_017",
+            "norm_degrees_per_s": 0.0032754854226807644,
+            "vector_degrees_per_s": [
+              -0.003063987714435984,
+              -0.0008348617024198078,
+              -0.000802365239658499
+            ]
+          },
+          {
+            "moves_Bone_016_origin": false,
+            "node": "Bone_016",
+            "norm_degrees_per_s": 0.0034955698145912855,
+            "vector_degrees_per_s": [
+              -0.00298116443248339,
+              -0.001382640374343656,
+              -0.0011916260111346072
+            ]
+          }
+        ]
+      },
+      "mode": "root_motion",
+      "witness": "Bone_016 runtime node origin"
+    },
+    {
+      "after": {
+        "endpoint_driven_tail_degrees": {
+          "Bone_016": 0.5111514304444892,
+          "Bone_017": 0.5090623513515743,
+          "Bone_018": 0.5020112114150906,
+          "Bone_019": 0.48874208271730246,
+          "Bone_020": 0.46757802722586395,
+          "Bone_021": 0.4361805912466963,
+          "Bone_022": 0.3910482476305518,
+          "Bone_023": 0.3262298601666458,
+          "Bone_024": 0.22859779331677013
+        },
+        "endpoint_index": 20,
+        "endpoint_plan": {
+          "locomotion_time_s": null,
+          "pelvis_height_offset_m": -0.7264381106919487,
+          "pelvis_vertical_velocity_mps": -0.021784326734965435,
+          "performance_gain": null,
+          "root_forward_m": 0.9969438177995706,
+          "root_velocity_mps": null,
+          "time_s": 0.11666666666666667
+        },
+        "indices": [
+          20,
+          21,
+          22
+        ],
+        "reconstruction": {
+          "chest_is_tip_ancestor": false,
+          "endpoint_tip_position_error_m": 1.224302105334033e-07,
+          "maximum_endpoint_path_local_rotation_error_degrees": 1.2728429583843889e-14,
+          "maximum_tip_position_error_m": 1.224302105334033e-07,
+          "path": [
+            "RESPIN_REFERENCE_SCALE_ROOT",
+            "UniRigArmature",
+            "Bone_000",
+            "Bone_001",
+            "Bone_024",
+            "Bone_023",
+            "Bone_022",
+            "Bone_021",
+            "Bone_020",
+            "Bone_019",
+            "Bone_018",
+            "Bone_017",
+            "Bone_016"
+          ]
+        },
+        "times_s": [
+          0.11666666716337204,
+          0.11874999850988388,
+          0.12083332985639572
+        ],
+        "velocity_vectors_mps": {
+          "actual": [
+            3.2025969869777664,
+            -1.5645548877512452,
+            8.564704689585799
+          ],
+          "baseline_other_tail_only_float64": [
+            1.405888314717417,
+            0.027167916263593352,
+            8.496774745279735
+          ],
+          "baseline_pelvis_only_float64": [
+            -0.7300325558846793,
+            -0.016039212510617504,
+            8.55606436672069
+          ],
+          "baseline_root_only_float64": [
+            0.33268007524535365,
+            0.0,
+            8.538762530454894
+          ],
+          "yaw_0_driven_0_float32": [
+            0.34283513095465407,
+            0.010973364551319226,
+            8.514085719548499
+          ],
+          "yaw_0_driven_0_float64": [
+            0.3431752190380216,
+            0.011131621462581206,
+            8.514066865429092
+          ],
+          "yaw_0_driven_1_float32": [
+            0.3434114416845382,
+            -1.5642581290286521,
+            8.53259330162009
+          ],
+          "yaw_0_driven_1_float64": [
+            0.3438962474465703,
+            -1.5641961506486162,
+            8.532573320593677
+          ],
+          "yaw_1_driven_0_float32": [
+            3.19637554557148,
+            0.01109712370958769,
+            8.545983351389019
+          ],
+          "yaw_1_driven_0_float64": [
+            3.196582342695773,
+            0.011131622353709228,
+            8.545980744462575
+          ],
+          "yaw_1_driven_1_float32": [
+            3.2025969283669973,
+            -1.564554855799067,
+            8.56470468905694
+          ],
+          "yaw_1_driven_1_float32_plan_clock": [
+            3.202593874132541,
+            -1.5645533637232745,
+            8.564696521117996
+          ],
+          "yaw_1_driven_1_float64": [
+            3.202871750596938,
+            -1.564196153444569,
+            8.56471332584351
+          ],
+          "yaw_1_driven_1_float64_plan_clock": [
+            3.2028686961003903,
+            -1.5641946617108615,
+            8.564705157896329
+          ]
+        }
+      },
+      "baseline_kinematic_decomposition": {
+        "chest": {
+          "norm_mps": 0.0,
+          "reason": "Bone_002 chest is not an ancestor of Bone_016",
+          "vector_mps": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "composition_interaction": {
+          "norm_mps": 0.0012220987132020732,
+          "vector_mps": [
+            -4.757825855078446e-05,
+            -5.1760683491067216e-08,
+            -0.001221172212034105
+          ]
+        },
+        "other_tail_local_trs_including_centering_static_elevation": {
+          "norm_mps": 0.0006162183086795819,
+          "vector_mps": [
+            0.00010344852906030155,
+            2.0686058776753224e-06,
+            0.0006074694450397544
+          ]
+        },
+        "pelvis_local_trs": {
+          "norm_mps": 0.0008207570828369629,
+          "vector_mps": [
+            -5.508977955726024e-05,
+            -0.000544268561186053,
+            0.0006118652127060642
+          ]
+        },
+        "root_local_trs": {
+          "norm_mps": 0.0006111356449902914,
+          "vector_mps": [
+            2.3792501108677033e-05,
+            -0.0,
+            0.0006106723290510985
+          ]
+        },
+        "sum": {
+          "norm_mps": 0.0008156718325377167,
+          "vector_mps": [
+            2.4572992060933885e-05,
+            -0.0005422517159918688,
+            0.000608834774762812
+          ]
+        }
+      },
+      "before": {
+        "endpoint_driven_tail_degrees": {
+          "Bone_016": 0.5111514304444893,
+          "Bone_017": 0.5090623513515746,
+          "Bone_018": 0.5020112114150908,
+          "Bone_019": 0.4887420827173029,
+          "Bone_020": 0.4675780272258643,
+          "Bone_021": 0.43618059124669656,
+          "Bone_022": 0.391048247630552,
+          "Bone_023": 0.3262298601666461,
+          "Bone_024": 0.22859779331677033
+        },
+        "endpoint_index": 459,
+        "endpoint_plan": {
+          "locomotion_time_s": 0.11666666666666659,
+          "pelvis_height_offset_m": -0.7264381106919485,
+          "pelvis_vertical_velocity_mps": -0.021784326734967035,
+          "performance_gain": 1.0,
+          "root_forward_m": 17.375306538792515,
+          "root_velocity_mps": 8.54523272399632,
+          "time_s": 3.2916666666666665
+        },
+        "indices": [
+          457,
+          458,
+          459
+        ],
+        "reconstruction": {
+          "chest_is_tip_ancestor": false,
+          "endpoint_tip_position_error_m": 1.2243021135546629e-07,
+          "maximum_endpoint_path_local_rotation_error_degrees": 1.2728429583843889e-14,
+          "maximum_tip_position_error_m": 1.2247660180929443e-07,
+          "path": [
+            "RESPIN_REFERENCE_SCALE_ROOT",
+            "UniRigArmature",
+            "Bone_000",
+            "Bone_001",
+            "Bone_024",
+            "Bone_023",
+            "Bone_022",
+            "Bone_021",
+            "Bone_020",
+            "Bone_019",
+            "Bone_018",
+            "Bone_017",
+            "Bone_016"
+          ]
+        },
+        "times_s": [
+          3.2874999046325684,
+          3.289583444595337,
+          3.2916667461395264
+        ],
+        "velocity_vectors_mps": {
+          "actual": [
+            3.203298680263087,
+            -1.5657394209426825,
+            8.565284042589756
+          ],
+          "baseline_other_tail_only_float64": [
+            1.4059917632464773,
+            0.027169984869471028,
+            8.497382214724775
+          ],
+          "baseline_pelvis_only_float64": [
+            -0.7300876456642366,
+            -0.016583481071803557,
+            8.556676231933396
+          ],
+          "baseline_root_only_float64": [
+            0.3327038677464623,
+            -0.0,
+            8.539373202783946
+          ],
+          "yaw_0_driven_0_float32": [
+            0.34350995547701696,
+            0.010558282684732698,
+            8.514682201311688
+          ],
+          "yaw_0_driven_0_float64": [
+            0.34319979203008255,
+            0.010589369746589337,
+            8.514675700203854
+          ],
+          "yaw_0_driven_1_float32": [
+            0.3438762820741642,
+            -1.5659693093597609,
+            8.533137276444911
+          ],
+          "yaw_0_driven_1_float64": [
+            0.34391822327955196,
+            -1.5659669389702107,
+            8.533115495239398
+          ],
+          "yaw_1_driven_0_float32": [
+            3.196978902407373,
+            0.010615936601591033,
+            8.546611288582426
+          ],
+          "yaw_1_driven_0_float64": [
+            3.1968158058022733,
+            0.010589370630430727,
+            8.546590397257026
+          ],
+          "yaw_1_driven_1_float32": [
+            3.203298621637118,
+            -1.5657393889646702,
+            8.565284042059812
+          ],
+          "yaw_1_driven_1_float32_plan_clock": [
+            3.2030638795320465,
+            -1.565636705818272,
+            8.564664199280806
+          ],
+          "yaw_1_driven_1_float64": [
+            3.203115277609502,
+            -1.5659669417675863,
+            8.565256544243775
+          ],
+          "yaw_1_driven_1_float64_plan_clock": [
+            3.2028805384024084,
+            -1.5658642604610276,
+            8.5646367001007
+          ]
+        }
+      },
+      "chain_rule_FK_from_same_local_stencil": {
+        "norm_mps": 0.0018821850860813413,
+        "vector_mps": [
+          0.0002627676324182815,
+          -0.001754902889672394,
+          0.0006276063395471709
+        ]
+      },
+      "endpoint_source_state_continuity": {
+        "aligned_Bone_016_position_error_m": [
+          -1.3739009929736312e-15,
+          4.884981308350689e-15,
+          -1.7763568394002505e-15
+        ],
+        "aligned_Bone_016_position_error_norm_m": 5.37643840681855e-15,
+        "maximum_driven_tail_angle_error_degrees": 4.440892098500626e-16,
+        "maximum_path_local_rotation_error_degrees": 3.777831295844421e-14,
+        "pelvis_declared_vertical_velocity_error_mps": -1.5994150448506161e-15,
+        "pelvis_height_error_m": 2.220446049250313e-16,
+        "phase_and_gain_reason": "both endpoints resolve phase 0.11666666666666667 s and gain 1; transition envelope first derivative is zero at its handoff"
+      },
+      "float64_shapley_decomposition": {
+        "authored_tail_yaw": {
+          "norm_mps": 0.00021522266016994372,
+          "vector_mps": [
+            0.00021522064701093302,
+            -4.354746598045356e-12,
+            9.308871158353327e-07
+          ]
+        },
+        "baseline_without_these_two": {
+          "norm_mps": 0.0008156718325377167,
+          "vector_mps": [
+            2.4572992060933885e-05,
+            -0.0005422517159918688,
+            0.000608834774762812
+          ]
+        },
+        "driven_tail_sagittal_response": {
+          "norm_mps": 0.001230343309896724,
+          "vector_mps": [
+            3.7333734921596307e-06,
+            -0.0012285366026707429,
+            -6.654726161325897e-05
+          ]
+        },
+        "sum": {
+          "norm_mps": 0.0018681763624374104,
+          "vector_mps": [
+            0.00024352701256402653,
+            -0.0017707883230173582,
+            0.0005432184002653884
+          ]
+        }
+      },
+      "join_mismatch": {
+        "actual": {
+          "norm_mps": 0.0014937008574257393,
+          "vector_mps": [
+            0.0007016932853205482,
+            -0.001184533191437298,
+            0.0005793530039568395
+          ]
+        },
+        "baseline_other_tail_only_float64": {
+          "norm_mps": 0.0006162183086795819,
+          "vector_mps": [
+            0.00010344852906030155,
+            2.0686058776753224e-06,
+            0.0006074694450397544
+          ]
+        },
+        "baseline_pelvis_only_float64": {
+          "norm_mps": 0.0008207570828369629,
+          "vector_mps": [
+            -5.508977955726024e-05,
+            -0.000544268561186053,
+            0.0006118652127060642
+          ]
+        },
+        "baseline_root_only_float64": {
+          "norm_mps": 0.0006111356449902914,
+          "vector_mps": [
+            2.3792501108677033e-05,
+            -0.0,
+            0.0006106723290510985
+          ]
+        },
+        "yaw_0_driven_0_float32": {
+          "norm_mps": 0.0009917013591643974,
+          "vector_mps": [
+            0.0006748245223628935,
+            -0.00041508186658652767,
+            0.0005964817631891606
+          ]
+        },
+        "yaw_0_driven_0_float64": {
+          "norm_mps": 0.0008156718325377167,
+          "vector_mps": [
+            2.4572992060933885e-05,
+            -0.0005422517159918688,
+            0.000608834774762812
+          ]
+        },
+        "yaw_0_driven_1_float32": {
+          "norm_mps": 0.001854756944572887,
+          "vector_mps": [
+            0.00046484038962602003,
+            -0.0017111803311087304,
+            0.0005439748248221576
+          ]
+        },
+        "yaw_0_driven_1_float64": {
+          "norm_mps": 0.0018520603563582005,
+          "vector_mps": [
+            2.1975832981635524e-05,
+            -0.0017707883215944964,
+            0.0005421746457212606
+          ]
+        },
+        "yaw_1_driven_0_float32": {
+          "norm_mps": 0.0009949299589340915,
+          "vector_mps": [
+            0.0006033568358927432,
+            -0.000481187107996656,
+            0.0006279371934070355
+          ]
+        },
+        "yaw_1_driven_0_float64": {
+          "norm_mps": 0.000848656870163938,
+          "vector_mps": [
+            0.0002334631065004089,
+            -0.0005422517232785001,
+            0.0006096527944503549
+          ]
+        },
+        "yaw_1_driven_1_float32": {
+          "norm_mps": 0.0014937008293775115,
+          "vector_mps": [
+            0.0007016932701207068,
+            -0.0011845331656032965,
+            0.0005793530028714855
+          ]
+        },
+        "yaw_1_driven_1_float32_plan_clock": {
+          "norm_mps": 0.0011813466347849403,
+          "vector_mps": [
+            0.00047000539950570186,
+            -0.001083342094997608,
+            -3.232183719070747e-05
+          ]
+        },
+        "yaw_1_driven_1_float64": {
+          "norm_mps": 0.0018681763624374104,
+          "vector_mps": [
+            0.00024352701256402653,
+            -0.0017707883230173582,
+            0.0005432184002653884
+          ]
+        },
+        "yaw_1_driven_1_float64_plan_clock": {
+          "norm_mps": 0.0016710435950194524,
+          "vector_mps": [
+            1.1842302018116868e-05,
+            -0.0016695987501660348,
+            -6.845779562958398e-05
+          ]
+        }
+      },
+      "kind": "start",
+      "local_stencil_witness": {
+        "pelvis_translation": {
+          "norm_mps": 0.00027095987862262776,
+          "vector_mps": [
+            -6.253292342632208e-05,
+            -0.00013338970008872422,
+            -0.00022741169103893295
+          ]
+        },
+        "root_translation": {
+          "norm_mps": 0.0,
+          "vector_mps": [
+            -0.0,
+            -0.0,
+            -0.0
+          ]
+        },
+        "tail_local_angular": [
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_024",
+            "norm_degrees_per_s": 0.002086694050375936,
+            "vector_degrees_per_s": [
+              -0.0018380469501875936,
+              -0.00025461517615947343,
+              -0.0009544876012027062
+            ]
+          },
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_023",
+            "norm_degrees_per_s": 0.0024821908800843817,
+            "vector_degrees_per_s": [
+              -0.0024351504934241154,
+              -0.00035497907766371753,
+              -0.0003245049983765758
+            ]
+          },
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_022",
+            "norm_degrees_per_s": 0.0028310451222171343,
+            "vector_degrees_per_s": [
+              -0.002760220909633841,
+              -0.000502731190181056,
+              -0.00037849486716294925
+            ]
+          },
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_021",
+            "norm_degrees_per_s": 0.003053318618446099,
+            "vector_degrees_per_s": [
+              -0.0029407191343019503,
+              -0.000637451254307964,
+              -0.0005182484513061162
+            ]
+          },
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_020",
+            "norm_degrees_per_s": 0.0031884423553789863,
+            "vector_degrees_per_s": [
+              -0.0030329346184245786,
+              -0.0007572872491552818,
+              -0.0006276848542089257
+            ]
+          },
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_019",
+            "norm_degrees_per_s": 0.0032222351125487194,
+            "vector_degrees_per_s": [
+              -0.003076378814987841,
+              -0.0007639751481184495,
+              -0.0005788216308097498
+            ]
+          },
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_018",
+            "norm_degrees_per_s": 0.003275604477390963,
+            "vector_degrees_per_s": [
+              -0.003078501796895336,
+              -0.0008263466598491666,
+              -0.0007546936971858416
+            ]
+          },
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_017",
+            "norm_degrees_per_s": 0.0032754854226807644,
+            "vector_degrees_per_s": [
+              -0.003063987714435984,
+              -0.0008348617024198078,
+              -0.000802365239658499
+            ]
+          },
+          {
+            "moves_Bone_016_origin": false,
+            "node": "Bone_016",
+            "norm_degrees_per_s": 0.0034955698145912855,
+            "vector_degrees_per_s": [
+              -0.00298116443248339,
+              -0.001382640374343656,
+              -0.0011916260111346072
+            ]
+          }
+        ]
+      },
+      "mode": "in_place",
+      "witness": "Bone_016 runtime node origin"
+    },
+    {
+      "after": {
+        "endpoint_driven_tail_degrees": {
+          "Bone_016": 0.5111514304444892,
+          "Bone_017": 0.5090623513515743,
+          "Bone_018": 0.5020112114150906,
+          "Bone_019": 0.48874208271730246,
+          "Bone_020": 0.46757802722586395,
+          "Bone_021": 0.4361805912466963,
+          "Bone_022": 0.3910482476305518,
+          "Bone_023": 0.3262298601666458,
+          "Bone_024": 0.22859779331677013
+        },
+        "endpoint_index": 0,
+        "endpoint_plan": {
+          "locomotion_time_s": 0.11666666666666667,
+          "pelvis_height_offset_m": -0.7264381106919487,
+          "pelvis_vertical_velocity_mps": -0.021784326734965435,
+          "performance_gain": 1.0,
+          "root_forward_m": 0.0,
+          "root_velocity_mps": 8.54523272399632,
+          "time_s": 0.0
+        },
+        "indices": [
+          0,
+          1,
+          2
+        ],
+        "reconstruction": {
+          "chest_is_tip_ancestor": false,
+          "endpoint_tip_position_error_m": 1.224302105334739e-07,
+          "maximum_endpoint_path_local_rotation_error_degrees": 1.2728429583843889e-14,
+          "maximum_tip_position_error_m": 1.224302105334739e-07,
+          "path": [
+            "RESPIN_REFERENCE_SCALE_ROOT",
+            "UniRigArmature",
+            "Bone_000",
+            "Bone_001",
+            "Bone_024",
+            "Bone_023",
+            "Bone_022",
+            "Bone_021",
+            "Bone_020",
+            "Bone_019",
+            "Bone_018",
+            "Bone_017",
+            "Bone_016"
+          ]
+        },
+        "times_s": [
+          0.0,
+          0.0020833334419876337,
+          0.004166666883975267
+        ],
+        "velocity_vectors_mps": {
+          "actual": [
+            3.202599352039648,
+            -1.564538338083768,
+            8.56475455048857
+          ],
+          "baseline_other_tail_only_float64": [
+            1.0732095666248016,
+            0.027181910508665703,
+            -0.04198841283257839
+          ],
+          "baseline_pelvis_only_float64": [
+            -1.0627139626062778,
+            -0.016048978995222146,
+            0.017301860513639085
+          ],
+          "baseline_root_only_float64": [
+            0.3326797483383137,
+            0.0,
+            8.538754139866082
+          ],
+          "yaw_0_driven_0_float32": [
+            0.3428306313098162,
+            0.010976644534722467,
+            8.514134174793943
+          ],
+          "yaw_0_driven_0_float64": [
+            0.34317488273131685,
+            0.011135850683050562,
+            8.514057866637065
+          ],
+          "yaw_0_driven_1_float32": [
+            0.3434117572934247,
+            -1.564239478826772,
+            8.532642640061994
+          ],
+          "yaw_0_driven_1_float64": [
+            0.3438959262935521,
+            -1.5641878905556499,
+            8.53256471073395
+          ],
+          "yaw_1_driven_0_float32": [
+            3.1963779880542837,
+            0.011108578870332588,
+            8.546031122305763
+          ],
+          "yaw_1_driven_0_float64": [
+            3.1965832247689776,
+            0.011135851577588292,
+            8.545971761224704
+          ],
+          "yaw_1_driven_1_float32": [
+            3.202599286634032,
+            -1.5645383061300235,
+            8.564754375569512
+          ],
+          "yaw_1_driven_1_float32_plan_clock": [
+            3.2025994536626006,
+            -1.5645383877270547,
+            8.564754822256262
+          ],
+          "yaw_1_driven_1_float64": [
+            3.2028726293951455,
+            -1.5641878933560762,
+            8.564704731853206
+          ],
+          "yaw_1_driven_1_float64_plan_clock": [
+            3.20287279643797,
+            -1.564187974934832,
+            8.564705178537366
+          ]
+        }
+      },
+      "baseline_kinematic_decomposition": {
+        "chest": {
+          "norm_mps": 0.0,
+          "reason": "Bone_002 chest is not an ancestor of Bone_016",
+          "vector_mps": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "composition_interaction": {
+          "norm_mps": 9.729182683731016e-08,
+          "vector_mps": [
+            7.87404791369184e-09,
+            -2.7886705247087695e-08,
+            9.287642655300687e-08
+          ]
+        },
+        "other_tail_local_trs_including_centering_static_elevation": {
+          "norm_mps": 1.4029387961475651e-05,
+          "vector_mps": [
+            1.9593673785678334e-06,
+            -1.3884431505867961e-05,
+            4.5515690510339324e-07
+          ]
+        },
+        "pelvis_local_trs": {
+          "norm_mps": 0.0005279096464138598,
+          "vector_mps": [
+            -1.925145894698943e-06,
+            -0.0005279061358597556,
+            -1.765536611006424e-08
+          ]
+        },
+        "root_local_trs": {
+          "norm_mps": 2.3676968743818597e-05,
+          "vector_mps": [
+            9.217827739993467e-07,
+            -0.0,
+            2.3659018690835865e-05
+          ]
+        },
+        "sum": {
+          "norm_mps": 0.0005423590076174049,
+          "vector_mps": [
+            9.63878305781929e-07,
+            -0.0005418184540708706,
+            2.41893966563822e-05
+          ]
+        }
+      },
+      "before": {
+        "endpoint_driven_tail_degrees": {
+          "Bone_016": 0.5111514304444892,
+          "Bone_017": 0.5090623513515743,
+          "Bone_018": 0.5020112114150906,
+          "Bone_019": 0.48874208271730246,
+          "Bone_020": 0.46757802722586395,
+          "Bone_021": 0.4361805912466963,
+          "Bone_022": 0.3910482476305518,
+          "Bone_023": 0.3262298601666458,
+          "Bone_024": 0.22859779331677013
+        },
+        "endpoint_index": 20,
+        "endpoint_plan": {
+          "locomotion_time_s": null,
+          "pelvis_height_offset_m": -0.7264381106919487,
+          "pelvis_vertical_velocity_mps": -0.021784326734965435,
+          "performance_gain": null,
+          "root_forward_m": 0.9969438177995706,
+          "root_velocity_mps": null,
+          "time_s": 0.11666666666666667
+        },
+        "indices": [
+          18,
+          19,
+          20
+        ],
+        "reconstruction": {
+          "chest_is_tip_ancestor": false,
+          "endpoint_tip_position_error_m": 1.0387902029452633e-07,
+          "maximum_endpoint_path_local_rotation_error_degrees": 1.2728429583843889e-14,
+          "maximum_tip_position_error_m": 1.0458220644683713e-07,
+          "path": [
+            "RESPIN_REFERENCE_SCALE_ROOT",
+            "UniRigArmature",
+            "Bone_000",
+            "Bone_001",
+            "Bone_024",
+            "Bone_023",
+            "Bone_022",
+            "Bone_021",
+            "Bone_020",
+            "Bone_019",
+            "Bone_018",
+            "Bone_017",
+            "Bone_016"
+          ]
+        },
+        "times_s": [
+          0.11249999701976776,
+          0.1145833358168602,
+          0.11666666716337204
+        ],
+        "velocity_vectors_mps": {
+          "actual": [
+            3.203077105929914,
+            -1.565640693534526,
+            8.56471344399381
+          ],
+          "baseline_other_tail_only_float64": [
+            1.0732115259921802,
+            0.027168026077159835,
+            -0.04198795767567329
+          ],
+          "baseline_pelvis_only_float64": [
+            -1.0627158877521725,
+            -0.016576885131081902,
+            0.017301842858272975
+          ],
+          "baseline_root_only_float64": [
+            0.3326806701210877,
+            -0.0,
+            8.538777798884773
+          ],
+          "yaw_0_driven_0_float32": [
+            0.3434903097802741,
+            0.010562940251654409,
+            8.514114171952704
+          ],
+          "yaw_0_driven_0_float64": [
+            0.34317584660962264,
+            0.01059403222897969,
+            8.514082056033722
+          ],
+          "yaw_0_driven_1_float32": [
+            0.3438565819220969,
+            -1.5658705882392343,
+            8.532568347438588
+          ],
+          "yaw_0_driven_1_float64": [
+            0.34389424278463826,
+            -1.5658682134570787,
+            8.532520950817608
+          ],
+          "yaw_1_driven_0_float32": [
+            3.196757814580007,
+            0.010620595497458224,
+            8.546041430149947
+          ],
+          "yaw_1_driven_0_float64": [
+            3.1965904157369716,
+            0.010594033109238104,
+            8.545994923901324
+          ],
+          "yaw_1_driven_1_float32": [
+            3.203077040513724,
+            -1.56564066155853,
+            8.56471326907533
+          ],
+          "yaw_1_driven_1_float32_plan_clock": [
+            3.2030681767069926,
+            -1.565636705818027,
+            8.564689812917068
+          ],
+          "yaw_1_driven_1_float64": [
+            3.2028894020331826,
+            -1.565868216255806,
+            8.564660156220848
+          ],
+          "yaw_1_driven_1_float64_plan_clock": [
+            3.202880538403381,
+            -1.5658642604642996,
+            8.564636700103295
+          ]
+        }
+      },
+      "chain_rule_FK_from_same_local_stencil": {
+        "norm_mps": 0.0016654036232690167,
+        "vector_mps": [
+          3.598112779945595e-05,
+          -0.0016645511635715593,
+          3.929390146595324e-05
+        ]
+      },
+      "endpoint_source_state_continuity": {
+        "aligned_Bone_016_position_error_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "aligned_Bone_016_position_error_norm_m": 0.0,
+        "maximum_driven_tail_angle_error_degrees": 0.0,
+        "maximum_path_local_rotation_error_degrees": 1.098142989952779e-15,
+        "pelvis_declared_vertical_velocity_error_mps": 0.0,
+        "pelvis_height_error_m": 0.0,
+        "phase_and_gain_reason": "both endpoints resolve phase 0.11666666666666667 s and gain 1; transition envelope first derivative is zero at its handoff"
+      },
+      "float64_shapley_decomposition": {
+        "authored_tail_yaw": {
+          "norm_mps": 1.2375951898652542e-05,
+          "vector_mps": [
+            1.2341618319561265e-05,
+            -6.2901159975092824e-12,
+            -9.212180263062919e-07
+          ]
+        },
+        "baseline_without_these_two": {
+          "norm_mps": 0.0005423590076174049,
+          "vector_mps": [
+            9.63878305781929e-07,
+            -0.0005418184540708706,
+            2.41893966563822e-05
+          ]
+        },
+        "driven_tail_sagittal_response": {
+          "norm_mps": 0.0011405293342222338,
+          "vector_mps": [
+            3.467141411778174e-06,
+            -0.0011385044393687604,
+            -6.784381098867698e-05
+          ]
+        },
+        "sum": {
+          "norm_mps": 0.0016809977262754042,
+          "vector_mps": [
+            1.6772638037121368e-05,
+            -0.001680322899729747,
+            -4.457563235860107e-05
+          ]
+        }
+      },
+      "join_mismatch": {
+        "actual": {
+          "norm_mps": 0.0012021339623317963,
+          "vector_mps": [
+            0.0004777538902662748,
+            -0.0011023554507578748,
+            -4.110649475919104e-05
+          ]
+        },
+        "baseline_other_tail_only_float64": {
+          "norm_mps": 1.4029387961475651e-05,
+          "vector_mps": [
+            1.9593673785678334e-06,
+            -1.3884431505867961e-05,
+            4.5515690510339324e-07
+          ]
+        },
+        "baseline_pelvis_only_float64": {
+          "norm_mps": 0.0005279096464138598,
+          "vector_mps": [
+            -1.925145894698943e-06,
+            -0.0005279061358597556,
+            -1.765536611006424e-08
+          ]
+        },
+        "baseline_root_only_float64": {
+          "norm_mps": 2.3676968743818597e-05,
+          "vector_mps": [
+            9.217827739993467e-07,
+            -0.0,
+            2.3659018690835865e-05
+          ]
+        },
+        "yaw_0_driven_0_float32": {
+          "norm_mps": 0.0007789268462905658,
+          "vector_mps": [
+            0.0006596784704578917,
+            -0.0004137042830680577,
+            -2.0002841239374902e-05
+          ]
+        },
+        "yaw_0_driven_0_float64": {
+          "norm_mps": 0.0005423590076174049,
+          "vector_mps": [
+            9.63878305781929e-07,
+            -0.0005418184540708706,
+            2.41893966563822e-05
+          ]
+        },
+        "yaw_0_driven_1_float32": {
+          "norm_mps": 0.0016923079683051816,
+          "vector_mps": [
+            0.0004448246286721802,
+            -0.0016311094124623615,
+            -7.429262340608034e-05
+          ]
+        },
+        "yaw_0_driven_1_float64": {
+          "norm_mps": 0.0016808934581188709,
+          "vector_mps": [
+            -1.6835089138300674e-06,
+            -0.0016803229014288323,
+            -4.3759916342978045e-05
+          ]
+        },
+        "yaw_1_driven_0_float32": {
+          "norm_mps": 0.0006184676333458659,
+          "vector_mps": [
+            0.0003798265257231037,
+            -0.0004879833728743642,
+            1.030784418354358e-05
+          ]
+        },
+        "yaw_1_driven_0_float64": {
+          "norm_mps": 0.0005423610165325382,
+          "vector_mps": [
+            7.1909679939530236e-06,
+            -0.000541818468350188,
+            2.316267661939264e-05
+          ]
+        },
+        "yaw_1_driven_1_float32": {
+          "norm_mps": 0.0012021339377052101,
+          "vector_mps": [
+            0.0004777538796920666,
+            -0.0011023554285065629,
+            -4.1106494181875064e-05
+          ]
+        },
+        "yaw_1_driven_1_float32_plan_clock": {
+          "norm_mps": 0.001195922294918662,
+          "vector_mps": [
+            0.0004687230443920498,
+            -0.0010983180909722723,
+            -6.50093391936224e-05
+          ]
+        },
+        "yaw_1_driven_1_float64": {
+          "norm_mps": 0.0016809977262754042,
+          "vector_mps": [
+            1.6772638037121368e-05,
+            -0.001680322899729747,
+            -4.457563235860107e-05
+          ]
+        },
+        "yaw_1_driven_1_float64_plan_clock": {
+          "norm_mps": 0.0016777015259765138,
+          "vector_mps": [
+            7.741965410978935e-06,
+            -0.001676285529467636,
+            -6.847843407165044e-05
+          ]
+        }
+      },
+      "kind": "stop",
+      "local_stencil_witness": {
+        "pelvis_translation": {
+          "norm_mps": 0.0002628242102557591,
+          "vector_mps": [
+            -6.24173948555462e-05,
+            -0.0001275360403340739,
+            -0.00022116779316147224
+          ]
+        },
+        "root_translation": {
+          "norm_mps": 1.178723537587027e-05,
+          "vector_mps": [
+            4.5889617519834225e-07,
+            -0.0,
+            1.1778299202624964e-05
+          ]
+        },
+        "tail_local_angular": [
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_024",
+            "norm_degrees_per_s": 0.001704677351017733,
+            "vector_degrees_per_s": [
+              -0.0016968386270733641,
+              -0.00016262418260038004,
+              1.4728203494450652e-05
+            ]
+          },
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_023",
+            "norm_degrees_per_s": 0.002287113204329635,
+            "vector_degrees_per_s": [
+              -0.0022679605027807435,
+              -0.00029462474921611645,
+              2.093380984978375e-05
+            ]
+          },
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_022",
+            "norm_degrees_per_s": 0.0026142169545883493,
+            "vector_degrees_per_s": [
+              -0.002574803289679643,
+              -0.0004517120063986392,
+              2.1784590594875224e-05
+            ]
+          },
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_021",
+            "norm_degrees_per_s": 0.0028099595838836687,
+            "vector_degrees_per_s": [
+              -0.0027493495743841777,
+              -0.0005797700334221391,
+              -2.857427582482845e-05
+            ]
+          },
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_020",
+            "norm_degrees_per_s": 0.0029293308717047734,
+            "vector_degrees_per_s": [
+              -0.002844966456889441,
+              -0.0006953425125942688,
+              -6.03655967888628e-05
+            ]
+          },
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_019",
+            "norm_degrees_per_s": 0.0029972347808557786,
+            "vector_degrees_per_s": [
+              -0.0028974792407354434,
+              -0.0007661445459994709,
+              3.244866274609301e-05
+            ]
+          },
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_018",
+            "norm_degrees_per_s": 0.0030450077115834594,
+            "vector_degrees_per_s": [
+              -0.002911328024385319,
+              -0.000889649520441477,
+              -6.902773942164036e-05
+            ]
+          },
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_017",
+            "norm_degrees_per_s": 0.003082553210898252,
+            "vector_degrees_per_s": [
+              -0.002910517690097725,
+              -0.001011015115156289,
+              -9.417807904624995e-05
+            ]
+          },
+          {
+            "moves_Bone_016_origin": false,
+            "node": "Bone_016",
+            "norm_degrees_per_s": 0.003249946039769966,
+            "vector_degrees_per_s": [
+              -0.0028462676171596567,
+              -0.0015269022341882286,
+              -0.00035983257239412134
+            ]
+          }
+        ]
+      },
+      "mode": "root_motion",
+      "witness": "Bone_016 runtime node origin"
+    },
+    {
+      "after": {
+        "endpoint_driven_tail_degrees": {
+          "Bone_016": 0.5111514304444892,
+          "Bone_017": 0.5090623513515743,
+          "Bone_018": 0.5020112114150906,
+          "Bone_019": 0.48874208271730246,
+          "Bone_020": 0.46757802722586395,
+          "Bone_021": 0.4361805912466963,
+          "Bone_022": 0.3910482476305518,
+          "Bone_023": 0.3262298601666458,
+          "Bone_024": 0.22859779331677013
+        },
+        "endpoint_index": 0,
+        "endpoint_plan": {
+          "locomotion_time_s": 0.11666666666666667,
+          "pelvis_height_offset_m": -0.7264381106919487,
+          "pelvis_vertical_velocity_mps": -0.021784326734965435,
+          "performance_gain": 1.0,
+          "root_forward_m": 0.0,
+          "root_velocity_mps": 8.54523272399632,
+          "time_s": 0.0
+        },
+        "indices": [
+          0,
+          1,
+          2
+        ],
+        "reconstruction": {
+          "chest_is_tip_ancestor": false,
+          "endpoint_tip_position_error_m": 1.224302105334739e-07,
+          "maximum_endpoint_path_local_rotation_error_degrees": 1.2728429583843889e-14,
+          "maximum_tip_position_error_m": 1.224302105334739e-07,
+          "path": [
+            "RESPIN_REFERENCE_SCALE_ROOT",
+            "UniRigArmature",
+            "Bone_000",
+            "Bone_001",
+            "Bone_024",
+            "Bone_023",
+            "Bone_022",
+            "Bone_021",
+            "Bone_020",
+            "Bone_019",
+            "Bone_018",
+            "Bone_017",
+            "Bone_016"
+          ]
+        },
+        "times_s": [
+          0.0,
+          0.0020833334419876337,
+          0.004166666883975267
+        ],
+        "velocity_vectors_mps": {
+          "actual": [
+            3.202599545566512,
+            -1.564538338083768,
+            8.564700225790505
+          ],
+          "baseline_other_tail_only_float64": [
+            1.4058893149631353,
+            0.027181910508665703,
+            8.496765727034356
+          ],
+          "baseline_pelvis_only_float64": [
+            -0.7300342142679441,
+            -0.016048978995222146,
+            8.556056000380574
+          ],
+          "baseline_root_only_float64": [
+            0.3326797483383337,
+            0.0,
+            8.538754139866935
+          ],
+          "yaw_0_driven_0_float32": [
+            0.34283083163098543,
+            0.010976644534722467,
+            8.514080024483095
+          ],
+          "yaw_0_driven_0_float64": [
+            0.3431748827313102,
+            0.011135850683050562,
+            8.514057866637065
+          ],
+          "yaw_0_driven_1_float32": [
+            0.3434119576145939,
+            -1.564239478826772,
+            8.532588489751145
+          ],
+          "yaw_0_driven_1_float64": [
+            0.3438959262935721,
+            -1.5641878905556499,
+            8.532564710734803
+          ],
+          "yaw_1_driven_0_float32": [
+            3.1963781883754394,
+            0.011108578870332588,
+            8.545976971994914
+          ],
+          "yaw_1_driven_0_float64": [
+            3.1965832247689745,
+            0.011135851577588292,
+            8.545971761224704
+          ],
+          "yaw_1_driven_1_float32": [
+            3.202599486955188,
+            -1.5645383061300235,
+            8.564700225258663
+          ],
+          "yaw_1_driven_1_float32_plan_clock": [
+            3.202599653983767,
+            -1.5645383877270547,
+            8.564700671942589
+          ],
+          "yaw_1_driven_1_float64": [
+            3.202872629395142,
+            -1.5641878933560762,
+            8.564704731852354
+          ],
+          "yaw_1_driven_1_float64_plan_clock": [
+            3.2028727964379664,
+            -1.564187974934832,
+            8.564705178536514
+          ]
+        }
+      },
+      "baseline_kinematic_decomposition": {
+        "chest": {
+          "norm_mps": 0.0,
+          "reason": "Bone_002 chest is not an ancestor of Bone_016",
+          "vector_mps": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "composition_interaction": {
+          "norm_mps": 4.7260829713324825e-05,
+          "vector_mps": [
+            -1.8356913466521796e-06,
+            -2.7886705247087695e-08,
+            -4.722515732957788e-05
+          ]
+        },
+        "other_tail_local_trs_including_centering_static_elevation": {
+          "norm_mps": 2.7974486372972655e-05,
+          "vector_mps": [
+            2.8811501324721434e-06,
+            -1.3884431505867961e-05,
+            2.4114174742351224e-05
+          ]
+        },
+        "pelvis_local_trs": {
+          "norm_mps": 0.0005284361919713106,
+          "vector_mps": [
+            -1.0033631741013238e-06,
+            -0.0005279061358597556,
+            2.3641361405424277e-05
+          ]
+        },
+        "root_local_trs": {
+          "norm_mps": 2.3676967889998372e-05,
+          "vector_mps": [
+            9.217827273699797e-07,
+            -0.0,
+            2.3659017838184582e-05
+          ]
+        },
+        "sum": {
+          "norm_mps": 0.0005423590076174641,
+          "vector_mps": [
+            9.638783390886196e-07,
+            -0.0005418184540708706,
+            2.41893966563822e-05
+          ]
+        }
+      },
+      "before": {
+        "endpoint_driven_tail_degrees": {
+          "Bone_016": 0.5111514304444892,
+          "Bone_017": 0.5090623513515743,
+          "Bone_018": 0.5020112114150906,
+          "Bone_019": 0.48874208271730246,
+          "Bone_020": 0.46757802722586395,
+          "Bone_021": 0.4361805912466963,
+          "Bone_022": 0.3910482476305518,
+          "Bone_023": 0.3262298601666458,
+          "Bone_024": 0.22859779331677013
+        },
+        "endpoint_index": 20,
+        "endpoint_plan": {
+          "locomotion_time_s": null,
+          "pelvis_height_offset_m": -0.7264381106919487,
+          "pelvis_vertical_velocity_mps": -0.021784326734965435,
+          "performance_gain": null,
+          "root_forward_m": 0.9969438177995706,
+          "root_velocity_mps": null,
+          "time_s": 0.11666666666666667
+        },
+        "indices": [
+          18,
+          19,
+          20
+        ],
+        "reconstruction": {
+          "chest_is_tip_ancestor": false,
+          "endpoint_tip_position_error_m": 1.224302105334033e-07,
+          "maximum_endpoint_path_local_rotation_error_degrees": 1.2728429583843889e-14,
+          "maximum_tip_position_error_m": 1.2247660180918116e-07,
+          "path": [
+            "RESPIN_REFERENCE_SCALE_ROOT",
+            "UniRigArmature",
+            "Bone_000",
+            "Bone_001",
+            "Bone_024",
+            "Bone_023",
+            "Bone_022",
+            "Bone_021",
+            "Bone_020",
+            "Bone_019",
+            "Bone_018",
+            "Bone_017",
+            "Bone_016"
+          ]
+        },
+        "times_s": [
+          0.11249999701976776,
+          0.1145833358168602,
+          0.11666666716337204
+        ],
+        "velocity_vectors_mps": {
+          "actual": [
+            3.2030728019612087,
+            -1.565640693534526,
+            8.564687655902638
+          ],
+          "baseline_other_tail_only_float64": [
+            1.4058921961132678,
+            0.027168026077159835,
+            8.496789841209099
+          ],
+          "baseline_pelvis_only_float64": [
+            -0.7300352176311182,
+            -0.016576885131081902,
+            8.556079641741979
+          ],
+          "baseline_root_only_float64": [
+            0.33268067012106106,
+            -0.0,
+            8.538777798884773
+          ],
+          "yaw_0_driven_0_float32": [
+            0.34348601260596195,
+            0.010562940251654409,
+            8.514088558248595
+          ],
+          "yaw_0_driven_0_float64": [
+            0.3431758466096493,
+            0.01059403222897969,
+            8.514082056033722
+          ],
+          "yaw_0_driven_1_float32": [
+            0.3438522847477713,
+            -1.5658705882392343,
+            8.53254273373448
+          ],
+          "yaw_0_driven_1_float64": [
+            0.3438942427846116,
+            -1.5658682134570787,
+            8.532520950818034
+          ],
+          "yaw_1_driven_0_float32": [
+            3.1967535174057082,
+            0.010620595497458224,
+            8.54601581644584
+          ],
+          "yaw_1_driven_0_float64": [
+            3.1965904157369716,
+            0.010594033109238104,
+            8.545994923901324
+          ],
+          "yaw_1_driven_1_float32": [
+            3.2030727433393986,
+            -1.56564066155853,
+            8.564687655371223
+          ],
+          "yaw_1_driven_1_float32_plan_clock": [
+            3.2030638795316038,
+            -1.565636705818027,
+            8.564664199283188
+          ],
+          "yaw_1_driven_1_float64": [
+            3.2028894020331626,
+            -1.565868216255806,
+            8.564660156221061
+          ],
+          "yaw_1_driven_1_float64_plan_clock": [
+            3.202880538403361,
+            -1.5658642604642996,
+            8.564636700103508
+          ]
+        }
+      },
+      "chain_rule_FK_from_same_local_stencil": {
+        "norm_mps": 0.0016654036165297975,
+        "vector_mps": [
+          3.598112011937715e-05,
+          -0.0016645511635715593,
+          3.929362286747562e-05
+        ]
+      },
+      "endpoint_source_state_continuity": {
+        "aligned_Bone_016_position_error_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "aligned_Bone_016_position_error_norm_m": 0.0,
+        "maximum_driven_tail_angle_error_degrees": 0.0,
+        "maximum_path_local_rotation_error_degrees": 1.098142989952779e-15,
+        "pelvis_declared_vertical_velocity_error_mps": 0.0,
+        "pelvis_height_error_m": 0.0,
+        "phase_and_gain_reason": "both endpoints resolve phase 0.11666666666666667 s and gain 1; transition envelope first derivative is zero at its handoff"
+      },
+      "float64_shapley_decomposition": {
+        "authored_tail_yaw": {
+          "norm_mps": 1.2375951843118007e-05,
+          "vector_mps": [
+            1.2341618319561265e-05,
+            -6.2901159975092824e-12,
+            -9.212172802364194e-07
+          ]
+        },
+        "baseline_without_these_two": {
+          "norm_mps": 0.0005423590076174641,
+          "vector_mps": [
+            9.638783390886196e-07,
+            -0.0005418184540708706,
+            2.41893966563822e-05
+          ]
+        },
+        "driven_tail_sagittal_response": {
+          "norm_mps": 0.0011405293342030627,
+          "vector_mps": [
+            3.4671413620401825e-06,
+            -0.0011385044393687604,
+            -6.784381066893275e-05
+          ]
+        },
+        "sum": {
+          "norm_mps": 0.0016809977262469778,
+          "vector_mps": [
+            1.6772638020690067e-05,
+            -0.001680322899729747,
+            -4.4575631292786966e-05
+          ]
+        }
+      },
+      "join_mismatch": {
+        "actual": {
+          "norm_mps": 0.0011997154483533727,
+          "vector_mps": [
+            0.0004732563946965307,
+            -0.0011023554507578748,
+            -1.2569887866575868e-05
+          ]
+        },
+        "baseline_other_tail_only_float64": {
+          "norm_mps": 2.7974486372972655e-05,
+          "vector_mps": [
+            2.8811501324721434e-06,
+            -1.3884431505867961e-05,
+            2.4114174742351224e-05
+          ]
+        },
+        "baseline_pelvis_only_float64": {
+          "norm_mps": 0.0005284361919713106,
+          "vector_mps": [
+            -1.0033631741013238e-06,
+            -0.0005279061358597556,
+            2.3641361405424277e-05
+          ]
+        },
+        "baseline_root_only_float64": {
+          "norm_mps": 2.3676967889998372e-05,
+          "vector_mps": [
+            9.217827273699797e-07,
+            -0.0,
+            2.3659017838184582e-05
+          ]
+        },
+        "yaw_0_driven_0_float32": {
+          "norm_mps": 0.0007749104264065994,
+          "vector_mps": [
+            0.0006551809749765214,
+            -0.0004137042830680577,
+            8.533765500473578e-06
+          ]
+        },
+        "yaw_0_driven_0_float64": {
+          "norm_mps": 0.0005423590076174641,
+          "vector_mps": [
+            9.638783390886196e-07,
+            -0.0005418184540708706,
+            2.41893966563822e-05
+          ]
+        },
+        "yaw_0_driven_1_float32": {
+          "norm_mps": 0.001690118194889492,
+          "vector_mps": [
+            0.00044032713317737615,
+            -0.0016311094124623615,
+            -4.57560166644555e-05
+          ]
+        },
+        "yaw_0_driven_1_float64": {
+          "norm_mps": 0.0016808934581300165,
+          "vector_mps": [
+            -1.6835089604594344e-06,
+            -0.0016803229014288323,
+            -4.3759916769303686e-05
+          ]
+        },
+        "yaw_1_driven_0_float32": {
+          "norm_mps": 0.0006168537464683614,
+          "vector_mps": [
+            0.0003753290302688228,
+            -0.0004879833728743642,
+            3.884445092516842e-05
+          ]
+        },
+        "yaw_1_driven_0_float64": {
+          "norm_mps": 0.0005423610165325794,
+          "vector_mps": [
+            7.190967997061648e-06,
+            -0.000541818468350188,
+            2.316267661939264e-05
+          ]
+        },
+        "yaw_1_driven_1_float32": {
+          "norm_mps": 0.0011997154237669576,
+          "vector_mps": [
+            0.00047325638421069627,
+            -0.0011023554285065629,
+            -1.2569887440250227e-05
+          ]
+        },
+        "yaw_1_driven_1_float32_plan_clock": {
+          "norm_mps": 0.0011929535796103756,
+          "vector_mps": [
+            0.00046422554783687175,
+            -0.0010983180909722723,
+            -3.6472659401098895e-05
+          ]
+        },
+        "yaw_1_driven_1_float64": {
+          "norm_mps": 0.0016809977262469778,
+          "vector_mps": [
+            1.6772638020690067e-05,
+            -0.001680322899729747,
+            -4.4575631292786966e-05
+          ]
+        },
+        "yaw_1_driven_1_float64_plan_clock": {
+          "norm_mps": 0.0016777015259329348,
+          "vector_mps": [
+            7.741965394547634e-06,
+            -0.001676285529467636,
+            -6.847843300583634e-05
+          ]
+        }
+      },
+      "kind": "stop",
+      "local_stencil_witness": {
+        "pelvis_translation": {
+          "norm_mps": 0.0002628242102557591,
+          "vector_mps": [
+            -6.24173948555462e-05,
+            -0.0001275360403340739,
+            -0.00022116779316147224
+          ]
+        },
+        "root_translation": {
+          "norm_mps": 0.0,
+          "vector_mps": [
+            -0.0,
+            -0.0,
+            -0.0
+          ]
+        },
+        "tail_local_angular": [
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_024",
+            "norm_degrees_per_s": 0.001704677351017733,
+            "vector_degrees_per_s": [
+              -0.0016968386270733641,
+              -0.00016262418260038004,
+              1.4728203494450652e-05
+            ]
+          },
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_023",
+            "norm_degrees_per_s": 0.002287113204329635,
+            "vector_degrees_per_s": [
+              -0.0022679605027807435,
+              -0.00029462474921611645,
+              2.093380984978375e-05
+            ]
+          },
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_022",
+            "norm_degrees_per_s": 0.0026142169545883493,
+            "vector_degrees_per_s": [
+              -0.002574803289679643,
+              -0.0004517120063986392,
+              2.1784590594875224e-05
+            ]
+          },
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_021",
+            "norm_degrees_per_s": 0.0028099595838836687,
+            "vector_degrees_per_s": [
+              -0.0027493495743841777,
+              -0.0005797700334221391,
+              -2.857427582482845e-05
+            ]
+          },
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_020",
+            "norm_degrees_per_s": 0.0029293308717047734,
+            "vector_degrees_per_s": [
+              -0.002844966456889441,
+              -0.0006953425125942688,
+              -6.03655967888628e-05
+            ]
+          },
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_019",
+            "norm_degrees_per_s": 0.0029972347808557786,
+            "vector_degrees_per_s": [
+              -0.0028974792407354434,
+              -0.0007661445459994709,
+              3.244866274609301e-05
+            ]
+          },
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_018",
+            "norm_degrees_per_s": 0.0030450077115834594,
+            "vector_degrees_per_s": [
+              -0.002911328024385319,
+              -0.000889649520441477,
+              -6.902773942164036e-05
+            ]
+          },
+          {
+            "moves_Bone_016_origin": true,
+            "node": "Bone_017",
+            "norm_degrees_per_s": 0.003082553210898252,
+            "vector_degrees_per_s": [
+              -0.002910517690097725,
+              -0.001011015115156289,
+              -9.417807904624995e-05
+            ]
+          },
+          {
+            "moves_Bone_016_origin": false,
+            "node": "Bone_016",
+            "norm_degrees_per_s": 0.003249946039769966,
+            "vector_degrees_per_s": [
+              -0.0028462676171596567,
+              -0.0015269022341882286,
+              -0.00035983257239412134
+            ]
+          }
+        ]
+      },
+      "mode": "in_place",
+      "witness": "Bone_016 runtime node origin"
+    }
+  ],
+  "interpretation": {
+    "chain_rule_assessment": "differentiating FK from the same native-stencil local TRS derivatives does not remove the residual because the local derivative estimates already differ; it is not justified as a follow-up gate change from this evidence",
+    "dominant_term": "the driven sagittal tail response supplies the largest float64 finite-window mismatch; authored yaw is secondary at start and negligible at stop; chest is outside the witness hierarchy",
+    "endpoint_state": "phase-aligned source endpoint position, rotations, driven response, pelvis height and declared pelvis velocity agree to floating-point roundoff after declared travel alignment",
+    "mechanism": "one-sided finite-window truncation and serialized clock/TRS quantization acting on a long nonlinear FK chain; no endpoint source-state inconsistency was found",
+    "next_action": "preserve the emitted BLOCKED result and make no authored motion, phase, amplitude, evaluator or threshold change from this diagnostic",
+    "serialization": "float32 timestamps/TRS alter the estimate but happen to reduce all four current residuals; float64 source reconstruction remains above the gate"
+  },
+  "pair_root": "/Volumes/m2-extended-disk/Repos/eonwild-factory/out/continuation-native-clock-7920c59-pairs/sprint",
+  "schema": "eonwild.motion.diagnostic.sprint-tail-handoff-causal.v1",
+  "scope": "read-only exact native-window Bone_016 decomposition; evaluator and gates unchanged",
+  "source_changed": false,
+  "source_git_commit": "c43d426ca8e5a2610c37ad7ae235ef623cb3f3fa",
+  "source_root": "/private/tmp/eonwild-engine-c43d426",
+  "status": "DIAGNOSTIC_COMPLETE"
+}
