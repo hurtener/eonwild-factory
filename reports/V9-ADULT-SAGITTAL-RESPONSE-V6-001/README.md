@@ -37,7 +37,7 @@ unchanged. Final full-patch interior-swing clearance is 35.214 mm left and
 40.603 mm right, with no penetration or hard-articulation violation. Head
 attention changes by less than 0.00001 degree. `reopened-audit.json` is the
 root-reproduced quantitative record, SHA-256
-`4d57a160c1749f9dfa93201f5fb13eda9b8dc82b4619633a4166bad273dd8409`.
+`4d57a160c1749f9a0ec20fdb1b9bca130a5dafb2765695b406cbe6ce3ad2b9eb`.
 The rendered pre-fix package and fixed-source package have byte-identical
 motion payloads; only their source-locking metadata differs. The host
 equivalence receipt has SHA-256
@@ -65,5 +65,9 @@ emitted LINEAR/SLERP loop measures 1.728740 mm/s linear mismatch against the
 degrees/second limit in both GLBs. `host-exact-continuity-status.json`, SHA-256
 `45bad61e5b3628e968b8af303f31781d4ffcc0b27c1edb0ad42735aa6da4ae53`,
 therefore records current exact local-loop status **BLOCKED**. The reviewed
-validator correction at `52e826c` remains a separate, unintegrated stage here;
-this report does not claim exact runtime C1 continuity.
+validator is integrated at source
+`61c7ffc99ac2c5166345c5b690328c55bce2aefd`, which passed 758 tests plus
+21 subtests in 211.81 seconds. `exact-head-validation.json` is that clean
+real-tool receipt. The motion remains blocked; this report makes no exact
+runtime C1 claim. See the
+[exact tangent report](../V9-EXACT-EMITTED-TANGENT-001/README.md).

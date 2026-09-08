@@ -21,14 +21,14 @@ contact policy. The user has authorized evidence-bound reassessment of inherited
 articulation limits; no limit change is accepted merely to make a candidate
 feasible. See
 [HINDLIMB_ARTICULATION_EVIDENCE.md](HINDLIMB_ARTICULATION_EVIDENCE.md) for the
-current evidence and angle conventions. Raw direct-join limits remain unchanged
-and the sprint joins remain unresolved. At exact local source
+current evidence and angle conventions. Raw direct-join limits remain unchanged.
+Under the historical quadratic finite-difference estimator at exact local source
 `7920c59dd354027b8784483bb208fd0e6229cd91`, walk, reverse-walk and run pass
 both direct joins in both movement modes; sprint remains `BLOCKED` in both.
 See [TRANSITION_INTEGRATION.md](TRANSITION_INTEGRATION.md) and the
 [exact-source pair report](../reports/V9-NATIVE-CLOCK-PAIR-STATUS-001/README.md).
 The later final evidence set independently reopened the twelve retained pair
-packages and re-ran their handoffs: walk, reverse-walk and run remain `PASS`,
+packages and re-ran that estimator: walk, reverse-walk and run remain `PASS`,
 while sprint start and stop remain `BLOCKED`. See the
 [final continuation report](../reports/V9-CONTINUATION-FINAL-4AE0FE9-001/README.md).
 
@@ -120,11 +120,19 @@ crossing. Its older body profile remains level and even, so the status is
 biological, Unity or production approval. See
 [reports/V9-ADULT-FAST-WALK-RECOVERY-V3-001](../reports/V9-ADULT-FAST-WALK-RECOVERY-V3-001/README.md).
 
-The combined exact source
+The pre-evaluator combined source
 `30f434ce914b6392f1438f0ff234718c82d2e985` passed 749 tests plus 21
 subtests in 502.90 seconds with the pinned real Blender and Khronos tools.
 Both new recipes are retained alongside adult v3, body diagnostic v5 and generic
 fast-walk v2 in candidate/native CI matrices.
+
+The exact emitted-tangent evaluator is integrated at source
+`61c7ffc99ac2c5166345c5b690328c55bce2aefd`, which passed 758 tests plus
+21 subtests in 211.81 seconds with the same real tools. It measures actual glTF
+LINEAR/SLERP endpoint slopes. Generic joins and local steady loops, adult v6
+and fast recovery v3 are blocked where those measurements exceed unchanged
+limits. See
+[V9-EXACT-EMITTED-TANGENT-001](../reports/V9-EXACT-EMITTED-TANGENT-001/README.md).
 
 ## Evidence-bound adult benchmark
 
@@ -205,9 +213,9 @@ factory generation dependency. No historical builders are imported by new work.
 ## Still required before ready/merge
 
 The exact exported-tangent source gate remains blocked for generic gait joins
-and local steady loops. The reviewed evaluator correction is still a separate,
-unintegrated stage on this head; a future motion-representation change must pass
-the unchanged limits. Retain user art-direction approval separately; adult v3
+and local steady loops. The corrected evaluator is integrated; a future
+motion-representation change must pass the unchanged limits. Retain user
+art-direction approval separately; adult v3
 has been accepted only as the current factory recovery candidate, while adult
 v6 and fast recovery v3 still require whole-body polish. Then validate the
 intended Unity consumer, root authority, phase handoff, event delivery,

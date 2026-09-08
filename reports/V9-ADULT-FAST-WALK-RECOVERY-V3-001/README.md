@@ -51,4 +51,8 @@ angular mismatch against the 10 degrees/second limit in both GLBs.
 `host-exact-continuity-status.json`, SHA-256
 `b7b63c3e4849d9ed0f880b309d4b2a57eb4cc7df559f8b5844464d9faaf49f74`,
 therefore records current exact local-loop status **BLOCKED**. The reviewed
-evaluator correction is not included in this head.
+evaluator is integrated at source
+`61c7ffc99ac2c5166345c5b690328c55bce2aefd`, which passed 758 tests plus
+21 subtests in 211.81 seconds. `exact-head-validation.json` is that clean
+real-tool receipt. See the
+[exact tangent report](../V9-EXACT-EMITTED-TANGENT-001/README.md).

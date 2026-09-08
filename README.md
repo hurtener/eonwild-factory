@@ -107,14 +107,15 @@ Both tools retain mechanical rejection even when diagnostic rendering succeeds.
 uv run python -m pytest tests -q --tb=short
 ```
 
-The 2026-09-08 sagittal-body and fast-recovery integration head
-`30f434ce914b6392f1438f0ff234718c82d2e985` passed 749 tests plus 21
-subtests in 502.90 seconds with the pinned real tools. Hosted CI for the
+The 2026-09-08 exact-tangent integration head
+`61c7ffc99ac2c5166345c5b690328c55bce2aefd` passed 758 tests plus 21
+subtests in 211.81 seconds with the pinned real tools. Hosted CI for the
 publication head is pending; the local result does not approve motion or
 authorize merging draft PR #2. The receipts are in the
 [adult v6](reports/V9-ADULT-SAGITTAL-RESPONSE-V6-001/README.md) and
 [fast recovery v3](reports/V9-ADULT-FAST-WALK-RECOVERY-V3-001/README.md)
-reports.
+reports, with the corrected acceptance boundary in the
+[exact tangent report](reports/V9-EXACT-EMITTED-TANGENT-001/README.md).
 
 The earlier 2026-09-08 final continuation head
 `4ae0fe92ec3ffd49dfeca14085756cc7cbe7d852` passed 683 tests plus 21
@@ -133,11 +134,11 @@ native multi-view reviews. There are no self-committing recovery workflows,
 production imports of staging scripts, or omitted integration tests. A green
 test suite is not itself a green motion catalog or a visual approval.
 
-Package continuity on this integration head is the historical quadratic
-finite-difference estimator. Independent evaluation of the actual exported
-LINEAR/SLERP tangents finds generic gait joins and local steady loops outside
-their governed velocity limits. The reviewed exact evaluator remains a separate
-unintegrated stage, so this head makes no exact runtime C1 claim.
+The integration now validates actual exported LINEAR/SLERP tangents. Generic
+gait joins and local steady loops remain outside their unchanged governed
+velocity limits. Earlier quadratic finite-difference values remain diagnostics
+only; this head makes no exact runtime C1 claim and changes no motion
+representation.
 
 ## Preserve what worked
 

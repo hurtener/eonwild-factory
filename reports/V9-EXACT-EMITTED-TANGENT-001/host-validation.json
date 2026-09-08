@@ -1,0 +1,34 @@
+{
+  "acceptance_boundary": "Exact emitted LINEAR/SLERP tangent evaluator is integrated. Current motion remains BLOCKED where exact joins or local loops exceed unchanged governed limits; no smoothing, retiming, CUBICSPLINE consumer, threshold change, or package rewrite is included.",
+  "branch": "codex/adult-body-fast-exact-tangent-publication-v2",
+  "captured_utc": "2026-09-08T07:11:39.597523+00:00",
+  "clean_after": true,
+  "clean_before": true,
+  "full_suite": {
+    "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=2 uv run --frozen python -m pytest tests -q --tb=short --junitxml=out/continuation-adult-body-fast-exact-61c7ffc/full-tests.xml",
+    "junit_case_elements": 758,
+    "log_sha256": "ba6b163a09918a70c89c682416d65574643c76e60fc14a2a0ebce2207de8a018",
+    "platform": "macOS-26.3-arm64-arm-64bit",
+    "scope": "complete mandatory tests directory, full external checkout, real Blender and Khronos validator, no exclusions",
+    "seconds": 211.81,
+    "status": "PASS",
+    "subtests_passed": 21,
+    "tests_passed": 758,
+    "tool_versions": [
+      "Blender 5.2.0 LTS",
+      "glTF 2.0 Validator, version 2.0.0-dev.3.10",
+      "Python 3.12.10"
+    ],
+    "xml_sha256": "01091cda24762c7549b0e40dfb1bf447435f645c39b13d6ad7f73b4a1c239e2c"
+  },
+  "integration": {
+    "exact_evaluator_cherry_pick": "61c7ffc99ac2c5166345c5b690328c55bce2aefd",
+    "exact_evaluator_original": "52e826ccd7e05dd2e82c37e889af8cf0a977c7a0",
+    "publication_parent": "c069ac0341689b094352c6e8c3c6af882b7b6109",
+    "round_one_identity": "6370df15d26c991b9c58dbf0a62c8699b31f16fc",
+    "round_one_note": "reviewed predecessor only; 52e826c is its amended full replacement, not a child commit"
+  },
+  "schema": "eonwild.motion.host-exact-tangent-integration-verification.v1",
+  "source_sha": "61c7ffc99ac2c5166345c5b690328c55bce2aefd",
+  "source_tree": "c1d4131b5729330fedcf8d8bb2b40f9dce931d46"
+}
