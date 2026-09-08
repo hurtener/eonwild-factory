@@ -97,14 +97,14 @@ def test_linear_rotation_sampling_and_derivative_follow_shortest_slerp_in_fk():
     glb = Glb.from_bytes(_build_glb(base, "slerp", np.array([0., 2.]), {(root, "rotation"): rows}, "q", {}))
     parsed, _ = read_animation_tracks(glb, "slerp", require_common_timeline=True)
     track = parsed[(root, "rotation")]
-    assert track.sample(1.) == pytest.approx([0., np.sin(np.radians(45.) / 2), 0., np.cos(np.radians(45.) / 2)])
+    assert track.sample(.5) == pytest.approx([0., np.sin(np.radians(22.5) / 2), 0., np.cos(np.radians(22.5) / 2)])
     assert track.derivative_at_key(0, terminal=False)[1] == pytest.approx(angle / 4)
     channels, _ = _animation_channels(glb, "slerp")
-    world = _pose_matrices(glb, channels, 1.)
+    world = _pose_matrices(glb, channels, .5)
     rest = _pose_matrices(glb, {}, 0.)
     pivot, point = np.asarray(rest[root])[:3, 3], np.asarray(rest[hip])[:3, 3]
     relative = point - pivot
-    half = angle / 2
+    half = angle / 4
     expected = pivot + np.array((
         np.cos(half) * relative[0] + np.sin(half) * relative[2],
         relative[1],
@@ -113,7 +113,25 @@ def test_linear_rotation_sampling_and_derivative_follow_shortest_slerp_in_fk():
     assert np.asarray(world[hip])[:3, 3] == pytest.approx(expected)
     antipodal = Glb.from_bytes(_build_glb(base, "slerp", np.array([0., 2.]), {(root, "rotation"): rows * np.array([[1.], [-1.]])}, "q", {}))
     antipodal_track, _ = read_animation_tracks(antipodal, "slerp", require_common_timeline=True)
-    assert antipodal_track[(root, "rotation")].sample(1.) == pytest.approx(track.sample(1.))
+    assert antipodal_track[(root, "rotation")].sample(.5) == pytest.approx(track.sample(.5))
+
+
+def test_linear_short_angle_slerp_is_not_nlerp_and_antipodal_identity_is_stable():
+    base, roles = fixture()
+    root = base.name_to_node[roles["root"]]
+    duration, angle = 1. / 120., .06
+    rows = np.array([[0., 0., 0., 1.], [0., np.sin(angle / 2), 0., np.cos(angle / 2)]])
+    glb = Glb.from_bytes(_build_glb(base, "short", np.array([0., duration]), {(root, "rotation"): rows}, "q", {}))
+    track, _ = read_animation_tracks(glb, "short", require_common_timeline=True)
+    sample = track[(root, "rotation")].sample(duration / 4)
+    assert sample == pytest.approx([0., np.sin(angle / 8), 0., np.cos(angle / 8)], abs=1e-8)
+    assert track[(root, "rotation")].derivative_at_key(0, terminal=False)[1] == pytest.approx(angle / (2 * duration))
+    identity_antipodal = Glb.from_bytes(_build_glb(
+        base, "identity", np.array([0., duration]),
+        {(root, "rotation"): np.array([[0., 0., 0., 1.], [0., 0., 0., -1.]])}, "q", {},
+    ))
+    antipodal_track, _ = read_animation_tracks(identity_antipodal, "identity", require_common_timeline=True)
+    assert antipodal_track[(root, "rotation")].sample(duration / 4) == pytest.approx([0., 0., 0., 1.])
 
 
 def test_fk_rotation_product_rule_uses_the_parent_world_frame():

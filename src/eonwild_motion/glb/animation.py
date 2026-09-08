@@ -49,16 +49,19 @@ def _quaternion_product(left: np.ndarray, right: np.ndarray) -> np.ndarray:
 def _shortest_slerp(left: np.ndarray, right: np.ndarray, amount: float) -> np.ndarray:
     """Match glTF LINEAR quaternion playback, including antipodal encoding."""
     first, second = _unit_quaternion(left, label="animation quaternion"), _unit_quaternion(right, label="animation quaternion")
-    cosine = float(np.dot(first, second))
-    if cosine < 0.0:
-        second, cosine = -second, -cosine
-    cosine = min(1.0, max(-1.0, cosine))
-    if cosine > 0.9995:
-        return _unit_quaternion(first + amount * (second - first), label="interpolated animation quaternion")
-    angle = math.acos(cosine)
-    sine = math.sin(angle)
+    if float(np.dot(first, second)) < 0.0:
+        second = -second
+    relative = _unit_quaternion(
+        _quaternion_product(np.array((-first[0], -first[1], -first[2], first[3])), second),
+        label="relative animation quaternion",
+    )
+    sine = float(np.linalg.norm(relative[:3]))
+    if sine <= 1.0e-15:
+        return first
+    half_angle = math.atan2(sine, float(relative[3]))
+    exponential = np.append(relative[:3] * (math.sin(amount * half_angle) / sine), math.cos(amount * half_angle))
     return _unit_quaternion(
-        (math.sin((1.0 - amount) * angle) * first + math.sin(amount * angle) * second) / sine,
+        _quaternion_product(first, exponential),
         label="interpolated animation quaternion",
     )
 
