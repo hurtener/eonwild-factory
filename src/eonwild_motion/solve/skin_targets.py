@@ -165,8 +165,16 @@ def cyclic_authority(frames, loaded, displacement, thresholds):
         'reasons': [reason for r in results for reason in r.get('reasons', [])]}
 
 
-def evaluate_skin(glb, profile, plan, *, world_offsets=None):
-    frames, _ = skin_frames(glb, profile)
+def evaluate_skin(glb, profile, plan, *, world_offsets=None, sample_times=None):
+    frames, _ = (
+        skin_frames(glb, profile)
+        if sample_times is None
+        else _source_frames(
+            glb, profile,
+            animation_name=glb.document['animations'][0]['name'],
+            sample_times=sample_times,
+        )
+    )
     _, masks = _validate_skin_samples(frames, plan)
     if world_offsets is not None:
         # Reconstruct the motor's world frame, never modify the GLB or floor.

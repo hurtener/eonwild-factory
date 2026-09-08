@@ -1,17 +1,15 @@
 """Factory contracts and adversarial regressions; not visual acceptance."""
 from __future__ import annotations
 
-from dataclasses import replace
 from pathlib import Path
 import json
 import math
 
-import numpy as np
 import pytest
 
 from eonwild_motion.errors import ContractError
 from eonwild_motion.factory.compiler import compile_recipe, verify_package, validate_plan, event_track
-from eonwild_motion.factory.io import bind, confined, frame_axes, locked_file, signed_heading_degrees, write_json
+from eonwild_motion.factory.io import bind, confined, digest, frame_axes, locked_file, signed_heading_degrees, write_json
 from eonwild_motion.factory.source import admit_geometry
 from eonwild_motion.glb.container import Glb
 from eonwild_motion.planning.grounded_gait import (
@@ -147,6 +145,28 @@ def test_repeat_compile_is_exact_and_reopened_receipts_are_bound(tmp_path, progr
     with pytest.raises(ContractError): compile_recipe(recipe, root=tmp_path, output=a)
     (a / "root_motion.glb").write_bytes((a / "root_motion.glb").read_bytes() + b"tamper")
     with pytest.raises(ContractError): verify_package(a)
+
+
+def test_profile_free_cubic_metadata_requires_midpoint_inventory(tmp_path):
+    recipe = make_recipe(tmp_path)
+    output = tmp_path / "candidate"
+    compile_recipe(recipe, root=tmp_path, output=output)
+    runtime = json.loads((output / "runtime.json").read_text())
+    runtime["interpolation"] = "CUBICSPLINE"
+    write_json(output / "runtime.json", runtime)
+    lock = json.loads((output / "inputs.lock.json").read_text())
+    lock["emission"] = {
+        "interpolation": "CUBICSPLINE",
+        "source_tangent_stencil_s": 0.001,
+        "convergence_stencil_s": 0.0005,
+    }
+    write_json(output / "inputs.lock.json", lock)
+    manifest = json.loads((output / "manifest.json").read_text())
+    for filename in ("runtime.json", "inputs.lock.json"):
+        manifest["files"][filename] = digest((output / filename).read_bytes())
+    write_json(output / "manifest.json", manifest)
+    with pytest.raises(ContractError, match="lacks midpoint plan evidence"):
+        verify_package(output)
 
 
 @pytest.mark.parametrize("prefix,scale", [("renamed_", 1.), ("another_rig_", 1.6)])

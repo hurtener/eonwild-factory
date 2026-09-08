@@ -92,6 +92,27 @@ def test_constant_law_returns_checked_pose_and_is_history_independent(law_and_in
             assert first.observations[side]["minimum_gap_m"] >= 0.0001
 
 
+def test_batch_matches_pointwise_and_returns_independent_owned_values(law_and_inputs):
+    law, _ = law_and_inputs
+    times = (0.2, 0.6, 0.2)
+    batch = law.values(times)
+    pointwise = tuple(law.value(time_s) for time_s in times)
+    assert isinstance(batch, tuple)
+    for batched, single in zip(batch, pointwise):
+        assert batched.status == single.status == "AVAILABLE"
+        assert batched.time_s == single.time_s
+        assert batched.row == single.row
+        assert batched.pose.translations == single.pose.translations
+        assert batched.pose.rotations == single.pose.rotations
+        for side in ("left", "right"):
+            assert np.array_equal(batched.corrections_m[side], single.corrections_m[side])
+    batch[0].pose.translations[0] = (999.0, 999.0, 999.0)
+    batch[0].corrections_m["left"].setflags(write=True)
+    batch[0].corrections_m["left"][0] += 1.0
+    assert batch[2].pose.translations[0] != (999.0, 999.0, 999.0)
+    assert not np.array_equal(batch[0].corrections_m["left"], batch[2].corrections_m["left"])
+
+
 def test_actual_query_yaw_contact_and_articulation_are_bound_to_provider():
     admitted = _inputs()
     wrong_yaw = _inputs(

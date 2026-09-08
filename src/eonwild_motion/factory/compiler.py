@@ -6,6 +6,7 @@ production approval. Baked GLBs are outputs, not the reusable program itself.
 """
 from __future__ import annotations
 
+from dataclasses import replace
 import json
 from pathlib import Path
 import platform
@@ -31,11 +32,14 @@ from .animal import (apply_uniform_geometry_scale,biomechanics_report,
 from ..solve.performance import load_performance, decorate_plan
 from ..solve.skin_targets import solve_with_skin_targets, evaluate_skin
 from ..solve.support_anchors import CanonicalSupportAnchorProvider
+from ..solve.constant_skin_targets import CanonicalConstantSkinTargetLaw
+from ..solve.source_motion_query import SourceMotionQuery, _thaw
 from ..planning.supported_action import load_supported_action
 from ..planning.gait_transition import load_gait_transition, build_transition_plan
 from ..planning.articulation_profile import load_articulation_profile
 from ..solve.supported_action import solve_supported_action
 from ..solve.gaze import calibrate_rostral_direction
+from .source_cubic import emit_source_cubics, serialized_key_midpoint_times
 
 SCHEMA = "eonwild.motion.factory-recipe.v1"
 PROGRAMS = ("airborne_gait", "grounded_gait", "supported_action", "gait_transition")
@@ -182,13 +186,30 @@ def engine_fingerprint() -> dict[str, str]:
 _ENGINE_AT_IMPORT = engine_fingerprint()
 
 
-def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
+def compile_recipe(
+    recipe_path: Path,
+    *,
+    root: Path,
+    output: Path,
+    interpolation: str = "LINEAR",
+    emission_checkpoint: Path | None = None,
+) -> dict:
+    if interpolation not in ("LINEAR", "CUBICSPLINE"):
+        raise ContractError("emission interpolation must be LINEAR or CUBICSPLINE")
+    cubic = interpolation == "CUBICSPLINE"
+    if emission_checkpoint is not None and not cubic:
+        raise ContractError("emission checkpoint is only available for CUBICSPLINE")
     engine_identity = engine_fingerprint()
     if engine_identity != _ENGINE_AT_IMPORT:
         raise ContractError("engine sources changed since import; restart the compiler")
     root, recipe_path, output = root.resolve(), recipe_path.resolve(), output.resolve()
+    checkpoint = (
+        None if emission_checkpoint is None else emission_checkpoint.resolve()
+    )
     if output.exists():
         raise ContractError("candidate output already exists; never overwrite an existing take")
+    if checkpoint is not None and checkpoint.exists():
+        raise ContractError("emission checkpoint already exists; never overwrite evidence")
     recipe_bytes = recipe_path.read_bytes()
     recipe, paths = load_recipe(recipe_path, root)
     if json.loads(recipe_bytes) != recipe:
@@ -259,15 +280,99 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
         root_raw, inplace_raw, plan, receipt = solve_supported_action(source, semantic_roles=roles, action=action,
             contact_profile=contact_profile, up_axis=up, forward_axis=forward, body_height_m=height)
     if "performance_profile" in snapshots:
-        plan = decorate_plan(plan, load_performance(json.loads(snapshots["performance_profile"])))
+        performance = load_performance(json.loads(snapshots["performance_profile"]))
+        if cubic:
+            performance = replace(
+                performance, canonical_support_anchors=True, skin_refinement=True
+            )
+        plan = decorate_plan(plan, performance)
         if "contact_profile" not in snapshots:
             raise ContractError("forward attention requires locked geometry calibration")
         plan["gaze_calibration"] = calibrate_rostral_direction(source, roles=roles,
             contact_profile=contact_profile, forward_axis=forward, up_axis=up)
     validate_plan(plan, recipe["program"])
     biomechanics = biomechanics_report(animal,plan,actual_semantic_height_m=height) if animal else None
+    midpoint_plan = None
     if supported:
+        if cubic:
+            raise ContractError("source CUBICSPLINE emission requires grounded locomotion")
         pass  # Already solved by the persistent-support program above.
+    elif cubic:
+        if (
+            "performance_profile" not in snapshots
+            or contact_profile is None
+            or locomotion_gait is None
+            or plan.get("performance", {}).get("canonical_support_anchors") is not True
+        ):
+            raise ContractError(
+                "source CUBICSPLINE emission requires performance, contact, locomotion, and canonical anchors"
+            )
+        support_anchor_provider = CanonicalSupportAnchorProvider.build(
+            source,
+            semantic_roles=roles,
+            solver_gait=gait,
+            locomotion_gait=locomotion_gait,
+            transition=transition,
+            plan=plan,
+            contact_profile=contact_profile,
+            up_axis=tuple(up),
+            forward_axis=tuple(forward),
+            articulation_profile=articulation_profile,
+        )
+        query = SourceMotionQuery(
+            source,
+            semantic_roles=roles,
+            solver_gait=gait,
+            locomotion_gait=locomotion_gait,
+            transition=transition,
+            plan=plan,
+            contact_profile=contact_profile,
+            up_axis=tuple(up),
+            forward_axis=tuple(forward),
+            source_clip=None,
+            legacy_overlay=False,
+            articulation_profile=articulation_profile,
+        )
+        law = CanonicalConstantSkinTargetLaw.build(
+            query,
+            support_anchor_provider,
+            source=source,
+            semantic_roles=roles,
+            solver_gait=gait,
+            locomotion_gait=locomotion_gait,
+            transition=transition,
+            plan=plan,
+            contact_profile=contact_profile,
+            up_axis=tuple(up),
+            forward_axis=tuple(forward),
+            articulation_profile=articulation_profile,
+        )
+        emission = emit_source_cubics(
+            source, law, plan, root_node=source.name_to_node[roles["root"]]
+        )
+        plan = _thaw(emission.plan)
+        midpoint_plan = _thaw(emission.midpoint_plan)
+        # Reuse the existing receipt construction against the identical
+        # constant-offset key rows. The returned LINEAR bytes are discarded.
+        _, _, _, receipt = solve_airborne_gait(
+            source,
+            source_clip=None,
+            semantic_roles=roles,
+            gait=gait,
+            up_axis=tuple(up),
+            forward_axis=tuple(forward),
+            plan_override=plan,
+            legacy_overlay=False,
+            articulation_profile=articulation_profile,
+        )
+        receipt["source_cubic_tangent_estimate"] = _thaw(
+            emission.tangent_estimate
+        )
+        receipt["constant_skin_target_law"] = {
+            "status": "AVAILABLE_AT_ALL_KEYS_STENCILS_AND_MIDPOINTS",
+            "classification": "pointwise checked values; derivative and global-C1 authority unavailable",
+        }
+        root_raw, inplace_raw = emission.root_motion, emission.in_place
     elif plan.get("performance", {}).get("skin_refinement", False):
         if "contact_profile" not in snapshots:
             raise ContractError("skin refinement requires a locked contact profile")
@@ -292,10 +397,49 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
             plan_override=plan, legacy_overlay=False, articulation_profile=articulation_profile)
     root_raw, inplace_raw = (tag_output(raw, recipe, plan, mode) for raw, mode in ((root_raw, "root_motion"), (inplace_raw, "in_place")))
     outputs = {"root_motion": Glb.from_bytes(root_raw), "in_place": Glb.from_bytes(inplace_raw)}
+    if checkpoint is not None:
+        assert cubic and midpoint_plan is not None
+        checkpoint_payloads = {
+            "root_motion.glb": root_raw,
+            "in_place.glb": inplace_raw,
+            "plan.json": json_bytes(plan),
+            "cubic-midpoint-plan.json": json_bytes(midpoint_plan),
+            "tangent-estimate.json": json_bytes(
+                receipt["source_cubic_tangent_estimate"]
+            ),
+        }
+        checkpoint_manifest = {
+            "schema": "eonwild.motion.source-cubic-emission-checkpoint.v1",
+            "classification": "pre-gate emitted bytes for reproducible diagnostics; not a candidate acceptance result",
+            "recipe_sha256": digest(recipe_bytes),
+            "inputs": {name: digest(raw) for name, raw in snapshots.items()},
+            "engine_files": engine_identity,
+            "files": {
+                name: digest(raw) for name, raw in checkpoint_payloads.items()
+            },
+        }
+        checkpoint.parent.mkdir(parents=True, exist_ok=True)
+        checkpoint_stage = Path(
+            tempfile.mkdtemp(prefix=".source-cubic-checkpoint-", dir=checkpoint.parent)
+        )
+        try:
+            for name, raw in checkpoint_payloads.items():
+                (checkpoint_stage / name).write_bytes(raw)
+            write_json(checkpoint_stage / "manifest.json", checkpoint_manifest)
+            checkpoint_stage.rename(checkpoint)
+        except BaseException:
+            shutil.rmtree(checkpoint_stage, ignore_errors=True)
+            raise
+    cubic_sample_times = None
+    if cubic:
+        cubic_sample_times = serialized_key_midpoint_times(
+            outputs["root_motion"], recipe["id"] + ".root_motion"
+        )
     evaluated = {mode: evaluate_emitted(glb, source, roles, plan, forward, in_place=(mode == "in_place")) for mode, glb in outputs.items()}
     rates = {mode: emitted_rotation_rates(glb, gait.max_joint_angular_velocity_degrees_per_s) for mode, glb in outputs.items()}
     continuity = {mode: emitted_cyclic_continuity(glb, loop=plan.get("loop", True)) for mode, glb in outputs.items()}
     articulation = None
+    midpoint_articulation = None
     if articulation_profile is not None:
         articulation = {
             mode: emitted_articulation_envelopes(
@@ -304,6 +448,17 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
             )
             for mode, glb in outputs.items()
         }
+        if cubic:
+            assert midpoint_plan is not None
+            assert cubic_sample_times is not None
+            midpoint_articulation = {
+                mode: emitted_articulation_envelopes(
+                    glb, semantic_roles=roles, plan=midpoint_plan,
+                    profile=articulation_profile, forward_axis=forward,
+                    up_axis=up, sample_times=cubic_sample_times,
+                )
+                for mode, glb in outputs.items()
+            }
     feasibility = solver_checks(receipt)
     surface = {"verdict": "NOT_MEASURED", "reason": "no bound skinned contact profile"}
     if "contact_profile" in snapshots:
@@ -327,17 +482,58 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
                 world_offsets=offsets)
         except (ContractError, ValueError, KeyError, StopIteration) as exc:
             in_place_surface = {"verdict": "FAIL", "reason": f"in-place skinned reconstruction failed: {exc}"}
+    midpoint_surface = None
+    midpoint_in_place_surface = None
+    if cubic and contact_profile is not None:
+        assert midpoint_plan is not None
+        assert cubic_sample_times is not None
+        midpoint_surface = evaluate_skin(
+            outputs["root_motion"], contact_profile, midpoint_plan,
+            sample_times=cubic_sample_times,
+        )
+        origin_travel = midpoint_plan["samples"][0]["root_forward_m"]
+        midpoint_offsets = [
+            forward * (row["root_forward_m"] - origin_travel)
+            for row in midpoint_plan["samples"]
+        ]
+        midpoint_in_place_surface = evaluate_skin(
+            outputs["in_place"], contact_profile, midpoint_plan,
+            world_offsets=midpoint_offsets, sample_times=cubic_sample_times,
+        )
     receipt["final_skinned_contact_gate"] = "PASS" if surface["verdict"] == in_place_surface["verdict"] == "PASS" else "FAIL"
     receipt["final_skinned_contact_scope"] = "both reopened serialized exports; in-place plus planned motor travel; locked floor and full skin influences"
     refinement_ok = receipt.get("skin_target_refinement", {}).get("converged", True) and receipt.get("oral_contact", {"status":"PASS"})["status"] == "PASS"
-    articulation_ok = articulation is None or all(row["status"] == "PASS" for row in articulation.values())
+    articulation_ok = (
+        articulation is None
+        or (
+            all(row["status"] == "PASS" for row in articulation.values())
+            and (
+                midpoint_articulation is None
+                or all(row["status"] == "PASS" for row in midpoint_articulation.values())
+            )
+        )
+    )
+    midpoint_ok = (
+        midpoint_surface is None
+        or (
+            midpoint_surface["verdict"] == "PASS"
+            and midpoint_in_place_surface is not None
+            and midpoint_in_place_surface["verdict"] == "PASS"
+        )
+    )
     technical = (refinement_ok and articulation_ok and all(row["status"] == "PASS" for row in evaluated.values()) and
                  all(row["status"] == "PASS" for row in rates.values()) and
-                 all(row["status"] in ("PASS", "NOT_APPLICABLE") for row in continuity.values()) and feasibility["status"] == "PASS" and surface["verdict"] == "PASS" and in_place_surface["verdict"] == "PASS")
+                 all(row["status"] in ("PASS", "NOT_APPLICABLE") for row in continuity.values()) and feasibility["status"] == "PASS" and surface["verdict"] == "PASS" and in_place_surface["verdict"] == "PASS" and midpoint_ok)
     validation = {"schema": "eonwild.motion.factory-validation.v1", "technical_status": "PASS" if technical else "BLOCKED",
         "outputs": evaluated, "rotation_rates": rates, "cyclic_continuity": continuity, "solver_feasibility": feasibility, "skinned_contact": surface, "in_place_skinned_contact": in_place_surface,
         "oral_contact": receipt.get("oral_contact"),
         "visual_review": "PENDING", "unity_parity": "NOT_RUN", "production_approved": False}
+    if cubic:
+        validation["cubic_midpoint_skinned_contact"] = {
+            "root_motion": midpoint_surface,
+            "in_place": midpoint_in_place_surface,
+        }
+        validation["cubic_midpoint_articulation_envelopes"] = midpoint_articulation
     if articulation is not None:
         validation["articulation_envelopes"] = articulation
         receipt["final_emitted_articulation_gate"] = "PASS" if articulation_ok else "FAIL"
@@ -347,6 +543,10 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
     lock = {"schema": "eonwild.motion.factory-lock.v1", "recipe_sha256": digest(recipe_bytes),
             "inputs": {name: recipe[name] for name in paths}, "engine_files": engine_identity,
             "tools": {"python": platform.python_version(), "numpy": np.__version__}}
+    if cubic:
+        lock["emission"] = {"interpolation": interpolation,
+                            "source_tangent_stencil_s": .001,
+                            "convergence_stencil_s": .0005}
     state = {"schema": "eonwild.motion.runtime-data.v1", "program": recipe["program"], "family": recipe["family"],
         "units": "m", "time_units": "s", "handedness": "right", "forward_axis": forward.tolist(), "up_axis": up.tolist(),
         "root_authority": "choose motor OR applied root motion, never both", "rig_roles": roles,
@@ -359,11 +559,16 @@ def compile_recipe(recipe_path: Path, *, root: Path, output: Path) -> dict:
         "animal": ({"id":animal["document"]["id"],"specimen":animal["document"]["specimen"],
             "uniform_geometry_scale":animal["uniform_scale"],"semantic_pelvis_to_toe_plane_m":height,
             "biological_validation":"NOT_VALIDATED"} if animal else None)}
+    if cubic:
+        state["interpolation"] = interpolation
     if articulation_profile is not None:
         state["articulation_profile"] = articulation_profile.receipt()
     payloads = {"root_motion.glb": root_raw, "in_place.glb": inplace_raw, "plan.json": json_bytes(plan),
         "solver-receipt.json": json_bytes(receipt), "runtime.json": json_bytes(state),
         "validation.json": json_bytes(validation), "inputs.lock.json": json_bytes(lock), "recipe.json": recipe_bytes}
+    if cubic:
+        assert midpoint_plan is not None
+        payloads["cubic-midpoint-plan.json"] = json_bytes(midpoint_plan)
     if articulation_profile is not None:
         payloads["articulation-profile.json"] = snapshots["articulation_profile"]
     if biomechanics is not None:
@@ -392,6 +597,8 @@ def verify_package(path: Path) -> dict:
         raise ContractError("unsupported package manifest")
     recipe = read_json(path / "recipe.json")
     required = {"root_motion.glb", "in_place.glb", "plan.json", "solver-receipt.json", "runtime.json", "validation.json", "inputs.lock.json", "recipe.json"}
+    if "cubic-midpoint-plan.json" in manifest.get("files", {}):
+        required.add("cubic-midpoint-plan.json")
     if "articulation_profile" in recipe:
         required.add("articulation-profile.json")
     if "animal" in recipe:
@@ -406,6 +613,51 @@ def verify_package(path: Path) -> dict:
     lock = read_json(path / "inputs.lock.json")
     receipt = read_json(path / "solver-receipt.json")
     runtime = read_json(path / "runtime.json")
+    interpolation = runtime.get("interpolation", "LINEAR")
+    if interpolation not in ("LINEAR", "CUBICSPLINE"):
+        raise ContractError("package declares unsupported interpolation")
+    is_cubic = interpolation == "CUBICSPLINE"
+    has_midpoint_plan = "cubic-midpoint-plan.json" in manifest["files"]
+    if is_cubic != has_midpoint_plan:
+        raise ContractError("CUBICSPLINE package lacks midpoint plan evidence")
+    emission = lock.get("emission")
+    if is_cubic:
+        if (
+            not isinstance(emission, dict)
+            or set(emission) != {
+                "interpolation", "source_tangent_stencil_s",
+                "convergence_stencil_s",
+            }
+            or emission.get("interpolation") != "CUBICSPLINE"
+            or emission.get("source_tangent_stencil_s") != 0.001
+            or emission.get("convergence_stencil_s") != 0.0005
+        ):
+            raise ContractError("CUBICSPLINE package lacks bound emission metadata")
+        midpoint_plan = read_json(path / "cubic-midpoint-plan.json")
+        root_glb = Glb.from_bytes((path / "root_motion.glb").read_bytes())
+        midpoint_times = serialized_key_midpoint_times(
+            root_glb, recipe["id"] + ".root_motion"
+        )
+        midpoint_rows = midpoint_plan.get("samples")
+        if (
+            not isinstance(midpoint_rows, list)
+            or len(midpoint_rows) != len(midpoint_times)
+            or any(not isinstance(row, dict) for row in midpoint_rows)
+            or not np.allclose(
+                midpoint_times,
+                [row.get("time_s") for row in midpoint_rows],
+                rtol=0,
+                atol=2e-6,
+            )
+        ):
+            raise ContractError("CUBICSPLINE midpoint plan timeline is inconsistent")
+        midpoint_contact = validation.get("cubic_midpoint_skinned_contact")
+        if not isinstance(midpoint_contact, dict) or set(midpoint_contact) != {
+            "root_motion", "in_place"
+        }:
+            raise ContractError("CUBICSPLINE package lacks midpoint contact evidence")
+    elif emission is not None:
+        raise ContractError("LINEAR package contains CUBICSPLINE emission metadata")
     if "articulation_profile" in recipe:
         if lock.get("inputs", {}).get("articulation_profile") != recipe["articulation_profile"]:
             raise ContractError("articulation profile binding is not preserved in the input lock")
@@ -425,15 +677,36 @@ def verify_package(path: Path) -> dict:
             )
             for mode in ("root_motion", "in_place")
         }
+        repeated_midpoint = None
+        if is_cubic:
+            repeated_midpoint = {
+                mode: emitted_articulation_envelopes(
+                    Glb.from_bytes((path / f"{mode}.glb").read_bytes()),
+                    semantic_roles=runtime.get("rig_roles"), plan=midpoint_plan,
+                    profile=articulation_profile,
+                    forward_axis=runtime.get("forward_axis"),
+                    up_axis=runtime.get("up_axis"), sample_times=midpoint_times,
+                )
+                for mode in ("root_motion", "in_place")
+            }
+            if validation.get("cubic_midpoint_articulation_envelopes") != repeated_midpoint:
+                raise ContractError("CUBICSPLINE midpoint articulation evidence is inconsistent")
+        expected_articulation_pass = (
+            all(check.get("status") == "PASS" for check in repeated.values())
+            and (
+                repeated_midpoint is None
+                or all(check.get("status") == "PASS" for check in repeated_midpoint.values())
+            )
+        )
         if (not isinstance(summary, dict) or summary != articulation_profile.receipt()
                 or runtime.get("articulation_profile") != summary
                 or not isinstance(checks, dict) or set(checks) != {"root_motion", "in_place"}
                 or any(check.get("profile") != summary for check in checks.values())
                 or checks != repeated
                 or receipt.get("final_emitted_articulation_gate") !=
-                   ("PASS" if all(check.get("status") == "PASS" for check in checks.values()) else "FAIL")):
+                   ("PASS" if expected_articulation_pass else "FAIL")):
             raise ContractError("articulation profile provenance or final emitted gate is inconsistent")
-        if any(check["status"] != "PASS" for check in repeated.values()) and validation["technical_status"] == "PASS":
+        if not expected_articulation_pass and validation["technical_status"] == "PASS":
             raise ContractError("technical status ignores a final articulation failure")
     elif any("articulation_profile" in item for item in (lock.get("inputs", {}), receipt, runtime)) or "articulation_envelopes" in validation:
         raise ContractError("unbound articulation profile metadata is not allowed")

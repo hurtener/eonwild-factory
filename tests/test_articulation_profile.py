@@ -168,7 +168,7 @@ def test_support_preference_changes_loaded_solve_but_not_interior_swing():
     assert middle[0] == middle[1]
 
 
-def test_recipe_hash_binds_profile_and_supported_actions_reject_it(tmp_path):
+def test_recipe_hash_binds_profile_and_supported_actions_reject_it(tmp_path, monkeypatch):
     recipe_path = make_recipe(tmp_path)
     write_json(tmp_path / "articulation.json", profile_payload())
     recipe = json.loads(recipe_path.read_text())
@@ -186,6 +186,80 @@ def test_recipe_hash_binds_profile_and_supported_actions_reject_it(tmp_path):
     assert {row["status"] for row in validation["articulation_envelopes"].values()} == {"PASS"}
     assert (out / "articulation-profile.json").read_bytes() == (tmp_path / "articulation.json").read_bytes()
     assert verify_package(out)["integrity"] == "PASS"
+
+    # Exercise the package verifier's combined key plus midpoint authority.
+    # A midpoint failure is a reachable BLOCKED package and must not be
+    # mistaken for either a PASS or inconsistent evidence.
+    cubic = tmp_path / "cubic-midpoint-blocked"
+    shutil.copytree(out, cubic)
+    cubic_runtime = json.loads((cubic / "runtime.json").read_text())
+    cubic_runtime["interpolation"] = "CUBICSPLINE"
+    write_json(cubic / "runtime.json", cubic_runtime)
+    key_plan = json.loads((cubic / "plan.json").read_text())
+    midpoint_plan = deepcopy(key_plan)
+    midpoint_plan["samples"] = [
+        item
+        for left, right in zip(key_plan["samples"][:-1], key_plan["samples"][1:])
+        for item in (
+            deepcopy(left),
+            {
+                **deepcopy(left),
+                "time_s": (left["time_s"] + right["time_s"]) / 2,
+            },
+        )
+    ] + [deepcopy(key_plan["samples"][-1])]
+    write_json(cubic / "cubic-midpoint-plan.json", midpoint_plan)
+    profile_receipt = load_articulation_profile(profile_payload()).receipt()
+    passed = {"status": "PASS", "profile": profile_receipt}
+    failed = {"status": "FAIL", "profile": profile_receipt,
+              "witness": {"sample_index": 1}}
+    cubic_validation = json.loads((cubic / "validation.json").read_text())
+    cubic_validation["technical_status"] = "BLOCKED"
+    cubic_validation["articulation_envelopes"] = {
+        "root_motion": passed, "in_place": passed,
+    }
+    cubic_validation["cubic_midpoint_articulation_envelopes"] = {
+        "root_motion": failed, "in_place": failed,
+    }
+    cubic_validation["cubic_midpoint_skinned_contact"] = {
+        "root_motion": {"verdict": "PASS"},
+        "in_place": {"verdict": "PASS"},
+    }
+    write_json(cubic / "validation.json", cubic_validation)
+    cubic_receipt = json.loads((cubic / "solver-receipt.json").read_text())
+    cubic_receipt["final_emitted_articulation_gate"] = "FAIL"
+    write_json(cubic / "solver-receipt.json", cubic_receipt)
+    cubic_lock = json.loads((cubic / "inputs.lock.json").read_text())
+    cubic_lock["emission"] = {
+        "interpolation": "CUBICSPLINE",
+        "source_tangent_stencil_s": 0.001,
+        "convergence_stencil_s": 0.0005,
+    }
+    write_json(cubic / "inputs.lock.json", cubic_lock)
+    cubic_manifest = json.loads((cubic / "manifest.json").read_text())
+    cubic_manifest["technical_status"] = "BLOCKED"
+    cubic_manifest["files"]["cubic-midpoint-plan.json"] = digest(
+        (cubic / "cubic-midpoint-plan.json").read_bytes()
+    )
+    for filename in (
+        "runtime.json", "validation.json", "solver-receipt.json", "inputs.lock.json"
+    ):
+        cubic_manifest["files"][filename] = digest((cubic / filename).read_bytes())
+    write_json(cubic / "manifest.json", cubic_manifest)
+    with monkeypatch.context() as local:
+        local.setattr(
+            "eonwild_motion.factory.compiler.emitted_articulation_envelopes",
+            lambda *args, sample_times=None, **kwargs: (
+                failed if sample_times is not None else passed
+            ),
+        )
+        assert verify_package(cubic) == {
+            "integrity": "PASS",
+            "technical_status": "BLOCKED",
+            "visual_review": "PENDING",
+            "unity_parity": "NOT_RUN",
+            "production_approved": False,
+        }
 
     altered = tmp_path / "altered-angle"
     shutil.copytree(out, altered)

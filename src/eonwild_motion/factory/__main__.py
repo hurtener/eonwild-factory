@@ -59,6 +59,14 @@ def main(argv: list[str] | None = None) -> int:
     compile_parser.add_argument("--recipe", type=Path, required=True)
     compile_parser.add_argument("--root", type=Path, default=Path.cwd())
     compile_parser.add_argument("--output", type=Path, required=True)
+    compile_parser.add_argument(
+        "--interpolation", choices=("LINEAR", "CUBICSPLINE"), default="LINEAR",
+        help="opt in to checked source-derived CUBICSPLINE output",
+    )
+    compile_parser.add_argument(
+        "--emission-checkpoint", type=Path,
+        help="retain pre-gate CUBICSPLINE bytes and source identities",
+    )
     verify = sub.add_parser("verify", help="check final hashes; exits 2 when technical acceptance is blocked")
     verify.add_argument("package", type=Path)
     args = parser.parse_args(argv)
@@ -66,7 +74,11 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "admit":
             result = admit(args)
         elif args.command == "compile":
-            result = compile_recipe(args.recipe, root=args.root, output=args.output)
+            result = compile_recipe(
+                args.recipe, root=args.root, output=args.output,
+                interpolation=args.interpolation,
+                emission_checkpoint=args.emission_checkpoint,
+            )
         else:
             result = verify_package(args.package)
         print(json.dumps(result, indent=2, allow_nan=False))

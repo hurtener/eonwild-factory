@@ -270,7 +270,7 @@ def test_cubicspline_rejects_triplet_mismatch_zero_interior_quaternion_and_dynam
         track[(root, "rotation")].sample(1.)
 
 
-def test_cubicspline_cyclic_tangent_is_exact_but_rate_gate_remains_fail_closed():
+def test_cubicspline_cyclic_tangent_and_interval_rate_are_both_checked():
     profile = json.loads((ROOT / "catalog/contacts/heavy-biped.v9.json").read_text())
     base = Glb(ROOT / profile["source"]["path"])
     root = base.name_to_node[profile["geometry"]["landmarks"]["root_node"]]
@@ -280,8 +280,10 @@ def test_cubicspline_cyclic_tangent_is_exact_but_rate_gate_remains_fail_closed()
         (root, "rotation"): (np.zeros((2, 4)), unit, np.zeros((2, 4))),
     })
     assert emitted_cyclic_continuity(glb, loop=True)["status"] == "PASS"
-    with pytest.raises(ContractError, match="CUBICSPLINE TRS"):
-        emitted_rotation_rates(glb, 600.)
+    rate = emitted_rotation_rates(glb, 600.)
+    assert rate["status"] == "PASS"
+    assert rate["maximum_degrees_per_s"] == pytest.approx(0)
+    assert "conservative" in rate["classification"]
 
 
 @pytest.mark.parametrize("path", ["translation", "scale"])

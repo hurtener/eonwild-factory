@@ -9,6 +9,7 @@ import numpy as np
 from ..errors import ContractError
 from ..glb.animation import read_animation_tracks
 from ..glb.container import Glb
+from ..glb.cubic_bounds import cubic_quaternion_bounds
 from ..layers.leg_contact_resolve_v3 import _clip_state, _pose, _world_matrices, _world_position
 from ..planning.articulation_profile import ArticulationProfile
 from ..planning.grounded_gait import grounded_phase_sample_counts
@@ -23,6 +24,7 @@ def emitted_articulation_envelopes(
     forward_axis: Any,
     up_axis: Any,
     tolerance_degrees: float = 0.01,
+    sample_times: Any = None,
 ) -> dict[str, Any]:
     """Measure bound scalar guardrails on the reopened serialized animation."""
     if not isinstance(profile, ArticulationProfile):
@@ -39,8 +41,39 @@ def emitted_articulation_envelopes(
     animations = glb.document.get("animations", [])
     if not isinstance(animations, list) or len(animations) != 1 or not isinstance(animations[0].get("name"), str):
         raise ContractError("final articulation check requires one named animation")
-    tracks, times = _clip_state(glb, animations[0]["name"])
     rows = plan.get("samples")
+    if sample_times is None:
+        tracks, times = _clip_state(glb, animations[0]["name"])
+
+        def worlds_at(index: int, _time_s: float):
+            return _world_matrices(glb, *_pose(glb, tracks, index))
+    else:
+        parsed, _ = read_animation_tracks(
+            glb, animations[0]["name"], require_common_timeline=True
+        )
+        times = np.asarray(sample_times, dtype=float)
+        if (
+            times.ndim != 1
+            or len(times) < 2
+            or not np.isfinite(times).all()
+            or np.any(np.diff(times) <= 0)
+        ):
+            raise ContractError("final articulation sample times are invalid")
+
+        def worlds_at(_index: int, time_s: float):
+            translation = np.asarray(glb.rest_translation, dtype=float)
+            rotation = np.asarray(glb.rest_rotation, dtype=float)
+            scale = np.asarray(glb.rest_scale, dtype=float)
+            destinations = {
+                "translation": translation,
+                "rotation": rotation,
+                "scale": scale,
+            }
+            for (node, path), track in parsed.items():
+                destinations[path][node] = track.sample(time_s)
+            return _world_matrices(
+                glb, translation.tolist(), rotation.tolist(), scale.tolist()
+            )
     if not isinstance(rows, list) or len(rows) != len(times) or not np.allclose(
         times, [row["time_s"] for row in rows], rtol=0, atol=2e-6
     ):
@@ -73,7 +106,7 @@ def emitted_articulation_envelopes(
                 for phase in counts}
     preferred_departure = 0.0
     for index, (time_s, row) in enumerate(zip(times, rows)):
-        worlds = _world_matrices(glb, *_pose(glb, tracks, index))
+        worlds = worlds_at(index, float(time_s))
         for side, (hip, knee, ankle, foot) in legs.items():
             hp, kp, ap, fp = (np.asarray(_world_position(worlds[node]))
                               for node in (hip, knee, ankle, foot))
@@ -177,39 +210,94 @@ def emitted_rotation_rates(glb: Glb, maximum_degrees_per_s: float) -> dict:
     peak = 0.0
     witness = None
     channel_count = 0
+    has_cubic = False
     for animation in glb.document.get("animations", []):
-        for channel in animation["channels"]:
-            sampler = animation["samplers"][channel["sampler"]]
-            if sampler.get("interpolation", "LINEAR") == "CUBICSPLINE":
+        name = animation.get("name")
+        if not isinstance(name, str):
+            raise ContractError("factory rate witness requires named animations")
+        declared_cubic = any(
+            animation["samplers"][channel["sampler"]].get(
+                "interpolation", "LINEAR"
+            ) == "CUBICSPLINE"
+            for channel in animation["channels"]
+        )
+        try:
+            tracks, _ = read_animation_tracks(
+                glb, name, require_common_timeline=False
+            )
+        except ContractError as exc:
+            if declared_cubic:
                 raise ContractError(
-                    "factory technical rate authority rejects CUBICSPLINE TRS channels until interval extrema are validated"
-                )
-            if channel["target"]["path"] != "rotation":
+                    f"CUBICSPLINE TRS interval authority failed: {exc}"
+                ) from exc
+            raise
+        for (node, path), track in tracks.items():
+            if path != "rotation":
                 continue
-            if sampler.get("interpolation", "LINEAR") != "LINEAR":
-                raise ContractError("factory rate witness requires emitted LINEAR quaternion channels")
-            times = np.asarray(glb.accessor_values(sampler["input"]), dtype=float).reshape(-1)
-            quaternions = np.asarray(glb.accessor_values(sampler["output"]), dtype=float)
-            if len(times) < 2 or quaternions.shape != (len(times), 4) or not np.isfinite(quaternions).all() or not np.isfinite(times).all() or np.any(np.diff(times) <= 0):
-                raise ContractError("invalid final rotation timeline")
-            norms = np.linalg.norm(quaternions, axis=1)
-            if np.any(norms < 1e-10):
-                raise ContractError("zero final quaternion")
-            quaternions /= norms[:, None]
-            angles = np.degrees(2 * np.arccos(np.clip(np.abs(np.sum(quaternions[:-1] * quaternions[1:], axis=1)), 0, 1)))
-            speed = angles / np.diff(times)
-            index = int(np.argmax(speed))
             channel_count += 1
-            if float(speed[index]) > peak:
-                peak = float(speed[index])
-                node = int(channel["target"]["node"])
-                witness = {"node": node, "bone": glb.nodes[node].get("name"), "times_s": times[index:index+2].tolist(),
-                           "quaternions_xyzw": quaternions[index:index+2].tolist()}
+            if track.interpolation == "LINEAR":
+                quaternions = track.values / np.linalg.norm(
+                    track.values, axis=1
+                )[:, None]
+                speeds = np.degrees(
+                    2 * np.arccos(
+                        np.clip(
+                            np.abs(
+                                np.sum(
+                                    quaternions[:-1] * quaternions[1:], axis=1
+                                )
+                            ),
+                            0,
+                            1,
+                        )
+                    )
+                ) / np.diff(track.times)
+                index = int(np.argmax(speeds))
+                speed = float(speeds[index])
+                detail = {
+                    "quaternions_xyzw": quaternions[index:index + 2].tolist()
+                }
+            else:
+                has_cubic = True
+                assert track.in_tangents is not None
+                assert track.out_tangents is not None
+                speed, index, bound = 0.0, 0, None
+                for interval, duration in enumerate(np.diff(track.times)):
+                    candidate = cubic_quaternion_bounds(
+                        track.values[interval].tolist(),
+                        track.out_tangents[interval].tolist(),
+                        track.values[interval + 1].tolist(),
+                        track.in_tangents[interval + 1].tolist(),
+                        float(duration),
+                    )
+                    candidate_speed = math.degrees(
+                        candidate.angular_speed_upper_rad_s
+                    )
+                    if candidate_speed > speed:
+                        speed, index, bound = candidate_speed, interval, candidate
+                assert bound is not None
+                detail = {
+                    "conservative_interval_bound": True,
+                    "raw_quaternion_norm_lower": bound.raw_norm_lower,
+                    "maximum_subdivision_depth": bound.maximum_subdivision_depth,
+                }
+            if speed > peak:
+                peak = speed
+                witness = {
+                    "node": node,
+                    "bone": glb.nodes[node].get("name"),
+                    "times_s": track.times[index:index + 2].tolist(),
+                    **detail,
+                }
     if not channel_count:
         raise ContractError("rotation witness requires at least one actual rotation channel")
     return {"status": "PASS" if peak <= maximum_degrees_per_s else "FAIL",
             "maximum_degrees_per_s": peak, "limit_degrees_per_s": maximum_degrees_per_s, "peak_witness": witness,
-            "classification": "serialized per-channel rotation rate; not joint torque or muscle capacity"}
+            "classification": (
+                "serialized per-channel rotation rate; CUBICSPLINE uses a conservative normalized-Hermite interval bound; not joint torque or muscle capacity"
+                if has_cubic else
+                "serialized per-channel rotation rate; not joint torque or muscle capacity"
+            )}
 
 
 # Added acceptance gates, not substitutes for the unchanged contact/position

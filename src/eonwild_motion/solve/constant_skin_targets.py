@@ -389,21 +389,77 @@ class CanonicalConstantSkinTargetLaw:
             return f"{side} target violates articulation envelope"
         return None
 
+    def _observe_pair(
+        self, query: SourceMotionQuery, time_s: float
+    ) -> dict[str, dict[str, Any]]:
+        """Reuse one owned query and row solve for the two material patches."""
+        result = query.evaluate(time_s)
+        if isinstance(result, SourceMotionUnavailable):
+            raise ContractError("constant skin target source value is unavailable")
+        row = _thaw(result.row)
+        for side, correction in self._constants.items():
+            row["feet"][side]["target_offset_m"] = np.asarray(
+                correction, dtype=float
+            ).tolist()
+        pose = solve_airborne_plan_sample(
+            query.context,
+            row,
+            body_response_sample=query._body_sample(query._exact_index(time_s), row),
+        )
+        worlds = np.asarray(
+            _world_matrices(
+                query._source,
+                pose.translations,
+                pose.rotations,
+                query.context.base_s,
+            ),
+            dtype=float,
+        )
+        up_index = int(np.argmax(np.abs(query.context.up)))
+        data = {}
+        for side in ("left", "right"):
+            patch = self._patch(self._skin, worlds, side)
+            target = (
+                self._provider.anchor_for(side).material_origin_m
+                + query.context.forward * row["feet"][side]["forward_m"]
+            )
+            active = patch[:, up_index] <= patch[:, up_index].min() + 0.001
+            error = 0.5 * (
+                (target[active] - patch[active]).max(0)
+                + (target[active] - patch[active]).min(0)
+            )
+            gap = float(patch[:, up_index].min() - self._skin.ground)
+            error -= query.context.up * float(error @ query.context.up)
+            error += query.context.up * (_TARGET_GAP_M - gap)
+            data[side] = {
+                "loaded": bool(row["feet"][side]["contact"]),
+                "required_correction_m": error,
+                "gap_m": gap,
+                "pose": pose,
+                "row": row,
+            }
+        return data
+
     def _observe_at(
         self, time_s: float, *, query: SourceMotionQuery | None = None
     ) -> ConstantSkinTargetValue | ConstantSkinTargetUnavailable:
         active_query = self._query if query is None else query
-        data = {
-            side: self._observe(
-                active_query,
-                self._provider,
-                self._skin,
-                side,
-                time_s,
-                self._constants,
-            )
-            for side in ("left", "right")
-        }
+        observer = getattr(self._observe, "__func__", None)
+        if observer is _DEFAULT_OBSERVE:
+            data = self._observe_pair(active_query, time_s)
+        else:
+            # Preserve independently injected failure witnesses and subclasses.
+            data = {
+                side: self._observe(
+                    active_query,
+                    self._provider,
+                    self._skin,
+                    side,
+                    time_s,
+                    self._constants,
+                )
+                for side in ("left", "right")
+            }
         observations: dict[str, Any] = {}
         failures = []
         for side, value in data.items():
@@ -472,9 +528,29 @@ class CanonicalConstantSkinTargetLaw:
         self._validate_integrity()
         return self._observe_at(time)
 
+    def values(
+        self, times_s: Any
+    ) -> tuple[ConstantSkinTargetValue | ConstantSkinTargetUnavailable, ...]:
+        """Check an owned immutable request batch after one integrity proof."""
+        if isinstance(times_s, (str, bytes)):
+            raise ContractError("constant skin target times must be an iterable")
+        try:
+            times = tuple(_finite_time(value) for value in times_s)
+        except TypeError as exc:
+            raise ContractError(
+                "constant skin target times must be an iterable"
+            ) from exc
+        if not times:
+            raise ContractError("constant skin target times must not be empty")
+        self._validate_integrity()
+        return tuple(self._observe_at(time) for time in times)
+
 
 __all__ = [
     "CanonicalConstantSkinTargetLaw",
     "ConstantSkinTargetUnavailable",
     "ConstantSkinTargetValue",
 ]
+
+
+_DEFAULT_OBSERVE = CanonicalConstantSkinTargetLaw._observe.__func__
