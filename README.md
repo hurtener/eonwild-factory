@@ -34,6 +34,12 @@ uv sync --frozen --group test
 uv run python -m eonwild_motion.factory compile \
   --recipe recipes/heavy-biped/walk.v3.json --output out/walk-v3
 uv run python -m eonwild_motion.factory verify out/walk-v3
+
+# Resolve several grounded motions through one animal/body baseline.
+uv run python -m eonwild_motion.factory compile-set \
+  --motion-set catalog/motion-sets/tarbosaurus-pin-552-1-adult-grounded.v1.json \
+  --motions walk fast-walk walk-start walk-stop \
+  --output out/tarbosaurus-adult-grounded
 ```
 
 An output directory must be new; earlier takes cannot be overwritten.
@@ -45,15 +51,12 @@ geometry calibration to the grounded walk. See
 [animal configuration](docs/ANIMAL_CONFIGURATION.md) for the reusable data
 contract and its current biomechanical limits.
 
-The current body-response review candidate is
-`recipes/heavy-biped/tarbosaurus-pin-552-1-adult-walk.v9.json`. It preserves the
-reviewed V8 bind geometry, gait, legs, contacts, articulation, travel and
-configured amplitudes, then combines the support-timed axial clock with the calibrated
-neutral jaw. The host inspected all 370 rendered frames across five locked
-cameras; native-speed playback remains pending. The exact LINEAR local-channel
-loop is `BLOCKED` at 3.231 mm/s against the unchanged 1 mm/s limit.
-Body timing is authored kinematics; mass-response physics is unavailable.
-See [the combined V9 report](reports/V9-ADULT-AXIAL-JAW-V9-001/README.md).
+The current technically checked working baseline is the adult V10 walk recorded
+in [V9-WORKING-BASELINE-001](reports/V9-WORKING-BASELINE-001/README.md).
+Its source-derived CUBICSPLINE package, native playback, contact, ROM, rate, and
+loop checks passed. Visual review still requires a stronger body-weight-transfer
+revision, so this remains a candidate. Body timing is authored kinematics;
+mass-response physics is unavailable.
 The final SourceMotionQuery union passed 907 tests plus 21 subtests; see the
 [integration report](reports/V9-SOURCE-MOTION-QUERY-V9-INTEGRATION-001/README.md).
 
@@ -142,13 +145,17 @@ native multi-view reviews. There are no self-committing recovery workflows,
 production imports of staging scripts, or omitted integration tests. A green
 test suite is not itself a green motion catalog or a visual approval.
 
-The integration validates actual exported LINEAR/SLERP tangents and now shares
-a strict CUBICSPLINE-capable reader across contact and tangent consumers.
-Generic gait joins and local steady loops remain outside their unchanged
-governed velocity limits. Stage A does not add a CUBICSPLINE emitter or interval
-rate authority, so it grants no CUBICSPLINE technical pass. Earlier quadratic
-finite-difference values remain diagnostics only; this head makes no exact
-runtime C1 claim and changes no motion representation.
+The compiler keeps LINEAR as the legacy recipe default and provides an opt-in
+source-derived CUBICSPLINE emitter for checked grounded locomotion and grounded
+transitions. It evaluates serialized Hermite curves through the existing
+TRS/FK/LBS consumers and applies the unchanged contact, articulation, rate,
+loop, and handoff gates. Numerical source tangents remain estimates; packages
+do not claim analytic derivatives or global C1 authority.
+
+The motion-set entry point is initially limited to grounded gait and grounded
+transitions and requires its baseline-owned CUBICSPLINE solve policy. Airborne
+and persistent-support intents are rejected before solving. Legacy v1 recipes
+and their default output remain unchanged.
 
 ## Preserve what worked
 

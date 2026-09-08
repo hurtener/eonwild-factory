@@ -41,6 +41,30 @@ def _digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _motion_set_baseline_identity(package: Path):
+    names = ("motion-set.json", "motion-baseline.json", "motion-intent.json")
+    present = [name for name in names if (package / name).is_file()]
+    if not present:
+        return None
+    if len(present) != len(names):
+        raise ContractError("handoff motion-set provenance is incomplete")
+    lock = _json(package / "inputs.lock.json").get("motion_set_resolution")
+    if not isinstance(lock, dict):
+        raise ContractError("handoff motion-set resolution is missing")
+    return {
+        "binding": lock.get("baseline"),
+        "identity": lock.get("identities", {}).get("baseline"),
+        "snapshot_sha256": _digest(package / "motion-baseline.json"),
+    }
+
+
+def require_shared_motion_baseline(packages):
+    identities = [_motion_set_baseline_identity(Path(package)) for package in packages]
+    if len(identities) < 2 or any(value != identities[0] for value in identities[1:]):
+        raise ContractError("handoff packages differ in shared motion baseline")
+    return identities[0]
+
+
 def _numeric(value):
     array = np.asarray(value)
     if array.dtype.kind not in 'fiu' or not np.isfinite(array).all():
@@ -335,6 +359,7 @@ def verify_handoff(transition: Path, steady: Path, *, root: Path) -> dict:
     hashes = [_digest(p/'manifest.json') for p in paths]
     verifications = [verify_package(p) for p in paths]
     tr,sr = [_json(p/'recipe.json') for p in paths]
+    require_shared_motion_baseline(paths)
     kind = require_pair(tr,sr,_json(paths[0]/'runtime.json'))
     root = root.resolve()
     def locked(reference):

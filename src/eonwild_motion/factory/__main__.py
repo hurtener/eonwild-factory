@@ -10,7 +10,7 @@ import tempfile
 
 from ..errors import MotionError, ContractError
 from ..glb.container import Glb
-from .compiler import compile_recipe, verify_package
+from .compiler import compile_motion_set_selection, compile_recipe, verify_package
 from .io import digest, read_json, write_json
 from .source import admit_geometry
 
@@ -67,6 +67,18 @@ def main(argv: list[str] | None = None) -> int:
         "--emission-checkpoint", type=Path,
         help="retain pre-gate CUBICSPLINE bytes and source identities",
     )
+    set_parser = sub.add_parser(
+        "compile-set",
+        help="compile and verify selected intents through one shared animal baseline",
+    )
+    set_parser.add_argument("--motion-set", type=Path, required=True)
+    set_parser.add_argument("--motions", nargs="+", required=True)
+    set_parser.add_argument("--root", type=Path, default=Path.cwd())
+    set_parser.add_argument("--output", type=Path, required=True)
+    set_parser.add_argument(
+        "--interpolation", choices=("LINEAR", "CUBICSPLINE"),
+        default="CUBICSPLINE",
+    )
     verify = sub.add_parser("verify", help="check final hashes; exits 2 when technical acceptance is blocked")
     verify.add_argument("package", type=Path)
     args = parser.parse_args(argv)
@@ -79,10 +91,35 @@ def main(argv: list[str] | None = None) -> int:
                 interpolation=args.interpolation,
                 emission_checkpoint=args.emission_checkpoint,
             )
+        elif args.command == "compile-set":
+            compile_motion_set_selection(
+                args.motion_set,
+                args.motions,
+                root=args.root,
+                output=args.output,
+                interpolation=args.interpolation,
+            )
+            results = {
+                motion: verify_package(args.output / motion)
+                for motion in args.motions
+            }
+            result = {
+                "schema": "eonwild.motion.motion-set-compilation.v1",
+                "results": results,
+            }
         else:
             result = verify_package(args.package)
         print(json.dumps(result, indent=2, allow_nan=False))
-        return 2 if args.command == "verify" and result["technical_status"] != "PASS" else 0
+        blocked = (
+            args.command == "verify" and result["technical_status"] != "PASS"
+        ) or (
+            args.command == "compile-set"
+            and any(
+                item["technical_status"] != "PASS"
+                for item in result["results"].values()
+            )
+        )
+        return 2 if blocked else 0
     except (MotionError, ValueError, OSError, KeyError) as exc:
         print(json.dumps({"status": "FAIL", "error": str(exc)}), file=sys.stderr)
         return 1

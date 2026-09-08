@@ -6,7 +6,7 @@ production approval. Baked GLBs are outputs, not the reusable program itself.
 """
 from __future__ import annotations
 
-from dataclasses import replace
+from dataclasses import asdict, replace
 import json
 import math
 from pathlib import Path
@@ -22,7 +22,7 @@ from ..glb.container import Glb
 from ..glb.animation import read_animation_tracks
 from ..layers.leg_contact_resolve_v3 import _clip_state, _pose, _world_matrices, _world_position
 from ..planning.airborne_gait import AirborneGait, build_airborne_plan, load_airborne_gait
-from ..planning.grounded_gait import build_grounded_plan, load_grounded_gait
+from ..planning.grounded_gait import GroundedGait, build_grounded_plan, load_grounded_gait
 from ..solve.airborne_gait import solve_airborne_gait, evaluate_airborne_skin_with_authority
 from ..solve.whole_body_gait_transition import _encode
 from .io import digest, frame_axes, json_bytes, locked_file, read_json, write_json
@@ -32,6 +32,10 @@ from .source import geometry_height
 from .animal import (apply_uniform_geometry_scale,biomechanics_report,
     load_animal_instance,scaled_contact_profile,verify_source_calibration)
 from ..solve.performance import load_performance, decorate_plan
+from ..solve.gait_response import (
+    assemble_baseline_performance,
+    resolve_gait_response,
+)
 from ..solve.skin_targets import solve_with_skin_targets, evaluate_skin
 from ..solve.support_anchors import CanonicalSupportAnchorProvider
 from ..solve.constant_skin_targets import CanonicalConstantSkinTargetLaw
@@ -42,13 +46,18 @@ from ..planning.articulation_profile import load_articulation_profile
 from ..solve.supported_action import solve_supported_action
 from ..solve.gaze import calibrate_rostral_direction
 from .source_cubic import emit_source_cubics, serialized_key_midpoint_times
+from .motion_set import (
+    MotionSetResolution,
+    reconstruct_motion_set,
+    resolve_motion_set,
+    resolve_motion_set_selection,
+)
 
 SCHEMA = "eonwild.motion.factory-recipe.v1"
 PROGRAMS = ("airborne_gait", "grounded_gait", "supported_action", "gait_transition")
 
 
-def load_recipe(path: Path, root: Path) -> tuple[dict, dict[str, Path]]:
-    recipe = read_json(path)
+def _load_recipe_document(recipe: Any, root: Path) -> tuple[dict, dict[str, Path]]:
     required = {"schema", "id", "version", "family", "program", "source", "rig", "program_profile", "forward_axis", "up_axis"}
     if not isinstance(recipe, dict) or set(recipe) - required - {"animal", "contact_profile", "performance_profile", "gait_profile", "articulation_profile", "description", "supersedes"} or not required <= set(recipe):
         raise ContractError("recipe contains missing or unknown fields")
@@ -77,6 +86,10 @@ def load_recipe(path: Path, root: Path) -> tuple[dict, dict[str, Path]]:
     elif recipe["program"] == "gait_transition":
         raise ContractError("gait transition requires a locked locomotion profile")
     return recipe, paths
+
+
+def load_recipe(path: Path, root: Path) -> tuple[dict, dict[str, Path]]:
+    return _load_recipe_document(read_json(path), root)
 
 
 def validate_plan(plan: dict, program: str) -> None:
@@ -189,22 +202,31 @@ _ENGINE_AT_IMPORT = engine_fingerprint()
 
 
 def compile_recipe(
-    recipe_path: Path,
+    recipe_path: Path | None,
     *,
     root: Path,
     output: Path,
     interpolation: str = "LINEAR",
     emission_checkpoint: Path | None = None,
+    _motion_set_resolution: MotionSetResolution | None = None,
 ) -> dict:
     if interpolation not in ("LINEAR", "CUBICSPLINE"):
         raise ContractError("emission interpolation must be LINEAR or CUBICSPLINE")
     cubic = interpolation == "CUBICSPLINE"
+    if _motion_set_resolution is not None and not cubic:
+        raise ContractError(
+            "motion-set solve policy currently requires CUBICSPLINE output"
+        )
     if emission_checkpoint is not None and not cubic:
         raise ContractError("emission checkpoint is only available for CUBICSPLINE")
     engine_identity = engine_fingerprint()
     if engine_identity != _ENGINE_AT_IMPORT:
         raise ContractError("engine sources changed since import; restart the compiler")
-    root, recipe_path, output = root.resolve(), recipe_path.resolve(), output.resolve()
+    root, output = root.resolve(), output.resolve()
+    if _motion_set_resolution is None:
+        if recipe_path is None:
+            raise ContractError("legacy compilation requires a recipe path")
+        recipe_path = recipe_path.resolve()
     checkpoint = (
         None if emission_checkpoint is None else emission_checkpoint.resolve()
     )
@@ -212,10 +234,23 @@ def compile_recipe(
         raise ContractError("candidate output already exists; never overwrite an existing take")
     if checkpoint is not None and checkpoint.exists():
         raise ContractError("emission checkpoint already exists; never overwrite evidence")
-    recipe_bytes = recipe_path.read_bytes()
-    recipe, paths = load_recipe(recipe_path, root)
-    if json.loads(recipe_bytes) != recipe:
-        raise ContractError("recipe changed during input resolution")
+    if _motion_set_resolution is None:
+        assert recipe_path is not None
+        recipe_bytes = recipe_path.read_bytes()
+        recipe, paths = load_recipe(recipe_path, root)
+        if json.loads(recipe_bytes) != recipe:
+            raise ContractError("recipe changed during input resolution")
+    else:
+        recipe = reconstruct_motion_set(
+            set_bytes=_motion_set_resolution.set_bytes,
+            baseline_bytes=_motion_set_resolution.baseline_bytes,
+            intent_bytes=_motion_set_resolution.intent_bytes,
+            resolution_lock=_motion_set_resolution.lock,
+        )
+        if recipe != _motion_set_resolution.recipe:
+            raise ContractError("motion-set resolution was mutated before compilation")
+        recipe_bytes = json_bytes(recipe)
+        recipe, paths = _load_recipe_document(recipe, root)
     # Compile only from bytes whose hashes were checked, not later rereads.
     snapshots = {name: path.read_bytes() for name, path in paths.items()}
     for name, raw in snapshots.items():
@@ -281,17 +316,57 @@ def compile_recipe(
         gait = AirborneGait(max_joint_angular_velocity_degrees_per_s=action.max_joint_rate_degrees_per_second)
         root_raw, inplace_raw, plan, receipt = solve_supported_action(source, semantic_roles=roles, action=action,
             contact_profile=contact_profile, up_axis=up, forward_axis=forward, body_height_m=height)
+    baseline_performance_resolution = None
     if "performance_profile" in snapshots:
-        performance = load_performance(json.loads(snapshots["performance_profile"]))
-        if cubic:
+        if _motion_set_resolution is not None:
+            performance, assembly_receipt = assemble_baseline_performance(
+                json.loads(snapshots["performance_profile"]),
+                json.loads(_motion_set_resolution.neutral_pose_bytes),
+            )
+            if (
+                assembly_receipt["neutral_pose"]["source_geometry_sha256"]
+                != recipe["source"]["sha256"]
+            ):
+                raise ContractError(
+                    "neutral-pose calibration differs from baseline source geometry"
+                )
+            if not isinstance(locomotion_gait, GroundedGait):
+                raise ContractError(
+                    "motion-set gait response requires grounded locomotion"
+                )
+            performance, gait_receipt = resolve_gait_response(
+                performance,
+                locomotion_gait,
+                _motion_set_resolution.gait_response_policy,
+            )
+            solve_policy = _motion_set_resolution.solve_policy
+            performance = replace(
+                performance,
+                canonical_support_anchors=solve_policy["canonical_support_anchors"],
+                skin_refinement=solve_policy["skin_refinement"],
+            )
+            baseline_performance_resolution = {
+                "assembly": assembly_receipt,
+                "gait_response": gait_receipt,
+            }
+        elif cubic:
+            performance = load_performance(
+                json.loads(snapshots["performance_profile"])
+            )
             performance = replace(
                 performance, canonical_support_anchors=True, skin_refinement=True
+            )
+        else:
+            performance = load_performance(
+                json.loads(snapshots["performance_profile"])
             )
         plan = decorate_plan(plan, performance)
         if "contact_profile" not in snapshots:
             raise ContractError("forward attention requires locked geometry calibration")
         plan["gaze_calibration"] = calibrate_rostral_direction(source, roles=roles,
             contact_profile=contact_profile, forward_axis=forward, up_axis=up)
+    if _motion_set_resolution is not None:
+        plan["solve_policy"] = dict(_motion_set_resolution.solve_policy)
     validate_plan(plan, recipe["program"])
     biomechanics = biomechanics_report(animal,plan,actual_semantic_height_m=height) if animal else None
     midpoint_plan = None
@@ -545,6 +620,8 @@ def compile_recipe(
     lock = {"schema": "eonwild.motion.factory-lock.v1", "recipe_sha256": digest(recipe_bytes),
             "inputs": {name: recipe[name] for name in paths}, "engine_files": engine_identity,
             "tools": {"python": platform.python_version(), "numpy": np.__version__}}
+    if _motion_set_resolution is not None:
+        lock["motion_set_resolution"] = _motion_set_resolution.lock
     if cubic:
         lock["emission"] = {"interpolation": interpolation,
                             "source_tangent_stencil_s": .001,
@@ -563,6 +640,13 @@ def compile_recipe(
             "biological_validation":"NOT_VALIDATED"} if animal else None)}
     if cubic:
         state["interpolation"] = interpolation
+    if _motion_set_resolution is not None:
+        state["motion_set"] = _motion_set_resolution.lock["identities"]
+        state["solve_policy"] = dict(_motion_set_resolution.solve_policy)
+        receipt["solve_policy"] = dict(_motion_set_resolution.solve_policy)
+        receipt["baseline_performance_resolution"] = (
+            baseline_performance_resolution
+        )
     if articulation_profile is not None:
         state["articulation_profile"] = articulation_profile.receipt()
     payloads = {"root_motion.glb": root_raw, "in_place.glb": inplace_raw, "plan.json": json_bytes(plan),
@@ -576,6 +660,12 @@ def compile_recipe(
     if biomechanics is not None:
         payloads["animal.json"] = snapshots["animal"]
         payloads["biomechanics.json"] = json_bytes(biomechanics)
+    if _motion_set_resolution is not None:
+        payloads.update(_motion_set_resolution.payloads)
+        payloads["performance-profile.json"] = snapshots["performance_profile"]
+        payloads["neutral-pose-profile.json"] = (
+            _motion_set_resolution.neutral_pose_bytes
+        )
     manifest = {"schema": "eonwild.motion.factory-package.v1", "id": recipe["id"], "version": recipe["version"],
         "status": "CANDIDATE", "production_approved": False, "technical_status": validation["technical_status"],
         "files": {name: digest(data) for name, data in payloads.items()},
@@ -591,6 +681,57 @@ def compile_recipe(
         shutil.rmtree(stage, ignore_errors=True)
         raise
     return manifest
+
+
+def compile_motion_set(
+    motion_set_path: Path,
+    motion: str,
+    *,
+    root: Path,
+    output: Path,
+    interpolation: str = "CUBICSPLINE",
+    emission_checkpoint: Path | None = None,
+) -> dict:
+    """Compile one selected motion through its single shared baseline."""
+    resolution = resolve_motion_set(root, motion_set_path, motion)
+    return compile_recipe(
+        None,
+        root=root,
+        output=output,
+        interpolation=interpolation,
+        emission_checkpoint=emission_checkpoint,
+        _motion_set_resolution=resolution,
+    )
+
+
+def compile_motion_set_selection(
+    motion_set_path: Path,
+    motions: list[str],
+    *,
+    root: Path,
+    output: Path,
+    interpolation: str = "CUBICSPLINE",
+) -> dict[str, dict]:
+    """Compile selected intents from one immutable set/baseline resolution."""
+    if interpolation != "CUBICSPLINE":
+        raise ContractError(
+            "motion-set solve policy currently requires CUBICSPLINE output"
+        )
+    if output.exists():
+        raise ContractError("motion-set output already exists; never overwrite")
+    resolutions = resolve_motion_set_selection(root, motion_set_path, motions)
+    output.mkdir(parents=True)
+    results = {}
+    for resolution in resolutions:
+        package = output / resolution.motion
+        results[resolution.motion] = compile_recipe(
+            None,
+            root=root,
+            output=package,
+            interpolation=interpolation,
+            _motion_set_resolution=resolution,
+        )
+    return results
 
 
 def _serialized_interpolation(glb: Glb) -> str:
@@ -661,12 +802,88 @@ def _midpoint_contact_verdict(result: Any, *, sample_count: int) -> str:
     return verdict
 
 
+def _verify_motion_set_provenance(
+    path: Path,
+    *,
+    recipe: dict,
+    lock: dict,
+    runtime: dict,
+    receipt: dict,
+    plan: dict,
+) -> None:
+    resolution_lock = lock.get("motion_set_resolution")
+    reconstructed = reconstruct_motion_set(
+        set_bytes=(path / "motion-set.json").read_bytes(),
+        baseline_bytes=(path / "motion-baseline.json").read_bytes(),
+        intent_bytes=(path / "motion-intent.json").read_bytes(),
+        resolution_lock=resolution_lock,
+    )
+    if reconstructed != recipe:
+        raise ContractError("motion set snapshots do not reconstruct recipe")
+    baseline = read_json(path / "motion-baseline.json")
+    solve_policy = baseline["solve_policy"]
+    style_bytes = (path / "performance-profile.json").read_bytes()
+    neutral_bytes = (path / "neutral-pose-profile.json").read_bytes()
+    if (
+        digest(style_bytes) != baseline["performance_profile"]["sha256"]
+        or digest(neutral_bytes) != baseline["neutral_pose_profile"]["sha256"]
+    ):
+        raise ContractError("motion baseline profile snapshots differ")
+    performance, assembly_receipt = assemble_baseline_performance(
+        json.loads(style_bytes), json.loads(neutral_bytes)
+    )
+    if (
+        assembly_receipt["neutral_pose"]["source_geometry_sha256"]
+        != recipe["source"]["sha256"]
+    ):
+        raise ContractError("motion baseline neutral calibration source differs")
+    gait = load_grounded_gait({
+        "schema": "eonwild.motion.v9.grounded-gait.v1",
+        "parameters": plan.get("parameters"),
+    })
+    performance, gait_receipt = resolve_gait_response(
+        performance, gait, baseline["gait_response_policy"]
+    )
+    performance = replace(
+        performance,
+        canonical_support_anchors=solve_policy["canonical_support_anchors"],
+        skin_refinement=solve_policy["skin_refinement"],
+    )
+    expected_parameters = {
+        key: value for key, value in asdict(performance).items()
+        if value is not None and not (
+            (key == "pelvis_forward_velocity_modulation_fraction" and value == 0)
+            or (key == "neutral_jaw_calibration" and value["close_degrees"] == 0)
+        )
+    }
+    if (
+        runtime.get("motion_set") != resolution_lock["identities"]
+        or runtime.get("solve_policy") != solve_policy
+        or receipt.get("solve_policy") != solve_policy
+        or plan.get("solve_policy") != solve_policy
+        or plan.get("performance") != expected_parameters
+        or receipt.get("baseline_performance_resolution") != {
+            "assembly": assembly_receipt,
+            "gait_response": gait_receipt,
+        }
+    ):
+        raise ContractError("motion set solve policy provenance is inconsistent")
+
+
 def verify_package(path: Path) -> dict:
     manifest = read_json(path / "manifest.json")
     if manifest.get("schema") != "eonwild.motion.factory-package.v1":
         raise ContractError("unsupported package manifest")
     recipe = read_json(path / "recipe.json")
     required = {"root_motion.glb", "in_place.glb", "plan.json", "solver-receipt.json", "runtime.json", "validation.json", "inputs.lock.json", "recipe.json"}
+    provenance_files = {
+        "motion-set.json", "motion-baseline.json", "motion-intent.json",
+        "performance-profile.json", "neutral-pose-profile.json",
+    }
+    present_provenance = provenance_files & set(manifest.get("files", {}))
+    if present_provenance and present_provenance != provenance_files:
+        raise ContractError("motion set package provenance is incomplete")
+    required.update(present_provenance)
     if "cubic-midpoint-plan.json" in manifest.get("files", {}):
         required.add("cubic-midpoint-plan.json")
     if "articulation_profile" in recipe:
@@ -683,6 +900,20 @@ def verify_package(path: Path) -> dict:
     lock = read_json(path / "inputs.lock.json")
     receipt = read_json(path / "solver-receipt.json")
     runtime = read_json(path / "runtime.json")
+    resolution_lock = lock.get("motion_set_resolution")
+    if present_provenance:
+        plan = read_json(path / "plan.json")
+        _verify_motion_set_provenance(
+            path, recipe=recipe, lock=lock, runtime=runtime,
+            receipt=receipt, plan=plan,
+        )
+    elif (
+        resolution_lock is not None
+        or "motion_set" in runtime
+        or "solve_policy" in runtime
+        or "solve_policy" in receipt
+    ):
+        raise ContractError("unbound motion set provenance is not allowed")
     interpolation = runtime.get("interpolation", "LINEAR")
     if interpolation not in ("LINEAR", "CUBICSPLINE"):
         raise ContractError("package declares unsupported interpolation")

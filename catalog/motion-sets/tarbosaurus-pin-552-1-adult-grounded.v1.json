@@ -1,0 +1,39 @@
+{
+  "baseline": {
+    "path": "catalog/motion-baselines/tarbosaurus-pin-552-1-adult-grounded.v1.json",
+    "sha256": "0c92fc7c3a42ad28d4712a7bb33b4e8d0c27f4715547e05a4d268a0d844d429a"
+  },
+  "id": "tarbosaurus-pin-552-1-adult-grounded-motion-set.v1",
+  "motions": [
+    {
+      "intent": {
+        "path": "catalog/motion-intents/heavy-biped.tarbosaurus-pin-552-1-adult-walk.motion-set.v1.json",
+        "sha256": "bdc62fcbe3659faa817907778b1256d01c17e9784a8874d954f8c90961ac4c2d"
+      },
+      "name": "walk"
+    },
+    {
+      "intent": {
+        "path": "catalog/motion-intents/heavy-biped.tarbosaurus-pin-552-1-adult-fast-walk.motion-set.v1.json",
+        "sha256": "2b504698a409cfec568954677a0caad33ffdac798bd8361945f18a810fe7fcad"
+      },
+      "name": "fast-walk"
+    },
+    {
+      "intent": {
+        "path": "catalog/motion-intents/heavy-biped.tarbosaurus-pin-552-1-adult-walk-start.motion-set.v1.json",
+        "sha256": "6f635774bdb23546d833d25526a61e8b7a723dbca372f2297b37f327f00291ac"
+      },
+      "name": "walk-start"
+    },
+    {
+      "intent": {
+        "path": "catalog/motion-intents/heavy-biped.tarbosaurus-pin-552-1-adult-walk-stop.motion-set.v1.json",
+        "sha256": "6aca1339e03f3f1c7dbf4df23d61f852273ff2554da4d71d01f84fd97b3f7fb5"
+      },
+      "name": "walk-stop"
+    }
+  ],
+  "schema": "eonwild.motion.motion-set.v1",
+  "version": 1
+}

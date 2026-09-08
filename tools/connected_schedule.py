@@ -99,10 +99,22 @@ def _load(package: Path) -> dict:
     identity = {key: named.get(key) for key in ('source', 'rig')}
     if any(not isinstance(value, dict) or set(value) != {'path', 'sha256'} for value in identity.values()):
         raise ValueError('connected review package lacks source/rig identity')
+    resolution = lock.get('motion_set_resolution')
+    baseline_identity = None
+    if resolution is not None:
+        if (not isinstance(resolution, dict)
+                or not isinstance(resolution.get('identities'), dict)):
+            raise ValueError('connected review package lacks motion baseline identity')
+        baseline_identity = {
+            'binding': resolution.get('baseline'),
+            'identity': resolution['identities'].get('baseline'),
+            'snapshot_sha256': files.get('motion-baseline.json'),
+        }
     value = {'path': str(package), 'manifest_sha256': hashlib.sha256(manifest.read_bytes()).hexdigest(),
              'runtime': json.loads(runtime.read_text()), 'plan': json.loads(plan.read_text()),
              'recipe': json.loads(recipe.read_text()), 'source_identity': identity,
-             'animal_identity': named.get('animal'), 'engine_files': _engine_files(lock, package)}
+             'animal_identity': named.get('animal'), 'baseline_identity': baseline_identity,
+             'engine_files': _engine_files(lock, package)}
     rows = value['plan'].get('samples')
     if not isinstance(rows, list) or len(rows) < 2:
         raise ValueError('connected review requires a native plan timeline')
@@ -148,6 +160,8 @@ def build_connected_schedule(start_package: Path, steady_package: Path, stop_pac
         raise ValueError('connected review packages do not share admitted geometry and rig identity')
     if start['animal_identity'] != steady['animal_identity'] or start['animal_identity'] != stop['animal_identity']:
         raise ValueError('connected review packages do not share animal identity')
+    if start['baseline_identity'] != steady['baseline_identity'] or start['baseline_identity'] != stop['baseline_identity']:
+        raise ValueError('connected review packages do not share motion baseline identity')
     if start['engine_files'] != steady['engine_files'] or start['engine_files'] != stop['engine_files']:
         raise ValueError('connected review packages do not share compiler fingerprints')
     for transition in (start, stop):
@@ -210,6 +224,8 @@ def build_connected_schedule(start_package: Path, steady_package: Path, stop_pac
     return {'schema': 'eonwild.motion.connected-review-schedule.v1', 'cycles': cycles,
             'source_identity': start['source_identity'],
             'animal_identity': start['animal_identity'],
+            **({'motion_baseline_identity': start['baseline_identity']}
+               if start['baseline_identity'] is not None else {}),
             'engine_files': start['engine_files'],
             'steady_phase_s': phase, 'segments': segments, 'duration_s': cursor_time,
             'declared_root_travel_m': cursor_travel, 'modes': ('root_motion', 'in_place'),
