@@ -7,7 +7,9 @@ import pytest
 from eonwild_motion.planning.airborne_gait import AirborneGait
 from eonwild_motion.planning.airborne_gait import build_airborne_plan
 from eonwild_motion.planning.grounded_gait import GroundedGait, build_grounded_plan
-from eonwild_motion.solve.airborne_gait import solve_airborne_gait, _recovery_pitch_target
+from eonwild_motion.solve.airborne_gait import (
+    _recovery_pitch_target, solve_airborne_gait, solve_airborne_plan_sample,
+)
 from eonwild_motion.solve.performance import Performance, decorate_plan
 from eonwild_motion.layers.leg_contact_resolve_v3 import _clip_state, _pose, _world_matrices
 from eonwild_motion.glb.container import Glb
@@ -48,7 +50,6 @@ def test_stance_pad_and_digits_are_fixed_while_metatarsal_articulates(travel, mo
     tracks,times=_clip_state(glb,glb.document['animations'][0]['name'])
     matrices=[_world_matrices(glb,*_pose(glb,tracks,i)) for i in range(len(times))]
     for side in ('left','right'):
-        chain=roles['legs'][side]['contactChain']
         nodes=[glb.name_to_node[n] for digit in roles['legs'][side]['toeChains'] for n in digit]
         pairs=0
         for i in range(1,len(times)):
@@ -67,7 +68,7 @@ def test_no_nearly_straight_toe_projection_in_new_material_partition():
     # Source-level safeguard supplements the actual FK witness above; the
     # legacy branch must remain available for immutable reproduction.
     import inspect
-    body=inspect.getsource(solve_airborne_gait)
+    body=inspect.getsource(solve_airborne_plan_sample)
     assert 'rot[foot] = _world_rotation' in body
     assert 'for _ in range(18 if not material_partition' in body
 

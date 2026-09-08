@@ -11,6 +11,7 @@ import hashlib
 import json
 import math
 from dataclasses import dataclass
+from types import MappingProxyType
 from typing import Any, Mapping
 
 import numpy as np
@@ -324,6 +325,95 @@ def _validate_plan_override(plan: Mapping[str, Any], gait: AirborneGait) -> dict
 
 
 @dataclass(frozen=True)
+class _AirborneSourceTopology:
+    """The source fields needed by phase-local FK and semantic resolution."""
+
+    nodes: tuple[None, ...]
+    parents: tuple[int | None, ...]
+    name_to_node: Mapping[str, int]
+
+
+def _frozen_array(value: Any) -> np.ndarray:
+    array = np.array(value, dtype=float, copy=True)
+    array.setflags(write=False)
+    return array
+
+
+def _freeze_data(value: Any) -> Any:
+    """Detach ordinary nested input containers for retained row evaluation."""
+    if isinstance(value, Mapping):
+        return MappingProxyType({key: _freeze_data(item) for key, item in value.items()})
+    if isinstance(value, (list, tuple)):
+        return tuple(_freeze_data(item) for item in value)
+    if isinstance(value, np.ndarray):
+        return _frozen_array(value)
+    return value
+
+
+def _frozen_source_topology(source: Glb) -> _AirborneSourceTopology:
+    return _AirborneSourceTopology(
+        nodes=tuple(None for _ in source.nodes),
+        parents=tuple(source.parents),
+        name_to_node=MappingProxyType(dict(source.name_to_node)),
+    )
+
+
+def _require_plan_sample(row: Any) -> Mapping[str, Any]:
+    """Reject malformed direct-seam rows before any solver operation."""
+    if not isinstance(row, Mapping):
+        raise ContractError("plan sample must be a mapping")
+    required_row = ("time_s", "root_forward_m", "pelvis_height_offset_m",
+                    "flight", "support_count", "feet")
+    for key in required_row:
+        if key not in row:
+            raise ContractError(f"plan sample misses {key}")
+    for key in ("time_s", "root_forward_m", "pelvis_height_offset_m"):
+        value = row[key]
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+            raise ContractError(f"plan sample {key} must be finite numeric")
+    if not isinstance(row["flight"], bool):
+        raise ContractError("plan sample flight must be bool")
+    if isinstance(row["support_count"], bool) or not isinstance(row["support_count"], int):
+        raise ContractError("plan sample support_count must be integer")
+    feet = row["feet"]
+    if not isinstance(feet, Mapping):
+        raise ContractError("plan sample feet must be a mapping")
+    required_foot = ("contact", "forward_m", "height_m", "toe_flex_degrees",
+                     "foot_pitch_degrees", "swing_phase")
+    for side in ("left", "right"):
+        foot = feet.get(side)
+        if not isinstance(foot, Mapping):
+            raise ContractError(f"plan sample misses {side} foot")
+        for key in required_foot:
+            if key not in foot:
+                raise ContractError(f"plan sample {side} foot misses {key}")
+            if key == "contact":
+                if not isinstance(foot[key], bool):
+                    raise ContractError("plan sample foot contact must be bool")
+            else:
+                value = foot[key]
+                if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+                    raise ContractError(f"plan sample {side} foot {key} must be finite numeric")
+    return row
+
+
+def _require_body_response_sample(sample: Any) -> Mapping[str, Any] | None:
+    if sample is None:
+        return None
+    if not isinstance(sample, Mapping):
+        raise ContractError("body response sample must be a mapping")
+    degrees = sample.get("sagittal_node_degrees")
+    if not isinstance(degrees, Mapping):
+        raise ContractError("body response sample needs sagittal node degrees")
+    for name, value in degrees.items():
+        if not isinstance(name, str) or not name:
+            raise ContractError("body response node name must be a nonempty string")
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+            raise ContractError("body response node degrees must be finite numeric")
+    return sample
+
+
+@dataclass(frozen=True)
 class AirborneSolveContext:
     """Read-only source geometry and plan context for one solved plan row.
 
@@ -332,7 +422,7 @@ class AirborneSolveContext:
     samples arbitrary time nor exposes source tangents or skin refinement.
     """
 
-    source: Glb
+    source: _AirborneSourceTopology
     roles: Mapping[str, Any]
     gait: AirborneGait
     plan: Mapping[str, Any]
@@ -340,8 +430,8 @@ class AirborneSolveContext:
     legacy_overlay: bool
     root: int
     pelvis: int
-    legs: Mapping[str, list[int]]
-    toes: Mapping[str, list[list[int]]]
+    legs: Mapping[str, tuple[int, ...]]
+    toes: Mapping[str, tuple[tuple[int, ...], ...]]
     up: np.ndarray
     forward: np.ndarray
     lateral: np.ndarray
@@ -377,6 +467,8 @@ def solve_airborne_plan_sample(
     body_response_sample: Mapping[str, Any] | None = None,
 ) -> SolvedAirbornePose:
     """Solve one existing plan row without reading or mutating sibling rows."""
+    row = _require_plan_sample(row)
+    body_response_sample = _require_body_response_sample(body_response_sample)
     source = context.source
     roles = context.roles
     gait = context.gait
@@ -482,7 +574,11 @@ def solve_airborne_plan_sample(
         )
         if ground_offset:
             desired_foot -= up * ground_offset
-        correction = np.asarray(foot_plan.get("target_offset_m", [0., 0., 0.]), dtype=float)
+        try:
+            correction = np.asarray(
+                foot_plan.get("target_offset_m", [0., 0., 0.]), dtype=float)
+        except (TypeError, ValueError) as exc:
+            raise ContractError("invalid bounded skin target correction") from exc
         if correction.shape != (3,) or not np.isfinite(correction).all() or np.linalg.norm(correction) > .06 * body_height:
             raise ContractError("invalid bounded skin target correction")
         desired_foot += correction
@@ -833,18 +929,19 @@ def solve_airborne_gait(source: Glb, *, source_clip: str | None, semantic_roles:
                 normal = np.cross(pb - pa, pc - pb)
                 toe_normals[a] = _unit(normal if np.linalg.norm(normal) > 1e-8 else lateral)
     context = AirborneSolveContext(
-        source=source, roles=roles, gait=gait, plan=plan,
+        source=_frozen_source_topology(source), roles=_freeze_data(roles), gait=gait,
+        plan=_freeze_data(plan),
         articulation_profile=articulation_profile, legacy_overlay=legacy_overlay,
-        root=root, pelvis=pelvis, legs=legs, toes=toes, up=up, forward=forward,
-        lateral=lateral, origin=origin, ground=ground, body_height=body_height,
-        hip_offsets=hip_offsets, hip_lane_center=hip_lane_center,
+        root=root, pelvis=pelvis, legs=_freeze_data(legs), toes=_freeze_data(toes),
+        up=_frozen_array(up), forward=_frozen_array(forward),
+        lateral=_frozen_array(lateral), origin=_frozen_array(origin), ground=ground,
+        body_height=body_height, hip_offsets=_freeze_data(hip_offsets),
+        hip_lane_center=hip_lane_center,
         base_t=tuple(base_t), base_r=tuple(base_r), base_s=tuple(base_s),
-        base_w=tuple(np.array(value, copy=True) for value in base_w),
-        jaw=jaw, jaw_axis=jaw_axis, anatomical_normals=anatomical_normals,
-        toe_normals=toe_normals,
+        base_w=tuple(_frozen_array(value) for value in base_w), jaw=jaw,
+        jaw_axis=jaw_axis, anatomical_normals=_freeze_data(anatomical_normals),
+        toe_normals=_freeze_data(toe_normals),
     )
-    for matrix in context.base_w:
-        matrix.setflags(write=False)
     frames_t, frames_r, emitted = [], [], []
     max_residual, max_extension = 0.0, 0.0
     max_envelope_violation = 0.0

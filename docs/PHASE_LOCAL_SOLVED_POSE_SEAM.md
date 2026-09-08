@@ -13,8 +13,10 @@ record contact/IK branch convergence. Continuous skin refinement remains a
 plan-grid iterative correction; it has no phase-local interpolation or
 derivative witness here. No emitted GLB is read to construct this seam.
 
-The context treats base TRS/world transforms as read-only; each row starts from
-fresh local TRS lists and returns its own witnesses. Its constructed context is
+The context snapshots source topology, semantic roles and plan data into nested
+read-only containers; its base TRS/world transforms and geometry arrays are
+also detached and read-only. Each row starts from fresh local TRS lists and
+returns its own witnesses. Its constructed context is
 therefore suitable for testing phase/order independence, but it does not by
 itself authorize CUBICSPLINE emission, tangents, float32 interval authority,
 FK/LBS contact extrema, or any approval state.

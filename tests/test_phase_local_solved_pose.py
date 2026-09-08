@@ -6,7 +6,6 @@ import json
 import math
 from pathlib import Path
 
-import numpy as np
 import pytest
 
 from eonwild_motion.errors import ContractError
@@ -91,6 +90,53 @@ def test_phase_local_row_evaluator_is_order_independent_and_does_not_mutate_cont
     assert _context_array_bytes(context) == context_arrays_before
     assert source.document == source_document
     assert source.binary == source_binary
+
+
+def test_phase_local_context_detaches_caller_state_and_rejects_nested_writes(monkeypatch):
+    source, roles = _frame_transformed_renamed_fixture()
+    context, plan, direct = _captured_context(
+        monkeypatch, source, roles, AirborneGait(cycles=1, sample_hz=24),
+    )
+    row = deepcopy(plan["samples"][len(plan["samples"]) // 2])
+    expected = direct(context, row)
+    roles["root"] = roles["pelvis"]
+    plan["samples"][0]["root_forward_m"] += 1.
+    source.name_to_node.clear()
+    source.parents[0] = None
+    source.document["nodes"][0]["name"] = "caller-mutated"
+    with pytest.raises(TypeError):
+        context.roles["root"] = "caller-mutated"
+    with pytest.raises(TypeError):
+        context.roles["legs"]["left"]["contactChain"][0] = "caller-mutated"
+    with pytest.raises(TypeError):
+        context.plan["samples"][0]["root_forward_m"] = 1.
+    with pytest.raises(TypeError):
+        context.source.name_to_node["caller-mutated"] = 0
+    with pytest.raises(TypeError):
+        context.source.parents[0] = 1
+    with pytest.raises(ValueError):
+        context.forward[0] = 0.
+    with pytest.raises(ValueError):
+        context.anatomical_normals["left"][0] = 0.
+    assert direct(context, row) == expected
+
+
+def test_phase_local_direct_payloads_fail_closed(monkeypatch):
+    source, roles = _frame_transformed_renamed_fixture()
+    context, plan, direct = _captured_context(
+        monkeypatch, source, roles, AirborneGait(cycles=1, sample_hz=24),
+    )
+    row = deepcopy(plan["samples"][0])
+    missing = deepcopy(row)
+    del missing["root_forward_m"]
+    with pytest.raises(ContractError, match="plan sample misses root_forward_m"):
+        direct(context, missing)
+    with pytest.raises(ContractError, match="body response sample needs sagittal node degrees"):
+        direct(context, row, body_response_sample={})
+    with pytest.raises(ContractError, match="body response node degrees must be finite numeric"):
+        direct(context, row, body_response_sample={
+            "sagittal_node_degrees": {"node": float("nan")},
+        })
 
 
 def test_renamed_frame_transformed_full_clip_payload_is_byte_identical():
