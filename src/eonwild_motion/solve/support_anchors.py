@@ -8,7 +8,7 @@ first-loaded-row reference exactly.
 from __future__ import annotations
 
 from copy import deepcopy
-from dataclasses import asdict, dataclass, is_dataclass
+from dataclasses import asdict, dataclass, fields, is_dataclass
 import hashlib
 import json
 import math
@@ -56,9 +56,32 @@ class _CanonicalSupportBinding:
     anchor_origin_sha256: tuple[str, str]
 
 
+def _dataclass_mapping(value: Any) -> Any:
+    """Match ``asdict`` while accepting immutable mapping snapshots."""
+    if is_dataclass(value):
+        return {
+            field.name: _dataclass_mapping(getattr(value, field.name))
+            for field in fields(value)
+        }
+    if isinstance(value, Mapping):
+        return {key: _dataclass_mapping(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_dataclass_mapping(item) for item in value]
+    if isinstance(value, np.ndarray):
+        return np.array(value, copy=True)
+    return value
+
+
 def _canonical_value(value: Any) -> Any:
     if is_dataclass(value):
-        return {"dataclass": f"{type(value).__module__}.{type(value).__qualname__}", "value": _canonical_value(asdict(value))}
+        # ``dataclasses.asdict`` deep-copies leaves before returning and cannot
+        # copy the immutable MappingProxy snapshots retained by a query.
+        # Canonicalize fields directly so owned request snapshots remain valid
+        # binding inputs.
+        return {
+            "dataclass": f"{type(value).__module__}.{type(value).__qualname__}",
+            "value": _canonical_value(_dataclass_mapping(value)),
+        }
     if isinstance(value, np.ndarray):
         if not np.isfinite(value).all():
             raise ContractError("canonical support anchor binding contains non-finite arrays")

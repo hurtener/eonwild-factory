@@ -220,6 +220,12 @@ class SourceMotionQuery:
         self._forward_axis = None if forward_axis is None else tuple(forward_axis)
         self._source_clip = source_clip
         self._legacy_overlay = legacy_overlay
+        # Retain the complete owned request, rather than only the derived
+        # SkinRig. Downstream source-owned diagnostics can therefore prove
+        # that this actual query is the request they admitted.
+        self._contact_profile = (
+            None if contact_profile is None else _freeze_data(contact_profile)
+        )
         self._context: AirborneSolveContext = build_airborne_solve_context(
             self._source,
             source_clip=source_clip,
@@ -253,7 +259,7 @@ class SourceMotionQuery:
                 self._roles,
                 self._context.forward,
                 self._context.up,
-                _thaw(contact_profile),
+                _thaw(self._contact_profile),
             )
         self._boundaries = self._canonical_boundaries()
 
