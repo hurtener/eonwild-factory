@@ -23,6 +23,7 @@ from eonwild_motion.layers.leg_contact_resolve_v3 import (
 from eonwild_motion.solve.airborne_gait import solve_airborne_gait
 from eonwild_motion.solve.performance import (
     Performance, _support_timed_axial_clock,
+    _support_timed_load_acceptance_pulse,
     _support_timed_pelvis_forward_carrier,
     _support_timed_sagittal_pulse, apply_performance,
     decorate_plan, load_performance, phase_and_gain,
@@ -84,6 +85,9 @@ def test_opt_in_body_carriers_preserve_legacy_plan_bytes():
     assert digest(json_bytes(decorated)) == "cb07b756443ee231d12bec2a5e948a23f8a31ea8048a937966c0ed2e90e4dce3"
     assert "support_directed_pelvis_carrier" not in decorated["performance"]
     assert "support_timed_axial_carrier" not in decorated["performance"]
+    assert "support_timed_load_acceptance_carrier" not in decorated["performance"]
+    assert "pelvis_load_acceptance_body_heights" not in decorated["performance"]
+    assert "upper_trunk_load_acceptance_pitch_degrees" not in decorated["performance"]
 
 
 @pytest.mark.parametrize("value", [True, False, 0, "bounce", float("nan")])
@@ -855,6 +859,128 @@ def test_sagittal_carrier_is_grounded_only():
         decorate_plan(airborne, _sagittal_performance())
 
 
+def _load_acceptance_performance(**changes):
+    values = {
+        "pelvis_sway_body_heights": 0,
+        "pelvis_yaw_degrees": 0,
+        "pelvis_roll_degrees": 0,
+        "tail_yaw_degrees": 0,
+        "gaze_elevation_degrees": 0,
+        "center_tail": False,
+        "support_timed_load_acceptance_carrier": True,
+        "pelvis_load_acceptance_body_heights": .01,
+        "upper_trunk_load_acceptance_pitch_degrees": .35,
+        "skin_refinement": False,
+    }
+    values.update(changes)
+    return Performance(**values)
+
+
+@pytest.mark.parametrize("value", [0, 1, "yes", float("nan")])
+def test_load_acceptance_carrier_rejects_malformed_flag(value):
+    with pytest.raises(ContractError):
+        _load_acceptance_performance(
+            support_timed_load_acceptance_carrier=value)
+
+
+@pytest.mark.parametrize(("field", "value"), [
+    ("pelvis_load_acceptance_body_heights", None),
+    ("upper_trunk_load_acceptance_pitch_degrees", None),
+    ("pelvis_load_acceptance_body_heights", -.001),
+    ("pelvis_load_acceptance_body_heights", .01001),
+    ("upper_trunk_load_acceptance_pitch_degrees", 1.01),
+    ("upper_trunk_load_acceptance_pitch_degrees", True),
+])
+def test_load_acceptance_carrier_requires_bounded_paired_amplitudes(field, value):
+    with pytest.raises(ContractError):
+        _load_acceptance_performance(**{field: value})
+
+
+def test_load_acceptance_amplitudes_require_opt_in_grounded_carrier():
+    with pytest.raises(ContractError, match="require the support-timed carrier"):
+        _load_acceptance_performance(
+            support_timed_load_acceptance_carrier=None)
+    airborne = build_airborne_plan(AirborneGait(cycles=1, sample_hz=24), 2.)
+    for value in (False, True):
+        performance = (Performance(support_timed_load_acceptance_carrier=False)
+                       if value is False else _load_acceptance_performance())
+        with pytest.raises(ContractError, match="requires grounded locomotion"):
+            decorate_plan(airborne, performance)
+
+
+def test_load_acceptance_pulse_spans_single_support_midpoints_and_is_c2():
+    gait = GroundedGait(step_period_s=1.23, duty_factor=.62)
+    plan = build_grounded_plan(gait, 2.)
+    step = gait.step_period_s
+    for cycle in (0, 1):
+        stance = (cycle + gait.duty_factor) * step
+        double = (cycle + gait.duty_factor + .5) * step
+        assert _support_timed_load_acceptance_pulse(
+            plan, stance, 1.) == pytest.approx(0, abs=1e-14)
+        assert _support_timed_load_acceptance_pulse(
+            plan, double, 1.) == pytest.approx(1, abs=1e-14)
+        assert _support_timed_load_acceptance_pulse(
+            plan, double, .25) == pytest.approx(.25, abs=1e-14)
+    stance = gait.duty_factor * step
+    derivatives = []
+    for h in (1e-3, 5e-4, 2.5e-4):
+        samples = [
+            _support_timed_load_acceptance_pulse(plan, stance + offset, 1.)
+            for offset in (-h, 0, h)
+        ]
+        first = (samples[2] - samples[0]) / (2 * h)
+        second = (samples[2] - 2 * samples[1] + samples[0]) / h**2
+        assert first == pytest.approx(0, abs=1e-8)
+        derivatives.append(abs(second))
+    assert derivatives[1] < .51 * derivatives[0]
+    assert derivatives[2] < .51 * derivatives[1]
+    assert _support_timed_load_acceptance_pulse(
+        plan, stance + 2 * step, .7) == pytest.approx(
+            _support_timed_load_acceptance_pulse(plan, stance, .7), abs=1e-14)
+
+
+def test_load_acceptance_carrier_uses_native_time_and_transition_gain():
+    gait = GroundedGait(step_period_s=1.23, duty_factor=.62)
+    plan = decorate_plan(
+        build_grounded_plan(gait, 2.), _load_acceptance_performance())
+    t = (gait.duty_factor + .5) * gait.step_period_s
+    for gain in (0., .35, 1.):
+        row = sample_grounded_gait(gait, t, 2.)
+        row["time_s"] = t + .41
+        row["locomotion_time_s"] = t
+        row["performance_gain"] = gain
+        phase, actual_gain = phase_and_gain(row)
+        assert phase == pytest.approx(t)
+        assert _support_timed_load_acceptance_pulse(
+            plan, phase, actual_gain) == pytest.approx(gain, abs=1e-14)
+
+
+@pytest.mark.parametrize("kind", ["start", "stop"])
+def test_load_acceptance_carrier_matches_grounded_transition_interface(kind):
+    source, roles = _actual_source_and_roles()
+    up = np.array([0., 1., 0.])
+    forward = np.array([0., 0., 1.])
+    gait = GroundedGait(
+        step_period_s=1.23, duty_factor=.62,
+        step_length_body_heights=.6, cycles=1, sample_hz=120)
+    performance = _load_acceptance_performance()
+    steady = decorate_plan(build_grounded_plan(gait, 2.), performance)
+    transition = decorate_plan(
+        build_transition_plan(GaitTransition(kind), gait, 2.), performance)
+    transition_row = transition["samples"][-1 if kind == "start" else 0]
+    steady_row = steady["samples"][0]
+    assert transition_row["locomotion_time_s"] == pytest.approx(0)
+    assert transition_row["performance_gain"] == pytest.approx(1)
+    _, transition_pose = _performance_pose(
+        source, roles, transition, transition_row, up, forward)
+    _, steady_pose = _performance_pose(
+        source, roles, steady, steady_row, up, forward)
+    for name in [roles["pelvis"], *roles["spine"], roles["chest"]]:
+        node = source.name_to_node[name]
+        assert np.asarray(transition_pose[node]) == pytest.approx(
+            np.asarray(steady_pose[node]), abs=1e-12)
+
+
 def test_sagittal_pulse_uses_declared_support_clock_and_closes_c2():
     gait = GroundedGait(step_period_s=1.23, duty_factor=.62)
     plan = build_grounded_plan(gait, 2.)
@@ -998,6 +1124,33 @@ def _actual_source_and_roles():
     source = Glb.from_bytes((root / "assets/sha256/044a8be907eb650fa71c613f19655eb10a0dd23c1d6bce86dfef93cd8d9575f6.glb").read_bytes())
     roles = json.loads((root / "catalog/rigs/heavy-biped.v9.json").read_text())["roles"]
     return source, roles
+
+
+def test_load_acceptance_carrier_has_signed_actual_rig_response_and_keeps_tail_local():
+    source, roles = _actual_source_and_roles()
+    up = np.array([0., 1., 0.])
+    forward = np.array([.03893162055641767, 0., .9992418770852486])
+    lateral = np.cross(up, forward)
+    gait = GroundedGait(step_period_s=1.23, duty_factor=.62)
+    plan = decorate_plan(
+        build_grounded_plan(gait, 2.), _load_acceptance_performance())
+    time_s = (gait.duty_factor + .5) * gait.step_period_s
+    row = sample_grounded_gait(gait, time_s, 2.)
+    base, posed = _performance_pose(source, roles, plan, row, up, forward)
+    pelvis = source.name_to_node[roles["pelvis"]]
+    pelvis_shift = np.asarray(_world_position(posed[pelvis])) - np.asarray(
+        _world_position(base[pelvis]))
+    assert pelvis_shift @ up == pytest.approx(-.02, abs=1e-10)
+    assert pelvis_shift @ forward == pytest.approx(0, abs=1e-10)
+    assert pelvis_shift @ lateral == pytest.approx(0, abs=1e-10)
+
+    trunk = [source.name_to_node[name]
+             for name in [*roles["spine"], roles["chest"]]]
+    assert _signed_world_rotation_delta(
+        base, posed, trunk[-1], lateral) == pytest.approx(.35, abs=2e-5)
+    tail = source.name_to_node[roles["tail"][0]]
+    assert np.asarray(posed[tail])[:3, :3] == pytest.approx(
+        np.asarray(base[tail])[:3, :3], abs=1e-12)
 
 
 def _signed_world_rotation_delta(base, posed, node, axis):

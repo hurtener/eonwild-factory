@@ -37,6 +37,9 @@ class Performance:
     upper_trunk_counterpitch_degrees: float | None = None
     neck_counterpitch_degrees: float | None = None
     tail_counterpitch_degrees: float | None = None
+    support_timed_load_acceptance_carrier: bool | None = None
+    pelvis_load_acceptance_body_heights: float | None = None
+    upper_trunk_load_acceptance_pitch_degrees: float | None = None
     pelvis_forward_velocity_modulation_fraction: float | None = None
     neutral_jaw_calibration: NeutralJawCalibration | None = None
     canonical_support_anchors: bool | None = None
@@ -58,6 +61,9 @@ class Performance:
                        "upper_trunk_counterpitch_degrees",
                        "neck_counterpitch_degrees",
                        "tail_counterpitch_degrees",
+                       "support_timed_load_acceptance_carrier",
+                       "pelvis_load_acceptance_body_heights",
+                       "upper_trunk_load_acceptance_pitch_degrees",
                        "pelvis_forward_velocity_modulation_fraction",
                        "canonical_support_anchors") and value is None:
                 continue
@@ -65,6 +71,7 @@ class Performance:
                        "support_directed_pelvis_carrier",
                        "support_timed_axial_carrier",
                        "support_timed_sagittal_carrier",
+                       "support_timed_load_acceptance_carrier",
                        "canonical_support_anchors", "skin_refinement"):
                 if type(value) is not bool:
                     raise ContractError(f"{key} must be boolean")
@@ -108,6 +115,26 @@ class Performance:
             (self.tail_counterpitch_degrees, 4., "tail counterpitch"),
         )
         for value, limit, label in sagittal_limits:
+            if value is not None and not 0 <= value <= limit:
+                raise ContractError(f"{label} exceeds the authored envelope")
+        load_acceptance = (
+            self.pelvis_load_acceptance_body_heights,
+            self.upper_trunk_load_acceptance_pitch_degrees,
+        )
+        if self.support_timed_load_acceptance_carrier is True:
+            if any(value is None for value in load_acceptance):
+                raise ContractError(
+                    "support-timed load-acceptance carrier requires both amplitudes")
+        elif any(value is not None for value in load_acceptance):
+            raise ContractError(
+                "load-acceptance amplitudes require the support-timed carrier")
+        load_acceptance_limits = (
+            (self.pelvis_load_acceptance_body_heights, .01,
+             "pelvis load-acceptance compression"),
+            (self.upper_trunk_load_acceptance_pitch_degrees, 1.,
+             "upper-trunk load-acceptance pitch"),
+        )
+        for value, limit, label in load_acceptance_limits:
             if value is not None and not 0 <= value <= limit:
                 raise ContractError(f"{label} exceeds the authored envelope")
         coefficient = self.pelvis_forward_velocity_modulation_fraction
@@ -156,6 +183,12 @@ def decorate_plan(plan: dict, performance: Performance) -> dict:
         if not grounded:
             raise ContractError(
                 "support-timed axial carrier requires grounded locomotion")
+    if performance.support_timed_load_acceptance_carrier is not None:
+        grounded = (plan.get("program") == "grounded_gait"
+                    or plan.get("locomotion_program") == "grounded_gait")
+        if not grounded:
+            raise ContractError(
+                "support-timed load-acceptance carrier requires grounded locomotion")
     if performance.pelvis_forward_velocity_modulation_fraction not in (None, 0):
         grounded = (plan.get("program") == "grounded_gait"
                     or plan.get("locomotion_program") == "grounded_gait")
@@ -265,6 +298,45 @@ def _support_timed_sagittal_pulse(plan, phase, gain):
     step = float(cycle) / 2
     stance_clock = phase / step - float(duty)
     return -gain * math.cos(2 * math.pi * stance_clock)
+
+
+def _support_timed_load_acceptance_pulse(plan, phase, gain):
+    """C2 compression pulse between adjacent declared single-support midpoints.
+
+    The pulse is zero with zero first and second derivatives at either
+    single-support midpoint and reaches one at the intervening double-support
+    midpoint. It is an authored kinematic response, not a force or COM solve.
+    """
+    grounded = (plan.get("program") == "grounded_gait"
+                or plan.get("locomotion_program") == "grounded_gait")
+    if not grounded:
+        raise ContractError(
+            "support-timed load-acceptance carrier requires grounded locomotion")
+    parameters = plan.get("parameters")
+    if not isinstance(parameters, Mapping):
+        raise ContractError(
+            "support-timed load-acceptance carrier requires gait parameters")
+    duty = parameters.get("duty_factor")
+    step = parameters.get("step_period_s")
+    cycle = plan.get("same_foot_cycle_s")
+    if (isinstance(duty, bool) or not isinstance(duty, (int, float))
+            or not math.isfinite(duty) or not .5 < duty < 1
+            or isinstance(step, bool) or not isinstance(step, (int, float))
+            or not math.isfinite(step) or step <= 0
+            or isinstance(cycle, bool) or not isinstance(cycle, (int, float))
+            or not math.isfinite(cycle) or cycle <= 0
+            or not math.isclose(float(cycle), 2 * float(step),
+                                rel_tol=0., abs_tol=1e-9)):
+        raise ContractError(
+            "support-timed load-acceptance carrier requires a finite two-step grounded clock")
+    if (isinstance(phase, bool) or not isinstance(phase, (int, float))
+            or not math.isfinite(phase) or phase < 0
+            or isinstance(gain, bool) or not isinstance(gain, (int, float))
+            or not math.isfinite(gain) or not 0 <= gain <= 1):
+        raise ContractError(
+            "support-timed load-acceptance carrier requires finite phase and gain")
+    u = (float(phase) / float(step) - float(duty)) % 1.
+    return float(gain) * 64. * u**3 * (1. - u)**3
 
 
 def _support_timed_axial_clock(source, base_worlds, roles, plan, phase, gain, lateral):
@@ -607,6 +679,9 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
                    if p.upper_trunk_counterroll_degrees is not None else None)
     sagittal_chains = (_sagittal_body_chains(source, roles)
                        if p.support_timed_sagittal_carrier is True else None)
+    load_acceptance_trunk_names = (
+        _counterroll_trunk_names(roles)
+        if p.support_timed_load_acceptance_carrier is True else None)
     phase, gain = phase_and_gain(row)
     forward_displacement = 0.
     if p.pelvis_forward_velocity_modulation_fraction is not None:
@@ -627,6 +702,7 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
     sway_pulse = pulse
     roll_pulse = pulse
     sagittal_pulse = 0.
+    load_acceptance_pulse = 0.
     if p.support_directed_pelvis_carrier:
         sway_pulse = _support_directed_pulse(
             source, base_worlds, roles, plan, phase, gain, lateral)
@@ -636,14 +712,28 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
     if p.support_timed_sagittal_carrier:
         sagittal_pulse = _support_timed_sagittal_pulse(
             plan, phase, gain)
+    if p.support_timed_load_acceptance_carrier:
+        load_acceptance_pulse = _support_timed_load_acceptance_pulse(
+            plan, phase, gain)
     if p.support_timed_axial_carrier:
         axial_clock = _support_timed_axial_clock(
             source, base_worlds, roles, plan, phase, gain, lateral)
         yaw_pulse = axial_clock[2]
     parent = source.parents[pelvis]
     parent_basis = np.eye(3) if parent is None else np.asarray(base_worlds[parent])[:3, :3]
-    shift = (lateral * (p.pelvis_sway_body_heights * plan["body_height_m"] * sway_pulse)
+    body_height = plan["body_height_m"]
+    if (p.support_timed_load_acceptance_carrier is True
+            and (isinstance(body_height, bool)
+                 or not isinstance(body_height, (int, float))
+                 or not math.isfinite(body_height) or body_height <= 0)):
+        raise ContractError(
+            "support-timed load-acceptance carrier requires positive finite body height")
+    shift = (lateral * (p.pelvis_sway_body_heights * body_height * sway_pulse)
              + np.asarray(forward) * forward_displacement)
+    if p.pelvis_load_acceptance_body_heights is not None:
+        shift = shift - np.asarray(up) * (
+            p.pelvis_load_acceptance_body_heights * body_height
+            * load_acceptance_pulse)
     translations[pelvis] = tuple(np.asarray(translations[pelvis]) + np.linalg.solve(parent_basis, shift))
     _world_delta(
         source, translations, rotations, scales, pelvis, up,
@@ -682,6 +772,27 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
             source, translations, rotations, scales,
             sagittal_chains["trunk"], lateral,
             -p.upper_trunk_counterpitch_degrees * sagittal_pulse)
+    if p.upper_trunk_load_acceptance_pitch_degrees is not None:
+        assert load_acceptance_trunk_names is not None
+        if any(name not in source.name_to_node
+               for name in load_acceptance_trunk_names):
+            raise ContractError(
+                "upper-trunk load-acceptance pitch requires a unique semantic spine/chest chain")
+        load_acceptance_trunk = [
+            source.name_to_node[name] for name in load_acceptance_trunk_names]
+        if (source.parents[load_acceptance_trunk[0]] != pelvis
+                or any(source.parents[child] != parent
+                       for parent, child in zip(
+                           load_acceptance_trunk,
+                           load_acceptance_trunk[1:]))):
+            raise ContractError(
+                "upper-trunk load-acceptance semantic roles must follow actual topology")
+        # Positive lateral rotation tips the declared forward axis downward.
+        _distributed_world_delta(
+            source, translations, rotations, scales,
+            load_acceptance_trunk, lateral,
+            p.upper_trunk_load_acceptance_pitch_degrees
+            * load_acceptance_pulse)
     tail = [source.name_to_node[n] for n in roles["tail"]]
     if p.center_tail:
         for node, child in zip(tail, tail[1:]):
