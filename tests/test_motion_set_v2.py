@@ -20,7 +20,10 @@ from eonwild_motion.factory.compiler import (
     _verify_motion_set_provenance,
 )
 from eonwild_motion.factory.io import bind, write_json
-from eonwild_motion.factory.motion_set import resolve_motion_set
+from eonwild_motion.factory.motion_set import (
+    resolve_motion_set,
+    resolve_motion_set_selection,
+)
 from eonwild_motion.factory.source import geometry_height
 from eonwild_motion.glb.container import Glb
 from eonwild_motion.planning.articulation_profile import load_articulation_profile
@@ -242,6 +245,44 @@ def test_real_v2_grounded_sets_share_inputs_without_changing_v1_recipe():
     assert json.loads(tarbo_v2.baseline_bytes)["supported_programs"] == [
         "grounded_gait", "gait_transition"
     ]
+
+
+def test_allosaurus_acquired_fast_walk_changes_only_portable_gait_intent():
+    motion_set = (
+        ROOT
+        / "catalog/motion-sets/allosaurus-engineering-acquired-fast-walk-diagnostic.v1.json"
+    )
+    walk, fast = resolve_motion_set_selection(
+        ROOT, motion_set, ["walk", "fast-walk"]
+    )
+    assert walk.baseline_bytes == fast.baseline_bytes
+    assert walk.baseline_binding == fast.baseline_binding
+    for field in (
+        "source",
+        "rig",
+        "animal",
+        "contact_profile",
+        "articulation_profile",
+        "performance_profile",
+    ):
+        assert walk.recipe[field] == fast.recipe[field]
+    assert walk.acquired_reference is not None
+    assert fast.acquired_reference is not None
+    assert walk.acquired_reference.binding == fast.acquired_reference.binding
+    assert set(json.loads(fast.intent_bytes)) == {
+        "schema",
+        "id",
+        "version",
+        "program",
+        "program_profile",
+        "authored_material_reference",
+        "description",
+    }
+    gait = load_grounded_gait(json.loads(fast.program_profile_bytes))
+    assert gait.step_period_s == 0.8
+    assert gait.duty_factor == 0.62
+    assert gait.step_length_body_heights == 0.6
+    assert gait.pelvis_height_carrier == "stance_vault_proxy"
 
 
 def test_v2_provenance_remeasures_touchdown_geometry_from_source(tmp_path):
