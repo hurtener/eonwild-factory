@@ -49,6 +49,13 @@ weighted pedal source and its raw/admitted identity boundary are recorded in
 [ALLOSAURUS-PEDAL-SOURCE-PREPARATION-001](../reports/ALLOSAURUS-PEDAL-SOURCE-PREPARATION-001/README.md);
 this source preparation does not pass the gait.
 
+The subsequent opt-in pedal attachment transfer is recorded in
+[ALLOSAURUS-PEDAL-ATTACHMENT-TRANSFER-001](../reports/ALLOSAURUS-PEDAL-ATTACHMENT-TRANSFER-001/README.md).
+Both independent reviews found no P0/P1 defect, and the prepared source
+preserves neutral structure and legacy V3 bytes. This remains source
+preparation only: whole-cycle gait, visual, anatomical, Unity and production
+acceptance are still pending.
+
 The user selected V10 walk as the unfinished working baseline; shared fast walk
 remains its current fast comparison, with the confirmed
 proximal thigh surface intersection still open. The sprint component-selection

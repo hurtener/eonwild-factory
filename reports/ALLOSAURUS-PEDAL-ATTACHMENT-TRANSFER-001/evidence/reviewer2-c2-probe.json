@@ -1,0 +1,16 @@
+{
+  "classification": "The component axis gains are quintic C2, but min(axis gains) has an interior first-derivative crease where two nonconstant gains are equal.",
+  "epsilon_m": 1e-07,
+  "gain": 0.4999999999999999,
+  "one_sided_lateral_derivative_per_m": {
+    "absolute_jump": 9.374999995204192,
+    "from_higher_lateral": 1.1102230246251565e-09,
+    "from_lower_lateral": 9.374999996314415
+  },
+  "point": {
+    "forward_m": -0.1,
+    "lateral_m": -0.6,
+    "up_m": 0.0
+  },
+  "reviewed_head": "f9337f7a6d084de2ed42f1d2a88c09dbc512f826"
+}

@@ -1,0 +1,105 @@
+{
+  "head": "f9337f7a6d084de2ed42f1d2a88c09dbc512f826",
+  "checks": {
+    "exact_frozen_output": true,
+    "legacy_v3_sha": "3613b67c9513c4ed5b88665c7606e0c15791bb922b01a72e7223aa112546ec89",
+    "nodes_unchanged": true,
+    "skins_unchanged": true,
+    "0_0_NORMAL_unchanged": true,
+    "0_0_POSITION_unchanged": true,
+    "0_0_TEXCOORD_0_unchanged": true,
+    "0_0_indices_unchanged": true
+  },
+  "output_sha256": "06f44c2f2f0702bb6db93faa3315ce5ef27d37b911bcd7af5f64c9191634790a",
+  "transfers": [
+    {
+      "role": "pedal_attachment_left",
+      "source_node": "Bone_021",
+      "root_node": "Bone_020",
+      "destination_nodes": [
+        "Bone_020",
+        "AllosaurusPedalInnerProximal.L",
+        "AllosaurusPedalInnerDistal.L",
+        "AllosaurusPedalOuterProximal.L",
+        "AllosaurusPedalOuterDistal.L"
+      ],
+      "selector": {
+        "frame": "source_world",
+        "lateral_interval_m": [
+          -0.365,
+          -0.04
+        ],
+        "up_maximum_m": 0.08,
+        "forward_interval_m": [
+          0.55,
+          0.725
+        ],
+        "taper_width_m": 0.025
+      },
+      "changed_vertex_count": 751,
+      "full_gain_vertex_count": 654,
+      "taper_vertex_count": 97,
+      "maximum_transferred_weight": 0.09140781656447644,
+      "destination_counts": {
+        "Bone_020": 243,
+        "AllosaurusPedalInnerProximal.L": 134,
+        "AllosaurusPedalInnerDistal.L": 163,
+        "AllosaurusPedalOuterProximal.L": 80,
+        "AllosaurusPedalOuterDistal.L": 131
+      },
+      "changed_rows_sha256": "f065487fd8a3787a40230c4b02dd58ccd674d905105eaf62ea0f8302d5468f4b"
+    },
+    {
+      "role": "pedal_attachment_right",
+      "source_node": "Bone_027",
+      "root_node": "Bone_026",
+      "destination_nodes": [
+        "Bone_026",
+        "AllosaurusPedalInnerProximal.R",
+        "AllosaurusPedalInnerDistal.R",
+        "AllosaurusPedalOuterProximal.R",
+        "AllosaurusPedalOuterDistal.R"
+      ],
+      "selector": {
+        "frame": "source_world",
+        "lateral_interval_m": [
+          0.04,
+          0.365
+        ],
+        "up_maximum_m": 0.08,
+        "forward_interval_m": [
+          0.55,
+          0.725
+        ],
+        "taper_width_m": 0.025
+      },
+      "changed_vertex_count": 731,
+      "full_gain_vertex_count": 625,
+      "taper_vertex_count": 106,
+      "maximum_transferred_weight": 0.15013457964837404,
+      "destination_counts": {
+        "Bone_026": 234,
+        "AllosaurusPedalInnerProximal.R": 116,
+        "AllosaurusPedalInnerDistal.R": 148,
+        "AllosaurusPedalOuterProximal.R": 76,
+        "AllosaurusPedalOuterDistal.R": 157
+      },
+      "changed_rows_sha256": "72a0ecdd6ffc2dfa518212785e0221fee9a698b256798ec69d1324d5625ace6c"
+    }
+  ],
+  "measurements": {
+    "maximum_input_neutral_skin_error_m": 7.774061190383236e-07,
+    "maximum_local_trs_projection_error": 1.5761053133445113e-07,
+    "maximum_reopened_world_matrix_error": 6.973255614717289e-06,
+    "maximum_reopened_neutral_skin_error_m": 3.749428662070317e-07
+  },
+  "focused_tests": "41 passed in 18.85s",
+  "review": {
+    "P0": 0,
+    "P1": 0,
+    "P2": [
+      "axis-wise quintic C2 falloff does not imply globally C2 min-composed field"
+    ]
+  },
+  "classification": "independent source regeneration and structural preservation; not whole-cycle visual acceptance"
+}
