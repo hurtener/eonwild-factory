@@ -17,6 +17,10 @@ from .support_anchors import _digest
 TARGET_MATERIAL_GAP_M = 0.0001
 TARGET_RESIDUAL_LIMIT_M = 0.001
 MATERIAL_EFFECTOR_RESOLUTION = "minimum_material_and_reach_floor.v1"
+MATERIAL_CLEARANCE_POLICY_SCHEMA = (
+    "eonwild.motion.authored-material-clearance-policy.v1"
+)
+MATERIAL_CLEARANCE_POLICY_MODEL = "body_height_fraction.v1"
 
 
 def _query_identity(query: Any) -> str:
@@ -67,6 +71,47 @@ def _linear(values: tuple[float, ...], phase: float) -> float:
     return values[left] * (1 - u) + values[left + 1] * u
 
 
+def _material_clearance_policy(
+    value: Mapping[str, Any] | None, *, body_height_m: float
+) -> tuple[Mapping[str, Any], float]:
+    expected = {
+        "schema",
+        "id",
+        "version",
+        "model",
+        "maximum_clearance_body_heights",
+        "classification",
+    }
+    if not isinstance(value, Mapping) or set(value) != expected:
+        raise ContractError(
+            "authored material contact needs a complete material-clearance policy"
+        )
+    if value["schema"] != MATERIAL_CLEARANCE_POLICY_SCHEMA:
+        raise ContractError("authored material-clearance policy schema is unsupported")
+    if value["model"] != MATERIAL_CLEARANCE_POLICY_MODEL:
+        raise ContractError("authored material-clearance policy model is unsupported")
+    if not isinstance(value["id"], str) or not value["id"].strip():
+        raise ContractError("authored material-clearance policy id is invalid")
+    if type(value["version"]) is not int or value["version"] <= 0:
+        raise ContractError("authored material-clearance policy version is invalid")
+    if value["classification"] != "source_backed_engineering_candidate":
+        raise ContractError(
+            "authored material-clearance policy classification is unsupported"
+        )
+    fraction = _finite(
+        value["maximum_clearance_body_heights"],
+        "maximum clearance body heights",
+    )
+    if fraction <= 0:
+        raise ContractError(
+            "authored material-clearance policy maximum must be positive"
+        )
+    height = _finite(body_height_m, "body height")
+    if height <= 0:
+        raise ContractError("authored material contact body height must be positive")
+    return MappingProxyType(deepcopy(dict(value))), fraction * height
+
+
 @dataclass(frozen=True)
 class _SidePath:
     contact: tuple[bool, ...]
@@ -89,6 +134,8 @@ class AuthoredMaterialContactAdapter:
         paths: Mapping[str, _SidePath],
         scale: float,
         retime_policy: str,
+        material_clearance_policy: Mapping[str, Any],
+        target_maximum_material_clearance_m: float,
     ):
         self._query_binding_sha256 = binding
         self._capsule = MappingProxyType(deepcopy(dict(capsule)))
@@ -96,6 +143,11 @@ class AuthoredMaterialContactAdapter:
         self._paths = MappingProxyType(dict(paths))
         self._scale = scale
         self._retime_policy = retime_policy
+        self._material_clearance_policy = material_clearance_policy
+        self._material_clearance_policy_sha256 = _digest(material_clearance_policy)
+        self._target_maximum_material_clearance_m = (
+            target_maximum_material_clearance_m
+        )
         self._integrity_sha256 = self._current_integrity_sha256()
 
     def _current_integrity_sha256(self) -> str:
@@ -105,6 +157,10 @@ class AuthoredMaterialContactAdapter:
                 "query_binding_sha256": self._query_binding_sha256,
                 "clearance_scale": self._scale,
                 "retime_policy": self._retime_policy,
+                "material_clearance_policy": self._material_clearance_policy,
+                "target_maximum_material_clearance_m": (
+                    self._target_maximum_material_clearance_m
+                ),
                 "paths": {
                     side: {
                         "contact": path.contact,
@@ -127,6 +183,8 @@ class AuthoredMaterialContactAdapter:
         capsule: Mapping[str, Any],
         *,
         authored_source: bytes,
+        body_height_m: float,
+        material_clearance_policy: Mapping[str, Any] | None = None,
         retime_policy: str = "phase_preserving.v1",
     ) -> "AuthoredMaterialContactAdapter":
         if (
@@ -171,6 +229,19 @@ class AuthoredMaterialContactAdapter:
             raise ContractError(
                 "authored material contact currently requires grounded locomotion"
             )
+        if not math.isclose(
+            _finite(body_height_m, "body height"),
+            query._context.body_height,
+            rel_tol=0.0,
+            abs_tol=1e-10,
+        ):
+            raise ContractError(
+                "authored material contact body height differs from its source query"
+            )
+        policy, target_maximum = _material_clearance_policy(
+            material_clearance_policy,
+            body_height_m=body_height_m,
+        )
         raw_feet = capsule.get("feet")
         if not isinstance(raw_feet, Mapping) or set(raw_feet) != {"left", "right"}:
             raise ContractError("authored material contact requires bilateral paths")
@@ -284,15 +355,6 @@ class AuthoredMaterialContactAdapter:
 
         duration = query._times[-1] - query._times[0]
         source_maximum = max(max(parsed[s]["clearance_m"]) for s in ("left", "right"))
-        target_maximum = 0.0
-        for index in range(count):
-            row = query._sample_row(
-                query._times[0] + duration * index / count, apply_clearance=False
-            )
-            target_maximum = max(
-                target_maximum,
-                *(float(row["feet"][s]["height_m"]) for s in ("left", "right")),
-            )
         if source_maximum <= 1e-12 or target_maximum <= 1e-12:
             raise ContractError(
                 "authored material contact needs nonzero source and target swing clearance"
@@ -356,6 +418,8 @@ class AuthoredMaterialContactAdapter:
             paths=paths,
             scale=scale,
             retime_policy=retime_policy,
+            material_clearance_policy=policy,
+            target_maximum_material_clearance_m=target_maximum,
         )
 
     def validate_for_query(self, query: Any) -> None:
@@ -459,6 +523,13 @@ class AuthoredMaterialContactAdapter:
                 "query_binding_sha256": self._query_binding_sha256,
                 "clearance_scale": self._scale,
                 "retime_policy": self._retime_policy,
+                "material_clearance_policy_sha256": (
+                    self._material_clearance_policy_sha256
+                ),
+                "material_clearance_policy": self._material_clearance_policy,
+                "target_maximum_material_clearance_m": (
+                    self._target_maximum_material_clearance_m
+                ),
                 "material_effector_resolution": MATERIAL_EFFECTOR_RESOLUTION,
                 "target_material_gap_m": TARGET_MATERIAL_GAP_M,
                 "target_residual_limit_m": TARGET_RESIDUAL_LIMIT_M,

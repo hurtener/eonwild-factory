@@ -60,6 +60,27 @@ def _query_kwargs(inputs):
     }
 
 
+def _policy(maximum_clearance_body_heights=0.125):
+    return {
+        "schema": "eonwild.motion.authored-material-clearance-policy.v1",
+        "id": "heavy-biped-authored-material-clearance",
+        "version": 1,
+        "model": "body_height_fraction.v1",
+        "maximum_clearance_body_heights": maximum_clearance_body_heights,
+        "classification": "source_backed_engineering_candidate",
+    }
+
+
+def _build(inputs, capsule=None):
+    return AuthoredMaterialContactAdapter.build(
+        inputs["query"],
+        _capsule() if capsule is None else capsule,
+        authored_source=b"source",
+        material_clearance_policy=_policy(),
+        body_height_m=inputs["query"]._context.body_height,
+    )
+
+
 def test_adapter_applies_material_contact_path_at_keys_and_offgrid():
     inputs = _inputs()
     bare = inputs["query"]
@@ -68,6 +89,8 @@ def test_adapter_applies_material_contact_path_at_keys_and_offgrid():
         bare,
         capsule,
         authored_source=b"source",
+        material_clearance_policy=_policy(),
+        body_height_m=bare._context.body_height,
     )
     capsule["feet"]["left"]["clearance_m"][1] = 99.0
     query = SourceMotionQuery(
@@ -108,13 +131,64 @@ def test_adapter_applies_material_contact_path_at_keys_and_offgrid():
     )
 
 
+def test_material_clearance_policy_owns_scale_independently_of_reference_lift():
+    inputs = _inputs()
+    query = inputs["query"]
+    original = query._sample_row
+
+    def exaggerated_reference_lift(time_s, *, apply_clearance):
+        row = original(time_s, apply_clearance=apply_clearance)
+        for foot in row["feet"].values():
+            foot["height_m"] = 99.0
+        return row
+
+    query._sample_row = exaggerated_reference_lift
+    adapter = _build(inputs)
+    expected_maximum = 0.125 * query._context.body_height
+    assert adapter._target_maximum_material_clearance_m == pytest.approx(
+        expected_maximum
+    )
+    assert adapter._scale == pytest.approx(expected_maximum / 0.2)
+    binding = adapter.binding()
+    assert binding["material_clearance_policy"] == _policy()
+    assert binding["target_maximum_material_clearance_m"] == pytest.approx(
+        expected_maximum
+    )
+
+
+def test_adapter_requires_bound_material_clearance_policy_and_body_height():
+    inputs = _inputs()
+    query = inputs["query"]
+    with pytest.raises(ContractError, match="complete material-clearance policy"):
+        AuthoredMaterialContactAdapter.build(
+            query,
+            _capsule(),
+            authored_source=b"source",
+            body_height_m=query._context.body_height,
+        )
+    with pytest.raises(ContractError, match="body height differs"):
+        AuthoredMaterialContactAdapter.build(
+            query,
+            _capsule(),
+            authored_source=b"source",
+            material_clearance_policy=_policy(),
+            body_height_m=query._context.body_height + 0.01,
+        )
+    malformed = _policy()
+    malformed["maximum_clearance_body_heights"] = True
+    with pytest.raises(ContractError, match="must be finite numeric"):
+        AuthoredMaterialContactAdapter.build(
+            query,
+            _capsule(),
+            authored_source=b"source",
+            material_clearance_policy=malformed,
+            body_height_m=query._context.body_height,
+        )
+
+
 def test_adapter_rejects_cross_query_reuse_and_internal_tamper():
     inputs = _inputs()
-    adapter = AuthoredMaterialContactAdapter.build(
-        inputs["query"],
-        _capsule(),
-        authored_source=b"source",
-    )
+    adapter = _build(inputs)
     wrong = deepcopy(inputs["plan"])
     wrong["performance"]["pelvis_yaw_degrees"] = 1.0
     with pytest.raises(ContractError, match="another source query"):
@@ -129,9 +203,7 @@ def test_adapter_rejects_cross_query_reuse_and_internal_tamper():
 
 def test_adapter_rejects_replaced_derived_path():
     inputs = _inputs()
-    adapter = AuthoredMaterialContactAdapter.build(
-        inputs["query"], _capsule(), authored_source=b"source"
-    )
+    adapter = _build(inputs)
     query = SourceMotionQuery(
         **_query_kwargs(inputs), authored_material_contact=adapter
     )
@@ -149,16 +221,14 @@ def test_adapter_rejects_unbound_authored_source_bytes():
             inputs["query"],
             _capsule(),
             authored_source=b"another source",
+            material_clearance_policy=_policy(),
+            body_height_m=inputs["query"]._context.body_height,
         )
 
 
 def test_constant_skin_law_binds_adapter_and_keeps_pointwise_checks():
     inputs = _inputs()
-    adapter = AuthoredMaterialContactAdapter.build(
-        inputs["query"],
-        _capsule(),
-        authored_source=b"source",
-    )
+    adapter = _build(inputs)
     query = SourceMotionQuery(
         **_query_kwargs(inputs), authored_material_contact=adapter
     )
@@ -209,14 +279,14 @@ def test_adapter_fails_closed_on_malformed_capsules(mutation):
             inputs["query"],
             capsule,
             authored_source=b"source",
+            material_clearance_policy=_policy(),
+            body_height_m=inputs["query"]._context.body_height,
         )
 
 
 def test_contact_switches_preserve_zero_height_and_consistent_row_phase():
     inputs = _inputs()
-    adapter = AuthoredMaterialContactAdapter.build(
-        inputs["query"], _capsule(), authored_source=b"source"
-    )
+    adapter = _build(inputs)
     query = SourceMotionQuery(
         **_query_kwargs(inputs), authored_material_contact=adapter
     )
