@@ -1670,6 +1670,10 @@ def verify_package(path: Path) -> dict:
         "authored-material-clearance-policy.json",
     }
     present_provenance = provenance_universe & set(manifest.get("files", {}))
+    if recipe.get("authored_material_reference") is not None and not present_provenance:
+        raise ContractError(
+            "authored material reference requires compile-set package provenance"
+        )
     baseline_snapshot = (
         read_json(path / "motion-baseline.json")
         if "motion-baseline.json" in present_provenance else None

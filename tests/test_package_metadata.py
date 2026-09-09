@@ -82,7 +82,7 @@ def test_complete_old_package_remains_inspectable_without_recompiling(candidate)
     assert result['production_approved'] is False
 
 
-def test_package_metadata_includes_authored_material_reference_input(candidate, tmp_path):
+def test_unbound_authored_material_reference_rejects_legacy_package(candidate, tmp_path):
     out = tmp_path / 'candidate'
     shutil.copytree(candidate, out)
     recipe = json.loads((out / 'recipe.json').read_text())
@@ -95,7 +95,10 @@ def test_package_metadata_includes_authored_material_reference_input(candidate, 
     write_json(out / 'inputs.lock.json', lock)
     rehash(out, 'recipe.json')
     rehash(out, 'inputs.lock.json')
-    assert verify_package(out)['integrity'] == 'PASS'
+    with pytest.raises(
+        ContractError, match='requires compile-set package provenance'
+    ):
+        verify_package(out)
 
 
 @pytest.mark.parametrize('case', [
