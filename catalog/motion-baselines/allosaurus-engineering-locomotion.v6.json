@@ -1,0 +1,116 @@
+{
+  "animal": {
+    "path": "catalog/animals/allosaurus-composite-engineering.adult.v5.json",
+    "sha256": "bbb76682ee4414c688fc9814d86a5463bacb767c466b9eabf6ebf4d2ceac2261"
+  },
+  "articulation_profile": {
+    "path": "catalog/articulation/heavy-biped.allosaurus-engineering.v2.json",
+    "sha256": "5a353e237a6be84502f092cb64aa5a0bd4529e843534a59d888b6fb3409e0ede"
+  },
+  "contact_profile": {
+    "path": "catalog/contacts/allosaurus-engineering.v5.json",
+    "sha256": "cf47fcdf62faf11a8c1d887f9864c8caec2f90b994ac3c98e966888ba9bbeb05"
+  },
+  "family": "heavy-predatory-biped",
+  "forward_axis": [
+    0.0,
+    0.0,
+    1.0
+  ],
+  "id": "allosaurus-engineering-locomotion.v6",
+  "locomotion_response_policy": {
+    "regimes": {
+      "airborne": {
+        "body_response": {
+          "carrier_mapping": {
+            "gaze_elevation": "constant_local_response",
+            "neck_counterpitch": "early_late_support_exchange",
+            "pelvis_forward_velocity": "integrated_early_late_support_exchange",
+            "pelvis_load_acceptance": "per_limb_early_support",
+            "pelvis_roll": "bilateral_support_difference",
+            "pelvis_support_pitch": "early_late_support_exchange",
+            "pelvis_sway": "bilateral_support_difference",
+            "pelvis_yaw": "bilateral_support_difference",
+            "tail_counterpitch": "early_late_support_exchange",
+            "tail_yaw": "lagged_bilateral_support_difference",
+            "upper_trunk_counterpitch": "early_late_support_exchange",
+            "upper_trunk_load_acceptance_pitch": "per_limb_early_support"
+          },
+          "forward_speed": {
+            "model": "reference_scaled_support_exchange.v1",
+            "reference_pelvis_forward_velocity_modulation_fraction": 0.14519967609352594,
+            "reference_speed_body_heights_per_s": 0.4878048780487805
+          },
+          "model": "explicit_contact_flight_coordination.v1",
+          "schema": "eonwild.motion.airborne-body-response.v1"
+        },
+        "intent_resolution": {
+          "model": "airborne_choreography_passthrough.v1"
+        }
+      },
+      "grounded": {
+        "authored_material_clearance": {
+          "path": "catalog/locomotion-response/heavy-biped-authored-material-clearance.v1.json",
+          "sha256": "42be9b1162838f5e3bdfbbef6570f749e0ef75cc2aec204bb5168e0945062941"
+        },
+        "body_response": {
+          "gait_response": {
+            "model": "reference_scaled_excursion_exchange.v1",
+            "reference": {
+              "pelvis_excursion_body_heights": 0.016,
+              "pelvis_forward_velocity_modulation_fraction": 0.14519967609352594,
+              "step_length_body_heights": 0.6,
+              "step_period_s": 1.23
+            },
+            "schema": "eonwild.motion.gait-response-policy.v1"
+          },
+          "model": "existing_grounded_shared_style.v1"
+        },
+        "intent_resolution": {
+          "path": "catalog/locomotion-response/heavy-biped-grounded-reference.v1.json",
+          "sha256": "d143e19026499ca6071a44995c1ce35e32f5a541b2b8667a7a9fbcc863f67980"
+        },
+        "neutral_support_profile": {
+          "path": "catalog/calibration/allosaurus-engineering-support.v5.json",
+          "sha256": "72a26a7df473a1af150b2b5b59cc49604c5624064ada1d837c593b1492044624"
+        }
+      }
+    },
+    "schema": "eonwild.motion.motion-set-locomotion-response.v1"
+  },
+  "neutral_pose_profile": {
+    "path": "catalog/calibration/allosaurus-engineering-neutral.v5.json",
+    "sha256": "85e35288fb09dd003217d7f748d02e26152c845281bc122d623350167fdf053b"
+  },
+  "performance_profile": {
+    "path": "catalog/performance/heavy-biped.grounded-weight-transfer.v1.json",
+    "sha256": "517b8df482d8c0d6d1f28494eb45c2a488a2e1cd11f43db7e47225d7b6c988c9"
+  },
+  "rig": {
+    "path": "catalog/rigs/allosaurus-engineering.v2.json",
+    "sha256": "63b793580864acdde8d57f7faa876cd7c1c888191c2da2cca06036b29a6d9dd8"
+  },
+  "schema": "eonwild.motion.motion-baseline.v2",
+  "solve_policy": {
+    "canonical_support_anchors": true,
+    "grounded_transition_clearance": "material_floor_scaled_excess.v1",
+    "representation": "CUBICSPLINE",
+    "schema": "eonwild.motion.solve-policy.v1",
+    "skin_refinement": true,
+    "skin_target_law": "canonical_constant_skin_targets.v1"
+  },
+  "source": {
+    "path": "assets/sha256/efea688cf032a42f731d2bc7aa7e484b081b5047e1f9da21a781dd2003da6e79.glb",
+    "sha256": "efea688cf032a42f731d2bc7aa7e484b081b5047e1f9da21a781dd2003da6e79"
+  },
+  "supported_programs": [
+    "grounded_gait",
+    "gait_transition"
+  ],
+  "up_axis": [
+    0.0,
+    1.0,
+    0.0
+  ],
+  "version": 6
+}
