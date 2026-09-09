@@ -22,6 +22,9 @@ SOURCE = (
 RIG = ROOT / "catalog/rigs/allosaurus-engineering.v2.json"
 CONTACT = ROOT / "catalog/contacts/allosaurus-engineering.v4.json"
 CONFIG = ROOT / "catalog/standing-preparation/allosaurus-engineering-standing.v1.json"
+WIDE_CONFIG = (
+    ROOT / "catalog/standing-preparation/allosaurus-engineering-standing.v3.json"
+)
 
 
 def inputs():
@@ -88,6 +91,31 @@ def test_actual_allosaurus_standing_is_deterministic_bound_and_bilateral():
     )
 
 
+def test_actual_allosaurus_standing_width_is_rotational_and_ordered():
+    source, roles, contact, _ = inputs()
+    config = json.loads(WIDE_CONFIG.read_text())
+    raw, receipt = prepare_standing_pose(
+        source, semantic_roles=roles, contact_profile=contact, config=config
+    )
+    assert raw
+    policy = receipt["stance_width_policy"]
+    assert policy["model"] == "length_weighted_semantic_lateral_rotation.v1"
+    assert policy["translations_or_stretch_applied"] is False
+    assert policy["target_over_hindlimb"] == pytest.approx(0.376)
+    assert receipt["stance_widths_m"]["after"]["mtp"] == pytest.approx(
+        policy["target_mtp_width_m"], abs=2e-6
+    )
+    assert (
+        receipt["stance_widths_m"]["after"]["mtp"]
+        > (receipt["stance_widths_m"]["before"]["mtp"])
+    )
+    assert receipt["segment_length_validation"]["maximum_difference_m"] < 2e-6
+    order = policy["lateral_order_sign"]
+    for joint in ("hip", "knee", "ankle", "mtp"):
+        coordinates = receipt["lateral_joint_coordinates_m"]["after"]
+        assert (coordinates["right"][joint] - coordinates["left"][joint]) * order > 0
+
+
 @pytest.mark.parametrize(
     "case",
     [
@@ -98,6 +126,7 @@ def test_actual_allosaurus_standing_is_deterministic_bound_and_bilateral():
         "nonuniform_scale",
         "reflected_scale",
         "zero_segment",
+        "width",
     ],
 )
 def test_standing_rejects_unbound_or_incompatible_inputs(case):
@@ -110,6 +139,8 @@ def test_standing_rejects_unbound_or_incompatible_inputs(case):
         )
     elif case == "angle":
         config["knee_interior_degrees"] = 180.0
+    elif case == "width":
+        config["stance_width_over_hindlimb"] = 1.01
     elif case in {"nonuniform_scale", "reflected_scale", "zero_segment"}:
         document = deepcopy(source.document)
         root = source.name_to_node[roles["root"]]
@@ -133,6 +164,7 @@ def test_standing_rejects_unbound_or_incompatible_inputs(case):
 
 def test_standing_pose_uses_semantic_names_not_literal_bone_constants():
     source, roles, contact, config = inputs()
+    config = json.loads(WIDE_CONFIG.read_text())
     original_raw, _ = prepare_standing_pose(
         source,
         semantic_roles=deepcopy(roles),
@@ -160,7 +192,7 @@ def test_standing_pose_uses_semantic_names_not_literal_bone_constants():
     assert raw
     assert receipt["angles_degrees"]["after"]["left"][
         "knee_interior_degrees"
-    ] == pytest.approx(125.0, abs=5e-5)
+    ] == pytest.approx(129.0, abs=5e-5)
     original = Glb.from_bytes(original_raw)
     result = Glb.from_bytes(raw)
     original_contact = deepcopy(json.loads(CONTACT.read_text()))
@@ -190,6 +222,7 @@ def test_standing_pose_uses_semantic_names_not_literal_bone_constants():
 
 def test_standing_pose_respects_rotated_scaled_source_world_frame():
     source, roles, contact, config = inputs()
+    config = json.loads(WIDE_CONFIG.read_text())
     document = deepcopy(source.document)
     root = source.name_to_node[roles["root"]]
     node = document["nodes"][root]
@@ -216,9 +249,13 @@ def test_standing_pose_respects_rotated_scaled_source_world_frame():
         ] == pytest.approx(30.0, abs=3e-5)
         assert receipt["angles_degrees"]["after"][side][
             "knee_interior_degrees"
-        ] == pytest.approx(125.0, abs=5e-5)
+        ] == pytest.approx(129.0, abs=5e-5)
         assert receipt["angles_degrees"]["after"][side][
             "metatarsus_sagittal_degrees"
         ] == pytest.approx(
             receipt["realized_metatarsus_sagittal_degrees"][side], abs=2e-5
         )
+    assert receipt["stance_widths_m"]["after"]["mtp"] == pytest.approx(
+        receipt["stance_width_policy"]["target_mtp_width_m"], abs=2e-6
+    )
+    assert receipt["segment_length_validation"]["maximum_difference_m"] < 2e-6
