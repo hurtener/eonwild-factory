@@ -64,6 +64,9 @@ def verify_compiled_motion_set(
         raise ContractError("motion package names must be unique")
     if len(set(handoffs)) != len(handoffs):
         raise ContractError("handoff pairs must be unique")
+    labels = [f"{transition}-to-{steady}" for transition, steady in handoffs]
+    if len(set(labels)) != len(labels):
+        raise ContractError("handoff pairs produce ambiguous evidence names")
     selected = set(motions)
     if any(
         transition not in selected or steady not in selected
@@ -115,8 +118,7 @@ def verify_compiled_motion_set(
             "MOTION_SET_PACKAGE", name, json.dumps(result["packages"][name]), flush=True
         )
 
-    for transition, steady in handoffs:
-        label = f"{transition}-to-{steady}"
+    for (transition, steady), label in zip(handoffs, labels, strict=True):
         try:
             receipt = verify_handoff(
                 package_paths[transition], package_paths[steady], root=root

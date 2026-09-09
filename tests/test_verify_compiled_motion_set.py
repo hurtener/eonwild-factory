@@ -156,10 +156,41 @@ def test_rejects_unselected_or_escaping_handoff_names_before_output(tmp_path):
     assert not output.exists()
 
 
+def test_rejects_handoff_pairs_with_colliding_evidence_names(tmp_path):
+    packages = tmp_path / "packages"
+    motions = ("a-to-b", "c", "a", "b-to-c")
+    for name in motions:
+        (packages / name).mkdir(parents=True)
+    output = tmp_path / "evidence"
+    assert (
+        MODULE.main(
+            [
+                "--root",
+                str(ROOT),
+                "--packages",
+                str(packages),
+                "--motions",
+                *motions,
+                "--handoff",
+                "a-to-b:c",
+                "--handoff",
+                "a:b-to-c",
+                "--output",
+                str(output),
+            ]
+        )
+        == 1
+    )
+    assert not output.exists()
+
+
 def test_hosted_workflow_compiles_current_set_and_checks_serialized_joins():
     workflow = (ROOT / ".github/workflows/shared-motion-set.yml").read_text()
     assert "workflow_dispatch:" in workflow
     assert "timeout-minutes: 180" in workflow
+    current_set = "catalog/motion-sets/tarbosaurus-pin-552-1-adult-locomotion.v2.json"
+    assert workflow.count(current_set) == 2
+    assert "tarbosaurus-pin-552-1-adult-grounded.v1.json" not in workflow
     assert "--motions walk fast-walk walk-start walk-stop" in workflow
     assert "--interpolation CUBICSPLINE" in workflow
     assert "tools/verify_compiled_motion_set.py" in workflow
@@ -167,3 +198,6 @@ def test_hosted_workflow_compiles_current_set_and_checks_serialized_joins():
     assert workflow.count("--handoff walk-stop:walk") == 1
     assert "shared-locomotion-set-packages-and-handoffs" in workflow
     assert "path: out/shared-locomotion-set-ci" in workflow
+    assert "set +e" in workflow
+    assert "status=${PIPESTATUS[0]}" in workflow
+    assert "compile-set.exit-code.txt" in workflow

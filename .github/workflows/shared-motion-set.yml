@@ -36,21 +36,23 @@ jobs:
           git rev-parse HEAD > out/shared-locomotion-set-ci/source.txt
           git rev-parse 'HEAD^{tree}' > out/shared-locomotion-set-ci/tree.txt
           git status --porcelain=v1 > out/shared-locomotion-set-ci/status.txt
-          sha256sum catalog/motion-sets/tarbosaurus-pin-552-1-adult-grounded.v1.json > out/shared-locomotion-set-ci/motion-set.sha256
+          sha256sum catalog/motion-sets/tarbosaurus-pin-552-1-adult-locomotion.v2.json > out/shared-locomotion-set-ci/motion-set.sha256
       - run: python -m pip install -e .
       - run: python -m pip freeze > out/shared-locomotion-set-ci/python-packages.txt
       - name: Compile and reopen the actual current shared set
         continue-on-error: true
         shell: bash
         run: |
+          set +e
           set -uo pipefail
           python -m eonwild_motion.factory compile-set \
-            --motion-set catalog/motion-sets/tarbosaurus-pin-552-1-adult-grounded.v1.json \
+            --motion-set catalog/motion-sets/tarbosaurus-pin-552-1-adult-locomotion.v2.json \
             --motions walk fast-walk walk-start walk-stop \
             --interpolation CUBICSPLINE \
             --output out/shared-locomotion-set-ci/packages \
             2>&1 | tee out/shared-locomotion-set-ci/compile-set.log
           status=${PIPESTATUS[0]}
+          set -e
           echo "$status" > out/shared-locomotion-set-ci/compile-set.exit-code.txt
           exit "$status"
       - name: Verify emitted start and stop joins against shared walk
