@@ -23,3 +23,18 @@
 - A Unity root has one final movement owner; world logic confirms bite/grip/
   damage/yield. Animation cues must not invent gameplay facts.
 - Ship source, recipes, hashes, tests and native-time review media together.
+- An imported bind, A, or T pose is rigging input, never authority for a living
+  posture. Articulation and posture values require cited scientific evidence or
+  an explicit authored estimate with confidence, provenance, and limitations.
+- Keep bind pose, calibrated standing neutral, usual standing, resting, ready,
+  and balance-recovery stances as distinct versioned roles. Do not hide a
+  behavior stance inside rig rest transforms or a motion-specific body override.
+- Stance and gait policies own foot placement. Configurable defaults may use a
+  staggered stance, rear-foot initiation, wider balance-recovery support, and a
+  narrower locomotion track only when their authored/evidence status is stated;
+  do not present them as universal dinosaur biology.
+- Apply floor, contact, reach, and final full-skin constraints after every
+  posture or stance change. Move between stances through declared contact
+  choreography, never a pose teleport or silent anchor slide.
+- Keep posture and stance differences in generic semantic calibration and
+  behavior data. Do not add species branches to shared solvers.
