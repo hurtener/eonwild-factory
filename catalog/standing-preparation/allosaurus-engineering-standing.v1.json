@@ -17,6 +17,11 @@
   "hip_sagittal_degrees": 30.0,
   "id": "allosaurus-engineering-standing.v1",
   "knee_interior_degrees": 125.0,
+  "bilateral_material_floor_refinement": {
+    "bisection_iterations": 32,
+    "maximum_adjustment_degrees": 3.0,
+    "model": "bounded_metatarsus_bisection.v1"
+  },
   "limitations": [
     "This is a low-confidence authored standing estimate, not a fossil-derived joint reconstruction.",
     "The MTP/pad and toe world orientations are retained after the declared metatarsus direction is applied; distal posture remains separately reviewable.",

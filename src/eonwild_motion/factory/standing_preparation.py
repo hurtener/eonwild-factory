@@ -25,6 +25,7 @@ from ..solve.airborne_gait import (
 )
 from ..solve.skin_rig import SkinRig
 from ..solve.whole_body_gait_transition import _encode
+from .quality import require_supported_geometry
 
 
 SCHEMA = "eonwild.motion.standing-pose-preparation.v1"
@@ -92,6 +93,7 @@ def prepare_standing_pose(
         "hip_sagittal_degrees",
         "knee_interior_degrees",
         "metatarsus_sagittal_degrees",
+        "bilateral_material_floor_refinement",
         "classification",
         "evidence",
         "limitations",
@@ -111,6 +113,7 @@ def prepare_standing_pose(
         raise ContractError("standing preparation source bytes differ from its binding")
     if source.document.get("animations"):
         raise ContractError("standing preparation requires an animation-free source")
+    require_supported_geometry(source)
     coordinate = config["coordinate"]
     if (
         not isinstance(coordinate, Mapping)
@@ -133,6 +136,22 @@ def prepare_standing_pose(
     metatarsus_degrees = _finite(
         config["metatarsus_sagittal_degrees"], "standing metatarsus angle"
     )
+    refinement = config["bilateral_material_floor_refinement"]
+    if (
+        not isinstance(refinement, Mapping)
+        or set(refinement)
+        != {"model", "maximum_adjustment_degrees", "bisection_iterations"}
+        or refinement["model"] != "bounded_metatarsus_bisection.v1"
+        or type(refinement["bisection_iterations"]) is not int
+        or not 1 <= refinement["bisection_iterations"] <= 64
+    ):
+        raise ContractError("standing bilateral material refinement is invalid")
+    refinement_limit = _finite(
+        refinement["maximum_adjustment_degrees"],
+        "standing bilateral material refinement limit",
+    )
+    if not 0 < refinement_limit <= 10:
+        raise ContractError("standing bilateral material refinement limit is invalid")
     if (
         not -89.0 < hip_degrees < 89.0
         or not 1.0 < knee_degrees < 179.0
@@ -262,11 +281,15 @@ def prepare_standing_pose(
             float(np.linalg.norm(kp - hp)),
             float(np.linalg.norm(ap - kp)),
         )
+        if upper_length <= 1e-9 or lower_length <= 1e-9:
+            raise ContractError("standing leg contains a zero-length segment")
         lengths[side] = {"upper_m": upper_length, "lower_m": lower_length}
         upper_lateral = float((kp - hp) @ lateral)
         lower_lateral = float((ap - kp) @ lateral)
         upper_sagittal = math.sqrt(max(0.0, upper_length**2 - upper_lateral**2))
         lower_sagittal = math.sqrt(max(0.0, lower_length**2 - lower_lateral**2))
+        if upper_sagittal <= 1e-9 or lower_sagittal <= 1e-9:
+            raise ContractError("standing leg has degenerate sagittal geometry")
         cosine_delta = (
             -upper_length * lower_length * math.cos(math.radians(knee_degrees))
             - upper_lateral * lower_lateral
@@ -303,6 +326,8 @@ def prepare_standing_pose(
         foot_lateral = float(original_vector @ lateral)
         foot_length = float(np.linalg.norm(vector))
         foot_sagittal = math.sqrt(max(0.0, foot_length**2 - foot_lateral**2))
+        if foot_length <= 1e-9 or foot_sagittal <= 1e-9:
+            raise ContractError("standing metatarsus has degenerate sagittal geometry")
         ankle_reference_local[side] = tuple(rot[ankle])
         foot_reference_local[side] = tuple(rot[foot])
         metatarsus_geometry[side] = (vector, foot_lateral, foot_sagittal)
@@ -315,14 +340,15 @@ def prepare_standing_pose(
     high_side = max(initial_minima, key=initial_minima.get)
     low_side = "right" if high_side == "left" else "left"
     target_minimum = initial_minima[low_side]
-    lo, hi = metatarsus_degrees - 3.0, metatarsus_degrees + 3.0
+    lo = metatarsus_degrees - refinement_limit
+    hi = metatarsus_degrees + refinement_limit
     apply_metatarsus(high_side, lo)
     f_lo = foot_minimum(high_side) - target_minimum
     apply_metatarsus(high_side, hi)
     f_hi = foot_minimum(high_side) - target_minimum
     if f_lo * f_hi > 0:
         raise ContractError("standing bilateral material refinement is not bracketed")
-    for _ in range(32):
+    for _ in range(refinement["bisection_iterations"]):
         mid = 0.5 * (lo + hi)
         apply_metatarsus(high_side, mid)
         value = foot_minimum(high_side) - target_minimum
@@ -430,6 +456,29 @@ def prepare_standing_pose(
         float(np.max(np.abs(reopened_worlds[node, :3, :3] - base)))
         for node, base in base_distal_rotations.items()
     )
+    for side in ("left", "right"):
+        if abs(after_angles[side]["hip_sagittal_degrees"] - hip_degrees) > 2e-4:
+            raise ContractError(
+                "standing realized hip angle differs from its declaration"
+            )
+        if abs(after_angles[side]["knee_interior_degrees"] - knee_degrees) > 2e-4:
+            raise ContractError(
+                "standing realized knee angle differs from its declaration"
+            )
+        if (
+            abs(
+                after_angles[side]["metatarsus_sagittal_degrees"]
+                - realized_metatarsus[side]
+            )
+            > 2e-4
+            or abs(realized_metatarsus[side] - metatarsus_degrees)
+            > refinement_limit + 1e-9
+        ):
+            raise ContractError(
+                "standing realized metatarsus angle differs from its declaration"
+            )
+    if maximum_distal_orientation_difference > 3e-6:
+        raise ContractError("standing preparation changed retained pad/toe orientation")
     receipt = {
         "schema": "eonwild.motion.standing-pose-preparation-receipt.v1",
         "status": "ENGINEERING_CANDIDATE",
@@ -442,6 +491,13 @@ def prepare_standing_pose(
         "animations": len(reopened.document.get("animations", [])),
         "angles_degrees": {"before": before_angles, "after": after_angles},
         "realized_metatarsus_sagittal_degrees": realized_metatarsus,
+        "bilateral_material_floor_refinement": {
+            **refinement,
+            "realized_adjustment_degrees": {
+                side: realized_metatarsus[side] - metatarsus_degrees
+                for side in ("left", "right")
+            },
+        },
         "joint_centers_source_world_m": {
             state: {
                 side: {name: point.tolist() for name, point in values[side].items()}

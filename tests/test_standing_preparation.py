@@ -88,7 +88,18 @@ def test_actual_allosaurus_standing_is_deterministic_bound_and_bilateral():
     )
 
 
-@pytest.mark.parametrize("case", ["hash", "topology", "angle", "unknown"])
+@pytest.mark.parametrize(
+    "case",
+    [
+        "hash",
+        "topology",
+        "angle",
+        "unknown",
+        "nonuniform_scale",
+        "reflected_scale",
+        "zero_segment",
+    ],
+)
 def test_standing_rejects_unbound_or_incompatible_inputs(case):
     source, roles, contact, config = inputs()
     if case == "hash":
@@ -99,6 +110,19 @@ def test_standing_rejects_unbound_or_incompatible_inputs(case):
         )
     elif case == "angle":
         config["knee_interior_degrees"] = 180.0
+    elif case in {"nonuniform_scale", "reflected_scale", "zero_segment"}:
+        document = deepcopy(source.document)
+        root = source.name_to_node[roles["root"]]
+        if case == "nonuniform_scale":
+            document["nodes"][root]["scale"] = [1.1, 1.0, 0.9]
+        elif case == "reflected_scale":
+            document["nodes"][root]["scale"] = [-1.0, 1.0, 1.0]
+        else:
+            knee = source.name_to_node[roles["legs"]["left"]["contactChain"][1]]
+            document["nodes"][knee]["translation"] = [0.0, 0.0, 0.0]
+        source = Glb.from_bytes(_encode(document, source.binary))
+        config["source_sha256"] = hashlib.sha256(source.raw).hexdigest()
+        contact["source"]["sha256"] = config["source_sha256"]
     else:
         config["per_clip_offset"] = 1
     with pytest.raises(ContractError):
