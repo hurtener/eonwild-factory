@@ -23,9 +23,9 @@ python -m eonwild_motion.factory.standing_preparation \
   --output <new-empty-output-directory>
 ```
 
-The configuration is `catalog/standing-preparation/allosaurus-engineering-standing.v1.json`, with schema `eonwild.motion.standing-pose-preparation.v1`, model `bilateral_semantic_sagittal_standing.v1`, and explicit `hip_sagittal_degrees`, `knee_interior_degrees`, and `metatarsus_sagittal_degrees` inputs. The public function is `prepare_standing_pose(source, *, semantic_roles, contact_profile, config)`. The command must write a new output rather than replace the input source; the output directory contains `geometry.glb` and `receipt.json`.
+The configuration is `catalog/standing-preparation/allosaurus-engineering-standing.v1.json`, with schema `eonwild.motion.standing-pose-preparation.v1`, model `bilateral_semantic_sagittal_standing.v1`, and explicit `hip_sagittal_degrees`, `knee_interior_degrees`, and `metatarsus_sagittal_degrees` inputs. Its `bilateral_material_floor_refinement` uses the declared `bounded_metatarsus_bisection.v1` model, a maximum adjustment of 3 degrees, and 32 bisection iterations; the receipt records each side's realized adjustment. The public function is `prepare_standing_pose(source, *, semantic_roles, contact_profile, config)`. The command must write a new output rather than replace the input source; the output directory contains `geometry.glb` and `receipt.json`.
 
-The initial implementation is bound to commit `8ab72cdd99e4f531308704815e991ecf344973ca`. Its derived candidate geometry has SHA-256 `b6be08e94f5ba3a24e83023669393c7eba922c02afd22e97d518170a4739027e`; this identity records an engineering candidate rather than visual or production approval.
+The reviewed implementation is bound to commit `b6fddc8da6ec3492751eccb2110831ff90aae8a8`. Its derived candidate geometry has SHA-256 `39ee2de34e6571ec5d4a2c100dc990d70daa3575b9b5abf7ff68610fc0764b82`. The new identity reflects the bound refinement policy and provenance metadata; its binary payload and node transforms are identical to candidate 004. This remains an engineering candidate rather than visual or production approval.
 
 Tarbosaurus is outside this calibration. Its source, animal configuration, shared baseline, emitted packages, and reviewed media remain byte-identical unless a separate versioned change is explicitly made.
 
