@@ -229,6 +229,8 @@ def test_opt_in_response_reaches_actual_pose_application_and_rejects_receipt_tam
         pelvis_load_acceptance_body_heights=0.005,
         upper_trunk_load_acceptance_pitch_degrees=0.2,
         pelvis_forward_velocity_modulation_fraction=0.1,
+        support_timed_axial_carrier=True,
+        center_tail=True,
         skin_refinement=False,
     )
     plan = decorate_airborne_response_plan(
@@ -268,6 +270,11 @@ def test_opt_in_response_reaches_actual_pose_application_and_rejects_receipt_tam
         "_support_timed_load_acceptance_pulse",
         legacy_carrier_must_not_run,
     )
+    monkeypatch.setattr(
+        performance_module,
+        "_support_timed_axial_clock",
+        legacy_carrier_must_not_run,
+    )
     apply_performance(
         source,
         translations,
@@ -282,6 +289,23 @@ def test_opt_in_response_reaches_actual_pose_application_and_rejects_receipt_tam
     )
     after = np.asarray(translations[source.name_to_node[roles["pelvis"]]], dtype=float)
     assert np.linalg.norm(after - before) > 1e-6
+    hip_left = source.name_to_node[roles["legs"]["left"]["contactChain"][0]]
+    hip_right = source.name_to_node[roles["legs"]["right"]["contactChain"][0]]
+    worlds = _world_matrices(
+        source, source.rest_translation, source.rest_rotation, source.rest_scale
+    )
+    lateral = np.asarray((1.0, 0.0, 0.0))
+    left_sign = -math.copysign(
+        1.0,
+        float(
+            (
+                np.asarray(worlds[hip_right])[:3, 3]
+                - np.asarray(worlds[hip_left])[:3, 3]
+            )
+            @ lateral
+        ),
+    )
+    assert float((after - before) @ lateral) * left_sign > 0
     plan["airborne_body_response"]["resolution"][
         "resolved_pelvis_forward_velocity_modulation_fraction"
     ] = 0.9

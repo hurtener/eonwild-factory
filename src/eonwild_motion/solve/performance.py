@@ -271,6 +271,29 @@ def _support_directed_pulse(source, base_worlds, roles, plan, phase, gain, later
     return gain * left_sign * math.cos(math.pi * stance_clock)
 
 
+def _semantic_left_lateral_sign(source, base_worlds, roles, lateral):
+    """Return the declared lateral sign of the semantic left hip."""
+    try:
+        hips = {
+            side: source.name_to_node[roles["legs"][side]["contactChain"][0]]
+            for side in ("left", "right")
+        }
+    except (KeyError, TypeError, IndexError) as exc:
+        raise ContractError(
+            "semantic lateral response requires bilateral hip roles"
+        ) from exc
+    positions = {
+        side: np.asarray(_world_position(base_worlds[index]), dtype=float)
+        for side, index in hips.items()
+    }
+    separation = float((positions["right"] - positions["left"]) @ lateral)
+    if not math.isfinite(separation) or abs(separation) <= 1e-8:
+        raise ContractError(
+            "semantic hips must be separated along the declared lateral axis"
+        )
+    return -math.copysign(1.0, separation)
+
+
 def _support_timed_sagittal_pulse(plan, phase, gain):
     """C2 support clock shared by both sides of a grounded gait.
 
@@ -747,10 +770,14 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
     roll_pulse = pulse
     sagittal_pulse = 0.
     load_acceptance_pulse = 0.
+    response_lateral_sign = 1.0
     if response_state is not None:
-        sway_pulse = response_state.lateral_support
+        response_lateral_sign = _semantic_left_lateral_sign(
+            source, base_worlds, roles, lateral
+        )
+        sway_pulse = response_lateral_sign * response_state.lateral_support
         roll_pulse = -sway_pulse
-        yaw_pulse = response_state.lateral_support
+        yaw_pulse = sway_pulse
         sagittal_pulse = response_state.sagittal_support
         load_acceptance_pulse = response_state.load_acceptance
     elif p.support_directed_pelvis_carrier:
@@ -765,7 +792,7 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
     if response_state is None and p.support_timed_load_acceptance_carrier:
         load_acceptance_pulse = _support_timed_load_acceptance_pulse(
             plan, phase, gain)
-    if p.support_timed_axial_carrier:
+    if response_state is None and p.support_timed_axial_carrier:
         axial_clock = _support_timed_axial_clock(
             source, base_worlds, roles, plan, phase, gain, lateral)
         yaw_pulse = axial_clock[2]
@@ -873,7 +900,7 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
             )
             degrees = (
                 -p.tail_yaw_degrees * weights[i]
-                * tail_state.lagged_lateral_support
+                * response_lateral_sign * tail_state.lagged_lateral_support
             )
         elif axial_clock is None:
             degrees = (-gain * p.tail_yaw_degrees * weights[i]

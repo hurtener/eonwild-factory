@@ -108,6 +108,72 @@ def _airborne_gait_with_shared_articulation(
     )
 
 
+def _measure_bound_grounded_touchdown_geometry(
+    source: Glb,
+    *,
+    roles: dict,
+    contact_profile: dict,
+    locomotion_gait: GroundedGait,
+    articulation_profile: Any,
+    performance: Any,
+    gait_response_policy: dict,
+    source_geometry_sha256: str,
+    body_height_m: float,
+    up: np.ndarray,
+    forward: np.ndarray,
+) -> dict:
+    """Measure the source-owned touchdown request used by v2 resolution."""
+    provisional_performance, _ = resolve_gait_response(
+        performance, locomotion_gait, gait_response_policy
+    )
+    provisional_performance = replace(
+        provisional_performance,
+        canonical_support_anchors=True,
+        skin_refinement=True,
+    )
+    observation_plan = decorate_plan(
+        build_grounded_plan(locomotion_gait, body_height_m),
+        provisional_performance,
+    )
+    observation_solver_gait = AirborneGait(
+        step_period_s=locomotion_gait.step_period_s,
+        cycles=locomotion_gait.cycles,
+        sample_hz=locomotion_gait.sample_hz,
+        swing_hip_lift_degrees=locomotion_gait.swing_hip_lift_degrees,
+    )
+    observation_query = SourceMotionQuery(
+        source,
+        semantic_roles=roles,
+        solver_gait=observation_solver_gait,
+        locomotion_gait=locomotion_gait,
+        plan=observation_plan,
+        contact_profile=contact_profile,
+        up_axis=tuple(up),
+        forward_axis=tuple(forward),
+        source_clip=None,
+        legacy_overlay=False,
+        articulation_profile=articulation_profile,
+    )
+    observations = {
+        "source_geometry_sha256": source_geometry_sha256,
+        "body_height_m": body_height_m,
+        "gait_parameters_sha256": canonical_hash(
+            gait_parameters(locomotion_gait)
+        ),
+        "sides": {
+            "left": _thaw(
+                observation_query.grounded_touchdown_observation(0.0, "left")
+            ),
+            "right": _thaw(
+                observation_query.grounded_touchdown_observation(
+                    locomotion_gait.step_period_s, "right"
+                )
+            ),
+        },
+    }
+    return measure_grounded_touchdown_geometry(locomotion_gait, observations)
+
+
 def _load_recipe_document(recipe: Any, root: Path) -> tuple[dict, dict[str, Path]]:
     required = {"schema", "id", "version", "family", "program", "source", "rig", "program_profile", "forward_axis", "up_axis"}
     if not isinstance(recipe, dict) or set(recipe) - required - {"animal", "contact_profile", "performance_profile", "gait_profile", "articulation_profile", "description", "supersedes"} or not required <= set(recipe):
@@ -416,63 +482,30 @@ def compile_recipe(
                             "v2 grounded intent resolution requires a bound animal"
                         )
                     grounded_policy = response_policy["regimes"]["grounded"]
-                    provisional_performance, _ = resolve_gait_response(
-                        performance,
-                        locomotion_gait,
-                        grounded_policy["body_response"]["gait_response"],
-                    )
                     solve_policy = _motion_set_resolution.solve_policy
-                    provisional_performance = replace(
-                        provisional_performance,
-                        canonical_support_anchors=solve_policy[
-                            "canonical_support_anchors"
-                        ],
-                        skin_refinement=solve_policy["skin_refinement"],
-                    )
-                    observation_plan = decorate_plan(
-                        build_grounded_plan(locomotion_gait, height),
-                        provisional_performance,
-                    )
-                    observation_solver_gait = AirborneGait(
-                        step_period_s=locomotion_gait.step_period_s,
-                        cycles=locomotion_gait.cycles,
-                        sample_hz=locomotion_gait.sample_hz,
-                        swing_hip_lift_degrees=locomotion_gait.swing_hip_lift_degrees,
-                    )
-                    observation_query = SourceMotionQuery(
-                        source,
-                        semantic_roles=roles,
-                        solver_gait=observation_solver_gait,
-                        locomotion_gait=locomotion_gait,
-                        plan=observation_plan,
-                        contact_profile=contact_profile,
-                        up_axis=tuple(up),
-                        forward_axis=tuple(forward),
-                        source_clip=None,
-                        legacy_overlay=False,
-                        articulation_profile=articulation_profile,
-                    )
-                    observations = {
-                        "source_geometry_sha256": recipe["source"]["sha256"],
-                        "body_height_m": height,
-                        "gait_parameters_sha256": canonical_hash(
-                            gait_parameters(locomotion_gait)
-                        ),
-                        "sides": {
-                            "left": _thaw(
-                                observation_query.grounded_touchdown_observation(
-                                    0.0, "left"
-                                )
-                            ),
-                            "right": _thaw(
-                                observation_query.grounded_touchdown_observation(
-                                    locomotion_gait.step_period_s, "right"
-                                )
-                            ),
-                        },
-                    }
-                    grounded_touchdown_geometry = measure_grounded_touchdown_geometry(
-                        locomotion_gait, observations
+                    if (
+                        solve_policy["canonical_support_anchors"] is not True
+                        or solve_policy["skin_refinement"] is not True
+                    ):
+                        raise ContractError(
+                            "v2 grounded geometry requires canonical refined solve policy"
+                        )
+                    grounded_touchdown_geometry = (
+                        _measure_bound_grounded_touchdown_geometry(
+                            source,
+                            roles=roles,
+                            contact_profile=contact_profile,
+                            locomotion_gait=locomotion_gait,
+                            articulation_profile=articulation_profile,
+                            performance=performance,
+                            gait_response_policy=grounded_policy[
+                                "body_response"
+                            ]["gait_response"],
+                            source_geometry_sha256=recipe["source"]["sha256"],
+                            body_height_m=height,
+                            up=up,
+                            forward=forward,
+                        )
                     )
                     resolved = resolve_grounded_intent(
                         locomotion_gait,
@@ -910,6 +943,12 @@ def compile_recipe(
         payloads["neutral-pose-profile.json"] = (
             _motion_set_resolution.neutral_pose_bytes
         )
+        if motion_set_v2:
+            # Verification replays source-owned v2 resolution from immutable
+            # package inputs. A hash of derived coordinates is not authority.
+            payloads["source.glb"] = snapshots["source"]
+            payloads["rig.json"] = snapshots["rig"]
+            payloads["contact-profile.json"] = snapshots["contact_profile"]
         if grounded_touchdown_geometry is not None:
             payloads["grounded-touchdown-geometry.json"] = json_bytes(
                 grounded_touchdown_geometry
@@ -1148,11 +1187,78 @@ def _verify_motion_set_provenance(
             geometry_path = path / "grounded-touchdown-geometry.json"
             if not geometry_path.exists():
                 raise ContractError("v2 grounded package lacks touchdown geometry evidence")
+            source_bytes = (path / "source.glb").read_bytes()
+            rig_bytes = (path / "rig.json").read_bytes()
+            contact_bytes = (path / "contact-profile.json").read_bytes()
+            animal_bytes = (path / "animal.json").read_bytes()
+            articulation_bytes = (path / "articulation-profile.json").read_bytes()
+            if (
+                digest(source_bytes) != recipe["source"]["sha256"]
+                or digest(rig_bytes) != recipe["rig"]["sha256"]
+                or digest(contact_bytes) != recipe["contact_profile"]["sha256"]
+                or digest(animal_bytes) != recipe["animal"]["sha256"]
+                or digest(articulation_bytes)
+                != recipe["articulation_profile"]["sha256"]
+            ):
+                raise ContractError(
+                    "v2 grounded source authority differs from baseline inputs"
+                )
+            source = Glb.from_bytes(source_bytes)
+            require_supported_geometry(source)
+            if source.document.get("animations"):
+                raise ContractError(
+                    "v2 grounded source authority contains prior animation"
+                )
+            roles = json.loads(rig_bytes)["roles"]
+            contact_profile = json.loads(contact_bytes)
+            forward, up = frame_axes(
+                recipe["forward_axis"], recipe["up_axis"]
+            )
             animal = load_animal_instance(
-                read_json(path / "animal.json"),
+                json.loads(animal_bytes),
                 source_sha256=recipe["source"]["sha256"],
             )
+            verify_source_calibration(
+                animal, source, roles, contact_profile, forward, up
+            )
+            apply_uniform_geometry_scale(source, animal["uniform_scale"])
+            contact_profile = scaled_contact_profile(
+                contact_profile, animal["uniform_scale"]
+            )
+            require_supported_geometry(source)
+            body_height = geometry_height(source, roles, up)
+            if not math.isclose(
+                body_height,
+                float(plan["body_height_m"]),
+                rel_tol=0,
+                abs_tol=1e-10,
+            ):
+                raise ContractError(
+                    "v2 grounded source height differs from packaged plan"
+                )
+            articulation_profile = load_articulation_profile(
+                json.loads(articulation_bytes)
+            )
             authored_gait = gait
+            expected_geometry = _measure_bound_grounded_touchdown_geometry(
+                source,
+                roles=roles,
+                contact_profile=contact_profile,
+                locomotion_gait=authored_gait,
+                articulation_profile=articulation_profile,
+                performance=performance,
+                gait_response_policy=grounded_policy["body_response"][
+                    "gait_response"
+                ],
+                source_geometry_sha256=recipe["source"]["sha256"],
+                body_height_m=body_height,
+                up=up,
+                forward=forward,
+            )
+            if read_json(geometry_path) != expected_geometry:
+                raise ContractError(
+                    "v2 grounded touchdown geometry differs from source authority"
+                )
             resolved = resolve_grounded_intent(
                 authored_gait,
                 body_height_m=float(plan["body_height_m"]),
@@ -1160,7 +1266,7 @@ def _verify_motion_set_provenance(
                 source_geometry_sha256=recipe["source"]["sha256"],
                 neutral_support_geometry=json.loads(support_bytes),
                 family_policy=json.loads(policy_bytes),
-                touchdown_geometry=read_json(geometry_path),
+                touchdown_geometry=expected_geometry,
             )
             gait = resolved.gait
             performance, gait_receipt = resolve_gait_response(
@@ -1241,6 +1347,7 @@ def verify_package(path: Path) -> dict:
         "program-profile.json", "gait-profile.json",
         "locomotion-response-policy.json", "neutral-support-profile.json",
         "grounded-touchdown-geometry.json",
+        "source.glb", "rig.json", "contact-profile.json",
     }
     present_provenance = provenance_universe & set(manifest.get("files", {}))
     expected_provenance = provenance_universe - {"gait-profile.json"}
@@ -1255,6 +1362,7 @@ def verify_package(path: Path) -> dict:
             "locomotion-response-policy.json",
             "neutral-support-profile.json",
             "grounded-touchdown-geometry.json",
+            "source.glb", "rig.json", "contact-profile.json",
         }
     else:
         airborne_v2 = recipe.get("program") == "airborne_gait"

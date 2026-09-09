@@ -24,7 +24,9 @@ SET_SCHEMA_V2 = "eonwild.motion.motion-set.v2"
 BASELINE_SCHEMA_V2 = "eonwild.motion.motion-baseline.v2"
 INTENT_SCHEMA_V2 = "eonwild.motion.motion-intent.v2"
 SUPPORTED_PROGRAMS = ("grounded_gait", "gait_transition")
-SUPPORTED_PROGRAMS_V2 = (*SUPPORTED_PROGRAMS, "airborne_gait")
+# Airborne choreography remains a typed foundation, but it is not an admitted
+# motion-set capability until the source-bound recovery provider is present.
+SUPPORTED_PROGRAMS_V2 = SUPPORTED_PROGRAMS
 
 _BASELINE_SHARED_FIELDS = (
     "source",
@@ -412,6 +414,14 @@ def resolve_motion_set_selection(
             gait_profile_bytes = gait_profile_path.read_bytes()
             if digest(gait_profile_bytes) != intent["gait_profile"]["sha256"]:
                 raise ContractError("motion gait profile changed during resolution")
+            if (
+                baseline["schema"] == BASELINE_SCHEMA_V2
+                and json.loads(gait_profile_bytes).get("schema")
+                == "eonwild.motion.airborne-choreography.v1"
+            ):
+                raise ContractError(
+                    "v2 airborne locomotion requires a source-bound recovery provider"
+                )
         resolutions.append(MotionSetResolution(
             motion=motion,
             recipe=_recipe(baseline, intent),

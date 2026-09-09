@@ -1,15 +1,37 @@
 from __future__ import annotations
 
 from copy import deepcopy
+from dataclasses import replace
 import json
 from pathlib import Path
 
+import numpy as np
 import pytest
 
 from eonwild_motion.errors import ContractError
+from eonwild_motion.factory.animal import (
+    apply_uniform_geometry_scale,
+    load_animal_instance,
+    scaled_contact_profile,
+    verify_source_calibration,
+)
+from eonwild_motion.factory.compiler import (
+    _measure_bound_grounded_touchdown_geometry,
+    _verify_motion_set_provenance,
+)
 from eonwild_motion.factory.io import bind, write_json
 from eonwild_motion.factory.motion_set import resolve_motion_set
+from eonwild_motion.factory.source import geometry_height
+from eonwild_motion.glb.container import Glb
+from eonwild_motion.planning.articulation_profile import load_articulation_profile
+from eonwild_motion.planning.grounded_gait import build_grounded_plan, load_grounded_gait
+from eonwild_motion.planning.grounded_intent_resolution import resolve_grounded_intent
+from eonwild_motion.solve.gait_response import (
+    assemble_baseline_performance,
+    resolve_gait_response,
+)
 from eonwild_motion.solve.locomotion_regime_response import _CARRIER_MAPPING
+from eonwild_motion.solve.performance import decorate_plan
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -128,19 +150,10 @@ def _documents(root: Path):
     return baseline, intent, motion_set
 
 
-def test_v2_resolves_airborne_intent_and_retains_one_grounded_policy_snapshot(tmp_path):
+def test_v2_rejects_airborne_until_source_bound_recovery_provider_exists(tmp_path):
     _documents(tmp_path)
-    resolved = resolve_motion_set(tmp_path, tmp_path / "set.json", "sprint")
-    assert resolved.recipe["program"] == "airborne_gait"
-    assert resolved.locomotion_response_bytes == (
-        tmp_path / "intent-resolution.json"
-    ).read_bytes()
-    assert resolved.payloads["locomotion-response-policy.json"] == (
-        tmp_path / "intent-resolution.json"
-    ).read_bytes()
-    assert resolved.payloads["neutral-support-profile.json"] == (
-        tmp_path / "neutral-support.json"
-    ).read_bytes()
+    with pytest.raises(ContractError, match="unsupported or repeated capabilities"):
+        resolve_motion_set(tmp_path, tmp_path / "set.json", "sprint")
 
 
 @pytest.mark.parametrize(
@@ -177,7 +190,14 @@ def test_v2_rejects_body_override_schema_mix_or_incomplete_response(tmp_path, mu
 
 
 def test_v2_returned_policy_and_payload_are_detached(tmp_path):
-    _documents(tmp_path)
+    baseline, intent, motion_set = _documents(tmp_path)
+    baseline["supported_programs"] = ["grounded_gait"]
+    intent["program"] = "grounded_gait"
+    write_json(tmp_path / "baseline.json", baseline)
+    motion_set["baseline"] = bind(tmp_path, tmp_path / "baseline.json")
+    write_json(tmp_path / "intent.json", intent)
+    motion_set["motions"][0]["intent"] = bind(tmp_path, tmp_path / "intent.json")
+    write_json(tmp_path / "set.json", motion_set)
     resolved = resolve_motion_set(tmp_path, tmp_path / "set.json", "sprint")
     policy = resolved.locomotion_response_policy
     assert policy is not None
@@ -222,3 +242,128 @@ def test_real_v2_grounded_sets_share_inputs_without_changing_v1_recipe():
     assert json.loads(tarbo_v2.baseline_bytes)["supported_programs"] == [
         "grounded_gait", "gait_transition"
     ]
+
+
+def test_v2_provenance_remeasures_touchdown_geometry_from_source(tmp_path):
+    resolution = resolve_motion_set(
+        ROOT,
+        ROOT / "catalog/motion-sets/allosaurus-engineering-locomotion.v2.json",
+        "walk-diagnostic",
+    )
+    baseline = json.loads(resolution.baseline_bytes)
+    source_bytes = (ROOT / baseline["source"]["path"]).read_bytes()
+    rig_bytes = (ROOT / baseline["rig"]["path"]).read_bytes()
+    contact_bytes = (ROOT / baseline["contact_profile"]["path"]).read_bytes()
+    animal_bytes = (ROOT / baseline["animal"]["path"]).read_bytes()
+    articulation_bytes = (
+        ROOT / baseline["articulation_profile"]["path"]
+    ).read_bytes()
+    style_bytes = (ROOT / baseline["performance_profile"]["path"]).read_bytes()
+    source = Glb.from_bytes(source_bytes)
+    roles = json.loads(rig_bytes)["roles"]
+    contact = json.loads(contact_bytes)
+    animal = load_animal_instance(
+        json.loads(animal_bytes),
+        source_sha256=resolution.recipe["source"]["sha256"],
+    )
+    forward = np.asarray((0.0, 0.0, 1.0))
+    up = np.asarray((0.0, 1.0, 0.0))
+    verify_source_calibration(animal, source, roles, contact, forward, up)
+    apply_uniform_geometry_scale(source, animal["uniform_scale"])
+    contact = scaled_contact_profile(contact, animal["uniform_scale"])
+    height = geometry_height(source, roles, up)
+    authored = load_grounded_gait(json.loads(resolution.program_profile_bytes))
+    performance, assembly = assemble_baseline_performance(
+        json.loads(style_bytes), json.loads(resolution.neutral_pose_bytes)
+    )
+    grounded_policy = baseline["locomotion_response_policy"]["regimes"]["grounded"]
+    geometry = _measure_bound_grounded_touchdown_geometry(
+        source,
+        roles=roles,
+        contact_profile=contact,
+        locomotion_gait=authored,
+        articulation_profile=load_articulation_profile(
+            json.loads(articulation_bytes)
+        ),
+        performance=performance,
+        gait_response_policy=grounded_policy["body_response"]["gait_response"],
+        source_geometry_sha256=resolution.recipe["source"]["sha256"],
+        body_height_m=height,
+        up=up,
+        forward=forward,
+    )
+    support = json.loads(resolution.neutral_support_bytes)
+    policy = json.loads(resolution.locomotion_response_bytes)
+
+    def package_state(touchdown_geometry):
+        resolved = resolve_grounded_intent(
+            authored,
+            body_height_m=height,
+            animal_hindlimb_length_m=animal["hindlimb_length_m"],
+            source_geometry_sha256=resolution.recipe["source"]["sha256"],
+            neutral_support_geometry=support,
+            family_policy=policy,
+            touchdown_geometry=touchdown_geometry,
+        )
+        effective, gait_receipt = resolve_gait_response(
+            performance,
+            resolved.gait,
+            grounded_policy["body_response"]["gait_response"],
+        )
+        solve = baseline["solve_policy"]
+        effective = replace(
+            effective,
+            canonical_support_anchors=solve["canonical_support_anchors"],
+            skin_refinement=solve["skin_refinement"],
+        )
+        plan = decorate_plan(build_grounded_plan(resolved.gait, height), effective)
+        plan["solve_policy"] = solve
+        receipt = {
+            "solve_policy": solve,
+            "baseline_performance_resolution": {
+                "assembly": assembly,
+                "gait_response": gait_receipt,
+                "grounded_intent": resolved.receipt(),
+            },
+        }
+        return json.loads(json.dumps(plan)), receipt
+
+    for name, raw in {
+        **resolution.payloads,
+        "performance-profile.json": style_bytes,
+        "neutral-pose-profile.json": resolution.neutral_pose_bytes,
+        "source.glb": source_bytes,
+        "rig.json": rig_bytes,
+        "contact-profile.json": contact_bytes,
+        "animal.json": animal_bytes,
+        "articulation-profile.json": articulation_bytes,
+    }.items():
+        (tmp_path / name).write_bytes(raw)
+    (tmp_path / "grounded-touchdown-geometry.json").write_text(
+        json.dumps(geometry)
+    )
+    plan, receipt = package_state(geometry)
+    common = {
+        "recipe": resolution.recipe,
+        "lock": {"motion_set_resolution": resolution.lock},
+        "runtime": {
+            "motion_set": resolution.lock["identities"],
+            "solve_policy": baseline["solve_policy"],
+        },
+    }
+    _verify_motion_set_provenance(
+        tmp_path, receipt=receipt, plan=plan, **common
+    )
+    altered = deepcopy(geometry)
+    altered["sides"]["right"]["zero_step_ankle_from_hip_m"][2] += 0.02
+    (tmp_path / "grounded-touchdown-geometry.json").write_text(
+        json.dumps(altered)
+    )
+    altered_plan, altered_receipt = package_state(altered)
+    with pytest.raises(ContractError, match="source authority"):
+        _verify_motion_set_provenance(
+            tmp_path,
+            receipt=altered_receipt,
+            plan=altered_plan,
+            **common,
+        )
