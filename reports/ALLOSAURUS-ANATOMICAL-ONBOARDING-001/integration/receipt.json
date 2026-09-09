@@ -1,0 +1,27 @@
+{
+  "schema": "eonwild.motion.allosaurus-onboarding-integration.v1",
+  "tested_head": "215588c75c5e64f5ce9f9dbbe3fa5fcfdfca03a4",
+  "tested_tree": "9eba909c9cee3e9a6179529fd3c33140c805fd4e",
+  "suite": {
+    "tests_passed": 1078,
+    "subtests_passed": 21,
+    "seconds": 632.05,
+    "command": ".venv/bin/python -m pytest tests -q --tb=short",
+    "exclusions": []
+  },
+  "dual_narrow_review": "CLOSED_P0_P1_ZERO",
+  "legacy_preparation": "EXACT_BYTES_PRESERVED",
+  "normalized_preparation": "EXACT_BYTES_PRESERVED",
+  "allosaurus_walk": "REJECTED_REACH_INFEASIBLE",
+  "anatomical_approval": "NOT_GRANTED",
+  "unity_parity": "NOT_RUN",
+  "production_approved": false,
+  "evidence": {
+    "full-suite.log": "0e99fa1ec75f497c58ffec8e75ecc8476bf9e5470f6f5d9a5f042aa45b61d1e5",
+    "root-narrow-closure.json": "90c0bf551fd253510bafdba6d3c6d764a563e218aaf7ef7a91e10ac3dd5c6222",
+    "root-narrow-tests.log": "60a8976ff6d141ce7727ffde2854a616a5ef8475b02f9d110f23d78448f983d9",
+    "reviewer2-narrow-closure.md": "f3da27b746fccd4e4130de9807ad9b53d5f2adf7435cc2682a7e51bc712a20b1",
+    "root-source-reproduction.json": "6dae3ab25d6f0c88e1b3bae21651fb13a04bbd79f347c0e0f07733d084106044",
+    "transfer-envelope.json": "bbfd5fa3cf42d9c6be7ea95ba0925f0dcd77ea1331fccf138bc78e41e3dd0038"
+  }
+}
