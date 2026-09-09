@@ -1128,10 +1128,13 @@ class SourceMotionQuery:
                             purpose="authored material clearance",
                         )
                     except GroundedTransitionClearanceUnavailable as exc:
-                        if str(exc) != (
+                        recoverable_floor_failures = {
                             f"{foot_side} authored material clearance "
-                            "material gap is nonmonotone"
-                        ):
+                            "material gap is nonmonotone",
+                            f"{foot_side} authored material clearance "
+                            "material floor did not converge",
+                        }
+                        if str(exc) not in recoverable_floor_failures:
                             raise
                         material_height = _bounded_authored_joint_height(
                             measure,

@@ -4,6 +4,7 @@ import math
 
 import pytest
 
+import eonwild_motion.solve.source_motion_query as source_query_module
 from eonwild_motion.errors import ContractError
 from eonwild_motion.solve.authored_material_contact import (
     AuthoredMaterialContactAdapter,
@@ -11,6 +12,7 @@ from eonwild_motion.solve.authored_material_contact import (
 from eonwild_motion.solve.constant_skin_targets import CanonicalConstantSkinTargetLaw
 from eonwild_motion.solve.grounded_transition_clearance import (
     GroundedTransitionClearanceUnavailable,
+    _monotone_floor,
 )
 from eonwild_motion.solve.source_motion_query import (
     SourceMotionQuery,
@@ -143,13 +145,127 @@ def test_adapter_binding_names_local_joint_feasibility_semantics():
     inputs = _inputs()
     binding = dict(_build(inputs).binding())
     assert binding["material_effector_resolution"] == (
-        "material_floor_and_local_joint_feasibility.v3"
+        "material_floor_and_local_joint_feasibility.v4"
     )
     legacy = {
         **binding,
-        "material_effector_resolution": "minimum_material_and_bounded_reach.v2",
+        "material_effector_resolution": (
+            "material_floor_and_local_joint_feasibility.v3"
+        ),
     }
     assert _digest(binding) != _digest(legacy)
+
+
+def test_adapter_recovers_exact_monotone_floor_iteration_exhaustion(monkeypatch):
+    inputs = _inputs()
+    query = SourceMotionQuery(
+        **_query_kwargs(inputs), authored_material_contact=_build(inputs)
+    )
+
+    def exhausted(measure, ceiling, side, *, target_gap_m, purpose):
+        raise GroundedTransitionClearanceUnavailable(
+            f"{side} {purpose} material floor did not converge"
+        )
+
+    monkeypatch.setattr(source_query_module, "_monotone_floor", exhausted)
+    value = query.evaluate(float(inputs["plan"]["duration_s"]) * 0.625)
+    assert value.status == "AVAILABLE"
+    assert value.row["feet"]["left"]["authored_material_achieved_clearance_m"] >= (
+        value.row["feet"]["left"]["authored_material_clearance_m"] - 1e-10
+    )
+
+
+def test_adapter_does_not_reclassify_other_floor_failures(monkeypatch):
+    inputs = _inputs()
+    query = SourceMotionQuery(
+        **_query_kwargs(inputs), authored_material_contact=_build(inputs)
+    )
+
+    def unavailable(measure, ceiling, side, *, target_gap_m, purpose):
+        raise GroundedTransitionClearanceUnavailable(
+            f"{side} {purpose} target does not clear the material floor"
+        )
+
+    monkeypatch.setattr(source_query_module, "_monotone_floor", unavailable)
+    value = query.evaluate(float(inputs["plan"]["duration_s"]) * 0.625)
+    assert value.status == "AUTHORED_MATERIAL_CLEARANCE_UNAVAILABLE"
+    assert value.reason == (
+        "left authored material clearance target does not clear the material floor"
+    )
+
+
+def test_joint_feasibility_recovers_measured_slow_secant_exhaustion():
+    target_gap = 0.019172604542864454
+    ceiling = 2.106182073161406
+    declared_height = 0.019072604542864455
+    # Exact requested-height/material-gap pairs from the frozen Allosaurus v4
+    # query at t=1.3942162162162162. The secant stays on the lower segment for
+    # twenty iterations even though the nearby upper sample is safely above
+    # the material floor.
+    samples = sorted(
+        (
+            (0.0, 0.00005996354645053819),
+            (0.018955638658452654, 0.0189428147362985),
+            (0.019143137135677602, 0.019130313111694126),
+            (0.01916213977977479, 0.0191493157454575),
+            (0.019169359870648904, 0.01915653583234884),
+            (0.01917316261695358, 0.01916033857668435),
+            (0.019175509921515694, 0.019162685879919105),
+            (0.019177103139392884, 0.01916427909691897),
+            (0.01917825536205319, 0.019165431318970635),
+            (0.01917912742793532, 0.019166303384330053),
+            (0.019179810439447914, 0.01916698639545295),
+            (0.019180372254322932, 0.019167548210059473),
+            (0.019180877887710446, 0.0191680538432191),
+            (0.019181332957759208, 0.019168508912957277),
+            (0.019181742520803097, 0.01916891847586592),
+            (0.019182111127542596, 0.01916928708236616),
+            (0.019182442873608145, 0.019169618828189714),
+            (0.01918274144506714, 0.01916991739949587),
+            (0.01918542858819808, 0.019224435068839422),
+            (0.02106182073161406, 0.021048995680435674),
+            (0.2106182073161406, 0.21060536902835617),
+            (ceiling, 2.075615112129538),
+        )
+    )
+
+    def material_gap(height):
+        for index, right in enumerate(samples):
+            if height <= right[0]:
+                if index == 0:
+                    return right[1]
+                left = samples[index - 1]
+                gain = (height - left[0]) / (right[0] - left[0])
+                return left[1] + gain * (right[1] - left[1])
+        return samples[-1][1]
+
+    def measure(height):
+        return material_gap(height), 802, 2e-7, 0.0, 0.0
+
+    with pytest.raises(
+        GroundedTransitionClearanceUnavailable, match="did not converge"
+    ):
+        _monotone_floor(
+            lambda height: measure(height)[:2],
+            ceiling,
+            "left",
+            target_gap_m=target_gap,
+            purpose="authored material clearance",
+        )
+    resolved = _bounded_authored_joint_height(
+        measure,
+        declared_height,
+        ceiling,
+        "left",
+        target_gap_m=target_gap,
+    )
+    gap, vertex, residual, extension, articulation = measure(resolved)
+    assert declared_height < resolved < 0.01918542858819808
+    assert vertex == 802
+    assert gap >= target_gap
+    assert residual <= 0.001
+    assert extension <= 0.001
+    assert articulation <= 0.01
 
 
 def test_material_clearance_policy_owns_scale_independently_of_reference_lift():
