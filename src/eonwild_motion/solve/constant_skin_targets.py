@@ -142,6 +142,8 @@ class CanonicalConstantSkinTargetLaw:
 
     def _current_query_binding_sha256(self, query: SourceMotionQuery) -> str:
         request = self._query_request(query)
+        if query._authored_material_contact is not None:
+            query._authored_material_contact.validate_for_query(query)
         inputs, material_ids = self._provider._binding_inputs(**request)
         return _digest(
             {
@@ -153,6 +155,11 @@ class CanonicalConstantSkinTargetLaw:
                     None
                     if query._transition_clearance is None
                     else query._transition_clearance.binding()
+                ),
+                "authored_material_contact": (
+                    None
+                    if query._authored_material_contact is None
+                    else query._authored_material_contact.binding()
                 ),
             }
         )

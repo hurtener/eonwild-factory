@@ -52,6 +52,7 @@ from .performance import phase_and_gain
 from .skin_rig import SkinRig
 from .grounded_transition_clearance import GroundedTransitionClearanceResolver
 from .grounded_transition_clearance import GroundedTransitionClearanceUnavailable
+from .authored_material_contact import AuthoredMaterialContactAdapter
 
 
 CONTINUOUS_SKIN_TARGET_UNAVAILABLE = "CONTINUOUS_SKIN_TARGET_UNAVAILABLE"
@@ -192,6 +193,7 @@ class SourceMotionQuery:
         articulation_profile: Any = None,
         contact_profile: Mapping[str, Any] | None = None,
         transition_clearance: GroundedTransitionClearanceResolver | None = None,
+        authored_material_contact: AuthoredMaterialContactAdapter | None = None,
     ) -> None:
         if not isinstance(solver_gait, AirborneGait):
             raise ContractError(
@@ -237,6 +239,12 @@ class SourceMotionQuery:
                 source_clip=source_clip,
                 legacy_overlay=legacy_overlay,
             )
+        if authored_material_contact is not None and type(
+            authored_material_contact
+        ) is not AuthoredMaterialContactAdapter:
+            raise ContractError(
+                "source motion query authored material contact must be its owned adapter"
+            )
         self._validate_plan_input(plan)
         if contact_profile is not None:
             self._validate_contact_profile(contact_profile, source)
@@ -251,6 +259,7 @@ class SourceMotionQuery:
         self._source_clip = source_clip
         self._legacy_overlay = legacy_overlay
         self._transition_clearance = transition_clearance
+        self._authored_material_contact = authored_material_contact
         # Retain the complete owned request, rather than only the derived
         # SkinRig. Downstream source-owned diagnostics can therefore prove
         # that this actual query is the request they admitted.
@@ -282,6 +291,12 @@ class SourceMotionQuery:
             for row in self._plan["samples"]
             for foot in row["feet"].values()
         )
+        if self._authored_material_contact is not None:
+            if self._refined:
+                raise ContractError(
+                    "authored material contact requires an unrefined source plan"
+                )
+            self._authored_material_contact.validate_for_query(self)
         self._body_response = driven_body_response(solver_gait, self._plan, self._roles)
         self._skin = None
         if contact_profile is not None:
@@ -883,6 +898,10 @@ class SourceMotionQuery:
                     self._transition_clearance._resolve_owned(row)
                     if transition_clearance_integrity_proved
                     else self._transition_clearance.resolve(row)
+                )
+            if self._authored_material_contact is not None:
+                row = self._authored_material_contact._resolve_owned(
+                    self, row, sampled_time
                 )
         except GroundedTransitionClearanceUnavailable as exc:
             return SourceMotionUnavailable(
