@@ -1,0 +1,12 @@
+46adf1a795ecca18127ec49b9306ca96fc4a95e3d34e5b896b8c69642edf8482  ./README.md
+7aed5e41194a866a11777a6c2a2ef201d0f35823e4328d471112ca7fed66f2b2  ./evidence/descriptor-snapshot-closure.json
+2c597d97a1f10e87ac24c8aff2b999cf9d976bd2dcb77f5663a2ca4e2bc8170a  ./evidence/diagnose-unavailable.py
+ef865a126f1c129f0c3ab6e856674fbb736d6f536dc1bde2655d38d8bceebc7f  ./evidence/focused-tests.log
+1df00c18dab842431bda94e08786b60cf7b06bda1ec889637dc33e5fa4f9478a  ./evidence/full-suite-receipt.json
+beb119a1399b828598cf39d737efaabdca13250bf319ddfd9896f8a290d2da69  ./evidence/public-compile-unavailable.json
+3b812c371cbf256c325a2f521da73e8ba26cd4f376876e69a8b15599d30445cd  ./evidence/public-compile.log
+edd9afa73174c191d3cd40b8c552797ef13124f42f0b766df9ceb802a0ab184e  ./evidence/reach-plateau-reviewer2.md
+6ec1d3fcfcfadeab54554575dbc93ba1c58c190691001307bdbd698d26841438  ./evidence/reach-plateau-root-review.json
+2f9bb6a74e6099fd2f8a1315c3bf4e97b4e1e2be4de148337a2f2f4c3c922806  ./evidence/reviewer2-r1-closure.md
+9b550195713891b631dae00e9a57ea031e02fb9f7766ba5f1af52f7cd28ba876  ./evidence/root-c51-review.json
+1ebae00bb4e7bf0723160b23cbe98344b918ef8c76d66a39b4b07bf5e68afd1a  ./evidence/root-r1-findings.json

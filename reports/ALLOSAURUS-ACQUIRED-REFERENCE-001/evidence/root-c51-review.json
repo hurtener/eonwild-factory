@@ -1,0 +1,17 @@
+{
+  "head": "c51b3aa86bfac51df0d30785303f698fc1f6c3a3",
+  "review_type": "narrow reviewed union and finite policy closure",
+  "P0": 0,
+  "P1": 0,
+  "checks": [
+    "Factory feature delta from independently reviewed f514 is finite policy guard plus regression only",
+    "Parent is reviewed 41e8ef4 reach fix",
+    "Full current local tests 1184 plus21subtests PASS",
+    "Publication ancestry excludes unpublished 9d private capsule commit"
+  ],
+  "boundaries": [
+    "Actual public Allosaurus compile failed; no accepted serialized package",
+    "Thigh deformation is still rejected",
+    "No continuous Unity or native playback acceptance"
+  ]
+}

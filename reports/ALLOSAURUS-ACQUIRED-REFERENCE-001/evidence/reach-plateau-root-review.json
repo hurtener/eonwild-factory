@@ -1,0 +1,30 @@
+{
+  "head": "41e8ef4ea11f6cef400ae2e21f6625f3857b7873",
+  "tree": "db41525f5628e344ac81f95839d1d65b8bcb4f48",
+  "base": "48c2b78e54203f35a3fd1c55fbeb0c761992cf9f",
+  "P0": 0,
+  "P1": 0,
+  "classification": "narrow reopenedreachplateaufix review; no wholebranchreaudit",
+  "focused_tests": "19 passed in14.08s: authoredmaterialcontact andgroundedtransitionclearance",
+  "checks": [
+    "feasibleupperbound preserved bypredicatebisection",
+    "actualmaterialfloormonotonicguard unchanged",
+    "finalcombinedreach/materialchecks unchanged",
+    "effectoralgorithmversionupdated",
+    "133/133retainedsourceposesavailable",
+    "rootindependent8slotLBSmatchesactualquerysupplement",
+    "touchdownULPpaircontactsconsistentandrotationdifference6e-12degrees",
+    "cycleendpointrotationclosure1.05e-11degrees"
+  ],
+  "evidence": {
+    "result.json": "b85a661346f6efbaac589f14b3dcd74d5ada7463c9ce994b40c86922944628c8",
+    "root-verification.json": "7e2caedc0aadd040a4b7615a7722f89f8a9e91cfbacfa69d750bd64e0ac86414",
+    "root-sampled-metrics.json": "0c750ed265c39452b9e486268b512aebc03b287aeaf384a09873de1a69f5671a"
+  },
+  "pending": [
+    "actualserializedpackage",
+    "visualrecoveryandthighacceptance",
+    "native-speedplayback",
+    "Unity"
+  ]
+}
