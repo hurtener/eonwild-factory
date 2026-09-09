@@ -57,6 +57,13 @@ def _finite_time(value: Any) -> float:
     return result
 
 
+def _source_unavailable_error(result: SourceMotionUnavailable) -> ContractError:
+    return ContractError(
+        "constant skin target source value is unavailable: "
+        f"status={result.status} time_s={result.time_s!r} reason={result.reason}"
+    )
+
+
 @dataclass(frozen=True)
 class ConstantSkinTargetUnavailable:
     status: str
@@ -331,7 +338,7 @@ class CanonicalConstantSkinTargetLaw:
     ) -> dict[str, Any]:
         result = query.evaluate(time_s)
         if isinstance(result, SourceMotionUnavailable):
-            raise ContractError("constant skin target source value is unavailable")
+            raise _source_unavailable_error(result)
         row = _thaw(result.row)
         for foot_side, value in constants.items():
             row["feet"][foot_side]["target_offset_m"] = np.asarray(
@@ -419,7 +426,7 @@ class CanonicalConstantSkinTargetLaw:
                 authored_material_integrity_proved=True,
             )
         if isinstance(result, SourceMotionUnavailable):
-            raise ContractError("constant skin target source value is unavailable")
+            raise _source_unavailable_error(result)
         row = _thaw(result.row)
         pose = result.pose
         worlds = np.asarray(result.worlds)

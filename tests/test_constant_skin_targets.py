@@ -327,6 +327,26 @@ def test_query_subclass_private_evaluator_override_retains_prior_fallback():
     assert OwnedOverrideQuery.offset_calls == 0
 
 
+def test_source_unavailable_error_preserves_query_metadata(monkeypatch):
+    inputs = _inputs()
+    law = _build(inputs)
+
+    def unavailable(time_s, **_kwargs):
+        return SourceMotionUnavailable(
+            "UNAVAILABLE", time_s, "right material gap is nonmonotone"
+        )
+
+    monkeypatch.setattr(law._query, "_evaluate_owned", unavailable)
+    with pytest.raises(
+        ContractError,
+        match=(
+            r"status=UNAVAILABLE time_s=0\.2238918918918919 "
+            r"reason=right material gap is nonmonotone"
+        ),
+    ):
+        law.value(0.2238918918918919)
+
+
 def test_injected_query_evaluate_retains_prior_fallback(law_and_inputs, monkeypatch):
     law, _ = law_and_inputs
     original = law._query.evaluate
