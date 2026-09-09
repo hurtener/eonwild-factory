@@ -175,6 +175,11 @@ def test_emitter_refinement_reuses_checked_values_and_inserts_exact_source_key(m
         return tuple(_synthetic_checked_value(len(source.nodes), time_s) for time_s in times)
 
     monkeypatch.setattr(CanonicalConstantSkinTargetLaw, "values", values)
+    integrity_checks = []
+    monkeypatch.setattr(
+        CanonicalConstantSkinTargetLaw, "_validate_integrity",
+        lambda _self: integrity_checks.append(True),
+    )
     plan = {
         "program": "grounded_gait", "loop": False, "duration_s": .2,
         "samples": [
@@ -190,11 +195,16 @@ def test_emitter_refinement_reuses_checked_values_and_inserts_exact_source_key(m
     assert unchanged.in_place == initial.in_place
     assert unchanged.plan == initial.plan
     assert unchanged.midpoint_plan == initial.midpoint_plan
+    with pytest.raises(TypeError):
+        unchanged._checked_values[.05] = object()
+    with pytest.raises(TypeError):
+        unchanged._checked_values[.05].pose.translations[0][0] = 123.
     refined = emit_source_cubics(
         source, law, plan, root_node=0,
         additional_key_times=(.05,), reuse=initial,
     )
     assert len(calls) == 2
+    assert len(integrity_checks) == 2
     assert set(calls[0]).isdisjoint(calls[1])
     assert refined.tangent_estimate["additional_key_count"] == 1
     assert refined.tangent_estimate["new_checked_source_time_count"] == len(calls[1])
@@ -223,6 +233,9 @@ def test_emitter_refinement_rejects_unbound_reuse_or_outside_key(monkeypatch):
         lambda _self, times: tuple(
             _synthetic_checked_value(len(source.nodes), time_s) for time_s in times
         ),
+    )
+    monkeypatch.setattr(
+        CanonicalConstantSkinTargetLaw, "_validate_integrity", lambda _self: None,
     )
     plan = {
         "program": "grounded_gait", "loop": False, "duration_s": .1,

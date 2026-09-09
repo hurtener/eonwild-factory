@@ -10,6 +10,7 @@ from dataclasses import dataclass, field
 import hashlib
 import json
 import math
+from types import MappingProxyType
 from typing import Any, Callable, Mapping
 
 import numpy as np
@@ -38,6 +39,35 @@ class SourceCubicEmission:
     _source_sha256: str = field(repr=False, compare=False)
     _input_plan_sha256: str = field(repr=False, compare=False)
     _stencils: tuple[float, float] = field(repr=False, compare=False)
+
+
+@dataclass(frozen=True)
+class _CachedPose:
+    translations: tuple[tuple[float, ...], ...]
+    rotations: tuple[tuple[float, ...], ...]
+
+
+@dataclass(frozen=True)
+class _CachedValue:
+    row: Mapping[str, Any]
+    pose: _CachedPose
+
+
+def _cache_value(value: Any) -> _CachedValue:
+    """Retain only detached immutable fields consumed by CUBIC emission."""
+    try:
+        translations = tuple(
+            tuple(float(component) for component in row)
+            for row in value.pose.translations
+        )
+        rotations = tuple(
+            tuple(float(component) for component in row)
+            for row in value.pose.rotations
+        )
+        row = _freeze_data(value.row)
+    except (AttributeError, TypeError, ValueError, OverflowError) as exc:
+        raise ContractError("source cubic checked value has invalid pose data") from exc
+    return _CachedValue(row, _CachedPose(translations, rotations))
 
 
 def serialized_key_midpoint_times(glb: Glb, animation_name: str) -> list[float]:
@@ -215,6 +245,7 @@ def emit_source_cubics(
                 or reuse._input_plan_sha256 != input_plan_sha256
                 or reuse._stencils != (stencil_s, convergence_stencil_s)):
             raise ContractError("source cubic reuse differs from the bound source law")
+        CanonicalConstantSkinTargetLaw._validate_integrity(law)
         cache.update(reuse._checked_values)
     ordered_times = tuple(sorted(requested - set(cache)))
     batch = law.values(ordered_times) if ordered_times else ()
@@ -223,7 +254,7 @@ def emit_source_cubics(
             raise ContractError(
                 f"source cubic checked value unavailable at {time_s}: {value.reason}"
             )
-        cache[time_s] = value
+        cache[time_s] = _cache_value(value)
 
     def checked(time_s: float):
         key = float(time_s)
@@ -383,7 +414,8 @@ def emit_source_cubics(
     )
     return SourceCubicEmission(
         root_raw, in_place_raw, _freeze_data(emitted_plan),
-        _freeze_data(midpoint_plan), diagnostic, dict(cache), id(law),
+        _freeze_data(midpoint_plan), diagnostic,
+        MappingProxyType(dict(cache)), id(law),
         source_sha256, input_plan_sha256,
         (stencil_s, convergence_stencil_s),
     )
