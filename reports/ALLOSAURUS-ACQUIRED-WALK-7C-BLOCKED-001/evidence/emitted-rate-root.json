@@ -1,0 +1,39 @@
+{
+  "scope": "1001 analytic normalized-Hermite derivative samples on worst reported interval; diagnostic sampled lower bound, not interval certification",
+  "source_sha256": "894a7329cdba9cf1f364902b71f8d910445a4246abb659ce478f5b69b38c0e59",
+  "witness": {
+    "bone": "Bone_028",
+    "conservative_interval_bound": true,
+    "maximum_subdivision_depth": 0,
+    "node": 31,
+    "raw_quaternion_norm_lower": 0.9871148467063904,
+    "times_s": [
+      1.0305405855178833,
+      1.0388513803482056
+    ]
+  },
+  "reported_conservative_upper_degrees_s": 7620.683907817504,
+  "sampled_actual_peak_degrees_s": 7522.320602821408,
+  "sampled_peak_time_s": 1.0388513803482056,
+  "endpoint_speeds_degrees_s": [
+    1395.9263729065933,
+    7522.320602821408
+  ],
+  "endpoint_chord": 0.09968457389977035,
+  "raw_tangents": [
+    [
+      -10.100091934204102,
+      -0.8019601106643677,
+      6.697137355804443,
+      0.9426197409629822
+    ],
+    [
+      -55.06744384765625,
+      -4.022406101226807,
+      35.47763442993164,
+      -1.3970924615859985
+    ]
+  ],
+  "limit_degrees_s": 1200,
+  "technical_status": "BLOCKED"
+}

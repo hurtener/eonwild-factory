@@ -1,0 +1,56 @@
+{
+  "schema": "eonwild.audit.local-render-inspection.v1",
+  "generator_head": "7c6272359f14d5f67a8b9de8b6079747e1a1cf13",
+  "package_status": "TECHNICALLY_BLOCKED",
+  "scope": "5 side stills plus5 three-quarter feet stills at rate witness; all10 individually inspected by root",
+  "visual_findings": [
+    "Side foot shape and posterior thigh attachment visibly improved versus earlier rejected diagnostic",
+    "Front foot appears to remain close to floor in terminal recovery witness; stills alone cannot judge smoothness or contact timing",
+    "No claim of full-cycle or biological acceptance"
+  ],
+  "native_speed_playback": "NOT_RUN",
+  "unity": "NOT_RUN",
+  "production_approved": false,
+  "receipts": {
+    "side": {
+      "source_sha256": "fe6bbf79e90c8ad273f6b65952e317a7f03212e9141e001e4945d0ea24f5bbd7",
+      "manifest_sha256": "caff695d5e1084d619daf22d0cb74df4ac4724d125ba6e9b0e58ec8f36865071",
+      "ground_level_m": 4.167575454303952e-05,
+      "times": [
+        0.0,
+        0.615,
+        1.23,
+        1.845,
+        2.459
+      ],
+      "image_hashes_match": {
+        "frames/00000.png": true,
+        "frames/00001.png": true,
+        "frames/00002.png": true,
+        "frames/00003.png": true,
+        "frames/00004.png": true
+      },
+      "render_receipt_sha256": "10bdecb171f201e49b19ffed4a1159d4f0abce292c1446e829e5a880ed2420e9"
+    },
+    "rate-witness": {
+      "source_sha256": "fe6bbf79e90c8ad273f6b65952e317a7f03212e9141e001e4945d0ea24f5bbd7",
+      "manifest_sha256": "caff695d5e1084d619daf22d0cb74df4ac4724d125ba6e9b0e58ec8f36865071",
+      "ground_level_m": 4.167575454303952e-05,
+      "times": [
+        1.0305405855,
+        1.0346959829,
+        1.0388513803,
+        1.0430067778,
+        1.047162175
+      ],
+      "image_hashes_match": {
+        "frames/00000.png": true,
+        "frames/00001.png": true,
+        "frames/00002.png": true,
+        "frames/00003.png": true,
+        "frames/00004.png": true
+      },
+      "render_receipt_sha256": "cafce8789232c51b5dec7270d1dd655e27e8625efae5ce243be2fb3b02dc6ce5"
+    }
+  }
+}
