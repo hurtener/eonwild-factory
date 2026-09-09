@@ -199,6 +199,13 @@ def test_emitter_refinement_reuses_checked_values_and_inserts_exact_source_key(m
     assert tracks[0, "translation"].values[:, 0] == pytest.approx(
         np.asarray(timeline) ** 2
     )
+    dense = serialized_key_midpoint_times(
+        Glb.from_bytes(refined.root_motion), "V9_SOURCE_CUBIC_ROOT_MOTION"
+    )
+    assert len(dense) == len(refined.midpoint_plan["samples"])
+    assert dense == pytest.approx(
+        [row["time_s"] for row in refined.midpoint_plan["samples"]], abs=2e-8
+    )
 
 
 def test_emitter_refinement_rejects_unbound_reuse_or_outside_key(monkeypatch):
