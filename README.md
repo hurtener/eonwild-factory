@@ -56,8 +56,9 @@ contract and its current biomechanical limits.
 The current technically checked working baseline is the adult V10 walk recorded
 in [V9-WORKING-BASELINE-001](reports/V9-WORKING-BASELINE-001/README.md).
 Its source-derived CUBICSPLINE package, native playback, contact, ROM, rate, and
-loop checks passed. Visual review still requires a stronger body-weight-transfer
-revision, so this remains a candidate. Body timing is authored kinematics;
+loop checks passed. The user selected V10 as the working baseline while keeping
+body-weight presentation and proximal-thigh deformation open for further work.
+This is not production approval. Body timing is authored kinematics;
 mass-response physics is unavailable.
 The final SourceMotionQuery union passed 907 tests plus 21 subtests; see the
 [integration report](reports/V9-SOURCE-MOTION-QUERY-V9-INTEGRATION-001/README.md).
@@ -131,7 +132,9 @@ The shared-regime integration head
 `c6abde3020d198657d203f45254d366d5105ca26` completed 1,122 tests plus
 21 subtests with one sparse-checkout fixture failure. After the missing tracked
 reference media was materialized, its full fixture module passed 13 tests. The
-original run remains `FAILED_FIXTURE`, and hosted validation is pending. See the
+original run remains `FAILED_FIXTURE`. The later published `f24297d` hosted
+contracts passed 1,123 tests plus 21 subtests in 648.92 seconds and its
+source-evidence job passed; the wider candidate catalog is not green. See the
 [shared-regime checkpoint](reports/SHARED-LOCOMOTION-REGIME-V2-001/README.md)
 for the exact boundary; this does not approve motion or authorize merging draft
 PR #2.
@@ -182,12 +185,19 @@ Prior partial-recovery records remain honest about missing source fragments.
 One runtime motor owns final movement. Animation contacts are cues, not
 unconditional gameplay damage, grip, yield or feeding facts. The Python factory
 emits the planned motion and versioned metadata; the Unity adapter must still
-prove imported/compressed trace parity, terrain and target adaptation, event
-handoff and device cost. A second real independently skinned species is also
-still required to establish production family transfer.
+prove continuous imported/compressed trace parity, Animator behavior, terrain
+and target adaptation, event handoff and device cost. Root independently
+verified four Tarbosaurus walk source samples, their actual rendered poses and
+all skin influences in Unity; this does not establish continuous runtime or
+Allosaurus parity. The provisional second-animal source preparation is recorded
+in [ALLOSAURUS-PEDAL-SOURCE-PREPARATION-001](reports/ALLOSAURUS-PEDAL-SOURCE-PREPARATION-001/README.md);
+its shared walk remains blocked and its engineering pivots are not anatomical
+approval.
 
 See [the factory roadmap](docs/FACTORY_ROADMAP.md),
 [the Unity contract](docs/UNITY_MOTION_CONTRACT.md), and
 [the current status](docs/MOTION_QUALITY_STATUS.md).
 
-**Unity: NOT_RUN. Visual approval: PENDING. Production promotion: NOT_GRANTED.**
+**Unity sample verification: PASS for four Tarbosaurus walk poses. Continuous
+Unity/Animator and Allosaurus parity: PENDING. Human native-speed acceptance:
+PENDING. Production promotion: NOT_GRANTED.**

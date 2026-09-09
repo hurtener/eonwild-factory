@@ -35,7 +35,9 @@ After materializing all 25 tracked `assets/examples` files, the expected and
 actual video SHA-256 matched and the entire module passed **13 tests** in 3.05
 seconds. The complete invocation remains truthfully recorded as
 `FAILED_FIXTURE`; it is not relabeled as a clean full-suite pass. Hosted
-validation of the published tree remains required.
+validation of published `f24297d` subsequently passed **1,123 tests plus 21
+subtests** in 648.92 seconds, and source evidence passed. Other catalog
+candidate jobs remain blocked, so this is not an all-catalog green result.
 
 ## Connected native review
 
@@ -46,20 +48,25 @@ eight exact join stills and selected full-resolution frames. Full decode passed,
 59 source files remained hash-stable, and no new gross pose or silhouette jump
 was found at the four joins.
 
-This evidence does not close visual acceptance. The known proximal thigh fold
-remains visible. In-place views were still rendering when this checkpoint was
-frozen, native-speed playback was not performed, and Unity parity is NOT_RUN.
+All four retained connected native views have now completed frame review. This
+evidence does not close human native-speed acceptance. The known proximal thigh
+fold remains visible. Unity verification currently covers four Tarbosaurus
+walk source samples, their actual rendered poses and full skin influences; it
+does not cover continuous Animator playback or Allosaurus parity.
 
 ## Remaining boundaries
 
 - The Allosaurus shared walk remains BLOCKED. The admitted source still has a
   right loaded-contact residual and early-swing reach failures; no limit or
-  authored push-off was weakened to make it pass.
+  authored push-off was weakened to make it pass. Its reviewed provisional
+  pedal source preparation is recorded in
+  [ALLOSAURUS-PEDAL-SOURCE-PREPARATION-001](../ALLOSAURUS-PEDAL-SOURCE-PREPARATION-001/README.md);
+  its engineering pivots are not anatomical approval.
 - Shared airborne/sprint admission remains BLOCKED until the separately
   reviewed, source-bound whole-cycle recovery provider closes its review and is
   integrated.
-- The Tarbosaurus V10 body-weight-transfer visual result remains revision
-  required, and the proximal thigh skin issue remains open.
+- The user selected Tarbosaurus V10 as the unfinished working baseline. Body
+  weight presentation and the proximal thigh skin issue remain open.
 - No candidate receives biological approval, Unity parity or production
   promotion from this checkpoint.
 

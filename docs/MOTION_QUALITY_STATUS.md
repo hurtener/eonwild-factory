@@ -14,7 +14,9 @@ floor calibration with both parent deltas byte-identical. Its local complete
 invocation reached **1,122 tests plus 21 subtests passed and one missing sparse
 fixture**. Materializing the tracked reference media closed the entire failing
 module at 13/13, but the original complete run remains `FAILED_FIXTURE`; hosted
-validation is pending. See the
+validation at published `f24297d` subsequently passed 1,123 tests plus 21
+subtests in 648.92 seconds and source evidence passed. The wider candidate
+catalog still has blocked jobs. See the
 [shared-regime checkpoint](../reports/SHARED-LOCOMOTION-REGIME-V2-001/README.md).
 
 The provisional Allosaurus source has explicit joint relocations, effector
@@ -25,18 +27,23 @@ Tarbosaurus configuration has 154.203 mm of reach margin. This is evidence for
 shared morphology-aware intent resolution, not permission to stretch bones or
 increase correction limits. The first shared-v2 resolution still blocks on the
 right loaded-contact residual and early-swing reach. Hand/pedal detail, hip
-placement and anatomical approval remain unfinished.
+placement and anatomical approval remain unfinished. The reviewed provisional
+weighted pedal source and its raw/admitted identity boundary are recorded in
+[ALLOSAURUS-PEDAL-SOURCE-PREPARATION-001](../reports/ALLOSAURUS-PEDAL-SOURCE-PREPARATION-001/README.md);
+this source preparation does not pass the gait.
 
-V10 walk and shared fast walk remain the working baselines, with the confirmed
+The user selected V10 walk as the unfinished working baseline; shared fast walk
+remains its current fast comparison, with the confirmed
 proximal thigh surface intersection still open. The sprint component-selection
 prototype is rejected: it moves the discontinuity earlier and still exceeds
 15,000 degrees/s of solved foot pitch. No rejected sprint pose replaces either
 walking baseline. The full walk-start and walk-stop exports record technical
 PASS, and both actual start-to-steady and steady-to-stop handoffs pass.
-Connected root-motion side and three-quarter review covered all 572 frames in
-each view without a new gross join discontinuity. In-place review was still
-rendering, native-speed playback and Unity parity remain NOT_RUN, and the known
-thigh fold remains. The start handoff had exposed an
+All four connected native views completed frame review without a new gross join
+discontinuity. Human native-speed acceptance remains pending and the known
+thigh fold remains. Unity verification covers four Tarbosaurus walk source
+samples, their actual rendered poses and full skin influences, but continuous
+Animator/runtime and Allosaurus parity remain pending. The start handoff had exposed an
 unscaled-versus-animal-scaled floor comparison in
 the verifier. The reviewed fix at `1f783f8` reuses the compiler's bound animal
 calibration without changing floor equality or join limits. The author's actual
@@ -343,8 +350,10 @@ has been accepted only as the current factory recovery candidate, while adult
 v7 and fast recovery v3 still require whole-body polish. Then validate the
 intended Unity consumer, root authority, phase handoff, event delivery,
 import/compression and target-device performance.
-Hosted CI for the ensuing published documentation head remains pending; draft
-PR #2 must not merge yet.
+Hosted contracts and source evidence pass at `f24297d`; the wider candidate
+catalog is not green, and draft PR #2 must not merge yet.
 
-**PR: draft. Visual approval: PENDING. Unity validation: NOT_RUN.
+**PR: draft. Human native-speed approval: PENDING. Unity four-sample
+Tarbosaurus walk verification: PASS; continuous Animator/runtime and Allosaurus
+parity: PENDING.
 Production promotion: NOT_GRANTED.**
