@@ -6,6 +6,12 @@ Unity parity are separate; none transfers automatically to a newer candidate.
 
 ## Current integration checkpoint
 
+The later [shared reverse-intent checkpoint](../reports/SHARED-REVERSE-INTENT-001/README.md)
+adds reviewed signed/fixed-placement resolution through the same adult baseline.
+Its actual steady diagnostic remains blocked by a between-key ankle undershoot;
+reverse starts/stops and their direct joins are incomplete. This is reusable
+configuration and resolver progress, not approval of another animation.
+
 The shared locomotion regime v2 implementation at
 `58c4f763d3bb1cabd333c4e27ee7a0aabc39d3f3` passed both bounded closure
 reviews with no remaining P0/P1/P2 finding. Combined head
