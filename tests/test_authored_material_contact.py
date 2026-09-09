@@ -14,8 +14,10 @@ from eonwild_motion.solve.grounded_transition_clearance import (
 )
 from eonwild_motion.solve.source_motion_query import (
     SourceMotionQuery,
+    _bounded_authored_joint_height,
     _bounded_authored_reach_height,
 )
+from eonwild_motion.solve.support_anchors import _digest
 from test_constant_skin_targets import _inputs
 
 
@@ -137,6 +139,19 @@ def test_adapter_applies_material_contact_path_at_keys_and_offgrid():
     )
 
 
+def test_adapter_binding_names_local_joint_feasibility_semantics():
+    inputs = _inputs()
+    binding = dict(_build(inputs).binding())
+    assert binding["material_effector_resolution"] == (
+        "material_floor_and_local_joint_feasibility.v3"
+    )
+    legacy = {
+        **binding,
+        "material_effector_resolution": "minimum_material_and_bounded_reach.v2",
+    }
+    assert _digest(binding) != _digest(legacy)
+
+
 def test_material_clearance_policy_owns_scale_independently_of_reference_lift():
     inputs = _inputs()
     query = inputs["query"]
@@ -211,6 +226,88 @@ def test_bounded_reach_fails_without_a_safe_bracket():
         GroundedTransitionClearanceUnavailable, match="no feasible bracket"
     ):
         _bounded_authored_reach_height(lambda height: (-0.01, 7), 0.2, "left")
+
+
+def test_joint_feasibility_brackets_measured_knee_clamp_coupling():
+    target_gap = 0.013291004300055361
+    lower = (0.014268489938549051, 0.013265030863688103)
+    middle = (0.014294463389953738, 0.013351248213287592)
+    upper = (0.014336423246479702, 0.013332964132288506)
+
+    assert middle[0] < upper[0]
+    assert middle[1] > upper[1] + 1e-8
+
+    def interpolate(left, right, height):
+        gain = (height - left[0]) / (right[0] - left[0])
+        return left[1] + gain * (right[1] - left[1])
+
+    def measure(height):
+        if height <= lower[0]:
+            gap = lower[1] + height - lower[0]
+        elif height <= middle[0]:
+            gap = interpolate(lower, middle, height)
+        elif height <= upper[0]:
+            gap = interpolate(middle, upper, height)
+        else:
+            gap = upper[1] + height - upper[0]
+        residual = 1.7683600841332874e-7
+        extension = 0.0
+        if height >= middle[0]:
+            residual = 6.127252780483835e-5
+            extension = 6.1363103e-5
+        return gap, 398, residual, extension, 0.0
+
+    resolved = _bounded_authored_joint_height(
+        measure,
+        0.013191004300055362,
+        2.106182073161406,
+        "right",
+        target_gap_m=target_gap,
+    )
+    gap, vertex, residual, extension, articulation = measure(resolved)
+    assert lower[0] < resolved <= upper[0]
+    assert vertex == 398
+    assert gap >= target_gap
+    assert residual <= 0.001
+    assert extension <= 0.001
+    assert articulation <= 0.01
+
+
+def test_joint_feasibility_fails_without_safe_interval():
+    with pytest.raises(
+        GroundedTransitionClearanceUnavailable, match="no safe bracket"
+    ):
+        _bounded_authored_joint_height(
+            lambda height: (height, 398, 0.0011, 0.0, 0.0),
+            0.01,
+            0.02,
+            "right",
+            target_gap_m=0.011,
+        )
+
+
+def test_joint_feasibility_rechecks_final_combined_gates():
+    ceiling_calls = 0
+
+    def measure(height):
+        nonlocal ceiling_calls
+        if height == 0.02:
+            ceiling_calls += 1
+            residual = 0.0 if ceiling_calls == 1 else 0.0011
+            return 0.02, 398, residual, 0.0, 0.0
+        return height, 398, 0.0011, 0.0, 0.0
+
+    with pytest.raises(
+        GroundedTransitionClearanceUnavailable,
+        match="final combined gates disagree",
+    ):
+        _bounded_authored_joint_height(
+            measure,
+            0.019,
+            0.02,
+            "right",
+            target_gap_m=0.0195,
+        )
 
 
 def test_adapter_rejects_cross_query_reuse_and_internal_tamper():

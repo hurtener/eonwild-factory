@@ -16,7 +16,7 @@ from .support_anchors import _digest
 
 TARGET_MATERIAL_GAP_M = 0.0001
 TARGET_RESIDUAL_LIMIT_M = 0.001
-MATERIAL_EFFECTOR_RESOLUTION = "minimum_material_and_bounded_reach.v2"
+MATERIAL_EFFECTOR_RESOLUTION = "material_floor_and_local_joint_feasibility.v3"
 MATERIAL_CLEARANCE_POLICY_SCHEMA = (
     "eonwild.motion.authored-material-clearance-policy.v1"
 )
