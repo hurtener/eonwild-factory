@@ -1,0 +1,81 @@
+{
+  "adapter_binding": {
+    "capsule_sha256": "742a35d227a8a52ef9c4fbfaace4f42c2bb8483e7b9343dca22aae3685887da2",
+    "clearance_scale": 1.247141080280782,
+    "material_effector_resolution": "minimum_material_and_reach_floor.v1",
+    "query_binding_sha256": "9804cd815b4bea98496c998e26451ca9f88dbdbdd46e1faa5639004020ea0cf5",
+    "retime_policy": "phase_preserving.v1",
+    "schema": "eonwild.motion.authored-material-contact-binding.v1",
+    "source_duration_s": 1.2916666666666667,
+    "source_fps": 24.0,
+    "source_interval_count": 31,
+    "target_material_gap_m": 0.0001,
+    "target_residual_limit_m": 0.001
+  },
+  "authored_source_fbx_sha256": "c052e81297737f2f2a3b9e7ce3c8a79e4f0950ef1b4a9b16558f8e4f0ca649cb",
+  "body_composition_boundary": "target shared body response is evaluated at the same adapted contact phase before the final leg/material solve; acquired Raptor axial/body animation is not yet injected",
+  "capsule_generator_path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/free-dinosaur-pack-investigation-001/actual-package/allosaurus-raptor-material-contact-preflight-975a-002/build_authored_material_capsule.701f2a67787d.py",
+  "capsule_generator_sha256": "701f2a67787d2df68b71a7cd65a38c650c9306370a5aa7d1877034fced1ffb77",
+  "capsule_path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/free-dinosaur-pack-investigation-001/actual-package/allosaurus-raptor-material-contact-preflight-975a-002/raptor-walk-authored-material-path.21363f7f7dc5787d.json",
+  "capsule_sha256": "21363f7f7dc5787d2f0a6a20aa08bbcdc5d3e76e4d36004ded032b44d8296051",
+  "classification": "non-emitting source-bound adapted distal/material query; sampled authored keys and interpreted contacts; no emitted/native/visual or continuous-curve acceptance",
+  "diagnostic_rebinding_receipt": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/tmp/allosaurus-pedal-975a-adapter-diagnostic/diagnostic-rebinding.json",
+  "diagnostic_rebinding_receipt_sha256": "8551f4a103222189cc2a343fa86ba494e1df70e8d50c55ef3b110f876c8bd38e",
+  "driver_path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/free-dinosaur-pack-investigation-001/actual-package/allosaurus-raptor-material-contact-preflight-975a-002/run_allosaurus_raptor_material_law_975a_dense.129ecbf2ecb.py",
+  "driver_sha256": "129ecbf2ecb955284a37609e29f735c40a6205ba56474dce8383be0a8b619881",
+  "event_interpretation_path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/free-dinosaur-pack-investigation-001/actual-package/allosaurus-raptor-material-contact-preflight-975a-002/source-contact-events-fixed-signals-r1-21363f7.json",
+  "event_interpretation_sha256": "ce356806fea70a3b11d9078eda7c10cfc8aa3e5ed1feaaa3baf4faa4e3493434",
+  "focused_tests": {
+    "command": "pytest tests/test_authored_material_contact.py tests/test_source_motion_query.py tests/test_constant_skin_targets.py tests/test_grounded_transition_clearance.py -q --tb=short",
+    "result": "51 passed in 69.19s"
+  },
+  "limitations": [
+    "non-emitting source-law interception only",
+    "sampled secant rates are not continuous derivative authority",
+    "acquired Raptor axial/body animation is not yet injected",
+    "no native visual or emitted package acceptance"
+  ],
+  "material_clearance_summary": {
+    "ik_authority": "existing CanonicalConstantSkinTargetLaw _IK_TOLERANCE_M; distinct from the material gap",
+    "maximum_adaptation_m": 0.004467881140086501,
+    "maximum_requested_clearance_m": 0.46317250563779816,
+    "minimum_achieved_minus_requested_m": 1.0049170805388752e-11,
+    "target_ik_residual_limit_m": 0.001,
+    "target_material_gap_m": 0.0001
+  },
+  "rate_checks": {
+    "classification": "sampled secants over the key, midpoint, and 1ms event-neighborhood inventory; not continuous derivative authority",
+    "foot_pitch_limit_degrees_per_s": 600.0,
+    "local_joint_limit_degrees_per_s": 1200.0,
+    "maximum_foot_pitch_rate_degrees_per_s": 462.0546102580107,
+    "maximum_foot_target_plane_speed_m_per_s": 4.115697469921544,
+    "maximum_local_joint_angular_rate_degrees_per_s": 835.8141383958714,
+    "maximum_local_joint_rate_witness": {
+      "bone_index": 30,
+      "from_time_s": 0.6348387096774194,
+      "sampled_secant_degrees_per_s": 835.8141383958714,
+      "to_time_s": 0.6745161290322581
+    }
+  },
+  "result_path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/free-dinosaur-pack-investigation-001/actual-package/allosaurus-raptor-material-contact-preflight-975a-002/result.json",
+  "result_sha256": "8c911a3d03fe5207af6f74f69c69058ea9d7b86287069418d3aad2e2cc0e6ddb",
+  "run_log_sha256": "43ee5c34fa68968fdfebe0e3493d1b717645ea5a46e7b813d150634bfd922c98",
+  "runtime_dirty": false,
+  "sample_inventory": {
+    "event_neighborhood_epsilon_s": 0.001,
+    "event_times_s": {
+      "left_toe_off": 1.3490322580645162,
+      "left_touchdown": 0.0,
+      "right_toe_off": 0.15870967741935485,
+      "right_touchdown": 1.1903225806451614
+    },
+    "key_count": 32,
+    "midpoint_count": 31,
+    "unique_checked_times": 71
+  },
+  "schema": "eonwild.audit.authored-material-contact-preflight-receipt.v1",
+  "source_geometry_sha256": "975a4bc626bc8d79537939ab3a0796473f54aa2c5fadc541f8561b13e442e6c6",
+  "source_head": "8d789469435e44277b19e06f35b57e35de8f3bad",
+  "source_head_tree": "6cb8a11b671a3991e06da0dce5a8b6b474a0bd80",
+  "status": "AVAILABLE"
+}

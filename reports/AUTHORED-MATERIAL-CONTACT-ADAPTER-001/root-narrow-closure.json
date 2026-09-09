@@ -1,0 +1,29 @@
+{
+  "head": "8d789469435e44277b19e06f35b57e35de8f3bad",
+  "target_source_sha256": "975a4bc626bc8d79537939ab3a0796473f54aa2c5fadc541f8561b13e442e6c6",
+  "capsule_sha256": "21363f7f7dc5787d2f0a6a20aa08bbcdc5d3e76e4d36004ded032b44d8296051",
+  "dense_sha256": "a3871434619154bff20edb11ce18f4e61c3e2523ce6aa0af8e0ba3d43bd9203a",
+  "available_samples": 133,
+  "previous_touchdown_witness": {
+    "times_s": [
+      1.1903225806451612,
+      1.1903225806451614
+    ],
+    "right_contact": [
+      true,
+      true
+    ],
+    "quaternion_component_max_difference": 4.7808978997920804e-14,
+    "translation_max_difference_m": 2.220446049250313e-16,
+    "right_gap_m": [
+      0.00010000000130324506,
+      0.00010000000130424822
+    ]
+  },
+  "maximum_target_residual_m": 0.000999999912964223,
+  "maximum_unreachable_extension_m": 0.0009999197490306866,
+  "maximum_articulation_envelope_violation_degrees": 0.0,
+  "endpoint_left_touchdown_time_s": 2.46,
+  "maximum_extra_clearance_m": 0.004467881140086501,
+  "classification": "narrow event/common-floor closure plus dense physical regression; not serialized, visual, Unity or production acceptance"
+}
