@@ -4,7 +4,7 @@
 
 The adapter-only numerical correction is frozen at `24c0651e6d815f946049c516899c2bebe8539bab` (tree `310af9feb7419a8ed5bedd3946bfef0a7936a246`), based on diagnostic-message head `ee8e0e5354736bd5afde29e3988b7c5fb03f3417`.
 
-Root's final narrow review and the independent reviewer-two closure report P0=0, P1=0, and P2=0. The actual old-source public package compile launched from intermediate `bf6af4f32df6bb9ee4166c3a4b88af2be246f5a2` remains **RUNNING / UNACCEPTED** at this report boundary. No emitted, visual, Unity, anatomical, or production acceptance is claimed.
+Root's final narrow review and the independent reviewer-two closure report P0=0, P1=0, and P2=0. The actual old-source public package compile launched from intermediate `bf6af4f32df6bb9ee4166c3a4b88af2be246f5a2` is **BLOCKED / UNACCEPTED**. It cleared the original `t=0.2238918918918919` failure, then stopped at `t=1.3942162162162162` because the left authored-material floor search did not converge. `evidence/old-source-public-compile.log` preserves the exact terminal result. No emitted, visual, Unity, anatomical, or production acceptance is claimed.
 
 ## Exact failure
 
