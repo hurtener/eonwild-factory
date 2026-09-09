@@ -6,7 +6,14 @@ import numpy as np
 import pytest
 from eonwild_motion.errors import ContractError
 from eonwild_motion.factory.emitted_tangent import endpoint_tangent
-from eonwild_motion.factory.handoff import _boundary,compare_boundaries,require_pair,_serialized_motor_velocity,_skin_boundary
+from eonwild_motion.factory.handoff import (
+    _boundary,
+    _calibrated_contact_profile,
+    _serialized_motor_velocity,
+    _skin_boundary,
+    compare_boundaries,
+    require_pair,
+)
 from eonwild_motion.glb.container import Glb
 from eonwild_motion.solve.whole_body_gait_transition import _build_glb
 from test_exact_emitted_tangent import ROOT, _asset_clip, _cubic_asset
@@ -34,6 +41,48 @@ def test_native_uneven_boundary_alignment_without_mutation():
     assert compare_test(a,b,[8,0,0])['status']=='PASS'
     for value,prior in zip((a,b),old):
         for key in ('times','positions','rotations','skin'):assert np.array_equal(value[key],prior[key])
+
+
+def test_handoff_contact_plane_uses_bound_animal_scale_without_mutating_input():
+    recipe = json.loads((ROOT / 'recipes/heavy-biped/tarbosaurus-pin-552-1-adult-walk.v10.json').read_text())
+    raw = json.loads((ROOT / recipe['contact_profile']['path']).read_text())
+    before = deepcopy(raw)
+
+    def locked(reference):
+        return json.loads((ROOT / reference['path']).read_text())
+
+    calibrated = _calibrated_contact_profile(recipe, locked)
+    animal = locked(recipe['animal'])
+    source_hindlimbs = [
+        animal['geometry_calibration']['source_measurements'][key]['value']
+        for key in ('left_semantic_hindlimb', 'right_semantic_hindlimb')
+    ]
+    scale = animal['measurements']['hindlimb_length']['value'] / np.mean(source_hindlimbs)
+    raw_level = raw['geometry']['ground']['level_m']
+    assert calibrated['geometry']['ground']['level_m'] == pytest.approx(
+        raw_level * scale, rel=0, abs=1e-20,
+    )
+    assert raw == before
+
+
+def test_handoff_contact_plane_preserves_unscaled_legacy_recipe():
+    profile = {'geometry': {'ground': {'level_m': 2.5, 'up_axis': 'Y'}}}
+    recipe = {
+        'contact_profile': {'path': 'contact.json', 'sha256': 'contact'},
+        'source': {'path': 'source.glb', 'sha256': 'source'},
+    }
+    assert _calibrated_contact_profile(recipe, lambda _: deepcopy(profile)) == profile
+
+
+def test_handoff_animal_calibration_rejects_source_substitution():
+    recipe = json.loads((ROOT / 'recipes/heavy-biped/tarbosaurus-pin-552-1-adult-walk.v10.json').read_text())
+    recipe['source']['sha256'] = '0' * 64
+
+    def locked(reference):
+        return json.loads((ROOT / reference['path']).read_text())
+
+    with pytest.raises(ContractError, match='bound to the admitted geometry'):
+        _calibrated_contact_profile(recipe, locked)
 
 
 def test_antipodal_quaternion_is_not_a_false_snap():

@@ -1,4 +1,4 @@
-8903e05bd484212516e00d67a37ba40cf188d208f3bc5b0e35949d2686ac8a63  ./README.md
+cb13c03d835823bece14b39605a483e46d4795f8a6ec410d7ec43a5637d97b31  ./README.md
 5b588476fdca39e8306f3f39a326792a7895e40bd14a06a2f3be1460c3c5aa7a  ./evidence/admission.json
 9aa42ccf620aeb5b6a05a1aed71e22cf89340b12dc7fc9f99e7097d024e96023  ./evidence/constant-envelope-probe.json
 cc8ec2bfc6d493468046ff7ca6d85b5d08447010d1e5c5b4a15550c63a994479  ./evidence/contact-influence-completeness.json
@@ -12,3 +12,10 @@ c9564359c155f2f0f2eca837fed1e326233a9ad0bfcdc2ef310901e0b5088956  ./evidence/pos
 26ebf9d1b56c7037731884367c766dceaf06e313eaa001d8584124a1b788f277  ./evidence/rig-preparation-receipt.json
 011df85cfe74be03fa66728d9e50860d1b4df3f06743e81a4426fc62bfdc8858  ./evidence/root-opaque-overlay-receipt.json
 54c95eb21b7ae6d37c9b55daf65fb7ca90538d7da14c12c6c9c121670f9c4eb7  ./evidence/walk-compile.log
+0e99fa1ec75f497c58ffec8e75ecc8476bf9e5470f6f5d9a5f042aa45b61d1e5  ./integration/full-suite.log
+9d0d4325919427805b43e3ebdba1da9ab943dc7dcc0a35221484da5cb71fb6ab  ./integration/receipt.json
+f3da27b746fccd4e4130de9807ad9b53d5f2adf7435cc2682a7e51bc712a20b1  ./integration/reviewer2-narrow-closure.md
+90c0bf551fd253510bafdba6d3c6d764a563e218aaf7ef7a91e10ac3dd5c6222  ./integration/root-narrow-closure.json
+60a8976ff6d141ce7727ffde2854a616a5ef8475b02f9d110f23d78448f983d9  ./integration/root-narrow-tests.log
+6dae3ab25d6f0c88e1b3bae21651fb13a04bbd79f347c0e0f07733d084106044  ./integration/root-source-reproduction.json
+bbfd5fa3cf42d9c6be7ea95ba0925f0dcd77ea1331fccf138bc78e41e3dd0038  ./integration/transfer-envelope.json

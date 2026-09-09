@@ -1,0 +1,165 @@
+{
+  "schema": "eonwild.motion.review-stills.v1",
+  "source_sha256": "09b641edf3fed8eb4363e5cb51dd5e46581ec247df1aa149cd1d57efe3be264f",
+  "manifest_sha256": "8dea3f8bc07f42528bb5bf36c390aa03475c5bb0f716c70daf0798655aaf0193",
+  "renderer_sha256": "c5337bacb3fb382eda446b5fa96a6674e8327324f00a01f828ae2cf1f0923b5b",
+  "timing_sampler_sha256": "85f72e471971e8aca9d813649af17dbdd4c672bbddc5791b64ba8f2db4e2d000",
+  "source_kind": "unapproved_candidate",
+  "technical_status": "PASS",
+  "blender": "5.2.0 LTS",
+  "engine": "CYCLES_CPU",
+  "samples": 4,
+  "denoising": false,
+  "declared_duration_s": 7.9875,
+  "source_duration_s": 7.9875,
+  "source_frame_start": 0.0,
+  "source_frame_end": 958.5,
+  "source_fps": 120.0,
+  "requested_native_times_s": [
+    0.6,
+    0.9,
+    1.2,
+    1.5,
+    2.1,
+    2.3,
+    3.3,
+    4.5
+  ],
+  "stills": [
+    {
+      "index": 0,
+      "source_time_s": 0.6,
+      "blender_frame": 72.0,
+      "camera_translation_m": [
+        0.0,
+        -0.00017583370208740234,
+        0.0
+      ],
+      "file": "frames/00000.png",
+      "sha256": "07a564335be1b2d4d11b9ff49150d28f7694c1525d02eed9b45ae86f6437a716"
+    },
+    {
+      "index": 1,
+      "source_time_s": 0.9,
+      "blender_frame": 108.0,
+      "camera_translation_m": [
+        0.0,
+        -0.0026056766510009766,
+        0.0
+      ],
+      "file": "frames/00001.png",
+      "sha256": "1d80e3b4e6546ecf096e567d9c21f05c57f4cfb1f7aceb9c502564fef545d8f8"
+    },
+    {
+      "index": 2,
+      "source_time_s": 1.2,
+      "blender_frame": 144.0,
+      "camera_translation_m": [
+        0.0,
+        -0.01218259334564209,
+        0.0
+      ],
+      "file": "frames/00002.png",
+      "sha256": "806b65b2a2ba3af55a00387beb8fde4ae7ce3e7e2c030d3c5167f8fc6226d0ce"
+    },
+    {
+      "index": 3,
+      "source_time_s": 1.5,
+      "blender_frame": 180.0,
+      "camera_translation_m": [
+        0.0,
+        -0.035459160804748535,
+        0.0
+      ],
+      "file": "frames/00003.png",
+      "sha256": "05bb79411999e39e774a702379fc77b478c88f84ac664de698c491b4d63dfd1f"
+    },
+    {
+      "index": 4,
+      "source_time_s": 2.1,
+      "blender_frame": 252.0,
+      "camera_translation_m": [
+        2.2351741790771484e-08,
+        -0.15088379383087158,
+        0.0
+      ],
+      "file": "frames/00004.png",
+      "sha256": "d5156ab7e083398a8bc0e686d758d4126cd9c4fd6a9aeb9823f0a2e3198db36d"
+    },
+    {
+      "index": 5,
+      "source_time_s": 2.3,
+      "blender_frame": 276.0,
+      "camera_translation_m": [
+        2.7939677238464355e-08,
+        -0.21641552448272705,
+        0.0
+      ],
+      "file": "frames/00005.png",
+      "sha256": "5f0ad42040774f6b6bc4157ab751d11424a03eb6d7185bb61871a12ae6d5f4a8"
+    },
+    {
+      "index": 6,
+      "source_time_s": 3.3,
+      "blender_frame": 396.0,
+      "camera_translation_m": [
+        9.499490261077881e-08,
+        -0.7900518178939819,
+        0.0
+      ],
+      "file": "frames/00006.png",
+      "sha256": "40d786e3ffa71da52878713a78d84a1b82b32ed7bd3426e937f6dae04884c1c7"
+    },
+    {
+      "index": 7,
+      "source_time_s": 4.5,
+      "blender_frame": 540.0,
+      "camera_translation_m": [
+        3.073364496231079e-07,
+        -1.94399893283844,
+        -2.384185791015625e-07
+      ],
+      "file": "frames/00007.png",
+      "sha256": "ffb7475c0c56d85b610c8ddc54b531a887ff8b2085289522d13468d41f68d388"
+    }
+  ],
+  "mode": "root_motion",
+  "view": "three-quarter",
+  "focus": "body",
+  "camera": {
+    "schema": "eonwild.motion.review-camera.v1",
+    "view": "three-quarter",
+    "focus": "body",
+    "center_relative_root": [
+      -0.05943483114242554,
+      2.1172964572906494,
+      -1.2360496520996094
+    ],
+    "position_relative_root": [
+      16.347450256347656,
+      -8.547179222106934,
+      1.7288391590118408
+    ],
+    "orthographic_scale": 11.899106522798538
+  },
+  "media": {
+    "camera.json": "436774554d0599cfdf6fc79f14b62aaa917efcfe998ed14a34b27a45267f5422",
+    "timeline.json": "5b46e1731a550c6f9f88c004f05e477706a9995ee2fbd3969e1dd64567fa1b8f"
+  },
+  "diagnostic_scope": "requested native-time stills only; no encoded film or full-cycle review claim",
+  "visual_approval": "PENDING",
+  "unity_import_validation": "NOT_RUN",
+  "ground_level_m": 7.44670325699803e-08,
+  "presentation": "fixed declared floor and 0.5 m world checker; camera-only root tracking; no bbox floor fitting or animal rescaling",
+  "native_playback": {
+    "mode": "TASK_OWNED_EXACT_SOURCE_TIME_SAMPLING",
+    "scope": "native Blender render evaluation only; not native curve or FBX support",
+    "source_sha256": "09b641edf3fed8eb4363e5cb51dd5e46581ec247df1aa149cd1d57efe3be264f",
+    "adapter_sha256": "34fc046babb83dbdee960751119bb7767bd312325adea894a31249a19bd9e647",
+    "timeline_start_s": 0.0,
+    "timeline_end_s": 7.987500190734863,
+    "track_count": 156,
+    "cubic_track_count": 156,
+    "detached_action_owner_count": 3
+  }
+}

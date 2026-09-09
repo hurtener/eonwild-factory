@@ -19,7 +19,9 @@ admission adds only the geometry contract and produces the checked-in source
 `a403679deb968ec88f7b8b89e3e399cc0881e9cc602e765a6e55934c28ad3826`.
 The reopened neutral full-weight skin error is 0.375 micrometres. Eleven local
 scales with float32 noise were normalized under an explicit 10 micrometre-per-
-metre bound; the maximum reopened world-matrix difference is 6.973 micrometres.
+metre bound; the largest reopened world-matrix component difference is
+6.973e-6. That mixed translation/linear-matrix metric is not a skin-distance
+measurement.
 
 The source's straight parallel legs and all original joint positions and
 lengths were authored as drift-control placeholders. The new hip, knee, ankle,
@@ -78,9 +80,11 @@ The first observed blocker is kinematic incompatibility between the copied
 0.6-body-height Tarbosaurus walk intent and the scaled provisional Allosaurus
 limb/foot geometry at canonical touchdown. This does not establish whether the
 surface-fitted pivots, the body-height normalization, or the copied stride intent
-is the incorrect assumption. The next bounded step is a source-bound reach
-envelope at the two touchdown anchors, followed by one explicit Allosaurus
-program intent derived from admitted limb geometry if that envelope supports it.
+is the incorrect assumption. The completed source-bound reach audit finds a
+44.993 mm initial touchdown deficit, compared with a 154.203 mm margin in the
+Tarbosaurus working baseline. The next step is a shared morphology-aware intent
+resolver using declared animal support posture and family gait rules;
+individually tuned animal clips would not establish reusable transfer.
 The correction guard, contact thresholds, and articulation limits remain
 unchanged.
 
@@ -109,3 +113,16 @@ the real two-set Allosaurus geometry admits all 40,105 vertices and a one-set
 omission rejects before tangent measurement. Eighty-nine focused tests pass.
 The external reach-envelope audit remains diagnostic evidence for a future shared
 morphology resolver and does not alter this rejected walk or its limits.
+
+## Combined integration gate
+
+The clean combined head `215588c75c5e64f5ce9f9dbbe3fa5fcfdfca03a4` passed
+**1,078 tests plus 21 subtests in 632.05 seconds**, with no exclusions. Both
+reviewers closed the two reproduced compatibility findings in a narrow postfix
+review. Root independently reran the actual preserved source through both
+preparation configurations and reproduced `c56772d...` and `c611bb49...` exactly.
+The original-to-admitted full-weight surface comparison at the preceding
+implementation remains below 0.525 micrometres; unchanged output bytes preserve
+that result. Compact source, review, reach and test evidence is retained in
+[integration/receipt.json](integration/receipt.json). This is a source-preparation
+gate, not acceptance of Allosaurus motion or anatomy.

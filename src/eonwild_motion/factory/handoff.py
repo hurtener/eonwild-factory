@@ -41,6 +41,23 @@ def _digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _calibrated_contact_profile(recipe: dict, locked) -> dict:
+    """Resolve the same source-bound contact plane used by the compiler."""
+    profile = locked(recipe["contact_profile"])
+    animal_reference = recipe.get("animal")
+    if animal_reference is None:
+        return profile
+    try:
+        source_sha256 = recipe["source"]["sha256"]
+    except (KeyError, TypeError) as exc:
+        raise ContractError("handoff animal calibration lacks a bound source") from exc
+    from .animal import load_animal_instance, scaled_contact_profile
+    animal = load_animal_instance(
+        locked(animal_reference), source_sha256=source_sha256,
+    )
+    return scaled_contact_profile(profile, animal["uniform_scale"])
+
+
 def _motion_set_baseline_identity(package: Path):
     names = ("motion-set.json", "motion-baseline.json", "motion-intent.json")
     present = [name for name in names if (package / name).is_file()]
@@ -367,7 +384,7 @@ def verify_handoff(transition: Path, steady: Path, *, root: Path) -> dict:
         if root not in path.parents or _digest(path)!=reference['sha256']:
             raise ContractError('handoff profile is not the locked source')
         return _json(path)
-    profile,rig = locked(tr['contact_profile']),locked(tr['rig'])
+    profile,rig = _calibrated_contact_profile(tr, locked),locked(tr['rig'])
     from ..planning.gait_transition import load_gait_transition, declared_handoff_phase
     from ..planning.grounded_gait import load_grounded_gait
     from ..planning.airborne_gait import load_airborne_gait
