@@ -96,3 +96,16 @@ unchanged.
 The checked-in report contains compact receipts only. Native overlay images,
 scripts, the preserved source, and failed diagnostic scratch remain under
 `ARC/audits` and `ARC/out` on external storage.
+
+## Round-one postfix
+
+Two independently reproduced compatibility gaps are closed at implementation
+checkpoint `a26e106`. When scale normalization is omitted, rig preparation again
+uses the historical exact target propagation: the unchanged v1 Allosaurus input
+reproduces retained source `c56772d...` byte-for-byte. The explicit normalized v2
+path still reproduces `c611bb49...` byte-for-byte. The exact emitted-tangent skin
+reader now invokes the same complete primitive binding as contact and solve paths;
+the real two-set Allosaurus geometry admits all 40,105 vertices and a one-set
+omission rejects before tangent measurement. Eighty-nine focused tests pass.
+The external reach-envelope audit remains diagnostic evidence for a future shared
+morphology resolver and does not alter this rejected walk or its limits.
