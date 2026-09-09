@@ -131,6 +131,12 @@ def test_transition_adapter_uses_locomotion_clock_and_preserves_contact_authorit
     adapted = AuthoredMaterialContactAdapter.for_transition(
         steady, steady_query=steady_query, transition_query=query
     )
+    transition_binding = adapted.binding()
+    assert transition_binding["mode"] == "transition_locomotion_time.v1"
+    assert transition_binding["steady_query_binding_sha256"]
+    assert transition_binding["steady_adapter_binding_sha256"] == _digest(
+        steady.binding()
+    )
     candidate = next(row for row in plan["samples"] if row["performance_gain"] > 0)
     before = deepcopy(candidate)
     result = adapted.resolve(query, candidate, float(candidate["time_s"]))
@@ -290,6 +296,26 @@ def test_adapter_binding_names_local_joint_feasibility_semantics():
         ),
     }
     assert _digest(binding) != _digest(legacy)
+
+
+def test_steady_adapter_binding_retains_legacy_v1_field_set():
+    binding = dict(_build(_inputs()).binding())
+    assert set(binding) == {
+        "schema",
+        "capsule_sha256",
+        "query_binding_sha256",
+        "clearance_scale",
+        "retime_policy",
+        "material_clearance_policy_sha256",
+        "material_clearance_policy",
+        "target_maximum_material_clearance_m",
+        "material_effector_resolution",
+        "target_material_gap_m",
+        "target_residual_limit_m",
+        "source_fps",
+        "source_interval_count",
+        "source_duration_s",
+    }
 
 
 def test_adapter_recovers_exact_monotone_floor_iteration_exhaustion(monkeypatch):
