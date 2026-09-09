@@ -82,6 +82,25 @@ def test_complete_old_package_remains_inspectable_without_recompiling(candidate)
     assert result['production_approved'] is False
 
 
+def test_unbound_authored_material_reference_rejects_legacy_package(candidate, tmp_path):
+    out = tmp_path / 'candidate'
+    shutil.copytree(candidate, out)
+    recipe = json.loads((out / 'recipe.json').read_text())
+    binding = {'path': 'private/reference.json', 'sha256': 'a' * 64}
+    recipe['authored_material_reference'] = binding
+    write_json(out / 'recipe.json', recipe)
+    lock = json.loads((out / 'inputs.lock.json').read_text())
+    lock['inputs']['authored_material_reference'] = binding
+    lock['recipe_sha256'] = digest((out / 'recipe.json').read_bytes())
+    write_json(out / 'inputs.lock.json', lock)
+    rehash(out, 'recipe.json')
+    rehash(out, 'inputs.lock.json')
+    with pytest.raises(
+        ContractError, match='requires compile-set package provenance'
+    ):
+        verify_package(out)
+
+
 @pytest.mark.parametrize('case', [
     'status-missing', 'status-approved',
     'production-missing', 'production-true', 'production-integer-zero',

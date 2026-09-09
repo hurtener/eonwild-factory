@@ -15,7 +15,8 @@ from .io import digest, frame_axes, read_json
 
 
 _INPUTS = ('source', 'rig', 'program_profile', 'animal', 'contact_profile',
-           'performance_profile', 'gait_profile', 'articulation_profile')
+           'performance_profile', 'gait_profile', 'articulation_profile',
+           'authored_material_reference')
 
 
 def require_metadata(path: Path, manifest: dict) -> None:
