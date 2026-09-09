@@ -971,8 +971,6 @@ class SourceMotionQuery:
             up_index = int(np.argmax(np.abs(self._context.up)))
 
             for foot_side in ("left", "right"):
-                if row["feet"][foot_side]["contact"]:
-                    continue
                 requested_gap = TARGET_MATERIAL_GAP_M + float(
                     row["feet"][foot_side]["authored_material_clearance_m"]
                 )
@@ -1041,8 +1039,6 @@ class SourceMotionQuery:
                     )
             pose, worlds, material = solve_owned()
             for foot_side in ("left", "right"):
-                if row["feet"][foot_side]["contact"]:
-                    continue
                 requested_clearance = float(
                     row["feet"][foot_side]["authored_material_clearance_m"]
                 )

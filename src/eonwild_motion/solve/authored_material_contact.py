@@ -384,9 +384,15 @@ class AuthoredMaterialContactAdapter:
         result = deepcopy(dict(row))
         duration = query._times[-1] - query._times[0]
         phase = (time_s - query._times[0]) / duration
-        x = (phase % 1.0) * (len(self._paths["left"].contact) - 1)
+        cycle_index = math.floor(phase)
+        cycle_phase = phase - cycle_index
+        interval_count = len(self._paths["left"].contact) - 1
+        x = cycle_phase * interval_count
+        nearest_key = round(x)
+        if math.isclose(x, nearest_key, rel_tol=0.0, abs_tol=1e-12):
+            x = float(nearest_key % interval_count)
         key = int(math.floor(x))
-        at_key = math.isclose(x, key, rel_tol=0, abs_tol=1e-12)
+        at_key = x == key
         for side in ("left", "right"):
             path = self._paths[side]
             # Contact owns complete key-to-key intervals. A switch is legal only
@@ -412,11 +418,10 @@ class AuthoredMaterialContactAdapter:
                 else ((x - path.toe_off_index) % (len(path.contact) - 1))
                 / swing_intervals
             )
-            foot["touchdown_time_s"] = query._times[0] + duration * (
-                path.touchdown_index
-                if x >= path.touchdown_index
-                else path.touchdown_index - (len(path.contact) - 1)
-            ) / (len(path.contact) - 1)
+            touchdown_cycle = cycle_index + path.touchdown_index / interval_count
+            if touchdown_cycle > phase + 1e-12:
+                touchdown_cycle -= 1
+            foot["touchdown_time_s"] = query._times[0] + duration * touchdown_cycle
             gait = query._locomotion_gait
             if contact:
                 foot["toe_flex_degrees"] = 0.0

@@ -1,5 +1,6 @@
 from copy import deepcopy
 import hashlib
+import math
 
 import pytest
 
@@ -222,16 +223,27 @@ def test_contact_switches_preserve_zero_height_and_consistent_row_phase():
     duration = float(inputs["plan"]["duration_s"])
     event = duration * 0.5
     before = query.evaluate(event - 1e-8)
+    adjacent_float = query.evaluate(math.nextafter(event, -math.inf))
     exact = query.evaluate(event)
     after = query.evaluate(event + 1e-8)
     assert before.row["feet"]["right"]["contact"] is False
+    assert adjacent_float.row["feet"]["right"]["contact"] is True
     assert exact.row["feet"]["right"]["contact"] is True
     assert after.row["feet"]["right"]["contact"] is True
     assert before.row["feet"]["right"]["height_m"] < 1e-7
-    assert exact.row["feet"]["right"]["height_m"] == 0.0
-    assert after.row["feet"]["right"]["height_m"] == 0.0
-    for value in (before, exact, after):
+    assert adjacent_float.row["feet"]["right"]["height_m"] == pytest.approx(
+        exact.row["feet"]["right"]["height_m"], abs=1e-12
+    )
+    assert after.row["feet"]["right"]["height_m"] == pytest.approx(
+        exact.row["feet"]["right"]["height_m"], abs=1e-7
+    )
+    for value in (before, adjacent_float, exact, after):
         assert value.row["support_count"] == sum(
             int(value.row["feet"][side]["contact"]) for side in ("left", "right")
         )
         assert value.row["flight"] is (value.row["support_count"] == 0)
+    endpoint = query.evaluate(duration)
+    assert endpoint.row["feet"]["left"]["touchdown_time_s"] == pytest.approx(
+        duration
+    )
+    assert endpoint.row["feet"]["right"]["touchdown_time_s"] < duration
