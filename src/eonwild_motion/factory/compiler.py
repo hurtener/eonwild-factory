@@ -204,10 +204,12 @@ def _grounded_source_query_plan(
 
 def _load_recipe_document(recipe: Any, root: Path) -> tuple[dict, dict[str, Path]]:
     required = {"schema", "id", "version", "family", "program", "source", "rig", "program_profile", "forward_axis", "up_axis"}
-    if not isinstance(recipe, dict) or set(recipe) - required - {"animal", "contact_profile", "performance_profile", "gait_profile", "articulation_profile", "description", "supersedes", "authored_material_reference"} or not required <= set(recipe):
+    if not isinstance(recipe, dict) or set(recipe) - required - {"animal", "contact_profile", "performance_profile", "gait_profile", "articulation_profile", "description", "supersedes", "authored_material_reference", "steady_motion"} or not required <= set(recipe):
         raise ContractError("recipe contains missing or unknown fields")
     if recipe["schema"] != SCHEMA or recipe["program"] not in PROGRAMS:
         raise ContractError("unsupported recipe schema or program")
+    if "steady_motion" in recipe and recipe["program"] != "gait_transition":
+        raise ContractError("steady motion is supported only by gait-transition recipes")
     if not isinstance(recipe["id"], str) or not recipe["id"] or not isinstance(recipe["family"], str) or not recipe["family"]:
         raise ContractError("recipe id and family are required")
     if type(recipe["version"]) is not int or recipe["version"] < 1:
@@ -231,7 +233,10 @@ def _load_recipe_document(recipe: Any, root: Path) -> tuple[dict, dict[str, Path
     elif recipe["program"] == "gait_transition":
         raise ContractError("gait transition requires a locked locomotion profile")
     if "authored_material_reference" in recipe:
-        if recipe["program"] != "grounded_gait":
+        if recipe["program"] != "grounded_gait" and not (
+            recipe["program"] == "gait_transition"
+            and isinstance(recipe.get("steady_motion"), str)
+        ):
             raise ContractError(
                 "authored material reference is currently supported only for steady grounded gait"
             )
@@ -398,6 +403,7 @@ def compile_recipe(
             set_bytes=_motion_set_resolution.set_bytes,
             baseline_bytes=_motion_set_resolution.baseline_bytes,
             intent_bytes=_motion_set_resolution.intent_bytes,
+            steady_intent_bytes=_motion_set_resolution.steady_intent_bytes,
             resolution_lock=_motion_set_resolution.lock,
         )
         if recipe != _motion_set_resolution.recipe:
@@ -648,6 +654,8 @@ def compile_recipe(
             raise ContractError("source CUBICSPLINE emission requires grounded locomotion")
         pass  # Already solved by the persistent-support program above.
     elif cubic:
+        transition_steady_adapter = None
+        transition_steady_query = None
         if (
             "performance_profile" not in snapshots
             or contact_profile is None
@@ -704,12 +712,36 @@ def compile_recipe(
                 up=up,
                 solve_policy=dict(_motion_set_resolution.solve_policy),
             )
-            if source_query_plan != plan:
+            if transition is None and source_query_plan != plan:
                 raise ContractError(
                     "acquired reference source-query plan differs from baseline assembly"
                 )
-            adapter = AuthoredMaterialContactAdapter.build(
-                query,
+            steady_solver_gait = AirborneGait(
+                step_period_s=locomotion_gait.step_period_s,
+                cycles=locomotion_gait.cycles,
+                sample_hz=locomotion_gait.sample_hz,
+                swing_hip_lift_degrees=locomotion_gait.swing_hip_lift_degrees,
+            )
+            steady_query = (
+                query
+                if transition is None
+                else SourceMotionQuery(
+                    source,
+                    semantic_roles=roles,
+                    solver_gait=steady_solver_gait,
+                    locomotion_gait=locomotion_gait,
+                    transition=None,
+                    plan=source_query_plan,
+                    contact_profile=contact_profile,
+                    up_axis=tuple(up),
+                    forward_axis=tuple(forward),
+                    source_clip=None,
+                    legacy_overlay=False,
+                    articulation_profile=articulation_profile,
+                )
+            )
+            steady_adapter = AuthoredMaterialContactAdapter.build(
+                steady_query,
                 json.loads(reference.capsule_bytes),
                 authored_source=reference.source_bytes,
                 retime_policy=descriptor["adapter"]["retime_policy"],
@@ -718,25 +750,43 @@ def compile_recipe(
                     _motion_set_resolution.authored_material_clearance_bytes
                 ),
             )
-            query = SourceMotionQuery(
+            transition_steady_adapter = steady_adapter
+            transition_steady_query = SourceMotionQuery(
                 source,
                 semantic_roles=roles,
-                solver_gait=gait,
+                solver_gait=steady_solver_gait,
                 locomotion_gait=locomotion_gait,
-                transition=transition,
-                plan=plan,
+                transition=None,
+                plan=source_query_plan,
                 contact_profile=contact_profile,
                 up_axis=tuple(up),
                 forward_axis=tuple(forward),
                 source_clip=None,
                 legacy_overlay=False,
                 articulation_profile=articulation_profile,
-                authored_material_contact=adapter,
+                authored_material_contact=steady_adapter,
             )
-            acquired_binding = {
-                **reference.binding,
-                "adapter": _thaw(adapter.binding()),
-            }
+            adapter = steady_adapter if transition is None else None
+            if adapter is not None:
+                query = SourceMotionQuery(
+                    source,
+                    semantic_roles=roles,
+                    solver_gait=gait,
+                    locomotion_gait=locomotion_gait,
+                    transition=transition,
+                    plan=plan,
+                    contact_profile=contact_profile,
+                    up_axis=tuple(up),
+                    forward_axis=tuple(forward),
+                    source_clip=None,
+                    legacy_overlay=False,
+                    articulation_profile=articulation_profile,
+                    authored_material_contact=adapter,
+                )
+                acquired_binding = {
+                    **reference.binding,
+                    "adapter": _thaw(adapter.binding()),
+                }
         law = CanonicalConstantSkinTargetLaw.build(
             query,
             support_anchor_provider,
@@ -775,6 +825,32 @@ def compile_recipe(
                 articulation_profile=articulation_profile,
                 transition_clearance=transition_clearance,
             )
+            if transition_steady_adapter is not None:
+                adapter = AuthoredMaterialContactAdapter.for_transition(
+                    transition_steady_adapter,
+                    steady_query=transition_steady_query,
+                    transition_query=query,
+                )
+                query = SourceMotionQuery(
+                    source,
+                    semantic_roles=roles,
+                    solver_gait=gait,
+                    locomotion_gait=locomotion_gait,
+                    transition=transition,
+                    plan=plan,
+                    contact_profile=contact_profile,
+                    up_axis=tuple(up),
+                    forward_axis=tuple(forward),
+                    source_clip=None,
+                    legacy_overlay=False,
+                    articulation_profile=articulation_profile,
+                    transition_clearance=transition_clearance,
+                    authored_material_contact=adapter,
+                )
+                acquired_binding = {
+                    **reference.binding,
+                    "adapter": _thaw(adapter.binding()),
+                }
             law = CanonicalConstantSkinTargetLaw.build(
                 query,
                 support_anchor_provider,
@@ -1274,6 +1350,11 @@ def _verify_motion_set_provenance(
         set_bytes=(path / "motion-set.json").read_bytes(),
         baseline_bytes=(path / "motion-baseline.json").read_bytes(),
         intent_bytes=(path / "motion-intent.json").read_bytes(),
+        steady_intent_bytes=(
+            (path / "steady-motion-intent.json").read_bytes()
+            if (path / "steady-motion-intent.json").exists()
+            else None
+        ),
         resolution_lock=resolution_lock,
     )
     if reconstructed != recipe:
@@ -1317,14 +1398,17 @@ def _verify_motion_set_provenance(
         or "authored_material_clearance_policy_sha256" in resolution_lock
     ):
         raise ContractError("unbound authored material clearance policy is not allowed")
-    if "authored_material_reference" in intent:
+    reference_intent = intent
+    if "steady_motion" in intent:
+        reference_intent = read_json(path / "steady-motion-intent.json")
+    if "authored_material_reference" in recipe:
         reference = packaged_reference(path)
         if not has_clearance_policy:
             raise ContractError("authored material reference lacks clearance policy")
         reference_binding = reference.binding
         if (
             digest(reference.descriptor_bytes)
-            != intent["authored_material_reference"]["sha256"]
+            != reference_intent["authored_material_reference"]["sha256"]
             or resolution_lock.get("authored_material_reference")
             != reference_binding
         ):
@@ -1535,7 +1619,7 @@ def _verify_motion_set_provenance(
         canonical_support_anchors=solve_policy["canonical_support_anchors"],
         skin_refinement=solve_policy["skin_refinement"],
     )
-    if "authored_material_reference" in intent:
+    if "authored_material_reference" in recipe:
         solver_gait = AirborneGait(
             step_period_s=gait.step_period_s,
             cycles=gait.cycles,
@@ -1567,7 +1651,7 @@ def _verify_motion_set_provenance(
             legacy_overlay=False,
             articulation_profile=articulation_profile,
         )
-        expected_adapter = AuthoredMaterialContactAdapter.build(
+        steady_adapter = AuthoredMaterialContactAdapter.build(
             bare_query,
             json.loads(reference.capsule_bytes),
             authored_source=reference.source_bytes,
@@ -1575,6 +1659,86 @@ def _verify_motion_set_provenance(
             body_height_m=body_height,
             material_clearance_policy=json.loads(clearance_bytes),
         )
+        if transition is None:
+            expected_adapter = steady_adapter
+        else:
+            support_provider = CanonicalSupportAnchorProvider.build(
+                source,
+                semantic_roles=roles,
+                solver_gait=solver_gait,
+                locomotion_gait=gait,
+                transition=transition,
+                plan=plan,
+                contact_profile=contact_profile,
+                up_axis=tuple(up),
+                forward_axis=tuple(forward),
+                articulation_profile=articulation_profile,
+            )
+            raw_transition_query = SourceMotionQuery(
+                source,
+                semantic_roles=roles,
+                solver_gait=solver_gait,
+                locomotion_gait=gait,
+                transition=transition,
+                plan=plan,
+                contact_profile=contact_profile,
+                up_axis=tuple(up),
+                forward_axis=tuple(forward),
+                source_clip=None,
+                legacy_overlay=False,
+                articulation_profile=articulation_profile,
+            )
+            raw_transition_law = CanonicalConstantSkinTargetLaw.build(
+                raw_transition_query,
+                support_provider,
+                source=source,
+                semantic_roles=roles,
+                solver_gait=solver_gait,
+                locomotion_gait=gait,
+                transition=transition,
+                plan=plan,
+                contact_profile=contact_profile,
+                up_axis=tuple(up),
+                forward_axis=tuple(forward),
+                articulation_profile=articulation_profile,
+            )
+            clearance = GroundedTransitionClearanceResolver.build(
+                raw_transition_law, gait
+            )
+            transition_query = SourceMotionQuery(
+                source,
+                semantic_roles=roles,
+                solver_gait=solver_gait,
+                locomotion_gait=gait,
+                transition=transition,
+                plan=plan,
+                contact_profile=contact_profile,
+                up_axis=tuple(up),
+                forward_axis=tuple(forward),
+                source_clip=None,
+                legacy_overlay=False,
+                articulation_profile=articulation_profile,
+                transition_clearance=clearance,
+            )
+            expected_adapter = AuthoredMaterialContactAdapter.for_transition(
+                steady_adapter,
+                steady_query=SourceMotionQuery(
+                    source,
+                    semantic_roles=roles,
+                    solver_gait=solver_gait,
+                    locomotion_gait=gait,
+                    transition=None,
+                    plan=source_query_plan,
+                    contact_profile=contact_profile,
+                    up_axis=tuple(up),
+                    forward_axis=tuple(forward),
+                    source_clip=None,
+                    legacy_overlay=False,
+                    articulation_profile=articulation_profile,
+                    authored_material_contact=steady_adapter,
+                ),
+                transition_query=transition_query,
+            )
         expected_reference = {
             **reference.binding,
             "adapter": _thaw(expected_adapter.binding()),
@@ -1607,6 +1771,7 @@ def _expected_motion_set_provenance_files(
 ) -> set[str]:
     universe = {
         "motion-set.json", "motion-baseline.json", "motion-intent.json",
+        "steady-motion-intent.json",
         "performance-profile.json", "neutral-pose-profile.json",
         "program-profile.json", "gait-profile.json",
         "locomotion-response-policy.json", "neutral-support-profile.json",
@@ -1617,6 +1782,8 @@ def _expected_motion_set_provenance_files(
         "authored-material-clearance-policy.json",
     }
     expected = universe - {"gait-profile.json"}
+    if recipe.get("steady_motion") is None:
+        expected.discard("steady-motion-intent.json")
     if baseline_snapshot is None or baseline_snapshot.get("schema") != (
         "eonwild.motion.motion-baseline.v2"
     ):
@@ -1661,6 +1828,7 @@ def verify_package(path: Path) -> dict:
     required = {"root_motion.glb", "in_place.glb", "plan.json", "solver-receipt.json", "runtime.json", "validation.json", "inputs.lock.json", "recipe.json"}
     provenance_universe = {
         "motion-set.json", "motion-baseline.json", "motion-intent.json",
+        "steady-motion-intent.json",
         "performance-profile.json", "neutral-pose-profile.json",
         "program-profile.json", "gait-profile.json",
         "locomotion-response-policy.json", "neutral-support-profile.json",

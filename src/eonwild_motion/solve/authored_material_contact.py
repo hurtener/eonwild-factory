@@ -136,6 +136,12 @@ class AuthoredMaterialContactAdapter:
         retime_policy: str,
         material_clearance_policy: Mapping[str, Any],
         target_maximum_material_clearance_m: float,
+        mode: str = "steady.v1",
+        steady_query_binding_sha256: str | None = None,
+        steady_start_time_s: float | None = None,
+        steady_duration_s: float | None = None,
+        steady_adapter: "AuthoredMaterialContactAdapter" | None = None,
+        steady_query: Any | None = None,
     ):
         self._query_binding_sha256 = binding
         self._capsule = MappingProxyType(deepcopy(dict(capsule)))
@@ -148,6 +154,15 @@ class AuthoredMaterialContactAdapter:
         self._target_maximum_material_clearance_m = (
             target_maximum_material_clearance_m
         )
+        self._mode = mode
+        self._steady_query_binding_sha256 = steady_query_binding_sha256
+        self._steady_start_time_s = steady_start_time_s
+        self._steady_duration_s = steady_duration_s
+        self._steady_adapter = steady_adapter
+        self._steady_adapter_binding_sha256 = (
+            None if steady_adapter is None else _digest(steady_adapter.binding())
+        )
+        self._steady_query = steady_query
         self._integrity_sha256 = self._current_integrity_sha256()
 
     def _current_integrity_sha256(self) -> str:
@@ -160,6 +175,13 @@ class AuthoredMaterialContactAdapter:
                 "material_clearance_policy": self._material_clearance_policy,
                 "target_maximum_material_clearance_m": (
                     self._target_maximum_material_clearance_m
+                ),
+                "mode": self._mode,
+                "steady_query_binding_sha256": self._steady_query_binding_sha256,
+                "steady_start_time_s": self._steady_start_time_s,
+                "steady_duration_s": self._steady_duration_s,
+                "steady_adapter_binding_sha256": (
+                    self._steady_adapter_binding_sha256
                 ),
                 "paths": {
                     side: {
@@ -422,6 +444,57 @@ class AuthoredMaterialContactAdapter:
             target_maximum_material_clearance_m=target_maximum,
         )
 
+    @classmethod
+    def for_transition(
+        cls,
+        steady: "AuthoredMaterialContactAdapter",
+        *,
+        steady_query: Any,
+        transition_query: Any,
+    ) -> "AuthoredMaterialContactAdapter":
+        """Bind one steady authored path to a transition without taking its contacts."""
+        steady.validate_for_query(steady_query)
+        if steady_query._authored_material_contact is not steady:
+            raise ContractError(
+                "authored transition steady query uses another material adapter"
+            )
+        if transition_query._transition is None:
+            raise ContractError(
+                "authored transition adapter requires a transition query"
+            )
+        if _query_identity(transition_query) == _query_identity(steady_query):
+            raise ContractError("authored transition and steady queries must differ")
+        if (
+            transition_query._source.raw != steady_query._source.raw
+            or transition_query._roles != steady_query._roles
+            or transition_query._contact_profile != steady_query._contact_profile
+            or transition_query._up_axis != steady_query._up_axis
+            or transition_query._forward_axis != steady_query._forward_axis
+            or transition_query.context.articulation_profile
+            != steady_query.context.articulation_profile
+            or transition_query._locomotion_gait != steady_query._locomotion_gait
+        ):
+            raise ContractError(
+                "authored transition adapter and steady query bindings differ"
+            )
+        return cls(
+            binding=_query_identity(transition_query),
+            capsule=steady._capsule,
+            paths=steady._paths,
+            scale=steady._scale,
+            retime_policy=steady._retime_policy,
+            material_clearance_policy=steady._material_clearance_policy,
+            target_maximum_material_clearance_m=(
+                steady._target_maximum_material_clearance_m
+            ),
+            mode="transition_locomotion_time.v1",
+            steady_query_binding_sha256=_query_identity(steady_query),
+            steady_start_time_s=float(steady_query._times[0]),
+            steady_duration_s=float(steady_query._times[-1] - steady_query._times[0]),
+            steady_adapter=steady,
+            steady_query=steady_query,
+        )
+
     def validate_for_query(self, query: Any) -> None:
         if _query_identity(query) != self._query_binding_sha256:
             raise ContractError(
@@ -435,6 +508,16 @@ class AuthoredMaterialContactAdapter:
             raise ContractError(
                 "authored material contact derived path differs from its validated values"
             )
+        if self._steady_query is not None:
+            if (
+                _query_identity(self._steady_query) != self._steady_query_binding_sha256
+                or self._steady_query._authored_material_contact is not self._steady_adapter
+                or _digest(self._steady_adapter.binding())
+                != self._steady_adapter_binding_sha256
+            ):
+                raise ContractError(
+                    "authored transition steady query differs from its binding"
+                )
 
     def resolve(
         self, query: Any, row: Mapping[str, Any], time_s: float
@@ -446,8 +529,43 @@ class AuthoredMaterialContactAdapter:
         self, query: Any, row: Mapping[str, Any], time_s: float
     ) -> dict[str, Any]:
         result = deepcopy(dict(row))
-        duration = query._times[-1] - query._times[0]
-        phase = (time_s - query._times[0]) / duration
+        transition_mode = self._mode == "transition_locomotion_time.v1"
+        if transition_mode:
+            locomotion_time = _finite(
+                row.get("locomotion_time_s"), "transition locomotion time"
+            )
+            gain = _finite(row.get("performance_gain"), "transition performance gain")
+            if not 0.0 <= gain <= 1.0:
+                raise ContractError(
+                    "authored transition performance gain is outside [0,1]"
+                )
+            duration = float(self._steady_duration_s)
+            phase = (locomotion_time - float(self._steady_start_time_s)) / duration
+            self._steady_query._authored_material_contact.validate_for_query(
+                self._steady_query
+            )
+            steady_value = self._steady_query.evaluate(locomotion_time)
+            if steady_value.status != "AVAILABLE":
+                raise ContractError(
+                    "named steady authored source is unavailable at transition time"
+                )
+            steady_feet = steady_value.row["feet"]
+            if gain == 1.0 and (
+                any(
+                    bool(result["feet"][side]["contact"])
+                    != bool(steady_feet[side]["contact"])
+                    for side in ("left", "right")
+                )
+                or result["support_count"] != steady_value.row["support_count"]
+                or bool(result["flight"]) != bool(steady_value.row["flight"])
+            ):
+                raise ContractError(
+                    "full-gain transition contact state differs from named steady motion"
+                )
+        else:
+            gain = 1.0
+            duration = query._times[-1] - query._times[0]
+            phase = (time_s - query._times[0]) / duration
         cycle_index = math.floor(phase)
         cycle_phase = phase - cycle_index
         interval_count = len(self._paths["left"].contact) - 1
@@ -462,57 +580,104 @@ class AuthoredMaterialContactAdapter:
             # Contact owns complete key-to-key intervals. A switch is legal only
             # at a retained zero-clearance event key; interpolation on either
             # adjacent swing interval therefore approaches zero continuously.
-            contact = path.contact[key] and (at_key or path.contact[key + 1])
+            authored_contact = path.contact[key] and (at_key or path.contact[key + 1])
             foot = result["feet"][side]
-            foot["contact"] = bool(contact)
-            foot["height_m"] = (
-                0.0 if contact else self._scale * _linear(path.clearance_m, phase)
+            contact = bool(foot["contact"]) if transition_mode else authored_contact
+            authored_height = (
+                0.0
+                if authored_contact
+                else (self._scale * _linear(path.clearance_m, phase))
             )
-            foot["authored_material_clearance_m"] = float(foot["height_m"])
-            foot["forward_m"] = result["root_forward_m"] + _linear(
-                path.forward_m, phase
-            )
-            foot["foot_pitch_degrees"] = _linear(path.foot_pitch_degrees, phase)
+            authored_forward = result["root_forward_m"] + _linear(path.forward_m, phase)
+            authored_pitch = _linear(path.foot_pitch_degrees, phase)
+            if transition_mode:
+                authored_height = float(steady_feet[side]["height_m"])
+                authored_forward = (
+                    result["root_forward_m"]
+                    + float(steady_feet[side]["forward_m"])
+                    - float(steady_value.row["root_forward_m"])
+                )
+                authored_pitch = float(steady_feet[side]["foot_pitch_degrees"])
+                foot["authored_material_clearance_m"] = 0.0
+                if not contact:
+                    foot["height_m"] = float(
+                        (1.0 - gain) * foot["height_m"] + gain * authored_height
+                    )
+                    foot["authored_material_clearance_m"] = float(
+                        gain * authored_height
+                    )
+                    foot["forward_m"] = float(
+                        (1.0 - gain) * foot["forward_m"] + gain * authored_forward
+                    )
+                    foot["swing_phase"] = float(
+                        (1.0 - gain) * foot["swing_phase"]
+                        + gain * steady_feet[side]["swing_phase"]
+                    )
+                    foot["authored_material_clearance_m"] = float(
+                        gain
+                        * steady_feet[side].get(
+                            "authored_material_clearance_m", authored_height
+                        )
+                    )
+                foot["foot_pitch_degrees"] = float(
+                    (1.0 - gain) * foot["foot_pitch_degrees"] + gain * authored_pitch
+                )
+            else:
+                foot["contact"] = bool(contact)
+                foot["height_m"] = authored_height
+                foot["authored_material_clearance_m"] = float(foot["height_m"])
+                foot["forward_m"] = authored_forward
+                foot["foot_pitch_degrees"] = authored_pitch
             swing_intervals = (path.touchdown_index - path.toe_off_index) % (
                 len(path.contact) - 1
             )
-            foot["swing_phase"] = (
+            authored_swing_phase = (
                 0.0
-                if contact
+                if authored_contact
                 else ((x - path.toe_off_index) % (len(path.contact) - 1))
                 / swing_intervals
             )
+            if not transition_mode:
+                foot["swing_phase"] = authored_swing_phase
             touchdown_cycle = cycle_index + path.touchdown_index / interval_count
             if touchdown_cycle > phase + 1e-12:
                 touchdown_cycle -= 1
-            foot["touchdown_time_s"] = query._times[0] + duration * touchdown_cycle
+            if not transition_mode:
+                foot["touchdown_time_s"] = query._times[0] + duration * touchdown_cycle
             gait = query._locomotion_gait
             if contact:
                 foot["toe_flex_degrees"] = 0.0
             elif gait.toe_recovery_peak_fraction is not None:
-                foot["toe_flex_degrees"] = -recovery_pitch(
-                    foot["swing_phase"],
+                authored_toe = -recovery_pitch(
+                    authored_swing_phase,
                     gait.toe_flex_degrees,
                     gait.toe_recovery_peak_fraction,
                 )
             else:
-                recovery = math.sin(math.pi * smooth(foot["swing_phase"])) ** 2
-                foot["toe_flex_degrees"] = gait.toe_flex_degrees * recovery
+                recovery = math.sin(math.pi * smooth(authored_swing_phase)) ** 2
+                authored_toe = gait.toe_flex_degrees * recovery
+            if not contact:
+                if transition_mode:
+                    authored_toe = float(steady_feet[side]["toe_flex_degrees"])
+                foot["toe_flex_degrees"] = float(
+                    (1.0 - gain) * foot["toe_flex_degrees"] + gain * authored_toe
+                )
             for name in tuple(foot):
                 if name.startswith("metatarsal_recovery_"):
                     foot.pop(name)
             foot.pop("target_offset_m", None)
-        result["support_count"] = sum(
-            int(result["feet"][s]["contact"]) for s in ("left", "right")
-        )
-        result["flight"] = result["support_count"] == 0
-        result["stage"] = (
-            "FLIGHT"
-            if result["flight"]
-            else "DOUBLE_SUPPORT"
-            if result["support_count"] == 2
-            else "SINGLE_SUPPORT"
-        )
+        if not transition_mode:
+            result["support_count"] = sum(
+                int(result["feet"][s]["contact"]) for s in ("left", "right")
+            )
+            result["flight"] = result["support_count"] == 0
+            result["stage"] = (
+                "FLIGHT"
+                if result["flight"]
+                else "DOUBLE_SUPPORT"
+                if result["support_count"] == 2
+                else "SINGLE_SUPPORT"
+            )
         return result
 
     def binding(self) -> Mapping[str, Any]:
@@ -536,5 +701,10 @@ class AuthoredMaterialContactAdapter:
                 "source_fps": float(self._capsule["fps"]),
                 "source_interval_count": int(self._capsule["interval_count"]),
                 "source_duration_s": float(self._capsule["duration_s"]),
+                "mode": self._mode,
+                "steady_query_binding_sha256": self._steady_query_binding_sha256,
+                "steady_adapter_binding_sha256": (
+                    self._steady_adapter_binding_sha256
+                ),
             }
         )

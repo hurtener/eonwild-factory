@@ -229,7 +229,7 @@ def _validate_intent(value: Any) -> Mapping[str, Any]:
     if not isinstance(value, Mapping):
         raise ContractError("motion intent must be a mapping")
     required = {"schema", "id", "version", "program", "program_profile"}
-    optional = {"gait_profile", "description", "supersedes", "authored_material_reference"}
+    optional = {"gait_profile", "description", "supersedes", "authored_material_reference", "steady_motion"}
     if not required <= set(value) or set(value) - required - optional:
         raise ContractError("motion intent contains missing or unknown fields")
     schema = value.get("schema")
@@ -251,6 +251,17 @@ def _validate_intent(value: Any) -> Mapping[str, Any]:
         raise ContractError(
             "authored material reference is currently supported only for steady grounded gait"
         )
+    if "steady_motion" in result and not (
+        program == "gait_transition" and schema == INTENT_SCHEMA_V2
+    ):
+        raise ContractError(
+            "steady motion is supported only by v2 gait-transition intents"
+        )
+    if "steady_motion" in result and (
+        not isinstance(result["steady_motion"], str)
+        or re.fullmatch(r"[a-z][a-z0-9-]*", result["steady_motion"]) is None
+    ):
+        raise ContractError("steady motion must be a safe motion-set name")
     for label in ("description", "supersedes"):
         if label in result and (not isinstance(result[label], str) or not result[label]):
             raise ContractError(f"motion intent {label} must be a nonempty string")
@@ -266,7 +277,12 @@ def _select_intent(set_document: Mapping[str, Any], motion: str) -> Mapping[str,
     return matches[0]
 
 
-def _recipe(baseline: Mapping[str, Any], intent: Mapping[str, Any]) -> dict[str, Any]:
+def _recipe(
+    baseline: Mapping[str, Any],
+    intent: Mapping[str, Any],
+    *,
+    steady_intent: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
     program = intent["program"]
     if program not in baseline["supported_programs"]:
         raise ContractError("motion intent program is not admitted by its baseline")
@@ -281,9 +297,11 @@ def _recipe(baseline: Mapping[str, Any], intent: Mapping[str, Any]) -> dict[str,
         "forward_axis": baseline["forward_axis"],
         "up_axis": baseline["up_axis"],
     }
-    for key in ("gait_profile", "description", "supersedes", "authored_material_reference"):
+    for key in ("gait_profile", "description", "supersedes", "authored_material_reference", "steady_motion"):
         if key in intent:
             recipe[key] = intent[key]
+    if steady_intent is not None:
+        recipe["authored_material_reference"] = steady_intent["authored_material_reference"]
     return recipe
 
 
@@ -304,6 +322,8 @@ class MotionSetResolution:
     neutral_support_bytes: bytes | None = None
     acquired_reference: AcquiredReferenceInputs | None = None
     authored_material_clearance_bytes: bytes | None = None
+    steady_intent_binding: dict[str, str] | None = None
+    steady_intent_bytes: bytes | None = None
 
     @property
     def payloads(self) -> dict[str, bytes]:
@@ -329,6 +349,8 @@ class MotionSetResolution:
             result["authored-material-clearance-policy.json"] = (
                 self.authored_material_clearance_bytes
             )
+        if self.steady_intent_bytes is not None:
+            result["steady-motion-intent.json"] = self.steady_intent_bytes
         return result
 
     @property
@@ -353,6 +375,13 @@ class MotionSetResolution:
             result["authored_material_clearance_policy_sha256"] = digest(
                 self.authored_material_clearance_bytes
             )
+        if self.steady_intent_bytes is not None:
+            steady_intent = json.loads(self.steady_intent_bytes)
+            result["steady_motion_dependency"] = {
+                "motion": intent["steady_motion"],
+                "intent": self.steady_intent_binding,
+                "identity": {key: steady_intent[key] for key in ("id", "version")},
+            }
         return result
 
     @property
@@ -457,6 +486,9 @@ def resolve_motion_set_selection(
             raise ContractError("motion program profile changed during resolution")
         gait_profile_bytes = None
         acquired_reference = None
+        steady_intent = None
+        steady_intent_binding = None
+        steady_intent_bytes = None
         if "gait_profile" in intent:
             gait_profile_path = locked_file(root, intent["gait_profile"])
             gait_profile_bytes = gait_profile_path.read_bytes()
@@ -470,17 +502,36 @@ def resolve_motion_set_selection(
                 raise ContractError(
                     "v2 airborne locomotion requires a source-bound recovery provider"
                 )
-        if "authored_material_reference" in intent:
+        reference_owner = intent
+        if "steady_motion" in intent:
+            if baseline["solve_policy"].get("grounded_transition_clearance") != "material_floor_scaled_excess.v1":
+                raise ContractError("acquired steady transition requires grounded clearance policy")
+            steady_entry = _select_intent(set_document, intent["steady_motion"])
+            if steady_entry is entry:
+                raise ContractError("transition steady motion cannot refer to itself")
+            steady_path = locked_file(root, steady_entry["intent"])
+            steady_intent_bytes = steady_path.read_bytes()
+            if digest(steady_intent_bytes) != steady_entry["intent"]["sha256"]:
+                raise ContractError("steady motion intent changed during resolution")
+            steady_intent = _validate_intent(json.loads(steady_intent_bytes))
+            if (
+                steady_intent["schema"] != INTENT_SCHEMA_V2
+                or steady_intent["program"] != "grounded_gait"
+                or "authored_material_reference" not in steady_intent
+                or intent["gait_profile"] != steady_intent["program_profile"]
+            ):
+                raise ContractError("transition steady motion must bind its exact acquired grounded gait")
+            steady_intent_binding = dict(steady_entry["intent"])
+            reference_owner = steady_intent
+        if "authored_material_reference" in reference_owner:
             if authored_material_clearance_bytes is None:
                 raise ContractError(
                     "authored material reference requires baseline-owned clearance policy"
                 )
-            acquired_reference = resolve_reference(
-                root, intent["authored_material_reference"]
-            )
+            acquired_reference = resolve_reference(root, reference_owner["authored_material_reference"])
         resolutions.append(MotionSetResolution(
             motion=motion,
-            recipe=_recipe(baseline, intent),
+            recipe=_recipe(baseline, intent, steady_intent=steady_intent),
             set_binding=set_binding,
             baseline_binding=dict(set_document["baseline"]),
             intent_binding=dict(entry["intent"]),
@@ -494,6 +545,8 @@ def resolve_motion_set_selection(
             neutral_support_bytes=neutral_support_bytes,
             acquired_reference=acquired_reference,
             authored_material_clearance_bytes=authored_material_clearance_bytes,
+            steady_intent_binding=steady_intent_binding,
+            steady_intent_bytes=steady_intent_bytes,
         ))
     if set_path.read_bytes() != set_bytes or baseline_path.read_bytes() != baseline_bytes:
         raise ContractError("motion set or baseline changed during selection")
@@ -508,6 +561,7 @@ def resolve_motion_set(root: Path, set_path: Path, motion: str) -> MotionSetReso
 def reconstruct_motion_set(
     *, set_bytes: bytes, baseline_bytes: bytes, intent_bytes: bytes,
     resolution_lock: Any,
+    steady_intent_bytes: bytes | None = None,
 ) -> dict[str, Any]:
     """Reconstruct a package recipe solely from its authored snapshots."""
     try:
@@ -534,6 +588,10 @@ def reconstruct_motion_set(
     }, {
         "motion", "set", "baseline", "intent", "identities",
         "authored_material_clearance_policy_sha256"
+    }, {
+        "motion", "set", "baseline", "intent", "identities",
+        "authored_material_reference", "authored_material_clearance_policy_sha256",
+        "steady_motion_dependency"
     }):
         raise ContractError("motion set resolution lock is incomplete")
     entry = _select_intent(set_document, resolution_lock["motion"])
@@ -552,7 +610,32 @@ def reconstruct_motion_set(
     }
     if identities != expected_identities:
         raise ContractError("motion set declared identities differ from snapshots")
-    has_reference = "authored_material_reference" in intent
+    steady_intent = None
+    dependency = resolution_lock.get("steady_motion_dependency")
+    if "steady_motion" in intent:
+        if steady_intent_bytes is None or not isinstance(dependency, Mapping):
+            raise ContractError("steady motion dependency snapshot is missing")
+        steady_entry = _select_intent(set_document, intent["steady_motion"])
+        try:
+            steady_intent = _validate_intent(json.loads(steady_intent_bytes))
+        except (TypeError, ValueError) as exc:
+            raise ContractError("steady motion dependency is not valid JSON") from exc
+        if (
+            set(dependency) != {"motion", "intent", "identity"}
+            or dependency["motion"] != intent["steady_motion"]
+            or dependency["intent"] != steady_entry["intent"]
+            or digest(steady_intent_bytes) != steady_entry["intent"]["sha256"]
+            or dependency["identity"]
+            != {key: steady_intent[key] for key in ("id", "version")}
+            or steady_intent.get("schema") != INTENT_SCHEMA_V2
+            or steady_intent.get("program") != "grounded_gait"
+            or "authored_material_reference" not in steady_intent
+            or intent["gait_profile"] != steady_intent["program_profile"]
+        ):
+            raise ContractError("steady motion dependency snapshot is inconsistent")
+    elif steady_intent_bytes is not None or dependency is not None:
+        raise ContractError("unbound steady motion dependency is not allowed")
+    has_reference = "authored_material_reference" in intent or steady_intent is not None
     if has_reference != ("authored_material_reference" in resolution_lock):
         raise ContractError("authored material reference lock is inconsistent")
     if has_reference and "authored_material_clearance_policy_sha256" not in resolution_lock:
@@ -571,4 +654,4 @@ def reconstruct_motion_set(
         or digest(set_bytes) != set_binding.get("sha256")
     ):
         raise ContractError("motion set snapshot differs from its resolution lock")
-    return _recipe(baseline, intent)
+    return _recipe(baseline, intent, steady_intent=steady_intent)
