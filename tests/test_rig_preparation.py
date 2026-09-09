@@ -189,6 +189,52 @@ def test_preparation_adds_non_skinned_semantic_endpoint_and_preserves_surface():
     assert receipt["measurements"]["maximum_reopened_neutral_skin_error_m"] < 3e-6
 
 
+def _weighted_branch(source: Glb, suffix: str = "A") -> dict:
+    worlds = np.asarray(_world_matrices(
+        source, source.rest_translation, source.rest_rotation, source.rest_scale))
+    origin = worlds[source.name_to_node["Bone_042"]][:3, 3]
+    return {
+        "role": f"fixture_branch_{suffix}",
+        "parent": "Bone_042",
+        "source_nodes": ["Bone_042"],
+        "proximal": {"name": f"fixture_proximal_{suffix}",
+                     "world_origin_m": origin.tolist(), "basis": "measured_source_world"},
+        "distal": {"name": f"fixture_distal_{suffix}",
+                   "world_origin_m": (origin + [0, 0, .05]).tolist(),
+                   "basis": "measured_source_world"},
+        "endpoint": {"name": f"fixture_endpoint_{suffix}",
+                     "world_origin_m": (origin + [0, 0, .1]).tolist(),
+                     "basis": "measured_source_world"},
+        "selector": {"frame": "source_world", "lateral_interval_m": [-1000, 1000],
+                     "up_maximum_m": 1000, "forward_interval_m": [-1000, 1000],
+                     "blend_width_m": 1},
+    }
+
+
+def test_preparation_adds_weighted_branch_and_preserves_neutral_skin():
+    source = Glb(SOURCE)
+    candidate = config(source)
+    candidate["weighted_branches"] = [_weighted_branch(source)]
+    raw, receipt = prepare_rig(source, candidate)
+    reopened = Glb.from_bytes(raw)
+    skin = reopened.document["skins"][0]
+    for name in ("fixture_proximal_A", "fixture_distal_A"):
+        assert reopened.name_to_node[name] in skin["joints"]
+    assert reopened.name_to_node["fixture_endpoint_A"] not in skin["joints"]
+    assert receipt["weighted_branches"][0]["changed_vertex_count"] > 0
+    assert receipt["joint_count"] == len(source.document["skins"][0]["joints"]) + 2
+    assert receipt["measurements"]["maximum_reopened_neutral_skin_error_m"] < 3e-6
+
+
+def test_preparation_rejects_overlapping_weighted_branch_ownership():
+    source = Glb(SOURCE)
+    candidate = config(source)
+    candidate["weighted_branches"] = [
+        _weighted_branch(source, "A"), _weighted_branch(source, "B")]
+    with pytest.raises(ContractError, match="selectors overlap"):
+        prepare_rig(source, candidate)
+
+
 @pytest.mark.parametrize("case", ["name", "parent", "origin", "basis"])
 def test_preparation_rejects_malformed_semantic_endpoint(case):
     source = Glb(SOURCE)

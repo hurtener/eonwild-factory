@@ -1,0 +1,129 @@
+{
+  "schema": "eonwild.motion.semantic-rig.v1",
+  "id": "allosaurus-engineering-v2",
+  "version": 2,
+  "coordinate": {
+    "units": "metres",
+    "handedness": "right",
+    "upAxis": "Y",
+    "forwardAxis": "Z"
+  },
+  "roles": {
+    "root": "Bone_000",
+    "pelvis": "Bone_001",
+    "spine": [
+      "Bone_003",
+      "Bone_002",
+      "Bone_017",
+      "Bone_016"
+    ],
+    "chest": "Bone_015",
+    "neck": [
+      "Bone_047",
+      "Bone_046"
+    ],
+    "head": "Bone_045",
+    "tail": [
+      "Bone_014",
+      "Bone_013",
+      "Bone_012",
+      "Bone_011",
+      "Bone_010",
+      "Bone_009",
+      "Bone_008",
+      "Bone_007",
+      "Bone_006",
+      "Bone_005",
+      "Bone_004"
+    ],
+    "legs": {
+      "left": {
+        "contactChain": [
+          "Bone_023",
+          "Bone_022",
+          "Bone_021",
+          "Bone_020"
+        ],
+        "toeChains": [
+          [
+            "AllosaurusPedalInnerProximal.L",
+            "AllosaurusPedalInnerDistal.L",
+            "AllosaurusPedalInnerEndpoint.L"
+          ],
+          [
+            "Bone_019",
+            "Bone_018",
+            "AllosaurusToeEndpoint.L"
+          ],
+          [
+            "AllosaurusPedalOuterProximal.L",
+            "AllosaurusPedalOuterDistal.L",
+            "AllosaurusPedalOuterEndpoint.L"
+          ]
+        ]
+      },
+      "right": {
+        "contactChain": [
+          "Bone_029",
+          "Bone_028",
+          "Bone_027",
+          "Bone_026"
+        ],
+        "toeChains": [
+          [
+            "AllosaurusPedalInnerProximal.R",
+            "AllosaurusPedalInnerDistal.R",
+            "AllosaurusPedalInnerEndpoint.R"
+          ],
+          [
+            "Bone_025",
+            "Bone_024",
+            "AllosaurusToeEndpoint.R"
+          ],
+          [
+            "AllosaurusPedalOuterProximal.R",
+            "AllosaurusPedalOuterDistal.R",
+            "AllosaurusPedalOuterEndpoint.R"
+          ]
+        ]
+      }
+    },
+    "leftLeg": [
+      "Bone_023",
+      "Bone_022",
+      "Bone_021",
+      "Bone_020"
+    ],
+    "rightLeg": [
+      "Bone_029",
+      "Bone_028",
+      "Bone_027",
+      "Bone_026"
+    ],
+    "leftFoot": "Bone_020",
+    "rightFoot": "Bone_026",
+    "jaw_lower": "Bone_044"
+  },
+  "expectedParents": {
+    "pelvis": "root",
+    "chest": "spine_parent",
+    "neck": [
+      "chest",
+      "neck:0"
+    ],
+    "head": "neck:1"
+  },
+  "spineParent": "Bone_016",
+  "accessorContract": {
+    "componentType": 5126,
+    "type": "VEC4",
+    "byteStride": 16,
+    "commonTimeline": true,
+    "interpolation": "LINEAR"
+  },
+  "provenance": {
+    "source": "Allosaurus rig-preparation v3 engineering pedal branches",
+    "status": "non_promoted_candidate",
+    "purpose": "three-branch pedal deformation transfer diagnostic; not fossil phalange reconstruction"
+  }
+}

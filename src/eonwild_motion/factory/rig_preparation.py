@@ -97,7 +97,7 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
         "coordinate", "pivot_relocations", "articulations", "weight_transfers",
         "evidence", "limitations",
     }
-    optional_fields = {"endpoints", "near_uniform_scale_normalization"}
+    optional_fields = {"endpoints", "near_uniform_scale_normalization", "weighted_branches"}
     if (
         not isinstance(config, Mapping)
         or not legacy_fields <= set(config)
@@ -131,7 +131,7 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
     if len(set(joints)) != len(joints):
         raise ContractError("rig preparation skin joints must be unique")
     joint_set = set(joints)
-    names = source.name_to_node
+    names = dict(source.name_to_node)
 
     coordinate = _exact_object(
         config["coordinate"], {"frame", "lateral", "up", "forward"},
@@ -190,6 +190,85 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
         nodes[parent].setdefault("children", []).append(child)
         reparented.add(child)
 
+    weighted_branches = config.get("weighted_branches", [])
+    if not isinstance(weighted_branches, list):
+        raise ContractError("rig preparation weighted branches must be an array")
+    weighted_branch_rows: list[dict[str, Any]] = []
+    added_names: set[str] = set()
+    weighted_roles: set[str] = set()
+    for index, raw in enumerate(weighted_branches):
+        row = _exact_object(
+            raw,
+            {"role", "parent", "source_nodes", "proximal", "distal", "endpoint", "selector"},
+            f"weighted_branch[{index}]",
+        )
+        role = _name(row["role"], f"weighted_branch[{index}] role")
+        if role in weighted_roles:
+            raise ContractError("rig preparation weighted branch roles must be unique")
+        weighted_roles.add(role)
+        parent_name = _name(row["parent"], f"weighted_branch[{index}] parent")
+        source_names = row["source_nodes"]
+        if (parent_name not in names or not isinstance(source_names, list)
+                or not source_names):
+            raise ContractError("rig preparation weighted branch references unknown topology")
+        source_names = [_name(item, f"weighted_branch[{index}] source node") for item in source_names]
+        if any(item not in names or names[item] not in joint_set for item in source_names):
+            raise ContractError("rig preparation weighted branch source nodes must be skin joints")
+        if names[parent_name] not in joint_set:
+            raise ContractError("rig preparation weighted branch parent must be a skin joint")
+        if any(not _is_descendant(names[item], names[parent_name], original_parents)
+               for item in source_names):
+            raise ContractError("rig preparation weighted branch source nodes must belong to its parent branch")
+        pieces = []
+        piece_parent = parent_name
+        for label in ("proximal", "distal", "endpoint"):
+            piece = _exact_object(
+                row[label], {"name", "world_origin_m", "basis"},
+                f"weighted_branch[{index}] {label}",
+            )
+            piece_name = _name(piece["name"], f"weighted_branch[{index}] {label} name")
+            if piece_name in names or piece_name in added_names:
+                raise ContractError("rig preparation weighted branch node names must be unique")
+            if piece["basis"] != "measured_source_world":
+                raise ContractError("rig preparation weighted branch origin basis is unsupported")
+            node = len(nodes)
+            nodes.append({"name": piece_name})
+            nodes[names[piece_parent]].setdefault("children", []).append(node)
+            names[piece_name] = node
+            added_names.add(piece_name)
+            pieces.append({
+                "name": piece_name, "node": node, "parent": piece_parent,
+                "world_origin_m": _vec3(
+                    piece["world_origin_m"], f"weighted_branch[{index}] {label} origin"),
+            })
+            piece_parent = piece_name
+        selector = _exact_object(
+            row["selector"],
+            {"frame", "lateral_interval_m", "up_maximum_m", "forward_interval_m", "blend_width_m"},
+            f"weighted_branch[{index}] selector",
+        )
+        if selector["frame"] != "source_world":
+            raise ContractError("rig preparation weighted branch selector frame is unsupported")
+        lateral_interval = np.asarray(selector["lateral_interval_m"], dtype=float)
+        forward_interval = np.asarray(selector["forward_interval_m"], dtype=float)
+        up_maximum = selector["up_maximum_m"]
+        blend_width = selector["blend_width_m"]
+        if (lateral_interval.shape != (2,) or forward_interval.shape != (2,)
+                or not np.isfinite(lateral_interval).all() or not np.isfinite(forward_interval).all()
+                or not lateral_interval[0] < lateral_interval[1]
+                or not forward_interval[0] < forward_interval[1]
+                or isinstance(up_maximum, bool) or not isinstance(up_maximum, (int, float))
+                or not math.isfinite(float(up_maximum))
+                or isinstance(blend_width, bool) or not isinstance(blend_width, (int, float))
+                or not math.isfinite(float(blend_width)) or not 0.0 < float(blend_width)
+                or 2.0 * float(blend_width) >= float(lateral_interval[1] - lateral_interval[0])):
+            raise ContractError("rig preparation weighted branch selector is invalid")
+        weighted_branch_rows.append({
+            "role": role, "parent": parent_name, "source_nodes": source_names,
+            "proximal": pieces[0], "distal": pieces[1], "endpoint": pieces[2],
+            "selector": deepcopy(selector),
+        })
+
     endpoints = config.get("endpoints", [])
     if not isinstance(endpoints, list):
         raise ContractError("rig preparation endpoints must be an array")
@@ -204,7 +283,7 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
         parent_name = _name(row["parent"], f"endpoint[{index}] parent")
         if endpoint_name in names or endpoint_name in endpoint_names:
             raise ContractError("rig preparation endpoint name must be unique")
-        if parent_name not in names:
+        if parent_name not in source.name_to_node:
             raise ContractError("rig preparation endpoint parent must be an existing node")
         if row["basis"] != "measured_source_world":
             raise ContractError("rig preparation endpoint basis is unsupported")
@@ -212,6 +291,7 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
         node = len(nodes)
         nodes.append({"name": endpoint_name})
         nodes[names[parent_name]].setdefault("children", []).append(node)
+        names[endpoint_name] = node
         endpoint_rows.append({
             "name": endpoint_name,
             "parent": parent_name,
@@ -252,7 +332,7 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
     desired_world = np.concatenate(
         (
             original_world.copy(),
-            np.repeat(np.eye(4)[None, :, :], len(endpoint_rows), axis=0),
+            np.repeat(np.eye(4)[None, :, :], len(nodes) - original_node_count, axis=0),
         ),
         axis=0,
     )
@@ -269,6 +349,12 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
             raise ContractError("rig preparation pivot nodes must be unique")
         desired_world[node, :3, 3] = _vec3(row["world_origin_m"], f"pivot[{index}] origin")
         pivot_nodes.add(node)
+
+    for row in weighted_branch_rows:
+        for piece in (row["proximal"], row["distal"], row["endpoint"]):
+            parent = names[piece["parent"]]
+            desired_world[piece["node"]] = desired_world[parent]
+            desired_world[piece["node"], :3, 3] = piece["world_origin_m"]
 
     for row in endpoint_rows:
         parent = names[row["parent"]]
@@ -406,6 +492,11 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
         source, skin.get("inverseBindMatrices"), label="rig preparation inverse bind",
         accessor_type="MAT4", component_types=(5126,), expected_count=len(joints))
     binary = bytearray(source.binary)
+    # Proximal and distal nodes are real deformers. Endpoints remain semantic
+    # effectors and therefore are deliberately absent from the skin.
+    for row in weighted_branch_rows:
+        joints.extend((row["proximal"]["node"], row["distal"]["node"]))
+    document["skins"][skin_index]["joints"] = joints
     weight_transfer_rows = []
     transfers = config["weight_transfers"]
     if not isinstance(transfers, list):
@@ -553,15 +644,152 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
             "changed_vertex_count": changed_count,
             "maximum_transferred_weight": max(transferred_weights),
         })
-    offset, count, stride = source.accessor_region(inverse_accessor)
-    if count != len(joints):
-        raise ContractError("rig preparation inverse bind count changed")
-    for slot, node in enumerate(joints):
+    claimed_vertices: set[tuple[int, int]] = set()
+    weighted_receipts = []
+    joint_row_cache: dict[int, np.ndarray] = {}
+    weight_row_cache: dict[int, np.ndarray] = {}
+
+    def binary_rows(accessor: int, *, dtype: type) -> np.ndarray:
+        _, _, components, _, code = source.accessor_layout(accessor)
+        start, row_count, row_stride = source.accessor_region(accessor)
+        return np.asarray([
+            struct.unpack_from("<" + code * components, binary, start + vertex * row_stride)
+            for vertex in range(row_count)
+        ], dtype=dtype)
+    for branch_index, row in enumerate(weighted_branch_rows):
+        source_slots = {joints.index(names[name]) for name in row["source_nodes"]}
+        proximal_slot = joints.index(row["proximal"]["node"])
+        distal_slot = joints.index(row["distal"]["node"])
+        selector = row["selector"]
+        lat_lo, lat_hi = map(float, selector["lateral_interval_m"])
+        fwd_lo, fwd_hi = map(float, selector["forward_interval_m"])
+        width = float(selector["blend_width_m"])
+        changed = 0
+        maximum_amount = 0.0
+        for primitive_index, primitive in enumerate(primitives):
+            attrs = primitive.get("attributes") if isinstance(primitive, Mapping) else None
+            suffixes = sorted(
+                key.removeprefix("JOINTS_") for key in attrs or {} if key.startswith("JOINTS_"))
+            if (not isinstance(attrs, Mapping) or "POSITION" not in attrs or not suffixes
+                    or any(not suffix.isdecimal() or f"WEIGHTS_{suffix}" not in attrs
+                           for suffix in suffixes)):
+                raise ContractError("rig preparation weighted branch requires complete skin attributes")
+            position_accessor = _accessor_index(
+                source, attrs["POSITION"], label="weighted branch POSITION",
+                accessor_type="VEC3", component_types=(5126,))
+            count = source.document["accessors"][position_accessor]["count"]
+            joint_accessors = [_accessor_index(
+                source, attrs[f"JOINTS_{suffix}"], label="weighted branch JOINTS",
+                accessor_type="VEC4", component_types=(5121, 5123), expected_count=count)
+                for suffix in suffixes]
+            for accessor in joint_accessors:
+                component = source.document["accessors"][accessor]["componentType"]
+                if len(joints) - 1 > (255 if component == 5121 else 65535):
+                    raise ContractError("rig preparation weighted branch exceeds joint index capacity")
+            weight_accessors = [_accessor_index(
+                source, attrs[f"WEIGHTS_{suffix}"], label="weighted branch WEIGHTS",
+                accessor_type="VEC4", component_types=(5126,), expected_count=count)
+                for suffix in suffixes]
+            positions = np.asarray(source.accessor_values(position_accessor), dtype=float)
+            world_positions = (original_world[mesh_node] @ np.column_stack(
+                (positions, np.ones(len(positions)))).T).T[:, :3]
+            lateral = world_positions @ axes[0]
+            up = world_positions @ axes[1]
+            forward = world_positions @ axes[2]
+            for accessor in joint_accessors:
+                joint_row_cache.setdefault(
+                    accessor, binary_rows(accessor, dtype=int))
+            for accessor in weight_accessors:
+                weight_row_cache.setdefault(
+                    accessor, binary_rows(accessor, dtype=float))
+            joint_rows = [joint_row_cache[a] for a in joint_accessors]
+            weight_rows = [weight_row_cache[a] for a in weight_accessors]
+            candidates = np.flatnonzero(
+                (lateral >= lat_lo) & (lateral <= lat_hi)
+                & (up <= float(selector["up_maximum_m"]))
+                & (forward >= fwd_lo) & (forward <= fwd_hi))
+            for vertex in candidates:
+                key = (primitive_index, int(vertex))
+                if key in claimed_vertices:
+                    raise ContractError("rig preparation weighted branch selectors overlap")
+                source_entries = [
+                    (s, c) for s, jr in enumerate(joint_rows) for c in range(4)
+                    if int(jr[vertex, c]) in source_slots and weight_rows[s][vertex, c] > 0.0]
+                amount = float(sum(weight_rows[s][vertex, c] for s, c in source_entries))
+                edge = min(
+                    float(lateral[vertex] - lat_lo),
+                    float(lat_hi - lateral[vertex]),
+                    float(forward[vertex] - fwd_lo),
+                    float(fwd_hi - forward[vertex]),
+                    float(selector["up_maximum_m"] - up[vertex]),
+                )
+                gain = min(1.0, max(0.0, edge / width))
+                gain = gain * gain * (3.0 - 2.0 * gain)
+                amount *= gain
+                if amount <= 1e-8:
+                    continue
+                claimed_vertices.add(key)
+                freed = list(source_entries)
+                for s, c in source_entries:
+                    weight_rows[s][vertex, c] *= 1.0 - gain
+                    if weight_rows[s][vertex, c] <= 1e-8:
+                        weight_rows[s][vertex, c] = 0.0; joint_rows[s][vertex, c] = 0
+                empty = [(s, c) for s, wr in enumerate(weight_rows) for c in range(4)
+                         if wr[vertex, c] == 0.0]
+                along = min(1.0, max(0.0, (float(forward[vertex]) - fwd_lo) / (fwd_hi - fwd_lo)))
+                along = along * along * (3.0 - 2.0 * along)
+                pieces = [(proximal_slot, amount * (1.0 - along)), (distal_slot, amount * along)]
+                pieces = [(slot, value) for slot, value in pieces if value > 1e-8]
+                if len(empty) < len(pieces):
+                    raise ContractError("rig preparation weighted branch exceeds influence capacity")
+                for (slot, value), (s, c) in zip(pieces, empty):
+                    joint_rows[s][vertex, c] = slot; weight_rows[s][vertex, c] = value
+                total = sum(float(wr[vertex].sum()) for wr in weight_rows)
+                if not math.isclose(total, 1.0, abs_tol=2e-5, rel_tol=0.0):
+                    raise ContractError("rig preparation weighted branch input weights are not normalized")
+                changed += 1; maximum_amount = max(maximum_amount, amount)
+            for accessor, rows in zip(joint_accessors, joint_rows):
+                _, _, _, _, code = source.accessor_layout(accessor); start, n, stride = source.accessor_region(accessor)
+                for vertex in range(n):
+                    struct.pack_into("<" + code * 4, binary, start + vertex * stride, *rows[vertex].tolist())
+            for accessor, rows in zip(weight_accessors, weight_rows):
+                _, _, _, _, code = source.accessor_layout(accessor); start, n, stride = source.accessor_region(accessor)
+                for vertex in range(n):
+                    struct.pack_into("<" + code * 4, binary, start + vertex * stride, *rows[vertex].tolist())
+        if changed == 0:
+            raise ContractError("rig preparation weighted branch selects no source influence")
+        weighted_receipts.append({
+            "role": row["role"], "parent": row["parent"],
+            "source_nodes": list(row["source_nodes"]), "changed_vertex_count": changed,
+            "maximum_transferred_weight": maximum_amount,
+            "weighted_nodes": [row["proximal"]["name"], row["distal"]["name"]],
+            "endpoint": row["endpoint"]["name"], "selector": deepcopy(selector),
+        })
+
+    matrices = []
+    for node in joints:
         inverse = np.linalg.solve(output_world[node], mesh_world)
         if not np.isfinite(inverse).all():
             raise ContractError("rig preparation generated a non-finite inverse bind matrix")
-        struct.pack_into("<16f", binary, offset + slot * stride,
-                         *np.asarray(inverse, dtype=np.float32).T.reshape(-1))
+        matrices.append(np.asarray(inverse, dtype=np.float32).T.reshape(-1))
+    if weighted_branch_rows:
+        while len(binary) % 4: binary.append(0)
+        start = len(binary)
+        matrix_bytes = np.asarray(matrices, dtype="<f4").tobytes()
+        binary.extend(matrix_bytes)
+        view = len(document["bufferViews"])
+        document["bufferViews"].append({"buffer": 0, "byteOffset": start, "byteLength": len(matrix_bytes)})
+        accessor = len(document["accessors"])
+        document["accessors"].append({"bufferView": view, "componentType": 5126,
+                                      "count": len(joints), "type": "MAT4"})
+        document["skins"][skin_index]["inverseBindMatrices"] = accessor
+        document["buffers"][0]["byteLength"] = len(binary)
+    else:
+        offset, count, stride = source.accessor_region(inverse_accessor)
+        if count != len(joints):
+            raise ContractError("rig preparation inverse bind count changed")
+        for slot, matrix in enumerate(matrices):
+            struct.pack_into("<16f", binary, offset + slot * stride, *matrix)
 
     config_bytes = json.dumps(config, sort_keys=True, separators=(",", ":"),
                               ensure_ascii=False, allow_nan=False).encode()
@@ -620,6 +848,7 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
         "touched_local_transforms": touched,
         "articulations": articulation_rows,
         "weight_transfers": weight_transfer_rows,
+        "weighted_branches": weighted_receipts,
         "measurements": {
             "maximum_input_neutral_skin_error_m": source_skin_error,
             "maximum_local_trs_projection_error": max(projection_errors, default=0.0),
