@@ -130,7 +130,7 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
     }
     optional_fields = {
         "endpoints", "near_uniform_scale_normalization", "weighted_branches",
-        "pedal_attachment_transfers",
+        "pedal_attachment_transfers", "attachment_weight_transfers",
     }
     if (
         not isinstance(config, Mapping)
@@ -1151,6 +1151,220 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
             "changed_rows_sha256": _digest(changed_bytes),
         })
 
+    # A body attachment correction moves only explicitly named source-joint
+    # weights onto an already present destination joint.  The gain is derived
+    # from the destination's authored ownership, so the operation introduces
+    # neither a spatial hard boundary nor another skin influence.
+    joint_row_cache.clear()
+    weight_row_cache.clear()
+    body_attachment_receipts = []
+    body_attachment_rows = config.get("attachment_weight_transfers", [])
+    if not isinstance(body_attachment_rows, list):
+        raise ContractError("rig preparation attachment weight transfers must be an array")
+    body_attachment_roles: set[str] = set()
+    claimed_body_attachment_vertices: set[tuple[
+        tuple[tuple[int, int, int, int, int, str, bool], ...], int,
+    ]] = set()
+    for transfer_index, raw in enumerate(body_attachment_rows):
+        row = _exact_object(
+            raw, {"role", "source_nodes", "destination_node", "selector"},
+            f"attachment_weight_transfer[{transfer_index}]",
+        )
+        role = _name(
+            row["role"], f"attachment_weight_transfer[{transfer_index}] role")
+        if role in body_attachment_roles:
+            raise ContractError("rig preparation attachment weight transfer roles must be unique")
+        body_attachment_roles.add(role)
+        source_values = row["source_nodes"]
+        if not isinstance(source_values, list) or not source_values:
+            raise ContractError(
+                "rig preparation attachment weight transfer sources must be non-empty")
+        source_names = [
+            _name(value, f"attachment_weight_transfer[{transfer_index}] source")
+            for value in source_values
+        ]
+        destination_name = _name(
+            row["destination_node"],
+            f"attachment_weight_transfer[{transfer_index}] destination",
+        )
+        if (
+            len(set(source_names)) != len(source_names)
+            or destination_name in source_names
+            or destination_name not in names
+            or any(name not in names for name in source_names)
+        ):
+            raise ContractError(
+                "rig preparation attachment weight transfer topology is invalid")
+        source_nodes = [names[name] for name in source_names]
+        destination_node = names[destination_name]
+        if (
+            destination_node not in joint_set
+            or any(node not in joint_set for node in source_nodes)
+        ):
+            raise ContractError(
+                "rig preparation attachment weight transfer nodes must be skin joints")
+        selector = _exact_object(
+            row["selector"], {"model", "exponent"},
+            f"attachment_weight_transfer[{transfer_index}] selector",
+        )
+        exponent = selector["exponent"]
+        if (
+            selector["model"] != "destination_weight_complement_power.v1"
+            or type(exponent) is not int
+            or not 1 <= exponent <= 16
+        ):
+            raise ContractError(
+                "rig preparation attachment weight transfer selector is unsupported")
+        source_slots = {joints.index(node) for node in source_nodes}
+        destination_slot = joints.index(destination_node)
+        changed = 0
+        maximum_amount = 0.0
+        changed_rows = []
+        physical_bundles: set[
+            tuple[tuple[int, int, int, int, int, str, bool], ...]
+        ] = set()
+        physical_accessor_owners: list[tuple[
+            tuple[int, int, int, int, int, str, bool],
+            tuple[tuple[int, int, int, int, int, str, bool], ...],
+        ]] = []
+        for primitive_index, primitive in enumerate(primitives):
+            attrs = primitive.get("attributes") if isinstance(primitive, Mapping) else None
+            suffixes = sorted(
+                key.removeprefix("JOINTS_") for key in attrs or {}
+                if key.startswith("JOINTS_")
+            )
+            if (
+                not isinstance(attrs, Mapping)
+                or "POSITION" not in attrs
+                or not suffixes
+                or any(
+                    not suffix.isdecimal() or f"WEIGHTS_{suffix}" not in attrs
+                    for suffix in suffixes
+                )
+            ):
+                raise ContractError(
+                    "rig preparation attachment weight transfer requires complete skin attributes")
+            position_accessor = _accessor_index(
+                source, attrs["POSITION"], label="attachment weight transfer POSITION",
+                accessor_type="VEC3", component_types=(5126,))
+            count = source.document["accessors"][position_accessor]["count"]
+            joint_accessors = [
+                _accessor_index(
+                    source, attrs[f"JOINTS_{suffix}"],
+                    label="attachment weight transfer JOINTS",
+                    accessor_type="VEC4", component_types=(5121, 5123),
+                    expected_count=count,
+                )
+                for suffix in suffixes
+            ]
+            weight_accessors = [
+                _accessor_index(
+                    source, attrs[f"WEIGHTS_{suffix}"],
+                    label="attachment weight transfer WEIGHTS",
+                    accessor_type="VEC4", component_types=(5126,),
+                    expected_count=count,
+                )
+                for suffix in suffixes
+            ]
+            first_rows, bundle = admit_physical_skin_rows(
+                position_accessor, joint_accessors, weight_accessors,
+                bundles=physical_bundles, accessor_owners=physical_accessor_owners)
+            if not first_rows:
+                continue
+            for accessor in joint_accessors:
+                joint_row_cache.setdefault(accessor, binary_rows(accessor, dtype=int))
+            for accessor in weight_accessors:
+                weight_row_cache.setdefault(accessor, binary_rows(accessor, dtype=float))
+            joint_rows = [joint_row_cache[accessor] for accessor in joint_accessors]
+            weight_rows = [weight_row_cache[accessor] for accessor in weight_accessors]
+            for vertex in range(count):
+                destination_entries = [
+                    (set_index, column)
+                    for set_index, joint_row in enumerate(joint_rows)
+                    for column in range(4)
+                    if int(joint_row[vertex, column]) == destination_slot
+                    and weight_rows[set_index][vertex, column] > 0.0
+                ]
+                source_entries = [
+                    (set_index, column)
+                    for set_index, joint_row in enumerate(joint_rows)
+                    for column in range(4)
+                    if int(joint_row[vertex, column]) in source_slots
+                    and weight_rows[set_index][vertex, column] > 0.0
+                ]
+                if not destination_entries or not source_entries:
+                    continue
+                destination_weight = float(sum(
+                    weight_rows[set_index][vertex, column]
+                    for set_index, column in destination_entries
+                ))
+                gain = 1.0 - (1.0 - destination_weight) ** exponent
+                source_weight = float(sum(
+                    weight_rows[set_index][vertex, column]
+                    for set_index, column in source_entries
+                ))
+                amount = source_weight * gain
+                if amount <= 1e-7:
+                    continue
+                key = (bundle, vertex)
+                if key in claimed_body_attachment_vertices:
+                    raise ContractError(
+                        "rig preparation attachment weight transfer selectors overlap")
+                claimed_body_attachment_vertices.add(key)
+                for set_index, column in source_entries:
+                    weight_rows[set_index][vertex, column] *= 1.0 - gain
+                destination = max(
+                    destination_entries,
+                    key=lambda item: (
+                        float(weight_rows[item[0]][vertex, item[1]]),
+                        -item[0], -item[1],
+                    ),
+                )
+                weight_rows[destination[0]][vertex, destination[1]] += amount
+                total = sum(float(values[vertex].sum()) for values in weight_rows)
+                if not math.isclose(total, 1.0, abs_tol=2e-5, rel_tol=0.0):
+                    raise ContractError(
+                        "rig preparation attachment weight transfer input weights are not normalized")
+                changed += 1
+                maximum_amount = max(maximum_amount, amount)
+                changed_rows.append({
+                    "physical_bundle": bundle,
+                    "vertex": vertex,
+                    "source_slots": sorted(source_slots),
+                    "destination_slot": destination_slot,
+                    "destination_weight": destination_weight,
+                    "gain": gain,
+                    "transferred_weight": amount,
+                })
+            for accessor, rows in zip(joint_accessors, joint_rows):
+                _, _, _, _, code = source.accessor_layout(accessor)
+                start, row_count, stride = source.accessor_region(accessor)
+                for vertex in range(row_count):
+                    struct.pack_into(
+                        "<" + code * 4, binary, start + vertex * stride,
+                        *rows[vertex].tolist())
+            for accessor, rows in zip(weight_accessors, weight_rows):
+                _, _, _, _, code = source.accessor_layout(accessor)
+                start, row_count, stride = source.accessor_region(accessor)
+                for vertex in range(row_count):
+                    struct.pack_into(
+                        "<" + code * 4, binary, start + vertex * stride,
+                        *rows[vertex].tolist())
+        if changed == 0:
+            raise ContractError(
+                "rig preparation attachment weight transfer selects no shared ownership")
+        body_attachment_receipts.append({
+            "role": role,
+            "source_nodes": source_names,
+            "destination_node": destination_name,
+            "selector": deepcopy(selector),
+            "changed_vertex_count": changed,
+            "maximum_transferred_weight": maximum_amount,
+            "changed_rows_sha256": _digest(json.dumps(
+                changed_rows, sort_keys=True, separators=(",", ":"),
+                allow_nan=False).encode()),
+        })
+
     matrices = []
     for node in joints:
         inverse = np.linalg.solve(output_world[node], mesh_world)
@@ -1236,6 +1450,7 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
         "weight_transfers": weight_transfer_rows,
         "weighted_branches": weighted_receipts,
         "pedal_attachment_transfers": attachment_receipts,
+        "attachment_weight_transfers": body_attachment_receipts,
         "measurements": {
             "maximum_input_neutral_skin_error_m": source_skin_error,
             "maximum_local_trs_projection_error": max(projection_errors, default=0.0),
