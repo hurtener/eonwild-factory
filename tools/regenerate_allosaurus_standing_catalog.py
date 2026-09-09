@@ -15,9 +15,9 @@ import hashlib
 import json
 import math
 from pathlib import Path
+import re
 import shutil
 import subprocess
-import sys
 from typing import Any
 
 import numpy as np
@@ -49,6 +49,137 @@ NEW_NEUTRAL = Path("catalog/calibration/allosaurus-engineering-neutral.v5.json")
 NEW_SUPPORT = Path("catalog/calibration/allosaurus-engineering-support.v5.json")
 NEW_BASELINE = Path("catalog/motion-baselines/allosaurus-engineering-locomotion.v6.json")
 NEW_SET = Path("catalog/motion-sets/allosaurus-engineering-acquired-walk.v6.json")
+
+
+class CatalogPaths:
+    """Explicit standing and catalog inputs/outputs for one regeneration."""
+
+    __slots__ = (
+        "current_animal",
+        "current_contact",
+        "current_neutral",
+        "current_support",
+        "current_baseline",
+        "current_set",
+        "new_animal",
+        "new_contact",
+        "new_neutral",
+        "new_support",
+        "new_baseline",
+        "new_set",
+        "standing_config",
+        "standing_contact",
+    )
+
+    def __init__(self, **values: Path) -> None:
+        missing = [name for name in self.__slots__ if name not in values]
+        unexpected = [name for name in values if name not in self.__slots__]
+        if missing or unexpected:
+            raise TypeError(f"invalid catalog paths: missing={missing}, unexpected={unexpected}")
+        for name in self.__slots__:
+            setattr(self, name, values[name])
+
+
+DEFAULT_CATALOG_PATHS = CatalogPaths(
+    current_animal=CURRENT_ANIMAL,
+    current_contact=CURRENT_CONTACT,
+    current_neutral=CURRENT_NEUTRAL,
+    current_support=CURRENT_SUPPORT,
+    current_baseline=CURRENT_BASELINE,
+    current_set=CURRENT_SET,
+    new_animal=NEW_ANIMAL,
+    new_contact=NEW_CONTACT,
+    new_neutral=NEW_NEUTRAL,
+    new_support=NEW_SUPPORT,
+    new_baseline=NEW_BASELINE,
+    new_set=NEW_SET,
+    standing_config=STANDING_CONFIG,
+    standing_contact=CURRENT_CONTACT,
+)
+
+
+def build_catalog_paths(
+    *,
+    current_profile_version: int = 4,
+    current_motion_version: int = 5,
+    output_profile_version: int | None = None,
+    output_motion_version: int | None = None,
+    standing_config: Path = STANDING_CONFIG,
+    standing_contact: Path | None = None,
+) -> CatalogPaths:
+    """Build versioned paths while keeping the historical defaults intact."""
+    versions = (
+        current_profile_version,
+        current_motion_version,
+        output_profile_version,
+        output_motion_version,
+    )
+    if any(version is not None and version < 1 for version in versions):
+        raise ValueError("catalog versions must be positive")
+    output_profile = (
+        current_profile_version + 1
+        if output_profile_version is None
+        else output_profile_version
+    )
+    output_motion = (
+        current_motion_version + 1
+        if output_motion_version is None
+        else output_motion_version
+    )
+    current_contact = Path(f"catalog/contacts/allosaurus-engineering.v{current_profile_version}.json")
+    current_animal = Path(
+        f"catalog/animals/allosaurus-composite-engineering.adult.v{current_profile_version}.json"
+    )
+    current_neutral = Path(
+        f"catalog/calibration/allosaurus-engineering-neutral.v{current_profile_version}.json"
+    )
+    current_support = Path(
+        f"catalog/calibration/allosaurus-engineering-support.v{current_profile_version}.json"
+    )
+    current_baseline = Path(
+        f"catalog/motion-baselines/allosaurus-engineering-locomotion.v{current_motion_version}.json"
+    )
+    current_set = Path(
+        f"catalog/motion-sets/allosaurus-engineering-acquired-walk.v{current_motion_version}.json"
+    )
+    return CatalogPaths(
+        current_animal=current_animal,
+        current_contact=current_contact,
+        current_neutral=current_neutral,
+        current_support=current_support,
+        current_baseline=current_baseline,
+        current_set=current_set,
+        new_animal=Path(
+            f"catalog/animals/allosaurus-composite-engineering.adult.v{output_profile}.json"
+        ),
+        new_contact=Path(f"catalog/contacts/allosaurus-engineering.v{output_profile}.json"),
+        new_neutral=Path(
+            f"catalog/calibration/allosaurus-engineering-neutral.v{output_profile}.json"
+        ),
+        new_support=Path(
+            f"catalog/calibration/allosaurus-engineering-support.v{output_profile}.json"
+        ),
+        new_baseline=Path(
+            f"catalog/motion-baselines/allosaurus-engineering-locomotion.v{output_motion}.json"
+        ),
+        new_set=Path(
+            f"catalog/motion-sets/allosaurus-engineering-acquired-walk.v{output_motion}.json"
+        ),
+        standing_config=standing_config,
+        standing_contact=current_contact if standing_contact is None else standing_contact,
+    )
+
+
+def version_from_path(path: Path) -> int:
+    match = re.search(r"\.v(\d+)\.json$", path.name)
+    if match is None:
+        raise ValueError(f"versioned catalog path required: {path}")
+    return int(match.group(1))
+
+
+def versioned_id(identifier: str, version: int) -> str:
+    return re.sub(r"\.v\d+$", f".v{version}", identifier)
+
 
 SIDES = {
     "left": {
@@ -233,13 +364,25 @@ def catalog_documents(
     neutral_body_height_m: float,
     template_documents: dict[Path, dict[str, Any]] | None = None,
     template_bindings: dict[Path, dict[str, str]] | None = None,
+    paths: CatalogPaths | None = None,
 ) -> dict[Path, dict[str, Any]]:
+    selected = paths or DEFAULT_CATALOG_PATHS
     templates = template_documents or {
         path: read_json(root / path)
-        for path in (CURRENT_ANIMAL, CURRENT_CONTACT, CURRENT_NEUTRAL, CURRENT_SUPPORT, CURRENT_BASELINE, CURRENT_SET)
+        for path in (
+            selected.current_animal,
+            selected.current_contact,
+            selected.current_neutral,
+            selected.current_support,
+            selected.current_baseline,
+            selected.current_set,
+        )
     }
-    animal = deepcopy(templates[CURRENT_ANIMAL])
-    animal["id"], animal["version"] = "allosaurus-composite-engineering.adult.v5", 5
+    profile_version = version_from_path(selected.new_animal)
+    motion_version = version_from_path(selected.new_baseline)
+    animal = deepcopy(templates[selected.current_animal])
+    animal["id"] = versioned_id(animal["id"], profile_version)
+    animal["version"] = profile_version
     animal["geometry_calibration"]["source_geometry_sha256"] = source_sha256
     animal["limitations"] = [
         *animal["limitations"],
@@ -252,8 +395,8 @@ def catalog_documents(
         set_quantity(animal, f"{side}_semantic_hindlimb", measurements["sides"][side]["hindlimb_length_m"])
     uniform_scale = float(load_animal_instance(animal, source_sha256=source_sha256)["uniform_scale"])
 
-    contact = deepcopy(templates[CURRENT_CONTACT])
-    contact["version"] = 5
+    contact = deepcopy(templates[selected.current_contact])
+    contact["version"] = profile_version
     contact["geometry"]["ground"]["level_m"] = measurements["material_floor_m"]
     contact["source"] = {
         "path": f"assets/sha256/{source_sha256}.glb",
@@ -261,8 +404,9 @@ def catalog_documents(
         "clips": contact["source"]["clips"],
     }
 
-    neutral = deepcopy(templates[CURRENT_NEUTRAL])
-    neutral["id"], neutral["version"] = "allosaurus-engineering-neutral.v5", 5
+    neutral = deepcopy(templates[selected.current_neutral])
+    neutral["id"] = versioned_id(neutral["id"], profile_version)
+    neutral["version"] = profile_version
     calibration = neutral["neutral_jaw_calibration"]
     calibration["source_geometry_sha256"] = source_sha256
     calibration["measured_body_height_m"] = neutral_body_height_m
@@ -272,8 +416,9 @@ def catalog_documents(
         "disabled neutral-jaw offset rebound to the standing-prepared source; sampled surface gap only"
     )
 
-    support = deepcopy(templates[CURRENT_SUPPORT])
-    support["id"], support["version"] = "allosaurus-engineering-support.v5", 5
+    support = deepcopy(templates[selected.current_support])
+    support["id"] = versioned_id(support["id"], profile_version)
+    support["version"] = profile_version
     support["source_geometry_sha256"] = source_sha256
     support["limitations"] = [
         "The preferred support knee is the authored standing-preparation result, not biological validation.",
@@ -289,34 +434,34 @@ def catalog_documents(
         )
 
     documents: dict[Path, dict[str, Any]] = {
-        NEW_ANIMAL: animal,
-        NEW_CONTACT: contact,
-        NEW_NEUTRAL: neutral,
-        NEW_SUPPORT: support,
+        selected.new_animal: animal,
+        selected.new_contact: contact,
+        selected.new_neutral: neutral,
+        selected.new_support: support,
     }
     bindings = {path: {"path": path.as_posix(), "sha256": digest(json_bytes(value))}
                 for path, value in documents.items()}
 
-    baseline = deepcopy(templates[CURRENT_BASELINE])
-    baseline["id"], baseline["version"] = "allosaurus-engineering-locomotion.v6", 6
+    baseline = deepcopy(templates[selected.current_baseline])
+    baseline["id"] = versioned_id(baseline["id"], motion_version)
+    baseline["version"] = motion_version
     baseline["source"] = {
         "path": f"assets/sha256/{source_sha256}.glb",
         "sha256": source_sha256,
     }
-    baseline["animal"] = bindings[NEW_ANIMAL]
-    baseline["contact_profile"] = bindings[NEW_CONTACT]
-    baseline["neutral_pose_profile"] = bindings[NEW_NEUTRAL]
+    baseline["animal"] = bindings[selected.new_animal]
+    baseline["contact_profile"] = bindings[selected.new_contact]
+    baseline["neutral_pose_profile"] = bindings[selected.new_neutral]
     baseline["locomotion_response_policy"]["regimes"]["grounded"][
         "neutral_support_profile"
-    ] = bindings[NEW_SUPPORT]
-    documents[NEW_BASELINE] = baseline
+    ] = bindings[selected.new_support]
+    documents[selected.new_baseline] = baseline
 
-    motion_set = deepcopy(templates[CURRENT_SET])
-    motion_set["id"], motion_set["version"] = (
-        "allosaurus-engineering-acquired-walk-motion-set.v6", 6
-    )
+    motion_set = deepcopy(templates[selected.current_set])
+    motion_set["id"] = versioned_id(motion_set["id"], motion_version)
+    motion_set["version"] = motion_version
     motion_set["baseline"] = {
-        "path": NEW_BASELINE.as_posix(),
+        "path": selected.new_baseline.as_posix(),
         "sha256": digest(json_bytes(baseline)),
     }
     fast_binding = (
@@ -326,7 +471,7 @@ def catalog_documents(
     )
     walk = next(entry for entry in motion_set["motions"] if entry["name"] == "walk")
     motion_set["motions"] = [walk, {"name": "fast-walk", "intent": fast_binding}]
-    documents[NEW_SET] = motion_set
+    documents[selected.new_set] = motion_set
     return documents
 
 
@@ -337,25 +482,76 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--standing-receipt", type=Path, required=True)
     parser.add_argument("--admission-output", type=Path, required=True)
     parser.add_argument("--receipt", type=Path, required=True)
+    parser.add_argument(
+        "--standing-config",
+        type=Path,
+        default=STANDING_CONFIG,
+        help="standing-preparation config bound by the supplied preparation receipt",
+    )
+    parser.add_argument(
+        "--standing-contact",
+        type=Path,
+        default=None,
+        help="contact profile used by the standing-preparation receipt (defaults to the selected current contact)",
+    )
+    parser.add_argument(
+        "--current-profile-version",
+        type=int,
+        default=4,
+        help="current animal/contact/neutral/support catalog version",
+    )
+    parser.add_argument(
+        "--current-motion-version",
+        type=int,
+        default=5,
+        help="current motion baseline/set catalog version",
+    )
+    parser.add_argument(
+        "--output-profile-version",
+        type=int,
+        default=None,
+        help="new animal/contact/neutral/support catalog version (defaults to current + 1)",
+    )
+    parser.add_argument(
+        "--output-motion-version",
+        type=int,
+        default=None,
+        help="new motion baseline/set catalog version (defaults to current + 1)",
+    )
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
     root = args.root.resolve()
+    paths = build_catalog_paths(
+        current_profile_version=args.current_profile_version,
+        current_motion_version=args.current_motion_version,
+        output_profile_version=args.output_profile_version,
+        output_motion_version=args.output_motion_version,
+        standing_config=args.standing_config,
+        standing_contact=args.standing_contact,
+    )
     prepared_path = require_regular_file(args.prepared_source, "prepared standing source")
     standing_receipt_path = require_regular_file(args.standing_receipt, "standing receipt")
     receipt_path = args.receipt.resolve()
     admission_output = args.admission_output.resolve()
     if receipt_path.exists() or admission_output.exists():
         raise RuntimeError("standing regeneration outputs must be new")
-    for relative in (*[NEW_ANIMAL, NEW_CONTACT, NEW_NEUTRAL, NEW_SUPPORT], NEW_BASELINE, NEW_SET):
+    for relative in (
+        paths.new_animal,
+        paths.new_contact,
+        paths.new_neutral,
+        paths.new_support,
+        paths.new_baseline,
+        paths.new_set,
+    ):
         if (root / relative).exists():
             raise RuntimeError(f"standing catalog target already exists: {relative}")
     old_source_path = require_regular_file(
         root / f"assets/sha256/{CURRENT_SOURCE_SHA256}.glb", "current admitted source"
     )
-    rig_path = require_regular_file(root / RIG, "semantic rig")
+    require_regular_file(root / RIG, "semantic rig")
     standing_receipt_bytes = standing_receipt_path.read_bytes()
     standing_receipt = json.loads(standing_receipt_bytes)
     prepared_bytes = prepared_path.read_bytes()
@@ -371,8 +567,16 @@ def main() -> int:
     ):
         raise RuntimeError("standing receipt does not bind the current source and prepared output")
     template_paths = (
-        CURRENT_ANIMAL, CURRENT_CONTACT, CURRENT_NEUTRAL, CURRENT_SUPPORT,
-        CURRENT_BASELINE, CURRENT_SET, FAST_INTENT, RIG, STANDING_CONFIG,
+        paths.current_animal,
+        paths.current_contact,
+        paths.current_neutral,
+        paths.current_support,
+        paths.current_baseline,
+        paths.current_set,
+        FAST_INTENT,
+        RIG,
+        paths.standing_config,
+        paths.standing_contact,
     )
     template_payloads = {
         path: require_regular_file(root / path, f"template {path}").read_bytes()
@@ -403,13 +607,13 @@ def main() -> int:
     if prepared.binary != old_source.binary:
         raise RuntimeError("standing preparation changed geometry/skin binary payload")
     expected_preparation = {
-        "schema": template_documents[STANDING_CONFIG]["schema"],
-        "id": template_documents[STANDING_CONFIG]["id"],
-        "version": template_documents[STANDING_CONFIG]["version"],
+        "schema": template_documents[paths.standing_config]["schema"],
+        "id": template_documents[paths.standing_config]["id"],
+        "version": template_documents[paths.standing_config]["version"],
         "source_sha256": CURRENT_SOURCE_SHA256,
-        "config_sha256": canonical_document_sha256(template_documents[STANDING_CONFIG]),
+        "config_sha256": canonical_document_sha256(template_documents[paths.standing_config]),
         "semantic_roles_sha256": canonical_document_sha256(template_documents[RIG]["roles"]),
-        "contact_profile_sha256": canonical_document_sha256(template_documents[CURRENT_CONTACT]),
+        "contact_profile_sha256": canonical_document_sha256(template_documents[paths.standing_contact]),
         "bind_reference": "retained_source_inverse_bind_matrices",
     }
     prepared_marker = prepared.document.get("extras", {}).get("eonwildStandingPreparation")
@@ -468,7 +672,9 @@ def main() -> int:
             if delta["sides"][side]["distal"][name]["rotation_residual_degrees"] > 1.0e-5:
                 raise RuntimeError(f"standing preparation rotated retained {side} {name} world frame")
 
-    seed = load_neutral_jaw_calibration(template_documents[CURRENT_NEUTRAL]["neutral_jaw_calibration"])
+    seed = load_neutral_jaw_calibration(
+        template_documents[paths.current_neutral]["neutral_jaw_calibration"]
+    )
     rebound = replace(seed, source_geometry_sha256=admitted_sha)
     _, _, jaw_gap = _posed_gap(admitted, roles, rebound, (0, 0, 1), (0, 1, 0))
     body_height = _semantic_body_height(admitted, roles, (0, 1, 0))
@@ -480,6 +686,7 @@ def main() -> int:
         body_height,
         template_documents,
         template_bindings_by_path,
+        paths,
     )
     asset_path = root / f"assets/sha256/{admitted_sha}.glb"
     if asset_path.exists():
@@ -493,7 +700,7 @@ def main() -> int:
     for relative, document in documents.items():
         write_new(root / relative, json_bytes(document))
 
-    resolutions = resolve_motion_set_selection(root, root / NEW_SET, ["walk", "fast-walk"])
+    resolutions = resolve_motion_set_selection(root, root / paths.new_set, ["walk", "fast-walk"])
     result = {
         "schema": "eonwild.allosaurus.standing-catalog-regeneration.v1",
         "status": "CATALOG_REGENERATED_NOT_COMPILED",

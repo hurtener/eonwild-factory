@@ -83,3 +83,40 @@ def test_identity_standing_delta_is_exactly_zero():
     assert delta["maximum_distal_rotation_residual_degrees"] == 0.0
     for side in MODULE.SIDES:
         assert delta["sides"][side]["knee_body_relative_to_hip_delta_m"] == [0.0, 0.0, 0.0]
+
+
+def test_catalog_version_selectors_bind_wider_standing_inputs_and_next_catalog():
+    selected = MODULE.build_catalog_paths(
+        current_profile_version=5,
+        current_motion_version=6,
+        output_profile_version=6,
+        output_motion_version=7,
+        standing_config=Path(
+            "catalog/standing-preparation/allosaurus-engineering-standing.v4.json"
+        ),
+        standing_contact=Path("catalog/contacts/allosaurus-engineering.v4.json"),
+    )
+    assert selected.current_animal.name.endswith(".adult.v5.json")
+    assert selected.current_baseline.name.endswith("locomotion.v6.json")
+    assert selected.new_animal.name.endswith(".adult.v6.json")
+    assert selected.new_baseline.name.endswith("locomotion.v7.json")
+    assert selected.standing_config.name.endswith("standing.v4.json")
+    assert selected.standing_contact.name.endswith("engineering.v4.json")
+
+    source = Glb(ROOT / "assets/sha256" / f"{MODULE.CURRENT_SOURCE_SHA256}.glb")
+    roles = document(ROOT / MODULE.RIG)["roles"]
+    measured = MODULE.geometry_measurements(source, roles)
+    neutral = document(ROOT / selected.current_neutral)["neutral_jaw_calibration"]
+    documents = MODULE.catalog_documents(
+        ROOT,
+        MODULE.CURRENT_SOURCE_SHA256,
+        measured,
+        neutral["measured_minimum_gap_m"],
+        neutral["measured_body_height_m"],
+        paths=selected,
+    )
+    assert documents[selected.new_animal]["id"].endswith(".adult.v6")
+    assert documents[selected.new_contact]["version"] == 6
+    assert documents[selected.new_baseline]["id"].endswith("locomotion.v7")
+    assert documents[selected.new_set]["id"].endswith("motion-set.v7")
+    assert documents[selected.new_set]["baseline"]["path"] == selected.new_baseline.as_posix()
