@@ -17,6 +17,7 @@ from eonwild_motion.solve.source_motion_query import (
     _bounded_authored_joint_height,
     _bounded_authored_reach_height,
 )
+from eonwild_motion.solve.support_anchors import _digest
 from test_constant_skin_targets import _inputs
 
 
@@ -136,6 +137,19 @@ def test_adapter_applies_material_contact_path_at_keys_and_offgrid():
             - 1e-10
         )
     )
+
+
+def test_adapter_binding_names_local_joint_feasibility_semantics():
+    inputs = _inputs()
+    binding = dict(_build(inputs).binding())
+    assert binding["material_effector_resolution"] == (
+        "material_floor_and_local_joint_feasibility.v3"
+    )
+    legacy = {
+        **binding,
+        "material_effector_resolution": "minimum_material_and_bounded_reach.v2",
+    }
+    assert _digest(binding) != _digest(legacy)
 
 
 def test_material_clearance_policy_owns_scale_independently_of_reference_lift():
