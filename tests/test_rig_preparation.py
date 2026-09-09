@@ -85,6 +85,23 @@ def pedal_attachment_config(source: Glb) -> dict:
     return value
 
 
+def attachment_weight_config(source: Glb) -> dict:
+    value = config(source)
+    value["reparents"] = []
+    value["pivot_relocations"] = []
+    value["articulations"] = []
+    value["attachment_weight_transfers"] = [{
+        "role": "fixture_body_attachment",
+        "source_nodes": ["Bone_011"],
+        "destination_node": "Bone_024",
+        "selector": {
+            "model": "destination_weight_complement_power.v1",
+            "exponent": 2,
+        },
+    }]
+    return value
+
+
 def dense_weights(source: Glb) -> np.ndarray:
     attributes = source.document["meshes"][0]["primitives"][0]["attributes"]
     suffixes = sorted(key.removeprefix("JOINTS_") for key in attributes if key.startswith("JOINTS_"))
@@ -468,3 +485,73 @@ def test_shared_material_rows_receive_pedal_attachment_once():
     )
     assert repeated_receipt["pedal_attachment_transfers"] == (
         single_receipt["pedal_attachment_transfers"])
+
+
+def test_attachment_weight_transfer_uses_existing_destination_and_preserves_neutral():
+    source = Glb(SOURCE)
+    before = dense_weights(source)
+    candidate = attachment_weight_config(source)
+    raw, receipt = prepare_rig(source, candidate)
+    reopened = Glb.from_bytes(raw)
+    after = dense_weights(reopened)
+    joints = source.document["skins"][0]["joints"]
+    source_slot = joints.index(source.name_to_node["Bone_011"])
+    destination_slot = joints.index(source.name_to_node["Bone_024"])
+    destination = before[:, destination_slot]
+    expected_gain = 1.0 - (1.0 - destination) ** 2
+    expected_source = before[:, source_slot] * (1.0 - expected_gain)
+    changed = before[:, source_slot] * expected_gain > 1e-7
+    assert np.allclose(
+        after[changed, source_slot], expected_source[changed], atol=2e-7, rtol=0)
+    assert np.allclose(after.sum(axis=1), before.sum(axis=1), atol=2e-7, rtol=0)
+    row = receipt["attachment_weight_transfers"][0]
+    assert row["changed_vertex_count"] == int(np.sum(changed))
+    assert row["selector"] == candidate["attachment_weight_transfers"][0]["selector"]
+    assert receipt["measurements"]["maximum_reopened_neutral_skin_error_m"] < 3e-6
+
+
+@pytest.mark.parametrize(
+    "case", ["unknown_source", "unknown_destination", "same", "duplicate",
+             "model", "bool_exponent", "zero_exponent", "overlap"])
+def test_attachment_weight_transfer_rejects_malformed_or_ambiguous_binding(case):
+    source = Glb(SOURCE)
+    candidate = attachment_weight_config(source)
+    transfer = candidate["attachment_weight_transfers"][0]
+    if case == "unknown_source":
+        transfer["source_nodes"] = ["missing"]
+    elif case == "unknown_destination":
+        transfer["destination_node"] = "missing"
+    elif case == "same":
+        transfer["destination_node"] = transfer["source_nodes"][0]
+    elif case == "duplicate":
+        transfer["source_nodes"] *= 2
+    elif case == "model":
+        transfer["selector"]["model"] = "latest"
+    elif case == "bool_exponent":
+        transfer["selector"]["exponent"] = True
+    elif case == "zero_exponent":
+        transfer["selector"]["exponent"] = 0
+    else:
+        duplicate = deepcopy(transfer)
+        duplicate["role"] = "overlapping"
+        candidate["attachment_weight_transfers"].append(duplicate)
+    with pytest.raises(ContractError, match="attachment weight transfer"):
+        prepare_rig(source, candidate)
+
+
+def test_shared_material_rows_receive_attachment_weight_transfer_once():
+    source = Glb(SOURCE)
+    single_raw, single_receipt = prepare_rig(
+        source, attachment_weight_config(source))
+    document = deepcopy(source.document)
+    document["meshes"][0]["primitives"].append(
+        deepcopy(document["meshes"][0]["primitives"][0]))
+    repeated = Glb.from_bytes(_encode(document, source.binary))
+    repeated_raw, repeated_receipt = prepare_rig(
+        repeated, attachment_weight_config(repeated))
+    assert np.array_equal(
+        dense_weights(Glb.from_bytes(single_raw)),
+        dense_weights(Glb.from_bytes(repeated_raw)),
+    )
+    assert repeated_receipt["attachment_weight_transfers"] == (
+        single_receipt["attachment_weight_transfers"])
