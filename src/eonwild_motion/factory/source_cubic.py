@@ -6,7 +6,7 @@ in glTF units per second and are not derivative, branch, or global-C1 authority.
 from __future__ import annotations
 
 from copy import deepcopy
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import hashlib
 import json
 import math
@@ -33,6 +33,11 @@ class SourceCubicEmission:
     plan: Mapping[str, Any]
     midpoint_plan: Mapping[str, Any]
     tangent_estimate: Mapping[str, Any]
+    _checked_values: Mapping[float, Any] = field(repr=False, compare=False)
+    _law_identity: int = field(repr=False, compare=False)
+    _source_sha256: str = field(repr=False, compare=False)
+    _input_plan_sha256: str = field(repr=False, compare=False)
+    _stencils: tuple[float, float] = field(repr=False, compare=False)
 
 
 def serialized_key_midpoint_times(glb: Glb, animation_name: str) -> list[float]:
@@ -153,6 +158,8 @@ def emit_source_cubics(
     root_node: int,
     stencil_s: float = 0.001,
     convergence_stencil_s: float = 0.0005,
+    additional_key_times: tuple[float, ...] = (),
+    reuse: SourceCubicEmission | None = None,
 ) -> SourceCubicEmission:
     """Evaluate one bound law at keys and one-sided source-time stencils."""
     if not isinstance(source, Glb) or not isinstance(law, CanonicalConstantSkinTargetLaw):
@@ -168,7 +175,22 @@ def emit_source_cubics(
     rows = plan.get("samples")
     if not isinstance(rows, list) or len(rows) < 2:
         raise ContractError("source cubic emission requires a retained plan")
-    times = np.asarray([row["time_s"] for row in rows], dtype=float)
+    input_times = np.asarray([row["time_s"] for row in rows], dtype=float)
+    input_plan_sha256 = hashlib.sha256(
+        json.dumps(plan, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
+    source_sha256 = hashlib.sha256(source.raw).hexdigest()
+    if (not isinstance(additional_key_times, tuple)
+            or any(isinstance(value, bool) or not isinstance(value, (int, float))
+                   or not math.isfinite(value) for value in additional_key_times)):
+        raise ContractError("source cubic additional keys must be a finite tuple")
+    if any(not input_times[0] < value < input_times[-1]
+           for value in additional_key_times):
+        raise ContractError("source cubic additional keys must lie inside the source timeline")
+    times = np.asarray(sorted({
+        *(float(value) for value in input_times),
+        *(float(value) for value in additional_key_times),
+    }), dtype=float)
     if not np.isfinite(times).all() or np.any(np.diff(times) <= 0):
         raise ContractError("source cubic timeline must be finite and increasing")
     midpoint_times = (times[:-1] + times[1:]) * 0.5
@@ -183,9 +205,17 @@ def emit_source_cubics(
             for step_s in (stencil_s, convergence_stencil_s):
                 requested.add(time_s + direction * step_s)
                 requested.add(time_s + direction * 2 * step_s)
-    ordered_times = tuple(sorted(requested))
-    batch = law.values(ordered_times)
     cache: dict[float, Any] = {}
+    if reuse is not None:
+        if (not isinstance(reuse, SourceCubicEmission)
+                or reuse._law_identity != id(law)
+                or reuse._source_sha256 != source_sha256
+                or reuse._input_plan_sha256 != input_plan_sha256
+                or reuse._stencils != (stencil_s, convergence_stencil_s)):
+            raise ContractError("source cubic reuse differs from the bound source law")
+        cache.update(reuse._checked_values)
+    ordered_times = tuple(sorted(requested - set(cache)))
+    batch = law.values(ordered_times)
     for time_s, value in zip(ordered_times, batch):
         if isinstance(value, ConstantSkinTargetUnavailable):
             raise ContractError(
@@ -339,7 +369,9 @@ def emit_source_cubics(
             "stencil_s": stencil_s,
             "convergence_stencil_s": convergence_stencil_s,
             "checked_source_time_count": len(cache),
+            "new_checked_source_time_count": len(ordered_times),
             "key_count": len(times),
+            "additional_key_count": len(times) - len(input_times),
             "midpoint_count": len(midpoint_times),
             "maximum_stencil_difference": convergence,
             "quaternion_tangent_units": "xyzw components per second before normalized glTF playback",
@@ -349,7 +381,9 @@ def emit_source_cubics(
     )
     return SourceCubicEmission(
         root_raw, in_place_raw, _freeze_data(emitted_plan),
-        _freeze_data(midpoint_plan), diagnostic,
+        _freeze_data(midpoint_plan), diagnostic, dict(cache), id(law),
+        source_sha256, input_plan_sha256,
+        (stencil_s, convergence_stencil_s),
     )
 
 

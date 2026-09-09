@@ -165,6 +165,71 @@ def test_emitter_uses_one_checked_batch_and_serializes_source_values(monkeypatch
     )
 
 
+def test_emitter_refinement_reuses_checked_values_and_inserts_exact_source_key(monkeypatch):
+    source, _ = fixture("source-cubic-refine", upper_body=True)
+    law = object.__new__(CanonicalConstantSkinTargetLaw)
+    calls = []
+
+    def values(_self, times):
+        calls.append(tuple(times))
+        return tuple(_synthetic_checked_value(len(source.nodes), time_s) for time_s in times)
+
+    monkeypatch.setattr(CanonicalConstantSkinTargetLaw, "values", values)
+    plan = {
+        "program": "grounded_gait", "loop": False, "duration_s": .2,
+        "samples": [
+            _synthetic_checked_value(len(source.nodes), time_s).row
+            for time_s in (0., .1, .2)
+        ],
+    }
+    initial = emit_source_cubics(source, law, plan, root_node=0)
+    refined = emit_source_cubics(
+        source, law, plan, root_node=0,
+        additional_key_times=(.05,), reuse=initial,
+    )
+    assert len(calls) == 2
+    assert set(calls[0]).isdisjoint(calls[1])
+    assert refined.tangent_estimate["additional_key_count"] == 1
+    assert refined.tangent_estimate["new_checked_source_time_count"] == len(calls[1])
+    tracks, timeline = read_animation_tracks(
+        Glb.from_bytes(refined.root_motion),
+        "V9_SOURCE_CUBIC_ROOT_MOTION", require_common_timeline=True,
+    )
+    assert timeline == pytest.approx([0., .05, .1, .2])
+    assert tracks[0, "translation"].values[:, 0] == pytest.approx(
+        np.asarray(timeline) ** 2
+    )
+
+
+def test_emitter_refinement_rejects_unbound_reuse_or_outside_key(monkeypatch):
+    source, _ = fixture("source-cubic-refine-invalid", upper_body=True)
+    law = object.__new__(CanonicalConstantSkinTargetLaw)
+    monkeypatch.setattr(
+        CanonicalConstantSkinTargetLaw, "values",
+        lambda _self, times: tuple(
+            _synthetic_checked_value(len(source.nodes), time_s) for time_s in times
+        ),
+    )
+    plan = {
+        "program": "grounded_gait", "loop": False, "duration_s": .1,
+        "samples": [
+            _synthetic_checked_value(len(source.nodes), time_s).row
+            for time_s in (0., .1)
+        ],
+    }
+    initial = emit_source_cubics(source, law, plan, root_node=0)
+    with pytest.raises(ContractError, match="inside the source timeline"):
+        emit_source_cubics(
+            source, law, plan, root_node=0,
+            additional_key_times=(.2,), reuse=initial,
+        )
+    with pytest.raises(ContractError, match="reuse differs"):
+        emit_source_cubics(
+            source, object.__new__(CanonicalConstantSkinTargetLaw), plan,
+            root_node=0, additional_key_times=(.05,), reuse=initial,
+        )
+
+
 def test_emitter_rejects_any_typed_unavailable_checked_value(monkeypatch):
     source, _ = fixture("source-cubic-unavailable", upper_body=True)
     law = object.__new__(CanonicalConstantSkinTargetLaw)

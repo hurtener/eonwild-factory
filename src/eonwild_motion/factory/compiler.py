@@ -694,6 +694,39 @@ def compile_recipe(
         emission = emit_source_cubics(
             source, law, plan, root_node=source.name_to_node[roles["root"]]
         )
+        # A checked source law can touch a hard articulation boundary while a
+        # Hermite interval between its valid keys overshoots it. Insert only
+        # the source-derived failing midpoints once; candidates whose first
+        # serialized curve passes retain their exact bytes.
+        refinement_times: set[float] = set()
+        initial_midpoint_articulation = {}
+        for mode, raw, clip in (() if articulation_profile is None else (
+            ("root_motion", emission.root_motion, "V9_SOURCE_CUBIC_ROOT_MOTION"),
+            ("in_place", emission.in_place, "V9_SOURCE_CUBIC_IN_PLACE"),
+        )):
+            emitted = Glb.from_bytes(raw)
+            sample_times = serialized_key_midpoint_times(emitted, clip)
+            check = emitted_articulation_envelopes(
+                emitted,
+                semantic_roles=roles,
+                plan=emission.midpoint_plan,
+                profile=articulation_profile,
+                forward_axis=forward,
+                up_axis=up,
+                sample_times=sample_times,
+            )
+            initial_midpoint_articulation[mode] = check
+            if check["status"] == "FAIL" and check.get("witness") is not None:
+                refinement_times.add(float(check["witness"]["time_s"]))
+        if refinement_times and len(refinement_times) <= 8:
+            emission = emit_source_cubics(
+                source,
+                law,
+                plan,
+                root_node=source.name_to_node[roles["root"]],
+                additional_key_times=tuple(sorted(refinement_times)),
+                reuse=emission,
+            )
         plan = _thaw(emission.plan)
         midpoint_plan = _thaw(emission.midpoint_plan)
         # Reuse the existing receipt construction against the identical
@@ -712,6 +745,15 @@ def compile_recipe(
         receipt["source_cubic_tangent_estimate"] = _thaw(
             emission.tangent_estimate
         )
+        receipt["source_cubic_key_refinement"] = {
+            "classification": (
+                "one bounded insertion of source-derived midpoint keys after an "
+                "initial serialized articulation failure; no clipped rotations or relaxed limits"
+            ),
+            "maximum_inserted_keys": 8,
+            "inserted_times_s": sorted(refinement_times) if len(refinement_times) <= 8 else [],
+            "initial_midpoint_articulation": initial_midpoint_articulation,
+        }
         receipt["constant_skin_target_law"] = {
             "status": "AVAILABLE_AT_ALL_KEYS_STENCILS_AND_MIDPOINTS",
             "classification": "pointwise checked values; derivative and global-C1 authority unavailable",
