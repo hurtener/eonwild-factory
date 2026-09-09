@@ -11,9 +11,12 @@ closes the reverse-walk between-key ankle undershoot with one source-derived
 key and unchanged limits. The exact integrated release package verifies PASS
 and has identical animation bytes to the independently reviewed candidate.
 Both code reviews and narrow immutable-cache correction reviews are closed.
-Root inspected 120 side/front frames; native-speed user and Unity acceptance
-remain open. Reverse starts/stops and their actual direct joins are still
-separate, unfinished acceptance requirements.
+Root inspected 120 side/front steady frames. Reverse starts/stops now also
+pass independent package verification and actual direct joins in both modes.
+The connected 13.6-second sequence adds 816 reviewed frames, exact join
+panels and independent hash/clock/decode checks. Native-speed user and Unity
+acceptance remain open. Hosted contracts at published 9a7e209 passed 1,140
+tests plus 21 subtests; broader catalog acceptance is not green.
 
 The preceding [shared reverse-intent checkpoint](../reports/SHARED-REVERSE-INTENT-001/README.md)
 records signed/fixed-placement resolution through the same adult baseline and

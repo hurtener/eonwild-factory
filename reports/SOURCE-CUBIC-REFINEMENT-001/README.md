@@ -33,6 +33,10 @@ implementation passed the same 52 focused checks in 5.90 seconds. Ruff and
 diff checks pass. These are focused results. The preceding published
 `6f6b8e2` hosted contracts passed 1,135 tests plus 21 subtests in 723.50 seconds
 and source evidence passed; that result is not attributed to this new head.
+At published `9a7e20983b8bce4bfcc3fbbf2ae34c3e92280f82`, hosted contracts
+passed 1,140 tests plus 21 subtests in 606.17 seconds (job 102354496950),
+and source evidence passed. Broader catalog acceptance still has failures;
+the overall workflow is not claimed green.
 
 ## Actual candidate evidence
 
@@ -60,8 +64,25 @@ because its policy check could not be verified. No native-speed user
 acceptance, reverse Unity parity, or production approval is claimed.
 
 The retained source-law preflight for reverse start and stop passes all native
-rows, contact, reach and sampled rate checks. Their final exports and actual
-direct joins remain separate acceptance requirements.
+rows, contact, reach and sampled rate checks. Candidate 007 final start and
+stop exports now independently verify integrity and technical PASS, as do
+their actual serialized joins with steady 006/byte-identical release 008 in
+both modes. Start manifest SHA-256:
+`c636c3519b56ec66b0dd9771b1b31bf7b1cbda0a0f05d78b4ccd744544701451`.
+Stop manifest SHA-256:
+`d2ef5af9be365ecc754e6e04333b7b324e18bcd33e2c4f7decbeba3b6fc444bb`.
+
+Connected review 009 uses the matching d905 generating fingerprints for
+007 start, 006 steady and 007 stop. The separate 006/008 byte-equivalence
+receipt binds this review to corrected steady output without claiming that
+the older packages were regenerated at 9a7e209. No segment is blended or
+retimed. The sequence lasts 13.6 seconds and moves backward 7.052392 m.
+Root reviewed all 816 frames across root-motion side and in-place
+three-quarter views, plus enlarged exact join and recovery panels. No new
+gross limb inversion, body jump or join discontinuity was found. Independent
+frame hashes, source manifests, 408-frame/30-fps clocks and full video decode
+pass. Native-speed aesthetic acceptance, fine skin assessment and Unity
+remain open. These are review candidates, not production-approved animals.
 
 ## Allosaurus and remaining scope
 
@@ -84,3 +105,9 @@ Local source-bound evidence stays on the external SSD under task storage:
 `audits/reverse-cubic-key-refinement-reviewer2-d905/`,
 `audits/tarbosaurus-reverse-shared-001/`, and
 `audits/allosaurus-wholebody-003-root-review/`.
+The connected extension is recorded under
+`audits/tarbosaurus-reverse-shared-007-transitions/` and
+`audits/reverse-connected-native-009/`, including independent
+`root-start-verification.json`, `root-stop-verification.json` and
+`root-review.json` receipts. The full-suite log is
+`audits/ci-contracts-9a7e209.log`.
