@@ -6,6 +6,11 @@ import pytest
 
 import eonwild_motion.solve.source_motion_query as source_query_module
 from eonwild_motion.errors import ContractError
+from eonwild_motion.planning.gait_transition import (
+    GaitTransition,
+    build_transition_plan,
+)
+from eonwild_motion.solve.performance import Performance, decorate_plan
 from eonwild_motion.solve.authored_material_contact import (
     AuthoredMaterialContactAdapter,
 )
@@ -88,6 +93,63 @@ def _build(inputs, capsule=None):
         authored_source=b"source",
         material_clearance_policy=_policy(),
         body_height_m=inputs["query"]._context.body_height,
+    )
+
+
+def test_transition_adapter_uses_locomotion_clock_and_preserves_contact_authority():
+    inputs = _inputs()
+    steady = _build(inputs)
+    transition = GaitTransition(
+        "start",
+        handoff_phase_fraction=0.125,
+        handoff_sample_hz=480,
+        support_placement="integrated_support",
+    )
+    plan = decorate_plan(
+        build_transition_plan(
+            transition,
+            inputs["locomotion_gait"],
+            float(inputs["plan"]["body_height_m"]),
+        ),
+        Performance(canonical_support_anchors=True),
+    )
+    query = SourceMotionQuery(
+        inputs["source"],
+        semantic_roles=inputs["semantic_roles"],
+        solver_gait=inputs["solver_gait"],
+        locomotion_gait=inputs["locomotion_gait"],
+        transition=transition,
+        plan=plan,
+        contact_profile=inputs["contact_profile"],
+        up_axis=inputs["up_axis"],
+        forward_axis=inputs["forward_axis"],
+        articulation_profile=inputs["articulation_profile"],
+    )
+    steady_query = SourceMotionQuery(
+        **_query_kwargs(inputs), authored_material_contact=steady
+    )
+    adapted = AuthoredMaterialContactAdapter.for_transition(
+        steady, steady_query=steady_query, transition_query=query
+    )
+    candidate = next(row for row in plan["samples"] if row["performance_gain"] > 0)
+    before = deepcopy(candidate)
+    result = adapted.resolve(query, candidate, float(candidate["time_s"]))
+    assert result["support_count"] == before["support_count"]
+    assert result["stage"] == before["stage"]
+    assert [result["feet"][side]["contact"] for side in ("left", "right")] == [
+        before["feet"][side]["contact"] for side in ("left", "right")
+    ]
+    shifted = deepcopy(candidate)
+    shifted["time_s"] += 99.0
+    assert (
+        adapted.resolve(query, shifted, float(candidate["time_s"]))["feet"]
+        == (result["feet"])
+    )
+    forged = deepcopy(candidate)
+    forged["locomotion_time_s"] += 0.25
+    assert (
+        adapted.resolve(query, forged, float(candidate["time_s"]))["feet"]
+        != (result["feet"])
     )
 
 

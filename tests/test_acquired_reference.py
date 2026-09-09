@@ -18,7 +18,7 @@ from eonwild_motion.factory.compiler import (
     compile_recipe,
 )
 from eonwild_motion.factory.io import bind, json_bytes, write_json
-from eonwild_motion.factory.motion_set import resolve_motion_set
+from eonwild_motion.factory.motion_set import reconstruct_motion_set, resolve_motion_set
 from eonwild_motion.solve.authored_material_contact import AuthoredMaterialContactAdapter
 from eonwild_motion.solve.source_motion_query import _thaw
 from eonwild_motion.solve.source_motion_query import SourceMotionQuery
@@ -166,6 +166,85 @@ def test_transition_cannot_silently_drop_acquired_reference(tmp_path):
     write_json(tmp_path / "set.json", motion_set)
     with pytest.raises(ContractError, match="only for steady grounded gait"):
         resolve_motion_set(tmp_path, tmp_path / "set.json", "walk")
+
+
+def test_transition_resolves_named_steady_reference_and_reconstructs_offline(tmp_path):
+    baseline, steady, motion_set = _documents_v2(tmp_path)
+    policy = tmp_path / "clearance.json"
+    write_json(
+        policy,
+        {
+            "schema": "eonwild.motion.authored-material-clearance-policy.v1",
+            "id": "test-clearance.v1",
+            "version": 1,
+            "model": "body_height_fraction.v1",
+            "maximum_clearance_body_heights": 0.125,
+            "classification": "source_backed_engineering_candidate",
+        },
+    )
+    baseline["supported_programs"] = ["grounded_gait", "gait_transition"]
+    baseline["solve_policy"]["grounded_transition_clearance"] = (
+        "material_floor_scaled_excess.v1"
+    )
+    baseline["locomotion_response_policy"]["regimes"]["grounded"][
+        "authored_material_clearance"
+    ] = bind(tmp_path, policy)
+    write_json(tmp_path / "gait.json", {"schema": "test.grounded-gait"})
+    steady.update(
+        {
+            "id": "animal.walk.v1",
+            "program": "grounded_gait",
+            "program_profile": bind(tmp_path, tmp_path / "gait.json"),
+            "authored_material_reference": bind(tmp_path, _reference(tmp_path)),
+        }
+    )
+    write_json(tmp_path / "steady.json", steady)
+    transition = {
+        "schema": "eonwild.motion.motion-intent.v2",
+        "id": "animal.walk-start.v1",
+        "version": 1,
+        "program": "gait_transition",
+        "program_profile": bind(tmp_path, tmp_path / "program.json"),
+        "gait_profile": steady["program_profile"],
+        "steady_motion": "walk",
+    }
+    write_json(tmp_path / "transition.json", transition)
+    write_json(tmp_path / "baseline.json", baseline)
+    motion_set["baseline"] = bind(tmp_path, tmp_path / "baseline.json")
+    motion_set["motions"] = [
+        {"name": "walk", "intent": bind(tmp_path, tmp_path / "steady.json")},
+        {"name": "walk-start", "intent": bind(tmp_path, tmp_path / "transition.json")},
+    ]
+    write_json(tmp_path / "set.json", motion_set)
+    resolved = resolve_motion_set(tmp_path, tmp_path / "set.json", "walk-start")
+    assert (
+        resolved.recipe["authored_material_reference"]
+        == steady["authored_material_reference"]
+    )
+    assert (
+        resolved.payloads["steady-motion-intent.json"]
+        == (tmp_path / "steady.json").read_bytes()
+    )
+    assert (
+        reconstruct_motion_set(
+            set_bytes=resolved.set_bytes,
+            baseline_bytes=resolved.baseline_bytes,
+            intent_bytes=resolved.intent_bytes,
+            steady_intent_bytes=resolved.steady_intent_bytes,
+            resolution_lock=resolved.lock,
+        )
+        == resolved.recipe
+    )
+    changed = json.loads(resolved.steady_intent_bytes)
+    changed["id"] = "forged"
+    with pytest.raises(ContractError, match="steady motion dependency"):
+        reconstruct_motion_set(
+            set_bytes=resolved.set_bytes,
+            baseline_bytes=resolved.baseline_bytes,
+            intent_bytes=resolved.intent_bytes,
+            steady_intent_bytes=json_bytes(changed),
+            resolution_lock=resolved.lock,
+        )
 
 
 def test_adapter_binding_is_detached_json_payload():
