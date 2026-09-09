@@ -101,8 +101,7 @@
   },
   "supported_programs": [
     "grounded_gait",
-    "gait_transition",
-    "airborne_gait"
+    "gait_transition"
   ],
   "up_axis": [
     0.0,

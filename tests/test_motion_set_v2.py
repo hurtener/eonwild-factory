@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
+import json
 from pathlib import Path
 
 import pytest
@@ -218,3 +219,6 @@ def test_real_v2_grounded_sets_share_inputs_without_changing_v1_recipe():
         tarbo_v2.locomotion_response_bytes
         == allo_v2.locomotion_response_bytes
     )
+    assert json.loads(tarbo_v2.baseline_bytes)["supported_programs"] == [
+        "grounded_gait", "gait_transition"
+    ]
