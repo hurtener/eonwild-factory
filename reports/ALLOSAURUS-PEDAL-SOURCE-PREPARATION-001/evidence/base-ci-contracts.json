@@ -1,0 +1,9 @@
+{
+  "source_commit": "f24297da9f3ef3a5db28cfd30860fa15760bb50d",
+  "workflow_run": 34304888782,
+  "job_id": 102319463915,
+  "job_conclusion": "success",
+  "result": "1123 passed, 21 subtests passed in 648.92s",
+  "log_sha256": "58186c3c27326765571c6ef93ae9b1a3cb254dace078e7dcf92aa69493caa64a",
+  "scope": "Full contracts job only; not whole catalog workflow success."
+}

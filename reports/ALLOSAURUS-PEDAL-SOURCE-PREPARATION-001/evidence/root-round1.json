@@ -1,0 +1,25 @@
+{
+  "head": "4eee1ba4d35d2a5fd767e7d14e9adf20a57b96cd",
+  "verdict": "CHANGES_REQUIRED",
+  "focused_tests": {
+    "passed": 26,
+    "elapsed_s": 18.04
+  },
+  "findings": [
+    {
+      "priority": "P1",
+      "title": "Shared primitive accessors apply branch transfer more than once",
+      "evidence": "shared-accessor-probe.json",
+      "maximum_weight_difference": 0.24501556158065796,
+      "affected_vertices": 286
+    },
+    {
+      "priority": "P1",
+      "title": "Public candidate bindings point to pre-admission source",
+      "evidence": "../allosaurus-pedal-shared-v2-preflight-001/result.json",
+      "note": "Independent worker evidence: temporary admission/rebinding was needed before the public compiler reached the mechanical blocker. Bind checked-in candidate to admitted source and retain raw preparation identity separately."
+    }
+  ],
+  "visual_gate": "Gross branch placement accepted for actual gait preflight; no anatomy or gait approval.",
+  "mechanical_preflight": "BLOCKED: added branches alone did not resolve loaded right plantar residual."
+}
