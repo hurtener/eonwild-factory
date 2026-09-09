@@ -681,8 +681,7 @@ class AuthoredMaterialContactAdapter:
         return result
 
     def binding(self) -> Mapping[str, Any]:
-        return MappingProxyType(
-            {
+        binding = {
                 "schema": "eonwild.motion.authored-material-contact-binding.v1",
                 "capsule_sha256": self._capsule_sha256,
                 "query_binding_sha256": self._query_binding_sha256,
@@ -701,10 +700,17 @@ class AuthoredMaterialContactAdapter:
                 "source_fps": float(self._capsule["fps"]),
                 "source_interval_count": int(self._capsule["interval_count"]),
                 "source_duration_s": float(self._capsule["duration_s"]),
-                "mode": self._mode,
-                "steady_query_binding_sha256": self._steady_query_binding_sha256,
-                "steady_adapter_binding_sha256": (
-                    self._steady_adapter_binding_sha256
-                ),
             }
-        )
+        if self._mode == "transition_locomotion_time.v1":
+            binding.update(
+                {
+                    "mode": self._mode,
+                    "steady_query_binding_sha256": (
+                        self._steady_query_binding_sha256
+                    ),
+                    "steady_adapter_binding_sha256": (
+                        self._steady_adapter_binding_sha256
+                    ),
+                }
+            )
+        return MappingProxyType(binding)
