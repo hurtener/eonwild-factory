@@ -1,0 +1,80 @@
+{
+  "classification": "integrity PASS after local metadata inventory fix; technical BLOCKED on unchanged residual and foot-pitch-rate gates; no visual, Unity, biological, anatomical, or production acceptance",
+  "compile_terminal": {
+    "elapsed_seconds_approx": 2940,
+    "error": "package metadata: input bindings differ",
+    "status": "FAIL"
+  },
+  "implementation_head": "7c6272359f14d5f67a8b9de8b6079747e1a1cf13",
+  "implementation_tree": "fd7975cab4081315b79d128a690e4d110e340ff3",
+  "in_place_sha256": "fe6bbf79e90c8ad273f6b65952e317a7f03212e9141e001e4945d0ea24f5bbd7",
+  "inputs": {
+    "catalog/acquired-reference/ferocious-industries.raptor-walk-material.v1.json": {
+      "sha256": "70b93b063d8738bbf9c89102930771a25dac139a4073d9d5abfa5d60987f9633",
+      "size_bytes": 636
+    },
+    "catalog/motion-baselines/allosaurus-engineering-locomotion.v4.json": {
+      "sha256": "5f31c9582baaf9359ba1a56f93d022fc388a475a46e39d6fd414699ad7294046",
+      "size_bytes": 4612
+    },
+    "catalog/motion-intents/heavy-biped.allosaurus-acquired-walk.motion-set.v3.json": {
+      "sha256": "64ddc6979885357a3fbb6b7f5860a36d432150b3dc65963f9e6ed42dec5d2bbd",
+      "size_bytes": 708
+    },
+    "catalog/motion-sets/allosaurus-engineering-acquired-walk.v4.json": {
+      "sha256": "3b5544993d3707288fb10e9c39a6f9f67753d689d8bdf27aefd3109f21188b0e",
+      "size_bytes": 572
+    },
+    "local/acquired/pbr-animated-dinosaurs/Raptor_Animated_FBX.fbx": {
+      "sha256": "c052e81297737f2f2a3b9e7ce3c8a79e4f0950ef1b4a9b16558f8e4f0ca649cb",
+      "size_bytes": 17074220
+    },
+    "local/acquired/pbr-animated-dinosaurs/raptor-walk-authored-material-path.v1.json": {
+      "sha256": "21363f7f7dc5787d2f0a6a20aa08bbcdc5d3e76e4d36004ded032b44d8296051",
+      "size_bytes": 8994
+    }
+  },
+  "interpolation": "CUBICSPLINE",
+  "material_effector_resolution": "material_floor_and_local_joint_feasibility.v4",
+  "metadata_verifier_fix": {
+    "head": "1d4d54967204c20c256adfafff63859d65f7a863",
+    "result": {
+      "integrity": "PASS",
+      "production_approved": false,
+      "technical_status": "BLOCKED",
+      "unity_parity": "NOT_RUN",
+      "visual_review": "PENDING"
+    },
+    "tree": "f9ebc36a568601b506848973ddaa5fc06ecd5053"
+  },
+  "motion": "walk",
+  "output": "ARC/out/allosaurus-acquired-reference-walk-007-release-7c62723",
+  "package_manifest_sha256": "caff695d5e1084d619daf22d0cb74df4ac4724d125ba6e9b0e58ec8f36865071",
+  "root_motion_sha256": "894a7329cdba9cf1f364902b71f8d910445a4246abb659ce478f5b69b38c0e59",
+  "schema": "eonwild.audit.allosaurus-acquired-reference-release.v1",
+  "solver_feasibility": {
+    "checks": {
+      "max_foot_target_residual_m": false,
+      "max_unreachable_extension_m": true,
+      "maximum_articulation_envelope_violation_degrees": true,
+      "maximum_solved_foot_pitch_velocity_degrees_per_s": false
+    },
+    "classification": "engineering feasibility only; missing evidence is a failure",
+    "limits": {
+      "max_foot_target_residual_m": 0.001,
+      "max_unreachable_extension_m": 0.001,
+      "maximum_articulation_envelope_violation_degrees": 0.01,
+      "maximum_solved_foot_pitch_velocity_degrees_per_s": 600.0
+    },
+    "status": "FAIL",
+    "values": {
+      "max_foot_target_residual_m": 0.0010000027150181058,
+      "max_unreachable_extension_m": 0.0009999111963139296,
+      "maximum_articulation_envelope_violation_degrees": 0.0,
+      "maximum_solved_foot_pitch_velocity_degrees_per_s": 750.1430087784727
+    }
+  },
+  "status": "BLOCKED",
+  "technical_status": "BLOCKED",
+  "validation_sha256": "fb4ca7be0e790049060e27e09b7a4e38155d4c9e11227ed9531cb94275c5044c"
+}

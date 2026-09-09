@@ -6,6 +6,8 @@ Unity parity are separate; none transfers automatically to a newer candidate.
 
 ## Current integration checkpoint
 
+The [emitted Allosaurus acquired-walk checkpoint](../reports/ALLOSAURUS-ACQUIRED-WALK-7C-BLOCKED-001/README.md) now records the first complete public factory emission through the licensed-reference adapter. Both GLBs were written and package integrity reopens as `PASS`, but the motion is **TECHNICALLY BLOCKED** by a 2.715 nm residual excess, a 750.143°/s solved foot-pitch rate against 600°/s, and a source-derived node rotation jump observed at about 7,522°/s against 1,200°/s. Ten diagnostic stills were inspected; no full-cycle, native-speed, Unity, anatomical, biological or production acceptance follows. This is not an accepted second animated animal.
+
 The latest [source CUBIC refinement checkpoint](../reports/SOURCE-CUBIC-REFINEMENT-001/README.md)
 closes the reverse-walk between-key ankle undershoot with one source-derived
 key and unchanged limits. The exact integrated release package verifies PASS
