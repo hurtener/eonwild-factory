@@ -511,6 +511,40 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
     primitives = meshes[mesh_index].get("primitives")
     if not isinstance(primitives, list) or not primitives:
         raise ContractError("rig preparation selected skin requires mesh primitives")
+
+    def admit_physical_skin_rows(
+        position_accessor: int,
+        joint_accessors: list[int],
+        weight_accessors: list[int],
+        *,
+        bundles: set[tuple[int, ...]],
+        accessor_owners: dict[int, tuple[int, ...]],
+    ) -> tuple[bool, tuple[int, ...]]:
+        """Admit one physical vertex/skin row bundle exactly once.
+
+        Multiple material primitives may share every accessor.  Reprocessing
+        that shared storage would compound partial-gain weight operations.
+        Partial aliases are rejected because they do not identify one
+        unambiguous physical row ownership model.
+        """
+        bundle = (
+            position_accessor,
+            *joint_accessors,
+            *weight_accessors,
+        )
+        for accessor in bundle:
+            owner = accessor_owners.get(accessor)
+            if owner is not None and owner != bundle:
+                raise ContractError(
+                    "rig preparation skin primitives partially alias accessors"
+                )
+        if bundle in bundles:
+            return False, bundle
+        bundles.add(bundle)
+        for accessor in bundle:
+            accessor_owners[accessor] = bundle
+        return True, bundle
+
     for transfer_index, raw in enumerate(transfers):
         row = _exact_object(
             raw, {"role", "from_articulation", "to_node", "selector"},
@@ -555,6 +589,8 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
         target_slot = joints.index(target_node)
         selected_count = changed_count = 0
         transferred_weights = []
+        physical_bundles: set[tuple[int, ...]] = set()
+        physical_accessor_owners: dict[int, tuple[int, ...]] = {}
         for primitive_index, primitive in enumerate(primitives):
             attributes = primitive.get("attributes") if isinstance(primitive, Mapping) else None
             if not isinstance(attributes, Mapping) or "POSITION" not in attributes:
@@ -580,6 +616,13 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
                 label=f"weight transfer primitive[{primitive_index}] WEIGHTS_{suffix}",
                 accessor_type="VEC4", component_types=(5126,),
                 expected_count=count) for suffix in suffixes]
+            first_rows, _ = admit_physical_skin_rows(
+                position_accessor, joint_accessors, weight_accessors,
+                bundles=physical_bundles,
+                accessor_owners=physical_accessor_owners,
+            )
+            if not first_rows:
+                continue
             positions = np.asarray(source.accessor_values(position_accessor), dtype=float)
             world_positions = (
                 original_world[mesh_node] @
@@ -644,7 +687,7 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
             "changed_vertex_count": changed_count,
             "maximum_transferred_weight": max(transferred_weights),
         })
-    claimed_vertices: set[tuple[int, int]] = set()
+    claimed_vertices: set[tuple[tuple[int, ...], int]] = set()
     weighted_receipts = []
     joint_row_cache: dict[int, np.ndarray] = {}
     weight_row_cache: dict[int, np.ndarray] = {}
@@ -666,6 +709,8 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
         width = float(selector["blend_width_m"])
         changed = 0
         maximum_amount = 0.0
+        physical_bundles: set[tuple[int, ...]] = set()
+        physical_accessor_owners: dict[int, tuple[int, ...]] = {}
         for primitive_index, primitive in enumerate(primitives):
             attrs = primitive.get("attributes") if isinstance(primitive, Mapping) else None
             suffixes = sorted(
@@ -690,6 +735,13 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
                 source, attrs[f"WEIGHTS_{suffix}"], label="weighted branch WEIGHTS",
                 accessor_type="VEC4", component_types=(5126,), expected_count=count)
                 for suffix in suffixes]
+            first_rows, bundle = admit_physical_skin_rows(
+                position_accessor, joint_accessors, weight_accessors,
+                bundles=physical_bundles,
+                accessor_owners=physical_accessor_owners,
+            )
+            if not first_rows:
+                continue
             positions = np.asarray(source.accessor_values(position_accessor), dtype=float)
             world_positions = (original_world[mesh_node] @ np.column_stack(
                 (positions, np.ones(len(positions)))).T).T[:, :3]
@@ -709,7 +761,7 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
                 & (up <= float(selector["up_maximum_m"]))
                 & (forward >= fwd_lo) & (forward <= fwd_hi))
             for vertex in candidates:
-                key = (primitive_index, int(vertex))
+                key = (bundle, int(vertex))
                 if key in claimed_vertices:
                     raise ContractError("rig preparation weighted branch selectors overlap")
                 source_entries = [
@@ -729,11 +781,11 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
                 if amount <= 1e-8:
                     continue
                 claimed_vertices.add(key)
-                freed = list(source_entries)
                 for s, c in source_entries:
                     weight_rows[s][vertex, c] *= 1.0 - gain
                     if weight_rows[s][vertex, c] <= 1e-8:
-                        weight_rows[s][vertex, c] = 0.0; joint_rows[s][vertex, c] = 0
+                        weight_rows[s][vertex, c] = 0.0
+                        joint_rows[s][vertex, c] = 0
                 empty = [(s, c) for s, wr in enumerate(weight_rows) for c in range(4)
                          if wr[vertex, c] == 0.0]
                 along = min(1.0, max(0.0, (float(forward[vertex]) - fwd_lo) / (fwd_hi - fwd_lo)))
@@ -743,17 +795,21 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
                 if len(empty) < len(pieces):
                     raise ContractError("rig preparation weighted branch exceeds influence capacity")
                 for (slot, value), (s, c) in zip(pieces, empty):
-                    joint_rows[s][vertex, c] = slot; weight_rows[s][vertex, c] = value
+                    joint_rows[s][vertex, c] = slot
+                    weight_rows[s][vertex, c] = value
                 total = sum(float(wr[vertex].sum()) for wr in weight_rows)
                 if not math.isclose(total, 1.0, abs_tol=2e-5, rel_tol=0.0):
                     raise ContractError("rig preparation weighted branch input weights are not normalized")
-                changed += 1; maximum_amount = max(maximum_amount, amount)
+                changed += 1
+                maximum_amount = max(maximum_amount, amount)
             for accessor, rows in zip(joint_accessors, joint_rows):
-                _, _, _, _, code = source.accessor_layout(accessor); start, n, stride = source.accessor_region(accessor)
+                _, _, _, _, code = source.accessor_layout(accessor)
+                start, n, stride = source.accessor_region(accessor)
                 for vertex in range(n):
                     struct.pack_into("<" + code * 4, binary, start + vertex * stride, *rows[vertex].tolist())
             for accessor, rows in zip(weight_accessors, weight_rows):
-                _, _, _, _, code = source.accessor_layout(accessor); start, n, stride = source.accessor_region(accessor)
+                _, _, _, _, code = source.accessor_layout(accessor)
+                start, n, stride = source.accessor_region(accessor)
                 for vertex in range(n):
                     struct.pack_into("<" + code * 4, binary, start + vertex * stride, *rows[vertex].tolist())
         if changed == 0:
@@ -773,7 +829,8 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
             raise ContractError("rig preparation generated a non-finite inverse bind matrix")
         matrices.append(np.asarray(inverse, dtype=np.float32).T.reshape(-1))
     if weighted_branch_rows:
-        while len(binary) % 4: binary.append(0)
+        while len(binary) % 4:
+            binary.append(0)
         start = len(binary)
         matrix_bytes = np.asarray(matrices, dtype="<f4").tobytes()
         binary.extend(matrix_bytes)

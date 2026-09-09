@@ -4,7 +4,7 @@
   "version": 2,
   "classification": "disabled neutral-jaw offset with source-bound open-mouth sample; no closure, tooth-contact, biological, or production claim",
   "neutral_jaw_calibration": {
-    "source_geometry_sha256": "3613b67c9513c4ed5b88665c7606e0c15791bb922b01a72e7223aa112546ec89",
+    "source_geometry_sha256": "6b588e9ffa1ebdb167f1619593d8107779b1dfd943fe9dc0c02830572a953d8c",
     "close_degrees": 0.0,
     "clearance_body_heights": 0.0030596051279205764,
     "measured_body_height_m": 1.0605733866739109,

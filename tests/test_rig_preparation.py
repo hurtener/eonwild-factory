@@ -43,6 +43,41 @@ def config(source: Glb) -> dict:
     }
 
 
+def weighted_config(source: Glb) -> dict:
+    value = config(source)
+    value["weighted_branches"] = [{
+        "role": "fixture_branch", "parent": "Bone_011",
+        "source_nodes": ["Bone_010", "Bone_009"],
+        "proximal": {"name": "FixtureProximal", "world_origin_m": [-0.38, 1.4, 0.72],
+                     "basis": "measured_source_world"},
+        "distal": {"name": "FixtureDistal", "world_origin_m": [-0.38, 1.2, 0.9],
+                   "basis": "measured_source_world"},
+        "endpoint": {"name": "FixtureEndpoint", "world_origin_m": [-0.38, 1.0, 1.1],
+                     "basis": "measured_source_world"},
+        "selector": {"frame": "source_world", "lateral_interval_m": [-1000, 1000],
+                     "up_maximum_m": 1000, "forward_interval_m": [-1000, 1000],
+                     "blend_width_m": 0.01},
+    }]
+    return value
+
+
+def dense_weights(source: Glb) -> np.ndarray:
+    attributes = source.document["meshes"][0]["primitives"][0]["attributes"]
+    suffixes = sorted(key.removeprefix("JOINTS_") for key in attributes if key.startswith("JOINTS_"))
+    joint_rows = np.concatenate([
+        np.asarray(source.accessor_values(attributes[f"JOINTS_{suffix}"]), dtype=int)
+        for suffix in suffixes
+    ], axis=1)
+    weight_rows = np.concatenate([
+        np.asarray(source.accessor_values(attributes[f"WEIGHTS_{suffix}"]), dtype=float)
+        for suffix in suffixes
+    ], axis=1)
+    dense = np.zeros((len(weight_rows), len(source.document["skins"][0]["joints"])))
+    for vertex in range(len(weight_rows)):
+        np.add.at(dense[vertex], joint_rows[vertex], weight_rows[vertex])
+    return dense
+
+
 def test_real_full_weight_source_reparents_relocates_and_preserves_neutral_skin():
     source = Glb(SOURCE)
     raw, receipt = prepare_rig(source, config(source))
@@ -155,6 +190,35 @@ def test_preparation_rejects_duplicate_articulation_node():
     candidate["articulations"].append(duplicate)
     with pytest.raises(ContractError, match="roles and nodes"):
         prepare_rig(source, candidate)
+
+
+def test_shared_material_primitive_skin_rows_are_transferred_once():
+    source = Glb(SOURCE)
+    single_raw, single_receipt = prepare_rig(source, weighted_config(source))
+    document = deepcopy(source.document)
+    document["meshes"][0]["primitives"].append(
+        deepcopy(document["meshes"][0]["primitives"][0])
+    )
+    repeated = Glb.from_bytes(_encode(document, source.binary))
+    repeated_raw, repeated_receipt = prepare_rig(repeated, weighted_config(repeated))
+    assert np.array_equal(
+        dense_weights(Glb.from_bytes(single_raw)),
+        dense_weights(Glb.from_bytes(repeated_raw)),
+    )
+    assert repeated_receipt["weighted_branches"] == single_receipt["weighted_branches"]
+
+
+def test_partial_skin_accessor_alias_is_rejected():
+    source = Glb(SOURCE)
+    document = deepcopy(source.document)
+    repeated = deepcopy(document["meshes"][0]["primitives"][0])
+    position = repeated["attributes"]["POSITION"]
+    document["accessors"].append(deepcopy(document["accessors"][position]))
+    repeated["attributes"]["POSITION"] = len(document["accessors"]) - 1
+    document["meshes"][0]["primitives"].append(repeated)
+    partial = Glb.from_bytes(_encode(document, source.binary))
+    with pytest.raises(ContractError, match="partially alias"):
+        prepare_rig(partial, weighted_config(partial))
 
 
 def test_preparation_adds_non_skinned_semantic_endpoint_and_preserves_surface():

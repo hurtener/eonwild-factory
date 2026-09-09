@@ -14,7 +14,7 @@ from eonwild_motion.solve.skin_rig import SkinRig
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SHA = "3613b67c9513c4ed5b88665c7606e0c15791bb922b01a72e7223aa112546ec89"
+SHA = "6b588e9ffa1ebdb167f1619593d8107779b1dfd943fe9dc0c02830572a953d8c"
 SOURCE = ROOT / f"assets/sha256/{SHA}.glb"
 
 

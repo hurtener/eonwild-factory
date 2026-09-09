@@ -71,8 +71,8 @@
   },
   "schema": "eonwild.motion.v9.contact-gauge-source.v1",
   "source": {
-    "path": "assets/sha256/3613b67c9513c4ed5b88665c7606e0c15791bb922b01a72e7223aa112546ec89.glb",
-    "sha256": "3613b67c9513c4ed5b88665c7606e0c15791bb922b01a72e7223aa112546ec89",
+    "path": "assets/sha256/6b588e9ffa1ebdb167f1619593d8107779b1dfd943fe9dc0c02830572a953d8c.glb",
+    "sha256": "6b588e9ffa1ebdb167f1619593d8107779b1dfd943fe9dc0c02830572a953d8c",
     "clips": {
       "root_motion": "factory-defined",
       "in_place": "factory-defined"
