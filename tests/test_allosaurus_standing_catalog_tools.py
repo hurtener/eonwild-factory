@@ -58,9 +58,7 @@ def test_current_allosaurus_measurement_and_catalog_binding_boundary():
         "neutral_support_profile"
     ]["sha256"] == digest(json_bytes(documents[MODULE.NEW_SUPPORT]))
     assert motion_set["baseline"]["sha256"] == digest(json_bytes(baseline))
-    assert [entry["name"] for entry in motion_set["motions"]] == [
-        "walk", "fast-walk", "walk-start", "walk-stop"
-    ]
+    assert [entry["name"] for entry in motion_set["motions"]] == ["walk", "fast-walk"]
 
 
 def test_identity_standing_delta_is_exactly_zero():

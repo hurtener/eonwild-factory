@@ -40,6 +40,7 @@ CURRENT_BASELINE = Path("catalog/motion-baselines/allosaurus-engineering-locomot
 CURRENT_SET = Path("catalog/motion-sets/allosaurus-engineering-acquired-walk.v5.json")
 FAST_INTENT = Path("catalog/motion-intents/heavy-biped.allosaurus-acquired-fast-walk.motion-set.v1.json")
 RIG = Path("catalog/rigs/allosaurus-engineering.v2.json")
+STANDING_CONFIG = Path("catalog/standing-preparation/allosaurus-engineering-standing.v1.json")
 
 NEW_ANIMAL = Path("catalog/animals/allosaurus-composite-engineering.adult.v5.json")
 NEW_CONTACT = Path("catalog/contacts/allosaurus-engineering.v5.json")
@@ -62,6 +63,12 @@ SIDES = {
 
 def sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def canonical_document_sha256(value: Any) -> str:
+    return hashlib.sha256(
+        json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+    ).hexdigest()
 
 
 def require_regular_file(path: Path, label: str) -> Path:
@@ -223,8 +230,14 @@ def catalog_documents(
     measurements: dict[str, Any],
     neutral_gap_m: float,
     neutral_body_height_m: float,
+    template_documents: dict[Path, dict[str, Any]] | None = None,
+    template_bindings: dict[Path, dict[str, str]] | None = None,
 ) -> dict[Path, dict[str, Any]]:
-    animal = deepcopy(read_json(root / CURRENT_ANIMAL))
+    templates = template_documents or {
+        path: read_json(root / path)
+        for path in (CURRENT_ANIMAL, CURRENT_CONTACT, CURRENT_NEUTRAL, CURRENT_SUPPORT, CURRENT_BASELINE, CURRENT_SET)
+    }
+    animal = deepcopy(templates[CURRENT_ANIMAL])
     animal["id"], animal["version"] = "allosaurus-composite-engineering.adult.v5", 5
     animal["geometry_calibration"]["source_geometry_sha256"] = source_sha256
     animal["limitations"] = [
@@ -237,7 +250,7 @@ def catalog_documents(
         set_quantity(animal, f"{side}_semantic_segments", measurements["sides"][side]["segment_lengths_m"])
         set_quantity(animal, f"{side}_semantic_hindlimb", measurements["sides"][side]["hindlimb_length_m"])
 
-    contact = deepcopy(read_json(root / CURRENT_CONTACT))
+    contact = deepcopy(templates[CURRENT_CONTACT])
     contact["version"] = 5
     contact["geometry"]["ground"]["level_m"] = measurements["material_floor_m"]
     contact["source"] = {
@@ -246,7 +259,7 @@ def catalog_documents(
         "clips": contact["source"]["clips"],
     }
 
-    neutral = deepcopy(read_json(root / CURRENT_NEUTRAL))
+    neutral = deepcopy(templates[CURRENT_NEUTRAL])
     neutral["id"], neutral["version"] = "allosaurus-engineering-neutral.v5", 5
     calibration = neutral["neutral_jaw_calibration"]
     calibration["source_geometry_sha256"] = source_sha256
@@ -257,7 +270,7 @@ def catalog_documents(
         "disabled neutral-jaw offset rebound to the standing-prepared source; sampled surface gap only"
     )
 
-    support = deepcopy(read_json(root / CURRENT_SUPPORT))
+    support = deepcopy(templates[CURRENT_SUPPORT])
     support["id"], support["version"] = "allosaurus-engineering-support.v5", 5
     support["source_geometry_sha256"] = source_sha256
     support["limitations"] = [
@@ -282,7 +295,7 @@ def catalog_documents(
     bindings = {path: {"path": path.as_posix(), "sha256": digest(json_bytes(value))}
                 for path, value in documents.items()}
 
-    baseline = deepcopy(read_json(root / CURRENT_BASELINE))
+    baseline = deepcopy(templates[CURRENT_BASELINE])
     baseline["id"], baseline["version"] = "allosaurus-engineering-locomotion.v6", 6
     baseline["source"] = {
         "path": f"assets/sha256/{source_sha256}.glb",
@@ -296,7 +309,7 @@ def catalog_documents(
     ] = bindings[NEW_SUPPORT]
     documents[NEW_BASELINE] = baseline
 
-    motion_set = deepcopy(read_json(root / CURRENT_SET))
+    motion_set = deepcopy(templates[CURRENT_SET])
     motion_set["id"], motion_set["version"] = (
         "allosaurus-engineering-acquired-walk-motion-set.v6", 6
     )
@@ -304,10 +317,13 @@ def catalog_documents(
         "path": NEW_BASELINE.as_posix(),
         "sha256": digest(json_bytes(baseline)),
     }
-    fast_binding = bind(root, root / FAST_INTENT)
-    motions = [entry for entry in motion_set["motions"] if entry["name"] != "fast-walk"]
-    motions.insert(1, {"name": "fast-walk", "intent": fast_binding})
-    motion_set["motions"] = motions
+    fast_binding = (
+        template_bindings[FAST_INTENT]
+        if template_bindings is not None
+        else bind(root, root / FAST_INTENT)
+    )
+    walk = next(entry for entry in motion_set["motions"] if entry["name"] == "walk")
+    motion_set["motions"] = [walk, {"name": "fast-walk", "intent": fast_binding}]
     documents[NEW_SET] = motion_set
     return documents
 
@@ -338,20 +354,35 @@ def main() -> int:
         root / f"assets/sha256/{CURRENT_SOURCE_SHA256}.glb", "current admitted source"
     )
     rig_path = require_regular_file(root / RIG, "semantic rig")
-    if sha(old_source_path) != CURRENT_SOURCE_SHA256:
-        raise RuntimeError("current admitted source identity differs")
-    standing_receipt = read_json(standing_receipt_path)
-    prepared_sha = sha(prepared_path)
-    serialized_receipt = json.dumps(standing_receipt, sort_keys=True)
-    if CURRENT_SOURCE_SHA256 not in serialized_receipt or prepared_sha not in serialized_receipt:
+    standing_receipt_bytes = standing_receipt_path.read_bytes()
+    standing_receipt = json.loads(standing_receipt_bytes)
+    prepared_bytes = prepared_path.read_bytes()
+    prepared_sha = digest(prepared_bytes)
+    if (
+        standing_receipt.get("schema") != "eonwild.motion.standing-pose-preparation-receipt.v1"
+        or standing_receipt.get("status") != "ENGINEERING_CANDIDATE"
+    ):
+        raise RuntimeError("standing receipt schema differs")
+    if (
+        standing_receipt.get("input_source_sha256") != CURRENT_SOURCE_SHA256
+        or standing_receipt.get("output_source_sha256") != prepared_sha
+    ):
         raise RuntimeError("standing receipt does not bind the current source and prepared output")
     template_paths = (
         CURRENT_ANIMAL, CURRENT_CONTACT, CURRENT_NEUTRAL, CURRENT_SUPPORT,
-        CURRENT_BASELINE, CURRENT_SET, FAST_INTENT, RIG,
+        CURRENT_BASELINE, CURRENT_SET, FAST_INTENT, RIG, STANDING_CONFIG,
     )
-    template_bindings = {
-        path.as_posix(): bind(root, require_regular_file(root / path, f"template {path}"))
+    template_payloads = {
+        path: require_regular_file(root / path, f"template {path}").read_bytes()
         for path in template_paths
+    }
+    template_documents = {path: json.loads(raw) for path, raw in template_payloads.items()}
+    template_bindings_by_path = {
+        path: {"path": path.as_posix(), "sha256": digest(raw)}
+        for path, raw in template_payloads.items()
+    }
+    template_bindings = {
+        path.as_posix(): binding for path, binding in template_bindings_by_path.items()
     }
     implementation_head = subprocess.check_output(
         ["git", "rev-parse", "HEAD"], cwd=root, text=True
@@ -360,15 +391,40 @@ def main() -> int:
         ["git", "rev-parse", "HEAD^{tree}"], cwd=root, text=True
     ).strip()
 
-    old_source = Glb(old_source_path)
-    prepared = Glb(prepared_path)
+    old_source_bytes = old_source_path.read_bytes()
+    if digest(old_source_bytes) != CURRENT_SOURCE_SHA256:
+        raise RuntimeError("current admitted source identity differs")
+    old_source = Glb.from_bytes(old_source_bytes)
+    prepared = Glb.from_bytes(prepared_bytes)
     if prepared.document.get("animations"):
         raise RuntimeError("prepared standing source must not contain animation")
     if prepared.binary != old_source.binary:
         raise RuntimeError("standing preparation changed geometry/skin binary payload")
+    expected_preparation = {
+        "schema": template_documents[STANDING_CONFIG]["schema"],
+        "id": template_documents[STANDING_CONFIG]["id"],
+        "version": template_documents[STANDING_CONFIG]["version"],
+        "source_sha256": CURRENT_SOURCE_SHA256,
+        "config_sha256": canonical_document_sha256(template_documents[STANDING_CONFIG]),
+        "semantic_roles_sha256": canonical_document_sha256(template_documents[RIG]["roles"]),
+        "contact_profile_sha256": canonical_document_sha256(template_documents[CURRENT_CONTACT]),
+        "bind_reference": "retained_source_inverse_bind_matrices",
+    }
+    prepared_marker = prepared.document.get("extras", {}).get("eonwildStandingPreparation")
+    if prepared_marker != expected_preparation:
+        raise RuntimeError("prepared source marker differs from frozen standing inputs")
+    for key in ("config_sha256", "semantic_roles_sha256", "contact_profile_sha256"):
+        if standing_receipt.get(key) != expected_preparation[key]:
+            raise RuntimeError(f"standing receipt {key} differs from frozen standing inputs")
 
+    admission_input = admission_output.with_name(f"{admission_output.name}-input.glb")
+    admission_rig = admission_output.with_name(f"{admission_output.name}-rig.json")
+    if admission_input.exists() or admission_rig.exists():
+        raise RuntimeError("standing admission snapshots already exist")
+    admission_input.write_bytes(prepared_bytes)
+    admission_rig.write_bytes(template_payloads[RIG])
     exit_code = factory_main([
-        "admit", "--source", str(prepared_path), "--rig", str(rig_path),
+        "admit", "--source", str(admission_input), "--rig", str(admission_rig),
         "--forward", "0", "0", "1", "--output", str(admission_output),
     ])
     if exit_code != 0:
@@ -381,8 +437,17 @@ def main() -> int:
     admitted = Glb(admitted_path)
     if admitted.binary != old_source.binary or admitted.document.get("animations"):
         raise RuntimeError("standing admission changed binary payload or retained animation")
+    prepared_worlds = world_state(prepared)
+    admitted_worlds = world_state(admitted)
+    prepared_skin = exact_skin(prepared, prepared_worlds)
+    admitted_skin = exact_skin(admitted, admitted_worlds)
+    if prepared_skin.shape != admitted_skin.shape:
+        raise RuntimeError("standing admission changed skinned vertex count")
+    admission_skin_residual = float(np.max(np.linalg.norm(prepared_skin - admitted_skin, axis=1)))
+    if admission_skin_residual > 1.0e-12:
+        raise RuntimeError("standing admission changed exact full-influence rest skin")
 
-    roles = read_json(rig_path)["roles"]
+    roles = template_documents[RIG]["roles"]
     before = geometry_measurements(old_source, roles)
     after = geometry_measurements(admitted, roles)
     delta = standing_delta(before, after)
@@ -401,11 +466,19 @@ def main() -> int:
             if delta["sides"][side]["distal"][name]["rotation_residual_degrees"] > 1.0e-5:
                 raise RuntimeError(f"standing preparation rotated retained {side} {name} world frame")
 
-    seed = load_neutral_jaw_calibration(read_json(root / CURRENT_NEUTRAL)["neutral_jaw_calibration"])
+    seed = load_neutral_jaw_calibration(template_documents[CURRENT_NEUTRAL]["neutral_jaw_calibration"])
     rebound = replace(seed, source_geometry_sha256=admitted_sha)
     _, _, jaw_gap = _posed_gap(admitted, roles, rebound, (0, 0, 1), (0, 1, 0))
     body_height = _semantic_body_height(admitted, roles, (0, 1, 0))
-    documents = catalog_documents(root, admitted_sha, after, jaw_gap, body_height)
+    documents = catalog_documents(
+        root,
+        admitted_sha,
+        after,
+        jaw_gap,
+        body_height,
+        template_documents,
+        template_bindings_by_path,
+    )
     asset_path = root / f"assets/sha256/{admitted_sha}.glb"
     if asset_path.exists():
         if sha(asset_path) != admitted_sha:
@@ -429,16 +502,25 @@ def main() -> int:
             "sha256": sha(Path(__file__).resolve()),
         },
         "inputs": {
-            "current_source": bind(root, old_source_path),
+            "current_source": {
+                "path": old_source_path.relative_to(root).as_posix(),
+                "sha256": digest(old_source_bytes),
+            },
             "prepared_source": {"path": str(prepared_path), "sha256": prepared_sha},
-            "standing_receipt": {"path": str(standing_receipt_path), "sha256": sha(standing_receipt_path)},
-            "rig": bind(root, rig_path),
+            "admission_input_snapshot": {"path": str(admission_input), "sha256": digest(prepared_bytes)},
+            "admission_rig_snapshot": {"path": str(admission_rig), "sha256": digest(template_payloads[RIG])},
+            "standing_receipt": {
+                "path": str(standing_receipt_path),
+                "sha256": digest(standing_receipt_bytes),
+            },
+            "rig": template_bindings_by_path[RIG],
             "templates": template_bindings,
         },
         "admission": {
             "output": str(admission_output),
             "geometry_sha256": admitted_sha,
             "receipt_sha256": sha(admission_output / "admission.json"),
+            "maximum_full_influence_skin_residual_m": admission_skin_residual,
         },
         "measurements": {"before": before, "after": after, "delta": delta},
         "neutral_jaw": {

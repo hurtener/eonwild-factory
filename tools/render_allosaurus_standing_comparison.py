@@ -190,8 +190,13 @@ def main() -> int:
     current_path, candidate_path = options.current.resolve(), options.candidate.resolve()
     if sha(current_path) != EXPECTED_CURRENT_SHA256:
         raise RuntimeError("current standing comparison source differs")
-    receipt_text = options.standing_receipt.read_text()
-    if sha(candidate_path) not in receipt_text or EXPECTED_CURRENT_SHA256 not in receipt_text:
+    standing_receipt = json.loads(options.standing_receipt.read_text())
+    if standing_receipt.get("schema") != "eonwild.motion.standing-pose-preparation-receipt.v1":
+        raise RuntimeError("standing receipt schema differs")
+    if (
+        standing_receipt.get("output_source_sha256") != sha(candidate_path)
+        or standing_receipt.get("input_source_sha256") != EXPECTED_CURRENT_SHA256
+    ):
         raise RuntimeError("standing receipt does not bind comparison sources")
     animal_document = json.loads(options.animal.read_text())
     current, candidate = Glb(current_path), Glb(candidate_path)
