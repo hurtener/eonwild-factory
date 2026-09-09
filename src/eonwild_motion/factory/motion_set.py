@@ -15,6 +15,11 @@ from typing import Any, Mapping
 
 from ..errors import ContractError
 from .io import bind, digest, frame_axes, locked_file, read_json
+from .acquired_reference import (
+    AcquiredReferenceInputs,
+    resolve_reference,
+    validate_clearance_policy,
+)
 
 
 SET_SCHEMA = "eonwild.motion.motion-set.v1"
@@ -184,9 +189,12 @@ def _validate_locomotion_response_policy(value: Any) -> Mapping[str, Any]:
     airborne = value["regimes"]["airborne"]
     if (
         not isinstance(grounded, Mapping)
-        or set(grounded) != {
+        or set(grounded) not in ({
             "intent_resolution", "neutral_support_profile", "body_response"
-        }
+        }, {
+            "intent_resolution", "neutral_support_profile", "body_response",
+            "authored_material_clearance",
+        })
         or not isinstance(grounded["intent_resolution"], Mapping)
         or set(grounded["intent_resolution"]) != {"path", "sha256"}
         or not isinstance(grounded["neutral_support_profile"], Mapping)
@@ -195,6 +203,14 @@ def _validate_locomotion_response_policy(value: Any) -> Mapping[str, Any]:
         or set(grounded["body_response"]) != {"model", "gait_response"}
         or grounded["body_response"].get("model")
         != "existing_grounded_shared_style.v1"
+        or (
+            "authored_material_clearance" in grounded
+            and (
+                not isinstance(grounded["authored_material_clearance"], Mapping)
+                or set(grounded["authored_material_clearance"])
+                != {"path", "sha256"}
+            )
+        )
     ):
         raise ContractError("grounded locomotion response is incomplete or unsupported")
     load_gait_response_policy(grounded["body_response"]["gait_response"])
@@ -213,7 +229,7 @@ def _validate_intent(value: Any) -> Mapping[str, Any]:
     if not isinstance(value, Mapping):
         raise ContractError("motion intent must be a mapping")
     required = {"schema", "id", "version", "program", "program_profile"}
-    optional = {"gait_profile", "description", "supersedes"}
+    optional = {"gait_profile", "description", "supersedes", "authored_material_reference"}
     if not required <= set(value) or set(value) - required - optional:
         raise ContractError("motion intent contains missing or unknown fields")
     schema = value.get("schema")
@@ -231,6 +247,10 @@ def _validate_intent(value: Any) -> Mapping[str, Any]:
         raise ContractError("motion intent program is outside baseline capabilities")
     if (program == "gait_transition") != ("gait_profile" in result):
         raise ContractError("only gait-transition intents require a gait profile")
+    if "authored_material_reference" in result and program != "grounded_gait":
+        raise ContractError(
+            "authored material reference is currently supported only for steady grounded gait"
+        )
     for label in ("description", "supersedes"):
         if label in result and (not isinstance(result[label], str) or not result[label]):
             raise ContractError(f"motion intent {label} must be a nonempty string")
@@ -261,7 +281,7 @@ def _recipe(baseline: Mapping[str, Any], intent: Mapping[str, Any]) -> dict[str,
         "forward_axis": baseline["forward_axis"],
         "up_axis": baseline["up_axis"],
     }
-    for key in ("gait_profile", "description", "supersedes"):
+    for key in ("gait_profile", "description", "supersedes", "authored_material_reference"):
         if key in intent:
             recipe[key] = intent[key]
     return recipe
@@ -282,6 +302,8 @@ class MotionSetResolution:
     gait_profile_bytes: bytes | None
     locomotion_response_bytes: bytes | None = None
     neutral_support_bytes: bytes | None = None
+    acquired_reference: AcquiredReferenceInputs | None = None
+    authored_material_clearance_bytes: bytes | None = None
 
     @property
     def payloads(self) -> dict[str, bytes]:
@@ -297,6 +319,16 @@ class MotionSetResolution:
             result["locomotion-response-policy.json"] = self.locomotion_response_bytes
         if self.neutral_support_bytes is not None:
             result["neutral-support-profile.json"] = self.neutral_support_bytes
+        if self.acquired_reference is not None:
+            result.update({
+                "authored-material-reference.json": self.acquired_reference.descriptor_bytes,
+                "authored-material-source.bin": self.acquired_reference.source_bytes,
+                "authored-material-path.json": self.acquired_reference.capsule_bytes,
+            })
+        if self.authored_material_clearance_bytes is not None:
+            result["authored-material-clearance-policy.json"] = (
+                self.authored_material_clearance_bytes
+            )
         return result
 
     @property
@@ -304,7 +336,7 @@ class MotionSetResolution:
         set_document = json.loads(self.set_bytes)
         baseline = json.loads(self.baseline_bytes)
         intent = json.loads(self.intent_bytes)
-        return {
+        result = {
             "motion": self.motion,
             "set": self.set_binding,
             "baseline": self.baseline_binding,
@@ -315,6 +347,13 @@ class MotionSetResolution:
                 "intent": {key: intent[key] for key in ("id", "version")},
             },
         }
+        if self.acquired_reference is not None:
+            result["authored_material_reference"] = self.acquired_reference.binding
+        if self.authored_material_clearance_bytes is not None:
+            result["authored_material_clearance_policy_sha256"] = digest(
+                self.authored_material_clearance_bytes
+            )
+        return result
 
     @property
     def gait_response_policy(self) -> Mapping[str, Any]:
@@ -370,6 +409,7 @@ def resolve_motion_set_selection(
     load_neutral_pose_profile(json.loads(neutral_pose_bytes))
     locomotion_response_bytes = None
     neutral_support_bytes = None
+    authored_material_clearance_bytes = None
     if baseline["schema"] == BASELINE_SCHEMA_V2:
         grounded_response = baseline["locomotion_response_policy"]["regimes"][
             "grounded"
@@ -384,6 +424,13 @@ def resolve_motion_set_selection(
         neutral_support_bytes = support_path.read_bytes()
         if digest(neutral_support_bytes) != support_reference["sha256"]:
             raise ContractError("neutral support profile changed during resolution")
+        if "authored_material_clearance" in grounded_response:
+            clearance_reference = grounded_response["authored_material_clearance"]
+            clearance_path = locked_file(root, clearance_reference)
+            authored_material_clearance_bytes = clearance_path.read_bytes()
+            if digest(authored_material_clearance_bytes) != clearance_reference["sha256"]:
+                raise ContractError("authored material clearance policy changed during resolution")
+            validate_clearance_policy(json.loads(authored_material_clearance_bytes))
     resolutions = []
     for motion in motions:
         entry = _select_intent(set_document, motion)
@@ -409,6 +456,7 @@ def resolve_motion_set_selection(
         if digest(program_profile_bytes) != intent["program_profile"]["sha256"]:
             raise ContractError("motion program profile changed during resolution")
         gait_profile_bytes = None
+        acquired_reference = None
         if "gait_profile" in intent:
             gait_profile_path = locked_file(root, intent["gait_profile"])
             gait_profile_bytes = gait_profile_path.read_bytes()
@@ -422,6 +470,14 @@ def resolve_motion_set_selection(
                 raise ContractError(
                     "v2 airborne locomotion requires a source-bound recovery provider"
                 )
+        if "authored_material_reference" in intent:
+            if authored_material_clearance_bytes is None:
+                raise ContractError(
+                    "authored material reference requires baseline-owned clearance policy"
+                )
+            acquired_reference = resolve_reference(
+                root, intent["authored_material_reference"]
+            )
         resolutions.append(MotionSetResolution(
             motion=motion,
             recipe=_recipe(baseline, intent),
@@ -436,6 +492,8 @@ def resolve_motion_set_selection(
             gait_profile_bytes=gait_profile_bytes,
             locomotion_response_bytes=locomotion_response_bytes,
             neutral_support_bytes=neutral_support_bytes,
+            acquired_reference=acquired_reference,
+            authored_material_clearance_bytes=authored_material_clearance_bytes,
         ))
     if set_path.read_bytes() != set_bytes or baseline_path.read_bytes() != baseline_bytes:
         raise ContractError("motion set or baseline changed during selection")
@@ -465,9 +523,18 @@ def reconstruct_motion_set(
     )
     if (set_document["schema"], intent["schema"]) != expected:
         raise ContractError("motion set snapshot schema versions disagree")
-    if not isinstance(resolution_lock, Mapping) or set(resolution_lock) != {
+    if not isinstance(resolution_lock, Mapping) or set(resolution_lock) not in ({
         "motion", "set", "baseline", "intent", "identities"
-    }:
+    }, {
+        "motion", "set", "baseline", "intent", "identities",
+        "authored_material_reference"
+    }, {
+        "motion", "set", "baseline", "intent", "identities",
+        "authored_material_reference", "authored_material_clearance_policy_sha256"
+    }, {
+        "motion", "set", "baseline", "intent", "identities",
+        "authored_material_clearance_policy_sha256"
+    }):
         raise ContractError("motion set resolution lock is incomplete")
     entry = _select_intent(set_document, resolution_lock["motion"])
     if (
@@ -485,6 +552,18 @@ def reconstruct_motion_set(
     }
     if identities != expected_identities:
         raise ContractError("motion set declared identities differ from snapshots")
+    has_reference = "authored_material_reference" in intent
+    if has_reference != ("authored_material_reference" in resolution_lock):
+        raise ContractError("authored material reference lock is inconsistent")
+    if has_reference and "authored_material_clearance_policy_sha256" not in resolution_lock:
+        raise ContractError("authored material clearance policy lock is missing")
+    grounded = baseline.get("locomotion_response_policy", {}).get("regimes", {}).get(
+        "grounded", {}
+    )
+    if ("authored_material_clearance" in grounded) != (
+        "authored_material_clearance_policy_sha256" in resolution_lock
+    ):
+        raise ContractError("authored material clearance policy lock is inconsistent")
     set_binding = resolution_lock["set"]
     if (
         not isinstance(set_binding, Mapping)

@@ -56,6 +56,7 @@ from ..solve.skin_targets import solve_with_skin_targets, evaluate_skin
 from ..solve.support_anchors import CanonicalSupportAnchorProvider
 from ..solve.constant_skin_targets import CanonicalConstantSkinTargetLaw
 from ..solve.source_motion_query import SourceMotionQuery, _thaw
+from ..solve.authored_material_contact import AuthoredMaterialContactAdapter
 from ..solve.grounded_transition_clearance import (
     GroundedTransitionClearanceResolver,
     POLICY as GROUNDED_TRANSITION_CLEARANCE_POLICY,
@@ -73,6 +74,7 @@ from .motion_set import (
     resolve_motion_set,
     resolve_motion_set_selection,
 )
+from .acquired_reference import packaged_reference, validate_clearance_policy
 
 SCHEMA = "eonwild.motion.factory-recipe.v1"
 PROGRAMS = ("airborne_gait", "grounded_gait", "supported_action", "gait_transition")
@@ -174,9 +176,35 @@ def _measure_bound_grounded_touchdown_geometry(
     return measure_grounded_touchdown_geometry(locomotion_gait, observations)
 
 
+def _grounded_source_query_plan(
+    source: Glb,
+    *,
+    gait: GroundedGait,
+    body_height_m: float,
+    performance: Any,
+    roles: dict,
+    contact_profile: dict,
+    forward: Any,
+    up: Any,
+    solve_policy: dict,
+) -> dict:
+    """Rebuild the pre-emission plan that owns an acquired adapter binding."""
+    result = decorate_plan(build_grounded_plan(gait, body_height_m), performance)
+    result["gaze_calibration"] = calibrate_rostral_direction(
+        source,
+        roles=roles,
+        contact_profile=contact_profile,
+        forward_axis=forward,
+        up_axis=up,
+    )
+    result["solve_policy"] = dict(solve_policy)
+    validate_plan(result, "grounded_gait")
+    return result
+
+
 def _load_recipe_document(recipe: Any, root: Path) -> tuple[dict, dict[str, Path]]:
     required = {"schema", "id", "version", "family", "program", "source", "rig", "program_profile", "forward_axis", "up_axis"}
-    if not isinstance(recipe, dict) or set(recipe) - required - {"animal", "contact_profile", "performance_profile", "gait_profile", "articulation_profile", "description", "supersedes"} or not required <= set(recipe):
+    if not isinstance(recipe, dict) or set(recipe) - required - {"animal", "contact_profile", "performance_profile", "gait_profile", "articulation_profile", "description", "supersedes", "authored_material_reference"} or not required <= set(recipe):
         raise ContractError("recipe contains missing or unknown fields")
     if recipe["schema"] != SCHEMA or recipe["program"] not in PROGRAMS:
         raise ContractError("unsupported recipe schema or program")
@@ -202,6 +230,14 @@ def _load_recipe_document(recipe: Any, root: Path) -> tuple[dict, dict[str, Path
         paths["gait_profile"] = locked_file(root, recipe["gait_profile"])
     elif recipe["program"] == "gait_transition":
         raise ContractError("gait transition requires a locked locomotion profile")
+    if "authored_material_reference" in recipe:
+        if recipe["program"] != "grounded_gait":
+            raise ContractError(
+                "authored material reference is currently supported only for steady grounded gait"
+            )
+        paths["authored_material_reference"] = locked_file(
+            root, recipe["authored_material_reference"]
+        )
     return recipe, paths
 
 
@@ -368,6 +404,13 @@ def compile_recipe(
             raise ContractError("motion-set resolution was mutated before compilation")
         recipe_bytes = json_bytes(recipe)
         recipe, paths = _load_recipe_document(recipe, root)
+    if (
+        "authored_material_reference" in recipe
+        and _motion_set_resolution is None
+    ):
+        raise ContractError(
+            "authored material reference requires compile-set provenance"
+        )
     # Compile only from bytes whose hashes were checked, not later rereads.
     motion_set_v2 = (
         _motion_set_resolution is not None
@@ -458,6 +501,7 @@ def compile_recipe(
         root_raw, inplace_raw, plan, receipt = solve_supported_action(source, semantic_roles=roles, action=action,
             contact_profile=contact_profile, up_axis=up, forward_axis=forward, body_height_m=height)
     baseline_performance_resolution = None
+    acquired_binding = None
     grounded_touchdown_geometry = None
     grounded_intent_resolution = None
     if "performance_profile" in snapshots:
@@ -639,6 +683,60 @@ def compile_recipe(
             legacy_overlay=False,
             articulation_profile=articulation_profile,
         )
+        if (
+            _motion_set_resolution is not None
+            and _motion_set_resolution.acquired_reference is not None
+        ):
+            reference = _motion_set_resolution.acquired_reference
+            if _motion_set_resolution.authored_material_clearance_bytes is None:
+                raise ContractError(
+                    "authored material reference lacks baseline clearance policy"
+                )
+            descriptor = reference.descriptor
+            source_query_plan = _grounded_source_query_plan(
+                source,
+                gait=locomotion_gait,
+                body_height_m=height,
+                performance=performance,
+                roles=roles,
+                contact_profile=contact_profile,
+                forward=forward,
+                up=up,
+                solve_policy=dict(_motion_set_resolution.solve_policy),
+            )
+            if source_query_plan != plan:
+                raise ContractError(
+                    "acquired reference source-query plan differs from baseline assembly"
+                )
+            adapter = AuthoredMaterialContactAdapter.build(
+                query,
+                json.loads(reference.capsule_bytes),
+                authored_source=reference.source_bytes,
+                retime_policy=descriptor["adapter"]["retime_policy"],
+                body_height_m=height,
+                material_clearance_policy=json.loads(
+                    _motion_set_resolution.authored_material_clearance_bytes
+                ),
+            )
+            query = SourceMotionQuery(
+                source,
+                semantic_roles=roles,
+                solver_gait=gait,
+                locomotion_gait=locomotion_gait,
+                transition=transition,
+                plan=plan,
+                contact_profile=contact_profile,
+                up_axis=tuple(up),
+                forward_axis=tuple(forward),
+                source_clip=None,
+                legacy_overlay=False,
+                articulation_profile=articulation_profile,
+                authored_material_contact=adapter,
+            )
+            acquired_binding = {
+                **reference.binding,
+                "adapter": _thaw(adapter.binding()),
+            }
         law = CanonicalConstantSkinTargetLaw.build(
             query,
             support_anchor_provider,
@@ -989,6 +1087,9 @@ def compile_recipe(
         receipt["baseline_performance_resolution"] = (
             baseline_performance_resolution
         )
+        if acquired_binding is not None:
+            state["authored_material_reference"] = acquired_binding
+            receipt["authored_material_reference"] = acquired_binding
     if articulation_profile is not None:
         state["articulation_profile"] = articulation_profile.receipt()
     payloads = {"root_motion.glb": root_raw, "in_place.glb": inplace_raw, "plan.json": json_bytes(plan),
@@ -1196,6 +1297,59 @@ def _verify_motion_set_provenance(
     ):
         raise ContractError("motion baseline neutral calibration source differs")
     intent = read_json(path / "motion-intent.json")
+    grounded_response = baseline.get("locomotion_response_policy", {}).get(
+        "regimes", {}
+    ).get("grounded", {})
+    has_clearance_policy = "authored_material_clearance" in grounded_response
+    clearance_path = path / "authored-material-clearance-policy.json"
+    if has_clearance_policy:
+        clearance_bytes = clearance_path.read_bytes()
+        validate_clearance_policy(json.loads(clearance_bytes))
+        if (
+            digest(clearance_bytes)
+            != grounded_response["authored_material_clearance"]["sha256"]
+            or resolution_lock.get("authored_material_clearance_policy_sha256")
+            != digest(clearance_bytes)
+        ):
+            raise ContractError("authored material clearance policy provenance differs")
+    elif (
+        clearance_path.exists()
+        or "authored_material_clearance_policy_sha256" in resolution_lock
+    ):
+        raise ContractError("unbound authored material clearance policy is not allowed")
+    if "authored_material_reference" in intent:
+        reference = packaged_reference(path)
+        if not has_clearance_policy:
+            raise ContractError("authored material reference lacks clearance policy")
+        reference_binding = reference.binding
+        if (
+            digest(reference.descriptor_bytes)
+            != intent["authored_material_reference"]["sha256"]
+            or resolution_lock.get("authored_material_reference")
+            != reference_binding
+        ):
+            raise ContractError("authored material reference provenance differs")
+        declared = reference.descriptor
+        if (
+            digest(reference.source_bytes) != declared["source"]["sha256"]
+            or digest(reference.capsule_bytes) != declared["capsule"]["sha256"]
+        ):
+            raise ContractError("authored material reference payload differs")
+        runtime_reference = runtime.get("authored_material_reference")
+        receipt_reference = receipt.get("authored_material_reference")
+        if (
+            not isinstance(runtime_reference, dict)
+            or runtime_reference != receipt_reference
+            or {key: runtime_reference[key] for key in reference_binding}
+            != reference_binding
+        ):
+            raise ContractError("authored material adapter binding is inconsistent")
+    elif (
+        "authored_material_reference" in resolution_lock
+        or "authored_material_reference" in runtime
+        or "authored_material_reference" in receipt
+    ):
+        raise ContractError("unbound authored material reference is not allowed")
     program_bytes = (path / "program-profile.json").read_bytes()
     if digest(program_bytes) != intent["program_profile"]["sha256"]:
         raise ContractError("motion intent program snapshot differs")
@@ -1381,6 +1535,54 @@ def _verify_motion_set_provenance(
         canonical_support_anchors=solve_policy["canonical_support_anchors"],
         skin_refinement=solve_policy["skin_refinement"],
     )
+    if "authored_material_reference" in intent:
+        solver_gait = AirborneGait(
+            step_period_s=gait.step_period_s,
+            cycles=gait.cycles,
+            sample_hz=gait.sample_hz,
+            swing_hip_lift_degrees=gait.swing_hip_lift_degrees,
+        )
+        source_query_plan = _grounded_source_query_plan(
+            source,
+            gait=gait,
+            body_height_m=body_height,
+            performance=performance,
+            roles=roles,
+            contact_profile=contact_profile,
+            forward=forward,
+            up=up,
+            solve_policy=solve_policy,
+        )
+        bare_query = SourceMotionQuery(
+            source,
+            semantic_roles=roles,
+            solver_gait=solver_gait,
+            locomotion_gait=gait,
+            transition=None,
+            plan=source_query_plan,
+            contact_profile=contact_profile,
+            up_axis=tuple(up),
+            forward_axis=tuple(forward),
+            source_clip=None,
+            legacy_overlay=False,
+            articulation_profile=articulation_profile,
+        )
+        expected_adapter = AuthoredMaterialContactAdapter.build(
+            bare_query,
+            json.loads(reference.capsule_bytes),
+            authored_source=reference.source_bytes,
+            retime_policy=reference.descriptor["adapter"]["retime_policy"],
+            body_height_m=body_height,
+            material_clearance_policy=json.loads(clearance_bytes),
+        )
+        expected_reference = {
+            **reference.binding,
+            "adapter": _thaw(expected_adapter.binding()),
+        }
+        if runtime_reference != expected_reference:
+            raise ContractError(
+                "authored material adapter does not replay from package inputs"
+            )
     expected_parameters = {
         key: value for key, value in asdict(performance).items()
         if value is not None and not (
@@ -1400,30 +1602,25 @@ def _verify_motion_set_provenance(
         raise ContractError("motion set solve policy provenance is inconsistent")
 
 
-def verify_package(path: Path) -> dict:
-    manifest = read_json(path / "manifest.json")
-    if manifest.get("schema") != "eonwild.motion.factory-package.v1":
-        raise ContractError("unsupported package manifest")
-    recipe = read_json(path / "recipe.json")
-    required = {"root_motion.glb", "in_place.glb", "plan.json", "solver-receipt.json", "runtime.json", "validation.json", "inputs.lock.json", "recipe.json"}
-    provenance_universe = {
+def _expected_motion_set_provenance_files(
+    path: Path, baseline_snapshot: dict | None, recipe: dict
+) -> set[str]:
+    universe = {
         "motion-set.json", "motion-baseline.json", "motion-intent.json",
         "performance-profile.json", "neutral-pose-profile.json",
         "program-profile.json", "gait-profile.json",
         "locomotion-response-policy.json", "neutral-support-profile.json",
         "grounded-touchdown-geometry.json",
         "source.glb", "rig.json", "contact-profile.json",
+        "authored-material-reference.json", "authored-material-source.bin",
+        "authored-material-path.json",
+        "authored-material-clearance-policy.json",
     }
-    present_provenance = provenance_universe & set(manifest.get("files", {}))
-    expected_provenance = provenance_universe - {"gait-profile.json"}
-    baseline_snapshot = (
-        read_json(path / "motion-baseline.json")
-        if "motion-baseline.json" in present_provenance else None
-    )
+    expected = universe - {"gait-profile.json"}
     if baseline_snapshot is None or baseline_snapshot.get("schema") != (
         "eonwild.motion.motion-baseline.v2"
     ):
-        expected_provenance -= {
+        expected -= {
             "locomotion-response-policy.json",
             "neutral-support-profile.json",
             "grounded-touchdown-geometry.json",
@@ -1438,9 +1635,48 @@ def verify_package(path: Path) -> dict:
                 "eonwild.motion.airborne-choreography.v1"
             )
         if airborne_v2:
-            expected_provenance.discard("grounded-touchdown-geometry.json")
+            expected.discard("grounded-touchdown-geometry.json")
+    if recipe.get("authored_material_reference") is None:
+        expected -= {
+            "authored-material-reference.json", "authored-material-source.bin",
+            "authored-material-path.json",
+        }
+    if (
+        baseline_snapshot is None
+        or "authored_material_clearance" not in baseline_snapshot.get(
+            "locomotion_response_policy", {}
+        ).get("regimes", {}).get("grounded", {})
+    ):
+        expected.discard("authored-material-clearance-policy.json")
     if recipe.get("program") == "gait_transition":
-        expected_provenance.add("gait-profile.json")
+        expected.add("gait-profile.json")
+    return expected
+
+
+def verify_package(path: Path) -> dict:
+    manifest = read_json(path / "manifest.json")
+    if manifest.get("schema") != "eonwild.motion.factory-package.v1":
+        raise ContractError("unsupported package manifest")
+    recipe = read_json(path / "recipe.json")
+    required = {"root_motion.glb", "in_place.glb", "plan.json", "solver-receipt.json", "runtime.json", "validation.json", "inputs.lock.json", "recipe.json"}
+    provenance_universe = {
+        "motion-set.json", "motion-baseline.json", "motion-intent.json",
+        "performance-profile.json", "neutral-pose-profile.json",
+        "program-profile.json", "gait-profile.json",
+        "locomotion-response-policy.json", "neutral-support-profile.json",
+        "grounded-touchdown-geometry.json", "source.glb", "rig.json",
+        "contact-profile.json", "authored-material-reference.json",
+        "authored-material-source.bin", "authored-material-path.json",
+        "authored-material-clearance-policy.json",
+    }
+    present_provenance = provenance_universe & set(manifest.get("files", {}))
+    baseline_snapshot = (
+        read_json(path / "motion-baseline.json")
+        if "motion-baseline.json" in present_provenance else None
+    )
+    expected_provenance = _expected_motion_set_provenance_files(
+        path, baseline_snapshot, recipe
+    )
     if present_provenance and present_provenance != expected_provenance:
         raise ContractError("motion set package provenance is incomplete")
     required.update(present_provenance)

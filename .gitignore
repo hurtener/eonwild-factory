@@ -12,5 +12,6 @@ __pycache__/
 
 # Local Python toolchain and generated package metadata
 .venv/
+local/acquired/
 .pytest_cache/
 *.egg-info/
