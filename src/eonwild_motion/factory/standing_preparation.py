@@ -98,7 +98,11 @@ def prepare_standing_pose(
         "evidence",
         "limitations",
     }
-    if not isinstance(config, Mapping) or set(config) != required:
+    optional = {"stance_width_over_hindlimb"}
+    if (
+        not isinstance(config, Mapping)
+        or not required <= set(config) <= required | optional
+    ):
         raise ContractError("standing preparation contains missing or unknown fields")
     if (
         config["schema"] != SCHEMA
@@ -136,6 +140,15 @@ def prepare_standing_pose(
     metatarsus_degrees = _finite(
         config["metatarsus_sagittal_degrees"], "standing metatarsus angle"
     )
+    stance_width_ratio = (
+        _finite(config["stance_width_over_hindlimb"], "standing stance width")
+        if "stance_width_over_hindlimb" in config
+        else None
+    )
+    if stance_width_ratio is not None and not 0.05 <= stance_width_ratio <= 1.0:
+        raise ContractError(
+            "standing stance width is outside the admitted normalized range"
+        )
     refinement = config["bilateral_material_floor_refinement"]
     if (
         not isinstance(refinement, Mapping)
@@ -255,6 +268,59 @@ def prepare_standing_pose(
     metatarsus_geometry: dict[str, tuple[float, float, np.ndarray]] = {}
     realized_metatarsus = {"left": metatarsus_degrees, "right": metatarsus_degrees}
 
+    original_segment_vectors = {
+        side: [
+            before_joints[side][end] - before_joints[side][start]
+            for start, end in (("hip", "knee"), ("knee", "ankle"), ("ankle", "mtp"))
+        ]
+        for side in ("left", "right")
+    }
+    original_hindlimb_lengths = {
+        side: sum(float(np.linalg.norm(value)) for value in vectors)
+        for side, vectors in original_segment_vectors.items()
+    }
+    desired_mtp_width = None
+    desired_segment_lateral: dict[str, list[float]] = {}
+    lateral_order_sign = None
+    if stance_width_ratio is not None:
+        desired_mtp_width = stance_width_ratio * float(
+            np.mean(list(original_hindlimb_lengths.values()))
+        )
+        before_lateral = {
+            side: {
+                name: float(point @ lateral)
+                for name, point in before_joints[side].items()
+            }
+            for side in ("left", "right")
+        }
+        mtp_order = before_lateral["right"]["mtp"] - before_lateral["left"]["mtp"]
+        hip_order = before_lateral["right"]["hip"] - before_lateral["left"]["hip"]
+        if (
+            abs(mtp_order) <= 1e-8
+            or abs(hip_order) <= 1e-8
+            or mtp_order * hip_order <= 0
+        ):
+            raise ContractError(
+                "standing semantic sides have inconsistent hip/MTP lateral ordering"
+            )
+        lateral_order_sign = math.copysign(1.0, mtp_order)
+        mtp_center = 0.5 * sum(
+            before_lateral[side]["mtp"] for side in ("left", "right")
+        )
+        for side, side_factor in (("left", -1.0), ("right", 1.0)):
+            vectors = original_segment_vectors[side]
+            lengths_side = np.asarray(
+                [np.linalg.norm(value) for value in vectors], dtype=float
+            )
+            target_mtp = (
+                mtp_center + lateral_order_sign * side_factor * 0.5 * desired_mtp_width
+            )
+            delta = target_mtp - before_lateral[side]["mtp"]
+            desired_segment_lateral[side] = [
+                float(vector @ lateral + delta * length / lengths_side.sum())
+                for vector, length in zip(vectors, lengths_side)
+            ]
+
     def apply_metatarsus(side: str, degrees: float) -> None:
         nonlocal worlds
         _, _, ankle, foot = chains[side]
@@ -284,8 +350,16 @@ def prepare_standing_pose(
         if upper_length <= 1e-9 or lower_length <= 1e-9:
             raise ContractError("standing leg contains a zero-length segment")
         lengths[side] = {"upper_m": upper_length, "lower_m": lower_length}
-        upper_lateral = float((kp - hp) @ lateral)
-        lower_lateral = float((ap - kp) @ lateral)
+        upper_lateral = (
+            desired_segment_lateral[side][0]
+            if stance_width_ratio is not None
+            else float((kp - hp) @ lateral)
+        )
+        lower_lateral = (
+            desired_segment_lateral[side][1]
+            if stance_width_ratio is not None
+            else float((ap - kp) @ lateral)
+        )
         upper_sagittal = math.sqrt(max(0.0, upper_length**2 - upper_lateral**2))
         lower_sagittal = math.sqrt(max(0.0, lower_length**2 - lower_lateral**2))
         if upper_sagittal <= 1e-9 or lower_sagittal <= 1e-9:
@@ -323,7 +397,11 @@ def prepare_standing_pose(
         ap, fp = (worlds[node, :3, 3] for node in (ankle, foot))
         vector = fp - ap
         original_vector = before_joints[side]["mtp"] - before_joints[side]["ankle"]
-        foot_lateral = float(original_vector @ lateral)
+        foot_lateral = (
+            desired_segment_lateral[side][2]
+            if stance_width_ratio is not None
+            else float(original_vector @ lateral)
+        )
         foot_length = float(np.linalg.norm(vector))
         foot_sagittal = math.sqrt(max(0.0, foot_length**2 - foot_lateral**2))
         if foot_length <= 1e-9 or foot_sagittal <= 1e-9:
@@ -452,6 +530,37 @@ def prepare_standing_pose(
         }
         for state in ("before", "after")
     }
+    after_segment_lengths = {
+        side: {
+            name: float(
+                np.linalg.norm(after_joints[side][end] - after_joints[side][start])
+            )
+            for name, start, end in (
+                ("hip_to_knee", "hip", "knee"),
+                ("knee_to_ankle", "knee", "ankle"),
+                ("ankle_to_mtp", "ankle", "mtp"),
+            )
+        }
+        for side in ("left", "right")
+    }
+    before_segment_lengths = {
+        side: {
+            name: float(
+                np.linalg.norm(before_joints[side][end] - before_joints[side][start])
+            )
+            for name, start, end in (
+                ("hip_to_knee", "hip", "knee"),
+                ("knee_to_ankle", "knee", "ankle"),
+                ("ankle_to_mtp", "ankle", "mtp"),
+            )
+        }
+        for side in ("left", "right")
+    }
+    maximum_segment_length_difference = max(
+        abs(after_segment_lengths[side][name] - before_segment_lengths[side][name])
+        for side in ("left", "right")
+        for name in before_segment_lengths[side]
+    )
     maximum_distal_orientation_difference = max(
         float(np.max(np.abs(reopened_worlds[node, :3, :3] - base)))
         for node, base in base_distal_rotations.items()
@@ -479,6 +588,23 @@ def prepare_standing_pose(
             )
     if maximum_distal_orientation_difference > 3e-6:
         raise ContractError("standing preparation changed retained pad/toe orientation")
+    if desired_mtp_width is not None:
+        if abs(stance_widths["after"]["mtp"] - desired_mtp_width) > 2e-6:
+            raise ContractError(
+                "standing preparation did not realize the declared MTP stance width"
+            )
+        if any(
+            (
+                lateral_joint_coordinates["after"]["right"][name]
+                - lateral_joint_coordinates["after"]["left"][name]
+            )
+            * lateral_order_sign
+            <= 1e-8
+            for name in ("hip", "knee", "ankle", "mtp")
+        ):
+            raise ContractError("standing semantic sides cross under the declared axes")
+    if maximum_segment_length_difference > 2e-6:
+        raise ContractError("standing preparation changed semantic leg segment lengths")
     receipt = {
         "schema": "eonwild.motion.standing-pose-preparation-receipt.v1",
         "status": "ENGINEERING_CANDIDATE",
@@ -507,6 +633,13 @@ def prepare_standing_pose(
         },
         "lateral_joint_coordinates_m": lateral_joint_coordinates,
         "stance_widths_m": stance_widths,
+        "stance_width_policy": {
+            "model": "length_weighted_semantic_lateral_rotation.v1",
+            "target_over_hindlimb": stance_width_ratio,
+            "target_mtp_width_m": desired_mtp_width,
+            "lateral_order_sign": lateral_order_sign,
+            "translations_or_stretch_applied": False,
+        },
         "knee_delta_m": {
             side: {
                 "source_world": (
@@ -520,6 +653,11 @@ def prepare_standing_pose(
             for side in ("left", "right")
         },
         "segment_lengths_m": lengths,
+        "segment_length_validation": {
+            "before_m": before_segment_lengths,
+            "after_m": after_segment_lengths,
+            "maximum_difference_m": maximum_segment_length_difference,
+        },
         "pelvis_height_change_m": float(
             reopened_worlds[pelvis, :3, 3] @ up - base_pelvis_height
         ),
