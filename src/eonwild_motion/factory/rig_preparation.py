@@ -382,16 +382,22 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
             entry["translation"], entry["rotation"], entry["scale"] = translation, rotation, scale
             touched.append(entry.get("name", f"node_{node}"))
             projection_errors.append(diagnostic["linear_projection_error"])
-            x, y, z, w = rotation
-            rotation_matrix = np.array([
-                [1 - 2 * (y * y + z * z), 2 * (x * y - z * w), 2 * (x * z + y * w)],
-                [2 * (x * y + z * w), 1 - 2 * (x * x + z * z), 2 * (y * z - x * w)],
-                [2 * (x * z - y * w), 2 * (y * z + x * w), 1 - 2 * (x * x + y * y)],
-            ])
-            local_output = np.eye(4)
-            local_output[:3, :3] = rotation_matrix * np.asarray(scale)
-            local_output[:3, 3] = translation
-            output_world[node] = parent_world @ local_output
+            if scale_policy is not None:
+                x, y, z, w = rotation
+                rotation_matrix = np.array([
+                    [1 - 2 * (y * y + z * z), 2 * (x * y - z * w), 2 * (x * z + y * w)],
+                    [2 * (x * y + z * w), 1 - 2 * (x * x + z * z), 2 * (y * z - x * w)],
+                    [2 * (x * z - y * w), 2 * (y * z + x * w), 1 - 2 * (x * x + y * y)],
+                ])
+                local_output = np.eye(4)
+                local_output[:3, :3] = rotation_matrix * np.asarray(scale)
+                local_output[:3, 3] = translation
+                output_world[node] = parent_world @ local_output
+            else:
+                # Preserve the historical exact target propagation when scale
+                # normalization is not requested. Reconstructing from serialized
+                # TRS here perturbs descendants and breaks prepared-source bytes.
+                output_world[node] = target
         else:
             output_world[node] = target
 

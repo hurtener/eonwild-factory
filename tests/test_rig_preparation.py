@@ -88,6 +88,14 @@ def test_preparation_is_deterministic_and_config_bound():
     assert c["config_sha256"] != a["config_sha256"]
 
 
+def test_legacy_preparation_without_scale_policy_preserves_exact_bytes():
+    source = Glb(SOURCE)
+    raw, _ = prepare_rig(source, config(source))
+    assert hashlib.sha256(raw).hexdigest() == (
+        "5404d81a401b385cec6ae458c1e211734892299f884373d5102a7a4449164832"
+    )
+
+
 def test_preparation_rejects_noncanonical_input_skin():
     source = Glb(SOURCE)
     inverse = source.document["skins"][0]["inverseBindMatrices"]

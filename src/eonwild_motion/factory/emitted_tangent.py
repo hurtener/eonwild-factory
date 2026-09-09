@@ -14,7 +14,12 @@ from typing import Any, Mapping
 
 import numpy as np
 
-from ..contact_gauge import _column_major_matrix, _normalize_skin_weights, _read_glb_accessor
+from ..contact_gauge import (
+    _column_major_matrix,
+    _normalize_skin_weights,
+    _read_glb_accessor,
+    _validate_contact_skin_binding,
+)
 from ..errors import ContractError
 from ..glb.animation import TrsTrack, read_animation_tracks
 from ..glb.container import Glb
@@ -196,6 +201,7 @@ def descendant_indices(glb: Glb, root: int) -> list[int]:
 def _skin_influences(glb: Glb, profile: Mapping[str, Any]) -> tuple[np.ndarray, tuple[tuple[tuple[int, float], ...], ...], list[int], np.ndarray, list[tuple[str, int]]]:
     try:
         geometry = profile["geometry"]
+        _validate_contact_skin_binding(glb, geometry)
         positions = _numeric(_read_glb_accessor(glb, geometry["position_accessor"], label="exact tangent position"), "exact tangent positions")
         joint_rows = [_read_glb_accessor(glb, index, label="exact tangent joints") for index in geometry["joint_accessors"]]
         weight_rows = [_read_glb_accessor(glb, index, label="exact tangent weights") for index in geometry["weight_accessors"]]

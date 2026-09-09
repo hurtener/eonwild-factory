@@ -74,7 +74,7 @@ extension grows from 44.99 to 169.65 mm. The same sole minimum remains vertex
 toe minimum remains vertex 27198, weighted only to the existing distal foot
 chain. This excludes fixed upstream skin contamination as the immediate cause.
 
-The current single blocker is kinematic incompatibility between the copied
+The first observed blocker is kinematic incompatibility between the copied
 0.6-body-height Tarbosaurus walk intent and the scaled provisional Allosaurus
 limb/foot geometry at canonical touchdown. This does not establish whether the
 surface-fitted pivots, the body-height normalization, or the copied stride intent

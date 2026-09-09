@@ -10,7 +10,12 @@ import pytest
 
 from eonwild_motion.errors import ContractError
 from eonwild_motion.contact_gauge import _animation_channels, _pose_matrices
-from eonwild_motion.factory.emitted_tangent import endpoint_tangent, local_cyclic_tangents, skinned_velocity
+from eonwild_motion.factory.emitted_tangent import (
+    _skin_influences,
+    endpoint_tangent,
+    local_cyclic_tangents,
+    skinned_velocity,
+)
 from eonwild_motion.factory.quality import emitted_cyclic_continuity, emitted_rotation_rates
 from eonwild_motion.glb.animation import read_animation_tracks
 from eonwild_motion.glb.container import Glb
@@ -20,6 +25,21 @@ from test_v9_airborne_gait import fixture
 
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def test_exact_skin_binding_rejects_omitted_real_influence_set():
+    profile = json.loads(
+        (ROOT / "catalog/contacts/allosaurus-engineering.v1.json").read_text()
+    )
+    glb = Glb(ROOT / profile["source"]["path"])
+    positions, influences, *_ = _skin_influences(glb, profile)
+    assert len(positions) == len(influences) == 40105
+    assert len(profile["geometry"]["joint_accessors"]) == 2
+    truncated = deepcopy(profile)
+    truncated["geometry"]["joint_accessors"] = truncated["geometry"]["joint_accessors"][:1]
+    truncated["geometry"]["weight_accessors"] = truncated["geometry"]["weight_accessors"][:1]
+    with pytest.raises(ContractError, match="complete primitive attributes"):
+        _skin_influences(glb, truncated)
 
 
 def _asset_clip(*, scale: bool = False) -> tuple[Glb, dict]:
