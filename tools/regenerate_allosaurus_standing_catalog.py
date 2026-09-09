@@ -23,6 +23,7 @@ from typing import Any
 import numpy as np
 
 from eonwild_motion.factory.__main__ import main as factory_main
+from eonwild_motion.factory.animal import load_animal_instance
 from eonwild_motion.factory.io import bind, digest, json_bytes, read_json
 from eonwild_motion.factory.motion_set import resolve_motion_set_selection
 from eonwild_motion.glb.container import Glb
@@ -249,6 +250,7 @@ def catalog_documents(
     for side in SIDES:
         set_quantity(animal, f"{side}_semantic_segments", measurements["sides"][side]["segment_lengths_m"])
         set_quantity(animal, f"{side}_semantic_hindlimb", measurements["sides"][side]["hindlimb_length_m"])
+    uniform_scale = float(load_animal_instance(animal, source_sha256=source_sha256)["uniform_scale"])
 
     contact = deepcopy(templates[CURRENT_CONTACT])
     contact["version"] = 5
@@ -279,8 +281,8 @@ def catalog_documents(
     ]
     for side in SIDES:
         values = measurements["sides"][side]
-        support["sides"][side]["upper_length_m"] = values["segment_lengths_m"][0]
-        support["sides"][side]["lower_length_m"] = values["segment_lengths_m"][1]
+        support["sides"][side]["upper_length_m"] = values["segment_lengths_m"][0] * uniform_scale
+        support["sides"][side]["lower_length_m"] = values["segment_lengths_m"][1] * uniform_scale
         support["sides"][side]["preferred_support_knee_degrees"] = values["knee_degrees"]
         support["sides"][side]["posture_evidence"] = (
             "source-bound authored standing preparation; engineering calibration, not habitual-pose biology"
