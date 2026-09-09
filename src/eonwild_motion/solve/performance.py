@@ -380,11 +380,14 @@ def _support_timed_axial_clock(source, base_worlds, roles, plan, phase, gain, la
             "support-timed axial carrier requires gait parameters")
     duty = parameters.get("duty_factor")
     step = parameters.get("step_period_s")
+    stride = parameters.get("step_length_body_heights")
     cycle = plan.get("same_foot_cycle_s")
     if (isinstance(duty, bool) or not isinstance(duty, (int, float))
             or not math.isfinite(duty) or not .5 < duty < 1
             or isinstance(step, bool) or not isinstance(step, (int, float))
             or not math.isfinite(step) or step <= 0
+            or isinstance(stride, bool) or not isinstance(stride, (int, float))
+            or not math.isfinite(stride) or stride == 0
             or isinstance(cycle, bool) or not isinstance(cycle, (int, float))
             or not math.isfinite(cycle) or cycle <= 0
             or not math.isclose(float(cycle), 2 * float(step), rel_tol=0., abs_tol=1e-9)):
@@ -449,6 +452,7 @@ def _support_timed_axial_clock(source, base_worlds, roles, plan, phase, gain, la
         raise ContractError(
             "support-timed axial carrier requires separated bilateral hips")
     left_sign = math.copysign(1., offsets["left"])
+    travel_sign = math.copysign(1., float(stride))
 
     # Admit the source choreography at its canonical alternating double-support
     # events. Validation must not depend on whether a finite output grid happens
@@ -478,7 +482,7 @@ def _support_timed_axial_clock(source, base_worlds, roles, plan, phase, gain, la
             raise ContractError(
                 "support-timed axial carrier requires finite bilateral foot placement")
         foot_separation = float(forward_values[0] - forward_values[1])
-        event_pulse = left_sign * math.sin(
+        event_pulse = travel_sign * left_sign * math.sin(
             math.pi * (event_time / float(step) - float(duty)))
         leading_advance = -left_sign * foot_separation
         if (abs(event_pulse) <= 1e-10 or abs(foot_separation) <= 1e-8
@@ -493,8 +497,9 @@ def _support_timed_axial_clock(source, base_worlds, roles, plan, phase, gain, la
             "support-timed axial carrier requires finite phase and bounded gain")
 
     stance_clock = float(phase) / float(step) - float(duty)
-    return left_sign, math.pi * stance_clock, float(gain) * left_sign * math.sin(
-        math.pi * stance_clock)
+    return left_sign, math.pi * stance_clock, (
+        float(gain) * travel_sign * left_sign * math.sin(math.pi * stance_clock)
+    )
 
 
 def _support_timed_pelvis_forward_carrier(plan, phase, coefficient):

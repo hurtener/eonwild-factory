@@ -32,6 +32,27 @@
         "sha256": "40f36c3796c6341e886fd153031c88543195912d030895d3dea5598dbe2d3d07"
       },
       "name": "walk-stop"
+    },
+    {
+      "intent": {
+        "path": "catalog/motion-intents/heavy-biped.tarbosaurus-pin-552-1-adult-reverse-walk.motion-set.v2.json",
+        "sha256": "88790dfba0588d58d11b5be38debf275c854b1127f26bd29f1f5a24011b0f21a"
+      },
+      "name": "reverse-walk"
+    },
+    {
+      "intent": {
+        "path": "catalog/motion-intents/heavy-biped.tarbosaurus-pin-552-1-adult-reverse-walk-start.motion-set.v2.json",
+        "sha256": "949b4f1d825166b51482bb152c595c32aa1fda9a4de6ffb9365844baebf8b777"
+      },
+      "name": "reverse-walk-start"
+    },
+    {
+      "intent": {
+        "path": "catalog/motion-intents/heavy-biped.tarbosaurus-pin-552-1-adult-reverse-walk-stop.motion-set.v2.json",
+        "sha256": "d6342bf33deabdc60763466ead8a40f0dd85fc5da45f992c18ee8733f727fc60"
+      },
+      "name": "reverse-walk-stop"
     }
   ],
   "schema": "eonwild.motion.motion-set.v2",

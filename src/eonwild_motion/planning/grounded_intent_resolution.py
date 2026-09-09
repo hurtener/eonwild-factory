@@ -7,7 +7,7 @@ from typing import Any, Mapping, Sequence
 
 from ..contracts.v9_models import canonical_hash
 from ..errors import ContractError
-from .grounded_gait import GroundedGait
+from .grounded_gait import GroundedGait, touchdown_reach
 from .parameters import gait_parameters
 
 
@@ -72,10 +72,11 @@ class ResolvedGroundedIntent:
     policy_sha256: str
     animal_support_sha256: str
     source_geometry_sha256: str
+    placement_mode: str = "centered_stance_duty_factor"
 
     def receipt(self) -> dict[str, Any]:
         """Return a detached JSON-compatible resolution record."""
-        return {
+        receipt = {
             "schema": "eonwild.motion.resolved-grounded-intent.v1",
             "source_geometry_sha256": self.source_geometry_sha256,
             "policy_sha256": self.policy_sha256,
@@ -86,11 +87,15 @@ class ResolvedGroundedIntent:
             "limiting_event": "canonical_touchdown" if self.limiting_side else None,
             "resolved_gait_parameters": dict(self.canonical_parameters),
             "sides": {
-                side: {
+                side: ({
                     "requested_reach_margin_m": requested_margin,
                     "resolved_reach_margin_m": resolved_margin,
                     "maximum_step_length_m": maximum_step,
-                }
+                } if self.placement_mode == "centered_stance_duty_factor" else {
+                    "requested_reach_margin_m": requested_margin,
+                    "resolved_reach_margin_m": resolved_margin,
+                    "fixed_touchdown_reach_m": maximum_step,
+                })
                 for side, requested_margin, resolved_margin, maximum_step
                 in self.side_evidence
             },
@@ -100,6 +105,9 @@ class ResolvedGroundedIntent:
             ),
             "requires_resolved_source_query_verification": True,
         }
+        if self.placement_mode != "centered_stance_duty_factor":
+            receipt["placement_mode"] = self.placement_mode
+        return receipt
 
 
 def measure_grounded_touchdown_geometry(
@@ -107,8 +115,8 @@ def measure_grounded_touchdown_geometry(
     observations: Mapping[str, Any],
 ) -> dict[str, Any]:
     """Convert exact source-query touchdown observations to a zero-step basis."""
-    if type(gait) is not GroundedGait or not gait.centered_stance:
-        raise ContractError("touchdown measurement requires exact centered GroundedGait")
+    if type(gait) is not GroundedGait:
+        raise ContractError("touchdown measurement requires exact GroundedGait")
     observed = _object(observations, {
         "source_geometry_sha256", "body_height_m", "gait_parameters_sha256", "sides",
     }, "grounded touchdown observations")
@@ -154,9 +162,7 @@ def measure_grounded_touchdown_geometry(
             ))
         hip, ankle = vectors
         relative = [ankle[index] - hip[index] for index in range(3)]
-        relative[2] -= (
-            gait.duty_factor * gait.step_length_body_heights * body_height
-        )
+        relative[2] -= touchdown_reach(gait, body_height)
         output[side] = {
             "event": "canonical_touchdown",
             "zero_step_ankle_from_hip_m": relative,
@@ -179,15 +185,15 @@ def resolve_grounded_intent(
     family_policy: Mapping[str, Any],
     touchdown_geometry: Mapping[str, Any],
 ) -> ResolvedGroundedIntent:
-    """Resolve one centered grounded gait against declared touchdown geometry.
+    """Resolve one grounded gait against declared touchdown geometry.
 
     ``touchdown_geometry`` supplies the source-query displacement from hip to
-    target ankle when centered step length is zero. Its lateral/up/forward
+    target ankle when its authored touchdown placement is zero. Its lateral/up/forward
     components must be expressed in the admitted animal frame. The operation
     is deterministic and has no access to previous frames or solver state.
     """
-    if type(gait) is not GroundedGait or not gait.centered_stance:
-        raise ContractError("morphology-aware grounded intent requires exact centered GroundedGait")
+    if type(gait) is not GroundedGait:
+        raise ContractError("morphology-aware grounded intent requires exact GroundedGait")
     body_height = _number(body_height_m, "body height", minimum=1e-9)
     hindlimb = _number(animal_hindlimb_length_m, "animal hindlimb length", minimum=1e-9)
     source_hash = _sha256(source_geometry_sha256, "source geometry")
@@ -236,11 +242,10 @@ def resolve_grounded_intent(
         input_step, rel_tol=0.0, abs_tol=1e-12,
     ):
         raise ContractError("family body-height step differs from its reference")
-    if not math.isclose(abs(gait.step_length_body_heights), input_step,
-                        rel_tol=0.0, abs_tol=1e-12):
-        raise ContractError("grounded gait step differs from the bound family input")
-    if gait.step_length_body_heights <= 0:
-        raise ContractError("initial morphology-aware grounded intent supports forward gait only")
+    intent_step = abs(gait.step_length_body_heights)
+    if intent_step > input_step + 1e-12:
+        raise ContractError("grounded gait step exceeds the bound family input")
+    direction = math.copysign(1.0, gait.step_length_body_heights)
 
     support = _object(neutral_support_geometry, {
         "schema", "id", "version", "source_geometry_sha256", "hindlimb_length_m",
@@ -288,8 +293,9 @@ def resolve_grounded_intent(
         raise ContractError("touchdown geometry is stale for the grounded gait")
     query_sides = _object(query["sides"], set(_SIDES), "touchdown geometry sides")
 
-    requested_step = ratio * hindlimb
-    resolved_step = requested_step
+    requested_step_magnitude = ratio * hindlimb * (intent_step / input_step)
+    requested_step = direction * requested_step_magnitude
+    resolved_step_magnitude = requested_step_magnitude
     rows: list[tuple[str, float, float, float]] = []
     parsed: list[tuple[str, float, float, float, float]] = []
     for side in _SIDES:
@@ -328,29 +334,48 @@ def resolve_grounded_intent(
         if remaining <= 0:
             raise ContractError(f"{side} neutral support posture cannot reach the touchdown plane")
         maximum_forward = math.sqrt(remaining)
-        maximum_step = (maximum_forward - forward_zero) / gait.duty_factor
-        if maximum_step <= 0:
-            raise ContractError(f"{side} neutral support posture has no forward step envelope")
-        resolved_step = min(resolved_step, maximum_step)
+        directional_zero = direction * forward_zero
+        if gait.centered_stance:
+            maximum_step = (maximum_forward - directional_zero) / gait.duty_factor
+            if maximum_step <= 0:
+                raise ContractError(f"{side} neutral support posture has no directed step envelope")
+        else:
+            maximum_step = touchdown_reach(gait, body_height)
+            fixed_distance = math.sqrt(
+                lateral * lateral + up * up + (forward_zero + maximum_step) ** 2
+            )
+            if fixed_distance > preferred_reach + tolerance:
+                raise ContractError(
+                    f"{side} fixed touchdown placement exceeds the neutral support reach"
+                )
+        if gait.centered_stance:
+            resolved_step_magnitude = min(resolved_step_magnitude, maximum_step)
         parsed.append((side, preferred_reach, lateral, up, forward_zero))
 
-    limited = resolved_step < requested_step - tolerance
+    limited = (
+        gait.centered_stance
+        and resolved_step_magnitude < requested_step_magnitude - tolerance
+    )
     if not limited:
-        resolved_step = requested_step
+        resolved_step_magnitude = requested_step_magnitude
+    resolved_step = direction * resolved_step_magnitude
     maximum_steps: dict[str, float] = {}
     for side, preferred_reach, lateral, up, forward_zero in parsed:
         maximum_forward = math.sqrt(
             preferred_reach * preferred_reach - lateral * lateral - up * up
         )
-        maximum_step = (maximum_forward - forward_zero) / gait.duty_factor
+        maximum_step = ((maximum_forward - direction * forward_zero) / gait.duty_factor
+                        if gait.centered_stance else touchdown_reach(gait, body_height))
         maximum_steps[side] = maximum_step
         requested_distance = math.sqrt(
             lateral * lateral + up * up
-            + (forward_zero + gait.duty_factor * requested_step) ** 2
+            + (forward_zero + (gait.duty_factor * requested_step
+                               if gait.centered_stance else maximum_step)) ** 2
         )
         resolved_distance = math.sqrt(
             lateral * lateral + up * up
-            + (forward_zero + gait.duty_factor * resolved_step) ** 2
+            + (forward_zero + (gait.duty_factor * resolved_step
+                               if gait.centered_stance else maximum_step)) ** 2
         )
         rows.append((side, preferred_reach - requested_distance,
                      preferred_reach - resolved_distance, maximum_step))
@@ -375,4 +400,6 @@ def resolve_grounded_intent(
         policy_sha256=canonical_hash(_plain(policy_document)),
         animal_support_sha256=canonical_hash(_plain(support)),
         source_geometry_sha256=source_hash,
+        placement_mode=("centered_stance_duty_factor" if gait.centered_stance
+                        else "fixed_touchdown_reach_signed_stride"),
     )

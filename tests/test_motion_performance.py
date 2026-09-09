@@ -245,12 +245,6 @@ def test_axial_clock_rejects_conflicting_or_malformed_choreography():
     base = _world_matrices(
         source, source.rest_translation, source.rest_rotation, source.rest_scale)
 
-    bad = deepcopy(plan)
-    bad["parameters"]["step_length_body_heights"] = -.6
-    with pytest.raises(ContractError, match="conflicts with foot choreography"):
-        _support_timed_axial_clock(
-            source, base, roles, bad, .1, 1., lateral)
-
     malformed = deepcopy(plan)
     malformed["parameters"]["duty_factor"] = "wide"
     with pytest.raises(ContractError, match="finite two-step grounded clock"):
@@ -258,9 +252,11 @@ def test_axial_clock_rejects_conflicting_or_malformed_choreography():
             source, base, roles, malformed, .1, 1., lateral)
 
     reverse = _axial_performance_plan(replace(gait, step_length_body_heights=-.6))
-    with pytest.raises(ContractError, match="conflicts with foot choreography"):
-        _support_timed_axial_clock(
-            source, base, roles, reverse, .1, 1., lateral)
+    forward_pulse = _support_timed_axial_clock(
+        source, base, roles, plan, .1, 1., lateral)[2]
+    reverse_pulse = _support_timed_axial_clock(
+        source, base, roles, reverse, .1, 1., lateral)[2]
+    assert reverse_pulse == pytest.approx(-forward_pulse, abs=1e-15)
 
 
 @pytest.mark.parametrize("kind", ["start", "stop"])

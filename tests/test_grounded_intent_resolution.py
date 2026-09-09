@@ -10,6 +10,7 @@ import pytest
 from eonwild_motion.errors import ContractError
 from eonwild_motion.contracts.v9_models import canonical_hash
 from eonwild_motion.planning.grounded_gait import GroundedGait, load_grounded_gait
+from eonwild_motion.planning.parameters import gait_parameters
 from eonwild_motion.planning.grounded_intent_resolution import (
     measure_grounded_touchdown_geometry,
     resolve_grounded_intent,
@@ -92,6 +93,9 @@ def test_reference_geometry_preserves_working_walk_exactly():
         TARBO_QUERY,
     )
     assert result.gait == gait
+    assert result.requested_step_length_m == (
+        _policy()["grounded_intent_resolution"]["step_length_hindlimb_ratio"] * 2.415
+    )
     assert result.resolved_step_length_m == pytest.approx(1.370505350338987, abs=1e-15)
     assert result.limiting_side is None
     assert result.receipt()["resolved_gait_parameters"] == {
@@ -257,7 +261,7 @@ def test_resolution_rejects_unbound_or_malformed_inputs(case):
     elif case == "ratio":
         policy["grounded_intent_resolution"]["step_length_hindlimb_ratio"] = 0.5
     elif case == "step":
-        gait = GroundedGait(**{**vars(gait), "step_length_body_heights": 0.55})
+        policy["grounded_intent_resolution"]["input_step_length_body_heights"] = 0.55
     elif case == "side":
         del support["sides"]["right"]
     elif case == "knee":
@@ -276,23 +280,130 @@ def test_resolution_rejects_unbound_or_malformed_inputs(case):
         )
 
 
-def test_resolution_rejects_noncentered_and_reverse_before_solve():
-    support = _document("catalog/calibration/allosaurus-engineering-support.v1.json")
-    kwargs = dict(
-        body_height_m=2.106182073161406,
-        animal_hindlimb_length_m=1.985,
-        source_geometry_sha256=ALLO_SHA,
-        neutral_support_geometry=support,
-        family_policy=_policy(),
-        touchdown_geometry=ALLO_QUERY,
+def test_fixed_touchdown_measurement_removes_authored_reach():
+    gait = GroundedGait(centered_stance=False, step_length_body_heights=-.38,
+                        touchdown_reach_body_heights=.2)
+    gait_hash = canonical_hash(gait_parameters(gait))
+    body_height = 2.0
+    common = {
+        "source_geometry_sha256": TARBO_SHA,
+        "body_height_m": body_height,
+        "gait_parameters_sha256": gait_hash,
+        "event": "canonical_touchdown",
+        "coordinate": {"lateral": [1., 0., 0.], "up": [0., 1., 0.],
+                       "forward": [0., 0., 1.]},
+    }
+    observations = {
+        "source_geometry_sha256": TARBO_SHA,
+        "body_height_m": body_height,
+        "gait_parameters_sha256": gait_hash,
+        "sides": {
+            "left": {**common, "side": "left", "time_s": 0.,
+                     "hip_world_m": [0., 1., 0.],
+                     "target_ankle_world_m": [0., 0., -.15]},
+            "right": {**common, "side": "right", "time_s": gait.step_period_s,
+                      "hip_world_m": [0., 1., 0.],
+                      "target_ankle_world_m": [0., 0., -.15]},
+        },
+    }
+    measured = measure_grounded_touchdown_geometry(gait, observations)
+    # Signed fixed reach is -0.4 m; removing it leaves the source/body basis.
+    assert measured["sides"]["left"]["zero_step_ankle_from_hip_m"] == pytest.approx(
+        [0., -1., .25]
     )
-    with pytest.raises(ContractError, match="centered"):
-        resolve_grounded_intent(GroundedGait(centered_stance=False), **kwargs)
-    with pytest.raises(ContractError, match="forward gait only"):
-        resolve_grounded_intent(
-            GroundedGait(**{**vars(_gait()), "step_length_body_heights": -0.6}),
-            **kwargs,
+
+
+def test_reference_scaled_reverse_preserves_signed_stride_and_timing():
+    gait = GroundedGait(**{
+        **vars(_gait(period=1.0)),
+        "centered_stance": False,
+        "duty_factor": 0.68,
+        "step_length_body_heights": -0.38,
+        "touchdown_reach_body_heights": 0.2,
+    })
+    query = _query(TARBO_SHA, {
+        "left": [.349, -1., 0.],
+        "right": [-.349, -1., 0.],
+    })
+    query["gait_parameters_sha256"] = canonical_hash(gait_parameters(gait))
+    result = resolve_grounded_intent(
+        gait,
+        body_height_m=2.2841755838983118,
+        animal_hindlimb_length_m=2.415,
+        source_geometry_sha256=TARBO_SHA,
+        neutral_support_geometry=_document(
+            "catalog/calibration/tarbosaurus-pin-552-1-adult-support.v1.json"
+        ),
+        family_policy=_policy(),
+        touchdown_geometry=query,
+    )
+    assert result.gait == gait
+    assert result.requested_step_length_m == pytest.approx(
+        -0.38 * 2.2841755838983118
+    )
+    assert result.resolved_step_length_m == pytest.approx(
+        -0.38 * 2.2841755838983118
+    )
+    assert result.gait.step_period_s == 1.0
+    assert result.gait.duty_factor == 0.68
+    assert result.receipt()["placement_mode"] == "fixed_touchdown_reach_signed_stride"
+    assert all(
+        row["fixed_touchdown_reach_m"] == pytest.approx(
+            -.2 * 2.2841755838983118
         )
+        for row in result.receipt()["sides"].values()
+    )
+
+
+def test_fixed_touchdown_infeasibility_is_not_hidden_by_stride_reduction():
+    gait = GroundedGait(**{
+        **vars(_gait(period=1.0)),
+        "centered_stance": False,
+        "step_length_body_heights": -.05,
+        "touchdown_reach_body_heights": .2,
+    })
+    query = _query(TARBO_SHA, {
+        "left": [.349, -1., 2.],
+        "right": [-.349, -1., 2.],
+    })
+    query["gait_parameters_sha256"] = canonical_hash(gait_parameters(gait))
+    with pytest.raises(ContractError, match="fixed touchdown placement exceeds"):
+        resolve_grounded_intent(
+            gait,
+            body_height_m=2.2841755838983118,
+            animal_hindlimb_length_m=2.415,
+            source_geometry_sha256=TARBO_SHA,
+            neutral_support_geometry=_document(
+                "catalog/calibration/tarbosaurus-pin-552-1-adult-support.v1.json"
+            ),
+            family_policy=_policy(),
+            touchdown_geometry=query,
+        )
+
+
+def test_centered_reverse_uses_backward_reach_envelope():
+    gait = GroundedGait(**{
+        **vars(_gait(period=1.0)),
+        "step_length_body_heights": -.38,
+    })
+    query = _query(TARBO_SHA, {
+        "left": [.349, -1., .1],
+        "right": [-.349, -1., .1],
+    })
+    query["gait_parameters_sha256"] = canonical_hash(gait_parameters(gait))
+    result = resolve_grounded_intent(
+        gait,
+        body_height_m=2.2841755838983118,
+        animal_hindlimb_length_m=2.415,
+        source_geometry_sha256=TARBO_SHA,
+        neutral_support_geometry=_document(
+            "catalog/calibration/tarbosaurus-pin-552-1-adult-support.v1.json"
+        ),
+        family_policy=_policy(),
+        touchdown_geometry=query,
+    )
+    assert result.resolved_step_length_m < 0
+    assert all(row[2] >= -1e-12 for row in result.side_evidence)
 
 
 def test_uncapped_nonreference_geometry_uses_resolved_physical_step():
