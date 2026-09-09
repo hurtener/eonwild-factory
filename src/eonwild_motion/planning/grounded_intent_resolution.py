@@ -243,12 +243,15 @@ def resolve_grounded_intent(
         raise ContractError("initial morphology-aware grounded intent supports forward gait only")
 
     support = _object(neutral_support_geometry, {
-        "schema", "source_geometry_sha256", "hindlimb_length_m",
+        "schema", "id", "version", "source_geometry_sha256", "hindlimb_length_m",
         "coordinate", "sides", "limitations",
     }, "animal neutral support geometry")
-    if support["schema"] != SUPPORT_SCHEMA or _sha256(
+    if (support["schema"] != SUPPORT_SCHEMA
+            or not isinstance(support["id"], str) or not support["id"]
+            or type(support["version"]) is not int or support["version"] < 1
+            or _sha256(
         support["source_geometry_sha256"], "animal support source geometry"
-    ) != source_hash:
+    ) != source_hash):
         raise ContractError("animal neutral support geometry is not source-bound")
     if not math.isclose(
         _number(support["hindlimb_length_m"], "support hindlimb length", minimum=1e-9),
@@ -353,7 +356,12 @@ def resolve_grounded_intent(
                      preferred_reach - resolved_distance, maximum_step))
     limiting_side = min(maximum_steps, key=maximum_steps.get) if limited else None
     resolved_bh = resolved_step / body_height
-    resolved_gait = gait if resolved_step == requested_step else replace(
+    original_step = gait.step_length_body_heights * body_height
+    preserve_reference_gait = (
+        resolved_step == requested_step
+        and math.isclose(resolved_step, original_step, rel_tol=0.0, abs_tol=tolerance)
+    )
+    resolved_gait = gait if preserve_reference_gait else replace(
         gait, step_length_body_heights=resolved_bh,
     )
     parameters = tuple(gait_parameters(resolved_gait).items())

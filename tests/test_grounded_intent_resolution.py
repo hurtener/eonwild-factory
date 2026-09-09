@@ -63,6 +63,11 @@ ALLO_QUERY = _query(ALLO_SHA, {
 
 def _resolve(animal_path: str, source: str, query: dict, *, period: float = 1.23):
     animal = _document(animal_path)
+    support = _document(
+        "catalog/calibration/tarbosaurus-pin-552-1-adult-support.v1.json"
+        if source == TARBO_SHA
+        else "catalog/calibration/allosaurus-engineering-support.v1.json"
+    )
     gait = _gait(period)
     query = deepcopy(query)
     query["gait_parameters_sha256"] = canonical_hash({
@@ -73,7 +78,7 @@ def _resolve(animal_path: str, source: str, query: dict, *, period: float = 1.23
         body_height_m=(2.2841755838983118 if source == TARBO_SHA else 2.106182073161406),
         animal_hindlimb_length_m=animal["measurements"]["hindlimb_length"]["value"],
         source_geometry_sha256=source,
-        neutral_support_geometry=animal["neutral_support_geometry"],
+        neutral_support_geometry=support,
         family_policy=_policy(),
         touchdown_geometry=query,
     )
@@ -193,7 +198,7 @@ def test_walk_and_fast_share_spatial_resolution_without_overriding_timing():
 
 
 def test_recursively_immutable_inputs_are_admitted_and_detached():
-    animal = _document("catalog/animals/allosaurus-composite-engineering.adult.v1.json")
+    support = _document("catalog/calibration/allosaurus-engineering-support.v1.json")
 
     def freeze(value):
         if isinstance(value, dict):
@@ -212,7 +217,7 @@ def test_recursively_immutable_inputs_are_admitted_and_detached():
         body_height_m=2.106182073161406,
         animal_hindlimb_length_m=1.985,
         source_geometry_sha256=ALLO_SHA,
-        neutral_support_geometry=freeze(animal["neutral_support_geometry"]),
+        neutral_support_geometry=freeze(support),
         family_policy=freeze(_policy()),
         touchdown_geometry=freeze(query),
     )
@@ -224,8 +229,7 @@ def test_recursively_immutable_inputs_are_admitted_and_detached():
     ["source", "query_source", "query_gait", "coordinate", "ratio", "step", "side", "knee", "event"],
 )
 def test_resolution_rejects_unbound_or_malformed_inputs(case):
-    animal = _document("catalog/animals/allosaurus-composite-engineering.adult.v1.json")
-    support = deepcopy(animal["neutral_support_geometry"])
+    support = _document("catalog/calibration/allosaurus-engineering-support.v1.json")
     policy = _policy()
     query = deepcopy(ALLO_QUERY)
     gait = _gait()
@@ -264,12 +268,12 @@ def test_resolution_rejects_unbound_or_malformed_inputs(case):
 
 
 def test_resolution_rejects_noncentered_and_reverse_before_solve():
-    animal = _document("catalog/animals/allosaurus-composite-engineering.adult.v1.json")
+    support = _document("catalog/calibration/allosaurus-engineering-support.v1.json")
     kwargs = dict(
         body_height_m=2.106182073161406,
         animal_hindlimb_length_m=1.985,
         source_geometry_sha256=ALLO_SHA,
-        neutral_support_geometry=animal["neutral_support_geometry"],
+        neutral_support_geometry=support,
         family_policy=_policy(),
         touchdown_geometry=ALLO_QUERY,
     )
@@ -280,3 +284,62 @@ def test_resolution_rejects_noncentered_and_reverse_before_solve():
             GroundedGait(**{**vars(_gait()), "step_length_body_heights": -0.6}),
             **kwargs,
         )
+
+
+def test_uncapped_nonreference_geometry_uses_resolved_physical_step():
+    gait = _gait()
+    source = "1" * 64
+    body_height = 2.0
+    support = {
+        "schema": "eonwild.motion.neutral-support-geometry.v1",
+        "id": "synthetic-support.v1",
+        "version": 1,
+        "source_geometry_sha256": source,
+        "hindlimb_length_m": 2.0,
+        "coordinate": {
+            "frame": "source_world",
+            "lateral": [1.0, 0.0, 0.0],
+            "up": [0.0, 1.0, 0.0],
+            "forward": [0.0, 0.0, 1.0],
+        },
+        "sides": {
+            side: {
+                "upper_length_m": 0.9,
+                "lower_length_m": 0.9,
+                "preferred_support_knee_degrees": 130.0,
+                "posture_evidence": "synthetic non-reference regression",
+            }
+            for side in ("left", "right")
+        },
+        "limitations": ["synthetic test fixture"],
+    }
+    gait_hash = canonical_hash({
+        key: value for key, value in vars(gait).items() if value is not None
+    })
+    query = _query(source, {
+        "left": [0.1, -0.5, 0.0],
+        "right": [-0.1, -0.5, 0.0],
+    })
+    query["body_height_m"] = body_height
+    query["gait_parameters_sha256"] = gait_hash
+
+    result = resolve_grounded_intent(
+        gait,
+        body_height_m=body_height,
+        animal_hindlimb_length_m=2.0,
+        source_geometry_sha256=source,
+        neutral_support_geometry=support,
+        family_policy=_policy(),
+        touchdown_geometry=query,
+    )
+
+    assert result.limiting_side is None
+    assert result.resolved_step_length_m == pytest.approx(
+        2.0 * _policy()["grounded_intent_resolution"]["step_length_hindlimb_ratio"]
+    )
+    assert result.gait.step_length_body_heights * body_height == pytest.approx(
+        result.resolved_step_length_m
+    )
+    assert result.receipt()["resolved_gait_parameters"][
+        "step_length_body_heights"
+    ] == pytest.approx(result.resolved_step_length_m / body_height)
