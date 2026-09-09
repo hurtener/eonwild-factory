@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 
 from eonwild_motion.factory.io import digest, json_bytes
+from eonwild_motion.factory.animal import load_animal_instance
 from eonwild_motion.glb.container import Glb
 
 
@@ -57,6 +58,16 @@ def test_current_allosaurus_measurement_and_catalog_binding_boundary():
     assert baseline["locomotion_response_policy"]["regimes"]["grounded"][
         "neutral_support_profile"
     ]["sha256"] == digest(json_bytes(documents[MODULE.NEW_SUPPORT]))
+    runtime_animal = load_animal_instance(
+        documents[MODULE.NEW_ANIMAL], source_sha256=MODULE.CURRENT_SOURCE_SHA256
+    )
+    for side in MODULE.SIDES:
+        assert documents[MODULE.NEW_SUPPORT]["sides"][side]["upper_length_m"] == pytest.approx(
+            measured["sides"][side]["segment_lengths_m"][0] * runtime_animal["uniform_scale"]
+        )
+        assert documents[MODULE.NEW_SUPPORT]["sides"][side]["lower_length_m"] == pytest.approx(
+            measured["sides"][side]["segment_lengths_m"][1] * runtime_animal["uniform_scale"]
+        )
     assert motion_set["baseline"]["sha256"] == digest(json_bytes(baseline))
     assert [entry["name"] for entry in motion_set["motions"]] == ["walk", "fast-walk"]
 
