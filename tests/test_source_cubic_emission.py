@@ -183,6 +183,13 @@ def test_emitter_refinement_reuses_checked_values_and_inserts_exact_source_key(m
         ],
     }
     initial = emit_source_cubics(source, law, plan, root_node=0)
+    unchanged = emit_source_cubics(
+        source, law, plan, root_node=0, reuse=initial,
+    )
+    assert unchanged.root_motion == initial.root_motion
+    assert unchanged.in_place == initial.in_place
+    assert unchanged.plan == initial.plan
+    assert unchanged.midpoint_plan == initial.midpoint_plan
     refined = emit_source_cubics(
         source, law, plan, root_node=0,
         additional_key_times=(.05,), reuse=initial,
@@ -235,6 +242,22 @@ def test_emitter_refinement_rejects_unbound_reuse_or_outside_key(monkeypatch):
             source, object.__new__(CanonicalConstantSkinTargetLaw), plan,
             root_node=0, additional_key_times=(.05,), reuse=initial,
         )
+
+
+@pytest.mark.parametrize("times", [(0., .1, .1), (0., .2, .1), (0., float("nan"), .2)])
+def test_emitter_rejects_malformed_original_timeline_before_key_union(monkeypatch, times):
+    source, _ = fixture("source-cubic-invalid-original-times", upper_body=True)
+    law = object.__new__(CanonicalConstantSkinTargetLaw)
+    monkeypatch.setattr(CanonicalConstantSkinTargetLaw, "values", lambda _self, values: ())
+    plan = {
+        "program": "grounded_gait", "loop": False, "duration_s": .2,
+        "samples": [
+            _synthetic_checked_value(len(source.nodes), time_s).row
+            for time_s in times
+        ],
+    }
+    with pytest.raises(ContractError, match="timeline must be finite and increasing"):
+        emit_source_cubics(source, law, plan, root_node=0)
 
 
 def test_emitter_rejects_any_typed_unavailable_checked_value(monkeypatch):

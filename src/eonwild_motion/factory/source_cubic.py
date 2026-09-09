@@ -176,6 +176,8 @@ def emit_source_cubics(
     if not isinstance(rows, list) or len(rows) < 2:
         raise ContractError("source cubic emission requires a retained plan")
     input_times = np.asarray([row["time_s"] for row in rows], dtype=float)
+    if not np.isfinite(input_times).all() or np.any(np.diff(input_times) <= 0):
+        raise ContractError("source cubic timeline must be finite and increasing")
     input_plan_sha256 = hashlib.sha256(
         json.dumps(plan, sort_keys=True, separators=(",", ":")).encode()
     ).hexdigest()
@@ -215,7 +217,7 @@ def emit_source_cubics(
             raise ContractError("source cubic reuse differs from the bound source law")
         cache.update(reuse._checked_values)
     ordered_times = tuple(sorted(requested - set(cache)))
-    batch = law.values(ordered_times)
+    batch = law.values(ordered_times) if ordered_times else ()
     for time_s, value in zip(ordered_times, batch):
         if isinstance(value, ConstantSkinTargetUnavailable):
             raise ContractError(

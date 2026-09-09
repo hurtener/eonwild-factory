@@ -695,30 +695,52 @@ def compile_recipe(
             source, law, plan, root_node=source.name_to_node[roles["root"]]
         )
         # A checked source law can touch a hard articulation boundary while a
-        # Hermite interval between its valid keys overshoots it. Insert only
-        # the source-derived failing midpoints once; candidates whose first
-        # serialized curve passes retain their exact bytes.
+        # Hermite interval between its valid keys overshoots it. Iteratively
+        # insert only source-derived failing midpoints, reusing all checked
+        # source values. Candidates whose first serialized curve passes retain
+        # their exact animation bytes.
         refinement_times: set[float] = set()
-        initial_midpoint_articulation = {}
-        for mode, raw, clip in (() if articulation_profile is None else (
-            ("root_motion", emission.root_motion, "V9_SOURCE_CUBIC_ROOT_MOTION"),
-            ("in_place", emission.in_place, "V9_SOURCE_CUBIC_IN_PLACE"),
-        )):
-            emitted = Glb.from_bytes(raw)
-            sample_times = serialized_key_midpoint_times(emitted, clip)
-            check = emitted_articulation_envelopes(
-                emitted,
-                semantic_roles=roles,
-                plan=emission.midpoint_plan,
-                profile=articulation_profile,
-                forward_axis=forward,
-                up_axis=up,
-                sample_times=sample_times,
-            )
-            initial_midpoint_articulation[mode] = check
-            if check["status"] == "FAIL" and check.get("witness") is not None:
-                refinement_times.add(float(check["witness"]["time_s"]))
-        if refinement_times and len(refinement_times) <= 8:
+        refinement_attempts = []
+        refinement_stop = "NOT_APPLICABLE"
+        while articulation_profile is not None:
+            attempt_checks = {}
+            next_times: set[float] = set()
+            check_plan = _thaw(emission.midpoint_plan)
+            for mode, raw, clip in (
+                ("root_motion", emission.root_motion, "V9_SOURCE_CUBIC_ROOT_MOTION"),
+                ("in_place", emission.in_place, "V9_SOURCE_CUBIC_IN_PLACE"),
+            ):
+                emitted = Glb.from_bytes(raw)
+                sample_times = serialized_key_midpoint_times(emitted, clip)
+                check = emitted_articulation_envelopes(
+                    emitted,
+                    semantic_roles=roles,
+                    plan=check_plan,
+                    profile=articulation_profile,
+                    forward_axis=forward,
+                    up_axis=up,
+                    sample_times=sample_times,
+                )
+                attempt_checks[mode] = check
+                witness = check.get("witness")
+                if check["status"] == "FAIL" and witness is not None:
+                    next_times.add(float(witness["time_s"]))
+            refinement_attempts.append({
+                "inserted_key_count": len(refinement_times),
+                "midpoint_articulation": attempt_checks,
+            })
+            if all(check["status"] == "PASS" for check in attempt_checks.values()):
+                refinement_stop = "PASS"
+                break
+            eligible = sorted(next_times - refinement_times)
+            remaining = 8 - len(refinement_times)
+            if not eligible:
+                refinement_stop = "NO_ELIGIBLE_SOURCE_MIDPOINT"
+                break
+            if remaining <= 0:
+                refinement_stop = "INSERTION_BUDGET_EXHAUSTED"
+                break
+            refinement_times.update(eligible[:remaining])
             emission = emit_source_cubics(
                 source,
                 law,
@@ -747,12 +769,13 @@ def compile_recipe(
         )
         receipt["source_cubic_key_refinement"] = {
             "classification": (
-                "one bounded insertion of source-derived midpoint keys after an "
-                "initial serialized articulation failure; no clipped rotations or relaxed limits"
+                "bounded iterative insertion of source-derived failing midpoint keys; "
+                "no clipped rotations or relaxed limits"
             ),
             "maximum_inserted_keys": 8,
-            "inserted_times_s": sorted(refinement_times) if len(refinement_times) <= 8 else [],
-            "initial_midpoint_articulation": initial_midpoint_articulation,
+            "inserted_times_s": sorted(refinement_times),
+            "stop_reason": refinement_stop,
+            "attempts": refinement_attempts,
         }
         receipt["constant_skin_target_law"] = {
             "status": "AVAILABLE_AT_ALL_KEYS_STENCILS_AND_MIDPOINTS",
