@@ -37,4 +37,46 @@
     "Taxon-level S4 limb proportions lack a specimen identifier and reveal a relative-segment mismatch; they are comparison evidence, not permission to resize bones.",
     "This evidence binding does not establish biological validation or production approval."
   ]
+,
+  "neutral_support_geometry": {
+    "schema": "eonwild.motion.neutral-support-geometry.v1",
+    "source_geometry_sha256": "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f",
+    "hindlimb_length_m": 2.415,
+    "coordinate": {
+      "frame": "source_world",
+      "lateral": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "up": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "forward": [
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    "sides": {
+      "left": {
+        "upper_length_m": 0.8300099288127706,
+        "lower_length_m": 0.9929763970787131,
+        "preferred_support_knee_degrees": 132.3260135579381,
+        "posture_evidence": "user-selected V10 working baseline canonical left touchdown; reference calibration, not anatomy"
+      },
+      "right": {
+        "upper_length_m": 0.8300100016872451,
+        "lower_length_m": 0.9929762097883313,
+        "preferred_support_knee_degrees": 132.11524488799193,
+        "posture_evidence": "user-selected V10 working baseline canonical right touchdown; reference calibration, not anatomy"
+      }
+    },
+    "limitations": [
+      "Reference calibration preserves the selected V10 authored kinematics; it is not a fossil joint-range or force measurement.",
+      "The pelvis proxy and ankle target are solver landmarks rather than measured COM or pressure-center data."
+    ]
+  }
 }

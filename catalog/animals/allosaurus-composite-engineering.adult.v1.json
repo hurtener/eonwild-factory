@@ -135,4 +135,46 @@
     "The fitted joint centers are reproducible engineering surface landmarks, not fossil joint centers.",
     "Uniform scaling does not validate morphology, forces, muscle capacity, tissue collisions, or digit anatomy."
   ]
+,
+  "neutral_support_geometry": {
+    "schema": "eonwild.motion.neutral-support-geometry.v1",
+    "source_geometry_sha256": "a403679deb968ec88f7b8b89e3e399cc0881e9cc602e765a6e55934c28ad3826",
+    "hindlimb_length_m": 1.985,
+    "coordinate": {
+      "frame": "source_world",
+      "lateral": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "up": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "forward": [
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    "sides": {
+      "left": {
+        "upper_length_m": 0.837393421787036,
+        "lower_length_m": 0.7383633012279879,
+        "preferred_support_knee_degrees": 162.40674193203094,
+        "posture_evidence": "admitted provisional engineering neutral support geometry; not a fossil-derived posture"
+      },
+      "right": {
+        "upper_length_m": 0.837393421787036,
+        "lower_length_m": 0.7383633012279879,
+        "preferred_support_knee_degrees": 162.40674193203094,
+        "posture_evidence": "admitted provisional engineering neutral support geometry; not a fossil-derived posture"
+      }
+    },
+    "limitations": [
+      "The preferred support knee is the provisional admitted engineering neutral, not an anatomical range or biological optimum.",
+      "The fitted hip center remains uncertain within the visible proximal muscle volume."
+    ]
+  }
 }

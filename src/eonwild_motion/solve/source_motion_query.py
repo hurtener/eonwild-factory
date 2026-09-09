@@ -9,12 +9,14 @@ from __future__ import annotations
 
 from copy import deepcopy
 from dataclasses import dataclass
+import hashlib
 import math
 from types import MappingProxyType
 from typing import Any, Mapping
 
 import numpy as np
 
+from ..contracts.v9_models import canonical_hash
 from ..errors import ContractError
 from ..factory.source_identity import validate_frozen_source_with_uniform_scale
 from ..glb.container import Glb
@@ -38,6 +40,8 @@ from .airborne_gait import (
     _freeze_data,
     _qinv,
     _qmul,
+    _qrotate,
+    _qrotvec,
     _world_matrices,
     build_airborne_solve_context,
     driven_body_response,
@@ -753,6 +757,55 @@ class SourceMotionQuery:
     ) -> SourceMotionResult | SourceMotionUnavailable:
         time = _finite_time(time_s)
         return self._evaluate_owned(time, side=side, target_offsets=None)
+
+    def grounded_touchdown_observation(self, time_s: Any, side: str) -> Mapping[str, Any]:
+        """Expose the exact pre-refinement ankle target for one grounded touchdown."""
+        if type(self._locomotion_gait) is not GroundedGait or self._transition is not None:
+            raise ContractError("touchdown observation requires steady grounded locomotion")
+        if side not in ("left", "right"):
+            raise ContractError("touchdown observation side must be left or right")
+        time = _finite_time(time_s)
+        value = self.evaluate(time)
+        if isinstance(value, SourceMotionUnavailable):
+            raise ContractError("touchdown observation is unavailable")
+        try:
+            row_foot = value.row["feet"][side]
+            pose_foot = value.pose.feet[side]
+            touchdown = float(row_foot["touchdown_time_s"])
+            chain = self._context.legs[side]
+            neutral_ankle = np.asarray(self._context.base_w[chain[2]][:3, 3], dtype=float)
+            neutral_foot = np.asarray(self._context.base_w[chain[3]][:3, 3], dtype=float)
+            pitch = float(pose_foot["solved_foot_pitch_degrees"])
+            target_foot = np.asarray(pose_foot["target_foot_world_m"], dtype=float)
+        except (KeyError, TypeError, ValueError, IndexError) as exc:
+            raise ContractError("touchdown observation is incomplete") from exc
+        if (row_foot.get("contact") is not True
+                or not math.isclose(touchdown, time, rel_tol=0.0, abs_tol=1e-10)
+                or not math.isfinite(pitch) or target_foot.shape != (3,)
+                or not np.isfinite(target_foot).all()):
+            raise ContractError("requested source time is not a canonical touchdown")
+        rotation = _qrotvec(tuple(
+            self._context.lateral * math.radians(pitch)
+        ))
+        target_ankle = target_foot - np.asarray(_qrotate(
+            rotation, tuple(neutral_foot - neutral_ankle)
+        ))
+        hip = np.asarray(value.worlds[chain[0]][:3, 3], dtype=float)
+        return _freeze_data({
+            "source_geometry_sha256": hashlib.sha256(self._source.raw).hexdigest(),
+            "body_height_m": float(self._context.body_height),
+            "gait_parameters_sha256": canonical_hash(gait_parameters(self._locomotion_gait)),
+            "side": side,
+            "event": "canonical_touchdown",
+            "time_s": time,
+            "coordinate": {
+                "lateral": self._context.lateral.tolist(),
+                "up": self._context.up.tolist(),
+                "forward": self._context.forward.tolist(),
+            },
+            "hip_world_m": hip.tolist(),
+            "target_ankle_world_m": target_ankle.tolist(),
+        })
 
     @staticmethod
     def _target_offsets(value: Mapping[str, Any]) -> dict[str, list[float]]:
