@@ -29,11 +29,14 @@ actual shared start/steady/stop handoffs and connected native review are pending
 the start handoff exposed an unscaled-versus-animal-scaled floor comparison in
 the verifier. The reviewed fix at `1f783f8` reuses the compiler's bound animal
 calibration without changing floor equality or join limits. The author's actual
-start-to-steady replay passes both modes; independent root replay is running.
+start-to-steady replay and independent root replay pass both modes.
 The [start/handoff report](../reports/V9-SHARED-GROUNDED-START-HANDOFF-001/README.md)
 records exact identities, complete side-frame coverage and remaining concerns.
+The combined source `12677c17d8b756fdc2be99fb1cce1243f5b29e87` passes 1,081 tests
+plus 21 subtests in 517.84 seconds, with no exclusions. Its hosted contracts
+and source-evidence checks pass.
 
-Hosted CI for this new checkpoint is pending. At preceding published `5fe4c17`,
+The wider current hosted workflow still has candidate failures. At preceding `5fe4c17`,
 contracts and source-evidence passed, while legacy candidate/transition and
 native-review jobs still failed. No all-catalog green result, Unity parity,
 biological approval or production promotion is claimed. PR #2 remains draft

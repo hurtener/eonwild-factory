@@ -1,0 +1,32 @@
+{
+  "schema": "eonwild.motion.start-handoff-integration.v1",
+  "tested_head": "12677c17d8b756fdc2be99fb1cce1243f5b29e87",
+  "local_full_suite": {
+    "tests_passed": 1081,
+    "subtests_passed": 21,
+    "seconds": 517.84,
+    "exclusions": [],
+    "log_sha256": "091927b673a7001845b4fad6641215bb0db9f6b23fd3e690b17038e61da7e55a"
+  },
+  "actual_handoff": {
+    "status": "PASS",
+    "modes": [
+      "root_motion",
+      "in_place"
+    ],
+    "reader_head": "1f783f87d3604b7a2fe6ae5acb1998569ed6582f",
+    "receipt_sha256": "e04ab630ef2b50bd6c1cd296d1a6d0f1dd4899715c682092e97464e00cef8ba7"
+  },
+  "hosted_ci": {
+    "head": "12677c17d8b756fdc2be99fb1cce1243f5b29e87",
+    "contracts_job": 102297138985,
+    "contracts_status": "SUCCESS",
+    "source_evidence_run": 34297464813,
+    "source_evidence_status": "SUCCESS",
+    "broader_workflow": "IN_PROGRESS_WITH_CANDIDATE_FAILURES"
+  },
+  "stop_export": "RUNNING_AT_CHECKPOINT",
+  "connected_native_review": "PENDING",
+  "unity": "NOT_RUN",
+  "production_approved": false
+}

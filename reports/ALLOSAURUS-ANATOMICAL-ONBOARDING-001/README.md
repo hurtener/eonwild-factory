@@ -19,7 +19,9 @@ admission adds only the geometry contract and produces the checked-in source
 `a403679deb968ec88f7b8b89e3e399cc0881e9cc602e765a6e55934c28ad3826`.
 The reopened neutral full-weight skin error is 0.375 micrometres. Eleven local
 scales with float32 noise were normalized under an explicit 10 micrometre-per-
-metre bound; the maximum reopened world-matrix difference is 6.973 micrometres.
+metre bound; the largest reopened world-matrix component difference is
+6.973e-6. That mixed translation/linear-matrix metric is not a skin-distance
+measurement.
 
 The source's straight parallel legs and all original joint positions and
 lengths were authored as drift-control placeholders. The new hip, knee, ankle,

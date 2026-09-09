@@ -266,7 +266,7 @@
   "findings": [
     "Short steps progressively open toward the V10 steady stride.",
     "Forward head posture retained; no sprint-like folded distal pose or visible adjacent-frame pose jump in inspected frames.",
-    "First recovery step has low visible clearance; native-speed effort assessment remains pending.",
+    "First recovery appears smaller in projection, but exact full-foot skin samples clear the floor by 94.018 mm at0.9s and91.765 mm at1.2s; these do not support a dragging-foot diagnosis. Native-speed effort assessment remains pending.",
     "Proximal thigh crease remains visible; known source surface-intersection issue is not fixed."
   ],
   "boundaries": [
@@ -276,5 +276,6 @@
     "No biological, force-simulation, Unity or production approval."
   ],
   "visual_status": "REVIEW_CANDIDATE_WITH_OPEN_CONCERNS",
-  "production_approved": false
+  "production_approved": false,
+  "selected_clearance_receipt_sha256": "0f90080a95f1a6eead0f9e5b47ded3c7e0f885c349335ac9f948fc0d64e37dc4"
 }
