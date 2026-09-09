@@ -247,13 +247,53 @@ def test_real_v2_grounded_sets_share_inputs_without_changing_v1_recipe():
     ]
 
 
-def test_allosaurus_acquired_fast_walk_changes_only_portable_gait_intent():
-    motion_set = (
-        ROOT
-        / "catalog/motion-sets/allosaurus-engineering-acquired-fast-walk-diagnostic.v1.json"
-    )
+def test_allosaurus_acquired_fast_walk_changes_only_portable_gait_intent(tmp_path):
+    # Reuse the repository synthetic licensed-source fixture. Importing here avoids
+    # a module cycle because test_acquired_reference imports _documents above.
+    from test_acquired_reference import _reference
+
+    baseline, _, motion_set = _documents(tmp_path)
+    baseline["supported_programs"] = ["grounded_gait"]
+    write_json(tmp_path / "clearance.json", {
+        "schema": "eonwild.motion.authored-material-clearance-policy.v1",
+        "id": "synthetic-clearance.v1", "version": 1,
+        "model": "body_height_fraction.v1",
+        "maximum_clearance_body_heights": 0.125,
+        "classification": "source_backed_engineering_candidate",
+    })
+    baseline["locomotion_response_policy"]["regimes"]["grounded"][
+        "authored_material_clearance"
+    ] = bind(tmp_path, tmp_path / "clearance.json")
+    write_json(tmp_path / "baseline.json", baseline)
+    motion_set["baseline"] = bind(tmp_path, tmp_path / "baseline.json")
+    reference = bind(tmp_path, _reference(tmp_path))
+    profiles = {
+        "walk": "heavy-biped.allosaurus-adult-walk-diagnostic.v1.json",
+        "fast-walk": "heavy-biped.acquired-fast-walk.v1.json",
+    }
+    intent_names = {
+        "walk": "heavy-biped.allosaurus-acquired-walk.motion-set.v3.json",
+        "fast-walk": "heavy-biped.allosaurus-acquired-fast-walk.motion-set.v1.json",
+    }
+    intents = {}
+    for name in ("walk", "fast-walk"):
+        profile = tmp_path / f"{name}-program.json"
+        profile.write_bytes((ROOT / "catalog/programs" / profiles[name]).read_bytes())
+        intent = json.loads(
+            (ROOT / "catalog/motion-intents" / intent_names[name]).read_text()
+        )
+        intent["program_profile"] = bind(tmp_path, profile)
+        intent["authored_material_reference"] = reference
+        intent_path = tmp_path / f"{name}-intent.json"
+        write_json(intent_path, intent)
+        intents[name] = bind(tmp_path, intent_path)
+    motion_set["motions"] = [
+        {"name": name, "intent": intents[name]}
+        for name in ("walk", "fast-walk")
+    ]
+    write_json(tmp_path / "set.json", motion_set)
     walk, fast = resolve_motion_set_selection(
-        ROOT, motion_set, ["walk", "fast-walk"]
+        tmp_path, tmp_path / "set.json", ["walk", "fast-walk"]
     )
     assert walk.baseline_bytes == fast.baseline_bytes
     assert walk.baseline_binding == fast.baseline_binding
