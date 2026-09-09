@@ -512,14 +512,47 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
     if not isinstance(primitives, list) or not primitives:
         raise ContractError("rig preparation selected skin requires mesh primitives")
 
+    def physical_accessor_layout(accessor: int) -> tuple[int, int, int, int, int, str, bool]:
+        item, _, width, component_size, _ = source.accessor_layout(accessor)
+        start, count, stride = source.accessor_region(accessor)
+        return (
+            start, count, stride, width * component_size,
+            int(item["componentType"]), str(item["type"]),
+            item.get("normalized") is True,
+        )
+
+    def physical_layouts_overlap(
+        left: tuple[int, int, int, int, int, str, bool],
+        right: tuple[int, int, int, int, int, str, bool],
+    ) -> bool:
+        left_start, left_count, left_stride, left_size = left[:4]
+        right_start, right_count, right_stride, right_size = right[:4]
+        left_row = right_row = 0
+        while left_row < left_count and right_row < right_count:
+            a = left_start + left_row * left_stride
+            b = right_start + right_row * right_stride
+            if a + left_size <= b:
+                left_row += 1
+            elif b + right_size <= a:
+                right_row += 1
+            else:
+                return True
+        return False
+
     def admit_physical_skin_rows(
         position_accessor: int,
         joint_accessors: list[int],
         weight_accessors: list[int],
         *,
-        bundles: set[tuple[int, ...]],
-        accessor_owners: dict[int, tuple[int, ...]],
-    ) -> tuple[bool, tuple[int, ...]]:
+        bundles: set[tuple[tuple[int, int, int, int, int, str, bool], ...]],
+        accessor_owners: list[tuple[
+            tuple[int, int, int, int, int, str, bool],
+            tuple[tuple[int, int, int, int, int, str, bool], ...],
+        ]],
+    ) -> tuple[
+        bool,
+        tuple[tuple[int, int, int, int, int, str, bool], ...],
+    ]:
         """Admit one physical vertex/skin row bundle exactly once.
 
         Multiple material primitives may share every accessor.  Reprocessing
@@ -527,22 +560,30 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
         Partial aliases are rejected because they do not identify one
         unambiguous physical row ownership model.
         """
-        bundle = (
-            position_accessor,
-            *joint_accessors,
-            *weight_accessors,
+        bundle = tuple(
+            physical_accessor_layout(accessor)
+            for accessor in (
+                position_accessor,
+                *joint_accessors,
+                *weight_accessors,
+            )
         )
-        for accessor in bundle:
-            owner = accessor_owners.get(accessor)
-            if owner is not None and owner != bundle:
+        for layout in bundle:
+            for owned_layout, owner in accessor_owners:
+                if owner != bundle and physical_layouts_overlap(layout, owned_layout):
+                    raise ContractError(
+                        "rig preparation skin primitives partially alias accessors"
+                    )
+        if bundle in bundles:
+            return False, bundle
+        for left_index, left in enumerate(bundle):
+            if any(physical_layouts_overlap(left, right)
+                   for right in bundle[left_index + 1:]):
                 raise ContractError(
                     "rig preparation skin primitives partially alias accessors"
                 )
-        if bundle in bundles:
-            return False, bundle
         bundles.add(bundle)
-        for accessor in bundle:
-            accessor_owners[accessor] = bundle
+        accessor_owners.extend((layout, bundle) for layout in bundle)
         return True, bundle
 
     for transfer_index, raw in enumerate(transfers):
@@ -589,8 +630,11 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
         target_slot = joints.index(target_node)
         selected_count = changed_count = 0
         transferred_weights = []
-        physical_bundles: set[tuple[int, ...]] = set()
-        physical_accessor_owners: dict[int, tuple[int, ...]] = {}
+        physical_bundles: set[tuple[tuple[int, int, int, int, int, str, bool], ...]] = set()
+        physical_accessor_owners: list[tuple[
+            tuple[int, int, int, int, int, str, bool],
+            tuple[tuple[int, int, int, int, int, str, bool], ...],
+        ]] = []
         for primitive_index, primitive in enumerate(primitives):
             attributes = primitive.get("attributes") if isinstance(primitive, Mapping) else None
             if not isinstance(attributes, Mapping) or "POSITION" not in attributes:
@@ -687,7 +731,9 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
             "changed_vertex_count": changed_count,
             "maximum_transferred_weight": max(transferred_weights),
         })
-    claimed_vertices: set[tuple[tuple[int, ...], int]] = set()
+    claimed_vertices: set[tuple[
+        tuple[tuple[int, int, int, int, int, str, bool], ...], int,
+    ]] = set()
     weighted_receipts = []
     joint_row_cache: dict[int, np.ndarray] = {}
     weight_row_cache: dict[int, np.ndarray] = {}
@@ -709,8 +755,11 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
         width = float(selector["blend_width_m"])
         changed = 0
         maximum_amount = 0.0
-        physical_bundles: set[tuple[int, ...]] = set()
-        physical_accessor_owners: dict[int, tuple[int, ...]] = {}
+        physical_bundles: set[tuple[tuple[int, int, int, int, int, str, bool], ...]] = set()
+        physical_accessor_owners: list[tuple[
+            tuple[int, int, int, int, int, str, bool],
+            tuple[tuple[int, int, int, int, int, str, bool], ...],
+        ]] = []
         for primitive_index, primitive in enumerate(primitives):
             attrs = primitive.get("attributes") if isinstance(primitive, Mapping) else None
             suffixes = sorted(

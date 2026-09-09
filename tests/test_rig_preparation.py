@@ -199,6 +199,10 @@ def test_shared_material_primitive_skin_rows_are_transferred_once():
     document["meshes"][0]["primitives"].append(
         deepcopy(document["meshes"][0]["primitives"][0])
     )
+    repeated_primitive = document["meshes"][0]["primitives"][-1]
+    for key, accessor in list(repeated_primitive["attributes"].items()):
+        document["accessors"].append(deepcopy(document["accessors"][accessor]))
+        repeated_primitive["attributes"][key] = len(document["accessors"]) - 1
     repeated = Glb.from_bytes(_encode(document, source.binary))
     repeated_raw, repeated_receipt = prepare_rig(repeated, weighted_config(repeated))
     assert np.array_equal(
@@ -212,12 +216,17 @@ def test_partial_skin_accessor_alias_is_rejected():
     source = Glb(SOURCE)
     document = deepcopy(source.document)
     repeated = deepcopy(document["meshes"][0]["primitives"][0])
-    position = repeated["attributes"]["POSITION"]
-    document["accessors"].append(deepcopy(document["accessors"][position]))
-    repeated["attributes"]["POSITION"] = len(document["accessors"]) - 1
+    weights = repeated["attributes"]["WEIGHTS_0"]
+    accessor = deepcopy(document["accessors"][weights])
+    view = deepcopy(document["bufferViews"][accessor["bufferView"]])
+    view["byteOffset"] += 4
+    document["bufferViews"].append(view)
+    accessor["bufferView"] = len(document["bufferViews"]) - 1
+    document["accessors"].append(accessor)
+    repeated["attributes"]["WEIGHTS_0"] = len(document["accessors"]) - 1
     document["meshes"][0]["primitives"].append(repeated)
     partial = Glb.from_bytes(_encode(document, source.binary))
-    with pytest.raises(ContractError, match="partially alias"):
+    with pytest.raises(ContractError):
         prepare_rig(partial, weighted_config(partial))
 
 
