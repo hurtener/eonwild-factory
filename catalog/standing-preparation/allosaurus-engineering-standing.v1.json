@@ -1,0 +1,30 @@
+{
+  "classification": "source_bound_authored_engineering_standing_estimate",
+  "coordinate": {
+    "forward": [0.0, 0.0, 1.0],
+    "frame": "source_world",
+    "lateral": [1.0, 0.0, 0.0],
+    "up": [0.0, 1.0, 0.0]
+  },
+  "evidence": [
+    {
+      "confidence": "low",
+      "evidence_kind": "authored_estimate_with_comparative_bounds",
+      "reference": "Gatesy, Baeker and Hutchinson (2009), Constraint-based exclusion of limb poses for reconstructing theropod dinosaur locomotion",
+      "scope": "The paper supplies a comparative constraint-based theropod pose method, not these angles. The 30 degree forward femur, 125 degree knee and 25 degree forward metatarsus are Eonwild's flexed load-bearing standing hypothesis and are not a reconstructed Allosaurus pose."
+    }
+  ],
+  "hip_sagittal_degrees": 30.0,
+  "id": "allosaurus-engineering-standing.v1",
+  "knee_interior_degrees": 125.0,
+  "limitations": [
+    "This is a low-confidence authored standing estimate, not a fossil-derived joint reconstruction.",
+    "The MTP/pad and toe world orientations are retained after the declared metatarsus direction is applied; distal posture remains separately reviewable.",
+    "No force, muscle capacity, balance or biological optimality follows from this pose."
+  ],
+  "model": "bilateral_semantic_sagittal_standing.v1",
+  "metatarsus_sagittal_degrees": 25.0,
+  "schema": "eonwild.motion.standing-pose-preparation.v1",
+  "source_sha256": "f1ac3ddebc2b8471af1a55439d0631ed0d350a750e59edaa661a9cd76ced4684",
+  "version": 1
+}
