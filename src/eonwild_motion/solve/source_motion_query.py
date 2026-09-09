@@ -40,11 +40,10 @@ from .airborne_gait import (
     _freeze_data,
     _qinv,
     _qmul,
-    _qrotate,
-    _qrotvec,
     _world_matrices,
     build_airborne_solve_context,
     driven_body_response,
+    grounded_touchdown_target,
     periodic_response,
     sample_periodic_response,
     solve_airborne_plan_sample,
@@ -765,32 +764,23 @@ class SourceMotionQuery:
         if side not in ("left", "right"):
             raise ContractError("touchdown observation side must be left or right")
         time = _finite_time(time_s)
-        value = self.evaluate(time)
-        if isinstance(value, SourceMotionUnavailable):
-            raise ContractError("touchdown observation is unavailable")
+        self._validate_domain(time)
+        index = self._exact_index(time)
+        row = self._sample_row(time, apply_clearance=False)
         try:
-            row_foot = value.row["feet"][side]
-            pose_foot = value.pose.feet[side]
+            row_foot = row["feet"][side]
             touchdown = float(row_foot["touchdown_time_s"])
-            chain = self._context.legs[side]
-            neutral_ankle = np.asarray(self._context.base_w[chain[2]][:3, 3], dtype=float)
-            neutral_foot = np.asarray(self._context.base_w[chain[3]][:3, 3], dtype=float)
-            pitch = float(pose_foot["solved_foot_pitch_degrees"])
-            target_foot = np.asarray(pose_foot["target_foot_world_m"], dtype=float)
-        except (KeyError, TypeError, ValueError, IndexError) as exc:
+        except (KeyError, TypeError, ValueError) as exc:
             raise ContractError("touchdown observation is incomplete") from exc
         if (row_foot.get("contact") is not True
-                or not math.isclose(touchdown, time, rel_tol=0.0, abs_tol=1e-10)
-                or not math.isfinite(pitch) or target_foot.shape != (3,)
-                or not np.isfinite(target_foot).all()):
+                or not math.isclose(touchdown, time, rel_tol=0.0, abs_tol=1e-10)):
             raise ContractError("requested source time is not a canonical touchdown")
-        rotation = _qrotvec(tuple(
-            self._context.lateral * math.radians(pitch)
-        ))
-        target_ankle = target_foot - np.asarray(_qrotate(
-            rotation, tuple(neutral_foot - neutral_ankle)
-        ))
-        hip = np.asarray(value.worlds[chain[0]][:3, 3], dtype=float)
+        target = grounded_touchdown_target(
+            self._context,
+            row,
+            side=side,
+            body_response_sample=self._body_sample(index, row),
+        )
         return _freeze_data({
             "source_geometry_sha256": hashlib.sha256(self._source.raw).hexdigest(),
             "body_height_m": float(self._context.body_height),
@@ -803,8 +793,8 @@ class SourceMotionQuery:
                 "up": self._context.up.tolist(),
                 "forward": self._context.forward.tolist(),
             },
-            "hip_world_m": hip.tolist(),
-            "target_ankle_world_m": target_ankle.tolist(),
+            "hip_world_m": target["hip_world_m"],
+            "target_ankle_world_m": target["target_ankle_world_m"],
         })
 
     @staticmethod
