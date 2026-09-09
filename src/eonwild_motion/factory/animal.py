@@ -169,7 +169,7 @@ def verify_source_calibration(animal: dict, source: Glb, roles: Mapping[str, Any
                               contact_profile: Mapping[str, Any], forward: Any, up: Any) -> dict:
     """Recompute the committed source measurements from the bound rig and skin."""
     from ..contact_gauge import (_column_major_matrix, _mat_mul, _mat_point,
-        _normalize_skin_weights, _read_glb_accessor)
+        _normalize_skin_weights, _read_glb_accessor, _validate_contact_skin_binding)
     forward,up=np.asarray(forward,dtype=float),np.asarray(up,dtype=float)
     worlds=_world_matrices(source,source.rest_translation,source.rest_rotation,source.rest_scale)
     measured={}
@@ -180,7 +180,9 @@ def verify_source_calibration(animal: dict, source: Glb, roles: Mapping[str, Any
         segments=[float(np.linalg.norm(b-a)) for a,b in zip(points,points[1:])]
         measured[key]=sum(segments);measured[f"{side}_semantic_segments"]=segments
     try:
-        geometry=contact_profile["geometry"];skin=source.document["skins"][int(geometry["skin_index"])]
+        geometry=contact_profile["geometry"]
+        _validate_contact_skin_binding(source, geometry)
+        skin=source.document["skins"][int(geometry["skin_index"])]
         positions=_read_glb_accessor(source,geometry["position_accessor"],label="animal source positions")
         joints=[_read_glb_accessor(source,index,label="animal source joints") for index in geometry["joint_accessors"]]
         weights=[_read_glb_accessor(source,index,label="animal source weights") for index in geometry["weight_accessors"]]

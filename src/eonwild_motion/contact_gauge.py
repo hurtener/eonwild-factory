@@ -720,10 +720,15 @@ def load_contact_gauge_source(path: Path) -> dict[str, Any]:
         value = geometry[key]
         if (
             not isinstance(value, list)
-            or len(value) != 3
+            or not 1 <= len(value) <= 3
             or any(not isinstance(item, int) or isinstance(item, bool) or item < 0 for item in value)
+            or len(value) != len(set(value))
         ):
-            raise ContractError(f"source geometry {key} must contain three accessor indices")
+            raise ContractError(
+                f"source geometry {key} must contain one to three unique accessor indices"
+            )
+    if len(geometry["joint_accessors"]) != len(geometry["weight_accessors"]):
+        raise ContractError("source joint and weight accessor counts differ")
 
     landmarks = geometry["landmarks"]
     if not isinstance(landmarks, Mapping):
@@ -804,6 +809,66 @@ def load_contact_gauge_source(path: Path) -> dict[str, Any]:
     if not isinstance(thresholds["minimum_active_points"], int) or thresholds["minimum_active_points"] < 1:
         raise ContractError("source thresholds.minimum_active_points must be a positive integer")
     return source
+
+
+def _validate_contact_skin_binding(glb: Glb, geometry: Mapping[str, Any]) -> None:
+    """Bind profile influence arrays to one complete skinned mesh primitive."""
+    try:
+        node = glb.name_to_node[geometry["mesh_node"]]
+        source_node = glb.nodes[node]
+        skin_index = geometry["skin_index"]
+        mesh_index = source_node["mesh"]
+        primitives = glb.document["meshes"][mesh_index]["primitives"]
+    except (KeyError, TypeError, IndexError) as exc:
+        raise ContractError("source geometry does not identify a skinned mesh") from exc
+    if (
+        source_node.get("skin") != skin_index
+        or type(mesh_index) is not int
+        or not isinstance(primitives, list)
+        or len(primitives) != 1
+        or not isinstance(primitives[0], Mapping)
+        or not isinstance(primitives[0].get("attributes"), Mapping)
+    ):
+        raise ContractError("source geometry must bind one primitive and its selected skin")
+    attributes = primitives[0]["attributes"]
+    accessor_count = len(glb.document.get("accessors", []))
+    declared = (
+        ("position", [geometry["position_accessor"]]),
+        ("joint", geometry["joint_accessors"]),
+        ("weight", geometry["weight_accessors"]),
+    )
+    for label, indices in declared:
+        for row, index in enumerate(indices):
+            suffix = "" if label == "position" else f"[{row}]"
+            if type(index) is not int or not 0 <= index < accessor_count:
+                raise ContractError(
+                    f"source geometry {label}{suffix} accessor index {index!r} out of range"
+                )
+    suffixes = [
+        key.removeprefix("JOINTS_")
+        for key in attributes
+        if key.startswith("JOINTS_")
+    ]
+    if any(not suffix.isdecimal() for suffix in suffixes):
+        raise ContractError("source geometry skin influence suffix is malformed")
+    suffixes.sort(key=int)
+    if (
+        not suffixes
+        or any(f"WEIGHTS_{suffix}" not in attributes for suffix in suffixes)
+        or any(
+            key.startswith("WEIGHTS_")
+            and key.removeprefix("WEIGHTS_") not in suffixes
+            for key in attributes
+        )
+        or geometry["position_accessor"] != attributes.get("POSITION")
+        or geometry["joint_accessors"]
+        != [attributes[f"JOINTS_{suffix}"] for suffix in suffixes]
+        or geometry["weight_accessors"]
+        != [attributes[f"WEIGHTS_{suffix}"] for suffix in suffixes]
+    ):
+        raise ContractError(
+            "source geometry skin accessors differ from the complete primitive attributes"
+        )
 
 
 def _coerce_frames(frames: Sequence[Mapping[str, Any]]) -> tuple[_Frame, ...]:
@@ -2019,6 +2084,7 @@ def _source_frames(
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     geometry = source["geometry"]
     _validate_glb_document_tables(glb)
+    _validate_contact_skin_binding(glb, geometry)
     profile_accessor_indices = {
         "source geometry position": geometry["position_accessor"],
         **{

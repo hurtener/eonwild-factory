@@ -1,0 +1,109 @@
+{
+  "schema": "eonwild.motion.semantic-rig.v1",
+  "id": "allosaurus-engineering-v1",
+  "version": 1,
+  "coordinate": {
+    "units": "metres",
+    "handedness": "right",
+    "upAxis": "Y",
+    "forwardAxis": "Z"
+  },
+  "roles": {
+    "root": "Bone_000",
+    "pelvis": "Bone_001",
+    "spine": [
+      "Bone_003",
+      "Bone_002",
+      "Bone_017",
+      "Bone_016"
+    ],
+    "chest": "Bone_015",
+    "neck": [
+      "Bone_047",
+      "Bone_046"
+    ],
+    "head": "Bone_045",
+    "tail": [
+      "Bone_014",
+      "Bone_013",
+      "Bone_012",
+      "Bone_011",
+      "Bone_010",
+      "Bone_009",
+      "Bone_008",
+      "Bone_007",
+      "Bone_006",
+      "Bone_005",
+      "Bone_004"
+    ],
+    "legs": {
+      "left": {
+        "contactChain": [
+          "Bone_023",
+          "Bone_022",
+          "Bone_021",
+          "Bone_020"
+        ],
+        "toeChains": [
+          [
+            "Bone_019",
+            "Bone_018",
+            "AllosaurusToeEndpoint.L"
+          ]
+        ]
+      },
+      "right": {
+        "contactChain": [
+          "Bone_029",
+          "Bone_028",
+          "Bone_027",
+          "Bone_026"
+        ],
+        "toeChains": [
+          [
+            "Bone_025",
+            "Bone_024",
+            "AllosaurusToeEndpoint.R"
+          ]
+        ]
+      }
+    },
+    "leftLeg": [
+      "Bone_023",
+      "Bone_022",
+      "Bone_021",
+      "Bone_020"
+    ],
+    "rightLeg": [
+      "Bone_029",
+      "Bone_028",
+      "Bone_027",
+      "Bone_026"
+    ],
+    "leftFoot": "Bone_020",
+    "rightFoot": "Bone_026",
+    "jaw_lower": "Bone_044"
+  },
+  "expectedParents": {
+    "pelvis": "root",
+    "chest": "spine_parent",
+    "neck": [
+      "chest",
+      "neck:0"
+    ],
+    "head": "neck:1"
+  },
+  "spineParent": "Bone_016",
+  "accessorContract": {
+    "componentType": 5126,
+    "type": "VEC4",
+    "byteStride": 16,
+    "commonTimeline": true,
+    "interpolation": "LINEAR"
+  },
+  "provenance": {
+    "source": "Allosaurus rig-preparation v2 engineering landmarks",
+    "status": "provisional",
+    "purpose": "non-promoted transfer diagnostic; no fossil joint-center claim"
+  }
+}

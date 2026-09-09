@@ -147,3 +147,75 @@ def test_preparation_rejects_duplicate_articulation_node():
     candidate["articulations"].append(duplicate)
     with pytest.raises(ContractError, match="roles and nodes"):
         prepare_rig(source, candidate)
+
+
+def test_preparation_adds_non_skinned_semantic_endpoint_and_preserves_surface():
+    source = Glb(SOURCE)
+    candidate = config(source)
+    candidate["endpoints"] = [{
+        "name": "renamed_toe_endpoint",
+        "parent": "Bone_042",
+        "world_origin_m": [2.1, 0.05, 0.3],
+        "basis": "measured_source_world",
+    }]
+    raw, receipt = prepare_rig(source, candidate)
+    reopened = Glb.from_bytes(raw)
+    assert reopened.node_parent_name("renamed_toe_endpoint") == "Bone_042"
+    worlds = np.asarray(_world_matrices(
+        reopened, reopened.rest_translation,
+        reopened.rest_rotation, reopened.rest_scale,
+    ))
+    assert np.allclose(
+        worlds[reopened.name_to_node["renamed_toe_endpoint"]][:3, 3],
+        [2.1, 0.05, 0.3], atol=3e-6, rtol=0,
+    )
+    assert reopened.name_to_node["renamed_toe_endpoint"] not in (
+        reopened.document["skins"][0]["joints"]
+    )
+    assert receipt["added_endpoints"] == [{
+        "name": "renamed_toe_endpoint",
+        "parent": "Bone_042",
+        "world_origin_m": [2.1, 0.05, 0.3],
+        "skin_influence": False,
+    }]
+    assert receipt["measurements"]["maximum_reopened_neutral_skin_error_m"] < 3e-6
+
+
+@pytest.mark.parametrize("case", ["name", "parent", "origin", "basis"])
+def test_preparation_rejects_malformed_semantic_endpoint(case):
+    source = Glb(SOURCE)
+    candidate = config(source)
+    endpoint = {
+        "name": "renamed_toe_endpoint",
+        "parent": "Bone_042",
+        "world_origin_m": [2.1, 0.05, 0.3],
+        "basis": "measured_source_world",
+    }
+    candidate["endpoints"] = [endpoint]
+    if case == "name":
+        endpoint["name"] = "Bone_042"
+    elif case == "parent":
+        endpoint["parent"] = "missing"
+    elif case == "origin":
+        endpoint["world_origin_m"][0] = float("nan")
+    else:
+        endpoint["basis"] = "guessed"
+    with pytest.raises(ContractError):
+        prepare_rig(source, candidate)
+
+
+@pytest.mark.parametrize(
+    "policy",
+    [
+        {"maximum_axis_spread": 1e-5, "maximum_unit_deviation": 1e-5},
+        {"maximum_axis_spread": 1e-6, "maximum_unit_deviation": 1e-5, "target": "unit"},
+        {"maximum_axis_spread": True, "maximum_unit_deviation": 1e-5, "target": "unit"},
+        {"maximum_axis_spread": 1e-5, "maximum_unit_deviation": 1e-5, "target": "source"},
+    ],
+)
+def test_preparation_rejects_malformed_near_uniform_scale_policy(policy):
+    source = Glb(SOURCE)
+    candidate = config(source)
+    candidate["near_uniform_scale_normalization"] = policy
+    with pytest.raises(ContractError, match="near-uniform scale normalization"):
+        prepare_rig(source, candidate)

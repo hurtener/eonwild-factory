@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from ..contact_gauge import _read_glb_accessor
+from ..contact_gauge import _read_glb_accessor, _validate_contact_skin_binding
 from ..errors import ContractError
 from .airborne_gait import _unit
 
@@ -50,6 +50,7 @@ class SkinRig:
                         for key, value in roles.items() if key in ("root", "pelvis", "spine", "chest", "neck", "head", "tail", "jaw_lower")}
         self.legs = {side: [glb.name_to_node[n] for n in roles["legs"][side]["contactChain"]] for side in ("left", "right")}
         geometry = contact_profile["geometry"]
+        _validate_contact_skin_binding(glb, geometry)
         skin = glb.document["skins"][geometry["skin_index"]]
         self.joints = np.asarray(skin["joints"], dtype=int)
         def read(index):

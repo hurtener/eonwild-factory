@@ -92,11 +92,18 @@ def _is_descendant(node: int, ancestor: int, parents: list[int | None]) -> bool:
 
 
 def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str, Any]]:
-    config = _exact_object(config, {
+    legacy_fields = {
         "schema", "id", "source_sha256", "skin_index", "reparents",
         "coordinate", "pivot_relocations", "articulations", "weight_transfers",
         "evidence", "limitations",
-    }, "rig preparation")
+    }
+    optional_fields = {"endpoints", "near_uniform_scale_normalization"}
+    if (
+        not isinstance(config, Mapping)
+        or not legacy_fields <= set(config)
+        or set(config) - legacy_fields - optional_fields
+    ):
+        raise ContractError("rig preparation contains missing or unknown fields")
     if config["schema"] != SCHEMA:
         raise ContractError("unsupported rig preparation schema")
     _name(config["id"], "rig preparation id")
@@ -142,6 +149,7 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
 
     document = deepcopy(source.document)
     nodes = document["nodes"]
+    original_node_count = len(nodes)
     original_parents = _parents(nodes)
     original_world = np.asarray(_world_matrices(
         source, source.rest_translation, source.rest_rotation, source.rest_scale), dtype=float)
@@ -182,11 +190,72 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
         nodes[parent].setdefault("children", []).append(child)
         reparented.add(child)
 
+    endpoints = config.get("endpoints", [])
+    if not isinstance(endpoints, list):
+        raise ContractError("rig preparation endpoints must be an array")
+    endpoint_rows: list[dict[str, Any]] = []
+    endpoint_names: set[str] = set()
+    for index, raw in enumerate(endpoints):
+        row = _exact_object(
+            raw, {"name", "parent", "world_origin_m", "basis"},
+            f"endpoint[{index}]",
+        )
+        endpoint_name = _name(row["name"], f"endpoint[{index}] name")
+        parent_name = _name(row["parent"], f"endpoint[{index}] parent")
+        if endpoint_name in names or endpoint_name in endpoint_names:
+            raise ContractError("rig preparation endpoint name must be unique")
+        if parent_name not in names:
+            raise ContractError("rig preparation endpoint parent must be an existing node")
+        if row["basis"] != "measured_source_world":
+            raise ContractError("rig preparation endpoint basis is unsupported")
+        endpoint_names.add(endpoint_name)
+        node = len(nodes)
+        nodes.append({"name": endpoint_name})
+        nodes[names[parent_name]].setdefault("children", []).append(node)
+        endpoint_rows.append({
+            "name": endpoint_name,
+            "parent": parent_name,
+            "node": node,
+            "world_origin_m": _vec3(
+                row["world_origin_m"], f"endpoint[{index}] origin"
+            ),
+        })
+
+    scale_policy = config.get("near_uniform_scale_normalization")
+    if scale_policy is not None:
+        scale_policy = _exact_object(
+            scale_policy,
+            {"maximum_axis_spread", "maximum_unit_deviation", "target"},
+            "near-uniform scale normalization",
+        )
+        if scale_policy["target"] != "unit":
+            raise ContractError("near-uniform scale normalization target is unsupported")
+        limits = []
+        for key in ("maximum_axis_spread", "maximum_unit_deviation"):
+            value = scale_policy[key]
+            if (
+                isinstance(value, bool)
+                or not isinstance(value, (int, float))
+                or not math.isfinite(value)
+                or not 1e-6 < float(value) <= 1e-4
+            ):
+                raise ContractError(
+                    "near-uniform scale normalization limits must lie within (1e-6, 1e-4]"
+                )
+            limits.append(float(value))
+        maximum_scale_spread, maximum_unit_deviation = limits
+
     new_parents = _parents(nodes)
     pivots = config["pivot_relocations"]
     if not isinstance(pivots, list):
         raise ContractError("rig preparation pivot relocations must be an array")
-    desired_world = original_world.copy()
+    desired_world = np.concatenate(
+        (
+            original_world.copy(),
+            np.repeat(np.eye(4)[None, :, :], len(endpoint_rows), axis=0),
+        ),
+        axis=0,
+    )
     pivot_nodes: set[int] = set()
     for index, raw in enumerate(pivots):
         row = _exact_object(raw, {"node", "world_origin_m", "basis"}, f"pivot[{index}]")
@@ -200,6 +269,11 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
             raise ContractError("rig preparation pivot nodes must be unique")
         desired_world[node, :3, 3] = _vec3(row["world_origin_m"], f"pivot[{index}] origin")
         pivot_nodes.add(node)
+
+    for row in endpoint_rows:
+        parent = names[row["parent"]]
+        desired_world[row["node"]] = desired_world[parent]
+        desired_world[row["node"], :3, 3] = row["world_origin_m"]
 
     articulations = config["articulations"]
     if not isinstance(articulations, list):
@@ -260,25 +334,66 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
 
     output_world: dict[int, np.ndarray] = {}
     touched: list[str] = []
+    normalized_scales: list[dict[str, Any]] = []
     projection_errors: list[float] = []
     for node in sorted(range(len(nodes)), key=depth):
         parent = new_parents[node]
         parent_world = np.eye(4) if parent is None else output_world[parent]
         target = desired_world[node]
         local = np.linalg.solve(parent_world, target)
-        old_parent = original_parents[node]
-        old_parent_world = np.eye(4) if old_parent is None else original_world[old_parent]
-        old_local = np.linalg.solve(old_parent_world, original_world[node])
-        changed = parent != old_parent or not np.allclose(local, old_local, atol=1e-12, rtol=0.0)
+        if node < original_node_count:
+            old_parent = original_parents[node]
+            old_parent_world = np.eye(4) if old_parent is None else original_world[old_parent]
+            old_local = np.linalg.solve(old_parent_world, original_world[node])
+            changed = parent != old_parent or not np.allclose(
+                local, old_local, atol=1e-12, rtol=0.0
+            )
+        else:
+            changed = True
+        local_scale = np.linalg.norm(local[:3, :3], axis=0)
+        normalize_scale = bool(
+            scale_policy is not None
+            and (
+                float(np.ptp(local_scale)) > 1e-6
+                or float(np.max(np.abs(local_scale - 1.0))) > 1e-6
+            )
+        )
+        if normalize_scale:
+            if (
+                float(np.ptp(local_scale)) > maximum_scale_spread
+                or float(np.max(np.abs(local_scale - 1.0))) > maximum_unit_deviation
+            ):
+                raise ContractError(
+                    "rig preparation near-uniform scale exceeds its declared normalization limits"
+                )
+            changed = True
         if changed:
             translation, rotation, scale, diagnostic = _decompose_bind_local(
                 local, label=f"prepared local[{node}]")
+            if normalize_scale:
+                normalized_scales.append({
+                    "node": nodes[node].get("name", f"node_{node}"),
+                    "input_scale": list(scale),
+                    "output_scale": [1.0, 1.0, 1.0],
+                })
+                scale = [1.0, 1.0, 1.0]
             entry = nodes[node]
             entry.pop("matrix", None)
             entry["translation"], entry["rotation"], entry["scale"] = translation, rotation, scale
             touched.append(entry.get("name", f"node_{node}"))
             projection_errors.append(diagnostic["linear_projection_error"])
-        output_world[node] = target
+            x, y, z, w = rotation
+            rotation_matrix = np.array([
+                [1 - 2 * (y * y + z * z), 2 * (x * y - z * w), 2 * (x * z + y * w)],
+                [2 * (x * y + z * w), 1 - 2 * (x * x + z * z), 2 * (y * z - x * w)],
+                [2 * (x * z - y * w), 2 * (y * z + x * w), 1 - 2 * (x * x + y * y)],
+            ])
+            local_output = np.eye(4)
+            local_output[:3, :3] = rotation_matrix * np.asarray(scale)
+            local_output[:3, 3] = translation
+            output_world[node] = parent_world @ local_output
+        else:
+            output_world[node] = target
 
     mesh_world = output_world[mesh_node]
     inverse_accessor = _accessor_index(
@@ -456,8 +571,16 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
     maximum_world_error = float(np.max(np.abs(reopened_world - desired_world)))
     maximum_skin_error, vertex_count = _skin_reconstruction_error(
         reopened, skin_index=skin_index, mesh_node=mesh_node)
-    if maximum_world_error > 3e-6 or maximum_skin_error > 3e-6:
-        raise ContractError("rig preparation exceeds reopened neutral preservation tolerance")
+    world_limit = (
+        max(3e-6, maximum_scale_spread)
+        if scale_policy is not None
+        else 3e-6
+    )
+    if maximum_world_error > world_limit or maximum_skin_error > 3e-6:
+        raise ContractError(
+            "rig preparation exceeds reopened neutral preservation tolerance: "
+            f"world={maximum_world_error:.9g}, skin={maximum_skin_error:.9g}"
+        )
     receipt = {
         "schema": "eonwild.motion.rig-preparation-receipt.v1",
         "status": "NON_PROMOTED_CANDIDATE",
@@ -475,6 +598,19 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
         "animations": len(reopened.document.get("animations", [])),
         "reparented_nodes": [source.nodes[node].get("name", str(node)) for node in sorted(reparented)],
         "relocated_pivots": [source.nodes[node].get("name", str(node)) for node in sorted(pivot_nodes)],
+        "added_endpoints": [
+            {
+                "name": row["name"],
+                "parent": row["parent"],
+                "world_origin_m": row["world_origin_m"].tolist(),
+                "skin_influence": False,
+            }
+            for row in endpoint_rows
+        ],
+        "near_uniform_scale_normalization": {
+            "policy": deepcopy(scale_policy),
+            "nodes": normalized_scales,
+        } if scale_policy is not None else None,
         "touched_local_transforms": touched,
         "articulations": articulation_rows,
         "weight_transfers": weight_transfer_rows,
@@ -484,7 +620,7 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
             "maximum_reopened_world_matrix_error": maximum_world_error,
             "maximum_reopened_neutral_skin_error_m": maximum_skin_error,
         },
-        "limits": {"reopened_world_matrix": 3e-6, "neutral_skin_m": 3e-6},
+        "limits": {"reopened_world_matrix": world_limit, "neutral_skin_m": 3e-6},
         "limitations": list(config["limitations"]),
     }
     if vertex_count != source_vertex_count:
