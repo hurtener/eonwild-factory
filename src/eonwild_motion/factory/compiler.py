@@ -17,11 +17,17 @@ from typing import Any
 
 import numpy as np
 
+from ..contracts.v9_models import canonical_hash
 from ..errors import ContractError
 from ..glb.container import Glb
 from ..glb.animation import read_animation_tracks
 from ..layers.leg_contact_resolve_v3 import _clip_state, _pose, _world_matrices, _world_position
-from ..planning.airborne_gait import AirborneGait, build_airborne_plan, load_airborne_gait
+from ..planning.airborne_gait import (
+    AirborneGait,
+    build_airborne_plan,
+    load_airborne_choreography,
+    load_airborne_gait,
+)
 from ..planning.grounded_gait import GroundedGait, build_grounded_plan, load_grounded_gait
 from ..planning.parameters import gait_parameters
 from ..solve.airborne_gait import solve_airborne_gait, evaluate_airborne_skin_with_authority
@@ -36,6 +42,15 @@ from ..solve.performance import load_performance, decorate_plan
 from ..solve.gait_response import (
     assemble_baseline_performance,
     resolve_gait_response,
+)
+from ..solve.locomotion_regime_response import (
+    airborne_response_receipt,
+    decorate_airborne_response_plan,
+    load_airborne_body_response_policy,
+)
+from ..planning.grounded_intent_resolution import (
+    measure_grounded_touchdown_geometry,
+    resolve_grounded_intent,
 )
 from ..solve.skin_targets import solve_with_skin_targets, evaluate_skin
 from ..solve.support_anchors import CanonicalSupportAnchorProvider
@@ -61,6 +76,36 @@ from .motion_set import (
 
 SCHEMA = "eonwild.motion.factory-recipe.v1"
 PROGRAMS = ("airborne_gait", "grounded_gait", "supported_action", "gait_transition")
+
+
+def _airborne_gait_with_shared_articulation(
+    gait: AirborneGait, articulation: Any
+) -> AirborneGait:
+    """Adapt closed solver scalars to one baseline-owned articulation profile."""
+    if articulation is None:
+        raise ContractError("v2 airborne locomotion requires shared articulation")
+    phases = (articulation.support, articulation.swing)
+    knee_min = min(phase["knee_interior_degrees"].hard_min_deg for phase in phases)
+    knee_max = max(phase["knee_interior_degrees"].hard_max_deg for phase in phases)
+    ankle_min = min(phase["ankle_interior_degrees"].hard_min_deg for phase in phases)
+    ankle_max = max(phase["ankle_interior_degrees"].hard_max_deg for phase in phases)
+    hip_min = min(phase["hip_sagittal_degrees"].hard_min_deg for phase in phases)
+    hip_max = max(phase["hip_sagittal_degrees"].hard_max_deg for phase in phases)
+    # AirborneGait's compatibility scalar is open at 180 while the authoritative
+    # articulation profile admits the closed engineering endpoint. The profile
+    # remains the final per-row authority; nextafter only represents it in the
+    # older scalar contract.
+    def open_max(value: float) -> float:
+        return math.nextafter(180.0, -math.inf) if value == 180.0 else value
+    return replace(
+        gait,
+        knee_min_interior_degrees=knee_min,
+        knee_max_interior_degrees=open_max(knee_max),
+        ankle_min_interior_degrees=ankle_min,
+        ankle_max_interior_degrees=open_max(ankle_max),
+        hip_extension_limit_degrees=max(1e-12, -hip_min),
+        hip_flexion_limit_degrees=max(0.0, hip_max),
+    )
 
 
 def _load_recipe_document(recipe: Any, root: Path) -> tuple[dict, dict[str, Path]]:
@@ -258,6 +303,11 @@ def compile_recipe(
         recipe_bytes = json_bytes(recipe)
         recipe, paths = _load_recipe_document(recipe, root)
     # Compile only from bytes whose hashes were checked, not later rereads.
+    motion_set_v2 = (
+        _motion_set_resolution is not None
+        and json.loads(_motion_set_resolution.baseline_bytes).get("schema")
+        == "eonwild.motion.motion-baseline.v2"
+    )
     snapshots = {name: path.read_bytes() for name, path in paths.items()}
     for name, raw in snapshots.items():
         if digest(raw) != recipe[name]["sha256"]:
@@ -290,7 +340,14 @@ def compile_recipe(
     locomotion_gait = None
     transition = None
     if recipe["program"] == "airborne_gait":
-        gait = load_airborne_gait(profile)
+        gait = (
+            load_airborne_choreography(profile)
+            if motion_set_v2 else load_airborne_gait(profile)
+        )
+        if motion_set_v2:
+            gait = _airborne_gait_with_shared_articulation(
+                gait, articulation_profile
+            )
         locomotion_gait = gait
         plan = build_airborne_plan(gait, height)
         plan["program"] = "airborne_gait"
@@ -304,9 +361,21 @@ def compile_recipe(
                 sample_hz=transition.sample_hz, swing_hip_lift_degrees=grounded.swing_hip_lift_degrees)
             plan = build_transition_plan(transition, grounded, height)
         else:
-            gait = load_airborne_gait(locomotion)
+            gait = (
+                load_airborne_choreography(locomotion)
+                if motion_set_v2 else load_airborne_gait(locomotion)
+            )
+            if motion_set_v2:
+                gait = _airborne_gait_with_shared_articulation(
+                    gait, articulation_profile
+                )
             locomotion_gait = gait
-            plan = build_transition_plan(transition, gait, height)
+            plan = build_transition_plan(
+                transition,
+                gait,
+                height,
+                include_performance_gain_derivative=motion_set_v2,
+            )
     elif not supported:
         grounded = load_grounded_gait(profile)
         locomotion_gait = grounded
@@ -323,6 +392,8 @@ def compile_recipe(
         root_raw, inplace_raw, plan, receipt = solve_supported_action(source, semantic_roles=roles, action=action,
             contact_profile=contact_profile, up_axis=up, forward_axis=forward, body_height_m=height)
     baseline_performance_resolution = None
+    grounded_touchdown_geometry = None
+    grounded_intent_resolution = None
     if "performance_profile" in snapshots:
         if _motion_set_resolution is not None:
             performance, assembly_receipt = assemble_baseline_performance(
@@ -336,15 +407,117 @@ def compile_recipe(
                 raise ContractError(
                     "neutral-pose calibration differs from baseline source geometry"
                 )
-            if not isinstance(locomotion_gait, GroundedGait):
-                raise ContractError(
-                    "motion-set gait response requires grounded locomotion"
+            if motion_set_v2:
+                response_policy = _motion_set_resolution.locomotion_response_policy
+                assert response_policy is not None
+                if isinstance(locomotion_gait, GroundedGait):
+                    if animal is None:
+                        raise ContractError(
+                            "v2 grounded intent resolution requires a bound animal"
+                        )
+                    grounded_policy = response_policy["regimes"]["grounded"]
+                    provisional_performance, _ = resolve_gait_response(
+                        performance,
+                        locomotion_gait,
+                        grounded_policy["body_response"]["gait_response"],
+                    )
+                    solve_policy = _motion_set_resolution.solve_policy
+                    provisional_performance = replace(
+                        provisional_performance,
+                        canonical_support_anchors=solve_policy[
+                            "canonical_support_anchors"
+                        ],
+                        skin_refinement=solve_policy["skin_refinement"],
+                    )
+                    observation_plan = decorate_plan(
+                        build_grounded_plan(locomotion_gait, height),
+                        provisional_performance,
+                    )
+                    observation_solver_gait = AirborneGait(
+                        step_period_s=locomotion_gait.step_period_s,
+                        cycles=locomotion_gait.cycles,
+                        sample_hz=locomotion_gait.sample_hz,
+                        swing_hip_lift_degrees=locomotion_gait.swing_hip_lift_degrees,
+                    )
+                    observation_query = SourceMotionQuery(
+                        source,
+                        semantic_roles=roles,
+                        solver_gait=observation_solver_gait,
+                        locomotion_gait=locomotion_gait,
+                        plan=observation_plan,
+                        contact_profile=contact_profile,
+                        up_axis=tuple(up),
+                        forward_axis=tuple(forward),
+                        source_clip=None,
+                        legacy_overlay=False,
+                        articulation_profile=articulation_profile,
+                    )
+                    observations = {
+                        "source_geometry_sha256": recipe["source"]["sha256"],
+                        "body_height_m": height,
+                        "gait_parameters_sha256": canonical_hash(
+                            gait_parameters(locomotion_gait)
+                        ),
+                        "sides": {
+                            "left": _thaw(
+                                observation_query.grounded_touchdown_observation(
+                                    0.0, "left"
+                                )
+                            ),
+                            "right": _thaw(
+                                observation_query.grounded_touchdown_observation(
+                                    locomotion_gait.step_period_s, "right"
+                                )
+                            ),
+                        },
+                    }
+                    grounded_touchdown_geometry = measure_grounded_touchdown_geometry(
+                        locomotion_gait, observations
+                    )
+                    resolved = resolve_grounded_intent(
+                        locomotion_gait,
+                        body_height_m=height,
+                        animal_hindlimb_length_m=animal["hindlimb_length_m"],
+                        source_geometry_sha256=recipe["source"]["sha256"],
+                        neutral_support_geometry=json.loads(
+                            _motion_set_resolution.neutral_support_bytes
+                        ),
+                        family_policy=json.loads(
+                            _motion_set_resolution.locomotion_response_bytes
+                        ),
+                        touchdown_geometry=grounded_touchdown_geometry,
+                    )
+                    locomotion_gait = resolved.gait
+                    grounded_intent_resolution = resolved.receipt()
+                    if transition is None:
+                        plan = build_grounded_plan(locomotion_gait, height)
+                    else:
+                        plan = build_transition_plan(
+                            transition, locomotion_gait, height
+                        )
+                    performance, gait_receipt = resolve_gait_response(
+                        performance,
+                        locomotion_gait,
+                        grounded_policy["body_response"]["gait_response"],
+                    )
+                    airborne_policy = None
+                elif isinstance(locomotion_gait, AirborneGait):
+                    airborne_policy = response_policy["regimes"]["airborne"][
+                        "body_response"
+                    ]
+                    gait_receipt = None
+                else:
+                    raise ContractError("v2 motion set has no locomotion gait")
+            else:
+                if not isinstance(locomotion_gait, GroundedGait):
+                    raise ContractError(
+                        "motion-set gait response requires grounded locomotion"
+                    )
+                performance, gait_receipt = resolve_gait_response(
+                    performance,
+                    locomotion_gait,
+                    _motion_set_resolution.gait_response_policy,
                 )
-            performance, gait_receipt = resolve_gait_response(
-                performance,
-                locomotion_gait,
-                _motion_set_resolution.gait_response_policy,
-            )
             solve_policy = _motion_set_resolution.solve_policy
             performance = replace(
                 performance,
@@ -353,7 +526,16 @@ def compile_recipe(
             )
             baseline_performance_resolution = {
                 "assembly": assembly_receipt,
-                "gait_response": gait_receipt,
+                **(
+                    ({"airborne_body_response": None}
+                     if isinstance(locomotion_gait, AirborneGait)
+                     else {
+                         "gait_response": gait_receipt,
+                         "grounded_intent": grounded_intent_resolution,
+                     })
+                    if motion_set_v2
+                    else {"gait_response": gait_receipt}
+                ),
             }
         elif cubic:
             performance = load_performance(
@@ -366,7 +548,15 @@ def compile_recipe(
             performance = load_performance(
                 json.loads(snapshots["performance_profile"])
             )
-        plan = decorate_plan(plan, performance)
+        if motion_set_v2 and isinstance(locomotion_gait, AirborneGait):
+            plan = decorate_airborne_response_plan(
+                plan, performance, locomotion_gait, airborne_policy
+            )
+            baseline_performance_resolution["airborne_body_response"] = plan[
+                "airborne_body_response"
+            ]["resolution"]
+        else:
+            plan = decorate_plan(plan, performance)
         if "contact_profile" not in snapshots:
             raise ContractError("forward attention requires locked geometry calibration")
         plan["gaze_calibration"] = calibrate_rostral_direction(source, roles=roles,
@@ -720,6 +910,10 @@ def compile_recipe(
         payloads["neutral-pose-profile.json"] = (
             _motion_set_resolution.neutral_pose_bytes
         )
+        if grounded_touchdown_geometry is not None:
+            payloads["grounded-touchdown-geometry.json"] = json_bytes(
+                grounded_touchdown_geometry
+            )
     manifest = {"schema": "eonwild.motion.factory-package.v1", "id": recipe["id"], "version": recipe["version"],
         "status": "CANDIDATE", "production_approved": False, "technical_status": validation["technical_status"],
         "files": {name: digest(data) for name, data in payloads.items()},
@@ -880,6 +1074,7 @@ def _verify_motion_set_provenance(
     if reconstructed != recipe:
         raise ContractError("motion set snapshots do not reconstruct recipe")
     baseline = read_json(path / "motion-baseline.json")
+    baseline_v2 = baseline.get("schema") == "eonwild.motion.motion-baseline.v2"
     solve_policy = baseline["solve_policy"]
     style_bytes = (path / "performance-profile.json").read_bytes()
     neutral_bytes = (path / "neutral-pose-profile.json").read_bytes()
@@ -910,9 +1105,98 @@ def _verify_motion_set_provenance(
         gait_bytes = (path / "gait-profile.json").read_bytes()
         if digest(gait_bytes) != intent["gait_profile"]["sha256"]:
             raise ContractError("motion intent gait snapshot differs")
-        gait = load_grounded_gait(json.loads(gait_bytes))
+        gait_document = json.loads(gait_bytes)
+        gait = (
+            load_airborne_choreography(gait_document)
+            if baseline_v2
+            and gait_document.get("schema")
+            == "eonwild.motion.airborne-choreography.v1"
+            else load_grounded_gait(gait_document)
+        )
+        if baseline_v2 and isinstance(gait, AirborneGait):
+            gait = _airborne_gait_with_shared_articulation(
+                gait,
+                load_articulation_profile(
+                    read_json(path / "articulation-profile.json")
+                ),
+            )
+    elif recipe["program"] == "airborne_gait" and baseline_v2:
+        if (path / "gait-profile.json").exists():
+            raise ContractError("airborne intent contains a transition gait snapshot")
+        gait = load_airborne_choreography(json.loads(program_bytes))
+        gait = _airborne_gait_with_shared_articulation(
+            gait,
+            load_articulation_profile(read_json(path / "articulation-profile.json")),
+        )
+        transition = None
     else:
         raise ContractError("motion set contains an unsupported program")
+    response_policy = baseline.get("locomotion_response_policy")
+    if baseline_v2:
+        if not isinstance(response_policy, dict):
+            raise ContractError("v2 motion baseline response policy is missing")
+        grounded_policy = response_policy["regimes"]["grounded"]
+        policy_bytes = (path / "locomotion-response-policy.json").read_bytes()
+        support_bytes = (path / "neutral-support-profile.json").read_bytes()
+        if (
+            digest(policy_bytes) != grounded_policy["intent_resolution"]["sha256"]
+            or digest(support_bytes)
+            != grounded_policy["neutral_support_profile"]["sha256"]
+        ):
+            raise ContractError("v2 motion response snapshots differ from baseline")
+        if isinstance(gait, GroundedGait):
+            geometry_path = path / "grounded-touchdown-geometry.json"
+            if not geometry_path.exists():
+                raise ContractError("v2 grounded package lacks touchdown geometry evidence")
+            animal = load_animal_instance(
+                read_json(path / "animal.json"),
+                source_sha256=recipe["source"]["sha256"],
+            )
+            authored_gait = gait
+            resolved = resolve_grounded_intent(
+                authored_gait,
+                body_height_m=float(plan["body_height_m"]),
+                animal_hindlimb_length_m=animal["hindlimb_length_m"],
+                source_geometry_sha256=recipe["source"]["sha256"],
+                neutral_support_geometry=json.loads(support_bytes),
+                family_policy=json.loads(policy_bytes),
+                touchdown_geometry=read_json(geometry_path),
+            )
+            gait = resolved.gait
+            performance, gait_receipt = resolve_gait_response(
+                performance,
+                gait,
+                grounded_policy["body_response"]["gait_response"],
+            )
+            expected_resolution = {
+                "assembly": assembly_receipt,
+                "gait_response": gait_receipt,
+                "grounded_intent": resolved.receipt(),
+            }
+        else:
+            airborne_document = response_policy["regimes"]["airborne"][
+                "body_response"
+            ]
+            airborne_policy = load_airborne_body_response_policy(airborne_document)
+            expected_airborne_receipt = airborne_response_receipt(gait, airborne_policy)
+            expected_airborne = {
+                "policy": airborne_document,
+                "resolution": expected_airborne_receipt,
+            }
+            if plan.get("airborne_body_response") != expected_airborne:
+                raise ContractError("airborne response differs from its baseline policy")
+            expected_resolution = {
+                "assembly": assembly_receipt,
+                "airborne_body_response": expected_airborne_receipt,
+            }
+    else:
+        performance, gait_receipt = resolve_gait_response(
+            performance, gait, baseline["gait_response_policy"]
+        )
+        expected_resolution = {
+            "assembly": assembly_receipt,
+            "gait_response": gait_receipt,
+        }
     if plan.get("parameters") != gait_parameters(gait):
         raise ContractError("motion plan parameters differ from the bound gait snapshot")
     if transition is not None and plan.get("transition_parameters") != gait_parameters(
@@ -921,9 +1205,6 @@ def _verify_motion_set_provenance(
         raise ContractError(
             "motion plan transition parameters differ from the bound program snapshot"
         )
-    performance, gait_receipt = resolve_gait_response(
-        performance, gait, baseline["gait_response_policy"]
-    )
     performance = replace(
         performance,
         canonical_support_anchors=solve_policy["canonical_support_anchors"],
@@ -943,10 +1224,7 @@ def _verify_motion_set_provenance(
         or receipt.get("solve_policy") != solve_policy
         or plan.get("solve_policy") != solve_policy
         or plan.get("performance") != expected_parameters
-        or receipt.get("baseline_performance_resolution") != {
-            "assembly": assembly_receipt,
-            "gait_response": gait_receipt,
-        }
+        or receipt.get("baseline_performance_resolution") != expected_resolution
     ):
         raise ContractError("motion set solve policy provenance is inconsistent")
 
@@ -961,9 +1239,33 @@ def verify_package(path: Path) -> dict:
         "motion-set.json", "motion-baseline.json", "motion-intent.json",
         "performance-profile.json", "neutral-pose-profile.json",
         "program-profile.json", "gait-profile.json",
+        "locomotion-response-policy.json", "neutral-support-profile.json",
+        "grounded-touchdown-geometry.json",
     }
     present_provenance = provenance_universe & set(manifest.get("files", {}))
     expected_provenance = provenance_universe - {"gait-profile.json"}
+    baseline_snapshot = (
+        read_json(path / "motion-baseline.json")
+        if "motion-baseline.json" in present_provenance else None
+    )
+    if baseline_snapshot is None or baseline_snapshot.get("schema") != (
+        "eonwild.motion.motion-baseline.v2"
+    ):
+        expected_provenance -= {
+            "locomotion-response-policy.json",
+            "neutral-support-profile.json",
+            "grounded-touchdown-geometry.json",
+        }
+    else:
+        airborne_v2 = recipe.get("program") == "airborne_gait"
+        if recipe.get("program") == "gait_transition" and (
+            path / "gait-profile.json"
+        ).exists():
+            airborne_v2 = read_json(path / "gait-profile.json").get("schema") == (
+                "eonwild.motion.airborne-choreography.v1"
+            )
+        if airborne_v2:
+            expected_provenance.discard("grounded-touchdown-geometry.json")
     if recipe.get("program") == "gait_transition":
         expected_provenance.add("gait-profile.json")
     if present_provenance and present_provenance != expected_provenance:

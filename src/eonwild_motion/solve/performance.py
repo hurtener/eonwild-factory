@@ -683,8 +683,52 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
         _counterroll_trunk_names(roles)
         if p.support_timed_load_acceptance_carrier is True else None)
     phase, gain = phase_and_gain(row)
+    airborne_response = plan.get("airborne_body_response")
+    response_state = None
+    if airborne_response is not None:
+        if (
+            not isinstance(airborne_response, Mapping)
+            or set(airborne_response) != {"policy", "resolution"}
+        ):
+            raise ContractError("airborne body-response plan binding is invalid")
+        from ..planning.airborne_gait import AirborneGait
+        from .locomotion_regime_response import (
+            airborne_response_receipt,
+            airborne_response_state,
+            load_airborne_body_response_policy,
+        )
+
+        try:
+            response_gait = AirborneGait(**dict(plan["parameters"]))
+        except (KeyError, TypeError, ValueError, ContractError) as exc:
+            raise ContractError(
+                "airborne body response requires authoritative gait parameters"
+            ) from exc
+        response_policy = load_airborne_body_response_policy(
+            airborne_response["policy"]
+        )
+        if airborne_response["resolution"] != airborne_response_receipt(
+            response_gait, response_policy
+        ):
+            raise ContractError("airborne body-response resolution is inconsistent")
+        response_state = airborne_response_state(
+            response_gait,
+            phase_s=phase,
+            body_height_m=plan["body_height_m"],
+            tail_lag_fraction=0.0,
+            policy=response_policy,
+            performance_gain=gain,
+            performance_gain_derivative_per_s=row.get(
+                "performance_gain_derivative_per_s", 0.0
+            ),
+        )
     forward_displacement = 0.
-    if p.pelvis_forward_velocity_modulation_fraction is not None:
+    if response_state is not None:
+        pelvis = _validate_pelvis_forward_carrier_binding(
+            source, roles, up, forward
+        )
+        forward_displacement = response_state.pelvis_forward_displacement_m
+    elif p.pelvis_forward_velocity_modulation_fraction is not None:
         pelvis = _validate_pelvis_forward_carrier_binding(
             source, roles, up, forward)
         forward_displacement, _ = _support_timed_pelvis_forward_carrier(
@@ -703,16 +747,22 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
     roll_pulse = pulse
     sagittal_pulse = 0.
     load_acceptance_pulse = 0.
-    if p.support_directed_pelvis_carrier:
+    if response_state is not None:
+        sway_pulse = response_state.lateral_support
+        roll_pulse = -sway_pulse
+        yaw_pulse = response_state.lateral_support
+        sagittal_pulse = response_state.sagittal_support
+        load_acceptance_pulse = response_state.load_acceptance
+    elif p.support_directed_pelvis_carrier:
         sway_pulse = _support_directed_pulse(
             source, base_worlds, roles, plan, phase, gain, lateral)
         # Positive world rotation about forward leans the pelvis top toward
         # negative lateral, so invert the translation carrier for the lean.
         roll_pulse = -sway_pulse
-    if p.support_timed_sagittal_carrier:
+    if response_state is None and p.support_timed_sagittal_carrier:
         sagittal_pulse = _support_timed_sagittal_pulse(
             plan, phase, gain)
-    if p.support_timed_load_acceptance_carrier:
+    if response_state is None and p.support_timed_load_acceptance_carrier:
         load_acceptance_pulse = _support_timed_load_acceptance_pulse(
             plan, phase, gain)
     if p.support_timed_axial_carrier:
@@ -807,7 +857,25 @@ def apply_performance(source, translations, rotations, scales, base_worlds, role
         weights /= weights.sum()
     for i, node in enumerate(tail):
         lag = p.tail_lag_fraction * i / max(1, len(tail) - 1)
-        if axial_clock is None:
+        if response_state is not None:
+            from .locomotion_regime_response import airborne_response_state
+
+            tail_state = airborne_response_state(
+                response_gait,
+                phase_s=phase,
+                body_height_m=plan["body_height_m"],
+                tail_lag_fraction=lag,
+                policy=response_policy,
+                performance_gain=gain,
+                performance_gain_derivative_per_s=row.get(
+                    "performance_gain_derivative_per_s", 0.0
+                ),
+            )
+            degrees = (
+                -p.tail_yaw_degrees * weights[i]
+                * tail_state.lagged_lateral_support
+            )
+        elif axial_clock is None:
             degrees = (-gain * p.tail_yaw_degrees * weights[i]
                        * math.sin(angle - 2 * math.pi * lag))
         else:

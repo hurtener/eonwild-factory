@@ -269,9 +269,17 @@ class _Choreography:
             'support_count': support, 'flight': support == 0, 'feet': feet}
 
 
-def build_transition_plan(transition: GaitTransition, gait, body_height_m):
+def build_transition_plan(
+    transition: GaitTransition,
+    gait,
+    body_height_m,
+    *,
+    include_performance_gain_derivative: bool = False,
+):
     if not isinstance(transition, GaitTransition):
         raise ContractError('transition must be validated')
+    if type(include_performance_gain_derivative) is not bool:
+        raise ContractError('transition gain-derivative selection must be boolean')
     c = _Choreography(transition, gait, body_height_m)
     count = int(math.ceil(c.duration * transition.sample_hz))
     times = set(np.linspace(0., c.duration, count + 1).tolist())
@@ -294,6 +302,10 @@ def build_transition_plan(transition: GaitTransition, gait, body_height_m):
         if not ordered or time - ordered[-1] > 1e-7:
             ordered.append(time)
     rows = [c.sample(time) for time in ordered]
+    if include_performance_gain_derivative:
+        for row in rows:
+            _, derivative = c.envelope(row['time_s'] - c.delay)
+            row['performance_gain_derivative_per_s'] = float(derivative)
     if c.grounded:
         require_grounded_phase_coverage(rows)
     entry_speed, exit_speed = (0., c.speed) if c.start else (c.speed, 0.)

@@ -1,0 +1,11 @@
+{
+  "description": "Portable walk timing intent resolved through the shared adult grounded baseline.",
+  "id": "heavy-biped.tarbosaurus-pin-552-1-adult-walk.motion-set.v2",
+  "program": "grounded_gait",
+  "program_profile": {
+    "path": "catalog/programs/heavy-biped.tarbosaurus-adult-walk.v4.json",
+    "sha256": "271ccb833a8913d3dc6bd8281e798e54b9c7bebad2080136245cb7b5e5afa725"
+  },
+  "schema": "eonwild.motion.motion-intent.v2",
+  "version": 2
+}

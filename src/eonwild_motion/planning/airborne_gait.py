@@ -164,6 +164,56 @@ def load_airborne_gait(profile: Mapping[str, Any]) -> AirborneGait:
     return AirborneGait(**values)
 
 
+_AIRBORNE_CHOREOGRAPHY_FIELDS = {
+    "step_period_s", "flight_fraction", "step_length_body_heights",
+    "touchdown_reach_body_heights", "swing_clearance_body_heights",
+    "swing_lift_fraction", "swing_lower_fraction",
+    "flight_height_body_heights", "toe_flex_degrees",
+    "foot_recovery_pitch_degrees", "push_off_pitch_degrees",
+    "push_off_start_fraction", "swing_hip_lift_degrees",
+    "swing_recovery_peak_fraction", "rounded_swing_peak_fraction",
+    "swing_transport_ramp_fraction", "flight_foot_lift_body_heights",
+    "swing_approach_lift_body_heights", "cycles", "sample_hz",
+    "boundary_sample_hz", "handoff_phase_fraction", "handoff_sample_hz",
+}
+
+
+def load_airborne_choreography(profile: Mapping[str, Any]) -> AirborneGait:
+    """Load v2 event choreography without accepting body-style or ROM fields."""
+    if (
+        not isinstance(profile, Mapping)
+        or set(profile) != {
+            "schema", "program", "parameters", "classification"
+        }
+        or profile.get("schema")
+        != "eonwild.motion.airborne-choreography.v1"
+        or profile.get("program") != "airborne_gait"
+        or not isinstance(profile.get("classification"), str)
+        or not profile["classification"]
+    ):
+        raise ContractError("unsupported airborne choreography profile")
+    values = profile.get("parameters")
+    if (
+        not isinstance(values, Mapping)
+        or set(values) - _AIRBORNE_CHOREOGRAPHY_FIELDS
+        or not {
+            "step_period_s", "flight_fraction", "step_length_body_heights",
+            "touchdown_reach_body_heights", "swing_clearance_body_heights",
+            "flight_height_body_heights", "cycles", "sample_hz",
+        } <= set(values)
+    ):
+        raise ContractError(
+            "airborne choreography contains missing or body-owned parameters"
+        )
+    # Support compression is supplied by the shared performance style through
+    # the regime response. Flight height and foot events remain choreography.
+    return AirborneGait(
+        **dict(values),
+        pelvis_compression_body_heights=0.0,
+        pelvis_crouch_body_heights=0.0,
+    )
+
+
 def _smooth(x: float) -> float:
     x = max(0.0, min(1.0, x))
     return x * x * x * (10 + x * (-15 + 6 * x))

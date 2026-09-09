@@ -20,7 +20,11 @@ from .io import bind, digest, frame_axes, locked_file, read_json
 SET_SCHEMA = "eonwild.motion.motion-set.v1"
 BASELINE_SCHEMA = "eonwild.motion.motion-baseline.v1"
 INTENT_SCHEMA = "eonwild.motion.motion-intent.v1"
+SET_SCHEMA_V2 = "eonwild.motion.motion-set.v2"
+BASELINE_SCHEMA_V2 = "eonwild.motion.motion-baseline.v2"
+INTENT_SCHEMA_V2 = "eonwild.motion.motion-intent.v2"
 SUPPORTED_PROGRAMS = ("grounded_gait", "gait_transition")
+SUPPORTED_PROGRAMS_V2 = (*SUPPORTED_PROGRAMS, "airborne_gait")
 
 _BASELINE_SHARED_FIELDS = (
     "source",
@@ -56,10 +60,14 @@ def _document(value: Any, *, fields: set[str], schema: str, label: str) -> Mappi
 
 
 def _validate_set(value: Any) -> Mapping[str, Any]:
+    if not isinstance(value, Mapping) or value.get("schema") not in {
+        SET_SCHEMA, SET_SCHEMA_V2
+    }:
+        raise ContractError("unsupported motion set schema")
     result = _document(
         value,
         fields={"schema", "id", "version", "baseline", "motions"},
-        schema=SET_SCHEMA,
+        schema=value["schema"],
         label="motion set",
     )
     motions = result["motions"]
@@ -81,13 +89,22 @@ def _validate_set(value: Any) -> Mapping[str, Any]:
 def _validate_baseline(value: Any) -> Mapping[str, Any]:
     from ..solve.gait_response import load_gait_response_policy
 
-    fields = {
+    common_fields = {
         "schema", "id", "version", "family", "forward_axis", "up_axis",
-        "supported_programs", "gait_response_policy", "solve_policy",
+        "supported_programs", "solve_policy",
         *_BASELINE_SHARED_FIELDS,
     }
+    if not isinstance(value, Mapping):
+        raise ContractError("motion baseline contains missing or unknown fields")
+    schema = value.get("schema")
+    if schema == BASELINE_SCHEMA:
+        fields = common_fields | {"gait_response_policy"}
+    elif schema == BASELINE_SCHEMA_V2:
+        fields = common_fields | {"locomotion_response_policy"}
+    else:
+        raise ContractError("unsupported motion baseline schema")
     result = _document(
-        value, fields=fields, schema=BASELINE_SCHEMA, label="motion baseline"
+        value, fields=fields, schema=schema, label="motion baseline"
     )
     if not isinstance(result["family"], str) or not result["family"]:
         raise ContractError("motion baseline family is required")
@@ -109,11 +126,20 @@ def _validate_baseline(value: Any) -> Mapping[str, Any]:
     if (
         not isinstance(programs, list)
         or not programs
-        or any(program not in SUPPORTED_PROGRAMS for program in programs)
+        or any(
+            program not in (
+                SUPPORTED_PROGRAMS if schema == BASELINE_SCHEMA
+                else SUPPORTED_PROGRAMS_V2
+            )
+            for program in programs
+        )
         or len(programs) != len(set(programs))
     ):
         raise ContractError("motion baseline has unsupported or repeated capabilities")
-    load_gait_response_policy(result["gait_response_policy"])
+    if schema == BASELINE_SCHEMA:
+        load_gait_response_policy(result["gait_response_policy"])
+    else:
+        _validate_locomotion_response_policy(result["locomotion_response_policy"])
     solve = result["solve_policy"]
     solve_fields = {
         "schema", "representation", "canonical_support_anchors",
@@ -139,6 +165,48 @@ def _validate_baseline(value: Any) -> Mapping[str, Any]:
     return result
 
 
+def _validate_locomotion_response_policy(value: Any) -> Mapping[str, Any]:
+    from ..solve.gait_response import load_gait_response_policy
+    from ..solve.locomotion_regime_response import load_airborne_body_response_policy
+
+    if (
+        not isinstance(value, Mapping)
+        or set(value) != {"schema", "regimes"}
+        or value.get("schema")
+        != "eonwild.motion.motion-set-locomotion-response.v1"
+        or not isinstance(value.get("regimes"), Mapping)
+        or set(value["regimes"]) != {"grounded", "airborne"}
+    ):
+        raise ContractError("motion baseline locomotion response is incomplete")
+    grounded = value["regimes"]["grounded"]
+    airborne = value["regimes"]["airborne"]
+    if (
+        not isinstance(grounded, Mapping)
+        or set(grounded) != {
+            "intent_resolution", "neutral_support_profile", "body_response"
+        }
+        or not isinstance(grounded["intent_resolution"], Mapping)
+        or set(grounded["intent_resolution"]) != {"path", "sha256"}
+        or not isinstance(grounded["neutral_support_profile"], Mapping)
+        or set(grounded["neutral_support_profile"]) != {"path", "sha256"}
+        or not isinstance(grounded["body_response"], Mapping)
+        or set(grounded["body_response"]) != {"model", "gait_response"}
+        or grounded["body_response"].get("model")
+        != "existing_grounded_shared_style.v1"
+    ):
+        raise ContractError("grounded locomotion response is incomplete or unsupported")
+    load_gait_response_policy(grounded["body_response"]["gait_response"])
+    if (
+        not isinstance(airborne, Mapping)
+        or set(airborne) != {"intent_resolution", "body_response"}
+        or airborne["intent_resolution"]
+        != {"model": "airborne_choreography_passthrough.v1"}
+    ):
+        raise ContractError("airborne locomotion response is incomplete or unsupported")
+    load_airborne_body_response_policy(airborne["body_response"])
+    return value
+
+
 def _validate_intent(value: Any) -> Mapping[str, Any]:
     if not isinstance(value, Mapping):
         raise ContractError("motion intent must be a mapping")
@@ -146,14 +214,18 @@ def _validate_intent(value: Any) -> Mapping[str, Any]:
     optional = {"gait_profile", "description", "supersedes"}
     if not required <= set(value) or set(value) - required - optional:
         raise ContractError("motion intent contains missing or unknown fields")
+    schema = value.get("schema")
+    if schema not in {INTENT_SCHEMA, INTENT_SCHEMA_V2}:
+        raise ContractError("unsupported motion intent schema")
     result = _document(
         value,
         fields=set(value),
-        schema=INTENT_SCHEMA,
+        schema=schema,
         label="motion intent",
     )
     program = result["program"]
-    if program not in SUPPORTED_PROGRAMS:
+    supported = SUPPORTED_PROGRAMS if schema == INTENT_SCHEMA else SUPPORTED_PROGRAMS_V2
+    if program not in supported:
         raise ContractError("motion intent program is outside baseline capabilities")
     if (program == "gait_transition") != ("gait_profile" in result):
         raise ContractError("only gait-transition intents require a gait profile")
@@ -206,6 +278,8 @@ class MotionSetResolution:
     neutral_pose_bytes: bytes
     program_profile_bytes: bytes
     gait_profile_bytes: bytes | None
+    locomotion_response_bytes: bytes | None = None
+    neutral_support_bytes: bytes | None = None
 
     @property
     def payloads(self) -> dict[str, bytes]:
@@ -217,6 +291,10 @@ class MotionSetResolution:
         }
         if self.gait_profile_bytes is not None:
             result["gait-profile.json"] = self.gait_profile_bytes
+        if self.locomotion_response_bytes is not None:
+            result["locomotion-response-policy.json"] = self.locomotion_response_bytes
+        if self.neutral_support_bytes is not None:
+            result["neutral-support-profile.json"] = self.neutral_support_bytes
         return result
 
     @property
@@ -238,7 +316,15 @@ class MotionSetResolution:
 
     @property
     def gait_response_policy(self) -> Mapping[str, Any]:
-        return json.loads(self.baseline_bytes)["gait_response_policy"]
+        baseline = json.loads(self.baseline_bytes)
+        if baseline.get("schema") != BASELINE_SCHEMA:
+            raise ContractError("v2 motion baseline uses regime-specific response")
+        return baseline["gait_response_policy"]
+
+    @property
+    def locomotion_response_policy(self) -> Mapping[str, Any] | None:
+        baseline = json.loads(self.baseline_bytes)
+        return baseline.get("locomotion_response_policy")
 
     @property
     def solve_policy(self) -> Mapping[str, Any]:
@@ -280,6 +366,22 @@ def resolve_motion_set_selection(
         raise ContractError("neutral-pose profile changed during resolution")
     from ..solve.gait_response import load_neutral_pose_profile
     load_neutral_pose_profile(json.loads(neutral_pose_bytes))
+    locomotion_response_bytes = None
+    neutral_support_bytes = None
+    if baseline["schema"] == BASELINE_SCHEMA_V2:
+        grounded_response = baseline["locomotion_response_policy"]["regimes"][
+            "grounded"
+        ]
+        response_reference = grounded_response["intent_resolution"]
+        response_path = locked_file(root, response_reference)
+        locomotion_response_bytes = response_path.read_bytes()
+        if digest(locomotion_response_bytes) != response_reference["sha256"]:
+            raise ContractError("locomotion response policy changed during resolution")
+        support_reference = grounded_response["neutral_support_profile"]
+        support_path = locked_file(root, support_reference)
+        neutral_support_bytes = support_path.read_bytes()
+        if digest(neutral_support_bytes) != support_reference["sha256"]:
+            raise ContractError("neutral support profile changed during resolution")
     resolutions = []
     for motion in motions:
         entry = _select_intent(set_document, motion)
@@ -288,6 +390,18 @@ def resolve_motion_set_selection(
         if digest(intent_bytes) != entry["intent"]["sha256"]:
             raise ContractError("motion intent changed during resolution")
         intent = _validate_intent(json.loads(intent_bytes))
+        expected_intent_schema = (
+            INTENT_SCHEMA if baseline["schema"] == BASELINE_SCHEMA
+            else INTENT_SCHEMA_V2
+        )
+        expected_set_schema = (
+            SET_SCHEMA if baseline["schema"] == BASELINE_SCHEMA else SET_SCHEMA_V2
+        )
+        if (
+            intent["schema"] != expected_intent_schema
+            or set_document["schema"] != expected_set_schema
+        ):
+            raise ContractError("motion set, baseline, and intent schema versions differ")
         program_profile_path = locked_file(root, intent["program_profile"])
         program_profile_bytes = program_profile_path.read_bytes()
         if digest(program_profile_bytes) != intent["program_profile"]["sha256"]:
@@ -310,6 +424,8 @@ def resolve_motion_set_selection(
             neutral_pose_bytes=neutral_pose_bytes,
             program_profile_bytes=program_profile_bytes,
             gait_profile_bytes=gait_profile_bytes,
+            locomotion_response_bytes=locomotion_response_bytes,
+            neutral_support_bytes=neutral_support_bytes,
         ))
     if set_path.read_bytes() != set_bytes or baseline_path.read_bytes() != baseline_bytes:
         raise ContractError("motion set or baseline changed during selection")
@@ -332,6 +448,13 @@ def reconstruct_motion_set(
         intent = _validate_intent(json.loads(intent_bytes))
     except (TypeError, ValueError) as exc:
         raise ContractError(f"motion set provenance is not valid JSON: {exc}") from exc
+    expected = (
+        (SET_SCHEMA, INTENT_SCHEMA)
+        if baseline["schema"] == BASELINE_SCHEMA
+        else (SET_SCHEMA_V2, INTENT_SCHEMA_V2)
+    )
+    if (set_document["schema"], intent["schema"]) != expected:
+        raise ContractError("motion set snapshot schema versions disagree")
     if not isinstance(resolution_lock, Mapping) or set(resolution_lock) != {
         "motion", "set", "baseline", "intent", "identities"
     }:
