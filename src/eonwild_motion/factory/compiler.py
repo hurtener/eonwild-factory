@@ -208,6 +208,8 @@ def _load_recipe_document(recipe: Any, root: Path) -> tuple[dict, dict[str, Path
         raise ContractError("recipe contains missing or unknown fields")
     if recipe["schema"] != SCHEMA or recipe["program"] not in PROGRAMS:
         raise ContractError("unsupported recipe schema or program")
+    if "steady_motion" in recipe and recipe["program"] != "gait_transition":
+        raise ContractError("steady motion is supported only by gait-transition recipes")
     if not isinstance(recipe["id"], str) or not recipe["id"] or not isinstance(recipe["family"], str) or not recipe["family"]:
         raise ContractError("recipe id and family are required")
     if type(recipe["version"]) is not int or recipe["version"] < 1:

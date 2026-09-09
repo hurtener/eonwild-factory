@@ -17,7 +17,7 @@ from eonwild_motion.factory.compiler import (
     _grounded_source_query_plan,
     compile_recipe,
 )
-from eonwild_motion.factory.io import bind, json_bytes, write_json
+from eonwild_motion.factory.io import bind, digest, json_bytes, write_json
 from eonwild_motion.factory.motion_set import reconstruct_motion_set, resolve_motion_set
 from eonwild_motion.solve.authored_material_contact import AuthoredMaterialContactAdapter
 from eonwild_motion.solve.source_motion_query import _thaw
@@ -97,6 +97,16 @@ def test_grounded_intent_packages_detached_acquired_reference(tmp_path):
     assert resolved.payloads["authored-material-source.bin"] == b"licensed raw source"
     write_json(tmp_path / "direct-recipe.json", resolved.recipe)
     with pytest.raises(ContractError, match="requires compile-set provenance"):
+        compile_recipe(
+            tmp_path / "direct-recipe.json",
+            root=tmp_path,
+            output=tmp_path / "output",
+            interpolation="CUBICSPLINE",
+        )
+    direct_recipe = deepcopy(resolved.recipe)
+    direct_recipe["steady_motion"] = "walk"
+    write_json(tmp_path / "direct-recipe.json", direct_recipe)
+    with pytest.raises(ContractError, match="only by gait-transition recipes"):
         compile_recipe(
             tmp_path / "direct-recipe.json",
             root=tmp_path,
@@ -244,6 +254,29 @@ def test_transition_resolves_named_steady_reference_and_reconstructs_offline(tmp
             intent_bytes=resolved.intent_bytes,
             steady_intent_bytes=json_bytes(changed),
             resolution_lock=resolved.lock,
+        )
+
+    legacy_steady = json.loads(resolved.steady_intent_bytes)
+    legacy_steady["schema"] = "eonwild.motion.motion-intent.v1"
+    legacy_steady_bytes = json_bytes(legacy_steady)
+    forged_set = json.loads(resolved.set_bytes)
+    steady_entry = next(
+        entry for entry in forged_set["motions"] if entry["name"] == "walk"
+    )
+    steady_entry["intent"]["sha256"] = digest(legacy_steady_bytes)
+    forged_set_bytes = json_bytes(forged_set)
+    forged_lock = deepcopy(resolved.lock)
+    forged_lock["set"]["sha256"] = digest(forged_set_bytes)
+    forged_lock["steady_motion_dependency"]["intent"]["sha256"] = digest(
+        legacy_steady_bytes
+    )
+    with pytest.raises(ContractError, match="steady motion dependency"):
+        reconstruct_motion_set(
+            set_bytes=forged_set_bytes,
+            baseline_bytes=resolved.baseline_bytes,
+            intent_bytes=resolved.intent_bytes,
+            steady_intent_bytes=legacy_steady_bytes,
+            resolution_lock=forged_lock,
         )
 
 

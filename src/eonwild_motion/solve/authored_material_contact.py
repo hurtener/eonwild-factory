@@ -140,6 +140,7 @@ class AuthoredMaterialContactAdapter:
         steady_query_binding_sha256: str | None = None,
         steady_start_time_s: float | None = None,
         steady_duration_s: float | None = None,
+        steady_adapter: "AuthoredMaterialContactAdapter" | None = None,
         steady_query: Any | None = None,
     ):
         self._query_binding_sha256 = binding
@@ -157,6 +158,10 @@ class AuthoredMaterialContactAdapter:
         self._steady_query_binding_sha256 = steady_query_binding_sha256
         self._steady_start_time_s = steady_start_time_s
         self._steady_duration_s = steady_duration_s
+        self._steady_adapter = steady_adapter
+        self._steady_adapter_binding_sha256 = (
+            None if steady_adapter is None else _digest(steady_adapter.binding())
+        )
         self._steady_query = steady_query
         self._integrity_sha256 = self._current_integrity_sha256()
 
@@ -175,6 +180,9 @@ class AuthoredMaterialContactAdapter:
                 "steady_query_binding_sha256": self._steady_query_binding_sha256,
                 "steady_start_time_s": self._steady_start_time_s,
                 "steady_duration_s": self._steady_duration_s,
+                "steady_adapter_binding_sha256": (
+                    self._steady_adapter_binding_sha256
+                ),
                 "paths": {
                     side: {
                         "contact": path.contact,
@@ -446,6 +454,10 @@ class AuthoredMaterialContactAdapter:
     ) -> "AuthoredMaterialContactAdapter":
         """Bind one steady authored path to a transition without taking its contacts."""
         steady.validate_for_query(steady_query)
+        if steady_query._authored_material_contact is not steady:
+            raise ContractError(
+                "authored transition steady query uses another material adapter"
+            )
         if transition_query._transition is None:
             raise ContractError(
                 "authored transition adapter requires a transition query"
@@ -479,6 +491,7 @@ class AuthoredMaterialContactAdapter:
             steady_query_binding_sha256=_query_identity(steady_query),
             steady_start_time_s=float(steady_query._times[0]),
             steady_duration_s=float(steady_query._times[-1] - steady_query._times[0]),
+            steady_adapter=steady,
             steady_query=steady_query,
         )
 
@@ -498,7 +511,9 @@ class AuthoredMaterialContactAdapter:
         if self._steady_query is not None:
             if (
                 _query_identity(self._steady_query) != self._steady_query_binding_sha256
-                or self._steady_query._authored_material_contact is None
+                or self._steady_query._authored_material_contact is not self._steady_adapter
+                or _digest(self._steady_adapter.binding())
+                != self._steady_adapter_binding_sha256
             ):
                 raise ContractError(
                     "authored transition steady query differs from its binding"
@@ -535,6 +550,18 @@ class AuthoredMaterialContactAdapter:
                     "named steady authored source is unavailable at transition time"
                 )
             steady_feet = steady_value.row["feet"]
+            if gain == 1.0 and (
+                any(
+                    bool(result["feet"][side]["contact"])
+                    != bool(steady_feet[side]["contact"])
+                    for side in ("left", "right")
+                )
+                or result["support_count"] != steady_value.row["support_count"]
+                or bool(result["flight"]) != bool(steady_value.row["flight"])
+            ):
+                raise ContractError(
+                    "full-gain transition contact state differs from named steady motion"
+                )
         else:
             gain = 1.0
             duration = query._times[-1] - query._times[0]
@@ -676,5 +703,8 @@ class AuthoredMaterialContactAdapter:
                 "source_duration_s": float(self._capsule["duration_s"]),
                 "mode": self._mode,
                 "steady_query_binding_sha256": self._steady_query_binding_sha256,
+                "steady_adapter_binding_sha256": (
+                    self._steady_adapter_binding_sha256
+                ),
             }
         )

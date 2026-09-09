@@ -152,6 +152,80 @@ def test_transition_adapter_uses_locomotion_clock_and_preserves_contact_authorit
         != (result["feet"])
     )
 
+    endpoint = deepcopy(plan["samples"][-1])
+    assert endpoint["performance_gain"] == 1.0
+    steady_endpoint = steady_query.evaluate(endpoint["locomotion_time_s"])
+    assert steady_endpoint.status == "AVAILABLE"
+    endpoint["feet"]["left"]["contact"] = not bool(
+        steady_endpoint.row["feet"]["left"]["contact"]
+    )
+    endpoint["feet"]["right"]["contact"] = bool(
+        steady_endpoint.row["feet"]["right"]["contact"]
+    )
+    endpoint["support_count"] = sum(
+        int(endpoint["feet"][side]["contact"]) for side in ("left", "right")
+    )
+    endpoint["flight"] = endpoint["support_count"] == 0
+    with pytest.raises(ContractError, match="full-gain transition contact state"):
+        adapted.resolve(query, endpoint, float(endpoint["time_s"]))
+
+
+def test_transition_adapter_rejects_substituted_steady_adapter():
+    inputs = _inputs()
+    first = _build(inputs)
+    changed_capsule = _capsule()
+    changed_capsule["feet"]["left"]["foot_pitch_degrees"][1] += 7.0
+    second = _build(inputs, changed_capsule)
+    transition = GaitTransition(
+        "start",
+        handoff_phase_fraction=0.125,
+        handoff_sample_hz=480,
+        support_placement="integrated_support",
+    )
+    plan = decorate_plan(
+        build_transition_plan(
+            transition,
+            inputs["locomotion_gait"],
+            float(inputs["plan"]["body_height_m"]),
+        ),
+        Performance(canonical_support_anchors=True),
+    )
+    transition_query = SourceMotionQuery(
+        inputs["source"],
+        semantic_roles=inputs["semantic_roles"],
+        solver_gait=inputs["solver_gait"],
+        locomotion_gait=inputs["locomotion_gait"],
+        transition=transition,
+        plan=plan,
+        contact_profile=inputs["contact_profile"],
+        up_axis=inputs["up_axis"],
+        forward_axis=inputs["forward_axis"],
+        articulation_profile=inputs["articulation_profile"],
+    )
+    substituted_query = SourceMotionQuery(
+        **_query_kwargs(inputs), authored_material_contact=second
+    )
+    with pytest.raises(ContractError, match="another material adapter"):
+        AuthoredMaterialContactAdapter.for_transition(
+            first,
+            steady_query=substituted_query,
+            transition_query=transition_query,
+        )
+
+    steady_query = SourceMotionQuery(
+        **_query_kwargs(inputs), authored_material_contact=first
+    )
+    adapted = AuthoredMaterialContactAdapter.for_transition(
+        first, steady_query=steady_query, transition_query=transition_query
+    )
+    steady_query._authored_material_contact = second
+    with pytest.raises(ContractError, match="steady query differs"):
+        adapted.resolve(
+            transition_query,
+            plan["samples"][1],
+            float(plan["samples"][1]["time_s"]),
+        )
+
 
 def test_adapter_applies_material_contact_path_at_keys_and_offgrid():
     inputs = _inputs()

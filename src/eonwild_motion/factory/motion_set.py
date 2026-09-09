@@ -627,6 +627,7 @@ def reconstruct_motion_set(
             or digest(steady_intent_bytes) != steady_entry["intent"]["sha256"]
             or dependency["identity"]
             != {key: steady_intent[key] for key in ("id", "version")}
+            or steady_intent.get("schema") != INTENT_SCHEMA_V2
             or steady_intent.get("program") != "grounded_gait"
             or "authored_material_reference" not in steady_intent
             or intent["gait_profile"] != steady_intent["program_profile"]
