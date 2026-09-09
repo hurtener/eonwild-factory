@@ -67,6 +67,43 @@ TRANSITION_CLEARANCE_UNAVAILABLE = "TRANSITION_CLEARANCE_UNAVAILABLE"
 AUTHORED_MATERIAL_CLEARANCE_UNAVAILABLE = (
     "AUTHORED_MATERIAL_CLEARANCE_UNAVAILABLE"
 )
+_AUTHORED_REACH_HEIGHT_TOLERANCE_M = 1e-6
+_AUTHORED_REACH_MAX_ITERATIONS = 24
+
+
+def _bounded_authored_reach_height(
+    measure: Any, ceiling: float, side: str
+) -> float:
+    """Find a reach-feasible height without asserting monotone residual magnitude.
+
+    The leg solver caps near its reach boundary, so the residual can vary by a
+    few nanometres between two already-feasible heights. Only the unchanged
+    residual predicate owns admission here; the caller separately solves and
+    rechecks the material floor at the combined final height.
+    """
+    lo, hi = 0.0, float(ceiling)
+    margin_lo, _ = measure(lo)
+    if margin_lo >= 0.0:
+        return 0.0
+    margin_hi, _ = measure(hi)
+    if margin_hi < 0.0:
+        raise GroundedTransitionClearanceUnavailable(
+            f"{side} authored target reach has no feasible bracket"
+        )
+    for _ in range(_AUTHORED_REACH_MAX_ITERATIONS):
+        if hi - lo <= _AUTHORED_REACH_HEIGHT_TOLERANCE_M:
+            return hi
+        mid = 0.5 * (lo + hi)
+        margin_mid, _ = measure(mid)
+        if margin_mid >= 0.0:
+            hi = mid
+        else:
+            lo = mid
+    raise GroundedTransitionClearanceUnavailable(
+        f"{side} authored target reach did not converge"
+    )
+
+
 def _readonly(value: np.ndarray) -> np.ndarray:
     copy = np.array(value, dtype=float, copy=True)
     copy.setflags(write=False)
@@ -1021,12 +1058,10 @@ class SourceMotionQuery:
                                 self._context.body_height, 2 * reach_ceiling
                             )
                             reach_value, _ = measure_reach(reach_ceiling)
-                        reach_height = _monotone_floor(
+                        reach_height = _bounded_authored_reach_height(
                             measure_reach,
                             reach_ceiling,
                             foot_side,
-                            target_gap_m=0.0,
-                            purpose="authored target reach",
                         )
                     row["feet"][foot_side]["height_m"] = max(
                         material_height, reach_height

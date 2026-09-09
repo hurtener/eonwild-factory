@@ -9,7 +9,13 @@ from eonwild_motion.solve.authored_material_contact import (
     AuthoredMaterialContactAdapter,
 )
 from eonwild_motion.solve.constant_skin_targets import CanonicalConstantSkinTargetLaw
-from eonwild_motion.solve.source_motion_query import SourceMotionQuery
+from eonwild_motion.solve.grounded_transition_clearance import (
+    GroundedTransitionClearanceUnavailable,
+)
+from eonwild_motion.solve.source_motion_query import (
+    SourceMotionQuery,
+    _bounded_authored_reach_height,
+)
 from test_constant_skin_targets import _inputs
 
 
@@ -184,6 +190,27 @@ def test_adapter_requires_bound_material_clearance_policy_and_body_height():
             material_clearance_policy=malformed,
             body_height_m=query._context.body_height,
         )
+
+
+def test_bounded_reach_accepts_safe_plateau_without_relaxing_residual_gate():
+    # This reproduces the real solver's ~13 nm margin reversal inside an
+    # already-feasible plateau. Admission remains the exact zero-margin gate.
+    def measure(height):
+        boundary = 0.08
+        if height < boundary:
+            return (height - boundary, 112)
+        return (0.00099992 + (0.1 - height) * 1.3e-6, 112)
+
+    resolved = _bounded_authored_reach_height(measure, 0.1032517014, "right")
+    assert measure(resolved)[0] >= 0.0
+    assert measure(math.nextafter(resolved, -math.inf))[0] >= -1e-6
+
+
+def test_bounded_reach_fails_without_a_safe_bracket():
+    with pytest.raises(
+        GroundedTransitionClearanceUnavailable, match="no feasible bracket"
+    ):
+        _bounded_authored_reach_height(lambda height: (-0.01, 7), 0.2, "left")
 
 
 def test_adapter_rejects_cross_query_reuse_and_internal_tamper():
