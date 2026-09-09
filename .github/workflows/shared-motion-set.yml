@@ -14,7 +14,8 @@ permissions:
   contents: read
 concurrency:
   group: shared-locomotion-set-${{ github.ref }}
-  cancel-in-progress: true
+  # Preserve expensive exact-source runs while a newer revision waits.
+  cancel-in-progress: false
 jobs:
   actual-shared-grounded-set:
     runs-on: ubuntu-24.04
