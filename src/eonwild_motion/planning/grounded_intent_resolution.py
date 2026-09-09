@@ -377,6 +377,10 @@ def resolve_grounded_intent(
             + (forward_zero + (gait.duty_factor * resolved_step
                                if gait.centered_stance else maximum_step)) ** 2
         )
+        if resolved_distance > preferred_reach + tolerance:
+            raise ContractError(
+                f"{side} resolved touchdown remains outside the neutral support reach"
+            )
         rows.append((side, preferred_reach - requested_distance,
                      preferred_reach - resolved_distance, maximum_step))
     limiting_side = min(maximum_steps, key=maximum_steps.get) if limited else None

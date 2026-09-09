@@ -406,6 +406,36 @@ def test_centered_reverse_uses_backward_reach_envelope():
     assert all(row[2] >= -1e-12 for row in result.side_evidence)
 
 
+@pytest.mark.parametrize(
+    ("step", "forward_zero"),
+    ((-.05, 2.), (.05, -2.)),
+)
+def test_centered_cap_rejects_when_small_stride_cannot_enter_reachable_interval(
+    step, forward_zero,
+):
+    gait = GroundedGait(**{
+        **vars(_gait(period=1.0)),
+        "step_length_body_heights": step,
+    })
+    query = _query(TARBO_SHA, {
+        "left": [.349, -1., forward_zero],
+        "right": [-.349, -1., forward_zero],
+    })
+    query["gait_parameters_sha256"] = canonical_hash(gait_parameters(gait))
+    with pytest.raises(ContractError, match="resolved touchdown remains outside"):
+        resolve_grounded_intent(
+            gait,
+            body_height_m=2.2841755838983118,
+            animal_hindlimb_length_m=2.415,
+            source_geometry_sha256=TARBO_SHA,
+            neutral_support_geometry=_document(
+                "catalog/calibration/tarbosaurus-pin-552-1-adult-support.v1.json"
+            ),
+            family_policy=_policy(),
+            touchdown_geometry=query,
+        )
+
+
 def test_uncapped_nonreference_geometry_uses_resolved_physical_step():
     gait = _gait()
     source = "1" * 64
