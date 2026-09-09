@@ -1,0 +1,519 @@
+{
+  "schema": "eonwild.motion.rig-preparation.v1",
+  "id": "allosaurus-incoming.rig-preparation.v4",
+  "source_sha256": "91d9816b6bbaeb1037f3e9cbf253261799d8a4121efd91e0e2185f76908a6bf7",
+  "skin_index": 0,
+  "coordinate": {
+    "frame": "source_world",
+    "lateral": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "up": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "forward": [
+      0.0,
+      0.0,
+      1.0
+    ]
+  },
+  "reparents": [
+    {
+      "node": "Bone_023",
+      "new_parent": "Bone_001"
+    },
+    {
+      "node": "Bone_029",
+      "new_parent": "Bone_001"
+    }
+  ],
+  "pivot_relocations": [
+    {
+      "node": "Bone_023",
+      "world_origin_m": [
+        -0.2255978316921107,
+        1.0672420596598649,
+        0.5635172708668909
+      ],
+      "basis": "measured_source_world"
+    },
+    {
+      "node": "Bone_022",
+      "world_origin_m": [
+        -0.15227374173115996,
+        0.6521556693665198,
+        0.5519496664968822
+      ],
+      "basis": "measured_source_world"
+    },
+    {
+      "node": "Bone_021",
+      "world_origin_m": [
+        -0.14686725058487204,
+        0.29604920113963923,
+        0.4451895911171614
+      ],
+      "basis": "measured_source_world"
+    },
+    {
+      "node": "Bone_020",
+      "world_origin_m": [
+        -0.15432454601635429,
+        0.09833941825669337,
+        0.5028293679142435
+      ],
+      "basis": "measured_source_world"
+    },
+    {
+      "node": "Bone_019",
+      "world_origin_m": [
+        -0.19640956807837703,
+        0.023506386828691148,
+        0.6517820245572232
+      ],
+      "basis": "measured_source_world"
+    },
+    {
+      "node": "Bone_018",
+      "world_origin_m": [
+        -0.19663141764833414,
+        0.018839703928872964,
+        0.7224648326322007
+      ],
+      "basis": "measured_source_world"
+    },
+    {
+      "node": "Bone_029",
+      "world_origin_m": [
+        0.2422830846921107,
+        1.0672420596598649,
+        0.5635172708668909
+      ],
+      "basis": "measured_source_world"
+    },
+    {
+      "node": "Bone_028",
+      "world_origin_m": [
+        0.16895899473115997,
+        0.6521556693665198,
+        0.5519496664968822
+      ],
+      "basis": "measured_source_world"
+    },
+    {
+      "node": "Bone_027",
+      "world_origin_m": [
+        0.16355250358487206,
+        0.29604920113963923,
+        0.4451895911171614
+      ],
+      "basis": "measured_source_world"
+    },
+    {
+      "node": "Bone_026",
+      "world_origin_m": [
+        0.1710097990163543,
+        0.09833941825669337,
+        0.5028293679142435
+      ],
+      "basis": "measured_source_world"
+    },
+    {
+      "node": "Bone_025",
+      "world_origin_m": [
+        0.21309482107837704,
+        0.023506386828691148,
+        0.6517820245572232
+      ],
+      "basis": "measured_source_world"
+    },
+    {
+      "node": "Bone_024",
+      "world_origin_m": [
+        0.21331667064833415,
+        0.018839703928872964,
+        0.7224648326322007
+      ],
+      "basis": "measured_source_world"
+    }
+  ],
+  "articulations": [
+    {
+      "role": "jaw_lower",
+      "node": "Bone_044",
+      "parent": "Bone_045",
+      "descendants": [
+        "Bone_043",
+        "Bone_042"
+      ],
+      "axis": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "axis_frame": "joint_parent_local"
+    }
+  ],
+  "weight_transfers": [
+    {
+      "role": "upper_skull",
+      "from_articulation": "jaw_lower",
+      "to_node": "Bone_045",
+      "selector": {
+        "frame": "source_world",
+        "halfspaces": [
+          {
+            "normal": [
+              0.0,
+              0.9889363528682975,
+              0.14834045293024462
+            ],
+            "minimum_dot_m": 1.672917706490115
+          },
+          {
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "minimum_dot_m": 1.95
+          }
+        ]
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "kind": "measured_source_geometry",
+      "reference": "ARC/audits/allosaurus-incoming-rig-001/inventory.json",
+      "claim": "The two hip origins are bilateral and lie in the proximal thigh surface; their current parent is the anterior axial Bone_002 rather than the measured pelvis Bone_001."
+    },
+    {
+      "kind": "measured_source_geometry",
+      "reference": "ARC/audits/allosaurus-rig-landmarks.json",
+      "claim": "The welded surface is connected; lower-jaw ownership is instead supported by the existing Bone_044 to Bone_043 to Bone_042 hierarchy and its concentrated lower-head weights."
+    },
+    {
+      "kind": "primary_comparative_measurement",
+      "reference": "White et al. 2013, PLOS ONE 8:e68649, Table 2, Allosaurus fragilis UUVP 6000r",
+      "claim": "Femur, tibia and metatarsus lengths 880, 730 and 375 mm give 44.33%, 36.77% and 18.90% of their sum; used only as a specimen-specific segment-proportion sanity check along the source chain."
+    },
+    {
+      "kind": "measured_source_geometry",
+      "reference": "ARC/audits/allosaurus-jaw-ownership-probe.json",
+      "claim": "The declared source-world upper-skull halfspace isolates the dorsal rostrum and upper mouth surface independently of skin weights; the original jaw branch incorrectly moves this region."
+    },
+    {
+      "kind": "measured_source_geometry",
+      "reference": "ARC/audits/allosaurus-anatomical-onboarding-001/landmarks.json",
+      "claim": "Bilateral hip, knee, ankle and MTP engineering centers are robust centers of declared full-weight surface slabs; pedal landmarks are forward quantiles of the existing shared distal skin family."
+    },
+    {
+      "kind": "engineering_topology",
+      "reference": "src/eonwild_motion/solve/airborne_gait.py",
+      "claim": "Each non-skinned terminal provides the third node required by the existing generic toe-chain effector contract; it adds no skin influence or digit-anatomy claim."
+    },
+    {
+      "kind": "engineering_topology",
+      "reference": "ARC/audits/allosaurus-articulation-gap-001/pedal-seed-probe.json",
+      "claim": "Neutral opaque sole inspection resolves three pedal projections per side; the existing central weighted branch is retained and the two added branches are bounded engineering proxies."
+    },
+    {
+      "kind": "measured_source_deformation",
+      "reference": "ARC/audits/allosaurus-pedal-ankle-influence-counterfactual-reviewer2-001/result.json",
+      "claim": "A bilateral full-gain plantar core isolates residual upstream ankle influence; a declared 25 mm C2 spatial taper covers the measured local selector-edge scale and replaces the rejected hard ownership boundary."
+    }
+  ],
+  "limitations": [
+    "The source's straight parallel legs and original pivots are deliberate drift-control placeholders, not anatomical measurements.",
+    "The fitted surface-slab centers use authored windows and are provisional engineering pivots, not fossil-derived joint centers.",
+    "White et al. 2013 UUVP 6000r proportions are a post-fit sanity check only; this artist mesh is not established as that specimen.",
+    "The toe chain describes one pedal contact family; its added non-skinned terminal is an effector endpoint, not evidence of a new digit.",
+    "The jaw hinge and upper-skull ownership remain the earlier bounded engineering preparation; inner cheek and mouth-corner polish remains unresolved.",
+    "The candidate is not admitted to a baseline, motion catalog, Unity project or production asset set.",
+    "The three pedal branches are engineering deformation proxies, not a complete fossil phalange reconstruction.",
+    "Independent hand digits and mouth-corner soft-tissue ownership remain unresolved.",
+    "The pedal attachment transfer is a bounded engineering skin-ownership correction; whole-cycle contact, clearance, rate, visual and Unity acceptance remain separate."
+  ],
+  "endpoints": [
+    {
+      "name": "AllosaurusToeEndpoint.L",
+      "parent": "Bone_018",
+      "world_origin_m": [
+        -0.20488882467653494,
+        0.012162650266269972,
+        0.7705469886923582
+      ],
+      "basis": "measured_source_world"
+    },
+    {
+      "name": "AllosaurusToeEndpoint.R",
+      "parent": "Bone_024",
+      "world_origin_m": [
+        0.22157407767653495,
+        0.012162650266269972,
+        0.7705469886923582
+      ],
+      "basis": "measured_source_world"
+    }
+  ],
+  "near_uniform_scale_normalization": {
+    "maximum_axis_spread": 1e-05,
+    "maximum_unit_deviation": 1e-05,
+    "target": "unit"
+  },
+  "weighted_branches": [
+    {
+      "role": "pedal_inner_left",
+      "parent": "Bone_020",
+      "source_nodes": [
+        "Bone_020",
+        "Bone_019",
+        "Bone_018"
+      ],
+      "proximal": {
+        "name": "AllosaurusPedalInnerProximal.L",
+        "world_origin_m": [
+          -0.12175146490335464,
+          0.057691540569067,
+          0.5752944946289062
+        ],
+        "basis": "measured_source_world"
+      },
+      "distal": {
+        "name": "AllosaurusPedalInnerDistal.L",
+        "world_origin_m": [
+          -0.0713053047657013,
+          0.020856624469161034,
+          0.6837481260299683
+        ],
+        "basis": "measured_source_world"
+      },
+      "endpoint": {
+        "name": "AllosaurusPedalInnerEndpoint.L",
+        "world_origin_m": [
+          -0.06261138617992401,
+          0.020459773018956184,
+          0.7217078804969788
+        ],
+        "basis": "measured_source_world"
+      },
+      "selector": {
+        "frame": "source_world",
+        "lateral_interval_m": [
+          -0.155,
+          -0.04
+        ],
+        "up_maximum_m": 0.08,
+        "forward_interval_m": [
+          0.55,
+          0.725
+        ],
+        "blend_width_m": 0.012
+      }
+    },
+    {
+      "role": "pedal_outer_left",
+      "parent": "Bone_020",
+      "source_nodes": [
+        "Bone_020",
+        "Bone_019",
+        "Bone_018"
+      ],
+      "proximal": {
+        "name": "AllosaurusPedalOuterProximal.L",
+        "world_origin_m": [
+          -0.298072874546051,
+          0.038074664771556854,
+          0.5684406757354736
+        ],
+        "basis": "measured_source_world"
+      },
+      "distal": {
+        "name": "AllosaurusPedalOuterDistal.L",
+        "world_origin_m": [
+          -0.3318150043487549,
+          0.01308396179229021,
+          0.6573713421821594
+        ],
+        "basis": "measured_source_world"
+      },
+      "endpoint": {
+        "name": "AllosaurusPedalOuterEndpoint.L",
+        "world_origin_m": [
+          -0.35225915908813477,
+          0.021657772362232208,
+          0.685264527797699
+        ],
+        "basis": "measured_source_world"
+      },
+      "selector": {
+        "frame": "source_world",
+        "lateral_interval_m": [
+          -0.365,
+          -0.255
+        ],
+        "up_maximum_m": 0.08,
+        "forward_interval_m": [
+          0.55,
+          0.688
+        ],
+        "blend_width_m": 0.012
+      }
+    },
+    {
+      "role": "pedal_inner_right",
+      "parent": "Bone_026",
+      "source_nodes": [
+        "Bone_026",
+        "Bone_025",
+        "Bone_024"
+      ],
+      "proximal": {
+        "name": "AllosaurusPedalInnerProximal.R",
+        "world_origin_m": [
+          0.11496544629335403,
+          0.058023035526275635,
+          0.5766021609306335
+        ],
+        "basis": "measured_source_world"
+      },
+      "distal": {
+        "name": "AllosaurusPedalInnerDistal.R",
+        "world_origin_m": [
+          0.06265836954116821,
+          0.02448188327252865,
+          0.6808534860610962
+        ],
+        "basis": "measured_source_world"
+      },
+      "endpoint": {
+        "name": "AllosaurusPedalInnerEndpoint.R",
+        "world_origin_m": [
+          0.062102433294057846,
+          0.01584271714091301,
+          0.7219637036323547
+        ],
+        "basis": "measured_source_world"
+      },
+      "selector": {
+        "frame": "source_world",
+        "lateral_interval_m": [
+          0.04,
+          0.155
+        ],
+        "up_maximum_m": 0.08,
+        "forward_interval_m": [
+          0.55,
+          0.725
+        ],
+        "blend_width_m": 0.012
+      }
+    },
+    {
+      "role": "pedal_outer_right",
+      "parent": "Bone_026",
+      "source_nodes": [
+        "Bone_026",
+        "Bone_025",
+        "Bone_024"
+      ],
+      "proximal": {
+        "name": "AllosaurusPedalOuterProximal.R",
+        "world_origin_m": [
+          0.3161497712135315,
+          0.027593053877353668,
+          0.585914671421051
+        ],
+        "basis": "measured_source_world"
+      },
+      "distal": {
+        "name": "AllosaurusPedalOuterDistal.R",
+        "world_origin_m": [
+          0.32675158977508545,
+          0.01312317606061697,
+          0.6601405143737793
+        ],
+        "basis": "measured_source_world"
+      },
+      "endpoint": {
+        "name": "AllosaurusPedalOuterEndpoint.R",
+        "world_origin_m": [
+          0.34884530305862427,
+          0.01280470285564661,
+          0.6871436834335327
+        ],
+        "basis": "measured_source_world"
+      },
+      "selector": {
+        "frame": "source_world",
+        "lateral_interval_m": [
+          0.255,
+          0.365
+        ],
+        "up_maximum_m": 0.08,
+        "forward_interval_m": [
+          0.55,
+          0.69
+        ],
+        "blend_width_m": 0.012
+      }
+    }
+  ],
+  "pedal_attachment_transfers": [
+    {
+      "role": "pedal_attachment_left",
+      "source_node": "Bone_021",
+      "root_node": "Bone_020",
+      "destination_nodes": [
+        "Bone_020",
+        "AllosaurusPedalInnerProximal.L",
+        "AllosaurusPedalInnerDistal.L",
+        "AllosaurusPedalOuterProximal.L",
+        "AllosaurusPedalOuterDistal.L"
+      ],
+      "selector": {
+        "frame": "source_world",
+        "lateral_interval_m": [
+          -0.365,
+          -0.04
+        ],
+        "up_maximum_m": 0.08,
+        "forward_interval_m": [
+          0.55,
+          0.725
+        ],
+        "taper_width_m": 0.025
+      }
+    },
+    {
+      "role": "pedal_attachment_right",
+      "source_node": "Bone_027",
+      "root_node": "Bone_026",
+      "destination_nodes": [
+        "Bone_026",
+        "AllosaurusPedalInnerProximal.R",
+        "AllosaurusPedalInnerDistal.R",
+        "AllosaurusPedalOuterProximal.R",
+        "AllosaurusPedalOuterDistal.R"
+      ],
+      "selector": {
+        "frame": "source_world",
+        "lateral_interval_m": [
+          0.04,
+          0.365
+        ],
+        "up_maximum_m": 0.08,
+        "forward_interval_m": [
+          0.55,
+          0.725
+        ],
+        "taper_width_m": 0.025
+      }
+    }
+  ]
+}

@@ -9,7 +9,10 @@ import numpy as np
 import pytest
 
 from eonwild_motion.errors import ContractError
-from eonwild_motion.factory.rig_preparation import prepare_rig
+from eonwild_motion.factory.rig_preparation import (
+    _pedal_attachment_gain,
+    prepare_rig,
+)
 from eonwild_motion.glb.container import Glb
 from eonwild_motion.layers.leg_contact_resolve_v3 import _world_matrices
 from eonwild_motion.solve.whole_body_gait_transition import _encode
@@ -57,6 +60,27 @@ def weighted_config(source: Glb) -> dict:
         "selector": {"frame": "source_world", "lateral_interval_m": [-1000, 1000],
                      "up_maximum_m": 1000, "forward_interval_m": [-1000, 1000],
                      "blend_width_m": 0.01},
+    }]
+    return value
+
+
+def pedal_attachment_config(source: Glb) -> dict:
+    value = config(source)
+    value["reparents"] = []
+    value["pivot_relocations"] = []
+    value["articulations"] = []
+    value["pedal_attachment_transfers"] = [{
+        "role": "fixture_pedal_attachment",
+        "source_node": "Bone_011",
+        "root_node": "Bone_010",
+        "destination_nodes": ["Bone_010", "Bone_009"],
+        "selector": {
+            "frame": "source_world",
+            "lateral_interval_m": [-0.8, -0.3],
+            "up_maximum_m": 2.1,
+            "forward_interval_m": [0.9, 1.9],
+            "taper_width_m": 0.2,
+        },
     }]
     return value
 
@@ -346,3 +370,101 @@ def test_preparation_rejects_malformed_near_uniform_scale_policy(policy):
     candidate["near_uniform_scale_normalization"] = policy
     with pytest.raises(ContractError, match="near-uniform scale normalization"):
         prepare_rig(source, candidate)
+
+
+def test_pedal_attachment_has_full_gain_core_and_c2_outer_taper():
+    arguments = {
+        "up": 0.0,
+        "forward": 0.5,
+        "lateral_interval": (-0.5, 0.5),
+        "up_maximum": 0.5,
+        "forward_interval": (0.0, 1.0),
+        "taper_width": 0.2,
+    }
+    assert _pedal_attachment_gain(0.0, **arguments) == 1.0
+    assert _pedal_attachment_gain(-0.5, **arguments) == 1.0
+    assert _pedal_attachment_gain(-0.6, **arguments) == pytest.approx(0.5)
+    assert _pedal_attachment_gain(-0.7, **arguments) == 0.0
+    epsilon = 1e-6
+    outer = -0.7
+    boundary = -0.5
+    assert _pedal_attachment_gain(outer + epsilon, **arguments) < 2e-14
+    assert 1.0 - _pedal_attachment_gain(boundary - epsilon, **arguments) < 2e-14
+
+
+def test_preparation_transfers_upstream_attachment_to_owned_pedal_descendant():
+    source = Glb(SOURCE)
+    before = dense_weights(source)
+    raw, receipt = prepare_rig(source, pedal_attachment_config(source))
+    reopened = Glb.from_bytes(raw)
+    after = dense_weights(reopened)
+    row = receipt["pedal_attachment_transfers"][0]
+    source_slot = source.document["skins"][0]["joints"].index(
+        source.name_to_node["Bone_011"])
+    assert row["full_gain_vertex_count"] > 0
+    assert row["taper_vertex_count"] > 0
+    assert row["changed_vertex_count"] == (
+        row["full_gain_vertex_count"] + row["taper_vertex_count"])
+    assert np.count_nonzero(after[:, source_slot] < before[:, source_slot]) == (
+        row["changed_vertex_count"])
+    assert np.allclose(after.sum(axis=1), before.sum(axis=1), atol=2e-7, rtol=0)
+    assert receipt["measurements"]["maximum_reopened_neutral_skin_error_m"] < 3e-6
+
+
+@pytest.mark.parametrize(
+    "case", ["unrelated", "source", "duplicate", "missing_owner", "overlap"])
+def test_preparation_rejects_unsafe_pedal_attachment_topology_or_ownership(case):
+    source = Glb(SOURCE)
+    candidate = pedal_attachment_config(source)
+    transfer = candidate["pedal_attachment_transfers"][0]
+    if case == "unrelated":
+        transfer["destination_nodes"] = ["Bone_042"]
+    elif case == "source":
+        transfer["root_node"] = "Bone_011"
+    elif case == "duplicate":
+        transfer["destination_nodes"] = ["Bone_010", "Bone_010"]
+    elif case == "missing_owner":
+        transfer["destination_nodes"] = ["Bone_009"]
+    else:
+        duplicate = deepcopy(transfer)
+        duplicate["role"] = "overlapping_attachment"
+        candidate["pedal_attachment_transfers"].append(duplicate)
+    with pytest.raises(ContractError):
+        prepare_rig(source, candidate)
+
+
+@pytest.mark.parametrize("case", ["nan", "huge", "zero", "frame", "interval"])
+def test_preparation_rejects_malformed_pedal_attachment_selector(case):
+    source = Glb(SOURCE)
+    candidate = pedal_attachment_config(source)
+    selector = candidate["pedal_attachment_transfers"][0]["selector"]
+    if case == "nan":
+        selector["up_maximum_m"] = float("nan")
+    elif case == "huge":
+        selector["taper_width_m"] = 10 ** 1000
+    elif case == "zero":
+        selector["taper_width_m"] = 0.0
+    elif case == "frame":
+        selector["frame"] = "mesh_local"
+    else:
+        selector["lateral_interval_m"] = [-0.3, -0.8]
+    with pytest.raises(ContractError, match="pedal attachment"):
+        prepare_rig(source, candidate)
+
+
+def test_shared_material_rows_receive_pedal_attachment_once():
+    source = Glb(SOURCE)
+    single_raw, single_receipt = prepare_rig(
+        source, pedal_attachment_config(source))
+    document = deepcopy(source.document)
+    document["meshes"][0]["primitives"].append(
+        deepcopy(document["meshes"][0]["primitives"][0]))
+    repeated = Glb.from_bytes(_encode(document, source.binary))
+    repeated_raw, repeated_receipt = prepare_rig(
+        repeated, pedal_attachment_config(repeated))
+    assert np.array_equal(
+        dense_weights(Glb.from_bytes(single_raw)),
+        dense_weights(Glb.from_bytes(repeated_raw)),
+    )
+    assert repeated_receipt["pedal_attachment_transfers"] == (
+        single_receipt["pedal_attachment_transfers"])

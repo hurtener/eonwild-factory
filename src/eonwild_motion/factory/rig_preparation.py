@@ -91,13 +91,47 @@ def _is_descendant(node: int, ancestor: int, parents: list[int | None]) -> bool:
     return False
 
 
+def _attachment_axis_gain(value: float, low: float, high: float, taper: float) -> float:
+    """Return a C2 spatial gain that is one on [low, high]."""
+    if value < low:
+        unit = (value - (low - taper)) / taper
+    elif value > high:
+        unit = ((high + taper) - value) / taper
+    else:
+        return 1.0
+    unit = min(1.0, max(0.0, unit))
+    return unit * unit * unit * (10.0 + unit * (-15.0 + 6.0 * unit))
+
+
+def _pedal_attachment_gain(
+    lateral: float,
+    up: float,
+    forward: float,
+    *,
+    lateral_interval: tuple[float, float],
+    up_maximum: float,
+    forward_interval: tuple[float, float],
+    taper_width: float,
+) -> float:
+    lateral_gain = _attachment_axis_gain(
+        lateral, lateral_interval[0], lateral_interval[1], taper_width)
+    forward_gain = _attachment_axis_gain(
+        forward, forward_interval[0], forward_interval[1], taper_width)
+    up_gain = 1.0 if up <= up_maximum else _attachment_axis_gain(
+        up, up_maximum - taper_width, up_maximum, taper_width)
+    return min(lateral_gain, forward_gain, up_gain)
+
+
 def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str, Any]]:
     legacy_fields = {
         "schema", "id", "source_sha256", "skin_index", "reparents",
         "coordinate", "pivot_relocations", "articulations", "weight_transfers",
         "evidence", "limitations",
     }
-    optional_fields = {"endpoints", "near_uniform_scale_normalization", "weighted_branches"}
+    optional_fields = {
+        "endpoints", "near_uniform_scale_normalization", "weighted_branches",
+        "pedal_attachment_transfers",
+    }
     if (
         not isinstance(config, Mapping)
         or not legacy_fields <= set(config)
@@ -871,6 +905,252 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
             "endpoint": row["endpoint"]["name"], "selector": deepcopy(selector),
         })
 
+    # Attachment ownership is a separate post-branch stage. Reopen the
+    # serialized binary32 rows so its bound inputs are exactly the prepared
+    # pedal weights rather than higher-precision temporary calculations.
+    joint_row_cache.clear()
+    weight_row_cache.clear()
+    attachment_receipts = []
+    attachment_rows = config.get("pedal_attachment_transfers", [])
+    if not isinstance(attachment_rows, list):
+        raise ContractError("rig preparation pedal attachment transfers must be an array")
+    attachment_roles: set[str] = set()
+    claimed_attachment_vertices: set[tuple[
+        tuple[tuple[int, int, int, int, int, str, bool], ...], int,
+    ]] = set()
+    for transfer_index, raw in enumerate(attachment_rows):
+        row = _exact_object(
+            raw,
+            {"role", "source_node", "root_node", "destination_nodes", "selector"},
+            f"pedal_attachment_transfer[{transfer_index}]",
+        )
+        role = _name(row["role"], f"pedal_attachment_transfer[{transfer_index}] role")
+        source_name = _name(
+            row["source_node"], f"pedal_attachment_transfer[{transfer_index}] source node")
+        root_name = _name(
+            row["root_node"], f"pedal_attachment_transfer[{transfer_index}] root node")
+        destinations = row["destination_nodes"]
+        if role in attachment_roles:
+            raise ContractError("rig preparation pedal attachment roles must be unique")
+        attachment_roles.add(role)
+        if source_name not in names or root_name not in names:
+            raise ContractError("rig preparation pedal attachment references unknown topology")
+        if not isinstance(destinations, list) or not destinations:
+            raise ContractError("rig preparation pedal attachment destinations must be non-empty")
+        destination_names = [
+            _name(item, f"pedal_attachment_transfer[{transfer_index}] destination")
+            for item in destinations
+        ]
+        if len(set(destination_names)) != len(destination_names):
+            raise ContractError("rig preparation pedal attachment destinations must be unique")
+        if any(item not in names for item in destination_names):
+            raise ContractError("rig preparation pedal attachment references unknown topology")
+        source_node, root_node = names[source_name], names[root_name]
+        destination_nodes = [names[item] for item in destination_names]
+        joint_nodes = set(joints)
+        if source_node not in joint_nodes or root_node not in joint_nodes:
+            raise ContractError("rig preparation pedal attachment source and root must be skin joints")
+        if not _is_descendant(root_node, source_node, new_parents) or root_node == source_node:
+            raise ContractError("rig preparation pedal root must descend from its source joint")
+        if any(node not in joint_nodes or not _is_descendant(node, root_node, new_parents)
+               for node in destination_nodes):
+            raise ContractError(
+                "rig preparation pedal destinations must be skin-joint descendants of its root")
+        selector = _exact_object(
+            row["selector"],
+            {"frame", "lateral_interval_m", "up_maximum_m", "forward_interval_m",
+             "taper_width_m"},
+            f"pedal_attachment_transfer[{transfer_index}] selector",
+        )
+        if selector["frame"] != "source_world":
+            raise ContractError("rig preparation pedal attachment selector frame is unsupported")
+        try:
+            lateral_interval_raw = np.asarray(selector["lateral_interval_m"], dtype=float)
+            forward_interval_raw = np.asarray(selector["forward_interval_m"], dtype=float)
+        except (TypeError, ValueError, OverflowError) as exc:
+            raise ContractError("rig preparation pedal attachment selector is invalid") from exc
+        up_maximum_raw = selector["up_maximum_m"]
+        taper_width_raw = selector["taper_width_m"]
+        try:
+            up_maximum = float(up_maximum_raw)
+            taper_width = float(taper_width_raw)
+        except (TypeError, ValueError, OverflowError) as exc:
+            raise ContractError("rig preparation pedal attachment selector is invalid") from exc
+        if (
+            lateral_interval_raw.shape != (2,)
+            or forward_interval_raw.shape != (2,)
+            or not np.isfinite(lateral_interval_raw).all()
+            or not np.isfinite(forward_interval_raw).all()
+            or not lateral_interval_raw[0] < lateral_interval_raw[1]
+            or not forward_interval_raw[0] < forward_interval_raw[1]
+            or isinstance(up_maximum_raw, bool)
+            or not isinstance(up_maximum_raw, (int, float))
+            or not math.isfinite(up_maximum)
+            or isinstance(taper_width_raw, bool)
+            or not isinstance(taper_width_raw, (int, float))
+            or not math.isfinite(taper_width)
+            or not 0.0 < taper_width
+        ):
+            raise ContractError("rig preparation pedal attachment selector is invalid")
+        lateral_interval = tuple(map(float, lateral_interval_raw))
+        forward_interval = tuple(map(float, forward_interval_raw))
+        source_slot = joints.index(source_node)
+        destination_slots = [joints.index(node) for node in destination_nodes]
+        changed = full_gain = tapered = 0
+        maximum_amount = 0.0
+        destination_counts = {name: 0 for name in destination_names}
+        changed_rows = []
+        physical_bundles: set[
+            tuple[tuple[int, int, int, int, int, str, bool], ...]
+        ] = set()
+        physical_accessor_owners: list[tuple[
+            tuple[int, int, int, int, int, str, bool],
+            tuple[tuple[int, int, int, int, int, str, bool], ...],
+        ]] = []
+        for primitive_index, primitive in enumerate(primitives):
+            attrs = primitive.get("attributes") if isinstance(primitive, Mapping) else None
+            suffixes = sorted(
+                key.removeprefix("JOINTS_") for key in attrs or {} if key.startswith("JOINTS_"))
+            if (not isinstance(attrs, Mapping) or "POSITION" not in attrs or not suffixes
+                    or any(not suffix.isdecimal() or f"WEIGHTS_{suffix}" not in attrs
+                           for suffix in suffixes)):
+                raise ContractError(
+                    "rig preparation pedal attachment requires complete skin attributes")
+            position_accessor = _accessor_index(
+                source, attrs["POSITION"], label="pedal attachment POSITION",
+                accessor_type="VEC3", component_types=(5126,))
+            count = source.document["accessors"][position_accessor]["count"]
+            joint_accessors = [_accessor_index(
+                source, attrs[f"JOINTS_{suffix}"], label="pedal attachment JOINTS",
+                accessor_type="VEC4", component_types=(5121, 5123), expected_count=count)
+                for suffix in suffixes]
+            weight_accessors = [_accessor_index(
+                source, attrs[f"WEIGHTS_{suffix}"], label="pedal attachment WEIGHTS",
+                accessor_type="VEC4", component_types=(5126,), expected_count=count)
+                for suffix in suffixes]
+            first_rows, bundle = admit_physical_skin_rows(
+                position_accessor, joint_accessors, weight_accessors,
+                bundles=physical_bundles, accessor_owners=physical_accessor_owners)
+            if not first_rows:
+                continue
+            positions = np.asarray(source.accessor_values(position_accessor), dtype=float)
+            world_positions = (original_world[mesh_node] @ np.column_stack(
+                (positions, np.ones(len(positions)))).T).T[:, :3]
+            lateral = world_positions @ axes[0]
+            up = world_positions @ axes[1]
+            forward = world_positions @ axes[2]
+            for accessor in joint_accessors:
+                joint_row_cache.setdefault(accessor, binary_rows(accessor, dtype=int))
+            for accessor in weight_accessors:
+                weight_row_cache.setdefault(accessor, binary_rows(accessor, dtype=float))
+            joint_rows = [joint_row_cache[accessor] for accessor in joint_accessors]
+            weight_rows = [weight_row_cache[accessor] for accessor in weight_accessors]
+            for vertex in range(count):
+                gain = _pedal_attachment_gain(
+                    float(lateral[vertex]), float(up[vertex]), float(forward[vertex]),
+                    lateral_interval=lateral_interval,
+                    up_maximum=up_maximum,
+                    forward_interval=forward_interval,
+                    taper_width=taper_width,
+                )
+                if gain <= 1e-8:
+                    continue
+                source_entries = [
+                    (set_index, column)
+                    for set_index, joint_row in enumerate(joint_rows)
+                    for column in range(4)
+                    if int(joint_row[vertex, column]) == source_slot
+                    and weight_rows[set_index][vertex, column] > 0.0
+                ]
+                if not source_entries:
+                    continue
+                destination_entries = [
+                    (set_index, column, destination_slots.index(
+                        int(joint_row[vertex, column])))
+                    for set_index, joint_row in enumerate(joint_rows)
+                    for column in range(4)
+                    if int(joint_row[vertex, column]) in destination_slots
+                    and weight_rows[set_index][vertex, column] > 0.0
+                ]
+                if not destination_entries:
+                    raise ContractError(
+                        "rig preparation pedal attachment selects source weight without pedal ownership")
+                destination = max(
+                    destination_entries,
+                    key=lambda item: (
+                        float(weight_rows[item[0]][vertex, item[1]]), -item[2],
+                        -item[0], -item[1],
+                    ),
+                )
+                source_amount = float(sum(
+                    weight_rows[set_index][vertex, column]
+                    for set_index, column in source_entries))
+                amount = source_amount * gain
+                # The destination storage is binary32. Ignore a vanishing
+                # spatial tail before claiming that a serialized row changed.
+                if amount <= 1e-7:
+                    continue
+                key = (bundle, vertex)
+                if key in claimed_attachment_vertices:
+                    raise ContractError("rig preparation pedal attachment selectors overlap")
+                claimed_attachment_vertices.add(key)
+                for set_index, column in source_entries:
+                    weight_rows[set_index][vertex, column] *= 1.0 - gain
+                    if weight_rows[set_index][vertex, column] <= 1e-8:
+                        weight_rows[set_index][vertex, column] = 0.0
+                        joint_rows[set_index][vertex, column] = 0
+                weight_rows[destination[0]][vertex, destination[1]] += amount
+                total = sum(float(weights[vertex].sum()) for weights in weight_rows)
+                if not math.isclose(total, 1.0, abs_tol=2e-5, rel_tol=0.0):
+                    raise ContractError(
+                        "rig preparation pedal attachment input weights are not normalized")
+                changed += 1
+                if gain == 1.0:
+                    full_gain += 1
+                else:
+                    tapered += 1
+                maximum_amount = max(maximum_amount, amount)
+                destination_name = destination_names[destination[2]]
+                destination_counts[destination_name] += 1
+                changed_rows.append({
+                    "physical_bundle": bundle,
+                    "vertex": vertex,
+                    "source_slot": source_slot,
+                    "destination_slot": destination_slots[destination[2]],
+                    "gain": gain,
+                    "transferred_weight": amount,
+                })
+            for accessor, rows in zip(joint_accessors, joint_rows):
+                _, _, _, _, code = source.accessor_layout(accessor)
+                start, row_count, stride = source.accessor_region(accessor)
+                for vertex in range(row_count):
+                    struct.pack_into(
+                        "<" + code * 4, binary, start + vertex * stride, *rows[vertex].tolist())
+            for accessor, rows in zip(weight_accessors, weight_rows):
+                _, _, _, _, code = source.accessor_layout(accessor)
+                start, row_count, stride = source.accessor_region(accessor)
+                for vertex in range(row_count):
+                    struct.pack_into(
+                        "<" + code * 4, binary, start + vertex * stride, *rows[vertex].tolist())
+        if changed == 0 or full_gain == 0 or tapered == 0:
+            raise ContractError(
+                "rig preparation pedal attachment requires full-gain core and tapered rows")
+        changed_bytes = json.dumps(
+            changed_rows, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+        attachment_receipts.append({
+            "role": role,
+            "source_node": source_name,
+            "root_node": root_name,
+            "destination_nodes": destination_names,
+            "selector": deepcopy(selector),
+            "changed_vertex_count": changed,
+            "full_gain_vertex_count": full_gain,
+            "taper_vertex_count": tapered,
+            "maximum_transferred_weight": maximum_amount,
+            "destination_counts": destination_counts,
+            "changed_rows_sha256": _digest(changed_bytes),
+        })
+
     matrices = []
     for node in joints:
         inverse = np.linalg.solve(output_world[node], mesh_world)
@@ -955,6 +1235,7 @@ def prepare_rig(source: Glb, config: Mapping[str, Any]) -> tuple[bytes, dict[str
         "articulations": articulation_rows,
         "weight_transfers": weight_transfer_rows,
         "weighted_branches": weighted_receipts,
+        "pedal_attachment_transfers": attachment_receipts,
         "measurements": {
             "maximum_input_neutral_skin_error_m": source_skin_error,
             "maximum_local_trs_projection_error": max(projection_errors, default=0.0),
