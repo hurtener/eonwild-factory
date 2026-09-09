@@ -52,15 +52,21 @@ from .performance import phase_and_gain
 from .skin_rig import SkinRig
 from .grounded_transition_clearance import GroundedTransitionClearanceResolver
 from .grounded_transition_clearance import GroundedTransitionClearanceUnavailable
-from .authored_material_contact import AuthoredMaterialContactAdapter
+from .grounded_transition_clearance import _monotone_floor
+from .authored_material_contact import (
+    AuthoredMaterialContactAdapter,
+    TARGET_MATERIAL_GAP_M,
+    TARGET_RESIDUAL_LIMIT_M,
+)
 
 
 CONTINUOUS_SKIN_TARGET_UNAVAILABLE = "CONTINUOUS_SKIN_TARGET_UNAVAILABLE"
 BRANCH_OR_CONVERGENCE_UNAVAILABLE = "BRANCH_OR_CONVERGENCE_UNAVAILABLE"
 RAW_NUMERICAL_PROBE_ONLY = "RAW_NUMERICAL_PROBE_ONLY"
 TRANSITION_CLEARANCE_UNAVAILABLE = "TRANSITION_CLEARANCE_UNAVAILABLE"
-
-
+AUTHORED_MATERIAL_CLEARANCE_UNAVAILABLE = (
+    "AUTHORED_MATERIAL_CLEARANCE_UNAVAILABLE"
+)
 def _readonly(value: np.ndarray) -> np.ndarray:
     copy = np.array(value, dtype=float, copy=True)
     copy.setflags(write=False)
@@ -239,9 +245,10 @@ class SourceMotionQuery:
                 source_clip=source_clip,
                 legacy_overlay=legacy_overlay,
             )
-        if authored_material_contact is not None and type(
-            authored_material_contact
-        ) is not AuthoredMaterialContactAdapter:
+        if (
+            authored_material_contact is not None
+            and type(authored_material_contact) is not AuthoredMaterialContactAdapter
+        ):
             raise ContractError(
                 "source motion query authored material contact must be its owned adapter"
             )
@@ -772,10 +779,17 @@ class SourceMotionQuery:
         time = _finite_time(time_s)
         return self._evaluate_owned(time, side=side, target_offsets=None)
 
-    def grounded_touchdown_observation(self, time_s: Any, side: str) -> Mapping[str, Any]:
+    def grounded_touchdown_observation(
+        self, time_s: Any, side: str
+    ) -> Mapping[str, Any]:
         """Expose the exact pre-refinement ankle target for one grounded touchdown."""
-        if type(self._locomotion_gait) is not GroundedGait or self._transition is not None:
-            raise ContractError("touchdown observation requires steady grounded locomotion")
+        if (
+            type(self._locomotion_gait) is not GroundedGait
+            or self._transition is not None
+        ):
+            raise ContractError(
+                "touchdown observation requires steady grounded locomotion"
+            )
         if side not in ("left", "right"):
             raise ContractError("touchdown observation side must be left or right")
         time = _finite_time(time_s)
@@ -787,8 +801,9 @@ class SourceMotionQuery:
             touchdown = float(row_foot["touchdown_time_s"])
         except (KeyError, TypeError, ValueError) as exc:
             raise ContractError("touchdown observation is incomplete") from exc
-        if (row_foot.get("contact") is not True
-                or not math.isclose(touchdown, time, rel_tol=0.0, abs_tol=1e-10)):
+        if row_foot.get("contact") is not True or not math.isclose(
+            touchdown, time, rel_tol=0.0, abs_tol=1e-10
+        ):
             raise ContractError("requested source time is not a canonical touchdown")
         target = grounded_touchdown_target(
             self._context,
@@ -796,21 +811,25 @@ class SourceMotionQuery:
             side=side,
             body_response_sample=self._body_sample(index, row),
         )
-        return _freeze_data({
-            "source_geometry_sha256": hashlib.sha256(self._source.raw).hexdigest(),
-            "body_height_m": float(self._context.body_height),
-            "gait_parameters_sha256": canonical_hash(gait_parameters(self._locomotion_gait)),
-            "side": side,
-            "event": "canonical_touchdown",
-            "time_s": time,
-            "coordinate": {
-                "lateral": self._context.lateral.tolist(),
-                "up": self._context.up.tolist(),
-                "forward": self._context.forward.tolist(),
-            },
-            "hip_world_m": target["hip_world_m"],
-            "target_ankle_world_m": target["target_ankle_world_m"],
-        })
+        return _freeze_data(
+            {
+                "source_geometry_sha256": hashlib.sha256(self._source.raw).hexdigest(),
+                "body_height_m": float(self._context.body_height),
+                "gait_parameters_sha256": canonical_hash(
+                    gait_parameters(self._locomotion_gait)
+                ),
+                "side": side,
+                "event": "canonical_touchdown",
+                "time_s": time,
+                "coordinate": {
+                    "lateral": self._context.lateral.tolist(),
+                    "up": self._context.up.tolist(),
+                    "forward": self._context.forward.tolist(),
+                },
+                "hip_world_m": target["hip_world_m"],
+                "target_ankle_world_m": target["target_ankle_world_m"],
+            }
+        )
 
     @staticmethod
     def _target_offsets(value: Mapping[str, Any]) -> dict[str, list[float]]:
@@ -864,12 +883,18 @@ class SourceMotionQuery:
         side: str,
         target_offsets: Mapping[str, list[float]] | None,
         transition_clearance_integrity_proved: bool = False,
+        authored_material_integrity_proved: bool = False,
     ) -> SourceMotionResult | SourceMotionUnavailable:
         if side not in ("value", "left_limit", "right_limit"):
             raise ContractError(
                 "source motion query side must be value, left_limit, or right_limit"
             )
         self._validate_domain(time)
+        if (
+            self._authored_material_contact is not None
+            and not authored_material_integrity_proved
+        ):
+            self._authored_material_contact.validate_for_query(self)
         index = self._exact_index(time)
         if self._refined and (
             target_offsets is not None or index is None or side != "value"
@@ -903,6 +928,8 @@ class SourceMotionQuery:
                 row = self._authored_material_contact._resolve_owned(
                     self, row, sampled_time
                 )
+                if "performance" in self._plan:
+                    declare_pad_recovery_sample(_thaw(self._plan["parameters"]), row)
         except GroundedTransitionClearanceUnavailable as exc:
             return SourceMotionUnavailable(
                 TRANSITION_CLEARANCE_UNAVAILABLE, sampled_time, str(exc)
@@ -913,20 +940,136 @@ class SourceMotionQuery:
                     target_offsets[foot_side]
                 )
         body = self._body_sample(index, row)
-        pose = solve_airborne_plan_sample(self._context, row, body_response_sample=body)
-        worlds = _readonly(
-            _world_matrices(
-                self._source, pose.translations, pose.rotations, self._context.base_s
-            )
-        )
         material = None
-        if self._skin is not None:
-            material = MappingProxyType(
-                {
-                    name: _readonly(self._skin.skin(worlds, ids))
-                    for name, ids in self._skin.foot_masks.items()
-                }
+
+        def solve_owned() -> tuple[
+            SolvedAirbornePose, np.ndarray, Mapping[str, np.ndarray] | None
+        ]:
+            pose = solve_airborne_plan_sample(
+                self._context, row, body_response_sample=body
             )
+            worlds = _readonly(
+                _world_matrices(
+                    self._source,
+                    pose.translations,
+                    pose.rotations,
+                    self._context.base_s,
+                )
+            )
+            points = None
+            if self._skin is not None:
+                points = MappingProxyType(
+                    {
+                        name: _readonly(self._skin.skin(worlds, ids))
+                        for name, ids in self._skin.foot_masks.items()
+                    }
+                )
+            return pose, worlds, points
+
+        pose, worlds, material = solve_owned()
+        if self._authored_material_contact is not None and material is not None:
+            up_index = int(np.argmax(np.abs(self._context.up)))
+
+            for foot_side in ("left", "right"):
+                if row["feet"][foot_side]["contact"]:
+                    continue
+                requested_gap = TARGET_MATERIAL_GAP_M + float(
+                    row["feet"][foot_side]["authored_material_clearance_m"]
+                )
+
+                def measure(height: float) -> tuple[float, int, float]:
+                    row["feet"][foot_side]["height_m"] = float(height)
+                    measured_pose, _, measured = solve_owned()
+                    if measured is None:
+                        raise GroundedTransitionClearanceUnavailable(
+                            "authored material clearance needs target skin"
+                        )
+                    points = measured[foot_side]
+                    index = int(np.argmin(points[:, up_index]))
+                    material_gap = float(
+                        points[index, up_index] - self._skin.ground
+                    )
+                    target_residual = float(
+                        measured_pose.feet[foot_side]["foot_target_residual_m"]
+                    )
+                    return material_gap, index, target_residual
+
+                try:
+                    material_height = _monotone_floor(
+                        lambda height: measure(height)[:2],
+                        self._context.body_height,
+                        foot_side,
+                        target_gap_m=requested_gap,
+                        purpose="authored material clearance",
+                    )
+
+                    def measure_reach(height: float) -> tuple[float, int]:
+                        _, vertex_index, residual = measure(height)
+                        return TARGET_RESIDUAL_LIMIT_M - residual, vertex_index
+
+                    _, _, material_height_residual = measure(material_height)
+                    reach_height = 0.0
+                    if material_height_residual > TARGET_RESIDUAL_LIMIT_M:
+                        reach_ceiling = min(
+                            self._context.body_height,
+                            max(0.01, 2 * material_height_residual),
+                        )
+                        reach_value, _ = measure_reach(reach_ceiling)
+                        while (
+                            reach_value < 0.0
+                            and reach_ceiling < self._context.body_height
+                        ):
+                            reach_ceiling = min(
+                                self._context.body_height, 2 * reach_ceiling
+                            )
+                            reach_value, _ = measure_reach(reach_ceiling)
+                        reach_height = _monotone_floor(
+                            measure_reach,
+                            reach_ceiling,
+                            foot_side,
+                            target_gap_m=0.0,
+                            purpose="authored target reach",
+                        )
+                    row["feet"][foot_side]["height_m"] = max(
+                        material_height, reach_height
+                    )
+                except GroundedTransitionClearanceUnavailable as exc:
+                    return SourceMotionUnavailable(
+                        AUTHORED_MATERIAL_CLEARANCE_UNAVAILABLE,
+                        sampled_time,
+                        str(exc),
+                    )
+            pose, worlds, material = solve_owned()
+            for foot_side in ("left", "right"):
+                if row["feet"][foot_side]["contact"]:
+                    continue
+                requested_clearance = float(
+                    row["feet"][foot_side]["authored_material_clearance_m"]
+                )
+                achieved_gap = float(
+                    material[foot_side][:, up_index].min() - self._skin.ground
+                )
+                target_residual = float(
+                    pose.feet[foot_side]["foot_target_residual_m"]
+                )
+                if (
+                    achieved_gap + 1e-10
+                    < TARGET_MATERIAL_GAP_M + requested_clearance
+                    or target_residual > TARGET_RESIDUAL_LIMIT_M + 1e-10
+                ):
+                    return SourceMotionUnavailable(
+                        AUTHORED_MATERIAL_CLEARANCE_UNAVAILABLE,
+                        sampled_time,
+                        f"{foot_side} final authored material and reach gates disagree",
+                    )
+                row["feet"][foot_side][
+                    "authored_material_achieved_clearance_m"
+                ] = achieved_gap - TARGET_MATERIAL_GAP_M
+                row["feet"][foot_side]["authored_material_adaptation_m"] = (
+                    achieved_gap
+                    - TARGET_MATERIAL_GAP_M
+                    - requested_clearance
+                )
         return SourceMotionResult(
             "AVAILABLE",
             sampled_time,

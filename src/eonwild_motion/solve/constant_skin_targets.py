@@ -416,6 +416,7 @@ class CanonicalConstantSkinTargetLaw:
                 side="value",
                 target_offsets=query._target_offsets(self._constants),
                 transition_clearance_integrity_proved=True,
+                authored_material_integrity_proved=True,
             )
         if isinstance(result, SourceMotionUnavailable):
             raise ContractError("constant skin target source value is unavailable")

@@ -28,21 +28,28 @@ class GroundedTransitionClearanceUnavailable(RuntimeError):
     """The bound distal solve cannot establish a safe material floor."""
 
 
-def _monotone_floor(measure: Any, ceiling: float, side: str) -> float:
+def _monotone_floor(
+    measure: Any,
+    ceiling: float,
+    side: str,
+    *,
+    target_gap_m: float = TARGET_GAP_M,
+    purpose: str = "transition steady",
+) -> float:
     """Find the first safe height while checking the measured solve branch."""
     lo, hi = 0.0, float(ceiling)
     gap_lo, _ = measure(lo)
-    if gap_lo >= TARGET_GAP_M:
+    if gap_lo >= target_gap_m:
         return 0.0
     gap_hi, _ = measure(hi)
-    if gap_hi < TARGET_GAP_M:
+    if gap_hi < target_gap_m:
         raise GroundedTransitionClearanceUnavailable(
-            f"{side} transition steady target does not clear the material floor"
+            f"{side} {purpose} target does not clear the material floor"
         )
     for _ in range(_MAX_ITERATIONS):
         if hi - lo <= _HEIGHT_TOLERANCE_M:
             return hi
-        fraction = (TARGET_GAP_M - gap_lo) / (gap_hi - gap_lo)
+        fraction = (target_gap_m - gap_lo) / (gap_hi - gap_lo)
         fraction = min(0.9, max(0.1, fraction))
         mid = lo + fraction * (hi - lo)
         gap_mid, _ = measure(mid)
@@ -51,16 +58,16 @@ def _monotone_floor(measure: Any, ceiling: float, side: str) -> float:
             or gap_mid > gap_hi + _MONOTONIC_TOLERANCE_M
         ):
             raise GroundedTransitionClearanceUnavailable(
-                f"{side} transition material gap is nonmonotone"
+                f"{side} {purpose} material gap is nonmonotone"
             )
-        if gap_mid >= TARGET_GAP_M:
+        if gap_mid >= target_gap_m:
             hi, gap_hi = mid, gap_mid
-            if gap_mid <= TARGET_GAP_M + _GAP_TOLERANCE_M:
+            if gap_mid <= target_gap_m + _GAP_TOLERANCE_M:
                 return hi
         else:
             lo, gap_lo = mid, gap_mid
     raise GroundedTransitionClearanceUnavailable(
-        f"{side} transition material floor did not converge"
+        f"{side} {purpose} material floor did not converge"
     )
 
 
