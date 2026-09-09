@@ -1,0 +1,75 @@
+name: Shared locomotion set
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/shared-motion-set.yml'
+      - 'assets/sha256/**'
+      - 'catalog/**'
+      - 'pyproject.toml'
+      - 'src/eonwild_motion/**'
+      - 'tools/verify_compiled_motion_set.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: shared-locomotion-set-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  actual-shared-grounded-set:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    env:
+      PYTHONPATH: src
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '2'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with: {fetch-depth: 1, persist-credentials: false, show-progress: false}
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with: {python-version: '3.13'}
+      - name: Capture exact hosted source
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out/shared-locomotion-set-ci
+          git rev-parse HEAD > out/shared-locomotion-set-ci/source.txt
+          git rev-parse 'HEAD^{tree}' > out/shared-locomotion-set-ci/tree.txt
+          git status --porcelain=v1 > out/shared-locomotion-set-ci/status.txt
+          sha256sum catalog/motion-sets/tarbosaurus-pin-552-1-adult-grounded.v1.json > out/shared-locomotion-set-ci/motion-set.sha256
+      - run: python -m pip install -e .
+      - run: python -m pip freeze > out/shared-locomotion-set-ci/python-packages.txt
+      - name: Compile and reopen the actual current shared set
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -uo pipefail
+          python -m eonwild_motion.factory compile-set \
+            --motion-set catalog/motion-sets/tarbosaurus-pin-552-1-adult-grounded.v1.json \
+            --motions walk fast-walk walk-start walk-stop \
+            --interpolation CUBICSPLINE \
+            --output out/shared-locomotion-set-ci/packages \
+            2>&1 | tee out/shared-locomotion-set-ci/compile-set.log
+          status=${PIPESTATUS[0]}
+          echo "$status" > out/shared-locomotion-set-ci/compile-set.exit-code.txt
+          exit "$status"
+      - name: Verify emitted start and stop joins against shared walk
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/verify_compiled_motion_set.py \
+            --packages out/shared-locomotion-set-ci/packages \
+            --motions walk fast-walk walk-start walk-stop \
+            --handoff walk-start:walk \
+            --handoff walk-stop:walk \
+            --output out/shared-locomotion-set-ci/handoffs \
+            2>&1 | tee out/shared-locomotion-set-ci/verify-handoffs.log
+          test "$(cat out/shared-locomotion-set-ci/compile-set.exit-code.txt)" = 0
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: shared-locomotion-set-packages-and-handoffs
+          path: out/shared-locomotion-set-ci
+          if-no-files-found: error
+          retention-days: 14
