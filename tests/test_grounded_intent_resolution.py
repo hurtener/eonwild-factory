@@ -155,12 +155,21 @@ def test_exact_touchdown_observations_recover_centered_fraction_basis():
     )
 
 
-def test_source_query_exposes_bound_touchdown_observations():
+def test_source_query_exposes_bound_touchdown_observations_without_leg_solve(
+    monkeypatch,
+):
     gait = GroundedGait(
         centered_stance=True, step_length_body_heights=0.6,
         cycles=1, sample_hz=24,
     )
     query, *_ = _grounded_query(gait=gait)
+    monkeypatch.setattr(
+        type(query),
+        "evaluate",
+        lambda *args, **kwargs: (_ for _ in ()).throw(
+            AssertionError("touchdown observation must not execute the leg solve")
+        ),
+    )
     left = query.grounded_touchdown_observation(0.0, "left")
     right = query.grounded_touchdown_observation(gait.step_period_s, "right")
     combined = {
