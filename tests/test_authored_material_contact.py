@@ -14,6 +14,7 @@ from eonwild_motion.solve.grounded_transition_clearance import (
 )
 from eonwild_motion.solve.source_motion_query import (
     SourceMotionQuery,
+    _bounded_authored_joint_height,
     _bounded_authored_reach_height,
 )
 from test_constant_skin_targets import _inputs
@@ -211,6 +212,73 @@ def test_bounded_reach_fails_without_a_safe_bracket():
         GroundedTransitionClearanceUnavailable, match="no feasible bracket"
     ):
         _bounded_authored_reach_height(lambda height: (-0.01, 7), 0.2, "left")
+
+
+def test_joint_feasibility_brackets_measured_knee_clamp_coupling():
+    target_gap = 0.013291004300055361
+    switch = 0.014294463389953738
+
+    def measure(height):
+        gap = height - 0.001003459074860946
+        residual = 1.7683600841332874e-7
+        extension = 0.0
+        if height >= switch:
+            gap += 1.8284080999086266e-5
+            residual = 6.127252780483835e-5
+            extension = 6.1363103e-5
+        return gap, 398, residual, extension, 0.0
+
+    resolved = _bounded_authored_joint_height(
+        measure,
+        0.013191004300055362,
+        2.106182073161406,
+        "right",
+        target_gap_m=target_gap,
+    )
+    gap, vertex, residual, extension, articulation = measure(resolved)
+    assert switch - 1e-6 <= resolved < 0.014336423246479702
+    assert vertex == 398
+    assert gap >= target_gap
+    assert residual <= 0.001
+    assert extension <= 0.001
+    assert articulation <= 0.01
+
+
+def test_joint_feasibility_fails_without_safe_interval():
+    with pytest.raises(
+        GroundedTransitionClearanceUnavailable, match="no safe bracket"
+    ):
+        _bounded_authored_joint_height(
+            lambda height: (height, 398, 0.0011, 0.0, 0.0),
+            0.01,
+            0.02,
+            "right",
+            target_gap_m=0.011,
+        )
+
+
+def test_joint_feasibility_rechecks_final_combined_gates():
+    ceiling_calls = 0
+
+    def measure(height):
+        nonlocal ceiling_calls
+        if height == 0.02:
+            ceiling_calls += 1
+            residual = 0.0 if ceiling_calls == 1 else 0.0011
+            return 0.02, 398, residual, 0.0, 0.0
+        return height, 398, 0.0011, 0.0, 0.0
+
+    with pytest.raises(
+        GroundedTransitionClearanceUnavailable,
+        match="final combined gates disagree",
+    ):
+        _bounded_authored_joint_height(
+            measure,
+            0.019,
+            0.02,
+            "right",
+            target_gap_m=0.0195,
+        )
 
 
 def test_adapter_rejects_cross_query_reuse_and_internal_tamper():

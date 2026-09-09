@@ -69,6 +69,7 @@ AUTHORED_MATERIAL_CLEARANCE_UNAVAILABLE = (
 )
 _AUTHORED_REACH_HEIGHT_TOLERANCE_M = 1e-6
 _AUTHORED_REACH_MAX_ITERATIONS = 24
+_AUTHORED_JOINT_MAX_BRACKET_STEPS = 24
 
 
 def _bounded_authored_reach_height(
@@ -102,6 +103,83 @@ def _bounded_authored_reach_height(
     raise GroundedTransitionClearanceUnavailable(
         f"{side} authored target reach did not converge"
     )
+
+
+def _bounded_authored_joint_height(
+    measure: Any,
+    seed_height: float,
+    ceiling: float,
+    side: str,
+    *,
+    target_gap_m: float,
+) -> float:
+    """Resolve one observed safe material/reach bracket after a clamp switch.
+
+    This is an authored-material engineering resolution for the local upward
+    height component starting at the declared source height. It does not claim
+    that the black-box solver is globally monotone or that the returned bracket
+    is the global first or minimum feasible interval. Final package gates remain
+    authoritative for continuous-time acceptance.
+    """
+
+    def admitted(sample: tuple[float, int, float, float, float]) -> bool:
+        gap, _, residual, extension, articulation = sample
+        return (
+            gap >= target_gap_m
+            and residual <= TARGET_RESIDUAL_LIMIT_M
+            and extension <= TARGET_RESIDUAL_LIMIT_M
+            and articulation <= 0.01
+        )
+
+    lo = max(0.0, float(seed_height))
+    hi_limit = float(ceiling)
+    if lo > hi_limit:
+        raise GroundedTransitionClearanceUnavailable(
+            f"{side} authored material joint feasibility seed exceeds its ceiling"
+        )
+    lo_sample = measure(lo)
+    if admitted(lo_sample):
+        return lo
+    step = max(
+        _AUTHORED_REACH_HEIGHT_TOLERANCE_M,
+        target_gap_m - float(lo_sample[0]),
+    )
+    hi = lo
+    hi_sample = lo_sample
+    for _ in range(_AUTHORED_JOINT_MAX_BRACKET_STEPS):
+        candidate = min(hi_limit, hi + step)
+        if candidate <= hi:
+            break
+        hi = candidate
+        hi_sample = measure(hi)
+        if admitted(hi_sample):
+            break
+        lo = hi
+        lo_sample = hi_sample
+        step *= 2.0
+    else:
+        raise GroundedTransitionClearanceUnavailable(
+            f"{side} authored material joint feasibility did not find a safe bracket"
+        )
+    if not admitted(hi_sample):
+        raise GroundedTransitionClearanceUnavailable(
+            f"{side} authored material joint feasibility has no safe bracket"
+        )
+    for _ in range(_AUTHORED_REACH_MAX_ITERATIONS):
+        if hi - lo <= _AUTHORED_REACH_HEIGHT_TOLERANCE_M:
+            break
+        mid = 0.5 * (lo + hi)
+        mid_sample = measure(mid)
+        if admitted(mid_sample):
+            hi, hi_sample = mid, mid_sample
+        else:
+            lo, lo_sample = mid, mid_sample
+    final_sample = measure(hi)
+    if not admitted(final_sample):
+        raise GroundedTransitionClearanceUnavailable(
+            f"{side} authored material joint feasibility final combined gates disagree"
+        )
+    return hi
 
 
 def _readonly(value: np.ndarray) -> np.ndarray:
@@ -1012,7 +1090,9 @@ class SourceMotionQuery:
                     row["feet"][foot_side]["authored_material_clearance_m"]
                 )
 
-                def measure(height: float) -> tuple[float, int, float]:
+                def measure(
+                    height: float,
+                ) -> tuple[float, int, float, float, float]:
                     row["feet"][foot_side]["height_m"] = float(height)
                     measured_pose, _, measured = solve_owned()
                     if measured is None:
@@ -1027,22 +1107,44 @@ class SourceMotionQuery:
                     target_residual = float(
                         measured_pose.feet[foot_side]["foot_target_residual_m"]
                     )
-                    return material_gap, index, target_residual
-
-                try:
-                    material_height = _monotone_floor(
-                        lambda height: measure(height)[:2],
-                        self._context.body_height,
-                        foot_side,
-                        target_gap_m=requested_gap,
-                        purpose="authored material clearance",
+                    return (
+                        material_gap,
+                        index,
+                        target_residual,
+                        float(measured_pose.maximum_unreachable_extension_m),
+                        float(
+                            measured_pose.maximum_articulation_envelope_violation_degrees
+                        ),
                     )
 
+                try:
+                    try:
+                        material_height = _monotone_floor(
+                            lambda height: measure(height)[:2],
+                            self._context.body_height,
+                            foot_side,
+                            target_gap_m=requested_gap,
+                            purpose="authored material clearance",
+                        )
+                    except GroundedTransitionClearanceUnavailable as exc:
+                        if str(exc) != (
+                            f"{foot_side} authored material clearance "
+                            "material gap is nonmonotone"
+                        ):
+                            raise
+                        material_height = _bounded_authored_joint_height(
+                            measure,
+                            float(row["feet"][foot_side]["height_m"]),
+                            self._context.body_height,
+                            foot_side,
+                            target_gap_m=requested_gap,
+                        )
+
                     def measure_reach(height: float) -> tuple[float, int]:
-                        _, vertex_index, residual = measure(height)
+                        _, vertex_index, residual, _, _ = measure(height)
                         return TARGET_RESIDUAL_LIMIT_M - residual, vertex_index
 
-                    _, _, material_height_residual = measure(material_height)
+                    _, _, material_height_residual, _, _ = measure(material_height)
                     reach_height = 0.0
                     if material_height_residual > TARGET_RESIDUAL_LIMIT_M:
                         reach_ceiling = min(
@@ -1087,6 +1189,10 @@ class SourceMotionQuery:
                     achieved_gap + 1e-10
                     < TARGET_MATERIAL_GAP_M + requested_clearance
                     or target_residual > TARGET_RESIDUAL_LIMIT_M + 1e-10
+                    or pose.maximum_unreachable_extension_m
+                    > TARGET_RESIDUAL_LIMIT_M + 1e-10
+                    or pose.maximum_articulation_envelope_violation_degrees
+                    > 0.01 + 1e-10
                 ):
                     return SourceMotionUnavailable(
                         AUTHORED_MATERIAL_CLEARANCE_UNAVAILABLE,
