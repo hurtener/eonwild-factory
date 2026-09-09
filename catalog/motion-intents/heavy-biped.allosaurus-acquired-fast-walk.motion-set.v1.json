@@ -8,7 +8,7 @@
   "program": "grounded_gait",
   "program_profile": {
     "path": "catalog/programs/heavy-biped.acquired-fast-walk.v1.json",
-    "sha256": "d77f8426702df529f19cc32e577ff0fdbb0c91ec76b310b2a24123065165f89d"
+    "sha256": "63ff5bc60d91bd1b0373d38b71180328fda59ca47d5fe9c1d915a25d68bd5591"
   },
   "schema": "eonwild.motion.motion-intent.v2",
   "version": 1

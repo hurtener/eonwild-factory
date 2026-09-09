@@ -15,7 +15,7 @@
     {
       "intent": {
         "path": "catalog/motion-intents/heavy-biped.allosaurus-acquired-fast-walk.motion-set.v1.json",
-        "sha256": "759198e8c2bae0035b77164c62e74776ca6fbd73f7bde3d07583caa8d48a3721"
+        "sha256": "803b466dd51f3020d6c7ea3676ed76c9598aa4c8102b69532035076df11c40f4"
       },
       "name": "fast-walk"
     }

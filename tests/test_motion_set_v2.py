@@ -279,7 +279,7 @@ def test_allosaurus_acquired_fast_walk_changes_only_portable_gait_intent():
         "description",
     }
     gait = load_grounded_gait(json.loads(fast.program_profile_bytes))
-    assert gait.step_period_s == 0.8
+    assert gait.step_period_s == 1.1
     assert gait.duty_factor == 0.62
     assert gait.step_length_body_heights == 0.6
     assert gait.pelvis_height_carrier == "stance_vault_proxy"
