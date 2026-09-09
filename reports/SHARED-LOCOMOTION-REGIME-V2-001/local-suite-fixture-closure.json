@@ -1,0 +1,32 @@
+{
+  "claim": "The missing tracked fixture is closed. The prior full run remains FAILED_FIXTURE and is not relabeled as a clean full-suite pass; hosted validation remains required.",
+  "focused_closure": {
+    "command": "python -m pytest -q --tb=short tests/test_animal_instance.py",
+    "log_sha256": "f102e581c5d82bb9aa5eb69af347e64f35112c258341d3b5fe53c55b7bfc6d3c",
+    "passed": 13,
+    "seconds": 3.05
+  },
+  "full_run": {
+    "failed": 1,
+    "failure": "tests/test_animal_instance.py::test_adult_walk_profile_has_observable_distal_release_and_tail_coordination",
+    "junit_sha256": "0ad59d90d5cc936bcb95d3690e2b306edc031bc5b36068aa480de91cacd32ba8",
+    "log_sha256": "932c13e756a105cb90f2155eae155f7ca371129b1e7e4cd368296dbdf1095f32",
+    "passed": 1122,
+    "reason": "tracked reference media absent from sparse checkout",
+    "seconds": 598.12,
+    "status": "FAILED_FIXTURE",
+    "subtests_passed": 21
+  },
+  "head": "c6abde3020d198657d203f45254d366d5105ca26",
+  "materialization": {
+    "actual_sha256": "7f981e34a38955b44df799069693c57a5b5c881083ae4cbd62419e5cdc7d3ea5",
+    "bytes": 61324124,
+    "expected_sha256": "7f981e34a38955b44df799069693c57a5b5c881083ae4cbd62419e5cdc7d3ea5",
+    "hash_matches": true,
+    "missing_path": "assets/examples/tarbosaurus/Tarbosaurus#walk_side_v02.mp4",
+    "tracked_files": 25,
+    "tracked_tree": "assets/examples"
+  },
+  "schema": "eonwild.motion.local-full-suite-fixture-closure.v1",
+  "tree": "0724ad419f6c74c3a9ba61c28cbc012716d12cfd"
+}

@@ -1,4 +1,4 @@
-# V9 motion quality: candidates and direct joins are separate gates
+# Motion quality: shared baselines, candidates and joins have separate gates
 
 PR #2 continues the existing engine and approved references. **Quality-01 is
 REJECTED**. Technical acceptance, source integrity, native visual review and
@@ -6,10 +6,16 @@ Unity parity are separate; none transfers automatically to a newer candidate.
 
 ## Current integration checkpoint
 
-The Allosaurus onboarding implementation at `215588c75c5e64f5ce9f9dbbe3fa5fcfdfca03a4`
-passed the complete local suite: **1,078 tests plus 21 subtests**, with no
-exclusions, in 632.05 seconds. Both bounded reviews and the narrow compatibility
-fixes are closed. See the [integration receipt](../reports/ALLOSAURUS-ANATOMICAL-ONBOARDING-001/integration/receipt.json).
+The shared locomotion regime v2 implementation at
+`58c4f763d3bb1cabd333c4e27ee7a0aabc39d3f3` passed both bounded closure
+reviews with no remaining P0/P1/P2 finding. Combined head
+`c6abde3020d198657d203f45254d366d5105ca26` adds the published handoff
+floor calibration with both parent deltas byte-identical. Its local complete
+invocation reached **1,122 tests plus 21 subtests passed and one missing sparse
+fixture**. Materializing the tracked reference media closed the entire failing
+module at 13/13, but the original complete run remains `FAILED_FIXTURE`; hosted
+validation is pending. See the
+[shared-regime checkpoint](../reports/SHARED-LOCOMOTION-REGIME-V2-001/README.md).
 
 The provisional Allosaurus source has explicit joint relocations, effector
 endpoints, bounded scale normalization and complete eight-influence admission.
@@ -17,16 +23,21 @@ Its first actual walk is **REJECTED**: the unchanged body-height-relative intent
 places touchdown 44.993 mm beyond the provisional limb's reach. The equivalent
 Tarbosaurus configuration has 154.203 mm of reach margin. This is evidence for
 shared morphology-aware intent resolution, not permission to stretch bones or
-increase correction limits. Hand/pedal detail, hip placement and anatomical
-approval remain unfinished.
+increase correction limits. The first shared-v2 resolution still blocks on the
+right loaded-contact residual and early-swing reach. Hand/pedal detail, hip
+placement and anatomical approval remain unfinished.
 
 V10 walk and shared fast walk remain the working baselines, with the confirmed
 proximal thigh surface intersection still open. The sprint component-selection
 prototype is rejected: it moves the discontinuity earlier and still exceeds
 15,000 degrees/s of solved foot pitch. No rejected sprint pose replaces either
-walking baseline. The new full walk-start export records technical PASS, but
-actual shared start/steady/stop handoffs and connected native review are pending;
-the start handoff exposed an unscaled-versus-animal-scaled floor comparison in
+walking baseline. The full walk-start and walk-stop exports record technical
+PASS, and both actual start-to-steady and steady-to-stop handoffs pass.
+Connected root-motion side and three-quarter review covered all 572 frames in
+each view without a new gross join discontinuity. In-place review was still
+rendering, native-speed playback and Unity parity remain NOT_RUN, and the known
+thigh fold remains. The start handoff had exposed an
+unscaled-versus-animal-scaled floor comparison in
 the verifier. The reviewed fix at `1f783f8` reuses the compiler's bound animal
 calibration without changing floor equality or join limits. The author's actual
 start-to-steady replay and independent root replay pass both modes.

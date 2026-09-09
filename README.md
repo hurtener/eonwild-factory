@@ -4,10 +4,12 @@
 continues V9 and the merged factory baseline, not another numbered toolkit.
 
 PR #2 is still a draft: **quality-01 is rejected** and new candidates do not
-inherit the approval of the preserved V9 takes. Execution is restored. Read
-[the final local continuation evidence](reports/V9-CONTINUATION-FINAL-4AE0FE9-001/README.md)
-and [the current motion/evidence status](docs/MOTION_QUALITY_STATUS.md) for the
-verified improvements and remaining transition/handoff acceptance work.
+inherit the approval of the preserved V9 takes. The current reviewed checkpoint
+adds one shared, versioned animal motion-set baseline for grounded locomotion
+and grounded transitions; airborne admission remains closed. Read the
+[shared-regime checkpoint](reports/SHARED-LOCOMOTION-REGIME-V2-001/README.md)
+and [current motion/evidence status](docs/MOTION_QUALITY_STATUS.md) for the
+verified behavior and remaining gates.
 
 ## One active generation path
 
@@ -37,7 +39,7 @@ uv run python -m eonwild_motion.factory verify out/walk-v3
 
 # Resolve several grounded motions through one animal/body baseline.
 uv run python -m eonwild_motion.factory compile-set \
-  --motion-set catalog/motion-sets/tarbosaurus-pin-552-1-adult-grounded.v1.json \
+  --motion-set catalog/motion-sets/tarbosaurus-pin-552-1-adult-locomotion.v2.json \
   --motions walk fast-walk walk-start walk-stop \
   --output out/tarbosaurus-adult-grounded
 ```
@@ -125,12 +127,14 @@ Both tools retain mechanical rejection even when diagnostic rendering succeeds.
 uv run python -m pytest tests -q --tb=short
 ```
 
-The 2026-09-08 v7 and CUBICSPLINE-consumer Stage A integration head
-`3b1f55602ba2d8d177c42ec15ccb02d401f92b7d` passed 788 tests plus 21
-subtests in 237.65 seconds with the pinned real tools. Hosted CI for the
-publication head is pending; the local result does not approve motion or
-authorize merging draft PR #2. The receipt and bounded review closure are in
-[the Stage A integration report](reports/V9-CUBICSPLINE-CONSUMER-STAGE-A-001/README.md).
+The shared-regime integration head
+`c6abde3020d198657d203f45254d366d5105ca26` completed 1,122 tests plus
+21 subtests with one sparse-checkout fixture failure. After the missing tracked
+reference media was materialized, its full fixture module passed 13 tests. The
+original run remains `FAILED_FIXTURE`, and hosted validation is pending. See the
+[shared-regime checkpoint](reports/SHARED-LOCOMOTION-REGIME-V2-001/README.md)
+for the exact boundary; this does not approve motion or authorize merging draft
+PR #2.
 
 The earlier 2026-09-08 final continuation head
 `4ae0fe92ec3ffd49dfeca14085756cc7cbe7d852` passed 683 tests plus 21

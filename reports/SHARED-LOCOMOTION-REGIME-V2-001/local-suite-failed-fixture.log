@@ -1,0 +1,31 @@
+...............................F........................................ [  6%]
+........................................................................ [ 12%]
+.................................................................... [ 18%]
+........................................................................ [ 25%]
+........................................................................ [ 31%]
+........................................................................ [ 38%]
+................................................................. [ 43%]
+........................................................................ [ 50%]
+........................................................................ [ 56%]
+........................................................................ [ 63%]
+........................................................................ [ 69%]
+.............................................................. [ 75%]
+........................................................................ [ 81%]
+........................................................................ [ 87%]
+........................................................................ [ 94%]
+................................................................         [100%]
+=================================== FAILURES ===================================
+_ test_adult_walk_profile_has_observable_distal_release_and_tail_coordination __
+tests/test_animal_instance.py:108: in test_adult_walk_profile_has_observable_distal_release_and_tail_coordination
+    assert hashlib.sha256((ROOT/asset['path']).read_bytes()).hexdigest()==asset['sha256']
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Users/santiagobenvenuto/.local/share/uv/python/cpython-3.12.10-macos-aarch64-none/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+/Users/santiagobenvenuto/.local/share/uv/python/cpython-3.12.10-macos-aarch64-none/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: '/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/worktrees/eonwild-shared-locomotion-regime-v2/assets/examples/tarbosaurus/Tarbosaurus#walk_side_v02.mp4'
+=========================== short test summary info ============================
+FAILED tests/test_animal_instance.py::test_adult_walk_profile_has_observable_distal_release_and_tail_coordination
+1 failed, 1122 passed, 21 subtests passed in 598.12s (0:09:58)
