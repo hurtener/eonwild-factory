@@ -1089,6 +1089,7 @@ class SourceMotionQuery:
                 requested_gap = TARGET_MATERIAL_GAP_M + float(
                     row["feet"][foot_side]["authored_material_clearance_m"]
                 )
+                declared_height = float(row["feet"][foot_side]["height_m"])
 
                 def measure(
                     height: float,
@@ -1134,7 +1135,7 @@ class SourceMotionQuery:
                             raise
                         material_height = _bounded_authored_joint_height(
                             measure,
-                            float(row["feet"][foot_side]["height_m"]),
+                            declared_height,
                             self._context.body_height,
                             foot_side,
                             target_gap_m=requested_gap,

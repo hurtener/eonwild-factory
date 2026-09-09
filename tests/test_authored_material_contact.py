@@ -216,14 +216,29 @@ def test_bounded_reach_fails_without_a_safe_bracket():
 
 def test_joint_feasibility_brackets_measured_knee_clamp_coupling():
     target_gap = 0.013291004300055361
-    switch = 0.014294463389953738
+    lower = (0.014268489938549051, 0.013265030863688103)
+    middle = (0.014294463389953738, 0.013351248213287592)
+    upper = (0.014336423246479702, 0.013332964132288506)
+
+    assert middle[0] < upper[0]
+    assert middle[1] > upper[1] + 1e-8
+
+    def interpolate(left, right, height):
+        gain = (height - left[0]) / (right[0] - left[0])
+        return left[1] + gain * (right[1] - left[1])
 
     def measure(height):
-        gap = height - 0.001003459074860946
+        if height <= lower[0]:
+            gap = lower[1] + height - lower[0]
+        elif height <= middle[0]:
+            gap = interpolate(lower, middle, height)
+        elif height <= upper[0]:
+            gap = interpolate(middle, upper, height)
+        else:
+            gap = upper[1] + height - upper[0]
         residual = 1.7683600841332874e-7
         extension = 0.0
-        if height >= switch:
-            gap += 1.8284080999086266e-5
+        if height >= middle[0]:
             residual = 6.127252780483835e-5
             extension = 6.1363103e-5
         return gap, 398, residual, extension, 0.0
@@ -236,7 +251,7 @@ def test_joint_feasibility_brackets_measured_knee_clamp_coupling():
         target_gap_m=target_gap,
     )
     gap, vertex, residual, extension, articulation = measure(resolved)
-    assert switch - 1e-6 <= resolved < 0.014336423246479702
+    assert lower[0] < resolved <= upper[0]
     assert vertex == 398
     assert gap >= target_gap
     assert residual <= 0.001
