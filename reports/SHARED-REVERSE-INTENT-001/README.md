@@ -1,5 +1,9 @@
 # Shared reverse intent checkpoint
 
+The later [source CUBIC refinement checkpoint](../SOURCE-CUBIC-REFINEMENT-001/README.md)
+closes the retained steady diagnostic undershoot. This report preserves the
+earlier implementation and its historical acceptance boundary.
+
 Implementation `6b600aa5b5fedf0187835bec24282408ab047e3c` and local
 reach-check correction `cbb3da714bc96f1cfdb9a6f568b1cd5943b83a0a` extend
 the existing grounded resolver to signed strides and fixed touchdown placement.

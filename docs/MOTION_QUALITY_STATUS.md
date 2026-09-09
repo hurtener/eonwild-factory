@@ -6,11 +6,19 @@ Unity parity are separate; none transfers automatically to a newer candidate.
 
 ## Current integration checkpoint
 
-The later [shared reverse-intent checkpoint](../reports/SHARED-REVERSE-INTENT-001/README.md)
-adds reviewed signed/fixed-placement resolution through the same adult baseline.
-Its actual steady diagnostic remains blocked by a between-key ankle undershoot;
-reverse starts/stops and their direct joins are incomplete. This is reusable
-configuration and resolver progress, not approval of another animation.
+The latest [source CUBIC refinement checkpoint](../reports/SOURCE-CUBIC-REFINEMENT-001/README.md)
+closes the reverse-walk between-key ankle undershoot with one source-derived
+key and unchanged limits. The exact integrated release package verifies PASS
+and has identical animation bytes to the independently reviewed candidate.
+Both code reviews and narrow immutable-cache correction reviews are closed.
+Root inspected 120 side/front frames; native-speed user and Unity acceptance
+remain open. Reverse starts/stops and their actual direct joins are still
+separate, unfinished acceptance requirements.
+
+The preceding [shared reverse-intent checkpoint](../reports/SHARED-REVERSE-INTENT-001/README.md)
+records signed/fixed-placement resolution through the same adult baseline and
+the retained rejected diagnostic. Its historical failure is superseded only
+by the later source-bound steady package above.
 
 The shared locomotion regime v2 implementation at
 `58c4f763d3bb1cabd333c4e27ee7a0aabc39d3f3` passed both bounded closure
