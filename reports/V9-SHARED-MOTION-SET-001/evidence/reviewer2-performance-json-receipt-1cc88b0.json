@@ -1,0 +1,15 @@
+{
+  "schema": "eonwild.motion.shared-set-performance-json-review.v1",
+  "result": "PASS",
+  "findings": {"P0": 0, "P1": 0},
+  "head": "1cc88b0b1669764421da1ef11cd48aa6ca9bbd08",
+  "tree": "a33800102d942652841d4863477f2e8d8f8866a7",
+  "parent": "62e4b60a399672fc68f9817aeabc6bff8c300912",
+  "focused": {"result": "1 passed in 1.10s", "log_sha256": "5beef0f5d302fb12666a7ce7ac1117654f854b8eed2924bb1a949e6a3bd31241"},
+  "retained_fast_package": {
+    "result": {"integrity": "PASS", "technical_status": "PASS", "visual_review": "PENDING", "unity_parity": "NOT_RUN", "production_approved": false},
+    "receipt_sha256": "5143eda8e25834a8e70183eae913921ab83b99ab49ef6184e12090e3a95b3722"
+  },
+  "author_receipt_sha256": "6255d7122a65ef25133df6d0d1e2a395691532a2098d27875d73b940d4665970",
+  "report_sha256": "e01ad6ef20cd4ecd796724a006ba3ed24dca73f9bf034c92ee68b109e5bf4752"
+}

@@ -1,0 +1,76 @@
+{
+  "schema": "eonwild.motion.host-independent-local-loop-probe.v1",
+  "captured_utc": "2026-09-08T07:01:06.692113+00:00",
+  "method": "Independent adjacent LINEAR translation and normalized shortest quaternion-log angular slopes read directly from original GLB accessors. No exact-emitted helper imported. Local channel scope only.",
+  "evaluator_patch_sha": "52e826ccd7e05dd2e82c37e889af8cf0a977c7a0",
+  "results": {
+    "root_motion": {
+      "glb_sha256": "4a2c3587d932a8c8bab002b9e536f1ed22a28388e928cbe18fe8845b553e7e7b",
+      "linear_mm_per_s": {
+        "value": 1.7287400202002907,
+        "bone": "Bone_001",
+        "incoming": [
+          -0.046517859063916464,
+          0.021396630615640597,
+          -0.04388765670721212
+        ],
+        "outgoing": [
+          -0.04643966352389965,
+          0.02253782498558608,
+          -0.04259146886397013
+        ]
+      },
+      "angular_degrees_per_s": {
+        "value": 3.410359591039676,
+        "bone": "Bone_010",
+        "incoming": [
+          0.995995154465033,
+          -2.4622748055774353e-07,
+          -0.21484531791865846
+        ],
+        "outgoing": [
+          0.9378111533111012,
+          2.0863762234590035e-07,
+          -0.20229577948090247
+        ]
+      }
+    },
+    "in_place": {
+      "glb_sha256": "2878670fbeacfd7e99014e8a75537d5711deea5ceafc96362b5fbc545a63aa0b",
+      "linear_mm_per_s": {
+        "value": 1.7287400202002907,
+        "bone": "Bone_001",
+        "incoming": [
+          -0.046517859063916464,
+          0.021396630615640597,
+          -0.04388765670721212
+        ],
+        "outgoing": [
+          -0.04643966352389965,
+          0.02253782498558608,
+          -0.04259146886397013
+        ]
+      },
+      "angular_degrees_per_s": {
+        "value": 3.410359591039676,
+        "bone": "Bone_010",
+        "incoming": [
+          0.995995154465033,
+          -2.4622748055774353e-07,
+          -0.21484531791865846
+        ],
+        "outgoing": [
+          0.9378111533111012,
+          2.0863762234590035e-07,
+          -0.20229577948090247
+        ]
+      }
+    }
+  },
+  "limits": {
+    "linear_mm_per_s": 1,
+    "angular_degrees_per_s": 10
+  },
+  "status": "BLOCKED",
+  "existing_package_and_visual_receipts": "UNCHANGED"
+}

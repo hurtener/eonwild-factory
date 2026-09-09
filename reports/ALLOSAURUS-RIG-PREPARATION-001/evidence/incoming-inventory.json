@@ -1,0 +1,559 @@
+{
+  "schema": "eonwild.incoming-animal-inspection.v1",
+  "original": "/Users/santiagobenvenuto/Downloads/Allosaurus.glb",
+  "preserved_copy": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/incoming/allosaurus/91d9816b6bbaeb1037f3e9cbf253261799d8a4121efd91e0e2185f76908a6bf7.glb",
+  "sha256": "91d9816b6bbaeb1037f3e9cbf253261799d8a4121efd91e0e2185f76908a6bf7",
+  "bytes": 19395616,
+  "source_unchanged": true,
+  "generator": "Khronos glTF Blender I/O v4.5.51",
+  "joints": [
+    {
+      "node": 47,
+      "name": "Bone_000",
+      "parent": 49,
+      "position_xyz": [
+        0.008342626504600048,
+        1.0921043157577515,
+        0.5708661675453186
+      ],
+      "dominant_vertex_count": 195
+    },
+    {
+      "node": 46,
+      "name": "Bone_001",
+      "parent": 47,
+      "position_xyz": [
+        0.008342627435922623,
+        1.0727360361579037,
+        0.53212957265029
+      ],
+      "dominant_vertex_count": 743
+    },
+    {
+      "node": 34,
+      "name": "Bone_003",
+      "parent": 46,
+      "position_xyz": [
+        0.008342626504600048,
+        1.0533676592134027,
+        0.8807597033501157
+      ],
+      "dominant_vertex_count": 855
+    },
+    {
+      "node": 33,
+      "name": "Bone_002",
+      "parent": 34,
+      "position_xyz": [
+        0.008342626504600048,
+        1.014630944926961,
+        1.0357064354906913
+      ],
+      "dominant_vertex_count": 369
+    },
+    {
+      "node": 20,
+      "name": "Bone_017",
+      "parent": 33,
+      "position_xyz": [
+        0.008342626504600048,
+        1.0727360667219066,
+        1.1325480495744022
+      ],
+      "dominant_vertex_count": 1426
+    },
+    {
+      "node": 19,
+      "name": "Bone_016",
+      "parent": 20,
+      "position_xyz": [
+        0.008342625573277473,
+        1.150209392465759,
+        1.4230731422813279
+      ],
+      "dominant_vertex_count": 107
+    },
+    {
+      "node": 18,
+      "name": "Bone_015",
+      "parent": 19,
+      "position_xyz": [
+        0.008342625573277473,
+        1.188946177260778,
+        1.5199149969048389
+      ],
+      "dominant_vertex_count": 775
+    },
+    {
+      "node": 5,
+      "name": "Bone_035",
+      "parent": 18,
+      "position_xyz": [
+        -0.08849897703294081,
+        1.0146310370210234,
+        1.461809922154101
+      ],
+      "dominant_vertex_count": 230
+    },
+    {
+      "node": 4,
+      "name": "Bone_034",
+      "parent": 5,
+      "position_xyz": [
+        -0.16597227674510376,
+        0.9565260058947475,
+        1.4424416892134742
+      ],
+      "dominant_vertex_count": 725
+    },
+    {
+      "node": 3,
+      "name": "Bone_033",
+      "parent": 4,
+      "position_xyz": [
+        -0.18534064611491297,
+        0.7822109298907057,
+        1.3649683299118147
+      ],
+      "dominant_vertex_count": 811
+    },
+    {
+      "node": 2,
+      "name": "Bone_032",
+      "parent": 3,
+      "position_xyz": [
+        -0.16597235107391647,
+        0.5110541280292055,
+        1.4424417496223956
+      ],
+      "dominant_vertex_count": 1021
+    },
+    {
+      "node": 1,
+      "name": "Bone_031",
+      "parent": 2,
+      "position_xyz": [
+        -0.12723560333219103,
+        0.4335807801921513,
+        1.44244181255849
+      ],
+      "dominant_vertex_count": 39
+    },
+    {
+      "node": 0,
+      "name": "Bone_030",
+      "parent": 1,
+      "position_xyz": [
+        -0.1078671910202529,
+        0.4142123487076331,
+        1.4618100809078163
+      ],
+      "dominant_vertex_count": 200
+    },
+    {
+      "node": 11,
+      "name": "Bone_041",
+      "parent": 18,
+      "position_xyz": [
+        0.10518440714735978,
+        1.0146310194616819,
+        1.4618098981389345
+      ],
+      "dominant_vertex_count": 626
+    },
+    {
+      "node": 10,
+      "name": "Bone_040",
+      "parent": 11,
+      "position_xyz": [
+        0.18265774651673122,
+        0.9565260210704662,
+        1.4424415522785876
+      ],
+      "dominant_vertex_count": 701
+    },
+    {
+      "node": 9,
+      "name": "Bone_039",
+      "parent": 10,
+      "position_xyz": [
+        0.20202606325955544,
+        0.7822108448495572,
+        1.3649680231186214
+      ],
+      "dominant_vertex_count": 1067
+    },
+    {
+      "node": 8,
+      "name": "Bone_038",
+      "parent": 9,
+      "position_xyz": [
+        0.18265770323627445,
+        0.5110540149973326,
+        1.442441345926359
+      ],
+      "dominant_vertex_count": 725
+    },
+    {
+      "node": 7,
+      "name": "Bone_037",
+      "parent": 8,
+      "position_xyz": [
+        0.14392094842541908,
+        0.43358061587077945,
+        1.4424413176404283
+      ],
+      "dominant_vertex_count": 84
+    },
+    {
+      "node": 6,
+      "name": "Bone_036",
+      "parent": 7,
+      "position_xyz": [
+        0.1245526085155734,
+        0.41421213530218076,
+        1.4618095584882247
+      ],
+      "dominant_vertex_count": 288
+    },
+    {
+      "node": 17,
+      "name": "Bone_047",
+      "parent": 18,
+      "position_xyz": [
+        0.00834278918287141,
+        1.28578789742915,
+        1.6167568376283246
+      ],
+      "dominant_vertex_count": 2618
+    },
+    {
+      "node": 16,
+      "name": "Bone_046",
+      "parent": 17,
+      "position_xyz": [
+        0.0083427974031859,
+        1.4019978836387856,
+        1.7523351270636043
+      ],
+      "dominant_vertex_count": 1875
+    },
+    {
+      "node": 15,
+      "name": "Bone_045",
+      "parent": 16,
+      "position_xyz": [
+        0.008342827228115073,
+        1.4988397300177791,
+        1.9072818458233978
+      ],
+      "dominant_vertex_count": 6016
+    },
+    {
+      "node": 14,
+      "name": "Bone_044",
+      "parent": 15,
+      "position_xyz": [
+        0.008342888375357614,
+        1.382629548018493,
+        2.1203335563839287
+      ],
+      "dominant_vertex_count": 1
+    },
+    {
+      "node": 13,
+      "name": "Bone_043",
+      "parent": 14,
+      "position_xyz": [
+        0.008342895224816831,
+        1.3632614000162149,
+        2.1397019903682
+      ],
+      "dominant_vertex_count": 909
+    },
+    {
+      "node": 12,
+      "name": "Bone_042",
+      "parent": 13,
+      "position_xyz": [
+        0.008342937496081775,
+        1.305156313859504,
+        2.2946485149453313
+      ],
+      "dominant_vertex_count": 2375
+    },
+    {
+      "node": 26,
+      "name": "Bone_023",
+      "parent": 33,
+      "position_xyz": [
+        -0.18534078914672136,
+        1.0921043174352894,
+        0.5708661027687608
+      ],
+      "dominant_vertex_count": 971
+    },
+    {
+      "node": 25,
+      "name": "Bone_022",
+      "parent": 26,
+      "position_xyz": [
+        -0.18534078914672136,
+        0.7628425306398215,
+        0.5902343884580651
+      ],
+      "dominant_vertex_count": 1045
+    },
+    {
+      "node": 24,
+      "name": "Bone_021",
+      "parent": 25,
+      "position_xyz": [
+        -0.1466040832366695,
+        0.33673906406103077,
+        0.4546558060936125
+      ],
+      "dominant_vertex_count": 751
+    },
+    {
+      "node": 23,
+      "name": "Bone_020",
+      "parent": 24,
+      "position_xyz": [
+        -0.1659724408639151,
+        0.10431903978834105,
+        0.4740241039659348
+      ],
+      "dominant_vertex_count": 1271
+    },
+    {
+      "node": 22,
+      "name": "Bone_019",
+      "parent": 23,
+      "position_xyz": [
+        -0.1853408141274541,
+        0.007477325530936668,
+        0.6483390902335685
+      ],
+      "dominant_vertex_count": 263
+    },
+    {
+      "node": 21,
+      "name": "Bone_018",
+      "parent": 22,
+      "position_xyz": [
+        -0.1853407963116022,
+        0.04621400497180057,
+        0.6483390846103603
+      ],
+      "dominant_vertex_count": 4
+    },
+    {
+      "node": 32,
+      "name": "Bone_029",
+      "parent": 33,
+      "position_xyz": [
+        0.20202604215592146,
+        1.0921043174352894,
+        0.5708661027687608
+      ],
+      "dominant_vertex_count": 928
+    },
+    {
+      "node": 31,
+      "name": "Bone_028",
+      "parent": 32,
+      "position_xyz": [
+        0.20202604215592146,
+        0.7628425306398215,
+        0.5902343884580651
+      ],
+      "dominant_vertex_count": 1067
+    },
+    {
+      "node": 30,
+      "name": "Bone_027",
+      "parent": 31,
+      "position_xyz": [
+        0.16328934162386005,
+        0.3367390794076165,
+        0.4546558549844108
+      ],
+      "dominant_vertex_count": 863
+    },
+    {
+      "node": 29,
+      "name": "Bone_026",
+      "parent": 30,
+      "position_xyz": [
+        0.18265766816999243,
+        0.10431901015119395,
+        0.4740241695916439
+      ],
+      "dominant_vertex_count": 1136
+    },
+    {
+      "node": 28,
+      "name": "Bone_025",
+      "parent": 29,
+      "position_xyz": [
+        0.2020259797374916,
+        0.007477346251315837,
+        0.6483391441510483
+      ],
+      "dominant_vertex_count": 216
+    },
+    {
+      "node": 27,
+      "name": "Bone_024",
+      "parent": 28,
+      "position_xyz": [
+        0.20202598988975892,
+        0.046214021860416066,
+        0.6483391253186296
+      ],
+      "dominant_vertex_count": 11
+    },
+    {
+      "node": 45,
+      "name": "Bone_014",
+      "parent": 46,
+      "position_xyz": [
+        0.008342626504600048,
+        1.1308408927042137,
+        0.3384461652160142
+      ],
+      "dominant_vertex_count": 3463
+    },
+    {
+      "node": 44,
+      "name": "Bone_013",
+      "parent": 45,
+      "position_xyz": [
+        0.008342626504600048,
+        1.1308408784653459,
+        -0.1651305072801296
+      ],
+      "dominant_vertex_count": 978
+    },
+    {
+      "node": 43,
+      "name": "Bone_012",
+      "parent": 44,
+      "position_xyz": [
+        0.008342626504600048,
+        1.1502092972350466,
+        -0.49439227054470997
+      ],
+      "dominant_vertex_count": 696
+    },
+    {
+      "node": 42,
+      "name": "Bone_011",
+      "parent": 43,
+      "position_xyz": [
+        0.008342627435922623,
+        1.1695777565174807,
+        -0.8042856369038459
+      ],
+      "dominant_vertex_count": 592
+    },
+    {
+      "node": 41,
+      "name": "Bone_010",
+      "parent": 42,
+      "position_xyz": [
+        0.008342627435922623,
+        1.1695777490735961,
+        -1.0948106581072308
+      ],
+      "dominant_vertex_count": 493
+    },
+    {
+      "node": 40,
+      "name": "Bone_009",
+      "parent": 41,
+      "position_xyz": [
+        0.008342627435922623,
+        1.1889459226062307,
+        -1.3853356429952932
+      ],
+      "dominant_vertex_count": 228
+    },
+    {
+      "node": 39,
+      "name": "Bone_008",
+      "parent": 40,
+      "position_xyz": [
+        0.008342627435922623,
+        1.1889459163733211,
+        -1.6564923650184362
+      ],
+      "dominant_vertex_count": 138
+    },
+    {
+      "node": 38,
+      "name": "Bone_007",
+      "parent": 39,
+      "position_xyz": [
+        0.008342627435922623,
+        1.1889459101404107,
+        -1.9276492062508135
+      ],
+      "dominant_vertex_count": 80
+    },
+    {
+      "node": 37,
+      "name": "Bone_006",
+      "parent": 38,
+      "position_xyz": [
+        0.008342627435922623,
+        1.1889459043527113,
+        -2.1794376463337337
+      ],
+      "dominant_vertex_count": 65
+    },
+    {
+      "node": 36,
+      "name": "Bone_005",
+      "parent": 37,
+      "position_xyz": [
+        0.008342627435922623,
+        1.1695776220909706,
+        -2.4699626376270203
+      ],
+      "dominant_vertex_count": 44
+    },
+    {
+      "node": 35,
+      "name": "Bone_004",
+      "parent": 36,
+      "position_xyz": [
+        0.008342627085413406,
+        1.169577622811521,
+        -2.3537528943249315
+      ],
+      "dominant_vertex_count": 21
+    }
+  ],
+  "joint_count": 48,
+  "vertex_count": 40105,
+  "animations": 0,
+  "maximum_influences": 8,
+  "vertices_over_four_influences": 9913,
+  "maximum_weight_sum_error": 1.341104507446289e-07,
+  "neutral_skinned_bounds_xyz": [
+    [
+      -0.3560880370802695,
+      1.031182289863628e-07,
+      -2.479646877835659
+    ],
+    [
+      0.35340493025783914,
+      1.7000002993686802,
+      2.478647734059364
+    ]
+  ],
+  "status": "UNADMITTED_STARTING_RIG",
+  "scope": "Read-only source inventory and preserved SSD copy. No semantic admission, rig correction, biomechanical calibration, motion generation, or Unity validation."
+}

@@ -1,0 +1,24 @@
+{
+  "3": {
+    "status": "ACCEPTED",
+    "mask_counts": {
+      "left": {
+        "sole": 169,
+        "toe": 1395
+      },
+      "right": {
+        "sole": 31,
+        "toe": 1386
+      }
+    },
+    "max_matched_contact_vertex_delta_m": 0.0
+  },
+  "2": {
+    "status": "REJECTED",
+    "error": "source geometry skin accessors differ from the complete primitive attributes"
+  },
+  "1": {
+    "status": "REJECTED",
+    "error": "source geometry skin accessors differ from the complete primitive attributes"
+  }
+}

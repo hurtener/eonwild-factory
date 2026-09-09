@@ -228,6 +228,7 @@ def test_periodic_response_has_no_startup_transient_and_tracks_actual_drive():
     for x, y in zip(a["samples"], b["samples"]):
         assert x["sagittal_node_degrees"] == pytest.approx(y["sagittal_node_degrees"])
     assert driven_body_response(AirborneGait(), build_airborne_plan(AirborneGait(), 2), roles) is None
+
     plan = build_airborne_plan(gait, 2)
     for row in plan["samples"]:
         row["pelvis_vertical_velocity_mps"] = 0
@@ -284,6 +285,18 @@ def test_continuous_body_c2_launch_and_loop_keep_original_extrema():
         a, b = (continuous_body_state(gait, t + d, height) for d in (-1e-7, 1e-7))
         assert a == pytest.approx(b, abs=.001)
     assert continuous_body_state(gait, 0, height) == pytest.approx(continuous_body_state(gait, 2 * gait.step_period_s, height))
+
+
+@pytest.mark.parametrize('change', [
+    {'handoff_phase_fraction': -.01, 'handoff_sample_hz': 960, 'boundary_sample_hz': 480},
+    {'handoff_phase_fraction': .26, 'handoff_sample_hz': 960, 'boundary_sample_hz': 480},
+    {'handoff_phase_fraction': .125, 'handoff_sample_hz': 960, 'boundary_sample_hz': 0},
+    {'handoff_phase_fraction': .125, 'handoff_sample_hz': None, 'boundary_sample_hz': 480},
+    {'handoff_phase_fraction': None, 'handoff_sample_hz': 960, 'boundary_sample_hz': 480},
+])
+def test_airborne_interface_sampling_fails_closed(change):
+    with pytest.raises(ContractError):
+        AirborneGait(**change)
 
 
 def test_rounded_clearance_has_no_plateau_and_keeps_c2_contact_endpoints():

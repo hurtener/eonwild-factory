@@ -1,0 +1,47 @@
+{
+  "schema": "eonwild.motion.factory-recipe.v1",
+  "id": "heavy-biped.tarbosaurus-pin-552-1-adult-walk.v7",
+  "version": 7,
+  "family": "heavy-predatory-biped",
+  "program": "grounded_gait",
+  "description": "One-cycle adult PIN 552-1 support-speed diagnostic that preserves the v6 gait, feet, timing, vertical/lateral/pitch controls and constant root motor while adding one support-phased local pelvis forward-velocity proxy; kinematic art direction only, with no COM, force, work, mass-response or biological claim",
+  "supersedes": "heavy-biped.tarbosaurus-pin-552-1-adult-walk.v6",
+  "source": {
+    "path": "assets/sha256/044a8be907eb650fa71c613f19655eb10a0dd23c1d6bce86dfef93cd8d9575f6.glb",
+    "sha256": "044a8be907eb650fa71c613f19655eb10a0dd23c1d6bce86dfef93cd8d9575f6"
+  },
+  "rig": {
+    "path": "catalog/rigs/heavy-biped.v9.json",
+    "sha256": "c3de770bf7dcc68219a28fb9851e9b75f3d3eebe2c2c0c7deb0078850100fd7e"
+  },
+  "animal": {
+    "path": "catalog/animals/tarbosaurus-bataar-pin-552-1.adult.v1.json",
+    "sha256": "dbb0336caacea988fdc5b5c9250fa4490f281e8442b23acf24502a7e35896a7b"
+  },
+  "program_profile": {
+    "path": "catalog/programs/heavy-biped.tarbosaurus-adult-walk.v4.json",
+    "sha256": "271ccb833a8913d3dc6bd8281e798e54b9c7bebad2080136245cb7b5e5afa725"
+  },
+  "contact_profile": {
+    "path": "catalog/contacts/heavy-biped.v9.json",
+    "sha256": "fef6279c1e7653ae6c7c485c3f934fd647410a726acb59393312b72af754a89f"
+  },
+  "performance_profile": {
+    "path": "catalog/performance/heavy-biped.tarbosaurus-adult-walk.v6.json",
+    "sha256": "e54eecc5eb361f9472d9d7373447a3a0cd2257ace1287c9966a3e3c8dc2c77b5"
+  },
+  "articulation_profile": {
+    "path": "catalog/articulation/heavy-biped.tarbosaurus-adult-walk.v1.json",
+    "sha256": "c1206143387ad4d1084a413ee031018f5a61a8e0539ef8256c6bba74a0f4bc6a"
+  },
+  "forward_axis": [
+    0.03893162055641767,
+    0.0,
+    0.9992418770852486
+  ],
+  "up_axis": [
+    0.0,
+    1.0,
+    0.0
+  ]
+}

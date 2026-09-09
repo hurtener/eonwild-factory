@@ -4,6 +4,7 @@ on:
     branches: [main, feat/v9-factory-baseline]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 permissions:
   contents: read
 concurrency:
@@ -11,89 +12,134 @@ concurrency:
   cancel-in-progress: true
 jobs:
   contracts:
-    runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    # The preserved legacy release was authored on macOS arm64. Reproduce its
+    # exact bytes there; Linux's libm differs by two float32 rounding values.
+    # This is NOT permission to update the approved hash or skip integration.
+    runs-on: macos-15
+    timeout-minutes: 25
+    env: {PYTHONPATH: src, OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '2'}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-        with:
-          fetch-depth: 1
-          persist-credentials: false
+        with: {fetch-depth: 1, persist-credentials: false, show-progress: false}
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
-        with:
-          python-version: '3.13'
+        with: {python-version: '3.13'}
       - run: python -m pip install -e . pytest==9.1.1
-      - name: Engine and factory contracts
-        env:
-          PYTHONPATH: src
-        run: python -m pytest tests -q --ignore=tests/test_integration.py -k 'not test_zero_bounds_fails_blender_stage' --junitxml=/tmp/contracts.xml
+      - run: bash tools/ci_setup_blender.sh
+      - run: bash tools/ci_setup_gltf_validator.sh
+      - name: Complete suite, real tools, no exclusions
+        run: |
+          set -euo pipefail
+          git config user.name 'Eonwild regression runner'
+          git config user.email 'eonwild-regression@example.invalid'
+          mkdir -p out/ci
+          git rev-parse HEAD > out/ci/source.txt
+          blender --version > out/ci/blender.txt
+          python -m pip freeze > out/ci/python-packages.txt
+          cp "$RUNNER_TEMP/gltf-validator-2.0.0-dev.3.10/installation-report.json" out/ci/
+          python -m pytest tests -q --tb=short --junitxml=out/ci/full-tests.xml 2>&1 | tee out/ci/full-tests.log
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
-        with:
-          name: factory-contract-results
-          path: /tmp/contracts.xml
-          retention-days: 14
-  generate-and-review:
+        with: {name: factory-full-regression-results, path: out/ci, retention-days: 14}
+  candidate-acceptance:
+    # Every requested recipe remains a strict job; no approved-name whitelist.
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     strategy:
       fail-fast: false
+      max-parallel: 4
       matrix:
-        recipe: [run.v1, run.v2, sprint.v2, reverse-walk.v1]
+        recipe: [tarbosaurus-pin-552-1-adult-walk.v3, tarbosaurus-pin-552-1-adult-walk.v5, tarbosaurus-pin-552-1-adult-walk.v6, tarbosaurus-pin-552-1-adult-walk.v7, tarbosaurus-pin-552-1-adult-walk.v8, tarbosaurus-pin-552-1-adult-walk.v9, tarbosaurus-pin-552-1-adult-fast-walk-recovery.v3, walk.v3, reverse-walk.v4, run.v4, sprint.v4, fast-walk.v2, idle.v1, alert.v1, call.v1, bite-miss.v2, feeding.v2, walk-start.v3, walk-stop.v3, reverse-walk-start.v3, reverse-walk-stop.v3, run-start.v3, run-stop.v3, sprint-start.v3, sprint-stop.v3]
+    env: {PYTHONPATH: src, OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '2', RECIPE: '${{ matrix.recipe }}'}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-        with:
-          fetch-depth: 1
-          persist-credentials: false
+        with: {fetch-depth: 1, persist-credentials: false, show-progress: false}
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
-        with:
-          python-version: '3.13'
-      - run: python -m pip install -e . pytest==9.1.1
-      - name: Install real Blender CPU renderer and separate Python dependencies
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y blender ffmpeg python3-numpy python3-jsonschema
-      - name: Blender rejection regression
-        if: matrix.recipe == 'run.v1'
-        env:
-          PYTHONPATH: src
-        run: |
-          mkdir -p out/ci
-          python -m pytest tests/test_negative.py -q -k test_zero_bounds_fails_blender_stage --junitxml=out/ci/blender-test.xml
-      - name: Generate actual motion, FBX and native-time CPU preview
-        env:
-          PYTHONPATH: src
-          RECIPE: ${{ matrix.recipe }}
-        run: python tools/build_showcase.py --output out/showcase --render --recipes "$RECIPE"
-      - name: Publish measured status
+        with: {python-version: '3.13'}
+      - run: python -m pip install -e .
+      - name: Compile, reopen and require final skin/limb/continuity acceptance
+        run: python tools/verify_catalog.py --recipes "$RECIPE" --output out/catalog
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
-        shell: python
+        with: {name: 'candidate-${{ matrix.recipe }}', path: out/catalog, if-no-files-found: error, retention-days: 14}
+  native-review:
+    needs: contracts
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        recipe: [tarbosaurus-pin-552-1-adult-walk.v3, tarbosaurus-pin-552-1-adult-walk.v5, tarbosaurus-pin-552-1-adult-walk.v6, tarbosaurus-pin-552-1-adult-walk.v7, tarbosaurus-pin-552-1-adult-walk.v8, tarbosaurus-pin-552-1-adult-walk.v9, tarbosaurus-pin-552-1-adult-fast-walk-recovery.v3, walk.v3, reverse-walk.v4, sprint.v4, fast-walk.v2, sprint-start.v3, sprint-stop.v3, run-start.v3, run-stop.v3, walk-start.v3, walk-stop.v3, reverse-walk-start.v3, reverse-walk-stop.v3]
+    env: {PYTHONPATH: src, OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '2', RECIPE: '${{ matrix.recipe }}'}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with: {fetch-depth: 1, persist-credentials: false, show-progress: false}
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with: {python-version: '3.13'}
+      - run: python -m pip install -e .
+      - run: bash tools/ci_setup_blender.sh
+      - name: Compile exactly this source's review candidate
+        run: python -m eonwild_motion.factory compile --recipe "recipes/heavy-biped/$RECIPE.json" --output out/candidate
+      - name: Native-time multi-view diagnostic, with preserved V9 walking comparison
+        shell: bash
         run: |
-          import json, pathlib, os
-          path = pathlib.Path('out/showcase/showcase.json')
-          if path.exists():
-              data = json.loads(path.read_text())
-              summary = '\n'.join(f"{r['recipe']}: generation={r['generation']}; render={r.get('render','not run')}; acceptance={r.get('integrity',{}).get('technical_status','not measured')}" for r in data['results'])
-              print(summary)
-              with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as f:
-                  f.write('## Motion candidates\n\n' + summary + '\n\nGeneration/rendering success is not mechanical or visual approval. Unity parity is not run.\n')
+          set -euo pipefail
+          if [[ "$RECIPE" == walk.v3 ]]; then
+            python tools/review_compiled_candidate.py --package out/candidate --output out/review --views side front rear three-quarter --fps 30 --compare-v9-walk
+          elif [[ "$RECIPE" == tarbosaurus-pin-552-1-adult-walk.v3 || "$RECIPE" == tarbosaurus-pin-552-1-adult-walk.v5 || "$RECIPE" == tarbosaurus-pin-552-1-adult-walk.v6 || "$RECIPE" == tarbosaurus-pin-552-1-adult-walk.v7 || "$RECIPE" == tarbosaurus-pin-552-1-adult-walk.v8 || "$RECIPE" == tarbosaurus-pin-552-1-adult-walk.v9 || "$RECIPE" == tarbosaurus-pin-552-1-adult-fast-walk-recovery.v3 || "$RECIPE" == reverse-walk.v4 || "$RECIPE" == sprint.v4 || "$RECIPE" == fast-walk.v2 ]]; then
+            python tools/review_compiled_candidate.py --package out/candidate --output out/review --views side front rear three-quarter --fps 30
+          else
+            python tools/review_compiled_candidate.py --package out/candidate --output out/review --views side three-quarter --fps 30
+          fi
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
-          name: preview-${{ matrix.recipe }}
+          name: native-review-${{ matrix.recipe }}
           path: |
-            out/showcase/previews/*/preview.mp4
-            out/showcase/previews/*/cover.png
-            out/showcase/previews/*/render-receipt.json
-            out/showcase/showcase.json
-            out/showcase/*.log
+            out/review/review-summary.json
+            out/review/candidate/**/*.mp4
+            out/review/candidate/**/cover.png
+            out/review/candidate/**/terminal.png
+            out/review/candidate/**/render-receipt.json
+            out/review/candidate/**/camera.json
+            out/review/candidate/**/timeline.json
+            out/review/reference/**/*.mp4
+            out/review/reference/**/cover.png
+            out/review/reference/**/render-receipt.json
+            out/review/reference/**/camera.json
+            out/review/reference/**/timeline.json
+            out/review/**/*.log
+            out/candidate/*.json
+          if-no-files-found: error
           retention-days: 14
+  transition-pairs:
+    # A green clip is not a green join. All four sets and both directions
+    # remain required; no crossfade, best-fit phase, or acceptance whitelist.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        include:
+          - {gait: sprint, steady: sprint.v4}
+          - {gait: run, steady: run.v4}
+          - {gait: walk, steady: walk.v3}
+          - {gait: reverse-walk, steady: reverse-walk.v4}
+    env: {PYTHONPATH: src, OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '2', GAIT: '${{ matrix.gait }}', STEADY: '${{ matrix.steady }}'}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with: {fetch-depth: 1, persist-credentials: false, show-progress: false}
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with: {python-version: '3.13'}
+      - run: python -m pip install -e .
+      - name: Compile all three packages and verify actual native joins
+        run: >-
+          python tools/verify_transition_pair.py
+          --steady "recipes/heavy-biped/$STEADY.json"
+          --start "recipes/heavy-biped/$GAIT-start.v3.json"
+          --stop "recipes/heavy-biped/$GAIT-stop.v3.json"
+          --output out/pair
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
-        with:
-          name: motion-${{ matrix.recipe }}
-          path: |
-            out/showcase/*/*.glb
-            out/showcase/*/*.json
-            out/showcase/previews/*/motion.fbx
-            out/ci/blender-test.xml
-          retention-days: 14
+        with: {name: 'transition-pair-${{ matrix.gait }}', path: out/pair, if-no-files-found: error, retention-days: 14}

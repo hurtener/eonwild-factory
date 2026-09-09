@@ -1,0 +1,43 @@
+{
+  "schema": "eonwild.motion.factory-recipe.v1",
+  "id": "heavy-biped.tarbosaurus-pin-552-1-adult-walk.v2",
+  "version": 2,
+  "family": "heavy-predatory-biped",
+  "program": "grounded_gait",
+  "description": "Evidence-bound adult PIN 552-1 grounded walk with independently authored hanging pad recovery; does not validate biology",
+  "supersedes": "heavy-biped.tarbosaurus-pin-552-1-adult-walk.v1",
+  "source": {
+    "path": "assets/sha256/044a8be907eb650fa71c613f19655eb10a0dd23c1d6bce86dfef93cd8d9575f6.glb",
+    "sha256": "044a8be907eb650fa71c613f19655eb10a0dd23c1d6bce86dfef93cd8d9575f6"
+  },
+  "rig": {
+    "path": "catalog/rigs/heavy-biped.v9.json",
+    "sha256": "c3de770bf7dcc68219a28fb9851e9b75f3d3eebe2c2c0c7deb0078850100fd7e"
+  },
+  "animal": {
+    "path": "catalog/animals/tarbosaurus-bataar-pin-552-1.adult.v1.json",
+    "sha256": "dbb0336caacea988fdc5b5c9250fa4490f281e8442b23acf24502a7e35896a7b"
+  },
+  "program_profile": {
+    "path": "catalog/programs/heavy-biped.tarbosaurus-adult-walk.v2.json",
+    "sha256": "644b33d0e623dfada97699d260f8c77ef28a6d181e3f5365fd3bfc1e5fc512e1"
+  },
+  "contact_profile": {
+    "path": "catalog/contacts/heavy-biped.v9.json",
+    "sha256": "fef6279c1e7653ae6c7c485c3f934fd647410a726acb59393312b72af754a89f"
+  },
+  "performance_profile": {
+    "path": "catalog/performance/heavy-biped.tarbosaurus-adult-walk.v1.json",
+    "sha256": "4ce24c072c01f9378af2d13cf95bfe15a16f0fb2e51431f7ab089f5f97d501cf"
+  },
+  "forward_axis": [
+    0.03893162055641767,
+    0.0,
+    0.9992418770852486
+  ],
+  "up_axis": [
+    0.0,
+    1.0,
+    0.0
+  ]
+}

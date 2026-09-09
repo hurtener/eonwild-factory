@@ -7,6 +7,7 @@ from typing import Any
 import bpy
 from mathutils import Vector
 
+from eonwild_motion.blender.native_playback import reject_stock_cubic_playback
 from eonwild_motion.media.png import canonicalize_png
 
 
@@ -27,6 +28,9 @@ def execute_render_request(request_path: Path) -> dict[str, Any]:
     request = json.loads(request_path.read_text())
     for item in list(bpy.data.objects):
         bpy.data.objects.remove(item, do_unlink=True)
+    reject_stock_cubic_playback(
+        Path(request["artifactPath"]), consumer="canonical single-frame renderer"
+    )
     bpy.ops.import_scene.gltf(filepath=request["artifactPath"])
     clip_name = request["clipName"]
     action = bpy.data.actions.get(clip_name)
@@ -39,7 +43,18 @@ def execute_render_request(request_path: Path) -> dict[str, Any]:
     render_set = request["renderSet"]
     scene = bpy.context.scene
     scene.frame_set(int(render_set["frame"]))
-    scene.render.engine = "BLENDER_EEVEE"
+    # The historical EEVEE enum was removed in newer Blender and requires
+    # a usable graphics context. The active reproduction verifier must also
+    # run headlessly: real CPU rendering, never a placeholder or skipped gate.
+    # This changes only review PNGs, not immutable approved GLB bytes.
+    scene.render.engine = "CYCLES"
+    scene.cycles.device = "CPU"
+    scene.cycles.samples = 16
+    scene.cycles.use_denoising = False
+    scene.cycles.use_adaptive_sampling = False
+    scene.cycles.seed = 0
+    scene.render.threads_mode = "FIXED"
+    scene.render.threads = 1
     scene.render.resolution_x = int(render_set["width"])
     scene.render.resolution_y = int(render_set["height"])
     scene.render.resolution_percentage = 100

@@ -1,0 +1,20 @@
+[
+  {
+    "case": "short_ibm_view",
+    "result": "ACCEPTED",
+    "maximum_skin_error_m": 1.1353242509093592e-06,
+    "output_sha256": "7a284e2b619296438018eda3aefbe238fe9041b12a73d683db18e0988c86f176"
+  },
+  {
+    "case": "short_position_view",
+    "result": "ACCEPTED",
+    "maximum_skin_error_m": 1.1353242509093592e-06,
+    "output_sha256": "d4f5304739a91fe3c1b55d8f705ced8dd4acbe2ebfee9c88995af3f709fba072"
+  },
+  {
+    "case": "short_declared_buffer",
+    "result": "ACCEPTED",
+    "maximum_skin_error_m": 1.1353242509093592e-06,
+    "output_sha256": "e45e3f728d21333c3508db3dbda63bdea136cc2553913348f8b602081915c0fb"
+  }
+]

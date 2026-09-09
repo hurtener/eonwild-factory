@@ -1,0 +1,16 @@
+{
+  "schema": "eonwild.motion.review-camera.v1",
+  "view": "front",
+  "focus": "body",
+  "center_relative_root": [
+    -0.036882709711790085,
+    1.2180604934692383,
+    -1.000304937362671
+  ],
+  "position_relative_root": [
+    -0.036882709711790085,
+    -15.638442102281452,
+    1.5537104606628418
+  ],
+  "orthographic_scale": 9.284965867102146
+}

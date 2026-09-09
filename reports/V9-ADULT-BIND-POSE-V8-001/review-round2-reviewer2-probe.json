@@ -1,0 +1,75 @@
+{
+  "base": "16aab6232698c6f641c34624c0ea246c67f1684e",
+  "cases": [
+    {
+      "case": "boolean_joint",
+      "exception": "ContractError",
+      "message": "skin joint must be a non-negative in-range integer index",
+      "result": "REJECTED"
+    },
+    {
+      "case": "fractional_joint",
+      "exception": "ContractError",
+      "message": "skin joint must be a non-negative in-range integer index",
+      "result": "REJECTED"
+    },
+    {
+      "case": "negative_ibm_accessor",
+      "exception": "ContractError",
+      "message": "inverse bind must be a non-negative in-range integer index",
+      "result": "REJECTED"
+    },
+    {
+      "case": "short_ibm_view",
+      "maximum_skin_error_m": 1.1353242509093592e-06,
+      "output_sha256": "7a284e2b619296438018eda3aefbe238fe9041b12a73d683db18e0988c86f176",
+      "result": "ACCEPTED"
+    },
+    {
+      "case": "short_position_view",
+      "maximum_skin_error_m": 1.1353242509093592e-06,
+      "output_sha256": "d4f5304739a91fe3c1b55d8f705ced8dd4acbe2ebfee9c88995af3f709fba072",
+      "result": "ACCEPTED"
+    },
+    {
+      "case": "short_declared_buffer",
+      "maximum_skin_error_m": 1.1353242509093592e-06,
+      "output_sha256": "e45e3f728d21333c3508db3dbda63bdea136cc2553913348f8b602081915c0fb",
+      "result": "ACCEPTED"
+    },
+    {
+      "case": "boolean_declared_buffer",
+      "maximum_skin_error_m": 1.1353242509093592e-06,
+      "output_sha256": "a81011635216f2484612569e5a17975b16e78e14fe942bd88bb7c7d4d005a261",
+      "result": "ACCEPTED"
+    },
+    {
+      "case": "fractional_declared_buffer",
+      "maximum_skin_error_m": 1.1353242509093592e-06,
+      "output_sha256": "8c2d851152bd170708b6b0b753093aea01ba3fbde9ba2f8490210493d87333d4",
+      "result": "ACCEPTED"
+    },
+    {
+      "case": "oversized_used_view",
+      "maximum_skin_error_m": 1.1353242509093592e-06,
+      "output_sha256": "93576ec3ff494b23d0adf0d747020481d6dcf42622af7782df75ddbd8b022174",
+      "result": "ACCEPTED"
+    },
+    {
+      "case": "nan_position",
+      "exception": "ContractError",
+      "message": "skin POSITION, JOINTS or WEIGHTS has an invalid shape",
+      "result": "REJECTED"
+    },
+    {
+      "case": "positive_infinite_position",
+      "exception": "ContractError",
+      "message": "skin POSITION, JOINTS or WEIGHTS has an invalid shape",
+      "result": "REJECTED"
+    }
+  ],
+  "reviewed_head": "1b5a13e9c703a67470288901291aff65aa9faa4a",
+  "source_sha256": "044a8be907eb650fa71c613f19655eb10a0dd23c1d6bce86dfef93cd8d9575f6",
+  "valid_maximum_skin_error_m": 1.1353242509093592e-06,
+  "valid_output_sha256": "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f"
+}

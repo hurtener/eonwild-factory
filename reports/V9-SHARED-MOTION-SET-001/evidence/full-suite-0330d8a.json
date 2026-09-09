@@ -1,0 +1,22 @@
+{
+  "source_head": "0330d8ae7acbf7a6300e1e991658f78544d9886c",
+  "source_tree": "5f22a62f8b2512e8cc89d7fd5ecadc19825e2df4",
+  "worktree": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/worktrees/eonwild-shared-motion-set-release-validation",
+  "command": [
+    "/Volumes/m2-extended-disk/Repos/eonwild-factory/.venv/bin/python",
+    "-m",
+    "pytest",
+    "tests",
+    "-q",
+    "--tb=short",
+    "--junitxml=/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/shared-set-release-full-0330d8a/full-tests.xml"
+  ],
+  "status": "PASS",
+  "started_at_unix": 1788898351.147161,
+  "exit_code": 0,
+  "elapsed_s": 873.4360856250278,
+  "status_after": "",
+  "head_after": "0330d8ae7acbf7a6300e1e991658f78544d9886c",
+  "log_sha256": "ce6703fa4f2b8d2b15115e7727e2921ff4115902d988ad9211133d1bdcd25aee",
+  "junit_sha256": "4998d4361a54d324e1f452858356e21915586389180d04a22579263d4c017848"
+}

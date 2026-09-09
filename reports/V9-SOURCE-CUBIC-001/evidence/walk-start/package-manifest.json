@@ -1,0 +1,24 @@
+{
+  "claims": {
+    "biological": false,
+    "physical": false,
+    "scientific": false
+  },
+  "files": {
+    "cubic-midpoint-plan.json": "28d79c03dbff3a96f089c99d8112d934575cd813ecdccb9393b33b6163fdc4fa",
+    "in_place.glb": "15d9e6fcfb8a57ff0dbe0c2d9e5da0bd39312e74dee99df7fd68bc0a882a69e8",
+    "inputs.lock.json": "4113f3e005772ffdc981b7f264c95fa85a7a9e6bcc9010c64928d4f0c6774dad",
+    "plan.json": "9fe8887dd90a09c13f8e6a7535aad4b3c8d5f3784da0285aba583d035e64a951",
+    "recipe.json": "0d0be8f4012ada48fd38f5914def40937a8dc0d76713f8184b10b1022e9f50e9",
+    "root_motion.glb": "a42a9bb8cfa2caa3aebec142eef2581fa3ff9073a007e61003c3c598c97c12ac",
+    "runtime.json": "701e6907b50368889636177f9542de110e1e54d5b348130e9021311c77459473",
+    "solver-receipt.json": "fa410f6fa1c623d0a438ce97139d1fb3e234f3700fddabd729f15aaee2a24c92",
+    "validation.json": "215c7fa8b039162e069fbff02e44bb2a68abfe443430060bf7a13798386666f5"
+  },
+  "id": "heavy-biped.walk-start.v3",
+  "production_approved": false,
+  "schema": "eonwild.motion.factory-package.v1",
+  "status": "CANDIDATE",
+  "technical_status": "PASS",
+  "version": 3
+}

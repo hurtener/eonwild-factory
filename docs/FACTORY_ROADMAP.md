@@ -1,5 +1,22 @@
 # V9 factory baseline and next acceptance gates
 
+## Shared animal motion sets
+
+A versioned motion set binds one animal baseline and an ordered list of portable
+motion intents. The baseline owns admitted source geometry, semantic rig,
+animal scale, contact and articulation limits, coordinate frame, neutral-pose
+calibration, shared body style, gait-response policy, and solve policy. An
+intent owns only its program and gait/timing profiles. Unknown fields and body
+overrides fail closed.
+
+`python -m eonwild_motion.factory compile-set` resolves every selected intent
+from one immutable baseline snapshot. Each package retains a canonical flat v1
+`recipe.json` for existing consumers plus the authored set, baseline, intent,
+style, and neutral-calibration snapshots. Verification reconstructs the recipe
+and effective performance from those package-local bytes. Grounded gait and
+grounded transitions are the initial supported capability; other programs must
+be admitted explicitly rather than inheriting grounded controllers.
+
 Source: `feat/spark-muse` / `8c1f5c2bfea481a56916ee6e0bfa74961ca0d141`.
 This document supersedes historical instructions that made Babylon the fixed
 consumer or treated a numbered experiment as the public factory interface.

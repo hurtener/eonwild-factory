@@ -1,0 +1,2503 @@
+{
+  "schema": "eonwild.motion.adult-load-acceptance-emitted-audit.v1",
+  "classification": "Reopened emitted TRS, full multi-influence foot skin, and compiler receipts. The load-acceptance response is authored kinematic art direction, not COM, force, work, mass response, biological validation, visual approval or Unity parity.",
+  "source_head": "94c81e7e3bb00e2e6057fd1babb183adb70ff9e3",
+  "packages": {
+    "v9": {
+      "manifest_sha256": "1b89ef55a89be040e12eb714ee391f31c5fca8f4b896bbe722e1eb26d5872b83",
+      "plan_sha256": "48e68639efd930c4209fd38fb484f4712461b5945cfbc90dd35fa047d1a7c513",
+      "recipe_sha256": "f55da91847dc63489f9655cfc3641bee665bf8ce6122755a61748d98fabf3ccd",
+      "technical_status": "BLOCKED",
+      "solver_feasibility": {
+        "checks": {
+          "max_foot_target_residual_m": true,
+          "max_unreachable_extension_m": true,
+          "maximum_articulation_envelope_violation_degrees": true,
+          "maximum_solved_foot_pitch_velocity_degrees_per_s": true
+        },
+        "classification": "engineering feasibility only; missing evidence is a failure",
+        "limits": {
+          "max_foot_target_residual_m": 0.001,
+          "max_unreachable_extension_m": 0.001,
+          "maximum_articulation_envelope_violation_degrees": 0.01,
+          "maximum_solved_foot_pitch_velocity_degrees_per_s": 600.0
+        },
+        "status": "PASS",
+        "values": {
+          "max_foot_target_residual_m": 4.4290720035541846e-07,
+          "max_unreachable_extension_m": 0.0,
+          "maximum_articulation_envelope_violation_degrees": 0.0,
+          "maximum_solved_foot_pitch_velocity_degrees_per_s": 284.76605083481553
+        }
+      },
+      "rotation_rates": {
+        "in_place": {
+          "classification": "serialized per-channel rotation rate; not joint torque or muscle capacity",
+          "limit_degrees_per_s": 1200.0,
+          "maximum_degrees_per_s": 375.9124397804565,
+          "peak_witness": {
+            "bone": "Bone_009",
+            "node": 48,
+            "quaternions_xyzw": [
+              [
+                -0.2154205382850616,
+                0.012944200655223398,
+                0.24445385565691666,
+                0.9453405480612999
+              ],
+              [
+                -0.18992031063642126,
+                0.011125352493192868,
+                0.23815599639497187,
+                0.9524117930395368
+              ]
+            ],
+            "times_s": [
+              2.2356081008911133,
+              2.2439188957214355
+            ]
+          },
+          "status": "PASS"
+        },
+        "root_motion": {
+          "classification": "serialized per-channel rotation rate; not joint torque or muscle capacity",
+          "limit_degrees_per_s": 1200.0,
+          "maximum_degrees_per_s": 375.9124397804565,
+          "peak_witness": {
+            "bone": "Bone_009",
+            "node": 48,
+            "quaternions_xyzw": [
+              [
+                -0.2154205382850616,
+                0.012944200655223398,
+                0.24445385565691666,
+                0.9453405480612999
+              ],
+              [
+                -0.18992031063642126,
+                0.011125352493192868,
+                0.23815599639497187,
+                0.9524117930395368
+              ]
+            ],
+            "times_s": [
+              2.2356081008911133,
+              2.2439188957214355
+            ]
+          },
+          "status": "PASS"
+        }
+      },
+      "articulation_envelopes": {
+        "in_place": {
+          "classification": "reopened scalar engineering guardrails; not biological ROM or 6DoF joint validation",
+          "maximum_preferred_departure_degrees": 0.0,
+          "maximum_violation_degrees": 0.0,
+          "observed_degrees": {
+            "support": {
+              "ankle_interior_degrees": [
+                126.96888048859313,
+                160.77099662271232
+              ],
+              "hip_sagittal_degrees": [
+                -4.814897313809202,
+                50.727150208339424
+              ],
+              "knee_interior_degrees": [
+                116.16317094285395,
+                142.5207844259085
+              ]
+            },
+            "swing": {
+              "ankle_interior_degrees": [
+                113.75017641911147,
+                161.48446209906353
+              ],
+              "hip_sagittal_degrees": [
+                -8.167776813689043,
+                74.68583327768734
+              ],
+              "knee_interior_degrees": [
+                74.66036317579427,
+                145.4530149611734
+              ]
+            }
+          },
+          "phase_sample_counts": {
+            "support": 370,
+            "swing": 224
+          },
+          "profile": {
+            "angle_conventions": {
+              "ankle_interior_degrees": "0 fully folded; 180 straight",
+              "hip_sagittal_degrees": "world sagittal thigh inclination from down: negative rearward; positive forward",
+              "knee_interior_degrees": "0 fully folded; 180 straight"
+            },
+            "classification": "engineering_guardrails_not_biological_rom",
+            "evidence": {
+              "limitations": [
+                "No measured Tarbosaurus joint range of motion or in-vivo loading evidence is available.",
+                "Hip hard [-45,80] retains the existing factory engineering interval; preferred [-35,75] is an authored 10/5 degree operating margin, not anatomical certification.",
+                "Knee hard [65,180] retains the existing 65 degree engineering floor and uses the scalar metric's straight endpoint; preferred [68,175] is an authored 3/5 degree operating margin.",
+                "Ankle hard [90,180] uses a comparative-model-informed lower engineering guardrail and the scalar metric's straight endpoint; preferred [95,172] is an authored 5/8 degree operating margin.",
+                "A prior unbound diagnostic used a 178 degree knee and ankle ceiling without independent anatomical support and put loaded stance at that boundary; this profile uses the defined 180 degree straight endpoint instead.",
+                "Support and swing ranges are identical because phase-specific Tarbosaurus evidence is unresolved.",
+                "The profile is a scalar sagittal guardrail; it does not model 6DoF joints, force, muscle capacity, or translated bones."
+              ],
+              "sources": [
+                {
+                  "citation": "Gatesy, Baeker and Hutchinson (2009), Constraint-based exclusion of limb poses for reconstructing theropod dinosaur locomotion",
+                  "locator": "https://www.rvc.ac.uk/Media/Default/Structure%20and%20Motion/Documents/23_000.pdf",
+                  "scope": "Comparative Tyrannosaurus rex MOR 555 model used geometric knee 30..180 and ankle 90..180 degree search intervals. This supports scalar coordinate sanity and the 180 degree straight endpoint; it is not measured Tarbosaurus ROM."
+                },
+                {
+                  "citation": "Eonwild Factory pre-existing gait engineering guardrails",
+                  "locator": "src/eonwild_motion/planning/airborne_gait.py",
+                  "scope": "Retains the existing global hip interval -45..80 degrees and knee minimum 65 degrees. Hip is a world thigh inclination, not a pelvis-relative anatomical joint coordinate."
+                },
+                {
+                  "citation": "Eonwild whole-cycle constrained and skinned candidate diagnostics",
+                  "locator": "tests/test_world_metatarsus_recovery.py",
+                  "scope": "Tests feasible-first scalar enforcement, phase-pure recovery and final-GLB verification mechanics. Synthetic and authored evidence do not establish biological ROM."
+                }
+              ],
+              "status": "comparative_anatomy_informed"
+            },
+            "evidence_status": "comparative_anatomy_informed",
+            "id": "heavy-biped.tarbosaurus-adult-walk.v1",
+            "limitations": [
+              "No measured Tarbosaurus joint range of motion or in-vivo loading evidence is available.",
+              "Hip hard [-45,80] retains the existing factory engineering interval; preferred [-35,75] is an authored 10/5 degree operating margin, not anatomical certification.",
+              "Knee hard [65,180] retains the existing 65 degree engineering floor and uses the scalar metric's straight endpoint; preferred [68,175] is an authored 3/5 degree operating margin.",
+              "Ankle hard [90,180] uses a comparative-model-informed lower engineering guardrail and the scalar metric's straight endpoint; preferred [95,172] is an authored 5/8 degree operating margin.",
+              "A prior unbound diagnostic used a 178 degree knee and ankle ceiling without independent anatomical support and put loaded stance at that boundary; this profile uses the defined 180 degree straight endpoint instead.",
+              "Support and swing ranges are identical because phase-specific Tarbosaurus evidence is unresolved.",
+              "The profile is a scalar sagittal guardrail; it does not model 6DoF joints, force, muscle capacity, or translated bones."
+            ],
+            "phase_transfer": "support guardrails blend C2 to swing guardrails over the existing 0.18 release and approach partition",
+            "schema": "eonwild.motion.v9.articulation-profile.v1",
+            "solver_scope": "scalar sagittal engineering guardrails; not a pelvis-relative hip JCS or 6DoF joint model; load/speed conditioning is not implemented",
+            "version": 1
+          },
+          "status": "PASS",
+          "tolerance_degrees": 0.01,
+          "witness": null
+        },
+        "root_motion": {
+          "classification": "reopened scalar engineering guardrails; not biological ROM or 6DoF joint validation",
+          "maximum_preferred_departure_degrees": 0.0,
+          "maximum_violation_degrees": 0.0,
+          "observed_degrees": {
+            "support": {
+              "ankle_interior_degrees": [
+                126.96888048859311,
+                160.77099662271237
+              ],
+              "hip_sagittal_degrees": [
+                -4.814897313809217,
+                50.727150208339424
+              ],
+              "knee_interior_degrees": [
+                116.16317094285395,
+                142.5207844259085
+              ]
+            },
+            "swing": {
+              "ankle_interior_degrees": [
+                113.75017641911145,
+                161.48446209906353
+              ],
+              "hip_sagittal_degrees": [
+                -8.16777681368906,
+                74.68583327768734
+              ],
+              "knee_interior_degrees": [
+                74.66036317579427,
+                145.4530149611734
+              ]
+            }
+          },
+          "phase_sample_counts": {
+            "support": 370,
+            "swing": 224
+          },
+          "profile": {
+            "angle_conventions": {
+              "ankle_interior_degrees": "0 fully folded; 180 straight",
+              "hip_sagittal_degrees": "world sagittal thigh inclination from down: negative rearward; positive forward",
+              "knee_interior_degrees": "0 fully folded; 180 straight"
+            },
+            "classification": "engineering_guardrails_not_biological_rom",
+            "evidence": {
+              "limitations": [
+                "No measured Tarbosaurus joint range of motion or in-vivo loading evidence is available.",
+                "Hip hard [-45,80] retains the existing factory engineering interval; preferred [-35,75] is an authored 10/5 degree operating margin, not anatomical certification.",
+                "Knee hard [65,180] retains the existing 65 degree engineering floor and uses the scalar metric's straight endpoint; preferred [68,175] is an authored 3/5 degree operating margin.",
+                "Ankle hard [90,180] uses a comparative-model-informed lower engineering guardrail and the scalar metric's straight endpoint; preferred [95,172] is an authored 5/8 degree operating margin.",
+                "A prior unbound diagnostic used a 178 degree knee and ankle ceiling without independent anatomical support and put loaded stance at that boundary; this profile uses the defined 180 degree straight endpoint instead.",
+                "Support and swing ranges are identical because phase-specific Tarbosaurus evidence is unresolved.",
+                "The profile is a scalar sagittal guardrail; it does not model 6DoF joints, force, muscle capacity, or translated bones."
+              ],
+              "sources": [
+                {
+                  "citation": "Gatesy, Baeker and Hutchinson (2009), Constraint-based exclusion of limb poses for reconstructing theropod dinosaur locomotion",
+                  "locator": "https://www.rvc.ac.uk/Media/Default/Structure%20and%20Motion/Documents/23_000.pdf",
+                  "scope": "Comparative Tyrannosaurus rex MOR 555 model used geometric knee 30..180 and ankle 90..180 degree search intervals. This supports scalar coordinate sanity and the 180 degree straight endpoint; it is not measured Tarbosaurus ROM."
+                },
+                {
+                  "citation": "Eonwild Factory pre-existing gait engineering guardrails",
+                  "locator": "src/eonwild_motion/planning/airborne_gait.py",
+                  "scope": "Retains the existing global hip interval -45..80 degrees and knee minimum 65 degrees. Hip is a world thigh inclination, not a pelvis-relative anatomical joint coordinate."
+                },
+                {
+                  "citation": "Eonwild whole-cycle constrained and skinned candidate diagnostics",
+                  "locator": "tests/test_world_metatarsus_recovery.py",
+                  "scope": "Tests feasible-first scalar enforcement, phase-pure recovery and final-GLB verification mechanics. Synthetic and authored evidence do not establish biological ROM."
+                }
+              ],
+              "status": "comparative_anatomy_informed"
+            },
+            "evidence_status": "comparative_anatomy_informed",
+            "id": "heavy-biped.tarbosaurus-adult-walk.v1",
+            "limitations": [
+              "No measured Tarbosaurus joint range of motion or in-vivo loading evidence is available.",
+              "Hip hard [-45,80] retains the existing factory engineering interval; preferred [-35,75] is an authored 10/5 degree operating margin, not anatomical certification.",
+              "Knee hard [65,180] retains the existing 65 degree engineering floor and uses the scalar metric's straight endpoint; preferred [68,175] is an authored 3/5 degree operating margin.",
+              "Ankle hard [90,180] uses a comparative-model-informed lower engineering guardrail and the scalar metric's straight endpoint; preferred [95,172] is an authored 5/8 degree operating margin.",
+              "A prior unbound diagnostic used a 178 degree knee and ankle ceiling without independent anatomical support and put loaded stance at that boundary; this profile uses the defined 180 degree straight endpoint instead.",
+              "Support and swing ranges are identical because phase-specific Tarbosaurus evidence is unresolved.",
+              "The profile is a scalar sagittal guardrail; it does not model 6DoF joints, force, muscle capacity, or translated bones."
+            ],
+            "phase_transfer": "support guardrails blend C2 to swing guardrails over the existing 0.18 release and approach partition",
+            "schema": "eonwild.motion.v9.articulation-profile.v1",
+            "solver_scope": "scalar sagittal engineering guardrails; not a pelvis-relative hip JCS or 6DoF joint model; load/speed conditioning is not implemented",
+            "version": 1
+          },
+          "status": "PASS",
+          "tolerance_degrees": 0.01,
+          "witness": null
+        }
+      },
+      "cyclic_continuity": {
+        "in_place": {
+          "checks": {
+            "angular_velocity": true,
+            "linear_velocity": false
+          },
+          "classification": "exact serialized local-channel tangents: adjacent LINEAR translation and shortest-SLERP, or glTF CUBICSPLINE one-sided tangents with normalized quaternion derivatives; constant scale is admitted and nonconstant animated scale rejects; not a world or skinned-loop claim",
+          "diagnostics": {
+            "quadratic_three_sample_estimate": {
+              "classification": "diagnostic quadratic fit through three native samples; not an emitted LINEAR pass claim",
+              "maximum_angular_velocity_seam_degrees_per_s": 2.1933631614562237,
+              "maximum_linear_velocity_seam_m_per_s": 3.396728912763751e-06,
+              "peak_witnesses": {
+                "angular": {
+                  "bone": "Bone_010",
+                  "incoming": [
+                    1.7160952364620428,
+                    2.415146943256649e-07,
+                    -0.18331968278631064
+                  ],
+                  "node": 49,
+                  "outgoing": [
+                    1.678030298578455,
+                    -3.2716349309456106e-07,
+                    -0.1792543700243043
+                  ]
+                },
+                "linear": {
+                  "bone": "Bone_001",
+                  "incoming": [
+                    -0.09492664883240576,
+                    -0.009963638189224855,
+                    -0.011454172105399047
+                  ],
+                  "node": 73,
+                  "outgoing": [
+                    -0.09492814891639254,
+                    -0.009963619208027194,
+                    -0.011451124622002283
+                  ]
+                }
+              }
+            }
+          },
+          "limits": {
+            "angular_degrees_per_s": 10.0,
+            "linear_m_per_s": 0.001
+          },
+          "maximum_angular_velocity_seam_degrees_per_s": 2.2502600720859265,
+          "maximum_linear_velocity_seam_m_per_s": 0.00323101227406632,
+          "peak_witnesses": {
+            "angular": {
+              "bone": "Bone_014",
+              "incoming": [
+                -0.3381298432305925,
+                -1.1453711337788144e-07,
+                -0.036120335100879516
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 2.4516892433166504,
+                "time_s": 2.4600000381469727
+              },
+              "node": 62,
+              "outgoing": [
+                -0.3771820782752954,
+                -6.874698903717254e-09,
+                -0.04029228278396929
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.008310810662806034,
+                "time_s": 0.0
+              },
+              "unit": "rad/s"
+            },
+            "linear": {
+              "bone": "Bone_001",
+              "incoming": [
+                -0.0939219027913248,
+                -0.009845300935222904,
+                -0.012759355815020941
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 2.4516892433166504,
+                "time_s": 2.4600000381469727
+              },
+              "node": 73,
+              "outgoing": [
+                -0.09581119416741889,
+                -0.01000844384005899,
+                -0.01014336598247469
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.008310810662806034,
+                "time_s": 0.0
+              },
+              "unit": "m/s"
+            }
+          },
+          "status": "FAIL"
+        },
+        "root_motion": {
+          "checks": {
+            "angular_velocity": true,
+            "linear_velocity": false
+          },
+          "classification": "exact serialized local-channel tangents: adjacent LINEAR translation and shortest-SLERP, or glTF CUBICSPLINE one-sided tangents with normalized quaternion derivatives; constant scale is admitted and nonconstant animated scale rejects; not a world or skinned-loop claim",
+          "diagnostics": {
+            "quadratic_three_sample_estimate": {
+              "classification": "diagnostic quadratic fit through three native samples; not an emitted LINEAR pass claim",
+              "maximum_angular_velocity_seam_degrees_per_s": 2.1933631614562237,
+              "maximum_linear_velocity_seam_m_per_s": 5.9425524869816115e-06,
+              "peak_witnesses": {
+                "angular": {
+                  "bone": "Bone_010",
+                  "incoming": [
+                    1.7160952364620428,
+                    2.415146943256649e-07,
+                    -0.18331968278631064
+                  ],
+                  "node": 49,
+                  "outgoing": [
+                    1.678030298578455,
+                    -3.2716349309456106e-07,
+                    -0.1792543700243043
+                  ]
+                },
+                "linear": {
+                  "bone": "Bone_000",
+                  "incoming": [
+                    -0.0,
+                    -0.0,
+                    0.6453324918239716
+                  ],
+                  "node": 74,
+                  "outgoing": [
+                    0.0,
+                    0.0,
+                    0.6453384343764585
+                  ]
+                }
+              }
+            }
+          },
+          "limits": {
+            "angular_degrees_per_s": 10.0,
+            "linear_m_per_s": 0.001
+          },
+          "maximum_angular_velocity_seam_degrees_per_s": 2.2502600720859265,
+          "maximum_linear_velocity_seam_m_per_s": 0.00323101227406632,
+          "peak_witnesses": {
+            "angular": {
+              "bone": "Bone_014",
+              "incoming": [
+                -0.3381298432305925,
+                -1.1453711337788144e-07,
+                -0.036120335100879516
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 2.4516892433166504,
+                "time_s": 2.4600000381469727
+              },
+              "node": 62,
+              "outgoing": [
+                -0.3771820782752954,
+                -6.874698903717254e-09,
+                -0.04029228278396929
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.008310810662806034,
+                "time_s": 0.0
+              },
+              "unit": "rad/s"
+            },
+            "linear": {
+              "bone": "Bone_001",
+              "incoming": [
+                -0.0939219027913248,
+                -0.009845300935222904,
+                -0.012759355815020941
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 2.4516892433166504,
+                "time_s": 2.4600000381469727
+              },
+              "node": 73,
+              "outgoing": [
+                -0.09581119416741889,
+                -0.01000844384005899,
+                -0.01014336598247469
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.008310810662806034,
+                "time_s": 0.0
+              },
+              "unit": "m/s"
+            }
+          },
+          "status": "FAIL"
+        }
+      },
+      "skinned_contact": {
+        "root_motion": {
+          "authority": {
+            "per_foot": {
+              "left": {
+                "cyclic_context": "loaded phases intersecting middle of three root-unwrapped cycles",
+                "maximum_skin_seam_error_m": 2.6645352591003757e-15,
+                "phases": [
+                  {
+                    "contact_centroid_m": [
+                      -0.39150972450478005,
+                      0.1078763059972459,
+                      2.262923292982594
+                    ],
+                    "drift_m": 2.30129366837797e-05,
+                    "end_frame": 183,
+                    "end_time_s": 1.5208784341812134,
+                    "max_penetration_m": 0.0,
+                    "max_persistent_velocity_mps": 4.0836595739703655e-05,
+                    "minimum_gap_m": 0.00011422482781100094,
+                    "persistent_point_total": 549,
+                    "print_depth_m": 0.0,
+                    "reasons": [],
+                    "start_frame": 0,
+                    "start_time_s": 0.0,
+                    "substrate": "hard",
+                    "unknown_pairs": 0,
+                    "verdict": "PASS",
+                    "yaw_deg": 6.502146373618258e-06
+                  }
+                ],
+                "reasons": [],
+                "verdict": "PASS"
+              },
+              "right": {
+                "cyclic_context": "loaded phases intersecting middle of three root-unwrapped cycles",
+                "maximum_skin_seam_error_m": 1.3322676295501878e-15,
+                "phases": [
+                  {
+                    "contact_centroid_m": [
+                      0.43217803314563363,
+                      0.08475285148328625,
+                      0.9223823679270948
+                    ],
+                    "drift_m": 2.8540571901659643e-05,
+                    "end_frame": 183,
+                    "end_time_s": 0.29087838530540466,
+                    "max_penetration_m": 0.0,
+                    "max_persistent_velocity_mps": 5.0058352878740206e-05,
+                    "minimum_gap_m": 0.00013044058186857232,
+                    "persistent_point_total": 1098,
+                    "print_depth_m": 0.0,
+                    "reasons": [],
+                    "start_frame": 0,
+                    "start_time_s": -1.2300000190734863,
+                    "substrate": "hard",
+                    "unknown_pairs": 0,
+                    "verdict": "PASS",
+                    "yaw_deg": 1.0663629423853027e-05
+                  },
+                  {
+                    "contact_centroid_m": [
+                      0.43217803314563363,
+                      0.08475285148328625,
+                      3.663392864479523
+                    ],
+                    "drift_m": 2.8540571901551315e-05,
+                    "end_frame": 183,
+                    "end_time_s": 2.7508784234523773,
+                    "max_penetration_m": 0.0,
+                    "max_persistent_velocity_mps": 5.0058352878740206e-05,
+                    "minimum_gap_m": 0.00013044058186857232,
+                    "persistent_point_total": 1098,
+                    "print_depth_m": 0.0,
+                    "reasons": [],
+                    "start_frame": 0,
+                    "start_time_s": 1.2300000190734863,
+                    "substrate": "hard",
+                    "unknown_pairs": 0,
+                    "verdict": "PASS",
+                    "yaw_deg": 1.0526028440638427e-05
+                  }
+                ],
+                "reasons": [],
+                "verdict": "PASS"
+              }
+            }
+          },
+          "classification": "final serialized skin, fixed floor, full multi-influence weights, unchanged engineering thresholds",
+          "ground_level_m": 7.44670325699803e-08,
+          "maximum_penetration_m": 0.0,
+          "maximum_stance_gap_m": 0.00013062454401512866,
+          "sample_count": 297,
+          "verdict": "PASS"
+        },
+        "in_place": {
+          "authority": {
+            "per_foot": {
+              "left": {
+                "cyclic_context": "loaded phases intersecting middle of three root-unwrapped cycles",
+                "maximum_skin_seam_error_m": 8.881784197001252e-16,
+                "phases": [
+                  {
+                    "contact_centroid_m": [
+                      -0.39150972450478005,
+                      0.1078763059972459,
+                      2.2629232528249057
+                    ],
+                    "drift_m": 2.6478466299750873e-05,
+                    "end_frame": 183,
+                    "end_time_s": 1.5208784341812134,
+                    "max_penetration_m": 0.0,
+                    "max_persistent_velocity_mps": 5.0028154513123334e-05,
+                    "minimum_gap_m": 0.00011422482781100094,
+                    "persistent_point_total": 549,
+                    "print_depth_m": 0.0,
+                    "reasons": [],
+                    "start_frame": 0,
+                    "start_time_s": 0.0,
+                    "substrate": "hard",
+                    "unknown_pairs": 0,
+                    "verdict": "PASS",
+                    "yaw_deg": 6.613302226726415e-06
+                  }
+                ],
+                "reasons": [],
+                "verdict": "PASS"
+              },
+              "right": {
+                "cyclic_context": "loaded phases intersecting middle of three root-unwrapped cycles",
+                "maximum_skin_seam_error_m": 8.881784197001252e-16,
+                "phases": [
+                  {
+                    "contact_centroid_m": [
+                      0.43217803314563363,
+                      0.08475285148328625,
+                      0.9223822257066264
+                    ],
+                    "drift_m": 3.311516711714645e-05,
+                    "end_frame": 183,
+                    "end_time_s": 0.29087838530540466,
+                    "max_penetration_m": 0.0,
+                    "max_persistent_velocity_mps": 5.967830367448521e-05,
+                    "minimum_gap_m": 0.00013044058186857232,
+                    "persistent_point_total": 1098,
+                    "print_depth_m": 0.0,
+                    "reasons": [],
+                    "start_frame": 0,
+                    "start_time_s": -1.2300000190734863,
+                    "substrate": "hard",
+                    "unknown_pairs": 0,
+                    "verdict": "PASS",
+                    "yaw_deg": 1.0629396175241108e-05
+                  },
+                  {
+                    "contact_centroid_m": [
+                      0.43217803314563363,
+                      0.08475285148328625,
+                      3.6633929263845944
+                    ],
+                    "drift_m": 3.311516711870525e-05,
+                    "end_frame": 183,
+                    "end_time_s": 2.7508784234523773,
+                    "max_penetration_m": 0.0,
+                    "max_persistent_velocity_mps": 5.967830367448521e-05,
+                    "minimum_gap_m": 0.00013044058186857232,
+                    "persistent_point_total": 1098,
+                    "print_depth_m": 0.0,
+                    "reasons": [],
+                    "start_frame": 0,
+                    "start_time_s": 1.2300000190734863,
+                    "substrate": "hard",
+                    "unknown_pairs": 0,
+                    "verdict": "PASS",
+                    "yaw_deg": 1.0629396175241108e-05
+                  }
+                ],
+                "reasons": [],
+                "verdict": "PASS"
+              }
+            }
+          },
+          "classification": "final serialized skin, fixed floor, full multi-influence weights, unchanged engineering thresholds",
+          "ground_level_m": 7.44670325699803e-08,
+          "maximum_penetration_m": 0.0,
+          "maximum_stance_gap_m": 0.00013062454401512866,
+          "sample_count": 297,
+          "verdict": "PASS"
+        }
+      },
+      "modes": {
+        "root_motion": {
+          "glb_sha256": "db5b2123e156fa218cc426cf8774972a8c02f9cfce7eea9c80fcf91a8c129ebe",
+          "sample_count": 297,
+          "landmarks": {
+            "DS_left_leads": {
+              "index": 18,
+              "time_s": 0.14959459006786346,
+              "target_time_s": 0.14759999999999998,
+              "time_error_s": 0.001994590067863483,
+              "contacts": [
+                "left",
+                "right"
+              ],
+              "root_relative_role_positions_m": {
+                "pelvis": [
+                  -0.12042910973433987,
+                  0.04360067057620798,
+                  -0.07982378125615774
+                ],
+                "chest": [
+                  0.007253216479022991,
+                  -0.29858054520285493,
+                  1.2732664784353755
+                ],
+                "head": [
+                  0.08329493511583842,
+                  0.08574217270549678,
+                  2.994006520597301
+                ],
+                "tail_tip": [
+                  0.5109360823270779,
+                  -0.6891340067985308,
+                  -5.823746748444776
+                ]
+              },
+              "foot_patch_minimum_gap_m": {
+                "left": 0.00011426020852326351,
+                "right": 0.0001305653231878116
+              }
+            },
+            "SS_left": {
+              "index": 92,
+              "time_s": 0.7645946145057678,
+              "target_time_s": 0.7626,
+              "time_error_s": 0.0019946145057678777,
+              "contacts": [
+                "left"
+              ],
+              "root_relative_role_positions_m": {
+                "pelvis": [
+                  -0.16133428060298793,
+                  0.0801455852972861,
+                  -0.08046916953715733
+                ],
+                "chest": [
+                  -0.07424709302083833,
+                  -0.21598562965743628,
+                  1.2873987675310032
+                ],
+                "head": [
+                  -0.018873972862914916,
+                  0.18266906531770966,
+                  3.004180871261731
+                ],
+                "tail_tip": [
+                  0.11906702456647197,
+                  -0.7861965256523615,
+                  -5.843376260457447
+                ]
+              },
+              "foot_patch_minimum_gap_m": {
+                "left": 0.00011429315541668629,
+                "right": 0.060675267997658405
+              }
+            },
+            "DS_right_leads": {
+              "index": 166,
+              "time_s": 1.3795945644378662,
+              "target_time_s": 1.3776000000000002,
+              "time_error_s": 0.001994564437866053,
+              "contacts": [
+                "left",
+                "right"
+              ],
+              "root_relative_role_positions_m": {
+                "pelvis": [
+                  -0.12001019670389981,
+                  0.04360067254212385,
+                  -0.07982378536560164
+                ],
+                "chest": [
+                  -0.08749721589697082,
+                  -0.29875198493213295,
+                  1.2788583768680826
+                ],
+                "head": [
+                  -0.03846802933204184,
+                  0.08550321482672629,
+                  3.0008816934259017
+                ],
+                "tail_tip": [
+                  -0.5110822865960504,
+                  -0.6893419947815975,
+                  -5.815358089318918
+                ]
+              },
+              "foot_patch_minimum_gap_m": {
+                "left": 0.00011426199939204413,
+                "right": 0.0001305079345167158
+              }
+            },
+            "SS_right": {
+              "index": 240,
+              "time_s": 1.9945945739746094,
+              "target_time_s": 1.9926000000000001,
+              "time_error_s": 0.001994573974609226,
+              "contacts": [
+                "right"
+              ],
+              "root_relative_role_positions_m": {
+                "pelvis": [
+                  -0.07910502246113027,
+                  0.08014558050868059,
+                  -0.08046916301381346
+                ],
+                "chest": [
+                  -0.005973648997717511,
+                  -0.22114604921888192,
+                  1.2874694970667937
+                ],
+                "head": [
+                  0.06365135597229299,
+                  0.1761963489459175,
+                  3.004176780151303
+                ],
+                "tail_tip": [
+                  -0.1191494321733183,
+                  -0.792489740394249,
+                  -5.8432872177125965
+                ]
+              },
+              "foot_patch_minimum_gap_m": {
+                "left": 0.06085837283181602,
+                "right": 0.00013051095679438292
+              }
+            }
+          },
+          "swing_full_patch_minimum_gap_m": {
+            "left": {
+              "minimum_gap_m": 0.00013370671573136885,
+              "index": 184,
+              "time_s": 1.5291892290115356
+            },
+            "right": {
+              "minimum_gap_m": 0.00014997163332538955,
+              "index": 36,
+              "time_s": 0.29918918013572693
+            }
+          },
+          "interior_swing_25_to_75_full_patch_minimum_gap_m": {
+            "left": {
+              "minimum_gap_m": 0.06039201066865732,
+              "index": 238,
+              "time_s": 1.9779729843139648,
+              "swing_phase": 0.48435277382645836
+            },
+            "right": {
+              "minimum_gap_m": 0.060256082750571954,
+              "index": 90,
+              "time_s": 0.7479729652404785,
+              "swing_phase": 0.484352773826458
+            }
+          }
+        },
+        "in_place": {
+          "glb_sha256": "5a16382521ebf06e73662b37d53151048df5c7f430b776fb7950d2c480abec51",
+          "sample_count": 297,
+          "landmarks": {
+            "DS_left_leads": {
+              "index": 18,
+              "time_s": 0.14959459006786346,
+              "target_time_s": 0.14759999999999998,
+              "time_error_s": 0.001994590067863483,
+              "contacts": [
+                "left",
+                "right"
+              ],
+              "root_relative_role_positions_m": {
+                "pelvis": [
+                  -0.12042910973433987,
+                  0.04360067057620798,
+                  -0.07982378125615774
+                ],
+                "chest": [
+                  0.007253216479022991,
+                  -0.29858054520285493,
+                  1.273266478435375
+                ],
+                "head": [
+                  0.08329493511583842,
+                  0.08574217270549678,
+                  2.9940065205973
+                ],
+                "tail_tip": [
+                  0.5109360823270779,
+                  -0.6891340067985308,
+                  -5.823746748444776
+                ]
+              },
+              "foot_patch_minimum_gap_m": {
+                "left": 0.00011426020852326351,
+                "right": 0.0001305653231878116
+              }
+            },
+            "SS_left": {
+              "index": 92,
+              "time_s": 0.7645946145057678,
+              "target_time_s": 0.7626,
+              "time_error_s": 0.0019946145057678777,
+              "contacts": [
+                "left"
+              ],
+              "root_relative_role_positions_m": {
+                "pelvis": [
+                  -0.16133428060298793,
+                  0.0801455852972861,
+                  -0.08046916953715733
+                ],
+                "chest": [
+                  -0.07424709302083833,
+                  -0.21598562965743628,
+                  1.287398767531004
+                ],
+                "head": [
+                  -0.018873972862914916,
+                  0.18266906531770966,
+                  3.00418087126173
+                ],
+                "tail_tip": [
+                  0.11906702456647197,
+                  -0.7861965256523615,
+                  -5.843376260457446
+                ]
+              },
+              "foot_patch_minimum_gap_m": {
+                "left": 0.00011429315541668629,
+                "right": 0.060675267997658405
+              }
+            },
+            "DS_right_leads": {
+              "index": 166,
+              "time_s": 1.3795945644378662,
+              "target_time_s": 1.3776000000000002,
+              "time_error_s": 0.001994564437866053,
+              "contacts": [
+                "left",
+                "right"
+              ],
+              "root_relative_role_positions_m": {
+                "pelvis": [
+                  -0.12001019670389981,
+                  0.04360067254212385,
+                  -0.07982378536560186
+                ],
+                "chest": [
+                  -0.08749721589697082,
+                  -0.29875198493213295,
+                  1.2788583768680823
+                ],
+                "head": [
+                  -0.03846802933204184,
+                  0.08550321482672629,
+                  3.0008816934259013
+                ],
+                "tail_tip": [
+                  -0.5110822865960504,
+                  -0.6893419947815975,
+                  -5.815358089318918
+                ]
+              },
+              "foot_patch_minimum_gap_m": {
+                "left": 0.00011426199939204413,
+                "right": 0.0001305079345167158
+              }
+            },
+            "SS_right": {
+              "index": 240,
+              "time_s": 1.9945945739746094,
+              "target_time_s": 1.9926000000000001,
+              "time_error_s": 0.001994573974609226,
+              "contacts": [
+                "right"
+              ],
+              "root_relative_role_positions_m": {
+                "pelvis": [
+                  -0.07910502246113027,
+                  0.08014558050868059,
+                  -0.08046916301381346
+                ],
+                "chest": [
+                  -0.005973648997717511,
+                  -0.22114604921888192,
+                  1.287469497066794
+                ],
+                "head": [
+                  0.06365135597229299,
+                  0.1761963489459175,
+                  3.0041767801513037
+                ],
+                "tail_tip": [
+                  -0.1191494321733183,
+                  -0.792489740394249,
+                  -5.843287217712595
+                ]
+              },
+              "foot_patch_minimum_gap_m": {
+                "left": 0.06085837283181602,
+                "right": 0.00013051095679438292
+              }
+            }
+          },
+          "swing_full_patch_minimum_gap_m": {
+            "left": {
+              "minimum_gap_m": 0.00013370671573136885,
+              "index": 184,
+              "time_s": 1.5291892290115356
+            },
+            "right": {
+              "minimum_gap_m": 0.00014997163332538955,
+              "index": 36,
+              "time_s": 0.29918918013572693
+            }
+          },
+          "interior_swing_25_to_75_full_patch_minimum_gap_m": {
+            "left": {
+              "minimum_gap_m": 0.06039201066865732,
+              "index": 238,
+              "time_s": 1.9779729843139648,
+              "swing_phase": 0.48435277382645836
+            },
+            "right": {
+              "minimum_gap_m": 0.060256082750571954,
+              "index": 90,
+              "time_s": 0.7479729652404785,
+              "swing_phase": 0.484352773826458
+            }
+          }
+        }
+      }
+    },
+    "v10": {
+      "manifest_sha256": "e3e9923526ced4e2fd08b5f4ffaa455edb78ce66020c3c3f369e6336d5f0aff7",
+      "plan_sha256": "b8ab09aa9b3adcb0bf60b494d16aa6a8fe4e96e4b7d148dc91855afe1320f22e",
+      "recipe_sha256": "1f5d4dee6bdf224db2082878112c777e5d01c7605d512e0e9006198eff7244be",
+      "technical_status": "BLOCKED",
+      "solver_feasibility": {
+        "checks": {
+          "max_foot_target_residual_m": true,
+          "max_unreachable_extension_m": true,
+          "maximum_articulation_envelope_violation_degrees": true,
+          "maximum_solved_foot_pitch_velocity_degrees_per_s": true
+        },
+        "classification": "engineering feasibility only; missing evidence is a failure",
+        "limits": {
+          "max_foot_target_residual_m": 0.001,
+          "max_unreachable_extension_m": 0.001,
+          "maximum_articulation_envelope_violation_degrees": 0.01,
+          "maximum_solved_foot_pitch_velocity_degrees_per_s": 600.0
+        },
+        "status": "PASS",
+        "values": {
+          "max_foot_target_residual_m": 4.64860895464063e-07,
+          "max_unreachable_extension_m": 0.0,
+          "maximum_articulation_envelope_violation_degrees": 0.0,
+          "maximum_solved_foot_pitch_velocity_degrees_per_s": 285.1537667106547
+        }
+      },
+      "rotation_rates": {
+        "in_place": {
+          "classification": "serialized per-channel rotation rate; not joint torque or muscle capacity",
+          "limit_degrees_per_s": 1200.0,
+          "maximum_degrees_per_s": 375.93272302527834,
+          "peak_witness": {
+            "bone": "Bone_009",
+            "node": 48,
+            "quaternions_xyzw": [
+              [
+                -0.21792400916485183,
+                0.013573798066400494,
+                0.24519648633906474,
+                0.9445652763692655
+              ],
+              [
+                -0.19243896391232,
+                0.01181755611021028,
+                0.23889799892391653,
+                0.9517117928480676
+              ]
+            ],
+            "times_s": [
+              2.2356081008911133,
+              2.2439188957214355
+            ]
+          },
+          "status": "PASS"
+        },
+        "root_motion": {
+          "classification": "serialized per-channel rotation rate; not joint torque or muscle capacity",
+          "limit_degrees_per_s": 1200.0,
+          "maximum_degrees_per_s": 375.93272302527834,
+          "peak_witness": {
+            "bone": "Bone_009",
+            "node": 48,
+            "quaternions_xyzw": [
+              [
+                -0.21792400916485183,
+                0.013573798066400494,
+                0.24519648633906474,
+                0.9445652763692655
+              ],
+              [
+                -0.19243896391232,
+                0.01181755611021028,
+                0.23889799892391653,
+                0.9517117928480676
+              ]
+            ],
+            "times_s": [
+              2.2356081008911133,
+              2.2439188957214355
+            ]
+          },
+          "status": "PASS"
+        }
+      },
+      "articulation_envelopes": {
+        "in_place": {
+          "classification": "reopened scalar engineering guardrails; not biological ROM or 6DoF joint validation",
+          "maximum_preferred_departure_degrees": 0.0,
+          "maximum_violation_degrees": 0.0,
+          "observed_degrees": {
+            "support": {
+              "ankle_interior_degrees": [
+                126.58976557719683,
+                160.5663727238649
+              ],
+              "hip_sagittal_degrees": [
+                -3.311813193159823,
+                52.634707110029304
+              ],
+              "knee_interior_degrees": [
+                114.87075359789719,
+                139.29254590407274
+              ]
+            },
+            "swing": {
+              "ankle_interior_degrees": [
+                113.33264525628279,
+                161.45085993200772
+              ],
+              "hip_sagittal_degrees": [
+                -6.837402735036793,
+                74.72826394878798
+              ],
+              "knee_interior_degrees": [
+                74.65967819123671,
+                142.30612653126045
+              ]
+            }
+          },
+          "phase_sample_counts": {
+            "support": 370,
+            "swing": 224
+          },
+          "profile": {
+            "angle_conventions": {
+              "ankle_interior_degrees": "0 fully folded; 180 straight",
+              "hip_sagittal_degrees": "world sagittal thigh inclination from down: negative rearward; positive forward",
+              "knee_interior_degrees": "0 fully folded; 180 straight"
+            },
+            "classification": "engineering_guardrails_not_biological_rom",
+            "evidence": {
+              "limitations": [
+                "No measured Tarbosaurus joint range of motion or in-vivo loading evidence is available.",
+                "Hip hard [-45,80] retains the existing factory engineering interval; preferred [-35,75] is an authored 10/5 degree operating margin, not anatomical certification.",
+                "Knee hard [65,180] retains the existing 65 degree engineering floor and uses the scalar metric's straight endpoint; preferred [68,175] is an authored 3/5 degree operating margin.",
+                "Ankle hard [90,180] uses a comparative-model-informed lower engineering guardrail and the scalar metric's straight endpoint; preferred [95,172] is an authored 5/8 degree operating margin.",
+                "A prior unbound diagnostic used a 178 degree knee and ankle ceiling without independent anatomical support and put loaded stance at that boundary; this profile uses the defined 180 degree straight endpoint instead.",
+                "Support and swing ranges are identical because phase-specific Tarbosaurus evidence is unresolved.",
+                "The profile is a scalar sagittal guardrail; it does not model 6DoF joints, force, muscle capacity, or translated bones."
+              ],
+              "sources": [
+                {
+                  "citation": "Gatesy, Baeker and Hutchinson (2009), Constraint-based exclusion of limb poses for reconstructing theropod dinosaur locomotion",
+                  "locator": "https://www.rvc.ac.uk/Media/Default/Structure%20and%20Motion/Documents/23_000.pdf",
+                  "scope": "Comparative Tyrannosaurus rex MOR 555 model used geometric knee 30..180 and ankle 90..180 degree search intervals. This supports scalar coordinate sanity and the 180 degree straight endpoint; it is not measured Tarbosaurus ROM."
+                },
+                {
+                  "citation": "Eonwild Factory pre-existing gait engineering guardrails",
+                  "locator": "src/eonwild_motion/planning/airborne_gait.py",
+                  "scope": "Retains the existing global hip interval -45..80 degrees and knee minimum 65 degrees. Hip is a world thigh inclination, not a pelvis-relative anatomical joint coordinate."
+                },
+                {
+                  "citation": "Eonwild whole-cycle constrained and skinned candidate diagnostics",
+                  "locator": "tests/test_world_metatarsus_recovery.py",
+                  "scope": "Tests feasible-first scalar enforcement, phase-pure recovery and final-GLB verification mechanics. Synthetic and authored evidence do not establish biological ROM."
+                }
+              ],
+              "status": "comparative_anatomy_informed"
+            },
+            "evidence_status": "comparative_anatomy_informed",
+            "id": "heavy-biped.tarbosaurus-adult-walk.v1",
+            "limitations": [
+              "No measured Tarbosaurus joint range of motion or in-vivo loading evidence is available.",
+              "Hip hard [-45,80] retains the existing factory engineering interval; preferred [-35,75] is an authored 10/5 degree operating margin, not anatomical certification.",
+              "Knee hard [65,180] retains the existing 65 degree engineering floor and uses the scalar metric's straight endpoint; preferred [68,175] is an authored 3/5 degree operating margin.",
+              "Ankle hard [90,180] uses a comparative-model-informed lower engineering guardrail and the scalar metric's straight endpoint; preferred [95,172] is an authored 5/8 degree operating margin.",
+              "A prior unbound diagnostic used a 178 degree knee and ankle ceiling without independent anatomical support and put loaded stance at that boundary; this profile uses the defined 180 degree straight endpoint instead.",
+              "Support and swing ranges are identical because phase-specific Tarbosaurus evidence is unresolved.",
+              "The profile is a scalar sagittal guardrail; it does not model 6DoF joints, force, muscle capacity, or translated bones."
+            ],
+            "phase_transfer": "support guardrails blend C2 to swing guardrails over the existing 0.18 release and approach partition",
+            "schema": "eonwild.motion.v9.articulation-profile.v1",
+            "solver_scope": "scalar sagittal engineering guardrails; not a pelvis-relative hip JCS or 6DoF joint model; load/speed conditioning is not implemented",
+            "version": 1
+          },
+          "status": "PASS",
+          "tolerance_degrees": 0.01,
+          "witness": null
+        },
+        "root_motion": {
+          "classification": "reopened scalar engineering guardrails; not biological ROM or 6DoF joint validation",
+          "maximum_preferred_departure_degrees": 0.0,
+          "maximum_violation_degrees": 0.0,
+          "observed_degrees": {
+            "support": {
+              "ankle_interior_degrees": [
+                126.58976557719683,
+                160.5663727238649
+              ],
+              "hip_sagittal_degrees": [
+                -3.3118131931598387,
+                52.634707110029304
+              ],
+              "knee_interior_degrees": [
+                114.87075359789719,
+                139.29254590407277
+              ]
+            },
+            "swing": {
+              "ankle_interior_degrees": [
+                113.33264525628277,
+                161.45085993200772
+              ],
+              "hip_sagittal_degrees": [
+                -6.837402735036793,
+                74.72826394878798
+              ],
+              "knee_interior_degrees": [
+                74.6596781912367,
+                142.30612653126045
+              ]
+            }
+          },
+          "phase_sample_counts": {
+            "support": 370,
+            "swing": 224
+          },
+          "profile": {
+            "angle_conventions": {
+              "ankle_interior_degrees": "0 fully folded; 180 straight",
+              "hip_sagittal_degrees": "world sagittal thigh inclination from down: negative rearward; positive forward",
+              "knee_interior_degrees": "0 fully folded; 180 straight"
+            },
+            "classification": "engineering_guardrails_not_biological_rom",
+            "evidence": {
+              "limitations": [
+                "No measured Tarbosaurus joint range of motion or in-vivo loading evidence is available.",
+                "Hip hard [-45,80] retains the existing factory engineering interval; preferred [-35,75] is an authored 10/5 degree operating margin, not anatomical certification.",
+                "Knee hard [65,180] retains the existing 65 degree engineering floor and uses the scalar metric's straight endpoint; preferred [68,175] is an authored 3/5 degree operating margin.",
+                "Ankle hard [90,180] uses a comparative-model-informed lower engineering guardrail and the scalar metric's straight endpoint; preferred [95,172] is an authored 5/8 degree operating margin.",
+                "A prior unbound diagnostic used a 178 degree knee and ankle ceiling without independent anatomical support and put loaded stance at that boundary; this profile uses the defined 180 degree straight endpoint instead.",
+                "Support and swing ranges are identical because phase-specific Tarbosaurus evidence is unresolved.",
+                "The profile is a scalar sagittal guardrail; it does not model 6DoF joints, force, muscle capacity, or translated bones."
+              ],
+              "sources": [
+                {
+                  "citation": "Gatesy, Baeker and Hutchinson (2009), Constraint-based exclusion of limb poses for reconstructing theropod dinosaur locomotion",
+                  "locator": "https://www.rvc.ac.uk/Media/Default/Structure%20and%20Motion/Documents/23_000.pdf",
+                  "scope": "Comparative Tyrannosaurus rex MOR 555 model used geometric knee 30..180 and ankle 90..180 degree search intervals. This supports scalar coordinate sanity and the 180 degree straight endpoint; it is not measured Tarbosaurus ROM."
+                },
+                {
+                  "citation": "Eonwild Factory pre-existing gait engineering guardrails",
+                  "locator": "src/eonwild_motion/planning/airborne_gait.py",
+                  "scope": "Retains the existing global hip interval -45..80 degrees and knee minimum 65 degrees. Hip is a world thigh inclination, not a pelvis-relative anatomical joint coordinate."
+                },
+                {
+                  "citation": "Eonwild whole-cycle constrained and skinned candidate diagnostics",
+                  "locator": "tests/test_world_metatarsus_recovery.py",
+                  "scope": "Tests feasible-first scalar enforcement, phase-pure recovery and final-GLB verification mechanics. Synthetic and authored evidence do not establish biological ROM."
+                }
+              ],
+              "status": "comparative_anatomy_informed"
+            },
+            "evidence_status": "comparative_anatomy_informed",
+            "id": "heavy-biped.tarbosaurus-adult-walk.v1",
+            "limitations": [
+              "No measured Tarbosaurus joint range of motion or in-vivo loading evidence is available.",
+              "Hip hard [-45,80] retains the existing factory engineering interval; preferred [-35,75] is an authored 10/5 degree operating margin, not anatomical certification.",
+              "Knee hard [65,180] retains the existing 65 degree engineering floor and uses the scalar metric's straight endpoint; preferred [68,175] is an authored 3/5 degree operating margin.",
+              "Ankle hard [90,180] uses a comparative-model-informed lower engineering guardrail and the scalar metric's straight endpoint; preferred [95,172] is an authored 5/8 degree operating margin.",
+              "A prior unbound diagnostic used a 178 degree knee and ankle ceiling without independent anatomical support and put loaded stance at that boundary; this profile uses the defined 180 degree straight endpoint instead.",
+              "Support and swing ranges are identical because phase-specific Tarbosaurus evidence is unresolved.",
+              "The profile is a scalar sagittal guardrail; it does not model 6DoF joints, force, muscle capacity, or translated bones."
+            ],
+            "phase_transfer": "support guardrails blend C2 to swing guardrails over the existing 0.18 release and approach partition",
+            "schema": "eonwild.motion.v9.articulation-profile.v1",
+            "solver_scope": "scalar sagittal engineering guardrails; not a pelvis-relative hip JCS or 6DoF joint model; load/speed conditioning is not implemented",
+            "version": 1
+          },
+          "status": "PASS",
+          "tolerance_degrees": 0.01,
+          "witness": null
+        }
+      },
+      "cyclic_continuity": {
+        "in_place": {
+          "checks": {
+            "angular_velocity": true,
+            "linear_velocity": false
+          },
+          "classification": "exact serialized local-channel tangents: adjacent LINEAR translation and shortest-SLERP, or glTF CUBICSPLINE one-sided tangents with normalized quaternion derivatives; constant scale is admitted and nonconstant animated scale rejects; not a world or skinned-loop claim",
+          "diagnostics": {
+            "quadratic_three_sample_estimate": {
+              "classification": "diagnostic quadratic fit through three native samples; not an emitted LINEAR pass claim",
+              "maximum_angular_velocity_seam_degrees_per_s": 2.06986628010734,
+              "maximum_linear_velocity_seam_m_per_s": 3.914675505543242e-06,
+              "peak_witnesses": {
+                "angular": {
+                  "bone": "Bone_010",
+                  "incoming": [
+                    1.7504377358746497,
+                    1.417081995999098e-07,
+                    -0.1869883631627422
+                  ],
+                  "node": 49,
+                  "outgoing": [
+                    1.7145160120555505,
+                    -6.560167961008558e-07,
+                    -0.183152179068227
+                  ]
+                },
+                "linear": {
+                  "bone": "Bone_001",
+                  "incoming": [
+                    -0.10146985291217224,
+                    -0.02331826625164955,
+                    -0.03462339617161054
+                  ],
+                  "node": 73,
+                  "outgoing": [
+                    -0.10147097633091337,
+                    -0.02331911832190025,
+                    -0.034619744241855786
+                  ]
+                }
+              }
+            }
+          },
+          "limits": {
+            "angular_degrees_per_s": 10.0,
+            "linear_m_per_s": 0.001
+          },
+          "maximum_angular_velocity_seam_degrees_per_s": 2.387517458494206,
+          "maximum_linear_velocity_seam_m_per_s": 0.003965012792580725,
+          "peak_witnesses": {
+            "angular": {
+              "bone": "Bone_014",
+              "incoming": [
+                -0.2276514190740479,
+                -3.47060593020901e-07,
+                -0.024319205187193983
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 2.4516892433166504,
+                "time_s": 2.4600000381469727
+              },
+              "node": 62,
+              "outgoing": [
+                -0.269085864888947,
+                6.095470716954175e-07,
+                -0.028744019608950646
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.008310810662806034,
+                "time_s": 0.0
+              },
+              "unit": "rad/s"
+            },
+            "linear": {
+              "bone": "Bone_001",
+              "incoming": [
+                -0.100596695432182,
+                -0.02346842905502324,
+                -0.036394756942452235
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 2.4516892433166504,
+                "time_s": 2.4600000381469727
+              },
+              "node": 73,
+              "outgoing": [
+                -0.10220783725072602,
+                -0.023064962658279977,
+                -0.03279437316394105
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.008310810662806034,
+                "time_s": 0.0
+              },
+              "unit": "m/s"
+            }
+          },
+          "status": "FAIL"
+        },
+        "root_motion": {
+          "checks": {
+            "angular_velocity": true,
+            "linear_velocity": false
+          },
+          "classification": "exact serialized local-channel tangents: adjacent LINEAR translation and shortest-SLERP, or glTF CUBICSPLINE one-sided tangents with normalized quaternion derivatives; constant scale is admitted and nonconstant animated scale rejects; not a world or skinned-loop claim",
+          "diagnostics": {
+            "quadratic_three_sample_estimate": {
+              "classification": "diagnostic quadratic fit through three native samples; not an emitted LINEAR pass claim",
+              "maximum_angular_velocity_seam_degrees_per_s": 2.06986628010734,
+              "maximum_linear_velocity_seam_m_per_s": 5.9425524869816115e-06,
+              "peak_witnesses": {
+                "angular": {
+                  "bone": "Bone_010",
+                  "incoming": [
+                    1.7504377358746497,
+                    1.417081995999098e-07,
+                    -0.1869883631627422
+                  ],
+                  "node": 49,
+                  "outgoing": [
+                    1.7145160120555505,
+                    -6.560167961008558e-07,
+                    -0.183152179068227
+                  ]
+                },
+                "linear": {
+                  "bone": "Bone_000",
+                  "incoming": [
+                    -0.0,
+                    -0.0,
+                    0.6453324918239716
+                  ],
+                  "node": 74,
+                  "outgoing": [
+                    0.0,
+                    0.0,
+                    0.6453384343764585
+                  ]
+                }
+              }
+            }
+          },
+          "limits": {
+            "angular_degrees_per_s": 10.0,
+            "linear_m_per_s": 0.001
+          },
+          "maximum_angular_velocity_seam_degrees_per_s": 2.387517458494206,
+          "maximum_linear_velocity_seam_m_per_s": 0.003965012792580725,
+          "peak_witnesses": {
+            "angular": {
+              "bone": "Bone_014",
+              "incoming": [
+                -0.2276514190740479,
+                -3.47060593020901e-07,
+                -0.024319205187193983
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 2.4516892433166504,
+                "time_s": 2.4600000381469727
+              },
+              "node": 62,
+              "outgoing": [
+                -0.269085864888947,
+                6.095470716954175e-07,
+                -0.028744019608950646
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.008310810662806034,
+                "time_s": 0.0
+              },
+              "unit": "rad/s"
+            },
+            "linear": {
+              "bone": "Bone_001",
+              "incoming": [
+                -0.100596695432182,
+                -0.02346842905502324,
+                -0.036394756942452235
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 2.4516892433166504,
+                "time_s": 2.4600000381469727
+              },
+              "node": 73,
+              "outgoing": [
+                -0.10220783725072602,
+                -0.023064962658279977,
+                -0.03279437316394105
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.008310810662806034,
+                "time_s": 0.0
+              },
+              "unit": "m/s"
+            }
+          },
+          "status": "FAIL"
+        }
+      },
+      "skinned_contact": {
+        "root_motion": {
+          "authority": {
+            "per_foot": {
+              "left": {
+                "cyclic_context": "loaded phases intersecting middle of three root-unwrapped cycles",
+                "maximum_skin_seam_error_m": 3.1086244689504383e-15,
+                "phases": [
+                  {
+                    "contact_centroid_m": [
+                      -0.3915096846315232,
+                      0.10787635490387246,
+                      2.262923372911756
+                    ],
+                    "drift_m": 2.3144760803946217e-05,
+                    "end_frame": 183,
+                    "end_time_s": 1.5208784341812134,
+                    "max_penetration_m": 0.0,
+                    "max_persistent_velocity_mps": 3.6389653873259947e-05,
+                    "minimum_gap_m": 0.0001142228227755961,
+                    "persistent_point_total": 549,
+                    "print_depth_m": 0.0,
+                    "reasons": [],
+                    "start_frame": 0,
+                    "start_time_s": 0.0,
+                    "substrate": "hard",
+                    "unknown_pairs": 0,
+                    "verdict": "PASS",
+                    "yaw_deg": 7.824964720612764e-06
+                  }
+                ],
+                "reasons": [],
+                "verdict": "PASS"
+              },
+              "right": {
+                "cyclic_context": "loaded phases intersecting middle of three root-unwrapped cycles",
+                "maximum_skin_seam_error_m": 1.7763568394002505e-15,
+                "phases": [
+                  {
+                    "contact_centroid_m": [
+                      0.4321781630412044,
+                      0.08475286057096514,
+                      0.9223823882100382
+                    ],
+                    "drift_m": 2.7574549543137535e-05,
+                    "end_frame": 183,
+                    "end_time_s": 0.29087838530540466,
+                    "max_penetration_m": 0.0,
+                    "max_persistent_velocity_mps": 4.0242135058895164e-05,
+                    "minimum_gap_m": 0.00013046004466722513,
+                    "persistent_point_total": 1098,
+                    "print_depth_m": 0.0,
+                    "reasons": [],
+                    "start_frame": 0,
+                    "start_time_s": -1.2300000190734863,
+                    "substrate": "hard",
+                    "unknown_pairs": 0,
+                    "verdict": "PASS",
+                    "yaw_deg": 9.956626120759437e-06
+                  },
+                  {
+                    "contact_centroid_m": [
+                      0.4321781630412044,
+                      0.08475286057096514,
+                      3.663392884762459
+                    ],
+                    "drift_m": 2.7574549542736435e-05,
+                    "end_frame": 183,
+                    "end_time_s": 2.7508784234523773,
+                    "max_penetration_m": 0.0,
+                    "max_persistent_velocity_mps": 4.0242135058895164e-05,
+                    "minimum_gap_m": 0.00013046004466722513,
+                    "persistent_point_total": 1098,
+                    "print_depth_m": 0.0,
+                    "reasons": [],
+                    "start_frame": 0,
+                    "start_time_s": 1.2300000190734863,
+                    "substrate": "hard",
+                    "unknown_pairs": 0,
+                    "verdict": "PASS",
+                    "yaw_deg": 9.956626120759437e-06
+                  }
+                ],
+                "reasons": [],
+                "verdict": "PASS"
+              }
+            }
+          },
+          "classification": "final serialized skin, fixed floor, full multi-influence weights, unchanged engineering thresholds",
+          "ground_level_m": 7.44670325699803e-08,
+          "maximum_penetration_m": 0.0,
+          "maximum_stance_gap_m": 0.00013061601454428682,
+          "sample_count": 297,
+          "verdict": "PASS"
+        },
+        "in_place": {
+          "authority": {
+            "per_foot": {
+              "left": {
+                "cyclic_context": "loaded phases intersecting middle of three root-unwrapped cycles",
+                "maximum_skin_seam_error_m": 8.881784197001252e-16,
+                "phases": [
+                  {
+                    "contact_centroid_m": [
+                      -0.3915096846315232,
+                      0.10787635490387246,
+                      2.2629233327540623
+                    ],
+                    "drift_m": 2.53559197825773e-05,
+                    "end_frame": 183,
+                    "end_time_s": 1.5208784341812134,
+                    "max_penetration_m": 0.0,
+                    "max_persistent_velocity_mps": 4.011926584699609e-05,
+                    "minimum_gap_m": 0.0001142228227755961,
+                    "persistent_point_total": 549,
+                    "print_depth_m": 0.0,
+                    "reasons": [],
+                    "start_frame": 0,
+                    "start_time_s": 0.0,
+                    "substrate": "hard",
+                    "unknown_pairs": 0,
+                    "verdict": "PASS",
+                    "yaw_deg": 7.871404088081626e-06
+                  }
+                ],
+                "reasons": [],
+                "verdict": "PASS"
+              },
+              "right": {
+                "cyclic_context": "loaded phases intersecting middle of three root-unwrapped cycles",
+                "maximum_skin_seam_error_m": 8.881784197001252e-16,
+                "phases": [
+                  {
+                    "contact_centroid_m": [
+                      0.4321781630412044,
+                      0.08475286057096514,
+                      0.9223822459895633
+                    ],
+                    "drift_m": 3.304874106094058e-05,
+                    "end_frame": 183,
+                    "end_time_s": 0.29087838530540466,
+                    "max_penetration_m": 0.0,
+                    "max_persistent_velocity_mps": 6.745889362000288e-05,
+                    "minimum_gap_m": 0.00013046004466722513,
+                    "persistent_point_total": 1098,
+                    "print_depth_m": 0.0,
+                    "reasons": [],
+                    "start_frame": 0,
+                    "start_time_s": -1.2300000190734863,
+                    "substrate": "hard",
+                    "unknown_pairs": 0,
+                    "verdict": "PASS",
+                    "yaw_deg": 9.956626120759437e-06
+                  },
+                  {
+                    "contact_centroid_m": [
+                      0.4321781630412044,
+                      0.08475286057096514,
+                      3.6633929466675306
+                    ],
+                    "drift_m": 3.3048741061170266e-05,
+                    "end_frame": 183,
+                    "end_time_s": 2.7508784234523773,
+                    "max_penetration_m": 0.0,
+                    "max_persistent_velocity_mps": 6.745889362000288e-05,
+                    "minimum_gap_m": 0.00013046004466722513,
+                    "persistent_point_total": 1098,
+                    "print_depth_m": 0.0,
+                    "reasons": [],
+                    "start_frame": 0,
+                    "start_time_s": 1.2300000190734863,
+                    "substrate": "hard",
+                    "unknown_pairs": 0,
+                    "verdict": "PASS",
+                    "yaw_deg": 9.956626120759437e-06
+                  }
+                ],
+                "reasons": [],
+                "verdict": "PASS"
+              }
+            }
+          },
+          "classification": "final serialized skin, fixed floor, full multi-influence weights, unchanged engineering thresholds",
+          "ground_level_m": 7.44670325699803e-08,
+          "maximum_penetration_m": 0.0,
+          "maximum_stance_gap_m": 0.00013061601454428682,
+          "sample_count": 297,
+          "verdict": "PASS"
+        }
+      },
+      "modes": {
+        "root_motion": {
+          "glb_sha256": "32048baac7ab944cf954bf80aba51c9582c465d6c965a24cf3fb006a3f0a6212",
+          "sample_count": 297,
+          "landmarks": {
+            "DS_left_leads": {
+              "index": 18,
+              "time_s": 0.14959459006786346,
+              "target_time_s": 0.14759999999999998,
+              "time_error_s": 0.001994590067863483,
+              "contacts": [
+                "left",
+                "right"
+              ],
+              "root_relative_role_positions_m": {
+                "pelvis": [
+                  -0.12042911854143584,
+                  0.020759637772896244,
+                  -0.07982378748914498
+                ],
+                "chest": [
+                  0.007253143355281322,
+                  -0.3245834834853105,
+                  1.2726947434046656
+                ],
+                "head": [
+                  0.08336030275115615,
+                  0.0528017933047491,
+                  2.9952835145790733
+                ],
+                "tail_tip": [
+                  0.5109360735199819,
+                  -0.7119750396018425,
+                  -5.823746754677764
+                ]
+              },
+              "foot_patch_minimum_gap_m": {
+                "left": 0.00011424614063617747,
+                "right": 0.00013055658254206647
+              }
+            },
+            "SS_left": {
+              "index": 92,
+              "time_s": 0.7645946145057678,
+              "target_time_s": 0.7626,
+              "time_error_s": 0.0019946145057678777,
+              "contacts": [
+                "left"
+              ],
+              "root_relative_role_positions_m": {
+                "pelvis": [
+                  -0.1613342827842321,
+                  0.08014558085541923,
+                  -0.08046917070715254
+                ],
+                "chest": [
+                  -0.07424713598317847,
+                  -0.21598558890755148,
+                  1.2873987750983291
+                ],
+                "head": [
+                  -0.018873974371664864,
+                  0.1826692007095576,
+                  3.0041808542667283
+                ],
+                "tail_tip": [
+                  0.11906702238522784,
+                  -0.7861965300942284,
+                  -5.843376261627441
+                ]
+              },
+              "foot_patch_minimum_gap_m": {
+                "left": 0.00011428013991026395,
+                "right": 0.060675257553794826
+              }
+            },
+            "DS_right_leads": {
+              "index": 166,
+              "time_s": 1.3795945644378662,
+              "target_time_s": 1.3776000000000002,
+              "time_error_s": 0.001994564437866053,
+              "contacts": [
+                "left",
+                "right"
+              ],
+              "root_relative_role_positions_m": {
+                "pelvis": [
+                  -0.12001019486931211,
+                  0.02075963639638223,
+                  -0.07982378438360227
+                ],
+                "chest": [
+                  -0.08749722260351876,
+                  -0.32474185329107663,
+                  1.2782868434674524
+                ],
+                "head": [
+                  -0.03833882635874525,
+                  0.052567176002762395,
+                  3.0021590568453234
+                ],
+                "tail_tip": [
+                  -0.5110822847614627,
+                  -0.7121830309273387,
+                  -5.815358088336919
+                ]
+              },
+              "foot_patch_minimum_gap_m": {
+                "left": 0.00011426193450931967,
+                "right": 0.00013056428397652026
+              }
+            },
+            "SS_right": {
+              "index": 240,
+              "time_s": 1.9945945739746094,
+              "target_time_s": 1.9926000000000001,
+              "time_error_s": 0.001994573974609226,
+              "contacts": [
+                "right"
+              ],
+              "root_relative_role_positions_m": {
+                "pelvis": [
+                  -0.0791050248334534,
+                  0.08014557539019584,
+                  -0.08046916457380782
+                ],
+                "chest": [
+                  -0.0059736894940388766,
+                  -0.22114600748683833,
+                  1.2874695045576132
+                ],
+                "head": [
+                  0.06365130328101352,
+                  0.17619651835267103,
+                  3.0041767583133447
+                ],
+                "tail_tip": [
+                  -0.11914943454564143,
+                  -0.7924897455127338,
+                  -5.843287219272591
+                ]
+              },
+              "foot_patch_minimum_gap_m": {
+                "left": 0.06085834501483126,
+                "right": 0.00013055880022591195
+              }
+            }
+          },
+          "swing_full_patch_minimum_gap_m": {
+            "left": {
+              "minimum_gap_m": 0.00013373402572667856,
+              "index": 184,
+              "time_s": 1.5291892290115356
+            },
+            "right": {
+              "minimum_gap_m": 0.00015001342031925938,
+              "index": 36,
+              "time_s": 0.29918918013572693
+            }
+          },
+          "interior_swing_25_to_75_full_patch_minimum_gap_m": {
+            "left": {
+              "minimum_gap_m": 0.06039198252193267,
+              "index": 238,
+              "time_s": 1.9779729843139648,
+              "swing_phase": 0.48435277382645836
+            },
+            "right": {
+              "minimum_gap_m": 0.060256045511136974,
+              "index": 90,
+              "time_s": 0.7479729652404785,
+              "swing_phase": 0.484352773826458
+            }
+          }
+        },
+        "in_place": {
+          "glb_sha256": "94eeb5e2d0f324230bf09d6b593169d531dece2ac22991a2562ce7ac48bbf086",
+          "sample_count": 297,
+          "landmarks": {
+            "DS_left_leads": {
+              "index": 18,
+              "time_s": 0.14959459006786346,
+              "target_time_s": 0.14759999999999998,
+              "time_error_s": 0.001994590067863483,
+              "contacts": [
+                "left",
+                "right"
+              ],
+              "root_relative_role_positions_m": {
+                "pelvis": [
+                  -0.12042911854143584,
+                  0.020759637772896244,
+                  -0.07982378748914498
+                ],
+                "chest": [
+                  0.007253143355281322,
+                  -0.3245834834853105,
+                  1.2726947434046656
+                ],
+                "head": [
+                  0.08336030275115615,
+                  0.0528017933047491,
+                  2.9952835145790733
+                ],
+                "tail_tip": [
+                  0.5109360735199819,
+                  -0.7119750396018425,
+                  -5.823746754677764
+                ]
+              },
+              "foot_patch_minimum_gap_m": {
+                "left": 0.00011424614063617747,
+                "right": 0.00013055658254206647
+              }
+            },
+            "SS_left": {
+              "index": 92,
+              "time_s": 0.7645946145057678,
+              "target_time_s": 0.7626,
+              "time_error_s": 0.0019946145057678777,
+              "contacts": [
+                "left"
+              ],
+              "root_relative_role_positions_m": {
+                "pelvis": [
+                  -0.1613342827842321,
+                  0.08014558085541923,
+                  -0.08046917070715254
+                ],
+                "chest": [
+                  -0.07424713598317847,
+                  -0.21598558890755148,
+                  1.2873987750983298
+                ],
+                "head": [
+                  -0.018873974371664864,
+                  0.1826692007095576,
+                  3.004180854266729
+                ],
+                "tail_tip": [
+                  0.11906702238522784,
+                  -0.7861965300942284,
+                  -5.843376261627441
+                ]
+              },
+              "foot_patch_minimum_gap_m": {
+                "left": 0.00011428013991026395,
+                "right": 0.060675257553794826
+              }
+            },
+            "DS_right_leads": {
+              "index": 166,
+              "time_s": 1.3795945644378662,
+              "target_time_s": 1.3776000000000002,
+              "time_error_s": 0.001994564437866053,
+              "contacts": [
+                "left",
+                "right"
+              ],
+              "root_relative_role_positions_m": {
+                "pelvis": [
+                  -0.12001019486931211,
+                  0.02075963639638223,
+                  -0.07982378438360183
+                ],
+                "chest": [
+                  -0.08749722260351876,
+                  -0.32474185329107663,
+                  1.278286843467453
+                ],
+                "head": [
+                  -0.03833882635874525,
+                  0.052567176002762395,
+                  3.002159056845324
+                ],
+                "tail_tip": [
+                  -0.5110822847614627,
+                  -0.7121830309273387,
+                  -5.815358088336918
+                ]
+              },
+              "foot_patch_minimum_gap_m": {
+                "left": 0.00011426193450931967,
+                "right": 0.00013056428397652026
+              }
+            },
+            "SS_right": {
+              "index": 240,
+              "time_s": 1.9945945739746094,
+              "target_time_s": 1.9926000000000001,
+              "time_error_s": 0.001994573974609226,
+              "contacts": [
+                "right"
+              ],
+              "root_relative_role_positions_m": {
+                "pelvis": [
+                  -0.0791050248334534,
+                  0.08014557539019584,
+                  -0.0804691645738076
+                ],
+                "chest": [
+                  -0.0059736894940388766,
+                  -0.22114600748683833,
+                  1.2874695045576134
+                ],
+                "head": [
+                  0.06365130328101352,
+                  0.17619651835267103,
+                  3.004176758313344
+                ],
+                "tail_tip": [
+                  -0.11914943454564143,
+                  -0.7924897455127338,
+                  -5.8432872192725895
+                ]
+              },
+              "foot_patch_minimum_gap_m": {
+                "left": 0.06085834501483126,
+                "right": 0.00013055880022591195
+              }
+            }
+          },
+          "swing_full_patch_minimum_gap_m": {
+            "left": {
+              "minimum_gap_m": 0.00013373402572667856,
+              "index": 184,
+              "time_s": 1.5291892290115356
+            },
+            "right": {
+              "minimum_gap_m": 0.00015001342031925938,
+              "index": 36,
+              "time_s": 0.29918918013572693
+            }
+          },
+          "interior_swing_25_to_75_full_patch_minimum_gap_m": {
+            "left": {
+              "minimum_gap_m": 0.06039198252193267,
+              "index": 238,
+              "time_s": 1.9779729843139648,
+              "swing_phase": 0.48435277382645836
+            },
+            "right": {
+              "minimum_gap_m": 0.060256045511136974,
+              "index": 90,
+              "time_s": 0.7479729652404785,
+              "swing_phase": 0.484352773826458
+            }
+          }
+        }
+      }
+    }
+  },
+  "preserved_plan_contract": {
+    "parameters_and_rows_without_performance_or_internal_target_offsets_equal": true,
+    "sample_count": 297,
+    "duration_s": 2.46,
+    "root_forward_terminal_m": 2.741010700677974,
+    "candidate_peak_compression_m": 0.022841755838983117,
+    "candidate_peak_added_vertical_acceleration_mps2": 0.36235186736439606
+  },
+  "v10_minus_v9": {
+    "modes": {
+      "root_motion": {
+        "landmarks": {
+          "DS_left_leads": {
+            "index": 18,
+            "time_s": 0.14959459006786346,
+            "roles": {
+              "pelvis": {
+                "world_delta_m": [
+                  -8.807095969176615e-09,
+                  -0.022841032803311734,
+                  -6.232987237453358e-09
+                ],
+                "up_delta_m": -0.022841032803311734,
+                "forward_delta_m": -6.232987237453358e-09,
+                "lateral_delta_m": -8.807095969176615e-09,
+                "signed_lateral_axis_rotation_delta_degrees": 0.0
+              },
+              "chest": {
+                "world_delta_m": [
+                  -7.312374166942859e-08,
+                  -0.02600293828245559,
+                  -0.0005717350307099522
+                ],
+                "up_delta_m": -0.02600293828245559,
+                "forward_delta_m": -0.0005717350307099522,
+                "lateral_delta_m": -7.312374166942859e-08,
+                "signed_lateral_axis_rotation_delta_degrees": 0.34998693830142336
+              },
+              "head": {
+                "world_delta_m": [
+                  6.536763531772571e-05,
+                  -0.03294037940074768,
+                  0.0012769939817722786
+                ],
+                "up_delta_m": -0.03294037940074768,
+                "forward_delta_m": 0.0012769939817722786,
+                "lateral_delta_m": 6.536763531772571e-05,
+                "signed_lateral_axis_rotation_delta_degrees": -2.6038516115626074e-06
+              },
+              "tail_tip": {
+                "world_delta_m": [
+                  -8.80709594142104e-09,
+                  -0.022841032803311734,
+                  -6.232987459497963e-09
+                ],
+                "up_delta_m": -0.022841032803311734,
+                "forward_delta_m": -6.232987459497963e-09,
+                "lateral_delta_m": -8.80709594142104e-09,
+                "signed_lateral_axis_rotation_delta_degrees": 0.0
+              }
+            }
+          },
+          "SS_left": {
+            "index": 92,
+            "time_s": 0.7645946145057678,
+            "roles": {
+              "pelvis": {
+                "world_delta_m": [
+                  -2.1812441575175257e-09,
+                  -4.441866874316247e-09,
+                  -1.1699952118249257e-09
+                ],
+                "up_delta_m": -4.441866874316247e-09,
+                "forward_delta_m": -1.1699952118249257e-09,
+                "lateral_delta_m": -2.1812441575175257e-09,
+                "signed_lateral_axis_rotation_delta_degrees": 0.0
+              },
+              "chest": {
+                "world_delta_m": [
+                  -4.296234014378175e-08,
+                  4.074988479985109e-08,
+                  7.567325877033682e-09
+                ],
+                "up_delta_m": 4.074988479985109e-08,
+                "forward_delta_m": 7.567325877033682e-09,
+                "lateral_delta_m": -4.296234014378175e-08,
+                "signed_lateral_axis_rotation_delta_degrees": -3.651249828197389e-06
+              },
+              "head": {
+                "world_delta_m": [
+                  -1.5087499478927402e-09,
+                  1.3539184795519077e-07,
+                  -1.6995002738440235e-08
+                ],
+                "up_delta_m": 1.3539184795519077e-07,
+                "forward_delta_m": -1.6995002738440235e-08,
+                "lateral_delta_m": -1.5087499478927402e-09,
+                "signed_lateral_axis_rotation_delta_degrees": -1.3157409439295832e-06
+              },
+              "tail_tip": {
+                "world_delta_m": [
+                  -2.18124412976195e-09,
+                  -4.441866874316247e-09,
+                  -1.1699938795572962e-09
+                ],
+                "up_delta_m": -4.441866874316247e-09,
+                "forward_delta_m": -1.1699938795572962e-09,
+                "lateral_delta_m": -2.18124412976195e-09,
+                "signed_lateral_axis_rotation_delta_degrees": 0.0
+              }
+            }
+          },
+          "DS_right_leads": {
+            "index": 166,
+            "time_s": 1.3795945644378662,
+            "roles": {
+              "pelvis": {
+                "world_delta_m": [
+                  1.8345877039749325e-09,
+                  -0.022841036145741622,
+                  9.819993707083086e-10
+                ],
+                "up_delta_m": -0.022841036145741622,
+                "forward_delta_m": 9.819993707083086e-10,
+                "lateral_delta_m": 1.8345877039749325e-09,
+                "signed_lateral_axis_rotation_delta_degrees": 0.0
+              },
+              "chest": {
+                "world_delta_m": [
+                  -6.706547941992547e-09,
+                  -0.02598986835894368,
+                  -0.0005715334006302086
+                ],
+                "up_delta_m": -0.02598986835894368,
+                "forward_delta_m": -0.0005715334006302086,
+                "lateral_delta_m": -6.706547941992547e-09,
+                "signed_lateral_axis_rotation_delta_degrees": 0.34998657356502005
+              },
+              "head": {
+                "world_delta_m": [
+                  0.00012920297329659103,
+                  -0.0329360388239639,
+                  0.0012773634194216399
+                ],
+                "up_delta_m": -0.0329360388239639,
+                "forward_delta_m": 0.0012773634194216399,
+                "lateral_delta_m": 0.00012920297329659103,
+                "signed_lateral_axis_rotation_delta_degrees": -6.817300628349779e-07
+              },
+              "tail_tip": {
+                "world_delta_m": [
+                  1.8345877039749325e-09,
+                  -0.022841036145741178,
+                  9.819993707083086e-10
+                ],
+                "up_delta_m": -0.022841036145741178,
+                "forward_delta_m": 9.819993707083086e-10,
+                "lateral_delta_m": 1.8345877039749325e-09,
+                "signed_lateral_axis_rotation_delta_degrees": 0.0
+              }
+            }
+          },
+          "SS_right": {
+            "index": 240,
+            "time_s": 1.9945945739746094,
+            "roles": {
+              "pelvis": {
+                "world_delta_m": [
+                  -2.3723231296068903e-09,
+                  -5.118484747157481e-09,
+                  -1.5599943559152507e-09
+                ],
+                "up_delta_m": -5.118484747157481e-09,
+                "forward_delta_m": -1.5599943559152507e-09,
+                "lateral_delta_m": -2.3723231296068903e-09,
+                "signed_lateral_axis_rotation_delta_degrees": 0.0
+              },
+              "chest": {
+                "world_delta_m": [
+                  -4.0496321365712795e-08,
+                  4.173204359858573e-08,
+                  7.490819520228342e-09
+                ],
+                "up_delta_m": 4.173204359858573e-08,
+                "forward_delta_m": 7.490819520228342e-09,
+                "lateral_delta_m": -4.0496321365712795e-08,
+                "signed_lateral_axis_rotation_delta_degrees": -4.4354300200979415e-06
+              },
+              "head": {
+                "world_delta_m": [
+                  -5.269127946461172e-08,
+                  1.6940675351406753e-07,
+                  -2.1837958108505973e-08
+                ],
+                "up_delta_m": 1.6940675351406753e-07,
+                "forward_delta_m": -2.1837958108505973e-08,
+                "lateral_delta_m": -5.269127946461172e-08,
+                "signed_lateral_axis_rotation_delta_degrees": -4.22284548798147e-06
+              },
+              "tail_tip": {
+                "world_delta_m": [
+                  -2.3723231296068903e-09,
+                  -5.118484747157481e-09,
+                  -1.5599948000044606e-09
+                ],
+                "up_delta_m": -5.118484747157481e-09,
+                "forward_delta_m": -1.5599948000044606e-09,
+                "lateral_delta_m": -2.3723231296068903e-09,
+                "signed_lateral_axis_rotation_delta_degrees": 0.0
+              }
+            }
+          }
+        },
+        "maximum_role_position_delta_m": {
+          "pelvis": {
+            "value_m": 0.022841036145741716,
+            "index": 166,
+            "time_s": 1.3795945644378662
+          },
+          "chest": {
+            "value_m": 0.02600922298477758,
+            "index": 18,
+            "time_s": 0.14959459006786346
+          },
+          "head": {
+            "value_m": 0.032965187419798356,
+            "index": 18,
+            "time_s": 0.14959459006786346
+          },
+          "tail_tip": {
+            "value_m": 0.022841036145741272,
+            "index": 166,
+            "time_s": 1.3795945644378662
+          }
+        }
+      },
+      "in_place": {
+        "landmarks": {
+          "DS_left_leads": {
+            "index": 18,
+            "time_s": 0.14959459006786346,
+            "roles": {
+              "pelvis": {
+                "world_delta_m": [
+                  -8.807095969176615e-09,
+                  -0.022841032803311734,
+                  -6.232987237453358e-09
+                ],
+                "up_delta_m": -0.022841032803311734,
+                "forward_delta_m": -6.232987237453358e-09,
+                "lateral_delta_m": -8.807095969176615e-09,
+                "signed_lateral_axis_rotation_delta_degrees": 0.0
+              },
+              "chest": {
+                "world_delta_m": [
+                  -7.312374166942859e-08,
+                  -0.02600293828245559,
+                  -0.0005717350307095082
+                ],
+                "up_delta_m": -0.02600293828245559,
+                "forward_delta_m": -0.0005717350307095082,
+                "lateral_delta_m": -7.312374166942859e-08,
+                "signed_lateral_axis_rotation_delta_degrees": 0.34998693830142336
+              },
+              "head": {
+                "world_delta_m": [
+                  6.536763531772571e-05,
+                  -0.03294037940074768,
+                  0.0012769939817731668
+                ],
+                "up_delta_m": -0.03294037940074768,
+                "forward_delta_m": 0.0012769939817731668,
+                "lateral_delta_m": 6.536763531772571e-05,
+                "signed_lateral_axis_rotation_delta_degrees": -2.6038516115626074e-06
+              },
+              "tail_tip": {
+                "world_delta_m": [
+                  -8.80709594142104e-09,
+                  -0.022841032803311734,
+                  -6.232987459497963e-09
+                ],
+                "up_delta_m": -0.022841032803311734,
+                "forward_delta_m": -6.232987459497963e-09,
+                "lateral_delta_m": -8.80709594142104e-09,
+                "signed_lateral_axis_rotation_delta_degrees": 0.0
+              }
+            }
+          },
+          "SS_left": {
+            "index": 92,
+            "time_s": 0.7645946145057678,
+            "roles": {
+              "pelvis": {
+                "world_delta_m": [
+                  -2.1812441575175257e-09,
+                  -4.441866874316247e-09,
+                  -1.1699952118249257e-09
+                ],
+                "up_delta_m": -4.441866874316247e-09,
+                "forward_delta_m": -1.1699952118249257e-09,
+                "lateral_delta_m": -2.1812441575175257e-09,
+                "signed_lateral_axis_rotation_delta_degrees": 0.0
+              },
+              "chest": {
+                "world_delta_m": [
+                  -4.296234014378175e-08,
+                  4.074988479985109e-08,
+                  7.567325877033682e-09
+                ],
+                "up_delta_m": 4.074988479985109e-08,
+                "forward_delta_m": 7.567325877033682e-09,
+                "lateral_delta_m": -4.296234014378175e-08,
+                "signed_lateral_axis_rotation_delta_degrees": -3.651249828197389e-06
+              },
+              "head": {
+                "world_delta_m": [
+                  -1.5087499478927402e-09,
+                  1.3539184795519077e-07,
+                  -1.6995000962083395e-08
+                ],
+                "up_delta_m": 1.3539184795519077e-07,
+                "forward_delta_m": -1.6995000962083395e-08,
+                "lateral_delta_m": -1.5087499478927402e-09,
+                "signed_lateral_axis_rotation_delta_degrees": -1.3157409439295832e-06
+              },
+              "tail_tip": {
+                "world_delta_m": [
+                  -2.18124412976195e-09,
+                  -4.441866874316247e-09,
+                  -1.1699947677357159e-09
+                ],
+                "up_delta_m": -4.441866874316247e-09,
+                "forward_delta_m": -1.1699947677357159e-09,
+                "lateral_delta_m": -2.18124412976195e-09,
+                "signed_lateral_axis_rotation_delta_degrees": 0.0
+              }
+            }
+          },
+          "DS_right_leads": {
+            "index": 166,
+            "time_s": 1.3795945644378662,
+            "roles": {
+              "pelvis": {
+                "world_delta_m": [
+                  1.8345877039749325e-09,
+                  -0.022841036145741622,
+                  9.820000368421233e-10
+                ],
+                "up_delta_m": -0.022841036145741622,
+                "forward_delta_m": 9.820000368421233e-10,
+                "lateral_delta_m": 1.8345877039749325e-09,
+                "signed_lateral_axis_rotation_delta_degrees": 0.0
+              },
+              "chest": {
+                "world_delta_m": [
+                  -6.706547941992547e-09,
+                  -0.02598986835894368,
+                  -0.0005715334006293205
+                ],
+                "up_delta_m": -0.02598986835894368,
+                "forward_delta_m": -0.0005715334006293205,
+                "lateral_delta_m": -6.706547941992547e-09,
+                "signed_lateral_axis_rotation_delta_degrees": 0.34998657356502005
+              },
+              "head": {
+                "world_delta_m": [
+                  0.00012920297329659103,
+                  -0.0329360388239639,
+                  0.001277363419422528
+                ],
+                "up_delta_m": -0.0329360388239639,
+                "forward_delta_m": 0.001277363419422528,
+                "lateral_delta_m": 0.00012920297329659103,
+                "signed_lateral_axis_rotation_delta_degrees": -6.817300628349779e-07
+              },
+              "tail_tip": {
+                "world_delta_m": [
+                  1.8345877039749325e-09,
+                  -0.022841036145741178,
+                  9.820002588867283e-10
+                ],
+                "up_delta_m": -0.022841036145741178,
+                "forward_delta_m": 9.820002588867283e-10,
+                "lateral_delta_m": 1.8345877039749325e-09,
+                "signed_lateral_axis_rotation_delta_degrees": 0.0
+              }
+            }
+          },
+          "SS_right": {
+            "index": 240,
+            "time_s": 1.9945945739746094,
+            "roles": {
+              "pelvis": {
+                "world_delta_m": [
+                  -2.3723231296068903e-09,
+                  -5.118484747157481e-09,
+                  -1.5599941338706458e-09
+                ],
+                "up_delta_m": -5.118484747157481e-09,
+                "forward_delta_m": -1.5599941338706458e-09,
+                "lateral_delta_m": -2.3723231296068903e-09,
+                "signed_lateral_axis_rotation_delta_degrees": 0.0
+              },
+              "chest": {
+                "world_delta_m": [
+                  -4.0496321365712795e-08,
+                  4.173204359858573e-08,
+                  7.490819520228342e-09
+                ],
+                "up_delta_m": 4.173204359858573e-08,
+                "forward_delta_m": 7.490819520228342e-09,
+                "lateral_delta_m": -4.0496321365712795e-08,
+                "signed_lateral_axis_rotation_delta_degrees": -4.4354300200979415e-06
+              },
+              "head": {
+                "world_delta_m": [
+                  -5.269127946461172e-08,
+                  1.6940675351406753e-07,
+                  -2.1837959884862812e-08
+                ],
+                "up_delta_m": 1.6940675351406753e-07,
+                "forward_delta_m": -2.1837959884862812e-08,
+                "lateral_delta_m": -5.269127946461172e-08,
+                "signed_lateral_axis_rotation_delta_degrees": -4.22284548798147e-06
+              },
+              "tail_tip": {
+                "world_delta_m": [
+                  -2.3723231296068903e-09,
+                  -5.118484747157481e-09,
+                  -1.5599948000044606e-09
+                ],
+                "up_delta_m": -5.118484747157481e-09,
+                "forward_delta_m": -1.5599948000044606e-09,
+                "lateral_delta_m": -2.3723231296068903e-09,
+                "signed_lateral_axis_rotation_delta_degrees": 0.0
+              }
+            }
+          }
+        },
+        "maximum_role_position_delta_m": {
+          "pelvis": {
+            "value_m": 0.022841036145741716,
+            "index": 166,
+            "time_s": 1.3795945644378662
+          },
+          "chest": {
+            "value_m": 0.02600922298477757,
+            "index": 18,
+            "time_s": 0.14959459006786346
+          },
+          "head": {
+            "value_m": 0.03296518741979839,
+            "index": 18,
+            "time_s": 0.14959459006786346
+          },
+          "tail_tip": {
+            "value_m": 0.022841036145741272,
+            "index": 166,
+            "time_s": 1.3795945644378662
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "reviewed_head": "4fc8c9cb9e6f48a266c516f1c4328ad91a19b1a5",
+  "classification": "narrow closure of five same-helper conformance reproducers; no third full review",
+  "valid_source_sha256": "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f",
+  "valid_skin_error_m": 1.1353242509093592e-06,
+  "cases": [
+    {
+      "case": "missing_buffer",
+      "result": "REJECTED",
+      "exception": "ContractError",
+      "message": "inverse bind bufferView must reference the GLB binary buffer"
+    },
+    {
+      "case": "ibm_relative_alignment",
+      "decoded_values_preserved": true,
+      "result": "REJECTED",
+      "exception": "ContractError",
+      "message": "inverse bind accessor span is outside its declared buffer bounds"
+    },
+    {
+      "case": "vertex_relative_alignment",
+      "decoded_values_preserved": true,
+      "result": "REJECTED",
+      "exception": "ContractError",
+      "message": "primitive[0] JOINTS_0 accessor span is outside its declared buffer bounds"
+    },
+    {
+      "case": "excess_padding",
+      "result": "REJECTED",
+      "exception": "ContractError",
+      "message": "bind-pose recovery buffer byteLength is invalid"
+    },
+    {
+      "case": "vertex_stride",
+      "decoded_values_preserved": true,
+      "result": "REJECTED",
+      "exception": "ContractError",
+      "message": "primitive[0] JOINTS_0 accessor byteStride is invalid"
+    }
+  ]
+}

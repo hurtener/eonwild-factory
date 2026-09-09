@@ -1,0 +1,103 @@
+{
+  "schema": "eonwild.motion.host-recovery-review.v1",
+  "reviewed_at_utc": "2026-09-08T02:08:52.554117+00:00",
+  "reviewer": "Codex root host visual review",
+  "decision": "ACCEPT_AS_REVISED_RECOVERY_CANDIDATE",
+  "scope": "Adult v3 recovery coordination and source-bound native-time presentation; no user art-direction approval, biological validation, Unity parity, or production promotion.",
+  "package": "/Volumes/m2-extended-disk/Repos/eonwild-factory/out/continuation-adult-v3-world-recovery-001/package",
+  "package_sha256": {
+    "manifest.json": "8a6fb8ad6ae06acc2f2150804e3c7658ffea6813bc52c9e18b6b141f10ed1ff3",
+    "root_motion.glb": "c079dbef986f0d59ab263d84403759e50fd2113212294e22d594a41b40e8602a",
+    "in_place.glb": "d9cbc9e021205437824a5ac114d93dc6696b6e3cad592eed891d30b360af61f7",
+    "plan.json": "cbe58ce3ca4180d7b8f7f335a77f04c63dbf08391e6fe451e1c764e5bd6b8a61",
+    "solver-receipt.json": "574824a151c9e2cc27a3351ba273018187f46db05e70d9d5fa68c991f45072bc",
+    "validation.json": "0260b11547678f01f4dbdf8806402ff4a3ec64608543e621af58e5ba3a579d2d"
+  },
+  "immutable_package_copy_byte_identical": true,
+  "native_review": {
+    "views": [
+      "side-feet",
+      "side-body",
+      "three-quarter-body",
+      "front-body",
+      "rear-body",
+      "root-motion-side"
+    ],
+    "frames_per_view": 74,
+    "review_frames_inspected": 444,
+    "inspection": "All review frames examined in contact sheets, plus twelve exact-time full-resolution stills. Not a claim that all297 serialized keys were individually viewed.",
+    "full_decode": "PASS",
+    "six_browser_playbacks_at_1x": "COMPLETE",
+    "native_sample_audit_count": 297,
+    "source_duration_s": 2.46,
+    "review_fps": 30,
+    "encoded_duration_s": 2.466666666666667,
+    "terminal_duplicated": false,
+    "receipt_and_media_hash_verification_sha256": "da01e2b61320d3f2212fc56d01d87b0ef9bc3fe6b194c8b136483e3e079f984b"
+  },
+  "exact_stills": {
+    "views": [
+      "side-feet",
+      "three-quarter-body"
+    ],
+    "times_s": [
+      0.6,
+      0.806,
+      1.064,
+      1.83,
+      2.036,
+      2.294
+    ],
+    "total": 12,
+    "receipt_hashes": {
+      "side-feet": "b7b18d2d9b2d94d0c3e393042498b206932f3d6aac45e8a9fd75ffe086386eb9",
+      "three-quarter-body": "d9bf50302a90248a3f212d5bf161597cc3b85c969d74b82b85d2f0b0da208121"
+    }
+  },
+  "reference": {
+    "path": "assets/examples/tarbosaurus/tarbosaurus_walk.mp4",
+    "sha256": "b0401fc76a202d6ed5dc9a5515f1054eab8bed8075c04f6167ff426fd603f5ae",
+    "phase_frames": [
+      101,
+      108,
+      116
+    ],
+    "native_fps": 24,
+    "comparison": "approximate phases, without calibrated joint-angle inference or temporal registration"
+  },
+  "observations": [
+    "Recovery ankle is more open and foot/toes coordinate downward before forward placement, replacing the previously rejected compressed pose.",
+    "Both legs preserve the revised recovery through the complete cycle; no visible leg crossing in front/rear views.",
+    "Whole-body views show restrained head, trunk and tail motion and corrected forward gaze; no exaggerated thigh lift observed at this review scale.",
+    "Root-motion side view preserves planted contact relative to the declared world floor; the camera alone tracks travel.",
+    "A modest positive mid-recovery clearance dip remains; this is not a measured biological safety margin."
+  ],
+  "final_full_sole_toe_patch_mid_swing_minimum_m": {
+    "left": 0.03521389000017014,
+    "right": 0.04060271299123565
+  },
+  "mid_swing_window": [
+    0.25,
+    0.75
+  ],
+  "diagnostic_hashes": {
+    "final-skin-clearance.json": "025d59ca36e367db6e6baea3a462d1eadf32744158b8ea5405d63459be921298",
+    "compiled-evidence.md": "60978a51d2342958b727b9664dc10deabca749d7546582eb5ac1f3194a2759a4",
+    "recovery-audit.json": "e63420cdaf0aa1e53738f0411beb08624bf997e09859343deb6a7bff55e8f937"
+  },
+  "rig_change": "None; independently reproduced Blender audit found no concrete structural or distal weighting defect.",
+  "browser_controls_verified": [
+    "six motion-view selections and complete1x playback",
+    "next frame0\u21921",
+    "previous frame1\u21920",
+    "candidate leg Right\u2192Left",
+    "candidate view Whole body\u2192Legs and feet"
+  ],
+  "remaining": {
+    "user_visual_approval": "PENDING",
+    "biological_validation": "NOT_VALIDATED",
+    "unity_parity": "NOT_RUN",
+    "production_approved": false
+  },
+  "package_status_unchanged": true
+}

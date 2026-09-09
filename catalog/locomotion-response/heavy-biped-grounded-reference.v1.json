@@ -1,0 +1,20 @@
+{
+  "schema": "eonwild.motion.locomotion-response-policy.v1",
+  "id": "heavy-biped-grounded-reference.v1",
+  "version": 1,
+  "grounded_intent_resolution": {
+    "schema": "eonwild.motion.grounded-intent-resolution.v1",
+    "source_reference": {
+      "source_geometry_sha256": "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f",
+      "hindlimb_length_m": 2.415,
+      "body_height_m": 2.2841755838983118,
+      "step_length_m": 1.370505350338987,
+      "evidence": "user-selected V10 working baseline canonical centered gait; authored reference kinematics"
+    },
+    "input_step_length_body_heights": 0.6,
+    "step_length_hindlimb_ratio": 0.5674970394778414,
+    "touchdown_mapping": "centered_stance_duty_factor",
+    "reference_preservation_tolerance_m": 2e-06,
+    "classification": "generic authored hindlimb-relative intent with animal support-posture feasibility cap; not biological speed or force"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "contact_profile": {
+    "path": "catalog/contacts/heavy-biped.v9.json",
+    "sha256": "fef6279c1e7653ae6c7c485c3f934fd647410a726acb59393312b72af754a89f"
+  },
+  "description": "V9 articulated grounded gait with explicit narrow lanes; candidate requires visual review",
+  "family": "heavy-predatory-biped",
+  "forward_axis": [
+    0.03893162055641767,
+    0.0,
+    0.9992418770852486
+  ],
+  "id": "heavy-biped.reverse-walk.v4",
+  "performance_profile": {
+    "path": "catalog/performance/heavy-biped.reverse-walk.v3.json",
+    "sha256": "ade6d37243d4b9597c9d2c15a86a667b5528654aca3998315abe7f2f06a968be"
+  },
+  "program": "grounded_gait",
+  "program_profile": {
+    "path": "catalog/programs/heavy-biped.reverse-walk.v4.json",
+    "sha256": "f1dcdae569913aa5a7407c3dac945374b698ae9310e3aa965c210b3d4a7bb924"
+  },
+  "rig": {
+    "path": "catalog/rigs/heavy-biped.v9.json",
+    "sha256": "c3de770bf7dcc68219a28fb9851e9b75f3d3eebe2c2c0c7deb0078850100fd7e"
+  },
+  "schema": "eonwild.motion.factory-recipe.v1",
+  "source": {
+    "path": "assets/sha256/044a8be907eb650fa71c613f19655eb10a0dd23c1d6bce86dfef93cd8d9575f6.glb",
+    "sha256": "044a8be907eb650fa71c613f19655eb10a0dd23c1d6bce86dfef93cd8d9575f6"
+  },
+  "supersedes": "heavy-biped.reverse-walk.v3",
+  "up_axis": [
+    0.0,
+    1.0,
+    0.0
+  ],
+  "version": 4
+}

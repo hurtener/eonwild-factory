@@ -1,0 +1,9 @@
+{
+  "source_head": "d18de689a10f81e8f1a1cb0fd3cd2c8c5fa5431f",
+  "exact_rational_vector_control_hull_cases": 3000,
+  "exact_rational_quaternion_sampled_rate_cases": 300,
+  "quaternion_fail_closed_cases": 0,
+  "samples_per_quaternion_case": 17,
+  "deep_nonzero_subdivision_depth": 30,
+  "classification": "Independent root diagnostic; exact arithmetic comparisons at finite samples are validation evidence, not replacement for analytical interval proof."
+}

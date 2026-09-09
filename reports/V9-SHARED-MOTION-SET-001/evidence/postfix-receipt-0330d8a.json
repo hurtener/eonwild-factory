@@ -1,0 +1,16 @@
+{
+  "diff_check": "PASS",
+  "focused_tests": {
+    "elapsed_s": 275.17,
+    "log": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/shared-motion-set-baseline-fix/focused-tests.log",
+    "result": "134 passed",
+    "sha256": "4523c4f31f840be619a3a1c7fc728b798f142bfabf604e952d6c658e7bce0f70"
+  },
+  "git_status": "clean",
+  "head": "0330d8ae7acbf7a6300e1e991658f78544d9886c",
+  "parent": "38f14dd4142c161f2838d80210ee3a83be836a91",
+  "ruff": "PASS",
+  "schema": "eonwild.motion.shared-motion-set-fix-test-receipt.v1",
+  "tree": "5f22a62f8b2512e8cc89d7fd5ecadc19825e2df4",
+  "worktree": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/worktrees/eonwild-shared-motion-set-baseline-fix"
+}

@@ -1,0 +1,34 @@
+{
+  "actual_blender_stock_import": {
+    "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/blender-cubic-playback-001/legacy-multiclip-narrow/result.json",
+    "sha256": "3804a92c0c4332edf9e1d4d5327619ae56098d43e00eb203a5f80a3d071f2546",
+    "status": "PASS"
+  },
+  "checks": {
+    "focused": "43 passed, 10 subtests passed",
+    "focused_log_sha256": "b0ec0bb0e2eabd352ebba378bd746aa6f78de7e565cc79070431833545da355d",
+    "ruff": "PASS",
+    "ruff_log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+  },
+  "cubic_cycles_regression": {
+    "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/blender-cubic-playback-001/narrow-527d274/native-result.json",
+    "post_cycles_m": {
+      "in_place": 2.3496518960810366e-06,
+      "root_motion": 2.4421291038418187e-06
+    },
+    "sha256": "20efe2255aaa67c77d197149e411fef9072a33b71e3f9ce082b2166c67ee7804",
+    "status": "PASS"
+  },
+  "finding": "Legacy multi-clip LINEAR detection no longer enters the strict single-animation cubic adapter",
+  "frozen_legacy_asset": {
+    "clip_count": 2,
+    "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/worktrees/eonwild-blender-cubic-playback/legacy/capsules/v8.2/asset/tarbosaurus_v8_2_approved.glb",
+    "sha256": "a2cf73a3c7d14a9c8fb9dffb8d9dc5bbcac330af3eeff772ca78c612801500b5"
+  },
+  "head": "527d27467c57c116041907976b36aa8728592b8b",
+  "parent": "f5207ca3a83718f21f0c8fb1bd25d891be6a4a8f",
+  "schema": "eonwild.motion.blender-cubic-legacy-compatibility-closure.v1",
+  "scope": "Narrow compatibility closure only; no emitter, GLB, recipe, native-curve or FBX change",
+  "status": "PASS",
+  "tree": "327302b52af51f4b50ec30806d352172df258edc"
+}

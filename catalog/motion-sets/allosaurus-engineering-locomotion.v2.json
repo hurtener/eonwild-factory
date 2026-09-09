@@ -1,0 +1,18 @@
+{
+  "baseline": {
+    "path": "catalog/motion-baselines/allosaurus-engineering-locomotion.v2.json",
+    "sha256": "3739218af6d3eeb999bacd211754f95d142b5170e7364fe0d5001edf87f6dfaf"
+  },
+  "id": "allosaurus-engineering-locomotion-motion-set.v2",
+  "motions": [
+    {
+      "intent": {
+        "path": "catalog/motion-intents/heavy-biped.allosaurus-adult-walk-diagnostic.motion-set.v2.json",
+        "sha256": "a600a140152929992d20a88b6a9e6315f1c4ee5b748ee90f07e13e8a9d19fa38"
+      },
+      "name": "walk-diagnostic"
+    }
+  ],
+  "schema": "eonwild.motion.motion-set.v2",
+  "version": 2
+}

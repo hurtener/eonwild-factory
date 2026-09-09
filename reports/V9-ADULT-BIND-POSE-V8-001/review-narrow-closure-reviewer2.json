@@ -1,0 +1,62 @@
+{
+  "cases": [
+    {
+      "case": "short_ibm_view",
+      "exception": "ContractError",
+      "message": "inverse bind accessor span is outside its declared buffer bounds",
+      "result": "REJECTED"
+    },
+    {
+      "case": "short_position_view",
+      "exception": "ContractError",
+      "message": "primitive[0] POSITION accessor span is outside its declared buffer bounds",
+      "result": "REJECTED"
+    },
+    {
+      "case": "short_declared_buffer",
+      "exception": "ContractError",
+      "message": "inverse bind accessor span is outside its declared buffer bounds",
+      "result": "REJECTED"
+    },
+    {
+      "case": "boolean_declared_buffer",
+      "exception": "ContractError",
+      "message": "bind-pose recovery buffer byteLength is invalid",
+      "result": "REJECTED"
+    },
+    {
+      "case": "fractional_declared_buffer",
+      "exception": "ContractError",
+      "message": "bind-pose recovery buffer byteLength is invalid",
+      "result": "REJECTED"
+    },
+    {
+      "case": "missing_view_buffer",
+      "maximum_skin_error_m": 1.1353242509093592e-06,
+      "output_sha256": "9a211f7d525777d48de2092e74d43d8ad2910cab0b08d6dafc3ad48d1a916100",
+      "result": "ACCEPTED"
+    },
+    {
+      "case": "individually_misaligned_cancelling_offsets",
+      "maximum_skin_error_m": 1.1353242509093592e-06,
+      "output_sha256": "e1413b43a2e81050edcb9c288020c238ced75189224d5de853a47954fe431d05",
+      "result": "ACCEPTED"
+    },
+    {
+      "case": "four_excess_binary_bytes",
+      "maximum_skin_error_m": 1.1353242509093592e-06,
+      "output_sha256": "20ea4abfff05c20bb6310ce6f931e8fa7b17e66c9482b907bec167b6918366d2",
+      "result": "ACCEPTED"
+    },
+    {
+      "case": "joint_accessor_stride_not_multiple_of_four",
+      "maximum_skin_error_m": 1.1353242509093592e-06,
+      "output_sha256": "8742fe748aee3a9124f166a123879f50fa52ea7f3ebe7d81c64e2bf50d1837b7",
+      "result": "ACCEPTED"
+    }
+  ],
+  "parent": "1b5a13e9c703a67470288901291aff65aa9faa4a",
+  "reviewed_head": "2d6b5e6506c14231f2a87b593bd8897ae0143519",
+  "valid_maximum_skin_error_m": 1.1353242509093592e-06,
+  "valid_output_sha256": "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f"
+}

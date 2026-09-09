@@ -1,0 +1,971 @@
+{
+  "elapsed_seconds": 444.55834454199066,
+  "generator": {
+    "branch": "codex/shared-motion-set-transition-authority-narrow",
+    "clean_before_and_after": true,
+    "driver": {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/shared-motion-set-transition-source-preflight-001/run.py",
+      "sha256": "1508f73e0d63b78815119581c4e1cdf84225087008c807c28dc1946e30aa483b"
+    },
+    "engine_files": {
+      "__init__.py": "78ca4a56537a3203f042048e6ca2512a50a592440142d955db44fe8f6e146593",
+      "__main__.py": "3d2438ae92f4746e9ffaa1f837b1fe803f6281091d1f31f8c95643716f257d9a",
+      "blender/__init__.py": "89c3d3ee91ebb24482cefa80630f3456003d2bcad6e553a8e4a69a9c4d6a2c79",
+      "blender/entrypoint.py": "2a15dd24a380b50f14133ddbe73c0e6a87cd1cf9dfa78ab7bdd0240def1c1b05",
+      "blender/native_playback.py": "34fc046babb83dbdee960751119bb7767bd312325adea894a31249a19bd9e647",
+      "blender/render.py": "1079533f1a2571f372d618edc41438f56d3142710c71d4c85679ceff16a61228",
+      "blender/render_walk_review.py": "580363f65e422e138b54eb0b501001f125ca0f9865363a592ac6b4413202f02e",
+      "cli.py": "7964cd12c292d02edeff6dcf002a31275ceecedf89106a50031c9cc8633d1478",
+      "contact_gauge.py": "2292cf60247a12f4e9b0c4492acf450b6c09f9bc198c68b7824033326a5168ff",
+      "contracts/__init__.py": "54ca75ea6ee395681b6314e264e8eb9e9dc476bb5cb06ac390fb45b23af62ddf",
+      "contracts/gait_transition.py": "671b3c7c8007ee9005308418c63e17ad077937066b9925820415fafc7d2253ab",
+      "contracts/load.py": "e4bc4ea9b9eaa2fafa79287d975890d1c0831060038674b91cf567d97760b379",
+      "contracts/models.py": "f9aefc29dbc6facc68f2164371ca30695aaa5173c00551e4c177cb7745ffd3f1",
+      "contracts/resolve.py": "5612185a60981ebf5babd805d8e89f235aa9d44b851a95041e4b40b2fdafd22a",
+      "contracts/semantic.py": "da440b1308bb515eb7de133ab73f35251e05896ab5627e286ec9bc871b33731c",
+      "contracts/v9_loader.py": "bf630249a5cde038f9da17856c410912ab38357cac15998189b44ec4bbeca9f6",
+      "contracts/v9_migration.py": "ebfa13980309d12674662e3f0533e8276a93a3fd89122eb31a0dc0b5623698fc",
+      "contracts/v9_models.py": "142514f6825b3d970dcc5a375611a3ff68fe21e22ca11dd290e9c3c810cc8a8a",
+      "dynamics/__init__.py": "ff82f1de3fcc4a57fb10a87972f71c046bf3b00f5f289d2a66e483a6f31b24de",
+      "dynamics/ballistic.py": "6199498532425b3b1013dc0a27ca372cd6a14e79192e481759623d22f91a58b0",
+      "dynamics/calibration.py": "abb1499a63b910bba0de804b75271619dd7d0409985986ed6a045a65debd9ac7",
+      "dynamics/capacity.py": "06f9428f584cee47e3ed5bc506e4dbe0ab0922c007d8813f1149dda241f476a2",
+      "dynamics/centroidal.py": "67a48f626d02a6d125f8be604b7ac88f0c4a95518530d8a5f022b7d431edfcc7",
+      "dynamics/contact_authority.py": "cb66957292d2e4f88c22f8d27b9b5589cd07a582fcb05b73e71a08284bf8eb26",
+      "dynamics/evidence.py": "b98e328c6263f8d40b29fe70745d3ef485721c8c1cf43d1930dfd92b96d6604a",
+      "dynamics/growth.py": "f5eed7930d15be5c77e93cdd5604ede896f5864ca35b77a5f6012a12cd79dacc",
+      "dynamics/integration.py": "6f8a6f9fe05da4d1168ab67d100e6dece948f7b7e5bbca6729b406afe9c2fdc4",
+      "dynamics/runtime.py": "4910c6d0988138045bac3ca2d78d4eacbcb6e6420a63dbbe345083e084f31682",
+      "dynamics/support_resultant.py": "0706932a7e48a40c78aed08d7bce6e7ed0f537e919fe0949ce3a24c588673465",
+      "dynamics/transition.py": "af5b70afe449590a2886696b2ed99cd9e67acdfd932d1a5dd03502b811d16209",
+      "dynamics/whole_body.py": "534ce0cceeb558d28a195068af0bbe90405913ab91ac19ada4e5f15feff4ca11",
+      "errors.py": "c3f9eb7ab7c2407039810af435dc9f2b9017aa46f0731899c5b1a2408ff44f47",
+      "factory/__init__.py": "ff2f387d3db392e5b9060d26686981057d148e1210bd5e7446fbf297ca057e28",
+      "factory/__main__.py": "86a4c51afbcfa4661812f3ec63029b9f4b1427e1fc90e6eb08a96ca0683486df",
+      "factory/animal.py": "847aa90b3d44c7db3f2842dd991006c25d1309c4acec7320e371cb1ae8afa402",
+      "factory/compiler.py": "3e4a306d065cb753fbe66843f8574ba740cb078b832b29f98212d7019583aa4e",
+      "factory/emitted_tangent.py": "6b4efcf24d47211835a25d1b0397cc6fdd8257249af272b7438101960e9dd17c",
+      "factory/handoff.py": "41355c044bf74d7cc94d01204c3119651da9657e723a117cfa04c678434de508",
+      "factory/io.py": "70f645bdde0aaa6756c763b8a7393e547881a564b61578a0fb5804ddc5fab180",
+      "factory/metadata.py": "714104a141f71ad35951e8b1385448148aa241e9b7ef72a1a7b9894d6579eb4a",
+      "factory/motion_set.py": "5b80faf26f9024d047d9ee6fb9586097c3bf130053ba0b87ce9274ff397ac2c4",
+      "factory/quality.py": "e09ba684b2bc683452a67258761e973e308a37972473b28591d2fb3728ff4ed6",
+      "factory/source.py": "b3efc3bb97016f55c95636c0cbe1499611fd13e58a5c9dbd261b3bbf59404c8f",
+      "factory/source_cubic.py": "cd8c6c8f9711c64970ffeb4445da57ff0566f241fcccad841c88c2203270a50b",
+      "factory/source_identity.py": "1a5a3f94489212080735e8838cb718cdf3906d3c5ad2601a06e4e366fb3b3728",
+      "glb/__init__.py": "8c92942e1e863c9f61533a91a4969a32e64868442de1cd5aaf6cf056e4e00ef3",
+      "glb/animation.py": "b5f42209ce4a9de33b2258c26e2f0e98f4ffc376f91fbe0c6012a04f4edbc9c7",
+      "glb/container.py": "090287e0433ba6ac0d8eb383b0a7460e3b8aa1b3721182d195b14eac73607757",
+      "glb/cubic_bounds.py": "e71e2183b9344d9b88b1f87ec604ddcae726fb84df9c948767738568c2dd7bb6",
+      "hashing.py": "ec8a2d8932dff8eab8c078f4afdf8f77d95e5febc313259c8c3891333e96f3dc",
+      "layers/__init__.py": "8d2813d90b9c3329d20193772a8bec0818a84069c01c0c529f0ad2c35a353dfd",
+      "layers/animation_state.py": "256c53ce5e5aa01a31ff1635638bdb6b7443a05a2171459d26c0c3199384cbd8",
+      "layers/chest_balance_world_relative_v1.py": "1e3dc92315718c8e9ebf74dad3ed404347a15ea46249527d508107131049d436",
+      "layers/chest_tail_head_stabilization_v1.py": "ebad255ba8a9dc42ff90a57bd77087b4f469fb5afe746692b38ac2a796254fa4",
+      "layers/leg_contact_resolve_v1.py": "ea8935728ae57acbdb70d3bdefc4bc7d2c15367c86f441617a615bd065bfc9a4",
+      "layers/leg_contact_resolve_v3.py": "95ffa5446c9277f39dc57eac3d8324536a1fd073e128b575438313861693dd42",
+      "layers/narrow_gauge_target_space_v1.py": "dbd5000587fcab725ce256e4f5817e53578d50da30f106822594082fe2d76181",
+      "layers/pelvis_balance_pre_ik_v1.py": "d2b2ece9af3ee7272e15d86bc8e8692427c8ba7c75c4323521c2e058a76c8a61",
+      "layers/registry.py": "3f2877cf481839896e099ea27c46aabb9db875a2022439716f0ed30cdb8002db",
+      "math/__init__.py": "7cc39da9d87ee9494e9d6d1c1f48f7495e4e9bfef09bff68cf28b3912a86a7c7",
+      "math/quaternion.py": "99de931ab5874384b9ee50fefb477353489135398b81a897d844527489557432",
+      "math/transforms.py": "10c06b87e8cd224587e279a0cee8a0124c460ec997179919c44a589d83cd9cd2",
+      "media/__init__.py": "b525b52f70f8e382f87f8e0e3cdf1af168d5d1e96ee7f8c882291cb4c565e664",
+      "media/png.py": "1eb6e8fc87b75e5b6fc2a71c873a2e9a93ecb83a78899f618ec833db969fd4ab",
+      "paths.py": "a1a5fde842e4ea41aa98bb5b4b578abc35202802d931b1ddda383fe12946b469",
+      "pipeline/__init__.py": "4a3d53152d11dd65e0f1e1323cb8d3b1b20053b7542374cdebfb6f8aa4d47087",
+      "pipeline/build.py": "bebc032d153953fbc3c61c0275e4b9f56349520b2e33e321217533854790a9ff",
+      "pipeline/channels.py": "74fd1f86bcfe1790e14833c515e5b45df86643ac38d50d75cdb9d7b0211c33ef",
+      "pipeline/compare.py": "bcc2fdd7ac11ffdd652b5b8f87a9359ff1571f5dffdfb10fe82f6fce151d7c94",
+      "pipeline/context.py": "6b76c16a4fe197c27a0ebe3905fe670f436ed2faf18672e766a3ad4b4c35d21c",
+      "pipeline/normative_evidence.py": "51b58afb77e15efea41181cb625ee7291cfd37b88ea951c1096a70f8a9e45567",
+      "pipeline/promote.py": "8d0232e1d01eb218f67c3e9d252e1cdcc75149cbb3a2706bbab548046b990f26",
+      "pipeline/render.py": "2cfb5f798afdae096ee9cb77b6e29b25124302a94510c317db688c42831625e5",
+      "pipeline/validate.py": "89035e343c26133fae0b9cf30589474f180b7dff4969ff4b83c97624ebbaba21",
+      "planning/__init__.py": "3766fac38405b622638e579a3d6951906ac9cb93b0277963c0c0928b0f48b6ed",
+      "planning/airborne_gait.py": "b265a4999e8f085f23bff4e0bc74eb47fbddb9d2b02b0c3888acf7667fa4244f",
+      "planning/articulation_profile.py": "460b6f1ab13ef8988f0d7b2e730c64488ce37e5af6fdf622534da83afc47523b",
+      "planning/foot_articulation.py": "7dd2539d43e8926613a8b8a6f587010fae0641e550d8af3ee2b653506c20f9cb",
+      "planning/gait_transition.py": "c8d636073425ae23e61bfc0912fded1dfd296db9d0c5a1f4c435e91244730231",
+      "planning/grounded_gait.py": "c78c3852327634e6cbd1a7aa2404e895f8fea6764ac5ac6fcffa1c9fce863324",
+      "planning/jaw_response.py": "393af2d4b0c3adc99969cc629d64d5642760aff6fb15605c0b544901337a7711",
+      "planning/parameters.py": "123037ff3954571ca566e3196f85b4d4ad4f8f38f2415a48f93256ccc794e0b2",
+      "planning/power_attack.py": "21bf498e9cc0b2cd7b2841eb5e928aa24727af3a521b049a4cbcf2e280279265",
+      "planning/stationary_support.py": "2447b83e42173869f599418d2174144e92b0f42850134e5f8f9ca792fc2d8951",
+      "planning/support_balance.py": "0cb5909000d73aaeb83a841e52afa7b66a94f883ab8756981a738dc76f6bbc6f",
+      "planning/supported_action.py": "8c3ab4e666cdd740b00096e9b4b893b7d13d6ae97d883e96fe45995f77fb3d3f",
+      "planning/swing_transport.py": "84dba50226d2b2e1b82baf44ed29cd8ea8a6e1cb14890f70da1b548720a9ed2a",
+      "reports.py": "2d9032c5418617b13354135aca636b6960ed6b5b4ce3bebe54fd66b98435049e",
+      "solve/__init__.py": "9bcc07e98a6d07aeb60b5d5e7901d00e052c82937eb5e84a5034c2382320704f",
+      "solve/airborne_gait.py": "2a562d3ab72435ed1b467e9f42c4b6023149148fe1702bc60e52994f7a730773",
+      "solve/constant_skin_targets.py": "ab10d7cced3acebbb5476958e077730df2efb468bd38dd2e86abaabb3e3e3a6b",
+      "solve/gait_response.py": "15db0ddac0e4647232d233d6fb9d2bcd923fd72bfccc69871c1cbdfc3b23cc51",
+      "solve/gaze.py": "fa6c9f8a97c1a4ffb6b1593e3d2644465e767ed9b9264a9a89e3290c32296cd8",
+      "solve/jaw_response.py": "cf992494f56a5e969a0584dff3ba5c79f33c5b14e22bf8c47b9c15f55e235835",
+      "solve/performance.py": "fc7a49d10aeac9ff16e103514bce1b59fb26849d3310765b839d4ae90d77dde7",
+      "solve/skin_rig.py": "9fcdedb1f442f2efd41cc1c70a46898548919c9f8edcc1e090cb0030fb32ca68",
+      "solve/skin_targets.py": "c4e989f6e3b3eb22c5f0a3a6d1a9cbe5cbf53358adf7f0353584be37f1d61208",
+      "solve/source_motion_query.py": "0e9517d108318a0490bcb5bfc68551c15ef909abfc3dad49c47bddc05c70f3bf",
+      "solve/support_anchors.py": "f2dceeaa62eb95fc1eac1d4ff0628940f0cd4e096c045954fa2df76cbf68f126",
+      "solve/supported_action.py": "291184d4f0767c075fba67ec3561ceea5be72aefee79f0c25920d2bc72925424",
+      "solve/whole_body_gait_transition.py": "7b476272ca967ff67fbb30cb70847bc7e75befbb94c68b317480b8e7b15077c4",
+      "solve/whole_body_walk.py": "d5e400044d248abc813d286ba98d70a0db7be12bd5ee46378176063bb6f089f0"
+    },
+    "head": "62e4b60a399672fc68f9817aeabc6bff8c300912",
+    "measurement_helper": {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/adult-fast-shared-baseline-preflight-001/analyze.py",
+      "sha256": "efffc166114b78e9de21276cf4775bfe4804a667c0979e33b08045d205e6e656"
+    },
+    "root": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/worktrees/eonwild-shared-motion-set-transition-authority-narrow",
+    "tree": "bf814e4536ece37d963f35cdc8693f3feba4b09c"
+  },
+  "limits": {
+    "articulation_envelope_violation_degrees": 0.01,
+    "foot_target_residual_m": 0.001,
+    "loaded_material_residual_m": 0.0002,
+    "local_joint_rotation_rate_degrees_per_s": 1200.0,
+    "material_penetration_m": 0.0005,
+    "solved_foot_pitch_rate_degrees_per_s": 600.0,
+    "unloaded_material_gap_minimum_m": 0.0001,
+    "unreachable_extension_m": 0.001
+  },
+  "motions": {
+    "walk-start": {
+      "bindings": {
+        "animal": {
+          "path": "catalog/animals/tarbosaurus-bataar-pin-552-1.adult.v2.json",
+          "sha256": "53ffeba22e24a87504d3dcc310bedacf6db94d60a25ffe56ad028b03f41e849d"
+        },
+        "articulation_profile": {
+          "path": "catalog/articulation/heavy-biped.tarbosaurus-adult-walk.v1.json",
+          "sha256": "c1206143387ad4d1084a413ee031018f5a61a8e0539ef8256c6bba74a0f4bc6a"
+        },
+        "baseline": {
+          "path": "catalog/motion-baselines/tarbosaurus-pin-552-1-adult-grounded.v1.json",
+          "sha256": "0c92fc7c3a42ad28d4712a7bb33b4e8d0c27f4715547e05a4d268a0d844d429a"
+        },
+        "contact_profile": {
+          "path": "catalog/contacts/heavy-biped.v10.json",
+          "sha256": "61e0351fe9f7170ddce7f0b83a8f0379d119349d3c392ffec43e544adb115db5"
+        },
+        "gait_profile": {
+          "path": "catalog/programs/heavy-biped.tarbosaurus-adult-walk.v4.json",
+          "sha256": "271ccb833a8913d3dc6bd8281e798e54b9c7bebad2080136245cb7b5e5afa725"
+        },
+        "intent": {
+          "path": "catalog/motion-intents/heavy-biped.tarbosaurus-pin-552-1-adult-walk-start.motion-set.v1.json",
+          "sha256": "6f635774bdb23546d833d25526a61e8b7a723dbca372f2297b37f327f00291ac"
+        },
+        "motion_set": {
+          "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/worktrees/eonwild-shared-motion-set-transition-authority-narrow/catalog/motion-sets/tarbosaurus-pin-552-1-adult-grounded.v1.json",
+          "sha256": "53a00e395172a27424e49030d9a08348bf515cf958194093677e4b14485fd7ea"
+        },
+        "neutral_pose_profile_sha256": "787fc381ff5988cc846331b125f4096ce1e5500fb8e9263cf56f36dac5afd258",
+        "performance_profile": {
+          "path": "catalog/performance/heavy-biped.grounded-weight-transfer.v1.json",
+          "sha256": "517b8df482d8c0d6d1f28494eb45c2a488a2e1cd11f43db7e47225d7b6c988c9"
+        },
+        "program_profile": {
+          "path": "catalog/programs/heavy-biped.start.v2.json",
+          "sha256": "062bc956067bdbc96ebd2901d5e657f36adf46ae34a126cfcea2aa1f7592b480"
+        },
+        "rig": {
+          "path": "catalog/rigs/heavy-biped.v9.json",
+          "sha256": "c3de770bf7dcc68219a28fb9851e9b75f3d3eebe2c2c0c7deb0078850100fd7e"
+        },
+        "source": {
+          "path": "assets/sha256/2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f.glb",
+          "sha256": "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f"
+        }
+      },
+      "endpoint_and_handoff_context": {
+        "handoff_sample_hz": 480,
+        "handoff_time_s": 7.9875,
+        "rows": [
+          {
+            "feet": {
+              "left": {
+                "articulation_envelope_violation_degrees": 0.0,
+                "contact": true,
+                "foot_target_residual_m": 3.0250136343894477e-08,
+                "material_residual_m": 1.4103896758743311e-05,
+                "minimum_material_gap_m": 0.0001141034399565394,
+                "swing_phase": 0.0
+              },
+              "right": {
+                "articulation_envelope_violation_degrees": 0.0,
+                "contact": true,
+                "foot_target_residual_m": 2.9893905137074345e-08,
+                "material_residual_m": 3.0384237451954877e-05,
+                "minimum_material_gap_m": 0.00013038413760871342,
+                "swing_phase": 0.0
+              }
+            },
+            "pose_trs_sha256": "3da993c60d06c67229104cb9386205fecabb806052b49aa608edb8cb1407f87e",
+            "relative_to_handoff_s": -7.9875,
+            "row_sha256": "ced1929c6cef53dc2d602dac73e01fdfa29b4b3864c04012e7a47ba061a63bed",
+            "status": "AVAILABLE",
+            "time_s": 0.0,
+            "worlds_sha256": "2e28309098ce9bcb489eaff3bea1f21d94363e060e098371e9a0e4f999332f7f"
+          },
+          {
+            "feet": {
+              "left": {
+                "articulation_envelope_violation_degrees": 0.0,
+                "contact": true,
+                "foot_target_residual_m": 7.224983519807586e-08,
+                "material_residual_m": 1.4181536529271923e-05,
+                "minimum_material_gap_m": 0.00011418130803475544,
+                "swing_phase": 0.0
+              },
+              "right": {
+                "articulation_envelope_violation_degrees": 0.0,
+                "contact": false,
+                "foot_target_residual_m": 4.9518206966498e-08,
+                "material_residual_m": 0.00019191199137255703,
+                "minimum_material_gap_m": 0.0002919119785495653,
+                "swing_phase": 0.008700613321922693
+              }
+            },
+            "pose_trs_sha256": "c1c9f0d624b2ec4625f167cdcc5b8ba497719fc6218a1fa65a79fe3c3923fa37",
+            "relative_to_handoff_s": -0.00416666666666643,
+            "row_sha256": "074950691e15f49944753ec0adbd7c9e9b8a1be46ead8a646d3467ae4b53af40",
+            "status": "AVAILABLE",
+            "time_s": 7.983333333333333,
+            "worlds_sha256": "bfb9ee523c1fae168c6c5b0efde9c7e1dd1325e240336935aff93da72180961a"
+          },
+          {
+            "feet": {
+              "left": {
+                "articulation_envelope_violation_degrees": 0.0,
+                "contact": true,
+                "foot_target_residual_m": 7.184124606523246e-08,
+                "material_residual_m": 1.4181065320522586e-05,
+                "minimum_material_gap_m": 0.00011418083505374965,
+                "swing_phase": 0.0
+              },
+              "right": {
+                "articulation_envelope_violation_degrees": 0.0,
+                "contact": false,
+                "foot_target_residual_m": 4.9533802102487144e-08,
+                "material_residual_m": 0.00034709157252486085,
+                "minimum_material_gap_m": 0.00044709156686417555,
+                "swing_phase": 0.010929254029382274
+              }
+            },
+            "pose_trs_sha256": "83263603e029b0a4dec6ef77a91e07fe69ceae9a00b5cb54a41e01c4ab12ee6e",
+            "relative_to_handoff_s": -0.002083333333333215,
+            "row_sha256": "3a15f26b2f8e30885834c202468b850ed3b25b8f69a77483af1c9d60c3fedf89",
+            "status": "AVAILABLE",
+            "time_s": 7.985416666666667,
+            "worlds_sha256": "6db8dbf88949d85b80b86a641833097b31b6bf1f6d171ec5f2717c1e2bb6e086"
+          },
+          {
+            "feet": {
+              "left": {
+                "articulation_envelope_violation_degrees": 0.0,
+                "contact": true,
+                "foot_target_residual_m": 7.14357510262189e-08,
+                "material_residual_m": 1.418059658271446e-05,
+                "minimum_material_gap_m": 0.00011418036455565642,
+                "swing_phase": 0.0
+              },
+              "right": {
+                "articulation_envelope_violation_degrees": 0.0,
+                "contact": false,
+                "foot_target_residual_m": 4.953494386406229e-08,
+                "material_residual_m": 0.0005769654398161381,
+                "minimum_material_gap_m": 0.0006769654256474143,
+                "swing_phase": 0.013157894736841855
+              }
+            },
+            "pose_trs_sha256": "f2fd00be2055ab279785a9645aa25c233a63ebdb82e1e45cf6fa5bc57d80b3dd",
+            "relative_to_handoff_s": 0.0,
+            "row_sha256": "ce2abf129ca656338a307c0dcf24832ccfacae212f486b073b253a9e55cd010e",
+            "status": "AVAILABLE",
+            "time_s": 7.9875,
+            "worlds_sha256": "77278766ecef8d0785582a08acd122a94fc6b4e01703789f83af29fd8c00838c"
+          }
+        ],
+        "transition_contract": {
+          "entry_pose": "calibrated_ready",
+          "entry_speed_mps": 0.0,
+          "exit_pose": "locomotion_declared_phase",
+          "exit_speed_mps": 1.114231992145518,
+          "interface_schema": "eonwild.motion.gait-interface.v2",
+          "kind": "start",
+          "root_distance_m": 5.824647738940695,
+          "steady_phase_s": 0.3075,
+          "verification": "Requires final emitted pose/velocity and skin-contact parity; planner intent is not proof."
+        }
+      },
+      "interception": {
+        "function": "eonwild_motion.factory.compiler.emit_source_cubics",
+        "kwargs": {},
+        "occurred_before_serialized_curve_emission": true,
+        "root_node": 74
+      },
+      "plan": {
+        "duration_s": 7.9875,
+        "parameters": {
+          "centered_stance": true,
+          "cycles": 1,
+          "duty_factor": 0.62,
+          "foot_recovery_pitch_degrees": 0,
+          "metatarsal_recovery_release_fraction": 0.8,
+          "metatarsal_recovery_world_degrees_from_down": -20,
+          "pad_recovery_pitch_degrees": 35,
+          "pelvis_crouch_body_heights": 0,
+          "pelvis_excursion_body_heights": 0.016,
+          "pelvis_height_carrier": "stance_vault_proxy",
+          "push_off_pitch_degrees": 28.0,
+          "push_off_start_fraction": 0.6,
+          "rounded_swing_peak_fraction": 0.42,
+          "sample_hz": 120,
+          "step_length_body_heights": 0.6,
+          "step_period_s": 1.23,
+          "swing_clearance_body_heights": 0.22,
+          "swing_hip_lift_degrees": 30.0,
+          "toe_flex_degrees": 25,
+          "toe_recovery_peak_fraction": 0.42,
+          "touchdown_reach_body_heights": 0.25
+        },
+        "performance_sha256": "8a9c5e032f2832e1badeb79daef6d55f3a7b881d2ef01f85b81105ff56505bbb",
+        "program": "gait_transition",
+        "sample_count": 1034,
+        "samples_sha256": "2283be358875efc56f80ff659b74adea24634c9a0ea8df4abcc864e39c6df6e4",
+        "solve_policy": {
+          "canonical_support_anchors": true,
+          "representation": "CUBICSPLINE",
+          "schema": "eonwild.motion.solve-policy.v1",
+          "skin_refinement": true,
+          "skin_target_law": "canonical_constant_skin_targets.v1"
+        },
+        "transition_parameters": {
+          "anticipation_seconds": 0.3,
+          "boundary_sample_hz": 480,
+          "handoff_phase_fraction": 0.125,
+          "handoff_sample_hz": 480,
+          "idle_crouch_body_heights": 0.025,
+          "kind": "start",
+          "minimum_swing_scale": 0.25,
+          "ramp_cycles": 2,
+          "sample_hz": 120,
+          "settle_seconds": 0.3,
+          "support_placement": "integrated_support"
+        }
+      },
+      "source_law": {
+        "classification": "NON-EMITTING native-key source-law feasibility captured at the production emit_source_cubics entry. Discrete native-key rates are not serialized CUBICSPLINE interval, renderer, visual, biological, or Unity authority.",
+        "sample_count": 1034,
+        "status": "BLOCKED",
+        "unavailable_source_values": [
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 0.9328467153284672
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 0.9411757038581857
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 0.9495046923879041
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 0.9578336809176226
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 0.9661626694473411
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 0.9744916579770595
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 0.9828206465067779
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 0.9911496350364964
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 0.9994786235662149
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 1.0078076120959334
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 1.0161366006256518
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 1.0244655891553702
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 1.0327945776850886
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 1.041123566214807
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 1.0494525547445257
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 1.0577815432742441
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 1.0661105318039625
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 1.074439520333681
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 1.0827685088633994
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 2.1655370177267987
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 2.1738660062565174
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 2.182194994786236
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 2.190523983315954
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 2.198852971845673
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 2.207181960375391
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 2.2155109489051097
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 2.223839937434828
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 2.2321689259645465
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 2.240497914494265
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 2.2488269030239834
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 2.257155891553702
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 2.26548488008342
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 2.273813868613139
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 2.2821428571428575
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 2.2904718456725757
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 2.2988008342022943
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 2.3071298227320125
+          }
+        ]
+      }
+    },
+    "walk-stop": {
+      "bindings": {
+        "animal": {
+          "path": "catalog/animals/tarbosaurus-bataar-pin-552-1.adult.v2.json",
+          "sha256": "53ffeba22e24a87504d3dcc310bedacf6db94d60a25ffe56ad028b03f41e849d"
+        },
+        "articulation_profile": {
+          "path": "catalog/articulation/heavy-biped.tarbosaurus-adult-walk.v1.json",
+          "sha256": "c1206143387ad4d1084a413ee031018f5a61a8e0539ef8256c6bba74a0f4bc6a"
+        },
+        "baseline": {
+          "path": "catalog/motion-baselines/tarbosaurus-pin-552-1-adult-grounded.v1.json",
+          "sha256": "0c92fc7c3a42ad28d4712a7bb33b4e8d0c27f4715547e05a4d268a0d844d429a"
+        },
+        "contact_profile": {
+          "path": "catalog/contacts/heavy-biped.v10.json",
+          "sha256": "61e0351fe9f7170ddce7f0b83a8f0379d119349d3c392ffec43e544adb115db5"
+        },
+        "gait_profile": {
+          "path": "catalog/programs/heavy-biped.tarbosaurus-adult-walk.v4.json",
+          "sha256": "271ccb833a8913d3dc6bd8281e798e54b9c7bebad2080136245cb7b5e5afa725"
+        },
+        "intent": {
+          "path": "catalog/motion-intents/heavy-biped.tarbosaurus-pin-552-1-adult-walk-stop.motion-set.v1.json",
+          "sha256": "6aca1339e03f3f1c7dbf4df23d61f852273ff2554da4d71d01f84fd97b3f7fb5"
+        },
+        "motion_set": {
+          "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/worktrees/eonwild-shared-motion-set-transition-authority-narrow/catalog/motion-sets/tarbosaurus-pin-552-1-adult-grounded.v1.json",
+          "sha256": "53a00e395172a27424e49030d9a08348bf515cf958194093677e4b14485fd7ea"
+        },
+        "neutral_pose_profile_sha256": "787fc381ff5988cc846331b125f4096ce1e5500fb8e9263cf56f36dac5afd258",
+        "performance_profile": {
+          "path": "catalog/performance/heavy-biped.grounded-weight-transfer.v1.json",
+          "sha256": "517b8df482d8c0d6d1f28494eb45c2a488a2e1cd11f43db7e47225d7b6c988c9"
+        },
+        "program_profile": {
+          "path": "catalog/programs/heavy-biped.stop.v2.json",
+          "sha256": "58eb4cd4cd6085e3ce5689bc349346aa5a1c5324234840f9211461b2a21c15f5"
+        },
+        "rig": {
+          "path": "catalog/rigs/heavy-biped.v9.json",
+          "sha256": "c3de770bf7dcc68219a28fb9851e9b75f3d3eebe2c2c0c7deb0078850100fd7e"
+        },
+        "source": {
+          "path": "assets/sha256/2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f.glb",
+          "sha256": "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f"
+        }
+      },
+      "endpoint_and_handoff_context": {
+        "handoff_sample_hz": 480,
+        "handoff_time_s": 0.0,
+        "rows": [
+          {
+            "feet": {
+              "left": {
+                "articulation_envelope_violation_degrees": 0.0,
+                "contact": true,
+                "foot_target_residual_m": 7.143575107281011e-08,
+                "material_residual_m": 1.418059658279623e-05,
+                "minimum_material_gap_m": 0.000114180364555734,
+                "swing_phase": 0.0
+              },
+              "right": {
+                "articulation_envelope_violation_degrees": 0.0,
+                "contact": false,
+                "foot_target_residual_m": 4.953494417734413e-08,
+                "material_residual_m": 0.0005769654398168194,
+                "minimum_material_gap_m": 0.0006769654256480955,
+                "swing_phase": 0.013157894736842318
+              }
+            },
+            "pose_trs_sha256": "e3a5f6bc5127c62b010a0e437afa528fcd1bb8b351993789fa51586046609f13",
+            "relative_to_handoff_s": 0.0,
+            "row_sha256": "f0c5c2579357b967494a16a9566bb41a7a94762109f2467a2358c58a800cc4b8",
+            "status": "AVAILABLE",
+            "time_s": 0.0,
+            "worlds_sha256": "058964ac28e8ddc263c9a4f2b6b107dda21fb3bab4c313b37ae96005929aea1b"
+          },
+          {
+            "feet": {
+              "left": {
+                "articulation_envelope_violation_degrees": 0.0,
+                "contact": true,
+                "foot_target_residual_m": 7.103333887224566e-08,
+                "material_residual_m": 1.4180130322690346e-05,
+                "minimum_material_gap_m": 0.00011417989654746045,
+                "swing_phase": 0.0
+              },
+              "right": {
+                "articulation_envelope_violation_degrees": 0.0,
+                "contact": false,
+                "foot_target_residual_m": 4.95188161792149e-08,
+                "material_residual_m": 0.0008946349588976341,
+                "minimum_material_gap_m": 0.0009946348899083895,
+                "swing_phase": 0.015386535444302024
+              }
+            },
+            "pose_trs_sha256": "42adcb6afc0252469c85673cac012e9a2d8c75681f3105996180de7ee11c543d",
+            "relative_to_handoff_s": 0.0020833333333333333,
+            "row_sha256": "5bb56422517fd1e5f38346bb6512815754876c5e0fec4d1d409b8d329eea6404",
+            "status": "AVAILABLE",
+            "time_s": 0.0020833333333333333,
+            "worlds_sha256": "b0c0bab9b4d6d93a8e25a6bba99f8e6facdfaf15f596845f476b38b12ee7207f"
+          },
+          {
+            "feet": {
+              "left": {
+                "articulation_envelope_violation_degrees": 0.0,
+                "contact": true,
+                "foot_target_residual_m": 7.063399827188182e-08,
+                "material_residual_m": 1.4179666546132214e-05,
+                "minimum_material_gap_m": 0.00011417943103498466,
+                "swing_phase": 0.0
+              },
+              "right": {
+                "articulation_envelope_violation_degrees": 0.0,
+                "contact": false,
+                "foot_target_residual_m": 4.9482755841442985e-08,
+                "material_residual_m": 0.0013124403552141157,
+                "minimum_material_gap_m": 0.0014124401026029423,
+                "swing_phase": 0.017615176151761728
+              }
+            },
+            "pose_trs_sha256": "033cfbeb060764a7d2f52f2c3fe45faef7ce88f7f0719dfbf1385d03e9d3efde",
+            "relative_to_handoff_s": 0.004166666666666667,
+            "row_sha256": "f9d2b949ae2a3e038da1745769bda436048f6a2ed6355948432a1b7b7296136f",
+            "status": "AVAILABLE",
+            "time_s": 0.004166666666666667,
+            "worlds_sha256": "c04395ab975a8fd7391d8e2d65131131bd18e2062abcd67bc6f9bdcd66adce9b"
+          },
+          {
+            "feet": {
+              "left": {
+                "articulation_envelope_violation_degrees": 0.0,
+                "contact": true,
+                "foot_target_residual_m": 3.02501358695421e-08,
+                "material_residual_m": 1.4103896757821988e-05,
+                "minimum_material_gap_m": 0.00011410343995561567,
+                "swing_phase": 0.0
+              },
+              "right": {
+                "articulation_envelope_violation_degrees": 0.0,
+                "contact": true,
+                "foot_target_residual_m": 2.9893905201536034e-08,
+                "material_residual_m": 3.038423745219424e-05,
+                "minimum_material_gap_m": 0.0001303841376089532,
+                "swing_phase": 0.0
+              }
+            },
+            "pose_trs_sha256": "b08a3d216674dadfb8c0797a8f79a136041bdc0db89708de817974b10b8fd63b",
+            "relative_to_handoff_s": 6.1425,
+            "row_sha256": "12371a690a9468c59494bd76c8b6a9f221b4aa7c2da7228f71d8c8b3952daa13",
+            "status": "AVAILABLE",
+            "time_s": 6.1425,
+            "worlds_sha256": "83bec957aebc8847facd88eb58709f7bd74af7ba065b2e2588cc2d8b62fd3b7c"
+          }
+        ],
+        "transition_contract": {
+          "entry_pose": "locomotion_declared_phase",
+          "entry_speed_mps": 1.114231992145518,
+          "exit_pose": "calibrated_ready",
+          "exit_speed_mps": 0.0,
+          "interface_schema": "eonwild.motion.gait-interface.v2",
+          "kind": "stop",
+          "root_distance_m": 2.5696975318856006,
+          "steady_phase_s": 0.3075,
+          "verification": "Requires final emitted pose/velocity and skin-contact parity; planner intent is not proof."
+        }
+      },
+      "interception": {
+        "function": "eonwild_motion.factory.compiler.emit_source_cubics",
+        "kwargs": {},
+        "occurred_before_serialized_curve_emission": true,
+        "root_node": 74
+      },
+      "plan": {
+        "duration_s": 6.1425,
+        "parameters": {
+          "centered_stance": true,
+          "cycles": 1,
+          "duty_factor": 0.62,
+          "foot_recovery_pitch_degrees": 0,
+          "metatarsal_recovery_release_fraction": 0.8,
+          "metatarsal_recovery_world_degrees_from_down": -20,
+          "pad_recovery_pitch_degrees": 35,
+          "pelvis_crouch_body_heights": 0,
+          "pelvis_excursion_body_heights": 0.016,
+          "pelvis_height_carrier": "stance_vault_proxy",
+          "push_off_pitch_degrees": 28.0,
+          "push_off_start_fraction": 0.6,
+          "rounded_swing_peak_fraction": 0.42,
+          "sample_hz": 120,
+          "step_length_body_heights": 0.6,
+          "step_period_s": 1.23,
+          "swing_clearance_body_heights": 0.22,
+          "swing_hip_lift_degrees": 30.0,
+          "toe_flex_degrees": 25,
+          "toe_recovery_peak_fraction": 0.42,
+          "touchdown_reach_body_heights": 0.25
+        },
+        "performance_sha256": "8a9c5e032f2832e1badeb79daef6d55f3a7b881d2ef01f85b81105ff56505bbb",
+        "program": "gait_transition",
+        "sample_count": 788,
+        "samples_sha256": "378256386cc5eee700529dd6fed96bded68d51da13cb841c9bbf7e51740791f6",
+        "solve_policy": {
+          "canonical_support_anchors": true,
+          "representation": "CUBICSPLINE",
+          "schema": "eonwild.motion.solve-policy.v1",
+          "skin_refinement": true,
+          "skin_target_law": "canonical_constant_skin_targets.v1"
+        },
+        "transition_parameters": {
+          "anticipation_seconds": 0.3,
+          "boundary_sample_hz": 480,
+          "handoff_phase_fraction": 0.125,
+          "handoff_sample_hz": 480,
+          "idle_crouch_body_heights": 0.025,
+          "kind": "stop",
+          "minimum_swing_scale": 0.25,
+          "ramp_cycles": 2,
+          "sample_hz": 120,
+          "settle_seconds": 0.3,
+          "support_placement": "integrated_support"
+        }
+      },
+      "source_law": {
+        "classification": "NON-EMITTING native-key source-law feasibility captured at the production emit_source_cubics entry. Discrete native-key rates are not serialized CUBICSPLINE interval, renderer, visual, biological, or Unity authority.",
+        "sample_count": 788,
+        "status": "BLOCKED",
+        "unavailable_source_values": [
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 2.771615853658537
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 2.779939024390244
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 2.7882621951219515
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 2.796585365853659
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 2.804908536585366
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 2.8132317073170734
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 2.8215548780487807
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 2.829878048780488
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 2.8382012195121953
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 2.8465243902439026
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 2.85484756097561
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 2.863170731707317
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 2.8714939024390245
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 2.8798170731707318
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 2.888140243902439
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 2.8964634146341464
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 2.9047865853658537
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 2.913109756097561
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 2.9214329268292683
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 2.9297560975609755
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 2.9380792682926833
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 2.9464024390243906
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 4.028414634146341
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 4.036737804878049
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 4.045060975609756
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 4.053384146341464
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 4.061707317073171
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 4.070030487804878
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 4.078353658536585
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 4.086676829268293
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 4.095000000000001
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 4.1033231707317075
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 4.111646341463415
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 4.119969512195122
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 4.12829268292683
+          },
+          {
+            "reason": "left swing clearance is below target gap",
+            "time_s": 4.136615853658537
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 5.24359756097561
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 5.251920731707317
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 5.260243902439025
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 5.268567073170732
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 5.276890243902439
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 5.285213414634146
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 5.293536585365854
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 5.301859756097561
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 5.310182926829269
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 5.3185060975609755
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 5.326829268292683
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 5.335152439024391
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 5.343475609756098
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 5.3517987804878056
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 5.360121951219512
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 5.36844512195122
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 5.376768292682927
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 5.385091463414635
+          },
+          {
+            "reason": "right swing clearance is below target gap",
+            "time_s": 5.393414634146342
+          }
+        ]
+      }
+    }
+  },
+  "overall_status": "BLOCKED",
+  "schema": "eonwild.motion.shared-set-transition-source-preflight.v1",
+  "scope": "NON-EMITTING feasibility only. Production compiler setup was executed through constant-law construction and intercepted exactly at emit_source_cubics. No GLB, serialized interpolation, visual, Unity, physical, or biological claim is made."
+}

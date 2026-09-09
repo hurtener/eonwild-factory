@@ -1,0 +1,14 @@
+{
+  "implementation_head": "f51431a61ce6b42b1bb64ab97af65437780f6c2e",
+  "implementation_tree": "f93e8573612e72c8cd5d113361d87e9f2851ec3f",
+  "reviewed_module_sha256": "84ec053d0a48e51f1c547e252694011ade9417b2b92d0010684088ba5803c020",
+  "resolution_uses_captured_descriptor": true,
+  "resolution_source_sha256": "5eb885e36da1ee0ff6605711ba9ecd4cecd152e3d5c12d4cff9735487e7f1a76",
+  "resolution_capsule_sha256": "3fb85cb294db96ce1a8b5e98e566b7fb52940a0136897ce28f904f9461908079",
+  "live_descriptor_after_interleaving_source_sha256": "21dbca194a11d25193a6e6fddbf7c9f08303f28d55685b920ca4893e53da9c2e",
+  "packaged_substitution_rejected": true,
+  "packaged_error": "authored material reference payload differs from its descriptor snapshot",
+  "direct_constructor_substitution_rejected": true,
+  "constructor_error": "authored material reference payload differs from its descriptor snapshot",
+  "classification": "synthetic descriptor replacement and package corruption witness; no production files changed"
+}

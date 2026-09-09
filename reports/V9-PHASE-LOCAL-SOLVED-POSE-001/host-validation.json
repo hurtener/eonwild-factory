@@ -1,0 +1,69 @@
+{
+  "schema": "eonwild.motion.phase-local-solved-pose-publication.v1",
+  "source_sha": "5da9b609da9725caccf243e66666179f9621307e",
+  "source_tree": "076b8790f19c9039bda4d693d69f0da721861365",
+  "publication_base": "424644e1b3ac184a03c64fc661786a1e2ab1a68b",
+  "integration": {
+    "original_commits": [
+      "e6c0b6f6daefba490305a79722ebb1644ffd1a41",
+      "79bc9f9cab6e3aebbae9e1aeb6e90324de4371e5"
+    ],
+    "publication_cherry_picks": [
+      "69a328968a30ea33a645dba666695cbc392759c5",
+      "5da9b609da9725caccf243e66666179f9621307e"
+    ]
+  },
+  "reviews": [
+    {"file": "review-root-round1.md", "sha256": "7da7ed776dada8328193727ae9eab6f49ed159f743cfc8860ce081cc6f2f0a91"},
+    {"file": "review-independent-round1.md", "sha256": "5f82547175e929885021722be945cb373973edeb84c1bba340180618980f9582"},
+    {"file": "review-root-round2.md", "sha256": "2d0c6ed3fc321afe1b392938e4414fea677020949a24ceedcad0935fa8c79cbd"},
+    {"file": "review-independent-round2.md", "sha256": "530b0878e6cb369a6bcdf4e012342b634c35babb3c30fe26ffde681c4d48a6ba"}
+  ],
+  "full_suite": {
+    "status": "PASS",
+    "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=2 uv run --frozen --group test python -m pytest tests -q --tb=short --junitxml=out/phase-local-ci-5da9b60-retry2/full-tests.xml",
+    "tests_passed": 813,
+    "subtests_passed": 21,
+    "junit_testcase_elements": 834,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 302.67,
+    "tools": ["Blender 5.2.0 LTS", "Khronos glTF Validator 2.0.0-dev.3.10", "uv 0.7.13"],
+    "artifacts": {
+      "source": {"path": "out/phase-local-ci-5da9b60-retry2/source.txt", "sha256": "f28ea31235442a8731a03d120c80a791ac05cfd54d437df2b58b64ed9893cfe0"},
+      "tree_before": {"path": "out/phase-local-ci-5da9b60-retry2/tree-before.txt", "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+      "tree_after": {"path": "out/phase-local-ci-5da9b60-retry2/tree-after.txt", "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+      "blender": {"path": "out/phase-local-ci-5da9b60-retry2/blender.txt", "sha256": "52c01d7bf836c18f15f4128ad91811fe49852ef3f1befc8e53be0d159126ff1c"},
+      "khronos_install": {"path": "out/phase-local-ci-5da9b60-retry2/khronos-install.log", "sha256": "835fe4ca66452e18ff78a2292e5f39f5b71ae0c9af7abeea7ff5df4f83810ddf"},
+      "khronos_smoke": {"path": "out/phase-local-ci-5da9b60-retry2/khronos-smoke.json", "sha256": "b9ae2d12c779eb20a1384f0a574429c01963a7047290d63980a735323b939380"},
+      "installation_report": {"path": "out/phase-local-ci-5da9b60-retry2/installation-report.json", "sha256": "6d27180da31b3193fb9ca84f9acc6ab77f2f378d77bf144b46e989b5282a7021"},
+      "junit": {"path": "out/phase-local-ci-5da9b60-retry2/full-tests.xml", "sha256": "ae2eee0a8b2ec278c2d227981e307e26f978737d91dae648832a8c17fe55f146"},
+      "log": {"path": "out/phase-local-ci-5da9b60-retry2/full-tests.log", "sha256": "4ff9e29bb6cd884d38483dac1d7ceb8ee5b1fa77dff99036bef9c0d0033b914c"}
+    }
+  },
+  "setup_attempts": [
+    {
+      "status": "STOPPED_BEFORE_PYTEST",
+      "reason": "CI helper required bare python; desktop shell supplied only uv-managed python.",
+      "log_path": "out/phase-local-ci-5da9b60/khronos-install.log",
+      "log_sha256": "6193107749f45846fafc30d50a1ac7e98bec1e02e17721fa2a1ce16ddef49581"
+    },
+    {
+      "status": "STOPPED_BEFORE_PYTEST",
+      "reason": "Khronos install and smoke passed; a manual stdout invocation supplied an extra path and exited with usage before pytest.",
+      "log_path": "out/phase-local-ci-5da9b60-retry1/khronos-install.log",
+      "log_sha256": "835fe4ca66452e18ff78a2292e5f39f5b71ae0c9af7abeea7ff5df4f83810ddf"
+    }
+  ],
+  "remaining": {
+    "articulation_profile_retained_context": "P2_DEBT_REQUIRES_SNAPSHOT_BEFORE_SOURCE_MOTION_QUERY",
+    "arbitrary_time_query": "NOT_IMPLEMENTED",
+    "cubic_emitter": "NOT_IMPLEMENTED",
+    "continuous_skin_interval_authority": "NOT_IMPLEMENTED",
+    "hosted_ci": "NOT_GREEN_OBSERVED_CAUSE_NOT_ATTRIBUTED",
+    "native_visual_decision": "UNCHANGED",
+    "unity_parity": "NOT_RUN",
+    "production_approved": false
+  }
+}

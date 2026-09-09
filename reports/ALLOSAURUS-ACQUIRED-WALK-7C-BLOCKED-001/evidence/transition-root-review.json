@@ -1,0 +1,33 @@
+{
+  "schema": "eonwild.audit.bounded-review.v1",
+  "head": "45c50cb7a48219ee2242e3918bfaa1e039883812",
+  "tree": "a98202ee2cefd764a28f39752264befe947c49ba",
+  "round": 2,
+  "reviewer": "root",
+  "scope": "16a72ef to45c50cb R1 closure and actual non-emitting boundary stencil evidence",
+  "findings": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 0
+  },
+  "checks": {
+    "focused_tests": "5 passed,30 deselected,7.73s; tests/test_acquired_reference.py tests/test_authored_material_contact.py selected transition and detached-grounded cases",
+    "diff_check": "PASS",
+    "worker_clean": "PASS",
+    "evidence_manifest": {
+      "probe.py": true,
+      "result.json": true,
+      "run.log": true
+    },
+    "full_gain_contact_contradiction": "negative regression rejects coherent changed support state",
+    "adapter_substitution": "construction and runtime replacement reject; adapter binding digest included",
+    "steady_schema_reconstruction": "v2 required offline consistent with live resolver",
+    "direct_recipe_field": "non-transition steady_motion rejected",
+    "boundary_scope": "3 rows each side of start/stop connection, non-emitting source query only; root forward scalar velocity, non-root TRS comparisons"
+  },
+  "limitations": [
+    "No serialized transition package or continuous derivative join accepted",
+    "No new full-cycle visual or Unity acceptance",
+    "Shared steady Allosaurus export remains technically BLOCKED on separate residual and rotation-rate checks"
+  ]
+}

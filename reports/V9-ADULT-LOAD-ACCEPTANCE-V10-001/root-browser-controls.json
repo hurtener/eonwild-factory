@@ -1,0 +1,230 @@
+{
+  "url": "http://127.0.0.1:8877/out/continuation-adult-v10-load-acceptance-review-001/index.html",
+  "page_id": 4,
+  "isolated_context": "eonwild-v10-review-check",
+  "method": "Actual page controls; 160 ms seek waits, 650 ms native playback, 3200 ms complete restart playback. Timeline stepping is 30 fps. Technical playback verification only.",
+  "results": [
+    {
+      "heading": "Side body",
+      "seek": [
+        {
+          "time": 0.733333,
+          "paused": true,
+          "ended": false,
+          "rate": 1,
+          "ready": 4,
+          "error": null
+        },
+        {
+          "time": 0.733333,
+          "paused": true,
+          "ended": false,
+          "rate": 1,
+          "ready": 4,
+          "error": null
+        }
+      ],
+      "forward": [
+        {
+          "time": 0.766666,
+          "paused": true,
+          "ended": false,
+          "rate": 1,
+          "ready": 4,
+          "error": null
+        },
+        {
+          "time": 0.766666,
+          "paused": true,
+          "ended": false,
+          "rate": 1,
+          "ready": 4,
+          "error": null
+        }
+      ],
+      "back": [
+        {
+          "time": 0.733333,
+          "paused": true,
+          "ended": false,
+          "rate": 1,
+          "ready": 4,
+          "error": null
+        },
+        {
+          "time": 0.733333,
+          "paused": true,
+          "ended": false,
+          "rate": 1,
+          "ready": 4,
+          "error": null
+        }
+      ],
+      "playing": [
+        {
+          "time": 1.384993,
+          "paused": false,
+          "ended": false,
+          "rate": 1,
+          "ready": 4,
+          "error": null
+        },
+        {
+          "time": 1.384925,
+          "paused": false,
+          "ended": false,
+          "rate": 1,
+          "ready": 4,
+          "error": null
+        }
+      ],
+      "paused": [
+        {
+          "time": 1.385133,
+          "paused": true,
+          "ended": false,
+          "rate": 1,
+          "ready": 4,
+          "error": null
+        },
+        {
+          "time": 1.385113,
+          "paused": true,
+          "ended": false,
+          "rate": 1,
+          "ready": 4,
+          "error": null
+        }
+      ],
+      "ended": [
+        {
+          "time": 2.466667,
+          "paused": true,
+          "ended": true,
+          "rate": 1,
+          "ready": 4,
+          "error": null
+        },
+        {
+          "time": 2.466667,
+          "paused": true,
+          "ended": true,
+          "rate": 1,
+          "ready": 4,
+          "error": null
+        }
+      ]
+    },
+    {
+      "heading": "Front body",
+      "seek": [
+        {
+          "time": 0.733333,
+          "paused": true,
+          "ended": false,
+          "rate": 1,
+          "ready": 4,
+          "error": null
+        },
+        {
+          "time": 0.733333,
+          "paused": true,
+          "ended": false,
+          "rate": 1,
+          "ready": 4,
+          "error": null
+        }
+      ],
+      "forward": [
+        {
+          "time": 0.766666,
+          "paused": true,
+          "ended": false,
+          "rate": 1,
+          "ready": 4,
+          "error": null
+        },
+        {
+          "time": 0.766666,
+          "paused": true,
+          "ended": false,
+          "rate": 1,
+          "ready": 4,
+          "error": null
+        }
+      ],
+      "back": [
+        {
+          "time": 0.733333,
+          "paused": true,
+          "ended": false,
+          "rate": 1,
+          "ready": 4,
+          "error": null
+        },
+        {
+          "time": 0.733333,
+          "paused": true,
+          "ended": false,
+          "rate": 1,
+          "ready": 4,
+          "error": null
+        }
+      ],
+      "playing": [
+        {
+          "time": 1.385023,
+          "paused": false,
+          "ended": false,
+          "rate": 1,
+          "ready": 4,
+          "error": null
+        },
+        {
+          "time": 1.384942,
+          "paused": false,
+          "ended": false,
+          "rate": 1,
+          "ready": 4,
+          "error": null
+        }
+      ],
+      "paused": [
+        {
+          "time": 1.385105,
+          "paused": true,
+          "ended": false,
+          "rate": 1,
+          "ready": 4,
+          "error": null
+        },
+        {
+          "time": 1.385058,
+          "paused": true,
+          "ended": false,
+          "rate": 1,
+          "ready": 4,
+          "error": null
+        }
+      ],
+      "ended": [
+        {
+          "time": 2.466667,
+          "paused": true,
+          "ended": true,
+          "rate": 1,
+          "ready": 4,
+          "error": null
+        },
+        {
+          "time": 2.466667,
+          "paused": true,
+          "ended": true,
+          "rate": 1,
+          "ready": 4,
+          "error": null
+        }
+      ]
+    }
+  ]
+}

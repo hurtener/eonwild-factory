@@ -1,0 +1,56 @@
+{
+  "artifacts": {
+    "exit_status": {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/closed-diagnostics-v10-final-suite-4e41689/exit-status.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "junit": {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/closed-diagnostics-v10-final-suite-4e41689/junit.xml",
+      "sha256": "696bed1ddfd0a628982a48cea48816a0b5c4aa97ece668d858b272d5342b8c6f"
+    },
+    "pytest_log": {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/closed-diagnostics-v10-final-suite-4e41689/pytest.log",
+      "sha256": "a57b137fdd980fadb5f46210889c6927fe9c29bae720b6f2faeb90b2a102efb6"
+    }
+  },
+  "classification": "Complete mandatory local suite with pinned real tools and no exclusions; candidate visual, Unity and production approval remain separate.",
+  "command": "source <ARC>/task-env.sh; PATH=<pinned-gltf-validator>:$PATH PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=2 <python> -m pytest tests -q --tb=short --basetemp=<ARC>/tmp/closed-diagnostics-v10-final-suite-4e41689 --junitxml=<ARC>/audits/closed-diagnostics-v10-final-suite-4e41689/junit.xml",
+  "result": {
+    "duration_seconds": 795.48,
+    "errors": 0,
+    "exit_code": 0,
+    "failures": 0,
+    "junit_testcases": 990,
+    "pytest_tests": 969,
+    "skipped": 0,
+    "subtests": 21
+  },
+  "schema": "eonwild.motion.local-full-suite-receipt.v1",
+  "scope": {
+    "constant_skin_target_law_emitting": false,
+    "support_resultant_motion_mutation": false,
+    "technical_continuity_approved": false,
+    "v10_recipe_selected": false
+  },
+  "tested_head": "4e41689671bb9787c743c72334bcd61334fd5aac",
+  "tested_tree": "2811bf44288bfc45b5413742e9425b6ef887c82d",
+  "tools": {
+    "blender": {
+      "executable": "/Applications/Blender.app/Contents/MacOS/Blender",
+      "version": "Blender 5.2.0 LTS",
+      "wrapper": "/opt/homebrew/bin/blender"
+    },
+    "gltf_validator": {
+      "binary": "Mach-O 64-bit x86_64",
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/tmp/phase-local-publication-real-tools-5da9b60-retry1/gltf-validator-2.0.0-dev.3.10/gltf_validator",
+      "version": "2.0.0-dev.3.10"
+    },
+    "pytest": {
+      "version": "pytest 9.1.1"
+    },
+    "python": {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/worktrees/eonwild-review-server-provider-integration/.venv/bin/python",
+      "version": "Python 3.12.10"
+    }
+  }
+}

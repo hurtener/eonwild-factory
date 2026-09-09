@@ -1,0 +1,94 @@
+{
+  "schema": "eonwild.motion.adult-v9-host-frame-review.v1",
+  "reviewed_at_utc": "2026-09-08T11:38:54.816894+00:00",
+  "reviewer": "root host visual inspection",
+  "code_head": "2c5dc911d15e60b4a37a0d6b9248fa547168672b",
+  "package_manifest_sha256": "1b89ef55a89be040e12eb714ee391f31c5fca8f4b896bbe722e1eb26d5872b83",
+  "render_audit_sha256": "5ba764afbfd6d0ed198e4a6395a2023a6bb19ade042b56608035d0e5bf6b4d81",
+  "coverage": {
+    "views": 5,
+    "frames_per_view": 74,
+    "distinct_rendered_frames_actually_viewed": 370,
+    "contact_sheets_actually_viewed": 25,
+    "critical_full_resolution_frames": [
+      {
+        "relative_path": "side-body/frames/00023.png",
+        "sha256": "639cd0f77b20c9caa6c2c4a17b1da0ba63757afdbdaa659374b25789b01acccf",
+        "actually_viewed": true
+      },
+      {
+        "relative_path": "front-body/frames/00023.png",
+        "sha256": "3746ebf78d79fd1e38a65a5f37ac502b17db60c374bb1d8310d42ed06f88045a",
+        "actually_viewed": true
+      },
+      {
+        "relative_path": "front-body/frames/00060.png",
+        "sha256": "0fed83ea1b9d2e310fe2a015af04321c47e3e535bcc809f04186ef0949cb67c2",
+        "actually_viewed": true
+      },
+      {
+        "relative_path": "three-quarter-body/frames/00059.png",
+        "sha256": "01170c2ee930db3bc6dff9a909c0ccf7bf4fce915a4380f2347d717b1abab9cd",
+        "actually_viewed": true
+      },
+      {
+        "relative_path": "rear-body/frames/00060.png",
+        "sha256": "929a4c2a6c590d429bf7ab21e631f667c1cd270e9e678b5d5db037e2e2bc9832",
+        "actually_viewed": true
+      }
+    ]
+  },
+  "views": {
+    "side-body": {
+      "film_sha256": "bc5cb77ce0da2425fa0c5dfbbd17623c116649b32378cf2e4bbef416f0e70139",
+      "reviewed_frame_indices": [
+        0,
+        73
+      ],
+      "all_frames_in_inclusive_range_actually_viewed": true,
+      "observation": "Recovery retains an open ankle with forward extension in both half cycles; no old folded-ankle pose is apparent. Jaw is relaxed and head carriage is near level. Vertical torso response remains restrained; perceived weight requires normal-speed playback."
+    },
+    "front-body": {
+      "film_sha256": "98e0ab92066b6ddfecf5b5e6cbc872bef4debf481aa456505d7ae60c0e866d44",
+      "reviewed_frame_indices": [
+        0,
+        73
+      ],
+      "all_frames_in_inclusive_range_actually_viewed": true,
+      "observation": "Alternating chest and head carriage shifts toward the planted foot in both half cycles. No obvious gross limb collapse, mesh rupture, or head snap in the reviewed frames."
+    },
+    "rear-body": {
+      "film_sha256": "047944a7222b8c3580218b1b6a2826b2e56505a1f06152f7933e0d9545bf3c37",
+      "reviewed_frame_indices": [
+        0,
+        73
+      ],
+      "all_frames_in_inclusive_range_actually_viewed": true,
+      "observation": "Tail moves continuously through both directions, with visible lateral sweep relative to the trunk. No obvious adjacent-frame whip or discontinuity; normal-speed amplitude judgment remains pending."
+    },
+    "three-quarter-body": {
+      "film_sha256": "14eb1cf01b55088f169eea417794723d08c7075b73073fbd2ae43bd2cb981e12",
+      "reviewed_frame_indices": [
+        0,
+        73
+      ],
+      "all_frames_in_inclusive_range_actually_viewed": true,
+      "observation": "Chest carriage and pelvis turn are visible while both feet retain the improved recovery. Relaxed jaw gives a more natural walking expression. No obvious gross neck bend or body mesh rupture."
+    },
+    "root-motion-side": {
+      "film_sha256": "941772987a181fc8b5b058dc332e43fff41d515bc0183ba82b886a81c90a286c",
+      "reviewed_frame_indices": [
+        0,
+        73
+      ],
+      "all_frames_in_inclusive_range_actually_viewed": true,
+      "observation": "Both recovery sequences extend toward the next placement without the old compressed fold. Camera follows the animal and the floor moves with root travel. No obvious adjacent-frame body jump; native playback remains necessary to judge effort and glide."
+    }
+  },
+  "frame_review_status": "COMPLETED_WITH_NATIVE_PLAYBACK_PENDING",
+  "native_speed_playback": "PENDING_MAC_UI_LOCK",
+  "perceived_weight_acceptance": "PENDING_NATIVE_PLAYBACK",
+  "technical_status": "BLOCKED_EXACT_LOOP_LINEAR_VELOCITY",
+  "unity_import_validation": "NOT_RUN",
+  "classification": "Host inspection of native rendered frames and source-bound engineering diagnostics; not measured body mass dynamics, ground-reaction forces, muscle effort, full dental collision clearance, or biological validation."
+}

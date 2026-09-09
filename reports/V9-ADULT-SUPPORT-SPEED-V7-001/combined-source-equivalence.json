@@ -1,0 +1,173 @@
+{
+  "classification": "Independent exact-key comparison of the original visually reviewed v7 package and the combined-source diagnostic regeneration. It reports numerical extent and does not itself grant visual, Unity, biological, physical, scientific, or production approval.",
+  "combined_package": "/Volumes/m2-extended-disk/Repos/eonwild-factory-candidate-claims-fix/out/continuation-adult-v7-support-speed-combined-3b1f556",
+  "contact_profile": "/Volumes/m2-extended-disk/Repos/eonwild-factory-candidate-claims-fix/catalog/contacts/heavy-biped.v9.json",
+  "modes": {
+    "in_place": {
+      "byte_identical": false,
+      "changed_track_count": 8,
+      "changed_tracks": [
+        {
+          "bone": "Bone_008",
+          "node": 47,
+          "path": "rotation"
+        },
+        {
+          "bone": "Bone_009",
+          "node": 48,
+          "path": "rotation"
+        },
+        {
+          "bone": "Bone_010",
+          "node": 49,
+          "path": "rotation"
+        },
+        {
+          "bone": "Bone_011",
+          "node": 50,
+          "path": "rotation"
+        },
+        {
+          "bone": "Bone_012",
+          "node": 60,
+          "path": "rotation"
+        },
+        {
+          "bone": "Bone_013",
+          "node": 61,
+          "path": "rotation"
+        },
+        {
+          "bone": "Bone_014",
+          "node": 62,
+          "path": "rotation"
+        },
+        {
+          "bone": "Bone_015",
+          "node": 63,
+          "path": "rotation"
+        }
+      ],
+      "channel_maxima": {
+        "rotation_radians": 1.1542389828584848e-07,
+        "scale": 0.0,
+        "translation_m": 0.0
+      },
+      "combined_sha256": "3d984b535ae22ea776d9111e9bdd52f55cfb05bf7a2cd1741c3354df75d9bdcc",
+      "key_count": 297,
+      "pose_and_skin_maxima": {
+        "all_skinned_vertices_m": {
+          "key": 46,
+          "time_s": 0.3822973072528839,
+          "value": 1.753765605327432e-07,
+          "vertex": 43773
+        },
+        "contact_selected_skinned_vertices_m": {
+          "key": 46,
+          "time_s": 0.3822973072528839,
+          "value": 1.7409159666086533e-07,
+          "vertex": 42400
+        },
+        "world_bone_origin_m": {
+          "bone": "Bone_012",
+          "key": 46,
+          "node": 60,
+          "time_s": 0.3822973072528839,
+          "value": 1.6123272999182854e-07
+        }
+      },
+      "reviewed_sha256": "1110f89eed7a4de38245a4620d0c10f92e589fb4c703e9360011b3be03e12ce0",
+      "rotation_witness": {
+        "bone": "Bone_009",
+        "key": 265,
+        "node": 48,
+        "time_s": 2.202364921569824
+      },
+      "track_count": 156
+    },
+    "root_motion": {
+      "byte_identical": false,
+      "changed_track_count": 8,
+      "changed_tracks": [
+        {
+          "bone": "Bone_008",
+          "node": 47,
+          "path": "rotation"
+        },
+        {
+          "bone": "Bone_009",
+          "node": 48,
+          "path": "rotation"
+        },
+        {
+          "bone": "Bone_010",
+          "node": 49,
+          "path": "rotation"
+        },
+        {
+          "bone": "Bone_011",
+          "node": 50,
+          "path": "rotation"
+        },
+        {
+          "bone": "Bone_012",
+          "node": 60,
+          "path": "rotation"
+        },
+        {
+          "bone": "Bone_013",
+          "node": 61,
+          "path": "rotation"
+        },
+        {
+          "bone": "Bone_014",
+          "node": 62,
+          "path": "rotation"
+        },
+        {
+          "bone": "Bone_015",
+          "node": 63,
+          "path": "rotation"
+        }
+      ],
+      "channel_maxima": {
+        "rotation_radians": 1.1542389828584848e-07,
+        "scale": 0.0,
+        "translation_m": 0.0
+      },
+      "combined_sha256": "03da1a7ed5d8d38fc190307ae2e41efa23156158b837c27445ec5809e14878e9",
+      "key_count": 297,
+      "pose_and_skin_maxima": {
+        "all_skinned_vertices_m": {
+          "key": 46,
+          "time_s": 0.3822973072528839,
+          "value": 1.753765605561636e-07,
+          "vertex": 43773
+        },
+        "contact_selected_skinned_vertices_m": {
+          "key": 46,
+          "time_s": 0.3822973072528839,
+          "value": 1.7409159652349512e-07,
+          "vertex": 42400
+        },
+        "world_bone_origin_m": {
+          "bone": "Bone_012",
+          "key": 46,
+          "node": 60,
+          "time_s": 0.3822973072528839,
+          "value": 1.6123272997626463e-07
+        }
+      },
+      "reviewed_sha256": "9d823831c2f6bf6b3eb1482784fb75ef3532838385bf111a683ee2c7d0986e0c",
+      "rotation_witness": {
+        "bone": "Bone_009",
+        "key": 265,
+        "node": 48,
+        "time_s": 2.202364921569824
+      },
+      "track_count": 156
+    }
+  },
+  "reviewed_package": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/worktrees/eonwild-adult-support-speed-carrier/out/continuation-adult-v7-support-speed-001",
+  "schema": "eonwild.motion.v9.combined-source-reviewed-package-equivalence.v1"
+}

@@ -10,7 +10,7 @@ import tempfile
 
 from ..errors import MotionError, ContractError
 from ..glb.container import Glb
-from .compiler import compile_recipe, verify_package
+from .compiler import compile_motion_set_selection, compile_recipe, verify_package
 from .io import digest, read_json, write_json
 from .source import admit_geometry
 
@@ -22,7 +22,8 @@ def admit(args) -> dict:
     source_bytes, rig_bytes = args.source.read_bytes(), args.rig.read_bytes()
     binding = read_json(args.rig)
     geometry, metadata = admit_geometry(Glb.from_bytes(source_bytes), binding["roles"],
-        reference_clip=args.reference_clip, forward_axis=args.forward, up_axis=args.up)
+        reference_clip=args.reference_clip, forward_axis=args.forward, up_axis=args.up,
+        recover_bind_pose=args.recover_bind_pose, skin_index=args.skin_index)
     output.parent.mkdir(parents=True, exist_ok=True)
     stage = Path(tempfile.mkdtemp(prefix=".admission-", dir=output.parent))
     receipt = {"schema": "eonwild.motion.admission.v1", "status": "ADMITTED_GEOMETRY",
@@ -49,11 +50,35 @@ def main(argv: list[str] | None = None) -> int:
     admission.add_argument("--forward", type=float, nargs=3)
     admission.add_argument("--up", type=float, nargs=3, default=[0, 1, 0])
     admission.add_argument("--reference-clip", help="optional declared pose source; never inherited choreography")
+    admission.add_argument("--recover-bind-pose", action="store_true",
+        help="recover an animation-independent skin bind pose from an explicit skin index")
+    admission.add_argument("--skin-index", type=int,
+        help="selected glTF skin for --recover-bind-pose")
     admission.add_argument("--output", type=Path, required=True)
     compile_parser = sub.add_parser("compile", help="generate an immutable candidate; inspect acceptance with verify")
     compile_parser.add_argument("--recipe", type=Path, required=True)
     compile_parser.add_argument("--root", type=Path, default=Path.cwd())
     compile_parser.add_argument("--output", type=Path, required=True)
+    compile_parser.add_argument(
+        "--interpolation", choices=("LINEAR", "CUBICSPLINE"), default="LINEAR",
+        help="opt in to checked source-derived CUBICSPLINE output",
+    )
+    compile_parser.add_argument(
+        "--emission-checkpoint", type=Path,
+        help="retain pre-gate CUBICSPLINE bytes and source identities",
+    )
+    set_parser = sub.add_parser(
+        "compile-set",
+        help="compile and verify selected intents through one shared animal baseline",
+    )
+    set_parser.add_argument("--motion-set", type=Path, required=True)
+    set_parser.add_argument("--motions", nargs="+", required=True)
+    set_parser.add_argument("--root", type=Path, default=Path.cwd())
+    set_parser.add_argument("--output", type=Path, required=True)
+    set_parser.add_argument(
+        "--interpolation", choices=("LINEAR", "CUBICSPLINE"),
+        default="CUBICSPLINE",
+    )
     verify = sub.add_parser("verify", help="check final hashes; exits 2 when technical acceptance is blocked")
     verify.add_argument("package", type=Path)
     args = parser.parse_args(argv)
@@ -61,11 +86,40 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "admit":
             result = admit(args)
         elif args.command == "compile":
-            result = compile_recipe(args.recipe, root=args.root, output=args.output)
+            result = compile_recipe(
+                args.recipe, root=args.root, output=args.output,
+                interpolation=args.interpolation,
+                emission_checkpoint=args.emission_checkpoint,
+            )
+        elif args.command == "compile-set":
+            compile_motion_set_selection(
+                args.motion_set,
+                args.motions,
+                root=args.root,
+                output=args.output,
+                interpolation=args.interpolation,
+            )
+            results = {
+                motion: verify_package(args.output / motion)
+                for motion in args.motions
+            }
+            result = {
+                "schema": "eonwild.motion.motion-set-compilation.v1",
+                "results": results,
+            }
         else:
             result = verify_package(args.package)
         print(json.dumps(result, indent=2, allow_nan=False))
-        return 2 if args.command == "verify" and result["technical_status"] != "PASS" else 0
+        blocked = (
+            args.command == "verify" and result["technical_status"] != "PASS"
+        ) or (
+            args.command == "compile-set"
+            and any(
+                item["technical_status"] != "PASS"
+                for item in result["results"].values()
+            )
+        )
+        return 2 if blocked else 0
     except (MotionError, ValueError, OSError, KeyError) as exc:
         print(json.dumps({"status": "FAIL", "error": str(exc)}), file=sys.stderr)
         return 1

@@ -1,0 +1,83 @@
+{
+  "branch": "codex/adult-v7-cubic-stage-a-publication",
+  "captured_utc": "2026-09-08T07:57:46+00:00",
+  "clean_after": true,
+  "clean_before": true,
+  "full_suite": {
+    "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=2 uv run --frozen python -m pytest tests -q --tb=short --junitxml=out/continuation-v7-cubic-final-3b1f556/full-tests.xml",
+    "junit_case_elements": 788,
+    "log_sha256": "0b0bf4c71cbb2a37e54de0817d35a28b1dbf2d8baf1f1b1ee411823dd9ade59a",
+    "platform": "macOS-26.3-arm64-arm-64bit",
+    "python": "3.12.10",
+    "scope": "complete mandatory tests directory, full external-SSD checkout, real Blender and Khronos validator, no exclusions",
+    "seconds": 237.65,
+    "status": "PASS",
+    "subtest_count_source": "pytest summary; successful subtests are not separate testcase elements in this JUnit output",
+    "subtests_passed": 21,
+    "tests_passed": 788,
+    "tool_versions": [
+      "Blender 5.2.0 LTS",
+      "glTF 2.0 Validator, version 2.0.0-dev.3.10"
+    ],
+    "xml_sha256": "0a87ae9160d7b52d04c7a0ffc6f2275c416448517ecc4ebc77b3d2fc2130b180"
+  },
+  "integration": {
+    "cubic_stage_a_cherry_picks": [
+      "17cb08bbfd5435db7a5f6e84d539350b9d860d63",
+      "6c7f804a01db39af467f22abc877a405b5aa80d7",
+      "efa1825fcf60317437b403792dd18b0ab6e7b3bf"
+    ],
+    "cubic_stage_a_original_commits": [
+      "b87c591954c5c5f313d22cad334471f825b62b0d",
+      "534ff53eb6cf7133864e713fb33968828d944774",
+      "76219543f5bc5982a77df1435fe1668e39de821a"
+    ],
+    "publication_parent": "b985d12a30f2cbfb2e3fa99683c8bd453fed36ab",
+    "selector_head": "3b1f55602ba2d8d177c42ec15ccb02d401f92b7d",
+    "v7_cherry_picks": [
+      "88b60c350ce4a83ed9325e23f2b516b3cb0753b6",
+      "4581a3762de0f91cfc9560c485171abf8a59c251",
+      "e3856b0c5625877d0dc9a3fc11df1ee4fee0ced2",
+      "f622d86ce571d55f276c47d7c7ae47977dda323f"
+    ],
+    "v7_original_commits": [
+      "50e909e02100aa448716b0ce41fd34b02b922ec7",
+      "98ab0af6610267a27373d8f6f91b8ce850028394",
+      "f5f8bdfca91a42463e35c77e875747c51f883c1e",
+      "06316bfb82a4e53343d276f93c8032f2734b5bee"
+    ]
+  },
+  "remaining": {
+    "biological_validation": "NOT_VALIDATED",
+    "body_visual_polish": "REQUIRED",
+    "cubic_emitter": "NOT_IMPLEMENTED",
+    "cubic_interval_rate_authority": "NOT_IMPLEMENTED",
+    "exact_local_loop": "BLOCKED",
+    "hosted_ci_for_publication_head": "PENDING",
+    "production_approved": false,
+    "unity_parity": "NOT_RUN"
+  },
+  "schema": "eonwild.motion.host-v7-cubic-stage-a-integration-verification.v1",
+  "setup_attempt": {
+    "note_sha256": "e1c5a4b95a20a611b2d31ad1f1f4156b944d714e24e324705f04d5c03071260a",
+    "reason": "The version-probe chain stopped because gltf_validator --version prints version and usage but exits nonzero; no tests ran. The unchanged suite then ran with the already verified pinned executable.",
+    "status": "STOPPED_BEFORE_PYTEST"
+  },
+  "source_sha": "3b1f55602ba2d8d177c42ec15ccb02d401f92b7d",
+  "source_tree": "fd5274dadca7fc4c3020bf9a1132c0e0ad9e8fde",
+  "v7_combined_regeneration": {
+    "classification": "Stage A changes strict shared reading/sampling and regenerated solver refinement at microscopic extent. Package remains a retained blocked diagnostic, not an approved asset.",
+    "equivalence_receipt_sha256": "d39c73811a56ab1f5999cfc0c25f9d92338c6e3d50ed9e6e87e6d90a859ca79c",
+    "exact_local_angular_degrees_per_s": 3.6520318154983844,
+    "exact_local_linear_m_per_s": 0.0032116449766123154,
+    "in_place_glb_sha256": "3d984b535ae22ea776d9111e9bdd52f55cfb05bf7a2cd1741c3354df75d9bdcc",
+    "limits": {
+      "angular_degrees_per_s": 10.0,
+      "linear_m_per_s": 0.001
+    },
+    "manifest_sha256": "af3f7ed57ca31d4272b38ecbc65c0fafe2ab65bb4a1439988d8876ad556faa09",
+    "package": "out/continuation-adult-v7-support-speed-combined-3b1f556",
+    "root_motion_glb_sha256": "03da1a7ed5d8d38fc190307ae2e41efa23156158b837c27445ec5809e14878e9",
+    "status": "TECHNICAL_BLOCKED_EXPECTED"
+  }
+}

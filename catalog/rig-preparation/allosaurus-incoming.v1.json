@@ -1,0 +1,91 @@
+{
+  "schema": "eonwild.motion.rig-preparation.v1",
+  "id": "allosaurus-incoming.rig-preparation.v1",
+  "source_sha256": "91d9816b6bbaeb1037f3e9cbf253261799d8a4121efd91e0e2185f76908a6bf7",
+  "skin_index": 0,
+  "coordinate": {
+    "frame": "source_world",
+    "lateral": [1.0, 0.0, 0.0],
+    "up": [0.0, 1.0, 0.0],
+    "forward": [0.0, 0.0, 1.0]
+  },
+  "reparents": [
+    {"node": "Bone_023", "new_parent": "Bone_001"},
+    {"node": "Bone_029", "new_parent": "Bone_001"}
+  ],
+  "pivot_relocations": [
+    {
+      "node": "Bone_022",
+      "world_origin_m": [-0.17506227898569848, 0.6497789980553261, 0.5542595732611826],
+      "basis": "measured_source_world"
+    },
+    {
+      "node": "Bone_021",
+      "world_origin_m": [-0.150132223245319, 0.294401432640272, 0.4581839352173052],
+      "basis": "measured_source_world"
+    },
+    {
+      "node": "Bone_028",
+      "world_origin_m": [0.19174753221583257, 0.6497789888605877, 0.5542595820127348],
+      "basis": "measured_source_world"
+    },
+    {
+      "node": "Bone_027",
+      "world_origin_m": [0.1668174787001475, 0.2944014070401179, 0.45818398988590664],
+      "basis": "measured_source_world"
+    }
+  ],
+  "articulations": [
+    {
+      "role": "jaw_lower",
+      "node": "Bone_044",
+      "parent": "Bone_045",
+      "descendants": ["Bone_043", "Bone_042"],
+      "axis": [1.0, 0.0, 0.0],
+      "axis_frame": "joint_parent_local"
+    }
+  ],
+  "weight_transfers": [
+    {
+      "role": "upper_skull",
+      "from_articulation": "jaw_lower",
+      "to_node": "Bone_045",
+      "selector": {
+        "frame": "source_world",
+        "halfspaces": [
+          {"normal": [0.0, 0.9889363528682975, 0.14834045293024462], "minimum_dot_m": 1.672917706490115},
+          {"normal": [0.0, 0.0, 1.0], "minimum_dot_m": 1.95}
+        ]
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "kind": "measured_source_geometry",
+      "reference": "ARC/audits/allosaurus-incoming-rig-001/inventory.json",
+      "claim": "The two hip origins are bilateral and lie in the proximal thigh surface; their current parent is the anterior axial Bone_002 rather than the measured pelvis Bone_001."
+    },
+    {
+      "kind": "measured_source_geometry",
+      "reference": "ARC/audits/allosaurus-rig-landmarks.json",
+      "claim": "The welded surface is connected; lower-jaw ownership is instead supported by the existing Bone_044 to Bone_043 to Bone_042 hierarchy and its concentrated lower-head weights."
+    },
+    {
+      "kind": "primary_comparative_measurement",
+      "reference": "White et al. 2013, PLOS ONE 8:e68649, Table 2, Allosaurus fragilis UUVP 6000r",
+      "claim": "Femur, tibia and metatarsus lengths 880, 730 and 375 mm give 44.33%, 36.77% and 18.90% of their sum; used only as a specimen-specific segment-proportion sanity check along the source chain."
+    },
+    {
+      "kind": "measured_source_geometry",
+      "reference": "ARC/audits/allosaurus-jaw-ownership-probe.json",
+      "claim": "The declared source-world upper-skull halfspace isolates the dorsal rostrum and upper mouth surface independently of skin weights; the original jaw branch incorrectly moves this region."
+    }
+  ],
+  "limitations": [
+    "The artist model is not established as UUVP 6000r and the published lengths do not determine exact surface landmarks.",
+    "The jaw hinge is an inferred engineering landmark supported by existing hierarchy and weights, not a fossil-derived joint center.",
+    "The upper-skull weight halfspace is an engineering ownership boundary requiring static articulation review; it is not fossil anatomy or tooth-contact evidence.",
+    "Hand and pedal digit anatomy remains unresolved; no independent digit pivots are invented.",
+    "The candidate is not admitted to a baseline, motion catalog, Unity project or production asset set."
+  ]
+}

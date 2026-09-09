@@ -1,0 +1,66 @@
+[
+  {
+    "candidate": "adult-v3",
+    "source_sha256": "c079dbef986f0d59ab263d84403759e50fd2113212294e22d594a41b40e8602a",
+    "source_unchanged": true,
+    "source_clock": {
+      "source_fps": 120,
+      "source_frame_start": 0.0,
+      "source_frame_end": 295.20001220703125,
+      "declared_duration_s": 2.46,
+      "source_duration_s": 2.4600001017252606,
+      "serialized_vs_declared_delta_s": 1.0172526065943543e-07,
+      "transport_frame_start": 0.0,
+      "transport_frame_end": 295.20001220703125,
+      "transport_duration_s": 2.4600001017252606,
+      "bake_step_frames": 0.28828126192092896,
+      "endpoint_policy": "exact declared endpoint; no retime, truncation, or held sample"
+    },
+    "transport": {
+      "sha256": "b8a836a7f060ac41893856c89ed5535f2314e588c09cf45551d8e0146dc8f2e6",
+      "nla_scale": 1.0,
+      "reopened_status": "PASS",
+      "reopened_frame_start": 1.0,
+      "reopened_frame_end": 296.20001220703125,
+      "reopened_duration_s": 2.4600001017252606
+    },
+    "start_middle_end_max_bone_origin_error_m": [
+      3.149472430616118e-06,
+      2.931954934025749e-06,
+      4.012592477728566e-06
+    ],
+    "scope": "Blender transport reproduction only; Unity NOT_RUN"
+  },
+  {
+    "candidate": "walk-v3",
+    "source_sha256": "ca6e9ee7b82a06455a54b6d596966b59ba8b0d71d61e6fd32f2dc8931d063626",
+    "source_unchanged": true,
+    "source_clock": {
+      "source_fps": 120,
+      "source_frame_start": 0.0,
+      "source_frame_end": 295.20001220703125,
+      "declared_duration_s": 2.46,
+      "source_duration_s": 2.4600001017252606,
+      "serialized_vs_declared_delta_s": 1.0172526065943543e-07,
+      "transport_frame_start": 0.0,
+      "transport_frame_end": 295.20001220703125,
+      "transport_duration_s": 2.4600001017252606,
+      "bake_step_frames": 0.28828126192092896,
+      "endpoint_policy": "exact declared endpoint; no retime, truncation, or held sample"
+    },
+    "transport": {
+      "sha256": "d5ca818ff046e7590dd0be05384f66177644c79e4aaac9c2683ca60fd267c8af",
+      "nla_scale": 1.0,
+      "reopened_status": "PASS",
+      "reopened_frame_start": 1.0,
+      "reopened_frame_end": 296.20001220703125,
+      "reopened_duration_s": 2.4600001017252606
+    },
+    "start_middle_end_max_bone_origin_error_m": [
+      5.955992451541808e-06,
+      5.891218883066737e-06,
+      4.937571208838283e-06
+    ],
+    "scope": "Blender transport reproduction only; Unity NOT_RUN"
+  }
+]

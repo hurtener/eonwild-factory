@@ -1,0 +1,40 @@
+{
+  "probe_sha256": "3368a9a859e3a7072b2182f4c177565b9689cefe958728237205752ce9950774",
+  "generator_sha256": "a7622acf0de3fd036aee3522776de82da09489283d1b8e7dacbd1667ae138d6d",
+  "source_sha256": "cf9766c8bad2ccb4c13c1217746c3791297ff3913eb4d491babd192784d62fcd",
+  "capsule_sha256": "cb6333658e4d99f954a62f6fbe4e193c43bd14359644bbc742386acf20ca86be",
+  "status": "FOUR_SOURCE_SAMPLES_AND_RENDERED_POSES_VERIFIED",
+  "unity": "6000.3.23f1",
+  "importer": "com.unity.cloud.gltfast@6.20.0",
+  "root_execution": {
+    "numerical_exit": 0,
+    "render_exit": 0,
+    "temporary_storage": "/Volumes/m2-extended-disk/eonwild-unity-tmp",
+    "probe_before_after_hash_unchanged": true
+  },
+  "inventory": {
+    "vertices": 59169,
+    "maximum_influences": 11,
+    "vertices_over_four": 23653,
+    "negative_checks": 5
+  },
+  "maximum_source_sample_difference_m": 0.0002029387414315768,
+  "maximum_native_bakemesh_to_cpu_m": 1.966064019143232e-06,
+  "visual_review": {
+    "all_four_full_resolution_pngs_inspected": true,
+    "poses": "Start and end return to the same stance; .6s shows lifted recovery foot;1.2s shows the opposite limb progression. No new gross skin explosion observed.",
+    "prior_stale_draw": "Resolved for this diagnostic by forceMatrixRecalculationPerRender and forced render updates. Initial stills are superseded as pose evidence.",
+    "known_baseline_thigh_fold": "Remains open."
+  },
+  "limitations": [
+    "Four editor samples do not establish continuous-cycle interpolation, Animator playback, runtime root-motion/blend/event behavior, materials or production performance.",
+    "Current diagnostic transport requires one mesh/skin/primitive and stable unique joint names; broader onboarding is not yet proved."
+  ],
+  "artifacts": {
+    "FactoryFullInfluenceProbe.cs": "3368a9a859e3a7072b2182f4c177565b9689cefe958728237205752ce9950774",
+    "unity-numerical.log": "ef7067ca95de7c617d312ef665ad85b425be4fd5b11b36ec779d0fa711c4139c",
+    "unity-render.log": "dfb81e2cb5c263a65134b7d3d2a505a5227935918cfcf4f38173180f75030745",
+    "full-sample-comparison.json": "49c1fc21a28bb57e8f4fa410315c1698477e19ffac61b9852dde955493fd8763",
+    "unity-transport.json": "3de3345cdaff67010b0905c71934d3e85c39b8e16f43efed32edf981af7f05b5"
+  }
+}

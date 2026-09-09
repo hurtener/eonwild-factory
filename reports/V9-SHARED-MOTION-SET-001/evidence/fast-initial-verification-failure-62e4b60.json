@@ -1,0 +1,241 @@
+{
+  "classification": "Generation and all recorded emitted motion gates completed PASS, but package integrity verification failed closed. The package is preserved diagnostic output and is not eligible for rendering, candidate acceptance, Unity, or production use.",
+  "command": [
+    "python",
+    "-m",
+    "eonwild_motion.factory",
+    "compile-set",
+    "--motion-set",
+    "catalog/motion-sets/tarbosaurus-pin-552-1-adult-grounded.v1.json",
+    "--motions",
+    "fast-walk",
+    "--root",
+    "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/worktrees/eonwild-fast-shared-baseline-cubic",
+    "--output",
+    "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/adult-fast-shared-baseline-cubic-001",
+    "--interpolation",
+    "CUBICSPLINE"
+  ],
+  "emitted_validation": {
+    "articulation_envelopes": {
+      "in_place": {
+        "maximum_preferred_departure_degrees": 3.9546752095455986,
+        "maximum_violation_degrees": 0.0,
+        "status": "PASS"
+      },
+      "root_motion": {
+        "maximum_preferred_departure_degrees": 3.9546752095455986,
+        "maximum_violation_degrees": 0.0,
+        "status": "PASS"
+      }
+    },
+    "cubic_midpoint_articulation_envelopes": {
+      "in_place": {
+        "maximum_preferred_departure_degrees": 3.957320685134505,
+        "maximum_violation_degrees": 0.0,
+        "status": "PASS"
+      },
+      "root_motion": {
+        "maximum_preferred_departure_degrees": 3.957320685134505,
+        "maximum_violation_degrees": 0.0,
+        "status": "PASS"
+      }
+    },
+    "cubic_midpoint_skinned_contact": {
+      "in_place": {
+        "maximum_penetration_m": 0.0,
+        "maximum_stance_gap_m": 0.00013064404341785754,
+        "verdict": "PASS"
+      },
+      "root_motion": {
+        "maximum_penetration_m": 0.0,
+        "maximum_stance_gap_m": 0.00013064404341785754,
+        "verdict": "PASS"
+      }
+    },
+    "cyclic_continuity": {
+      "in_place": {
+        "maximum_angular_velocity_seam_degrees_per_s": 0.10940809231197908,
+        "maximum_linear_velocity_seam_m_per_s": 3.122362236350814e-08,
+        "status": "PASS"
+      },
+      "root_motion": {
+        "maximum_angular_velocity_seam_degrees_per_s": 0.10940809231197908,
+        "maximum_linear_velocity_seam_m_per_s": 3.122362236350814e-08,
+        "status": "PASS"
+      }
+    },
+    "production_approved": false,
+    "rotation_rates": {
+      "in_place": {
+        "limit_degrees_per_s": 1200.0,
+        "maximum_degrees_per_s": 619.4986607679873,
+        "status": "PASS"
+      },
+      "root_motion": {
+        "limit_degrees_per_s": 1200.0,
+        "maximum_degrees_per_s": 619.4986607679873,
+        "status": "PASS"
+      }
+    },
+    "skinned_contact": {
+      "in_place": {
+        "maximum_penetration_m": 0.0,
+        "maximum_stance_gap_m": 0.00013064404341785754,
+        "verdict": "PASS"
+      },
+      "root_motion": {
+        "maximum_penetration_m": 0.0,
+        "maximum_stance_gap_m": 0.00013064404341785754,
+        "verdict": "PASS"
+      }
+    },
+    "solver_feasibility": {
+      "checks": {
+        "max_foot_target_residual_m": true,
+        "max_unreachable_extension_m": true,
+        "maximum_articulation_envelope_violation_degrees": true,
+        "maximum_solved_foot_pitch_velocity_degrees_per_s": true
+      },
+      "classification": "engineering feasibility only; missing evidence is a failure",
+      "limits": {
+        "max_foot_target_residual_m": 0.001,
+        "max_unreachable_extension_m": 0.001,
+        "maximum_articulation_envelope_violation_degrees": 0.01,
+        "maximum_solved_foot_pitch_velocity_degrees_per_s": 600.0
+      },
+      "status": "PASS",
+      "values": {
+        "max_foot_target_residual_m": 4.444863741093538e-07,
+        "max_unreachable_extension_m": 0.0,
+        "maximum_articulation_envelope_violation_degrees": 0.0,
+        "maximum_solved_foot_pitch_velocity_degrees_per_s": 253.18274801516344
+      }
+    },
+    "technical_status": "PASS",
+    "unity_parity": "NOT_RUN",
+    "visual_review": "PENDING"
+  },
+  "package": {
+    "in_place_glb_sha256": "edcb0f755a3dea83c739006c9bcd2b321e8edffedd654119c0c7e7cb502ec2ed",
+    "manifest_file_checks": {
+      "animal.json": {
+        "actual_sha256": "53ffeba22e24a87504d3dcc310bedacf6db94d60a25ffe56ad028b03f41e849d",
+        "matches": true,
+        "recorded_sha256": "53ffeba22e24a87504d3dcc310bedacf6db94d60a25ffe56ad028b03f41e849d"
+      },
+      "articulation-profile.json": {
+        "actual_sha256": "c1206143387ad4d1084a413ee031018f5a61a8e0539ef8256c6bba74a0f4bc6a",
+        "matches": true,
+        "recorded_sha256": "c1206143387ad4d1084a413ee031018f5a61a8e0539ef8256c6bba74a0f4bc6a"
+      },
+      "biomechanics.json": {
+        "actual_sha256": "37cb3179b88b7d2038e09cb7540a8f5063eed0e2fdeb61ebb6e6ced0574a2fed",
+        "matches": true,
+        "recorded_sha256": "37cb3179b88b7d2038e09cb7540a8f5063eed0e2fdeb61ebb6e6ced0574a2fed"
+      },
+      "cubic-midpoint-plan.json": {
+        "actual_sha256": "55c4fda869046c6c80a41a2ba83687fe330ac4e02c16ab316fccef77f3d41995",
+        "matches": true,
+        "recorded_sha256": "55c4fda869046c6c80a41a2ba83687fe330ac4e02c16ab316fccef77f3d41995"
+      },
+      "in_place.glb": {
+        "actual_sha256": "edcb0f755a3dea83c739006c9bcd2b321e8edffedd654119c0c7e7cb502ec2ed",
+        "matches": true,
+        "recorded_sha256": "edcb0f755a3dea83c739006c9bcd2b321e8edffedd654119c0c7e7cb502ec2ed"
+      },
+      "inputs.lock.json": {
+        "actual_sha256": "5d86b4586503b2cea9f4efbcb7efbc2146a901b0680cc03981815ddce0f286ca",
+        "matches": true,
+        "recorded_sha256": "5d86b4586503b2cea9f4efbcb7efbc2146a901b0680cc03981815ddce0f286ca"
+      },
+      "motion-baseline.json": {
+        "actual_sha256": "0c92fc7c3a42ad28d4712a7bb33b4e8d0c27f4715547e05a4d268a0d844d429a",
+        "matches": true,
+        "recorded_sha256": "0c92fc7c3a42ad28d4712a7bb33b4e8d0c27f4715547e05a4d268a0d844d429a"
+      },
+      "motion-intent.json": {
+        "actual_sha256": "2b504698a409cfec568954677a0caad33ffdac798bd8361945f18a810fe7fcad",
+        "matches": true,
+        "recorded_sha256": "2b504698a409cfec568954677a0caad33ffdac798bd8361945f18a810fe7fcad"
+      },
+      "motion-set.json": {
+        "actual_sha256": "53a00e395172a27424e49030d9a08348bf515cf958194093677e4b14485fd7ea",
+        "matches": true,
+        "recorded_sha256": "53a00e395172a27424e49030d9a08348bf515cf958194093677e4b14485fd7ea"
+      },
+      "neutral-pose-profile.json": {
+        "actual_sha256": "787fc381ff5988cc846331b125f4096ce1e5500fb8e9263cf56f36dac5afd258",
+        "matches": true,
+        "recorded_sha256": "787fc381ff5988cc846331b125f4096ce1e5500fb8e9263cf56f36dac5afd258"
+      },
+      "performance-profile.json": {
+        "actual_sha256": "517b8df482d8c0d6d1f28494eb45c2a488a2e1cd11f43db7e47225d7b6c988c9",
+        "matches": true,
+        "recorded_sha256": "517b8df482d8c0d6d1f28494eb45c2a488a2e1cd11f43db7e47225d7b6c988c9"
+      },
+      "plan.json": {
+        "actual_sha256": "03def2970b30d5e49fa73a04181eddcda313d47af3eb4c190884e0ca7777f444",
+        "matches": true,
+        "recorded_sha256": "03def2970b30d5e49fa73a04181eddcda313d47af3eb4c190884e0ca7777f444"
+      },
+      "program-profile.json": {
+        "actual_sha256": "d77f8426702df529f19cc32e577ff0fdbb0c91ec76b310b2a24123065165f89d",
+        "matches": true,
+        "recorded_sha256": "d77f8426702df529f19cc32e577ff0fdbb0c91ec76b310b2a24123065165f89d"
+      },
+      "recipe.json": {
+        "actual_sha256": "355b0dcfcf93ab0e99701368a1f206b79cdba2d135baea729dabba83bd6cb96b",
+        "matches": true,
+        "recorded_sha256": "355b0dcfcf93ab0e99701368a1f206b79cdba2d135baea729dabba83bd6cb96b"
+      },
+      "root_motion.glb": {
+        "actual_sha256": "220a3412f045f03a00ec791b03951036628ac8a929c52347642049c1c8df23bf",
+        "matches": true,
+        "recorded_sha256": "220a3412f045f03a00ec791b03951036628ac8a929c52347642049c1c8df23bf"
+      },
+      "runtime.json": {
+        "actual_sha256": "06ab06db859279bfd79f5427100ef464b72b2839afdeadb581ee40359d94f163",
+        "matches": true,
+        "recorded_sha256": "06ab06db859279bfd79f5427100ef464b72b2839afdeadb581ee40359d94f163"
+      },
+      "solver-receipt.json": {
+        "actual_sha256": "3e9c9e73b9dd3e8f7f26301626392179338b916fcbc6dd5b085e6f0f691e059c",
+        "matches": true,
+        "recorded_sha256": "3e9c9e73b9dd3e8f7f26301626392179338b916fcbc6dd5b085e6f0f691e059c"
+      },
+      "validation.json": {
+        "actual_sha256": "c0a0a6eccdd4c6a6b5e36079f1e3104c260fd7d40138c832dcf2980e58546090",
+        "matches": true,
+        "recorded_sha256": "c0a0a6eccdd4c6a6b5e36079f1e3104c260fd7d40138c832dcf2980e58546090"
+      }
+    },
+    "manifest_payload_hashes_all_match": true,
+    "manifest_sha256": "8ac753a379e468349f23d9612a6f73fd46cd49eb48ac5ea40ad0c4d8ce6431e9",
+    "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/adult-fast-shared-baseline-cubic-001/fast-walk",
+    "root_motion_glb_sha256": "220a3412f045f03a00ec791b03951036628ac8a929c52347642049c1c8df23bf"
+  },
+  "process": {
+    "error": "motion set solve policy provenance is inconsistent",
+    "exit_code": 1,
+    "failure_stage": "compile-set post-compile verify_package",
+    "observed_cpu_progress": "compiler sustained approximately 94-97 percent CPU during generation"
+  },
+  "provenance_diagnosis": {
+    "all_values_equal": true,
+    "diagnosis_sha256": "168ce7210f3f9205c43bf4db233ee8a032f23f4118519562520aafce124c6613",
+    "only_failed_comparison": "plan.performance JSON lists versus verifier-reassembled dataclass tuples",
+    "other_provenance_checks_passed": 11,
+    "paths": [
+      "neutral_jaw_calibration.joint_accessors",
+      "neutral_jaw_calibration.weight_accessors",
+      "neutral_jaw_calibration.surface_bins"
+    ]
+  },
+  "schema": "eonwild.motion.fast-shared-baseline-cubic-failed-verification.v1",
+  "source": {
+    "git_head": "62e4b60a399672fc68f9817aeabc6bff8c300912",
+    "git_tree": "bf814e4536ece37d963f35cdc8693f3feba4b09c",
+    "working_tree_clean": true
+  }
+}

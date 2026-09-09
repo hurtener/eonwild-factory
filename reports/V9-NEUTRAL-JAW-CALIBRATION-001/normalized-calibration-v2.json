@@ -1,0 +1,25 @@
+{
+  "schema": "eonwild.motion.neutral-jaw-normalized-calibration.v2",
+  "classification": "Authored engineering positive sampled surface clearance; not tooth contact, biological measurement, or visual approval.",
+  "source_geometry_sha256": "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f",
+  "method": "semantic_weighted_binned_surface_clearance.v1",
+  "axis_frame": "admitted_jaw_local_from_declared_lateral.v1",
+  "clearance_body_heights": 0.0015,
+  "close_degrees": 50.03933635803102,
+  "raw_source": {
+    "body_height_m": 2.657391579010845,
+    "minimum_gap_m": 0.003986087368516689,
+    "gap_body_heights": 0.0015000000000001583
+  },
+  "uniform_animal_scale": 0.8595555137374769,
+  "scaled_admitted": {
+    "body_height_m": 2.2841755838983118,
+    "minimum_gap_m": 0.0034262633758475047,
+    "gap_body_heights": 0.0015000000000000163
+  },
+  "prior_diagnostic": {
+    "report_sha256": "9d9abfcd7c0b9b10c663b9d952e0e7cbe7e39e011f11cbdec2d1007551171eec",
+    "result_sha256": "abd44cbff9a77ffb556764fdb100d58516907fc8314620a515f4e2ba7dee115c",
+    "use": "surface witness and initial bracket only; v2 re-solves the angle in one raw-source space"
+  }
+}

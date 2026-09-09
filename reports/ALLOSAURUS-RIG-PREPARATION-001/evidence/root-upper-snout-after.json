@@ -1,0 +1,26 @@
+{
+  "scope": "Fixed conservative dorsal-rostrum geometric box, not full skull ownership or anatomy approval",
+  "source_sha256": "91d9816b6bbaeb1037f3e9cbf253261799d8a4121efd91e0e2185f76908a6bf7",
+  "candidate_sha256": "c56772d63045d3410b8efe81eb45f7ee06ad97307fa076a32033553dab372c41",
+  "selection_source_world": {
+    "z_gt": 2.15,
+    "y_gt": 1.43
+  },
+  "selected_vertices": 2151,
+  "vertex_ids_sha256": "068d3f08b56ee17d5b9a2dd54485e385193b5c0f827007c51eeee26744f43db7",
+  "neutral_source_difference_max_m": 5.690630346975663e-07,
+  "probes": [
+    {
+      "degrees": -8,
+      "maximum_m": 0.0,
+      "median_m": 0.0,
+      "vertices_over_1mm": 0
+    },
+    {
+      "degrees": 8,
+      "maximum_m": 0.0,
+      "median_m": 0.0,
+      "vertices_over_1mm": 0
+    }
+  ]
+}

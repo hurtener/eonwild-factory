@@ -1,0 +1,63 @@
+{
+  "closures": {
+    "duplicate_articulation_node": {
+      "error": "rig preparation articulation roles and nodes must be unique",
+      "matched": true,
+      "rejected": true
+    },
+    "multiple_skins": {
+      "error": "rig preparation supports exactly one skin",
+      "matched": true,
+      "rejected": true
+    },
+    "noncanonical_input": {
+      "error": "rig preparation source neutral skin is not canonical POSITION geometry",
+      "matched": true,
+      "rejected": true
+    }
+  },
+  "fixture_sha256": "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f",
+  "production_candidate": {
+    "byte_identical": true,
+    "candidate_sha256": "c56772d63045d3410b8efe81eb45f7ee06ad97307fa076a32033553dab372c41",
+    "config_sha256": "bfc228d11801e3bd2a65b6cd3b974ec2cd2bbe2ca98b09cf2c207e7159cf7cc4",
+    "input_neutral_skin_error_m": 7.774061190383236e-07,
+    "input_sha256": "91d9816b6bbaeb1037f3e9cbf253261799d8a4121efd91e0e2185f76908a6bf7",
+    "output_neutral_skin_error_m": 3.749428662070317e-07,
+    "output_world_matrix_error": 1.0374803127710663e-08,
+    "receipt_output_sha256": "c56772d63045d3410b8efe81eb45f7ee06ad97307fa076a32033553dab372c41",
+    "regenerated_sha256": "c56772d63045d3410b8efe81eb45f7ee06ad97307fa076a32033553dab372c41",
+    "weight_transfer": {
+      "changed_vertex_count": 6132,
+      "from_articulation": "jaw_lower",
+      "maximum_transferred_weight": 1.0000000074505806,
+      "role": "upper_skull",
+      "selected_vertex_count": 6672,
+      "selector": {
+        "frame": "source_world",
+        "halfspaces": [
+          {
+            "minimum_dot_m": 1.672917706490115,
+            "normal": [
+              0.0,
+              0.9889363528682975,
+              0.14834045293024462
+            ]
+          },
+          {
+            "minimum_dot_m": 1.95,
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        ]
+      },
+      "to_node": "Bone_045"
+    }
+  },
+  "reviewed_head": "55cd2b64bcfd1e315277d025f78cecf6927274e1",
+  "reviewed_tree": "f1307185e741060a198deb257f70273feb2a6a4d",
+  "schema": "eonwild.motion.rig-preparation-reviewer2-closure.v1"
+}

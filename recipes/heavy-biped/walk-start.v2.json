@@ -1,0 +1,17 @@
+{
+  "schema": "eonwild.motion.factory-recipe.v1",
+  "id": "heavy-biped.walk-start.v2",
+  "version": 2,
+  "supersedes": "heavy-biped.walk-start.v1",
+  "description": "Contact-owned walk start bound to walk v3; final emitted handoff verification is required.",
+  "family": "heavy-predatory-biped",
+  "program": "gait_transition",
+  "source": {"path": "assets/sha256/044a8be907eb650fa71c613f19655eb10a0dd23c1d6bce86dfef93cd8d9575f6.glb", "sha256": "044a8be907eb650fa71c613f19655eb10a0dd23c1d6bce86dfef93cd8d9575f6"},
+  "rig": {"path": "catalog/rigs/heavy-biped.v9.json", "sha256": "c3de770bf7dcc68219a28fb9851e9b75f3d3eebe2c2c0c7deb0078850100fd7e"},
+  "contact_profile": {"path": "catalog/contacts/heavy-biped.v9.json", "sha256": "fef6279c1e7653ae6c7c485c3f934fd647410a726acb59393312b72af754a89f"},
+  "program_profile": {"path": "catalog/programs/heavy-biped.start.v1.json", "sha256": "fe6bb569a44ade9f2ad8d4a11ea806795187bbaed73c232b39a816f1518160b9"},
+  "gait_profile": {"path": "catalog/programs/heavy-biped.walk.v3.phase-zero.json", "sha256": "38b636cd5e80c6b11d0c7c926b843484c978ee764882c802189b9b7056ec7d6f"},
+  "performance_profile": {"path": "catalog/performance/heavy-biped.walk.v2.json", "sha256": "ade6d37243d4b9597c9d2c15a86a667b5528654aca3998315abe7f2f06a968be"},
+  "forward_axis": [0.03893162055641767, 0.0, 0.9992418770852486],
+  "up_axis": [0.0, 1.0, 0.0]
+}

@@ -1,0 +1,35 @@
+{
+  "classification": "art-directed support-timed pelvis coordination; no COM, force, mass-response or biological claim",
+  "parameters": {
+    "center_lanes_on_bilateral_hip_midpoint": true,
+    "center_tail": true,
+    "gaze_elevation_degrees": 3.0,
+    "lane_width_body_heights": 0.24,
+    "pelvis_roll_degrees": 0.6,
+    "pelvis_sway_body_heights": 0.006,
+    "pelvis_yaw_degrees": 2.0,
+    "skin_refinement": true,
+    "tail_lag_fraction": 0.16,
+    "tail_yaw_degrees": 16.0,
+    "support_directed_pelvis_carrier": true
+  },
+  "reference": {
+    "classification": "visual direction only; approximate phase pairing, not calibrated joint targets; no biological or force claim",
+    "source_frame_rate_hz": 24,
+    "assets": [
+      {
+        "path": "assets/examples/tarbosaurus/tarbosaurus_walk.mp4",
+        "sha256": "b0401fc76a202d6ed5dc9a5515f1054eab8bed8075c04f6167ff426fd603f5ae"
+      },
+      {
+        "path": "assets/examples/tarbosaurus/Tarbosaurus#walk_side_v02.mp4",
+        "sha256": "7f981e34a38955b44df799069693c57a5b5c881083ae4cbd62419e5cdc7d3ea5"
+      },
+      {
+        "path": "assets/examples/tarbosaurus/tarbosaurus-walking-looking.mp4",
+        "sha256": "80a4d5c0c7ed9da43b2c06f5381ef95c309904ca302031c945a6c28bde29fa8a"
+      }
+    ]
+  },
+  "schema": "eonwild.motion.performance.v1"
+}

@@ -1,0 +1,248 @@
+{
+  "animal": null,
+  "duration_s": 7.9875,
+  "events": [
+    {
+      "authoritative_world_fact": false,
+      "kind": "animation_cue",
+      "name": "ANTICIPATION_START",
+      "time_s": 0.0
+    },
+    {
+      "authoritative_world_fact": false,
+      "kind": "animation_cue",
+      "name": "R_FOOT_RELEASE",
+      "side": "right",
+      "time_s": 0.5952
+    },
+    {
+      "authoritative_world_fact": false,
+      "kind": "animation_cue",
+      "name": "R_FOOT_CONTACT",
+      "side": "right",
+      "time_s": 1.53
+    },
+    {
+      "authoritative_world_fact": false,
+      "kind": "animation_cue",
+      "name": "L_FOOT_RELEASE",
+      "side": "left",
+      "time_s": 1.8252
+    },
+    {
+      "authoritative_world_fact": false,
+      "kind": "animation_cue",
+      "name": "L_FOOT_CONTACT",
+      "side": "left",
+      "time_s": 2.76
+    },
+    {
+      "authoritative_world_fact": false,
+      "kind": "animation_cue",
+      "name": "R_FOOT_RELEASE",
+      "side": "right",
+      "time_s": 3.0551999999999997
+    },
+    {
+      "authoritative_world_fact": false,
+      "kind": "animation_cue",
+      "name": "R_FOOT_CONTACT",
+      "side": "right",
+      "time_s": 3.9899999999999998
+    },
+    {
+      "authoritative_world_fact": false,
+      "kind": "animation_cue",
+      "name": "L_FOOT_RELEASE",
+      "side": "left",
+      "time_s": 4.2852
+    },
+    {
+      "authoritative_world_fact": false,
+      "kind": "animation_cue",
+      "name": "L_FOOT_CONTACT",
+      "side": "left",
+      "time_s": 5.22
+    },
+    {
+      "authoritative_world_fact": false,
+      "kind": "animation_cue",
+      "name": "R_FOOT_RELEASE",
+      "side": "right",
+      "time_s": 5.515199999999999
+    },
+    {
+      "authoritative_world_fact": false,
+      "kind": "animation_cue",
+      "name": "R_FOOT_CONTACT",
+      "side": "right",
+      "time_s": 6.45
+    },
+    {
+      "authoritative_world_fact": false,
+      "kind": "animation_cue",
+      "name": "L_FOOT_RELEASE",
+      "side": "left",
+      "time_s": 6.7452
+    },
+    {
+      "authoritative_world_fact": false,
+      "kind": "animation_cue",
+      "name": "L_FOOT_CONTACT",
+      "side": "left",
+      "time_s": 7.68
+    },
+    {
+      "authoritative_world_fact": false,
+      "kind": "animation_cue",
+      "name": "R_FOOT_RELEASE",
+      "side": "right",
+      "time_s": 7.9752
+    },
+    {
+      "authoritative_world_fact": false,
+      "kind": "animation_cue",
+      "name": "LOCOMOTION_READY",
+      "time_s": 7.9875
+    }
+  ],
+  "family": "heavy-predatory-biped",
+  "forward_axis": [
+    0.038931620556417676,
+    0.0,
+    0.9992418770852487
+  ],
+  "ground_plane": {
+    "level_m": -0.01200103802869944,
+    "up_axis": "Y"
+  },
+  "handedness": "right",
+  "initial_contacts": {
+    "left": true,
+    "right": true
+  },
+  "interpolation": "CUBICSPLINE",
+  "loop": false,
+  "plan_sha256": "9fe8887dd90a09c13f8e6a7535aad4b3c8d5f3784da0285aba583d035e64a951",
+  "program": "gait_transition",
+  "rig_roles": {
+    "chest": "Bone_002",
+    "head": "Bone_036",
+    "jaw_lower": "Bone_074",
+    "leftFoot": "Bone_008",
+    "leftLeg": [
+      "Bone_011",
+      "Bone_010",
+      "Bone_009",
+      "Bone_008"
+    ],
+    "legs": {
+      "left": {
+        "contactChain": [
+          "Bone_011",
+          "Bone_010",
+          "Bone_009",
+          "Bone_008"
+        ],
+        "toeChains": [
+          [
+            "Bone_044",
+            "Bone_043",
+            "Bone_042"
+          ],
+          [
+            "Bone_047",
+            "Bone_046",
+            "Bone_045"
+          ],
+          [
+            "Bone_050",
+            "Bone_049",
+            "Bone_048"
+          ]
+        ]
+      },
+      "right": {
+        "contactChain": [
+          "Bone_015",
+          "Bone_014",
+          "Bone_013",
+          "Bone_012"
+        ],
+        "toeChains": [
+          [
+            "Bone_053",
+            "Bone_052",
+            "Bone_051"
+          ],
+          [
+            "Bone_056",
+            "Bone_055",
+            "Bone_054"
+          ],
+          [
+            "Bone_059",
+            "Bone_058",
+            "Bone_057"
+          ]
+        ]
+      }
+    },
+    "neck": [
+      "Bone_041",
+      "Bone_040",
+      "Bone_039",
+      "Bone_038",
+      "Bone_037"
+    ],
+    "pelvis": "Bone_001",
+    "rightFoot": "Bone_012",
+    "rightLeg": [
+      "Bone_015",
+      "Bone_014",
+      "Bone_013",
+      "Bone_012"
+    ],
+    "root": "Bone_000",
+    "spine": [
+      "Bone_007",
+      "Bone_006",
+      "Bone_005",
+      "Bone_004",
+      "Bone_003"
+    ],
+    "tail": [
+      "Bone_024",
+      "Bone_023",
+      "Bone_022",
+      "Bone_021",
+      "Bone_020",
+      "Bone_019",
+      "Bone_018",
+      "Bone_017",
+      "Bone_016"
+    ]
+  },
+  "root_authority": "choose motor OR applied root motion, never both",
+  "schema": "eonwild.motion.runtime-data.v1",
+  "time_units": "s",
+  "transition_contract": {
+    "entry_pose": "calibrated_ready",
+    "entry_speed_mps": 0.0,
+    "exit_pose": "locomotion_declared_phase",
+    "exit_speed_mps": 1.2886201983472025,
+    "interface_schema": "eonwild.motion.gait-interface.v2",
+    "kind": "start",
+    "root_distance_m": 6.736262086860002,
+    "steady_phase_s": 0.3075,
+    "verification": "Requires final emitted pose/velocity and skin-contact parity; planner intent is not proof."
+  },
+  "units": "m",
+  "unity_import_status": "NOT_VERIFIED",
+  "up_axis": [
+    0.0,
+    1.0,
+    0.0
+  ],
+  "world_interaction_authority": "runtime decides contact, damage, grip resistance and release"
+}

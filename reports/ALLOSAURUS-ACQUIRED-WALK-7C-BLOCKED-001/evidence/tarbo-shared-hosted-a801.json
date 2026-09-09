@@ -1,0 +1,74 @@
+{
+  "run_id": 34323230164,
+  "source_commit": "a80150e6a378b6d35055718f62cd58a22fc4cc1c",
+  "workflow": "Shared locomotion set",
+  "conclusion": "success",
+  "url": "https://github.com/hurtener/eonwild-factory/actions/runs/34323230164",
+  "artifact": {
+    "id": 10098235621,
+    "name": "shared-locomotion-set-packages-and-handoffs",
+    "size_bytes": 513505923,
+    "sha256": "c66a48d8f7236351b421cc8b76fb38d9b47b0988a55441b1c14fe0235f915c2e"
+  },
+  "parsed_verify_result": {
+    "schema": "eonwild.motion.compiled-motion-set-verification.v1",
+    "source": {
+      "head": "acb5c1500c19d7a348a0c2cda47aeb9b452ef265",
+      "tree": "af5e6a13e0671f32aadebf83162627109337218f"
+    },
+    "motions": [
+      "walk",
+      "fast-walk",
+      "walk-start",
+      "walk-stop"
+    ],
+    "packages": {
+      "walk": {
+        "integrity": "PASS",
+        "technical_status": "PASS",
+        "visual_review": "PENDING",
+        "unity_parity": "NOT_RUN",
+        "production_approved": false
+      },
+      "fast-walk": {
+        "integrity": "PASS",
+        "technical_status": "PASS",
+        "visual_review": "PENDING",
+        "unity_parity": "NOT_RUN",
+        "production_approved": false
+      },
+      "walk-start": {
+        "integrity": "PASS",
+        "technical_status": "PASS",
+        "visual_review": "PENDING",
+        "unity_parity": "NOT_RUN",
+        "production_approved": false
+      },
+      "walk-stop": {
+        "integrity": "PASS",
+        "technical_status": "PASS",
+        "visual_review": "PENDING",
+        "unity_parity": "NOT_RUN",
+        "production_approved": false
+      }
+    },
+    "handoffs": {
+      "walk-start-to-walk": {
+        "status": "PASS",
+        "receipt_sha256": "5144760411881691ced09f8d0bb66a0d7fadbbfc727dcb860f54759c89e634b9"
+      },
+      "walk-stop-to-walk": {
+        "status": "PASS",
+        "receipt_sha256": "11cd3ff8a162f39ee307aa95c508f59fdf183723e1ef1533a2dae9115373e895"
+      }
+    },
+    "visual_review": "PENDING",
+    "unity_validation": "NOT_RUN",
+    "production_approved": false,
+    "status": "PASS",
+    "elapsed_seconds": 311.08393455199985
+  },
+  "log_sha256": "5f90c96f79a62faba097adec59bb0ec737159d3eee70c142da0c5a34734d0812",
+  "limitation": "Old pinned a80150e hosted result, not current7c hosted approval; visual and Unity boundaries retained.",
+  "recorded_utc": "2026-09-09T10:06:35.200286+00:00"
+}

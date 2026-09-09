@@ -1,0 +1,32 @@
+{
+  "schema": "eonwild.audit.allosaurus-pedal-p1-postfix.v1",
+  "head": "f0a08c8c481bb27e5f00080d5b46dba39e3a20f3",
+  "tree": "bd96e277560f8490d8ac38936e0702d8ff17db5a",
+  "parent": "db0adb6518898ae651eb999f1003590f97ee3b20",
+  "status": "READY_FOR_EXCEPTIONAL_NARROW_REVIEW",
+  "findings_closed": [
+    "identical physical skin rows are mutated once even through duplicate accessor descriptors; partial physical byte overlaps reject",
+    "public Allosaurus v2 inputs bind separately admitted geometry"
+  ],
+  "source_identity": {
+    "raw_prepared_sha256": "3613b67c9513c4ed5b88665c7606e0c15791bb922b01a72e7223aa112546ec89",
+    "admitted_geometry_sha256": "6b588e9ffa1ebdb167f1619593d8107779b1dfd943fe9dc0c02830572a953d8c",
+    "regenerated_raw_exact": true
+  },
+  "focused_tests": {
+    "result": "28 passed in 22.58s",
+    "log": "focused-physical-layout.log",
+    "sha256": "383345dcf2405f61a636d0d5670c65aac535dc991b25f4d965865d58a9a50417"
+  },
+  "shared_accessor_probe": {
+    "probe": "root physical-layout duplicate-accessor reproducer",
+    "affected_vertices": 0,
+    "maximum_weight_difference": 0.0,
+    "sha256": "2c9a71a9cb50258df7dccfe9681ce7d5a9f61b437427995cb30ab42dcc9c749c"
+  },
+  "regenerated_raw": {
+    "path": "regenerated-physical-layout/geometry.glb",
+    "sha256": "3613b67c9513c4ed5b88665c7606e0c15791bb922b01a72e7223aa112546ec89"
+  },
+  "mechanical_preflight": "separate diagnostic remains BLOCKED; no gait, push-off, ROM or limit change"
+}

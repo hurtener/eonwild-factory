@@ -1,0 +1,29 @@
+{
+  "emitted_tangent": {
+    "complete_two_sets": "ACCEPTED",
+    "source_sha256": "a403679deb968ec88f7b8b89e3e399cc0881e9cc602e765a6e55934c28ad3826",
+    "truncated_one_set": "REJECTED",
+    "vertex_count": 40105
+  },
+  "focused_tests": {
+    "log_sha256": "c9564359c155f2f0f2eca837fed1e326233a9ad0bfcdc2ef310901e0b5088956",
+    "result": "89 passed",
+    "seconds": 48.07
+  },
+  "implementation_head": "a26e106ca65eac20f6cbef675a610759294c8a7c",
+  "implementation_tree": "f5fd5d7776800c34c7d8852b979dc4f819d391d4",
+  "legacy": {
+    "actual_output_sha256": "c56772d63045d3410b8efe81eb45f7ee06ad97307fa076a32033553dab372c41",
+    "byte_equal": true,
+    "expected_output_sha256": "c56772d63045d3410b8efe81eb45f7ee06ad97307fa076a32033553dab372c41",
+    "input_config": "catalog/rig-preparation/allosaurus-incoming.v1.json"
+  },
+  "normalized": {
+    "actual_output_sha256": "c611bb493813006d8b6a549124a021ff2c91930371f558f2f11434106b866c8b",
+    "byte_equal": true,
+    "expected_output_sha256": "c611bb493813006d8b6a549124a021ff2c91930371f558f2f11434106b866c8b",
+    "input_config": "catalog/rig-preparation/allosaurus-incoming.v2.json"
+  },
+  "parent": "729ff70e741341e051275d81528d1516d5b41d19",
+  "schema": "eonwild.motion.allosaurus-onboarding-postfix.v1"
+}

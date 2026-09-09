@@ -1,0 +1,1115 @@
+{
+  "adult_v6_postfix_source": "verified main postfix-package path supplied by root",
+  "extra_local_cyclic": {
+    "adult_v6_postfix": {
+      "in_place": {
+        "metric": {
+          "angular_degrees_per_s": 3.410359591039677,
+          "classification": "exact adjacent LINEAR translation and shortest-SLERP local-channel tangents; constant scale is admitted and nonconstant animated scale rejects; not a world or skinned-loop claim",
+          "linear_m_per_s": 0.0017287400202002908,
+          "witnesses": {
+            "angular": {
+              "bone": "Bone_010",
+              "incoming": [
+                0.9959951544650331,
+                -2.4622748055774353e-07,
+                -0.2148453179186585
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 2.4516892433166504,
+                "time_s": 2.4600000381469727
+              },
+              "node": 49,
+              "outgoing": [
+                0.9378111533111013,
+                2.0863762234590033e-07,
+                -0.20229577948090244
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.008310810662806034,
+                "time_s": 0.0
+              },
+              "unit": "rad/s"
+            },
+            "linear": {
+              "bone": "Bone_001",
+              "incoming": [
+                -0.046517859063916464,
+                0.021396630615640597,
+                -0.04388765670721212
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 2.4516892433166504,
+                "time_s": 2.4600000381469727
+              },
+              "node": 73,
+              "outgoing": [
+                -0.04643966352389965,
+                0.02253782498558608,
+                -0.04259146886397013
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.008310810662806034,
+                "time_s": 0.0
+              },
+              "unit": "m/s"
+            }
+          }
+        },
+        "path": "/Volumes/m2-extended-disk/Repos/eonwild-factory/out/continuation-adult-v6-sagittal-body-001/postfix-package/in_place.glb",
+        "sha256": "2878670fbeacfd7e99014e8a75537d5711deea5ceafc96362b5fbc545a63aa0b"
+      },
+      "root_motion": {
+        "metric": {
+          "angular_degrees_per_s": 3.410359591039677,
+          "classification": "exact adjacent LINEAR translation and shortest-SLERP local-channel tangents; constant scale is admitted and nonconstant animated scale rejects; not a world or skinned-loop claim",
+          "linear_m_per_s": 0.0017287400202002908,
+          "witnesses": {
+            "angular": {
+              "bone": "Bone_010",
+              "incoming": [
+                0.9959951544650331,
+                -2.4622748055774353e-07,
+                -0.2148453179186585
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 2.4516892433166504,
+                "time_s": 2.4600000381469727
+              },
+              "node": 49,
+              "outgoing": [
+                0.9378111533111013,
+                2.0863762234590033e-07,
+                -0.20229577948090244
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.008310810662806034,
+                "time_s": 0.0
+              },
+              "unit": "rad/s"
+            },
+            "linear": {
+              "bone": "Bone_001",
+              "incoming": [
+                -0.046517859063916464,
+                0.021396630615640597,
+                -0.04388765670721212
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 2.4516892433166504,
+                "time_s": 2.4600000381469727
+              },
+              "node": 73,
+              "outgoing": [
+                -0.04643966352389965,
+                0.02253782498558608,
+                -0.04259146886397013
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.008310810662806034,
+                "time_s": 0.0
+              },
+              "unit": "m/s"
+            }
+          }
+        },
+        "path": "/Volumes/m2-extended-disk/Repos/eonwild-factory/out/continuation-adult-v6-sagittal-body-001/postfix-package/root_motion.glb",
+        "sha256": "4a2c3587d932a8c8bab002b9e536f1ed22a28388e928cbe18fe8845b553e7e7b"
+      }
+    },
+    "fast_walk_recovery_c3": {
+      "in_place": {
+        "metric": {
+          "angular_degrees_per_s": 6.683921667445959,
+          "classification": "exact adjacent LINEAR translation and shortest-SLERP local-channel tangents; constant scale is admitted and nonconstant animated scale rejects; not a world or skinned-loop claim",
+          "linear_m_per_s": 0.005406218835601299,
+          "witnesses": {
+            "angular": {
+              "bone": "Bone_009",
+              "incoming": [
+                -1.26979685119066,
+                0.14186963978785333,
+                0.6722195471406108
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 1.5916666984558105,
+                "time_s": 1.600000023841858
+              },
+              "node": 48,
+              "outgoing": [
+                -1.3804421097567525,
+                0.15400414022261447,
+                0.7071352407380331
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.008333333767950535,
+                "time_s": 0.0
+              },
+              "unit": "rad/s"
+            },
+            "linear": {
+              "bone": "Bone_001",
+              "incoming": [
+                0.021441711072169373,
+                -0.020628889206780632,
+                0.009047155514626993
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 1.5916666984558105,
+                "time_s": 1.600000023841858
+              },
+              "node": 73,
+              "outgoing": [
+                0.0201567996956587,
+                -0.023251174667788872,
+                0.004497449610515332
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.008333333767950535,
+                "time_s": 0.0
+              },
+              "unit": "m/s"
+            }
+          }
+        },
+        "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/worktrees/eonwild-fast-walk-recovery/out/tarbosaurus-adult-fast-walk-recovery-v3-f53782e/in_place.glb",
+        "sha256": "0215d73f22f45e1897afa8d6336caea8bd2072a57679e63e05ce735fe32717cf"
+      },
+      "root_motion": {
+        "metric": {
+          "angular_degrees_per_s": 6.683921667445959,
+          "classification": "exact adjacent LINEAR translation and shortest-SLERP local-channel tangents; constant scale is admitted and nonconstant animated scale rejects; not a world or skinned-loop claim",
+          "linear_m_per_s": 0.005406218835601299,
+          "witnesses": {
+            "angular": {
+              "bone": "Bone_009",
+              "incoming": [
+                -1.26979685119066,
+                0.14186963978785333,
+                0.6722195471406108
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 1.5916666984558105,
+                "time_s": 1.600000023841858
+              },
+              "node": 48,
+              "outgoing": [
+                -1.3804421097567525,
+                0.15400414022261447,
+                0.7071352407380331
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.008333333767950535,
+                "time_s": 0.0
+              },
+              "unit": "rad/s"
+            },
+            "linear": {
+              "bone": "Bone_001",
+              "incoming": [
+                0.021441711072169373,
+                -0.020628889206780632,
+                0.009047155514626993
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 1.5916666984558105,
+                "time_s": 1.600000023841858
+              },
+              "node": 73,
+              "outgoing": [
+                0.0201567996956587,
+                -0.023251174667788872,
+                0.004497449610515332
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.008333333767950535,
+                "time_s": 0.0
+              },
+              "unit": "m/s"
+            }
+          }
+        },
+        "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/worktrees/eonwild-fast-walk-recovery/out/tarbosaurus-adult-fast-walk-recovery-v3-f53782e/root_motion.glb",
+        "sha256": "4416c91ea3629f638949139c5c7a9c1d1e0ed062b518822d024dbd313670e2a7"
+      }
+    }
+  },
+  "generic": {
+    "reverse-walk": {
+      "joins": {
+        "start": {
+          "in_place": {
+            "local_angular_velocity_degrees_per_s": {
+              "index": 49,
+              "maximum": 0.5855564463190939,
+              "witness": "Bone_010"
+            },
+            "local_translation_velocity_mps": {
+              "index": 73,
+              "maximum": 0.00011444286989402004,
+              "witness": "Bone_001"
+            },
+            "skin_velocity_mps": {
+              "index": 608,
+              "maximum": 0.003909311044602959,
+              "witness": "left:toe:vertex-50328"
+            },
+            "world_linear_velocity_mps": {
+              "index": 61,
+              "maximum": 0.005754019560504669,
+              "witness": "Bone_013"
+            }
+          },
+          "root_motion": {
+            "local_angular_velocity_degrees_per_s": {
+              "index": 49,
+              "maximum": 0.5855564463190939,
+              "witness": "Bone_010"
+            },
+            "local_translation_velocity_mps": {
+              "index": 73,
+              "maximum": 0.00011444286989402004,
+              "witness": "Bone_001"
+            },
+            "skin_velocity_mps": {
+              "index": 608,
+              "maximum": 0.00390959153470937,
+              "witness": "left:toe:vertex-50328"
+            },
+            "world_linear_velocity_mps": {
+              "index": 61,
+              "maximum": 0.005754101016094961,
+              "witness": "Bone_013"
+            }
+          }
+        },
+        "stop": {
+          "in_place": {
+            "local_angular_velocity_degrees_per_s": {
+              "index": 49,
+              "maximum": 0.5948703680514168,
+              "witness": "Bone_010"
+            },
+            "local_translation_velocity_mps": {
+              "index": 73,
+              "maximum": 0.00011416998630081691,
+              "witness": "Bone_001"
+            },
+            "skin_velocity_mps": {
+              "index": 608,
+              "maximum": 0.003902234139209592,
+              "witness": "left:toe:vertex-50328"
+            },
+            "world_linear_velocity_mps": {
+              "index": 61,
+              "maximum": 0.005635248963154372,
+              "witness": "Bone_013"
+            }
+          },
+          "root_motion": {
+            "local_angular_velocity_degrees_per_s": {
+              "index": 49,
+              "maximum": 0.5948703680514168,
+              "witness": "Bone_010"
+            },
+            "local_translation_velocity_mps": {
+              "index": 73,
+              "maximum": 0.00011416998630081691,
+              "witness": "Bone_001"
+            },
+            "skin_velocity_mps": {
+              "index": 608,
+              "maximum": 0.0039022342146283443,
+              "witness": "left:toe:vertex-50328"
+            },
+            "world_linear_velocity_mps": {
+              "index": 61,
+              "maximum": 0.005635249318673942,
+              "witness": "Bone_013"
+            }
+          }
+        }
+      },
+      "steady_local_cyclic": {
+        "in_place": {
+          "angular_degrees_per_s": 1.697989541958647,
+          "classification": "exact adjacent LINEAR translation and shortest-SLERP local-channel tangents; constant scale is admitted and nonconstant animated scale rejects; not a world or skinned-loop claim",
+          "linear_m_per_s": 0.0034604658907141867,
+          "witnesses": {
+            "angular": {
+              "bone": "Bone_009",
+              "incoming": [
+                -0.4378040085455365,
+                0.02945206000990054,
+                0.06787068985619364
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 1.9916666746139526,
+                "time_s": 2.0
+              },
+              "node": 48,
+              "outgoing": [
+                -0.4652827046553834,
+                0.031520897010205946,
+                0.07877502468956817
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.008333333767950535,
+                "time_s": 0.0
+              },
+              "unit": "rad/s"
+            },
+            "linear": {
+              "bone": "Bone_001",
+              "incoming": [
+                0.01705165715971676,
+                -0.016714201416207712,
+                0.006874508261211644
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 1.9916666746139526,
+                "time_s": 2.0
+              },
+              "node": 73,
+              "outgoing": [
+                0.01622926359173026,
+                -0.018392353290718248,
+                0.003962069543194124
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.008333333767950535,
+                "time_s": 0.0
+              },
+              "unit": "m/s"
+            }
+          }
+        },
+        "root_motion": {
+          "angular_degrees_per_s": 1.697989541958647,
+          "classification": "exact adjacent LINEAR translation and shortest-SLERP local-channel tangents; constant scale is admitted and nonconstant animated scale rejects; not a world or skinned-loop claim",
+          "linear_m_per_s": 0.0034604658907141867,
+          "witnesses": {
+            "angular": {
+              "bone": "Bone_009",
+              "incoming": [
+                -0.4378040085455365,
+                0.02945206000990054,
+                0.06787068985619364
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 1.9916666746139526,
+                "time_s": 2.0
+              },
+              "node": 48,
+              "outgoing": [
+                -0.4652827046553834,
+                0.031520897010205946,
+                0.07877502468956817
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.008333333767950535,
+                "time_s": 0.0
+              },
+              "unit": "rad/s"
+            },
+            "linear": {
+              "bone": "Bone_001",
+              "incoming": [
+                0.01705165715971676,
+                -0.016714201416207712,
+                0.006874508261211644
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 1.9916666746139526,
+                "time_s": 2.0
+              },
+              "node": 73,
+              "outgoing": [
+                0.01622926359173026,
+                -0.018392353290718248,
+                0.003962069543194124
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.008333333767950535,
+                "time_s": 0.0
+              },
+              "unit": "m/s"
+            }
+          }
+        }
+      }
+    },
+    "run": {
+      "joins": {
+        "start": {
+          "in_place": {
+            "local_angular_velocity_degrees_per_s": {
+              "index": 62,
+              "maximum": 6.7992388026914945,
+              "witness": "Bone_014"
+            },
+            "local_translation_velocity_mps": {
+              "index": 73,
+              "maximum": 0.0022125105584990066,
+              "witness": "Bone_001"
+            },
+            "skin_velocity_mps": {
+              "index": 1574,
+              "maximum": 0.18160316354232303,
+              "witness": "right:sole:vertex-43685"
+            },
+            "world_linear_velocity_mps": {
+              "index": 53,
+              "maximum": 0.18092336909856033,
+              "witness": "Bone_053"
+            }
+          },
+          "root_motion": {
+            "local_angular_velocity_degrees_per_s": {
+              "index": 62,
+              "maximum": 6.7992388026914945,
+              "witness": "Bone_014"
+            },
+            "local_translation_velocity_mps": {
+              "index": 73,
+              "maximum": 0.0022125105584990066,
+              "witness": "Bone_001"
+            },
+            "skin_velocity_mps": {
+              "index": 1574,
+              "maximum": 0.1815412192026616,
+              "witness": "right:sole:vertex-43685"
+            },
+            "world_linear_velocity_mps": {
+              "index": 53,
+              "maximum": 0.18086114625985883,
+              "witness": "Bone_053"
+            }
+          }
+        },
+        "stop": {
+          "in_place": {
+            "local_angular_velocity_degrees_per_s": {
+              "index": 62,
+              "maximum": 6.7946138688481055,
+              "witness": "Bone_014"
+            },
+            "local_translation_velocity_mps": {
+              "index": 73,
+              "maximum": 0.0022125280253591727,
+              "witness": "Bone_001"
+            },
+            "skin_velocity_mps": {
+              "index": 1574,
+              "maximum": 0.18168261890307014,
+              "witness": "right:sole:vertex-43685"
+            },
+            "world_linear_velocity_mps": {
+              "index": 53,
+              "maximum": 0.18100329996488787,
+              "witness": "Bone_053"
+            }
+          },
+          "root_motion": {
+            "local_angular_velocity_degrees_per_s": {
+              "index": 62,
+              "maximum": 6.7946138688481055,
+              "witness": "Bone_014"
+            },
+            "local_translation_velocity_mps": {
+              "index": 73,
+              "maximum": 0.0022125280253591727,
+              "witness": "Bone_001"
+            },
+            "skin_velocity_mps": {
+              "index": 1574,
+              "maximum": 0.1816531800299959,
+              "witness": "right:sole:vertex-43685"
+            },
+            "world_linear_velocity_mps": {
+              "index": 53,
+              "maximum": 0.1809736679592799,
+              "witness": "Bone_053"
+            }
+          }
+        }
+      },
+      "steady_local_cyclic": {
+        "in_place": {
+          "angular_degrees_per_s": 6.3324127738660625,
+          "classification": "exact adjacent LINEAR translation and shortest-SLERP local-channel tangents; constant scale is admitted and nonconstant animated scale rejects; not a world or skinned-loop claim",
+          "linear_m_per_s": 0.047942073174142195,
+          "witnesses": {
+            "angular": {
+              "bone": "Bone_014",
+              "incoming": [
+                5.281139676630101,
+                2.810799897763266e-06,
+                0.9122212894484054
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 1.2479166984558105,
+                "time_s": 1.25
+              },
+              "node": 62,
+              "outgoing": [
+                5.3900492585106115,
+                -3.1841588995534e-06,
+                0.9310280542214877
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.0020833334419876337,
+                "time_s": 0.0
+              },
+              "unit": "rad/s"
+            },
+            "linear": {
+              "bone": "Bone_001",
+              "incoming": [
+                -0.11515167229343098,
+                -0.3174643976024262,
+                -0.4933730544747082
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 1.2479166984558105,
+                "time_s": 1.25
+              },
+              "node": 73,
+              "outgoing": [
+                -0.12654572065308656,
+                -0.34071786414813215,
+                -0.5337202270623923
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.0020833334419876337,
+                "time_s": 0.0
+              },
+              "unit": "m/s"
+            }
+          }
+        },
+        "root_motion": {
+          "angular_degrees_per_s": 6.3324127738660625,
+          "classification": "exact adjacent LINEAR translation and shortest-SLERP local-channel tangents; constant scale is admitted and nonconstant animated scale rejects; not a world or skinned-loop claim",
+          "linear_m_per_s": 0.047942073174142195,
+          "witnesses": {
+            "angular": {
+              "bone": "Bone_014",
+              "incoming": [
+                5.281139676630101,
+                2.810799897763266e-06,
+                0.9122212894484054
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 1.2479166984558105,
+                "time_s": 1.25
+              },
+              "node": 62,
+              "outgoing": [
+                5.3900492585106115,
+                -3.1841588995534e-06,
+                0.9310280542214877
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.0020833334419876337,
+                "time_s": 0.0
+              },
+              "unit": "rad/s"
+            },
+            "linear": {
+              "bone": "Bone_001",
+              "incoming": [
+                -0.11515167229343098,
+                -0.3174643976024262,
+                -0.4933730544747082
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 1.2479166984558105,
+                "time_s": 1.25
+              },
+              "node": 73,
+              "outgoing": [
+                -0.12654572065308656,
+                -0.34071786414813215,
+                -0.5337202270623923
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.0020833334419876337,
+                "time_s": 0.0
+              },
+              "unit": "m/s"
+            }
+          }
+        }
+      }
+    },
+    "sprint": {
+      "joins": {
+        "start": {
+          "in_place": {
+            "local_angular_velocity_degrees_per_s": {
+              "index": 49,
+              "maximum": 10.521595745832627,
+              "witness": "Bone_010"
+            },
+            "local_translation_velocity_mps": {
+              "index": 73,
+              "maximum": 0.015009806261708954,
+              "witness": "Bone_001"
+            },
+            "skin_velocity_mps": {
+              "index": 674,
+              "maximum": 0.12974501226951918,
+              "witness": "left:toe:vertex-50426"
+            },
+            "world_linear_velocity_mps": {
+              "index": 38,
+              "maximum": 0.12935097780512722,
+              "witness": "Bone_042"
+            }
+          },
+          "root_motion": {
+            "local_angular_velocity_degrees_per_s": {
+              "index": 49,
+              "maximum": 10.521595745832627,
+              "witness": "Bone_010"
+            },
+            "local_translation_velocity_mps": {
+              "index": 73,
+              "maximum": 0.015009806261708954,
+              "witness": "Bone_001"
+            },
+            "skin_velocity_mps": {
+              "index": 674,
+              "maximum": 0.12972658842761342,
+              "witness": "left:toe:vertex-50426"
+            },
+            "world_linear_velocity_mps": {
+              "index": 38,
+              "maximum": 0.1293321444367633,
+              "witness": "Bone_042"
+            }
+          }
+        },
+        "stop": {
+          "in_place": {
+            "local_angular_velocity_degrees_per_s": {
+              "index": 49,
+              "maximum": 10.518202550104636,
+              "witness": "Bone_010"
+            },
+            "local_translation_velocity_mps": {
+              "index": 73,
+              "maximum": 0.015009508836646427,
+              "witness": "Bone_001"
+            },
+            "skin_velocity_mps": {
+              "index": 674,
+              "maximum": 0.1296514772593278,
+              "witness": "left:toe:vertex-50426"
+            },
+            "world_linear_velocity_mps": {
+              "index": 38,
+              "maximum": 0.12926324841932624,
+              "witness": "Bone_042"
+            }
+          },
+          "root_motion": {
+            "local_angular_velocity_degrees_per_s": {
+              "index": 49,
+              "maximum": 10.518202550104636,
+              "witness": "Bone_010"
+            },
+            "local_translation_velocity_mps": {
+              "index": 73,
+              "maximum": 0.015009508836646427,
+              "witness": "Bone_001"
+            },
+            "skin_velocity_mps": {
+              "index": 674,
+              "maximum": 0.1296509373063037,
+              "witness": "left:toe:vertex-50426"
+            },
+            "world_linear_velocity_mps": {
+              "index": 38,
+              "maximum": 0.12926271444393683,
+              "witness": "Bone_042"
+            }
+          }
+        }
+      },
+      "steady_local_cyclic": {
+        "in_place": {
+          "angular_degrees_per_s": 5.440881631630531,
+          "classification": "exact adjacent LINEAR translation and shortest-SLERP local-channel tangents; constant scale is admitted and nonconstant animated scale rejects; not a world or skinned-loop claim",
+          "linear_m_per_s": 0.0703895060257232,
+          "witnesses": {
+            "angular": {
+              "bone": "Bone_013",
+              "incoming": [
+                -7.617942581945797,
+                -0.8152207966849772,
+                -4.649828725386267
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 0.956250011920929,
+                "time_s": 0.9583333134651184
+              },
+              "node": 61,
+              "outgoing": [
+                -7.697256069044032,
+                -0.8107012835763627,
+                -4.701853652230862
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.0020833334419876337,
+                "time_s": 0.0
+              },
+              "unit": "rad/s"
+            },
+            "linear": {
+              "bone": "Bone_001",
+              "incoming": [
+                -0.06661278324559396,
+                -0.2434803444724193,
+                -0.3475480659189746
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 0.956250011920929,
+                "time_s": 0.9583333134651184
+              },
+              "node": 73,
+              "outgoing": [
+                -0.08333980602488933,
+                -0.27762113553771417,
+                -0.4067873742616801
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.0020833334419876337,
+                "time_s": 0.0
+              },
+              "unit": "m/s"
+            }
+          }
+        },
+        "root_motion": {
+          "angular_degrees_per_s": 5.440881631630531,
+          "classification": "exact adjacent LINEAR translation and shortest-SLERP local-channel tangents; constant scale is admitted and nonconstant animated scale rejects; not a world or skinned-loop claim",
+          "linear_m_per_s": 0.0703895060257232,
+          "witnesses": {
+            "angular": {
+              "bone": "Bone_013",
+              "incoming": [
+                -7.617942581945797,
+                -0.8152207966849772,
+                -4.649828725386267
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 0.956250011920929,
+                "time_s": 0.9583333134651184
+              },
+              "node": 61,
+              "outgoing": [
+                -7.697256069044032,
+                -0.8107012835763627,
+                -4.701853652230862
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.0020833334419876337,
+                "time_s": 0.0
+              },
+              "unit": "rad/s"
+            },
+            "linear": {
+              "bone": "Bone_001",
+              "incoming": [
+                -0.06661278324559396,
+                -0.2434803444724193,
+                -0.3475480659189746
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 0.956250011920929,
+                "time_s": 0.9583333134651184
+              },
+              "node": 73,
+              "outgoing": [
+                -0.08333980602488933,
+                -0.27762113553771417,
+                -0.4067873742616801
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.0020833334419876337,
+                "time_s": 0.0
+              },
+              "unit": "m/s"
+            }
+          }
+        }
+      }
+    },
+    "walk": {
+      "joins": {
+        "start": {
+          "in_place": {
+            "local_angular_velocity_degrees_per_s": {
+              "index": 62,
+              "maximum": 5.6525093193356035,
+              "witness": "Bone_014"
+            },
+            "local_translation_velocity_mps": {
+              "index": 73,
+              "maximum": 7.631889773942387e-05,
+              "witness": "Bone_001"
+            },
+            "skin_velocity_mps": {
+              "index": 2473,
+              "maximum": 0.026662772084200984,
+              "witness": "right:toe:vertex-42225"
+            },
+            "world_linear_velocity_mps": {
+              "index": 62,
+              "maximum": 0.04856118123753406,
+              "witness": "Bone_014"
+            }
+          },
+          "root_motion": {
+            "local_angular_velocity_degrees_per_s": {
+              "index": 62,
+              "maximum": 5.6525093193356035,
+              "witness": "Bone_014"
+            },
+            "local_translation_velocity_mps": {
+              "index": 73,
+              "maximum": 7.631889773942387e-05,
+              "witness": "Bone_001"
+            },
+            "skin_velocity_mps": {
+              "index": 2473,
+              "maximum": 0.026647237453382672,
+              "witness": "right:toe:vertex-42225"
+            },
+            "world_linear_velocity_mps": {
+              "index": 62,
+              "maximum": 0.048454208200096695,
+              "witness": "Bone_014"
+            }
+          }
+        },
+        "stop": {
+          "in_place": {
+            "local_angular_velocity_degrees_per_s": {
+              "index": 62,
+              "maximum": 5.650971465072473,
+              "witness": "Bone_014"
+            },
+            "local_translation_velocity_mps": {
+              "index": 73,
+              "maximum": 7.613561633878897e-05,
+              "witness": "Bone_001"
+            },
+            "skin_velocity_mps": {
+              "index": 2473,
+              "maximum": 0.026649244374359605,
+              "witness": "right:toe:vertex-42225"
+            },
+            "world_linear_velocity_mps": {
+              "index": 62,
+              "maximum": 0.04852436164773587,
+              "witness": "Bone_014"
+            }
+          },
+          "root_motion": {
+            "local_angular_velocity_degrees_per_s": {
+              "index": 62,
+              "maximum": 5.650971465072473,
+              "witness": "Bone_014"
+            },
+            "local_translation_velocity_mps": {
+              "index": 73,
+              "maximum": 7.613561633878897e-05,
+              "witness": "Bone_001"
+            },
+            "skin_velocity_mps": {
+              "index": 2473,
+              "maximum": 0.026649223630877635,
+              "witness": "right:toe:vertex-42225"
+            },
+            "world_linear_velocity_mps": {
+              "index": 62,
+              "maximum": 0.04852446418583707,
+              "witness": "Bone_014"
+            }
+          }
+        }
+      },
+      "steady_local_cyclic": {
+        "in_place": {
+          "angular_degrees_per_s": 3.1776931285712147,
+          "classification": "exact adjacent LINEAR translation and shortest-SLERP local-channel tangents; constant scale is admitted and nonconstant animated scale rejects; not a world or skinned-loop claim",
+          "linear_m_per_s": 0.002281508590440414,
+          "witnesses": {
+            "angular": {
+              "bone": "Bone_009",
+              "incoming": [
+                -0.8116242102662776,
+                0.10329251478958497,
+                0.41150644763932687
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 2.4516892433166504,
+                "time_s": 2.4600000381469727
+              },
+              "node": 48,
+              "outgoing": [
+                -0.8643123853052685,
+                0.10943893177543858,
+                0.427696670927542
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.008310810662806034,
+                "time_s": 0.0
+              },
+              "unit": "rad/s"
+            },
+            "linear": {
+              "bone": "Bone_001",
+              "incoming": [
+                0.013800409877216134,
+                -0.013718156520741293,
+                0.0053655186757702675
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 2.4516892433166504,
+                "time_s": 2.4600000381469727
+              },
+              "node": 73,
+              "outgoing": [
+                0.013258229662364063,
+                -0.014824402305554948,
+                0.0034452212179636953
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.008310810662806034,
+                "time_s": 0.0
+              },
+              "unit": "m/s"
+            }
+          }
+        },
+        "root_motion": {
+          "angular_degrees_per_s": 3.1776931285712147,
+          "classification": "exact adjacent LINEAR translation and shortest-SLERP local-channel tangents; constant scale is admitted and nonconstant animated scale rejects; not a world or skinned-loop claim",
+          "linear_m_per_s": 0.002281508590440414,
+          "witnesses": {
+            "angular": {
+              "bone": "Bone_009",
+              "incoming": [
+                -0.8116242102662776,
+                0.10329251478958497,
+                0.41150644763932687
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 2.4516892433166504,
+                "time_s": 2.4600000381469727
+              },
+              "node": 48,
+              "outgoing": [
+                -0.8643123853052685,
+                0.10943893177543858,
+                0.427696670927542
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.008310810662806034,
+                "time_s": 0.0
+              },
+              "unit": "rad/s"
+            },
+            "linear": {
+              "bone": "Bone_001",
+              "incoming": [
+                0.013800409877216134,
+                -0.013718156520741293,
+                0.0053655186757702675
+              ],
+              "incoming_key": {
+                "neighbor_time_s": 2.4516892433166504,
+                "time_s": 2.4600000381469727
+              },
+              "node": 73,
+              "outgoing": [
+                0.013258229662364063,
+                -0.014824402305554948,
+                0.0034452212179636953
+              ],
+              "outgoing_key": {
+                "neighbor_time_s": 0.008310810662806034,
+                "time_s": 0.0
+              },
+              "unit": "m/s"
+            }
+          }
+        }
+      }
+    }
+  },
+  "glb_sha256": {
+    "reverse-walk": {
+      "start": {
+        "in_place": "eab77938e50a852173a8ac7ef9b5e49eee23587d0adb8ee9b20b48b6cc71cce8",
+        "root_motion": "bfa395709a64a49e7a1d7656a06bd71a83241f5d972d9d7ad69c15580b80b4bc"
+      },
+      "steady": {
+        "in_place": "f4d63e9624eb360860e10382bd5f59f746d678bceb300a4dd8f95c921a8bbc78",
+        "root_motion": "eefe70eb216ef7bf095324cae4b26710637a166f05a857cc9648c18ee1226835"
+      },
+      "stop": {
+        "in_place": "e57f8f2faf55b1e86388b022bf3c2738e410ae39f89a1933f7f40da6e14af31e",
+        "root_motion": "977d0bb30c97d9689cb8032c14b54960afd30c22287793777ae2060b2b3aa7e3"
+      }
+    },
+    "run": {
+      "start": {
+        "in_place": "c04d1f14b4c94d5385b3a516757b338da81a93178ad6b376424c20f07fc544a6",
+        "root_motion": "da71af6c2687ab010ecbdea8c9f22ccac67bee077bc4bd62ca1e667e795d65f0"
+      },
+      "steady": {
+        "in_place": "b4ae95fcfd2ae37ad73dba0f5a966ba3f48834ec22dc00f826bf5ef7604e3f69",
+        "root_motion": "98a9f462efc0f9061e5e388172447e83b350a71f8368c2e61d7a40beabcd540d"
+      },
+      "stop": {
+        "in_place": "fa6be078f075ecb18f33c6040289e8e2fc4304b5810c7aab2b72edeca9d8356b",
+        "root_motion": "77c3d6755e719184bd18b257ebe6fffbec5122ded9720bb15d7824cc694428aa"
+      }
+    },
+    "sprint": {
+      "start": {
+        "in_place": "82d7889616c72b393c2f3c82847b52f61e681bf48d9ba233bb66cb76fea6a27d",
+        "root_motion": "1a5df68c53c7f0f3c12b22411ff1e9f813ba27ba2db1ca635783e4e013a294e0"
+      },
+      "steady": {
+        "in_place": "8acd1bde73275db21bf12fa12074ebe6d2e1b50359d8b5d0aab09de9725ea0fd",
+        "root_motion": "703a57cd2d33b1d65f793f11e6088ab67c6f7e7aa843df05ef62c75905010bee"
+      },
+      "stop": {
+        "in_place": "79435fd0c317e21bb1b08f59c5a91c0b918464e7594b8227c80c0be8df8bbac1",
+        "root_motion": "2fdaee3e8d7c20b6ec03d3d5a60a5ae61efad0f118aec86496a4e27c289791b0"
+      }
+    },
+    "walk": {
+      "start": {
+        "in_place": "566e740791dd3e0df3952180eefe921cf528ea961a9e8419ad602f5bed0edb91",
+        "root_motion": "532795923e9aa654dc3d28a82bd31c75048911c00e80644e8319100763d3ca84"
+      },
+      "steady": {
+        "in_place": "29f4e3a4c8b05f73005ebf8a7b16725770a5e3c08e7ae31eb733aea0a12a0652",
+        "root_motion": "ca6e9ee7b82a06455a54b6d596966b59ba8b0d71d61e6fd32f2dc8931d063626"
+      },
+      "stop": {
+        "in_place": "e9ba12820756c4017b0024debfe00f5da77fb72446d15a1a34c576cff72826d9",
+        "root_motion": "b07c52ccc19f667d84fd3aa666312e67d9831bff851946cf6db0aff72f65d401"
+      }
+    }
+  },
+  "schema": "eonwild.motion.exact-emitted-reproduction.v1",
+  "validator_source_sha": "52e826ccd7e05dd2e82c37e889af8cf0a977c7a0"
+}

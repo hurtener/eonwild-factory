@@ -1,0 +1,22 @@
+{
+  "parameters": {
+    "cycles": 1,
+    "duty_factor": 0.68,
+    "foot_recovery_pitch_degrees": 22,
+    "handoff_phase_fraction": 0.125,
+    "handoff_sample_hz": 480,
+    "pelvis_crouch_body_heights": 0.035,
+    "pelvis_excursion_body_heights": 0.016,
+    "push_off_pitch_degrees": 10.0,
+    "push_off_start_fraction": 0.6,
+    "rounded_swing_peak_fraction": 0.42,
+    "sample_hz": 120,
+    "step_length_body_heights": -0.38,
+    "step_period_s": 1.0,
+    "swing_clearance_body_heights": 0.12,
+    "swing_hip_lift_degrees": 12.0,
+    "toe_flex_degrees": 24.0,
+    "touchdown_reach_body_heights": 0.2
+  },
+  "schema": "eonwild.motion.v9.grounded-gait.v1"
+}

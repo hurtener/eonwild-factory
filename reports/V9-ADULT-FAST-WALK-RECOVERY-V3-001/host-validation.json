@@ -1,0 +1,34 @@
+{
+  "branch": "codex/adult-sagittal-fast-integration",
+  "captured_utc": "2026-09-08T06:46:28.591440+00:00",
+  "clean_after": true,
+  "clean_before": true,
+  "continuity_scope": "compiler current finite-difference estimator only; exact runtime LINEAR/SLERP tangent validator remains a separate unintegrated stage",
+  "full_suite": {
+    "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=2 uv run --frozen python -m pytest tests -q --tb=short --junitxml=out/continuation-adult-sagittal-fast-integration-30f434c/full-tests.xml",
+    "junit_case_elements": 749,
+    "log_sha256": "ba22d6c44dbf2536321f56c745420b9e6382a42bd6ca381e03751426b7539230",
+    "platform": "macOS-26.3-arm64-arm-64bit",
+    "scope": "complete mandatory tests directory, full external checkout, real Blender and Khronos validator, no exclusions",
+    "seconds": 502.9,
+    "status": "PASS",
+    "subtests_passed": 21,
+    "tests_passed": 749,
+    "tool_versions": [
+      "Blender 5.2.0 LTS",
+      "glTF 2.0 Validator, version 2.0.0-dev.3.10",
+      "Python 3.12.10"
+    ],
+    "xml_sha256": "049644344e13f8a78f5f68f3fbc94ddcef2d0b96260c2aa09c3dc4ec727776df"
+  },
+  "integration": {
+    "fast_lint_cherry_pick": "30f434ce914b6392f1438f0ff234718c82d2e985",
+    "fast_lint_original": "0955fc867fcf70383613d67f984baf4a92c4d6e0",
+    "fast_recovery_cherry_pick": "8c4aef0",
+    "fast_recovery_original": "f53782e060d38554879cbd25a65d0d62c72d44f4",
+    "sagittal_root_hierarchy_fix": "4ea2ad2a9e2e73fdb7bfc2b0cd34445c044c1ae4"
+  },
+  "schema": "eonwild.motion.host-sagittal-fast-integration-verification.v1",
+  "source_sha": "30f434ce914b6392f1438f0ff234718c82d2e985",
+  "source_tree": "abce9f7db7ce8117e5d0eca979e243d2e1f6c597"
+}

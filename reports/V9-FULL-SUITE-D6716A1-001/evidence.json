@@ -1,0 +1,43 @@
+{
+  "schema": "eonwild.motion.full-suite-host-validation.v1",
+  "status": "PASS",
+  "tested_commit": "d6716a15f815480cee525381613dff526f9a844b",
+  "engine_matches_commit": "7920c59dd354027b8784483bb208fd0e6229cd91",
+  "tests": {
+    "count": 647,
+    "subtests": 21,
+    "duration_s": 321.11,
+    "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=2 uv run --frozen pytest tests -q --tb=short --junitxml=out/continuation-full-suite-d6716a1.xml"
+  },
+  "toolchain": {
+    "python": "3.12.10 (main, May 30 2025, 05:53:56) [Clang 20.1.4 ]",
+    "platform": "macOS-26.3-arm64-arm-64bit",
+    "machine": "arm64",
+    "blender_version": "5.2.0 LTS fbe6228777e7",
+    "gltf_validator_version": "2.0.0-dev.3.10"
+  },
+  "artifacts": {
+    "receipt": {
+      "path": "out/continuation-full-suite-d6716a1/host-validation.json",
+      "sha256": "a396c795298c2a0f8d6e96fee04ad8ff8a5286a0d814226b3f181986b9e52cad"
+    },
+    "log": {
+      "path": "out/continuation-full-suite-d6716a1/full-tests.log",
+      "sha256": "1a19a34530ca62f3ac754e0cc4b03bdf6a80f21b157944fb57e1b6ca997eeef8"
+    },
+    "junit": {
+      "path": "out/continuation-full-suite-d6716a1/full-tests.xml",
+      "sha256": "f06b6858b273e07259aa32cb261e521819738269eb4bdc3fdd7d7ca6a027d11b"
+    }
+  },
+  "tracked_checkout_clean_after_tests": true,
+  "acceptance": {
+    "remote_ci_for_source": "NOT_RUN",
+    "sprint_direct_joins": "BLOCKED",
+    "adult_recovery_visual_acceptance": "NOT_ACCEPTED",
+    "native_visual_review": "PENDING",
+    "biological_validation": "NOT_VALIDATED",
+    "unity_validation": "NOT_RUN",
+    "production_approved": false
+  }
+}

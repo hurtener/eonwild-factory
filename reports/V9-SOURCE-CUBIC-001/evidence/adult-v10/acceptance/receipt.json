@@ -1,0 +1,52 @@
+{
+  "schema": "eonwild.root-adult-cubic-validation.v1",
+  "created_at": "2026-09-08T17:53:32.413353+00:00",
+  "reader_head": "f9ca924bcc79943d2d2b7eeab28bef8763c18ec4",
+  "reader_tree": "91f63ac2efb1bbc49e0ae85cadb13fcac97722b2",
+  "package_manifest_sha256": "80b15c5d7dba7aa294335c46e55e8e8776aa7d177507c3c7fb3f96628252153d",
+  "package_payload_hashes_unchanged": true,
+  "generator_engine_file_count": 100,
+  "recipe_input_bindings_checked": 7,
+  "world_material_status": "PASS",
+  "world_maximum_velocity_difference_m_per_s": 0.00026194661729240327,
+  "foot_material_maximum_velocity_difference_m_per_s": 0.0002039749450277199,
+  "native_status": "PASS",
+  "native_scope": "18 source times per mode, all59169 same-index vertices; includes actual Cycles render reevaluation; not whole-interval proof",
+  "native_maximum_error_m": {
+    "in_place": 4.481751598969648e-06,
+    "root_motion": 4.373791529611378e-06
+  },
+  "khronos": {
+    "root_motion": {
+      "version": "2.0.0-dev.3.10",
+      "errors": 0,
+      "warnings": 4
+    },
+    "in_place": {
+      "version": "2.0.0-dev.3.10",
+      "errors": 0,
+      "warnings": 4
+    }
+  },
+  "visual_status": "REVISION_REQUIRED_BODY_WEIGHT_TRANSFER",
+  "visual_reviewed_frames": {
+    "v9_side": 74,
+    "v9_front": 74,
+    "v10_side": 74,
+    "v10_front": 74
+  },
+  "browser_controls": "NOT_RUN_POLICY_BLOCKED",
+  "unity_validation": "NOT_RUN",
+  "production_approved": false,
+  "files": {
+    "world-material.py": "8725a7c659762f96eeec6aa378d6278b6485cc07f0b06da532483c08565e2331",
+    "world-material.json": "009b6a9c98cd8b5a3028b5865e977cc8301a1e5030aba0383fd65a2b4d98c555",
+    "prepare.py": "6b3d74e4ff7ef4d2143344b3fd22b6d45277a85cecdca91fc57f1caf2e5f8dee",
+    "request.json": "14eb0c0d4e2b07d374ef5b92dbab708feaf61f1b6ed77b17ad8fbec52a0ed44b",
+    "verify_native.py": "3863884a25a9186c30a58cab81d1d7cf62d02aee5d707bea3ba8d830a0a3984f",
+    "native-result.json": "ec74a6ae4ded4af1506c7dc3afd718be1c2d307c31b5c3a12a2ff40943bd0250",
+    "root_motion-khronos.json": "b88444a6a3e9d47ec23be1f953d4fdf7f61af7517cb5bac01aaf881e2feafdb8",
+    "in_place-khronos.json": "22c76b8ec1ce470702e981f3217b8946892f7b3af4205770090f3e1804a962dc",
+    "visual/inventory.json": "ffb4dcfbaaba41cfc8f1c89032f0e0aaacef838d57acf2dec0058a03feeb8bfb"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "schema": "eonwild.motion.factory-recipe.v1",
+  "id": "heavy-biped.tarbosaurus-pin-552-1-adult-walk.v9",
+  "version": 9,
+  "family": "heavy-predatory-biped",
+  "program": "grounded_gait",
+  "description": "One-cycle adult PIN 552-1 combined diagnostic using the reviewed recovered bind geometry, support-timed axial coordination, and calibrated neutral jaw; preserves v8 gait, timing, legs, contacts, articulation, root travel, physical amplitudes and thresholds; kinematic art direction only, with no COM, force, work, mass-response, biological, tooth-contact or production claim",
+  "supersedes": "heavy-biped.tarbosaurus-pin-552-1-adult-walk.v8",
+  "source": {
+    "path": "assets/sha256/2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f.glb",
+    "sha256": "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f"
+  },
+  "rig": {
+    "path": "catalog/rigs/heavy-biped.v9.json",
+    "sha256": "c3de770bf7dcc68219a28fb9851e9b75f3d3eebe2c2c0c7deb0078850100fd7e"
+  },
+  "animal": {
+    "path": "catalog/animals/tarbosaurus-bataar-pin-552-1.adult.v2.json",
+    "sha256": "53ffeba22e24a87504d3dcc310bedacf6db94d60a25ffe56ad028b03f41e849d"
+  },
+  "program_profile": {
+    "path": "catalog/programs/heavy-biped.tarbosaurus-adult-walk.v4.json",
+    "sha256": "271ccb833a8913d3dc6bd8281e798e54b9c7bebad2080136245cb7b5e5afa725"
+  },
+  "contact_profile": {
+    "path": "catalog/contacts/heavy-biped.v10.json",
+    "sha256": "61e0351fe9f7170ddce7f0b83a8f0379d119349d3c392ffec43e544adb115db5"
+  },
+  "performance_profile": {
+    "path": "catalog/performance/heavy-biped.tarbosaurus-adult-walk.v8.json",
+    "sha256": "e133819dddf19bd224ddec7419687208e01abf8f3906fa147837813710dc2dfc"
+  },
+  "articulation_profile": {
+    "path": "catalog/articulation/heavy-biped.tarbosaurus-adult-walk.v1.json",
+    "sha256": "c1206143387ad4d1084a413ee031018f5a61a8e0539ef8256c6bba74a0f4bc6a"
+  },
+  "forward_axis": [
+    0.0,
+    0.0,
+    1.0
+  ],
+  "up_axis": [
+    0.0,
+    1.0,
+    0.0
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "description": "Portable acquired walk-stop timing resolved from the named steady walk in the same shared Allosaurus baseline.",
+  "gait_profile": {
+    "path": "catalog/programs/heavy-biped.allosaurus-adult-walk-diagnostic.v1.json",
+    "sha256": "271ccb833a8913d3dc6bd8281e798e54b9c7bebad2080136245cb7b5e5afa725"
+  },
+  "id": "heavy-biped.allosaurus-acquired-walk-stop.motion-set.v1",
+  "program": "gait_transition",
+  "program_profile": {
+    "path": "catalog/programs/heavy-biped.stop.v2.json",
+    "sha256": "58eb4cd4cd6085e3ce5689bc349346aa5a1c5324234840f9211461b2a21c15f5"
+  },
+  "schema": "eonwild.motion.motion-intent.v2",
+  "steady_motion": "walk",
+  "version": 1
+}

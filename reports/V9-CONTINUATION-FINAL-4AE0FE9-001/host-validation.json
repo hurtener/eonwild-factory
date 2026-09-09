@@ -1,0 +1,40 @@
+{
+  "schema": "eonwild.motion.host-final-verification.v1",
+  "source_sha": "4ae0fe92ec3ffd49dfeca14085756cc7cbe7d852",
+  "captured_utc": "2026-09-08T03:30:13.435227+00:00",
+  "tracked_clean": true,
+  "engine_git_tree": "61f04bd7955be156d5a100cdfd13fbf546412f64",
+  "full_suite": {
+    "status": "PASS",
+    "tests_passed": 683,
+    "subtests_passed": 21,
+    "seconds": 212.65,
+    "junit_cases_including_subtests": 704,
+    "log_sha256": "efb5e4de9ef5bcdc2e84d5ed95ad36787d909900eb0f9111fa3b37c2cab138ee",
+    "xml_sha256": "ec802f0c6d6eb667d073c2aecfe6436ac8295275a6d960961bac3bbc3978b30d",
+    "blender": "5.2.0 LTS fbe6228777e7",
+    "khronos_gltf_validator": "2.0.0-dev.3.10",
+    "platform": "macOS arm64",
+    "python": "3.12.10"
+  },
+  "postfix_probes_sha256": "d73ffc12e995e24ca9a385b567461729d652f45dbf43d05681ad55b370906d73",
+  "postfix_valid_packages_verified": 14,
+  "final_review_round": 2,
+  "full_review_head": "3219d65d66f4408e1eaf05d4eccec39409b474e1",
+  "review_scope": "Two final full reviews found twoP1s; fixes by workers, one narrow re-review per finding, both clean. No third full review.",
+  "review_receipts": {
+    "integrity.md": "16aef7961c8162c7da709e11bf88136b22ba0d5f61beab5007594c02604cae88",
+    "mechanics.md": "10aea53021fc3575558905677025741f2f7ec1d4b693723661bb1abc3e6469ca",
+    "integrity-postfix.md": "53ede4b09aa157f2c278090ca55caae39daa9f7494782afc9934ce533409e8e7",
+    "mechanics-postfix.md": "a0eac3637b3b858a193b8ea8bec6e56c6ff98a6b64d1c801c55c1566dd3f5387"
+  },
+  "remaining": {
+    "sprint_direct_joins": "BLOCKED",
+    "fast_walk_visual_polish": "REQUIRED",
+    "user_art_direction": "PENDING",
+    "unity_parity": "NOT_RUN",
+    "biological_validation": "NOT_VALIDATED",
+    "production_approved": false,
+    "hosted_ci_for_this_head": "NOT_RUN"
+  }
+}

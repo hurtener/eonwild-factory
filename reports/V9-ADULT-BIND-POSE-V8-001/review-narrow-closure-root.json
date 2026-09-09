@@ -1,0 +1,38 @@
+{
+  "head": "2d6b5e6506c14231f2a87b593bd8897ae0143519",
+  "negative_cases": [
+    {
+      "case": "short_ibm_view",
+      "result": "ContractError",
+      "reason": "inverse bind accessor span is outside its declared buffer bounds"
+    },
+    {
+      "case": "short_position_view",
+      "result": "ContractError",
+      "reason": "primitive[0] POSITION accessor span is outside its declared buffer bounds"
+    },
+    {
+      "case": "short_declared_buffer",
+      "result": "ContractError",
+      "reason": "inverse bind accessor span is outside its declared buffer bounds"
+    },
+    {
+      "case": "boolean_buffer_length",
+      "result": "ContractError",
+      "reason": "bind-pose recovery buffer byteLength is invalid"
+    },
+    {
+      "case": "fractional_buffer_length",
+      "result": "ContractError",
+      "reason": "bind-pose recovery buffer byteLength is invalid"
+    },
+    {
+      "case": "external_uri",
+      "result": "ContractError",
+      "reason": "bind-pose recovery requires one embedded buffer and accessor arrays"
+    }
+  ],
+  "valid_source_sha256": "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f",
+  "valid_frozen_source_byte_identical": true,
+  "focused_test_result": "43 passed in 5.57s"
+}

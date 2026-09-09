@@ -1,0 +1,32 @@
+{
+  "source_sha256": "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f",
+  "classification": "Independent actual Blender5.2 static bind import versus factory FK/LBS, all59169 body vertices in the same unchanged index order and semantic leg/root/pelvis landmarks; no anatomical or motion approval.",
+  "vertex_count": 59169,
+  "maximum_skin_delta_m": 3.01989033355766e-06,
+  "maximum_skin_delta_vertex": 1543,
+  "rms_skin_delta_m": 6.982234105095242e-07,
+  "maximum_joint_origin_delta_m": 1.1690565794810003e-06,
+  "joint_deltas_m": {
+    "Bone_000": 8.665325703340401e-08,
+    "Bone_001": 9.859533971093538e-08,
+    "Bone_011": 1.442709278288388e-07,
+    "Bone_010": 3.3905522977007394e-07,
+    "Bone_009": 5.890629976719301e-07,
+    "Bone_008": 6.592171254829657e-07,
+    "Bone_015": 2.1382725998477076e-07,
+    "Bone_014": 4.930668830679411e-07,
+    "Bone_013": 9.069159226532191e-07,
+    "Bone_012": 1.1690565794810003e-06
+  },
+  "visual_views_inspected": [
+    "side",
+    "front",
+    "rear",
+    "three-quarter"
+  ],
+  "static_visual_findings": [
+    "Leg bones align with leg mesh silhouettes; bilateral recovered chains are symmetric.",
+    "Original bind jaw is widely open; walking behavior must handle jaw posture separately.",
+    "No obvious new static mesh rupture or flipped body in four views; animation deformation still unreviewed."
+  ]
+}

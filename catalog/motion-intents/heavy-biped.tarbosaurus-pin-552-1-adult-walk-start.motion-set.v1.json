@@ -1,0 +1,15 @@
+{
+  "description": "Portable walk-start timing intent resolved through the shared adult grounded baseline.",
+  "gait_profile": {
+    "path": "catalog/programs/heavy-biped.tarbosaurus-adult-walk.v4.json",
+    "sha256": "271ccb833a8913d3dc6bd8281e798e54b9c7bebad2080136245cb7b5e5afa725"
+  },
+  "id": "heavy-biped.tarbosaurus-pin-552-1-adult-walk-start.motion-set.v1",
+  "program": "gait_transition",
+  "program_profile": {
+    "path": "catalog/programs/heavy-biped.start.v2.json",
+    "sha256": "062bc956067bdbc96ebd2901d5e657f36adf46ae34a126cfcea2aa1f7592b480"
+  },
+  "schema": "eonwild.motion.motion-intent.v1",
+  "version": 1
+}

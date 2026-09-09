@@ -1,0 +1,172 @@
+{
+  "classification": "Reopened complete emitted geometry only. Trunk vertex means and closed-surface uniform-volume centroids are geometric descriptors, not animal COM, load distribution, forces, stability or visual approval.",
+  "position_frame": "All reported positions are relative to the emitted root-node origin, projected on the declared world lateral axis. Volume is in world metres cubed.",
+  "packages": {
+    "v8": {
+      "root_motion_sha256": "d0ca24b7738517804f525c7261d5dcbc0790b94479915ba1251250cd76433d37",
+      "sample_count": 297,
+      "trunk_vertex_count": 4907,
+      "lateral_peak_to_peak_m": {
+        "pelvis": 0.08222925814185766,
+        "chest": 0.04038087100321608,
+        "head": 0.054595944771200465,
+        "tail_tip": 0.9762072068245431
+      },
+      "landmarks": {
+        "DS_left": {
+          "index": 18,
+          "time_s": 0.14959459006786346,
+          "target_time_s": 0.14759999999999998,
+          "contacts": [
+            "left",
+            "right"
+          ],
+          "lateral_role_origins_m": {
+            "pelvis": -0.12042910973433987,
+            "chest": -0.022521856799566243,
+            "head": 0.045027938742086854,
+            "tail_tip": 0.036271449394200836
+          },
+          "trunk_vertex_mean_lateral_m": 0.03198929438440873,
+          "uniform_volume_centroid_lateral_m": -0.006997490374277989,
+          "oriented_volume_m3": 5.86926558939115
+        },
+        "SS_left": {
+          "index": 92,
+          "time_s": 0.7645946145057678,
+          "target_time_s": 0.7626,
+          "contacts": [
+            "left"
+          ],
+          "lateral_role_origins_m": {
+            "pelvis": -0.16133428060298793,
+            "chest": -0.029933420394468637,
+            "head": 0.03871421920926699,
+            "tail_tip": 0.4866096912932851
+          },
+          "trunk_vertex_mean_lateral_m": 0.010851112798660783,
+          "uniform_volume_centroid_lateral_m": -0.029836180709997183,
+          "oriented_volume_m3": 5.7221263345105715
+        },
+        "DS_right": {
+          "index": 166,
+          "time_s": 1.3795945644378662,
+          "target_time_s": 1.3776000000000002,
+          "contacts": [
+            "left",
+            "right"
+          ],
+          "lateral_role_origins_m": {
+            "pelvis": -0.12001019670389981,
+            "chest": -0.05763808433513397,
+            "head": -0.00011044071647256168,
+            "tail_tip": -0.036292008124147436
+          },
+          "trunk_vertex_mean_lateral_m": 0.005926374362406419,
+          "uniform_volume_centroid_lateral_m": -0.03812214768056289,
+          "oriented_volume_m3": 5.867262867248133
+        },
+        "SS_right": {
+          "index": 240,
+          "time_s": 1.9945945739746094,
+          "target_time_s": 1.9926000000000001,
+          "contacts": [
+            "right"
+          ],
+          "lateral_role_origins_m": {
+            "pelvis": -0.07910502246113027,
+            "chest": -0.0503707447884241,
+            "head": 0.005953764605969237,
+            "tail_tip": -0.4868179902701463
+          },
+          "trunk_vertex_mean_lateral_m": 0.028239906922666803,
+          "uniform_volume_centroid_lateral_m": -0.015283004324936799,
+          "oriented_volume_m3": 5.726435402059645
+        }
+      }
+    },
+    "axial_483e006": {
+      "root_motion_sha256": "84c36a3e88129b5a2427167be80cbb85ad6efc5d733ab9c6a1cb6c5dad1fb08d",
+      "sample_count": 297,
+      "trunk_vertex_count": 4907,
+      "lateral_peak_to_peak_m": {
+        "pelvis": 0.08222925814185766,
+        "chest": 0.117046127619406,
+        "head": 0.14827684618481654,
+        "tail_tip": 1.049146848575718
+      },
+      "landmarks": {
+        "DS_left": {
+          "index": 18,
+          "time_s": 0.14959459006786346,
+          "target_time_s": 0.14759999999999998,
+          "contacts": [
+            "left",
+            "right"
+          ],
+          "lateral_role_origins_m": {
+            "pelvis": -0.12042910973433987,
+            "chest": 0.007253216479022991,
+            "head": 0.08329493511583842,
+            "tail_tip": 0.5109360823270779
+          },
+          "trunk_vertex_mean_lateral_m": 0.050724806883735735,
+          "uniform_volume_centroid_lateral_m": 0.01850367519105078,
+          "oriented_volume_m3": 5.871329830808196
+        },
+        "SS_left": {
+          "index": 92,
+          "time_s": 0.7645946145057678,
+          "target_time_s": 0.7626,
+          "contacts": [
+            "left"
+          ],
+          "lateral_role_origins_m": {
+            "pelvis": -0.16133428060298793,
+            "chest": -0.07424709302083833,
+            "head": -0.018873972862914916,
+            "tail_tip": 0.11906702456647197
+          },
+          "trunk_vertex_mean_lateral_m": -0.017069661597204105,
+          "uniform_volume_centroid_lateral_m": -0.06146059510087758,
+          "oriented_volume_m3": 5.723874390709676
+        },
+        "DS_right": {
+          "index": 166,
+          "time_s": 1.3795945644378662,
+          "target_time_s": 1.3776000000000002,
+          "contacts": [
+            "left",
+            "right"
+          ],
+          "lateral_role_origins_m": {
+            "pelvis": -0.12001019670389981,
+            "chest": -0.08749721589697082,
+            "head": -0.03846802933204184,
+            "tail_tip": -0.5110822865960504
+          },
+          "trunk_vertex_mean_lateral_m": -0.012883902558412262,
+          "uniform_volume_centroid_lateral_m": -0.06371482233936329,
+          "oriented_volume_m3": 5.8656694493345745
+        },
+        "SS_right": {
+          "index": 240,
+          "time_s": 1.9945945739746094,
+          "target_time_s": 1.9926000000000001,
+          "contacts": [
+            "right"
+          ],
+          "lateral_role_origins_m": {
+            "pelvis": -0.07910502246113027,
+            "chest": -0.005973648997717511,
+            "head": 0.06365135597229299,
+            "tail_tip": -0.1191494321733183
+          },
+          "trunk_vertex_mean_lateral_m": 0.05634523386404014,
+          "uniform_volume_centroid_lateral_m": 0.01636218084491357,
+          "oriented_volume_m3": 5.729858608309904
+        }
+      }
+    }
+  }
+}
