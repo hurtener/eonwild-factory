@@ -72,7 +72,7 @@
         },
         "neutral_support_profile": {
           "path": "catalog/calibration/allosaurus-engineering-support.v5.json",
-          "sha256": "72a26a7df473a1af150b2b5b59cc49604c5624064ada1d837c593b1492044624"
+          "sha256": "d2b514345b5feb34cd9d3adf6536ea983dabe7191f9cfa0c27a614c5bc1e05f5"
         }
       }
     },

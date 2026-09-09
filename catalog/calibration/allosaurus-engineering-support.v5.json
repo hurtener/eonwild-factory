@@ -26,16 +26,16 @@
   "schema": "eonwild.motion.neutral-support-geometry.v1",
   "sides": {
     "left": {
-      "lower_length_m": 0.3718046826728601,
+      "lower_length_m": 0.7383633011103065,
       "posture_evidence": "source-bound authored standing preparation; engineering calibration, not habitual-pose biology",
       "preferred_support_knee_degrees": 125.00004122295267,
-      "upper_length_m": 0.42167153093789345
+      "upper_length_m": 0.8373933898016139
     },
     "right": {
-      "lower_length_m": 0.3718046826728601,
+      "lower_length_m": 0.7383633011103065,
       "posture_evidence": "source-bound authored standing preparation; engineering calibration, not habitual-pose biology",
       "preferred_support_knee_degrees": 125.00004122295283,
-      "upper_length_m": 0.42167153093789345
+      "upper_length_m": 0.8373933898016139
     }
   },
   "source_geometry_sha256": "efea688cf032a42f731d2bc7aa7e484b081b5047e1f9da21a781dd2003da6e79",
