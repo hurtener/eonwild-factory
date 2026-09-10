@@ -437,10 +437,17 @@ class CanonicalConstantSkinTargetLaw:
                     boundary_residuals_m=boundary_residuals,
                     _token=_BUILD_TOKEN,
                 )
-            for phase in (
+            validation_phases = [
                 provider.anchor_for("left").touchdown_phase_s,
                 provider.anchor_for("right").touchdown_phase_s,
-            ):
+            ]
+            if law_id == _JOINT_CONTACT_LAW:
+                period = 2.0 * calibration_query._locomotion_gait.step_period_s
+                validation_phases.extend(
+                    (offset + period * calibration_query._locomotion_gait.duty_factor) % period
+                    for offset in (0.0, calibration_query._locomotion_gait.step_period_s)
+                )
+            for phase in validation_phases:
                 checked = law._observe_at(phase, query=calibration_query)
                 if isinstance(checked, ConstantSkinTargetUnavailable):
                     raise ContractError(
@@ -900,17 +907,20 @@ class CanonicalConstantSkinTargetLaw:
         if isinstance(nominal, SourceMotionUnavailable):
             raise _source_unavailable_error(nominal)
         row = _thaw(nominal.row)
-        declared = float(row["feet"][side]["foot_pitch_degrees"])
-        def evaluate(x: np.ndarray) -> JointContactTrial:
+        fixed = {
+            foot_side: np.asarray([
+                row["feet"][foot_side]["foot_pitch_degrees"], 0.0, 0.0, 0.0
+            ], dtype=float)
+            for foot_side in ("left", "right")
+        }
+
+        def controls_for(active_side: str, x: np.ndarray) -> dict[str, Any]:
             envelope = _MAX_CORRECTION_BODY_HEIGHTS * query.context.body_height
             if np.linalg.norm(x[2:]) > envelope:
                 raise ContractError("joint contact target offset exceeds body-height envelope")
             controls = {}
             for foot_side in ("left", "right"):
-                source_foot = row["feet"][foot_side]
-                values = x if foot_side == side else np.asarray([
-                    source_foot["foot_pitch_degrees"], 0.0, 0.0, 0.0
-                ])
+                values = x if foot_side == active_side else fixed[foot_side]
                 controls[foot_side] = {
                     "authored_pitch_degrees": float(values[0]),
                     "foot_counterrotation_degrees": float(values[1]),
@@ -919,45 +929,65 @@ class CanonicalConstantSkinTargetLaw:
                         + query.context.up * float(values[3])
                     ).tolist(),
                 }
+            return controls
+
+        def evaluate(active_side: str, x: np.ndarray) -> JointContactTrial:
+            controls = controls_for(active_side, x)
             solved = query.evaluate_with_joint_contact_controls(
                 time_s, controls, side="left_limit"
             )
             if isinstance(solved, SourceMotionUnavailable):
                 raise _source_unavailable_error(solved)
-            anchor = self._provider.anchor_for(side)
-            patch = self._patch(self._skin, np.asarray(solved.worlds), side)
-            target = anchor.material_origin_m + query.context.forward * row["feet"][side]["forward_m"]
+            anchor = self._provider.anchor_for(active_side)
+            patch = self._patch(self._skin, np.asarray(solved.worlds), active_side)
+            target = anchor.material_origin_m + query.context.forward * row["feet"][active_side]["forward_m"]
             up_i = int(np.argmax(np.abs(query.context.up)))
             base_gap = anchor.material_origin_m[anchor.lowest_patch_index][up_i] - self._skin.ground
             target = target + query.context.up * (_TARGET_GAP_M - base_gap)
-            active = np.asarray(self._support_patch_indices[side], dtype=int)
-            foot = solved.pose.feet[side]
+            active = np.asarray(self._support_patch_indices[active_side], dtype=int)
+            foot = solved.pose.feet[active_side]
             return JointContactTrial(
                 patch[active] - target[active], target[active],
-                float(self._skin.skin(np.asarray(solved.worlds))[:, up_i].min() - self._skin.ground),
+                float(patch[:, up_i].min() - self._skin.ground),
                 float(foot["foot_target_residual_m"]),
                 float(solved.pose.maximum_unreachable_extension_m),
                 float(solved.pose.maximum_articulation_envelope_violation_degrees),
                 float(foot["solved_foot_pitch_degrees"]),
             )
-        solution = solve_loaded_contact_controls(
-            evaluate, declared_pitch_degrees=declared
+        active_sides = tuple(
+            foot_side for foot_side in ("left", "right")
+            if row["feet"][foot_side]["contact"]
         )
-        trial = solution.trial
-        maximum = float(np.linalg.norm(trial.material_errors_m, axis=1).max())
-        if (
-            maximum > _TOLERANCE_M
-            or trial.minimum_skin_gap_m < _TARGET_GAP_M
-            or trial.ik_residual_m > _IK_TOLERANCE_M
-            or trial.unreachable_extension_m > _IK_TOLERANCE_M
-            or trial.articulation_violation_degrees > _ARTICULATION_TOLERANCE_DEGREES
-        ):
+        for _ in range(2):
+            for active_side in active_sides:
+                solution = solve_loaded_contact_controls(
+                    lambda x, active_side=active_side: evaluate(active_side, x),
+                    declared_pitch_degrees=float(row["feet"][active_side]["foot_pitch_degrees"]),
+                )
+                fixed[active_side] = np.asarray(solution.coordinates, dtype=float)
+
+        controls = controls_for(side, fixed[side])
+        solved = query.evaluate_with_joint_contact_controls(
+            time_s, controls, side="left_limit"
+        )
+        if isinstance(solved, SourceMotionUnavailable):
+            raise _source_unavailable_error(solved)
+        worlds = np.asarray(solved.worlds)
+        up_i = int(np.argmax(np.abs(query.context.up)))
+        full_gap = float(self._skin.skin(worlds)[:, up_i].min() - self._skin.ground)
+        failures = []
+        for active_side in active_sides:
+            trial = evaluate(active_side, fixed[active_side])
+            maximum = float(np.linalg.norm(trial.material_errors_m, axis=1).max())
+            if maximum > _TOLERANCE_M:
+                failures.append(f"{active_side} residual={maximum!r}")
+        if full_gap < _TARGET_GAP_M or failures:
             raise ContractError(
-                "joint contact endpoint is unavailable: "
-                f"side={side} time_s={time_s!r} max_residual_m={maximum!r} "
-                f"minimum_gap_m={trial.minimum_skin_gap_m!r}"
+                "bilateral joint contact endpoint is unavailable: "
+                f"time_s={time_s!r} full_skin_gap_m={full_gap!r} "
+                + "; ".join(failures)
             )
-        return np.asarray(solution.coordinates, dtype=float)
+        return np.asarray(fixed[side], dtype=float)
 
     @staticmethod
     def _failure_reason(side: str, observation: Mapping[str, Any]) -> str | None:
