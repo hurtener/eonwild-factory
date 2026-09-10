@@ -1,0 +1,11 @@
+{
+  "description": "Shared source-owned one-way stance-roll release walk with heel rise distributed from 35 percent of stance and one C2-supported roll release after toe-off. Controls are authored engineering values.",
+  "id": "heavy-biped.shared-adult-walk-visual-iteration.v11",
+  "program": "grounded_gait",
+  "program_profile": {
+    "path": "catalog/programs/heavy-biped.shared-adult-walk-visual-iteration.v13.json",
+    "sha256": "22c22412c6a1d7875ab828a212b7937942fa09366c63804dddd065cf714237b0"
+  },
+  "schema": "eonwild.motion.motion-intent.v2",
+  "version": 11
+}

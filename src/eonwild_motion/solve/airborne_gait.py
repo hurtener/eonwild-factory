@@ -1007,14 +1007,33 @@ def solve_airborne_plan_sample(
         contact_frame = _qmul(outward_yaw, contact_counterrotation_q)
         yawed_tip_offset = np.asarray(
             _qrotate(outward_yaw, tuple(initial_tip_offset)))
-        stance_roll_gain = (1.0 if foot_plan["contact"] else support_lock)
+        early_swing_roll_release = (
+            1.0 if foot_plan["contact"] else
+            1.0 - _smooth(min(1.0, swing_phase / 0.18))
+        )
+        authored_push_off_raw = plan.get("parameters", {}).get(
+            "push_off_pitch_degrees")
+        if context.stance_roll_carrier is not None and (
+                isinstance(authored_push_off_raw, bool)
+                or not isinstance(authored_push_off_raw, (int, float))
+                or not math.isfinite(authored_push_off_raw)
+                or not 0.0 <= authored_push_off_raw <= 60.0):
+            raise ContractError(
+                "stance roll carrier requires authored grounded push-off")
+        authored_push_off = (0.0 if authored_push_off_raw is None
+                             else float(authored_push_off_raw))
+        stance_roll_degrees = (
+            None if context.stance_roll_carrier is None else
+            float(foot_plan["foot_pitch_degrees"]) if foot_plan["contact"] else
+            authored_push_off * early_swing_roll_release
+        )
 
         def pitch_candidate(degrees, world_metatarsus_target=None):
             candidate_q = _qrotvec(tuple(lateral * math.radians(degrees)))
-            if (material_partition and context.stance_roll_carrier
-                    and stance_roll_gain > 0.0):
+            if (material_partition and stance_roll_degrees is not None
+                    and abs(stance_roll_degrees) > 0.0):
                 carried_pitch = _qrotvec(tuple(
-                    lateral * math.radians(degrees * stance_roll_gain)))
+                    lateral * math.radians(stance_roll_degrees)))
                 rolled_tip_offset = np.asarray(_qrotate(
                     _qmul(contact_frame, carried_pitch), tuple(initial_tip_offset)))
                 candidate_foot = nominal_foot + yawed_tip_offset - rolled_tip_offset
@@ -1186,8 +1205,7 @@ def solve_airborne_plan_sample(
             # and digit flex. No per-bone translation/scale is introduced.
             free_pitch = _qrotvec(tuple(lateral * math.radians(foot_plan.get("pad_pitch_degrees", 0.) * (1 - support_lock))))
             contact_pitch = contact_counterrotation_q
-            stance_roll = (solved_pitch * stance_roll_gain
-                           if context.stance_roll_carrier else 0.0)
+            stance_roll = stance_roll_degrees or 0.0
             stance_pitch = _qrotvec(tuple(lateral * math.radians(stance_roll)))
             foot_world = _qmul(
                 outward_yaw,
@@ -1204,7 +1222,8 @@ def solve_airborne_plan_sample(
         # these constraints smoothly after lift and restore before land.
         for tc in toes[side]:
             if material_partition and not (
-                    context.stance_roll_carrier and stance_roll_gain > 0.0):
+                    stance_roll_degrees is not None
+                    and abs(stance_roll_degrees) > 0.0):
                 # Calibrated FK, not a nearly straight two-link toe IK:
                 # at full support the fixed foot frame plus zero local
                 # flex makes EVERY toe landmark stationary. During swing
