@@ -42,6 +42,7 @@ _CONSTANT_LAW = "canonical_constant_skin_targets.v1"
 _FRAME_MAPPING_TOLERANCE_M = 1e-10
 _FRAME_MAPPING_MAX_ITERATIONS = 40
 _FRAME_MAPPING_DAMPING = 0.5
+_SUPPORT_BAND_M = 0.001
 _BUILD_TOKEN = object()
 
 
@@ -105,6 +106,7 @@ class CanonicalConstantSkinTargetLaw:
         *,
         law_id: str = _CONSTANT_LAW,
         local_material_references: Mapping[str, np.ndarray] | None = None,
+        support_patch_indices: Mapping[str, tuple[int, ...]] | None = None,
         boundary_residuals_m: Mapping[str, Mapping[str, float]] | None = None,
         _token: object | None = None,
     ) -> None:
@@ -130,10 +132,28 @@ class CanonicalConstantSkinTargetLaw:
             self._local_material_references = MappingProxyType(
                 {side: _readonly_vector(local_material_references[side]) for side in ("left", "right")}
             )
+            if support_patch_indices is None or set(support_patch_indices) != {"left", "right"}:
+                raise ContractError("semantic foot-frame law requires bilateral frozen support membership")
+            frozen_support = {}
+            for side in ("left", "right"):
+                indices = tuple(int(value) for value in support_patch_indices[side])
+                patch_count = len(provider.anchor_for(side).material_vertex_indices)
+                if len(indices) < 3 or len(set(indices)) != len(indices) or any(
+                    value < 0 or value >= patch_count for value in indices
+                ):
+                    raise ContractError(
+                        "semantic foot-frame support membership requires at least "
+                        f"three distinct valid material vertices: side={side} count={len(indices)}"
+                    )
+                frozen_support[side] = indices
+            self._support_patch_indices = MappingProxyType(frozen_support)
         else:
             if local_material_references is not None:
                 raise ContractError("constant skin target law does not accept foot-frame references")
             self._local_material_references = None
+            if support_patch_indices is not None:
+                raise ContractError("constant skin target law does not accept support membership")
+            self._support_patch_indices = None
         self._boundary_residuals_m = _freeze_data(
             {} if boundary_residuals_m is None else boundary_residuals_m
         )
@@ -218,6 +238,14 @@ class CanonicalConstantSkinTargetLaw:
                 if self._local_material_references is None
                 else {
                     side: self._local_material_references[side].tolist()
+                    for side in ("left", "right")
+                }
+            ),
+            "support_patch_indices": (
+                None
+                if self._support_patch_indices is None
+                else {
+                    side: list(self._support_patch_indices[side])
                     for side in ("left", "right")
                 }
             ),
@@ -324,6 +352,9 @@ class CanonicalConstantSkinTargetLaw:
             references = cls._build_local_material_references(
                 calibration_query, provider, skin
             )
+            support_indices = cls._build_support_patch_indices(
+                calibration_query, provider
+            )
             boundary_residuals = cls._validate_foot_frame_boundaries(
                 calibration_query, provider, skin, references
             )
@@ -335,6 +366,7 @@ class CanonicalConstantSkinTargetLaw:
                 constants,
                 law_id=law_id,
                 local_material_references=references,
+                support_patch_indices=support_indices,
                 boundary_residuals_m=boundary_residuals,
                 _token=_BUILD_TOKEN,
             )
@@ -395,6 +427,30 @@ class CanonicalConstantSkinTargetLaw:
                     f"constant skin target calibration failed: {checked.reason}"
                 )
         return law
+
+    @staticmethod
+    def _build_support_patch_indices(
+        query: SourceMotionQuery,
+        provider: CanonicalSupportAnchorProvider,
+    ) -> dict[str, tuple[int, ...]]:
+        """Freeze canonical touchdown support membership before any trial solve."""
+        up_index = int(np.argmax(np.abs(query.context.up)))
+        result = {}
+        for side in ("left", "right"):
+            anchor = provider.anchor_for(side)
+            origin = anchor.material_origin_m
+            floor = float(origin[:, up_index].min())
+            selected = []
+            seen_vertices = set()
+            for index in np.flatnonzero(
+                origin[:, up_index] <= floor + _SUPPORT_BAND_M
+            ):
+                vertex_id = anchor.material_vertex_indices[int(index)]
+                if vertex_id not in seen_vertices:
+                    selected.append(int(index))
+                    seen_vertices.add(vertex_id)
+            result[side] = tuple(selected)
+        return result
 
     @staticmethod
     def _foot_frame(
@@ -642,6 +698,7 @@ class CanonicalConstantSkinTargetLaw:
         residuals = {
             side: np.full(3, math.inf) for side in ("left", "right")
         }
+        loaded_max_residuals = {side: math.inf for side in ("left", "right")}
         for _ in range(_FRAME_MAPPING_MAX_ITERATIONS):
             correction_norms = {
                 side: float(np.linalg.norm(value))
@@ -666,10 +723,13 @@ class CanonicalConstantSkinTargetLaw:
                 patch = self._patch(self._skin, worlds, side)
                 if support_targets[side] is not None:
                     target_patch = support_targets[side]
-                    active = patch[:, up_index] <= patch[:, up_index].min() + 0.001
+                    active = np.asarray(self._support_patch_indices[side], dtype=int)
+                    vertex_errors = target_patch[active] - patch[active]
                     error = 0.5 * (
-                        (target_patch[active] - patch[active]).max(0)
-                        + (target_patch[active] - patch[active]).min(0)
+                        vertex_errors.max(0) + vertex_errors.min(0)
+                    )
+                    loaded_max_residuals[side] = float(
+                        np.linalg.norm(vertex_errors, axis=1).max()
                     )
                     gap = float(patch[:, up_index].min() - self._skin.ground)
                     error -= query.context.up * float(error @ query.context.up)
@@ -703,6 +763,11 @@ class CanonicalConstantSkinTargetLaw:
                 "material_mapping_residual_m": float(
                     np.linalg.norm(residuals[side])
                 ),
+                "loaded_material_max_residual_m": (
+                    loaded_max_residuals[side]
+                    if row["feet"][side]["contact"]
+                    else 0.0
+                ),
                 "gap_m": float(patch[:, up_index].min() - self._skin.ground),
                 "pose": pose,
                 "row": row,
@@ -718,6 +783,7 @@ class CanonicalConstantSkinTargetLaw:
             observation["ik_target_residual_m"],
             observation["unreachable_extension_m"],
             observation["articulation_violation_degrees"],
+            observation.get("loaded_material_max_residual_m", 0.0),
         )
         if not all(math.isfinite(float(value)) for value in numeric):
             return f"{side} pointwise geometry contains non-finite values"
@@ -727,7 +793,10 @@ class CanonicalConstantSkinTargetLaw:
             and mapping_residual > _FRAME_MAPPING_TOLERANCE_M
         ):
             return f"{side} semantic foot-frame mapping did not converge"
-        if observation["loaded"] and observation["residual_m"] > _TOLERANCE_M:
+        loaded_residual = observation.get(
+            "loaded_material_max_residual_m", observation["residual_m"]
+        )
+        if observation["loaded"] and loaded_residual > _TOLERANCE_M:
             return f"{side} loaded residual exceeds refinement tolerance"
         numerical_gap_tolerance = (
             _FRAME_MAPPING_TOLERANCE_M
@@ -857,6 +926,10 @@ class CanonicalConstantSkinTargetLaw:
                 observation["material_mapping_residual_m"] = float(
                     value["material_mapping_residual_m"]
                 )
+            if "loaded_material_max_residual_m" in value:
+                observation["loaded_material_max_residual_m"] = float(
+                    value["loaded_material_max_residual_m"]
+                )
             observations[side] = observation
             reason = self._failure_reason(side, observation)
             if reason is not None:
@@ -933,7 +1006,32 @@ class CanonicalConstantSkinTargetLaw:
             "binding_sha256": self._law_binding_sha256,
             "material_reference": "provider-fixed full-skin vertex in semantic MTP local frame",
             "swing_target": "E_declared(t) + R_declared(t) * local_material_reference",
-            "support_target": "immutable canonical full-skin material anchor patch",
+            "support_target": "immutable canonical material support subset; full sole/toe skin floor",
+            "loaded_support_membership": {
+                "selection": "canonical touchdown vertices within fixed support band",
+                "support_band_m": _SUPPORT_BAND_M,
+                "sides": {
+                    side: {
+                        "count": len(self._support_patch_indices[side]),
+                        "region_counts": {
+                            "sole": sum(
+                                index < len(self._skin.foot_regions[side]["sole"])
+                                for index in self._support_patch_indices[side]
+                            ),
+                            "toe": sum(
+                                index >= len(self._skin.foot_regions[side]["sole"])
+                                for index in self._support_patch_indices[side]
+                            ),
+                        },
+                        "patch_indices_sha256": hashlib.sha256(
+                            np.asarray(
+                                self._support_patch_indices[side], dtype="<i8"
+                            ).tobytes()
+                        ).hexdigest(),
+                    }
+                    for side in ("left", "right")
+                },
+            },
             "boundary_residuals_m": _thaw(self._boundary_residuals_m),
             "mapping_tolerance_m": _FRAME_MAPPING_TOLERANCE_M,
             "correction_envelope_body_heights": _MAX_CORRECTION_BODY_HEIGHTS,

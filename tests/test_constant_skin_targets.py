@@ -122,6 +122,22 @@ def test_semantic_foot_frame_clearance_allows_only_mapping_numerical_error():
     ) == "left swing clearance is below target gap"
 
 
+def test_semantic_foot_frame_loaded_gate_uses_max_frozen_vertex_residual():
+    observation = {
+        "loaded": True,
+        "residual_m": 0.0,
+        "material_mapping_residual_m": 0.0,
+        "loaded_material_max_residual_m": 0.001,
+        "minimum_gap_m": 0.0001,
+        "ik_target_residual_m": 0.0,
+        "unreachable_extension_m": 0.0,
+        "articulation_violation_degrees": 0.0,
+    }
+    assert CanonicalConstantSkinTargetLaw._failure_reason(
+        "left", observation
+    ) == "left loaded residual exceeds refinement tolerance"
+
+
 def test_semantic_foot_frame_contact_boundary_is_history_independent_and_continuous():
     inputs = _inputs()
     law = _build_semantic_foot_frame(inputs)

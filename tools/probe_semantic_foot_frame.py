@@ -104,8 +104,20 @@ def probe(law, plan):
                 "contacts": {side: bool(value.row["feet"][side]["contact"]) for side in ("left", "right")},
                 "corrections_m": {side: list(map(float, value.corrections_m[side])) for side in ("left", "right")},
                 "minimum_gaps_m": {side: float(value.observations[side]["minimum_gap_m"]) for side in ("left", "right")},
+                "loaded_material_max_residuals_m": {
+                    side: float(
+                        value.observations[side][
+                            "loaded_material_max_residual_m"
+                        ]
+                    )
+                    for side in ("left", "right")
+                },
             })
-    return {"boundaries": boundaries, "samples": sample_rows}
+    return {
+        "boundaries": boundaries,
+        "loaded_support_membership": law.receipt()["loaded_support_membership"],
+        "samples": sample_rows,
+    }
 
 
 def main(argv):
