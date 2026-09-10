@@ -1,0 +1,11 @@
+{
+  "description": "Shared lower-recovery walk with rate-limited C2 metatarsal return through 0.9 swing and reduced 22-degree toe-off for ankle-silhouette review. Controls are authored engineering values.",
+  "id": "heavy-biped.shared-adult-walk-visual-iteration.v6",
+  "program": "grounded_gait",
+  "program_profile": {
+    "path": "catalog/programs/heavy-biped.shared-adult-walk-visual-iteration.v8.json",
+    "sha256": "67522407136a077a6e0b88d3882a371b35d6db32105b522109155ad3e05027a4"
+  },
+  "schema": "eonwild.motion.motion-intent.v2",
+  "version": 6
+}
