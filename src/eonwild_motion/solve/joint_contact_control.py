@@ -17,6 +17,11 @@ from .minimax_contact import minimum_enclosing_residual_ball
 
 JOINT_CONTACT_POLICY_ID = "source_joint_contact_minimax.v1"
 LOADED_MATERIAL_TOLERANCE_M = 0.0002
+_MINIMUM_SKIN_GAP_M = 0.0001
+_IK_RESIDUAL_TOLERANCE_M = 0.001
+_UNREACHABLE_EXTENSION_TOLERANCE_M = 0.001
+_ARTICULATION_TOLERANCE_DEGREES = 1e-8
+_COUNTERROTATION_BOUNDS_DEGREES = (-45.0, 45.0)
 _ANGLE_STEP_DEGREES = 0.01
 _TARGET_STEP_M = 1e-5
 _MAX_GAUSS_NEWTON_ITERATIONS = 18
@@ -74,16 +79,99 @@ def _unique_material_rows(value: JointContactTrial) -> np.ndarray:
 
 def _hard_feasible(value: JointContactTrial) -> bool:
     return (
-        value.minimum_skin_gap_m >= 0.0001
-        and value.ik_residual_m <= 0.001
-        and value.unreachable_extension_m <= 0.001
-        and value.articulation_violation_degrees <= 1e-8
+        value.minimum_skin_gap_m >= _MINIMUM_SKIN_GAP_M
+        and value.ik_residual_m <= _IK_RESIDUAL_TOLERANCE_M
+        and value.unreachable_extension_m <= _UNREACHABLE_EXTENSION_TOLERANCE_M
+        and value.articulation_violation_degrees <= _ARTICULATION_TOLERANCE_DEGREES
     )
 
 
 def _max_error(value: JointContactTrial) -> float:
     _admit_trial(value)
     return float(np.linalg.norm(value.material_errors_m, axis=1).max())
+
+
+def _hard_violation(value: JointContactTrial) -> np.ndarray:
+    """Return normalized positive hard-gate violations in a fixed order."""
+    raw = np.asarray(
+        (
+            _MINIMUM_SKIN_GAP_M - value.minimum_skin_gap_m,
+            value.ik_residual_m - _IK_RESIDUAL_TOLERANCE_M,
+            value.unreachable_extension_m - _UNREACHABLE_EXTENSION_TOLERANCE_M,
+            value.articulation_violation_degrees - _ARTICULATION_TOLERANCE_DEGREES,
+        ),
+        dtype=float,
+    )
+    scales = np.asarray(
+        (
+            _MINIMUM_SKIN_GAP_M,
+            _IK_RESIDUAL_TOLERANCE_M,
+            _UNREACHABLE_EXTENSION_TOLERANCE_M,
+            _ARTICULATION_TOLERANCE_DEGREES,
+        ),
+        dtype=float,
+    )
+    return np.maximum(raw, 0.0) / scales
+
+
+def _trial_merit(value: JointContactTrial) -> tuple[object, ...]:
+    """Order trials by hard feasibility, then violation, then material error."""
+    violation = _hard_violation(value)
+    return (
+        0 if _hard_feasible(value) else 1,
+        float(violation.max()),
+        float(violation.sum()),
+        tuple(float(item) for item in violation),
+        _max_error(value),
+    )
+
+
+def _bounded_stencil(
+    evaluate: Callable[[np.ndarray], JointContactTrial],
+    x: np.ndarray,
+    coordinate: int,
+    step: float,
+    base: JointContactTrial,
+) -> tuple[JointContactTrial, JointContactTrial, float, float]:
+    """Evaluate a finite-difference stencil without leaving the known domain."""
+    if coordinate == 1:
+        lower, upper = _COUNTERROTATION_BOUNDS_DEGREES
+        minus_step = min(step, max(0.0, float(x[coordinate] - lower)))
+        plus_step = min(step, max(0.0, float(upper - x[coordinate])))
+    else:
+        minus_step = plus_step = step
+
+    if plus_step:
+        plus = x.copy()
+        plus[coordinate] += plus_step
+        plus_trial = evaluate(plus)
+        _admit_trial(plus_trial)
+    else:
+        plus_trial = base
+    if minus_step:
+        minus = x.copy()
+        minus[coordinate] -= minus_step
+        minus_trial = evaluate(minus)
+        _admit_trial(minus_trial)
+    else:
+        minus_trial = base
+    return plus_trial, minus_trial, plus_step, minus_step
+
+
+def _finite_difference(
+    plus: np.ndarray,
+    minus: np.ndarray,
+    plus_step: float,
+    minus_step: float,
+) -> np.ndarray:
+    """Differentiate central, asymmetric, or one-sided bounded samples."""
+    if plus_step and minus_step:
+        return (plus - minus) / (plus_step + minus_step)
+    if plus_step:
+        return (plus - minus) / plus_step
+    if minus_step:
+        return (plus - minus) / minus_step
+    return np.zeros_like(plus, dtype=float)
 
 
 def solve_fixed_authored_pitch(
@@ -103,19 +191,39 @@ def solve_fixed_authored_pitch(
     _admit_trial(best)
     for _ in range(_MAX_GAUSS_NEWTON_ITERATIONS):
         unique = _unique_material_rows(best)
-        residual = np.asarray(best.material_errors_m)[unique].reshape(-1)
         columns = []
-        for local, coordinate in enumerate((1, 2, 3)):
-            plus, minus = x.copy(), x.copy()
-            plus[coordinate] += steps[local]
-            minus[coordinate] -= steps[local]
-            p, m = evaluate(plus), evaluate(minus)
-            _admit_trial(p); _admit_trial(m)
-            columns.append(
-                (np.asarray(p.material_errors_m)[unique].reshape(-1)
-                 - np.asarray(m.material_errors_m)[unique].reshape(-1))
-                / (2 * steps[local])
-            )
+        if _hard_feasible(best):
+            residual = np.asarray(best.material_errors_m)[unique].reshape(-1)
+            for local, coordinate in enumerate((1, 2, 3)):
+                p, m, plus_step, minus_step = _bounded_stencil(
+                    evaluate, x, coordinate, steps[local], best
+                )
+                columns.append(
+                    _finite_difference(
+                        np.asarray(p.material_errors_m)[unique].reshape(-1),
+                        np.asarray(m.material_errors_m)[unique].reshape(-1),
+                        plus_step,
+                        minus_step,
+                    )
+                )
+        else:
+            # Restore the callback's hard gates before optimizing material
+            # residuals.  This uses the same bounded coordinates and line
+            # search as the material solve, so a near-boundary GN step can
+            # continue to an actually evaluated feasible trial.
+            residual = _hard_violation(best)
+            for local, coordinate in enumerate((1, 2, 3)):
+                p, m, plus_step, minus_step = _bounded_stencil(
+                    evaluate, x, coordinate, steps[local], best
+                )
+                columns.append(
+                    _finite_difference(
+                        _hard_violation(p),
+                        _hard_violation(m),
+                        plus_step,
+                        minus_step,
+                    )
+                )
         jacobian = np.column_stack(columns)
         scaled = jacobian * scale[None, :]
         delta = np.linalg.lstsq(scaled, -residual, rcond=1e-6)[0]
@@ -124,10 +232,10 @@ def solve_fixed_authored_pitch(
         for fraction in (1.0, 0.5, 0.25, 0.125, 0.0625, 0.03125, 0.015625):
             candidate = x.copy()
             candidate[1:] += fraction * delta * scale
-            candidate[1] = float(np.clip(candidate[1], -45.0, 45.0))
+            candidate[1] = float(np.clip(candidate[1], *_COUNTERROTATION_BOUNDS_DEGREES))
             trial = evaluate(candidate)
             _admit_trial(trial)
-            if _hard_feasible(trial) and _max_error(trial) < _max_error(best):
+            if _trial_merit(trial) < _trial_merit(best):
                 x, best, accepted = candidate, trial, True
                 break
         if not accepted:
@@ -140,14 +248,16 @@ def solve_fixed_authored_pitch(
         ball = minimum_enclosing_residual_ball(best.material_errors_m)
         columns = []
         for coordinate in (2, 3):
-            plus, minus = x.copy(), x.copy()
-            plus[coordinate] += _TARGET_STEP_M
-            minus[coordinate] -= _TARGET_STEP_M
-            p, m = evaluate(plus), evaluate(minus)
+            p, m, plus_step, minus_step = _bounded_stencil(
+                evaluate, x, coordinate, _TARGET_STEP_M, best
+            )
             columns.append(
-                (np.asarray(p.material_errors_m).mean(axis=0)
-                 - np.asarray(m.material_errors_m).mean(axis=0))
-                / (2 * _TARGET_STEP_M)
+                _finite_difference(
+                    np.asarray(p.material_errors_m).mean(axis=0),
+                    np.asarray(m.material_errors_m).mean(axis=0),
+                    plus_step,
+                    minus_step,
+                )
             )
         translation_jacobian = np.column_stack(columns)
         shift = np.linalg.lstsq(
@@ -157,7 +267,7 @@ def solve_fixed_authored_pitch(
         candidate[2:4] += shift
         trial = evaluate(candidate)
         _admit_trial(trial)
-        if _hard_feasible(trial) and _max_error(trial) < _max_error(best):
+        if _trial_merit(trial) < _trial_merit(best):
             x, best = candidate, trial
         else:
             break

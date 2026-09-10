@@ -1,12 +1,83 @@
 import numpy as np
+import pytest
 
 from test_constant_skin_targets import _inputs
+from eonwild_motion.errors import ContractError
 
 from eonwild_motion.solve.joint_contact_control import (
     JointContactTrial,
     quintic_boundary_transport,
     solve_fixed_authored_pitch,
 )
+
+
+def test_infeasible_seed_restores_hard_feasibility_before_material_merit():
+    targets = np.asarray([[0., 0., 0.], [1., 0., 0.], [2., 0., 0.]])
+
+    def evaluate(x):
+        u = x[1] / 5.0
+        errors = np.asarray([
+            [0.000199 + 0.0000005 * u, 0., 0.],
+            [0.000199 * (1. - u), 0., 0.],
+            [0.000199 * (1. - u), 0., 0.],
+        ])
+        return JointContactTrial(errors, targets, 0.0001 * u, 0., 0., 0., x[0])
+
+    solved = solve_fixed_authored_pitch(evaluate, authored_pitch_degrees=28.)
+    maximum = np.linalg.norm(solved.trial.material_errors_m, axis=1).max()
+    assert solved.coordinates[1] == pytest.approx(5.0)
+    assert solved.trial.minimum_skin_gap_m >= 0.0001
+    assert maximum <= 0.0002
+
+
+@pytest.mark.parametrize("seed_counterrotation", (-45.0, 45.0))
+def test_counterrotation_boundary_uses_only_valid_finite_difference_samples(
+    seed_counterrotation,
+):
+    targets = np.asarray([[0., 0., 0.], [1., 0., 0.], [2., 0., 0.]])
+    calls = []
+
+    def evaluate(x):
+        calls.append(float(x[1]))
+        if abs(x[1]) > 45.0:
+            raise AssertionError(f"counterrotation outside hard domain: {x[1]}")
+        return JointContactTrial(
+            np.asarray([[0.0001, 0., 0.]] * 3),
+            targets,
+            0.0001,
+            0.,
+            0.,
+            0.,
+            x[0],
+        )
+
+    solved = solve_fixed_authored_pitch(
+        evaluate,
+        authored_pitch_degrees=28.,
+        seed=(seed_counterrotation, 0., 0.),
+    )
+    assert solved.coordinates[1] == pytest.approx(seed_counterrotation)
+    assert max(abs(value) for value in calls) <= 45.0
+
+
+def test_translation_envelope_errors_are_propagated_from_callback():
+    targets = np.asarray([[0., 0., 0.], [1., 0., 0.], [2., 0., 0.]])
+
+    def evaluate(x):
+        if abs(float(x[2])) > 1e-6:
+            raise ContractError("translation envelope rejected candidate")
+        return JointContactTrial(
+            np.asarray([[0.0001, 0., 0.]] * 3),
+            targets,
+            0.0001,
+            0.,
+            0.,
+            0.,
+            x[0],
+        )
+
+    with pytest.raises(ContractError, match="translation envelope rejected candidate"):
+        solve_fixed_authored_pitch(evaluate, authored_pitch_degrees=28.)
 
 
 def test_minimax_fit_does_not_weight_duplicate_seam_vertices():
