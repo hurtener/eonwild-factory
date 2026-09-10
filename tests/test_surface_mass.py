@@ -37,6 +37,7 @@ def profile() -> dict:
                 "node": "a",
                 "mass_fraction": 0.25,
                 "bind_world_determinant_scale": 1.0,
+                "bind_world_gram_matrix": np.eye(3).tolist(),
                 "com_local_m": [1, 0, 0],
                 "allocation_point_mass_inertia_tensor_fraction_m2": np.diag([0.25, 0.5, 0.75]).tolist(),
             },
@@ -44,6 +45,7 @@ def profile() -> dict:
                 "node": "b",
                 "mass_fraction": 0.75,
                 "bind_world_determinant_scale": 1.0,
+                "bind_world_gram_matrix": np.eye(3).tolist(),
                 "com_local_m": [0, 2, 0],
                 "allocation_point_mass_inertia_tensor_fraction_m2": np.diag([1.0, 1.5, 2.0]).tolist(),
             },
@@ -77,6 +79,7 @@ def test_body_state_labels_per_joint_inertia_as_allocation_approximation() -> No
     value["instance_uniform_scale"] = 2.0
     for binding in value["bindings"]:
         binding["bind_world_determinant_scale"] = 2.0
+        binding["bind_world_gram_matrix"] = (4.0 * np.eye(3)).tolist()
     state = surface_mass_body_state(value, {"a": scaled, "b": scaled})
     assert state["total_mass_kg"] == 100.0
     assert [item["mass_kg"] for item in state["bindings"]] == pytest.approx([25.0, 75.0])
@@ -96,6 +99,14 @@ def test_interval_momentum_matches_uniform_translation() -> None:
     result = surface_mass_interval_momentum(previous, current, 0.2)
     assert result["linear_momentum_kg_mps"] == pytest.approx(100.0 * velocity)
     assert result["centroidal_angular_momentum_kg_m2ps"] == pytest.approx((0.0, 0.0, 0.0))
+
+
+@pytest.mark.parametrize("masses", [[0.0, 0.0], [-1.0, 2.0], [np.nan, 1.0], [np.inf, 1.0]])
+def test_interval_momentum_rejects_invalid_particle_mass(masses) -> None:
+    positions = np.zeros((2, 3))
+    state = {"vertex_mass_kg": np.asarray(masses), "world_positions_m": positions}
+    with pytest.raises(ContractError, match="incompatible"):
+        surface_mass_interval_momentum(state, state, 0.1)
 
 
 def test_area_lumped_rendered_centroid_is_subdivision_invariant() -> None:
@@ -185,6 +196,12 @@ def test_exact_sources_match_compiler_scaled_full_lbs(
     assert vertices["com_m"] == pytest.approx(audit["direct_bind_centroid_m"], abs=2e-9)
     assert float(np.sum(vertices["vertex_mass_kg"])) == pytest.approx(expected_mass, abs=2e-9)
 
+    distorted = {name: np.array(matrix, copy=True) for name, matrix in named_worlds.items()}
+    active_name = profile_value["bindings"][0]["node"]
+    distorted[active_name][:3, :3] = distorted[active_name][:3, :3] @ np.diag([2.0, 0.5, 1.0])
+    with pytest.raises(ContractError, match="linear Gram"):
+        surface_mass_vertex_state(source_bytes, profile_value, distorted)
+
 
 def test_missing_joint_and_bad_mass_sum_fail_closed() -> None:
     with pytest.raises(ContractError, match="missing joint"):
@@ -198,9 +215,24 @@ def test_missing_joint_and_bad_mass_sum_fail_closed() -> None:
 def test_changed_runtime_scale_and_corrupted_source_fail_closed() -> None:
     changed = np.eye(4)
     changed[:3, :3] *= 1.1
-    with pytest.raises(ContractError, match="uniform geometry scale"):
+    with pytest.raises(ContractError, match="linear Gram"):
         surface_mass_centroid(profile(), {"a": changed, "b": changed})
+    determinant_preserving = np.eye(4)
+    determinant_preserving[:3, :3] = np.diag([2.0, 0.5, 1.0])
+    with pytest.raises(ContractError, match="linear Gram"):
+        surface_mass_centroid(
+            profile(), {"a": determinant_preserving, "b": determinant_preserving}
+        )
     bound = profile()
     bound["identity"] = {"source_sha256": hashlib.sha256(b"expected").hexdigest()}
     with pytest.raises(ContractError, match="differs from profile binding"):
         surface_mass_vertex_state(b"corrupted", bound, {})
+
+
+@pytest.mark.parametrize("mass", [0.0, -1.0, np.nan, np.inf])
+def test_vertex_state_rejects_invalid_profile_mass_before_source_parse(mass) -> None:
+    bound = profile()
+    bound["identity"] = {"source_sha256": hashlib.sha256(b"expected").hexdigest()}
+    bound["mass_model"]["total_mass_kg"] = mass
+    with pytest.raises(ContractError, match="valid total mass"):
+        surface_mass_vertex_state(b"expected", bound, {})

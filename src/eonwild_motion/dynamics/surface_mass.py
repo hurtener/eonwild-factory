@@ -48,6 +48,35 @@ def _column_major_matrix(row: Sequence[float]) -> np.ndarray:
     return value.reshape(4, 4).T
 
 
+def _validate_bound_linear(
+    linear: np.ndarray, binding: Mapping[str, Any]
+) -> None:
+    """Admit animated left rotations while preserving source-bound shape."""
+    try:
+        expected_gram = np.asarray(
+            binding["bind_world_gram_matrix"], dtype=np.float64
+        )
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ContractError(
+            "surface-mass binding has no source-bound linear Gram matrix"
+        ) from exc
+    actual_gram = linear.T @ linear
+    if (
+        expected_gram.shape != (3, 3)
+        or not np.isfinite(expected_gram).all()
+        or not np.isfinite(actual_gram).all()
+        or not np.allclose(
+            actual_gram,
+            expected_gram,
+            rtol=2e-6,
+            atol=4e-8 * max(1.0, float(np.max(np.abs(expected_gram)))),
+        )
+    ):
+        raise ContractError(
+            "surface-mass joint world matrix differs from bound linear Gram matrix"
+        )
+
+
 def _role_paths(value: Any, path: tuple[str, ...] = ()) -> dict[str, list[str]]:
     result: dict[str, list[str]] = {}
     if isinstance(value, str):
@@ -274,6 +303,13 @@ def prepare_surface_mass_proxy(
                 "bind_world_determinant_scale": float(
                     np.cbrt(abs(np.linalg.det(worlds[node_index][:3, :3])))
                 ),
+                "bind_world_gram_matrix": [
+                    [float(value) for value in row]
+                    for row in (
+                        worlds[node_index][:3, :3].T
+                        @ worlds[node_index][:3, :3]
+                    )
+                ],
                 "com_local_m": [float(instance_scale * value) for value in center],
                 "allocation_point_mass_inertia_tensor_fraction_m2": [
                     [float(instance_scale * instance_scale * value) for value in row]
@@ -379,12 +415,7 @@ def surface_mass_body_state(
             raise ContractError("surface-mass binding fraction is invalid")
         linear = matrix[:3, :3]
         source_linear = linear / instance_scale
-        determinant_scale = float(np.cbrt(abs(np.linalg.det(linear))))
-        expected_scale = float(binding["bind_world_determinant_scale"])
-        if determinant_scale <= 0 or not np.isclose(
-            determinant_scale, expected_scale, rtol=2e-6, atol=2e-8 * max(1.0, expected_scale)
-        ):
-            raise ContractError("surface-mass joint world matrix differs from bound uniform geometry scale")
+        _validate_bound_linear(linear, binding)
         local_com = np.asarray(binding["com_local_m"], dtype=np.float64)
         local_inertia = np.asarray(
             binding["allocation_point_mass_inertia_tensor_fraction_m2"], dtype=np.float64
@@ -435,14 +466,16 @@ def surface_mass_vertex_state(
         raise ContractError("surface-mass proxy binding is incomplete") from exc
     if profile.get("schema") != SCHEMA or _digest(source_bytes) != expected_source:
         raise ContractError("surface-mass vertex source differs from profile binding")
+    if not np.isfinite(total_mass_kg) or total_mass_kg <= 0:
+        raise ContractError("surface-mass proxy has no valid total mass")
     source = Glb.from_bytes(source_bytes)
     _, skin, positions, triangles, joints, weights = _validated_inputs(source)
     inverse = np.asarray(
         [_column_major_matrix(row) for row in source.accessor_values(skin["inverseBindMatrices"])],
         dtype=np.float64,
     )
-    expected_scales = {
-        binding["node"]: float(binding["bind_world_determinant_scale"])
+    expected_bindings = {
+        binding["node"]: binding
         for binding in profile["bindings"]
     }
     matrices = []
@@ -453,14 +486,8 @@ def surface_mass_vertex_state(
         matrix = np.asarray(joint_world_matrices[name], dtype=np.float64)
         if matrix.shape != (4, 4) or not np.isfinite(matrix).all():
             raise ContractError("surface-mass joint world matrix is invalid")
-        determinant_scale = float(np.cbrt(abs(np.linalg.det(matrix[:3, :3]))))
-        if name in expected_scales and not np.isclose(
-            determinant_scale,
-            expected_scales[name],
-            rtol=2e-6,
-            atol=2e-8 * max(1.0, expected_scales[name]),
-        ):
-            raise ContractError("surface-mass joint world matrix differs from bound uniform geometry scale")
+        if name in expected_bindings:
+            _validate_bound_linear(matrix[:3, :3], expected_bindings[name])
         matrices.append(matrix @ inverse[len(matrices)])
     transforms = np.asarray(matrices, dtype=np.float64)
     homogeneous = np.column_stack((positions, np.ones(len(positions))))
@@ -512,6 +539,14 @@ def surface_mass_interval_momentum(
         or previous_masses.shape != masses.shape
         or not np.isfinite(before).all()
         or not np.isfinite(after).all()
+        or not np.isfinite(masses).all()
+        or not np.isfinite(previous_masses).all()
+        or np.any(masses < 0)
+        or np.any(previous_masses < 0)
+        or not np.isfinite(masses.sum())
+        or masses.sum() <= 0
+        or not np.isfinite(previous_masses.sum())
+        or previous_masses.sum() <= 0
         or not np.allclose(previous_masses, masses, rtol=0, atol=1e-12)
     ):
         raise ContractError("surface-mass momentum states are incompatible")
