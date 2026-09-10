@@ -143,6 +143,25 @@ def test_transition_clearance_policy_is_additive_and_strict(tmp_path):
         resolve_motion_set(tmp_path, tmp_path / "set.json", "walk")
 
 
+def test_body_support_coordinator_policy_is_additive_and_strict(tmp_path):
+    from eonwild_motion.dynamics.body_support_coordinator import SCHEMA
+
+    baseline, _, motion_set = _documents(tmp_path)
+    baseline["solve_policy"]["body_support_coordinator"] = SCHEMA
+    write_json(tmp_path / "baseline.json", baseline)
+    motion_set["baseline"] = bind(tmp_path, tmp_path / "baseline.json")
+    write_json(tmp_path / "set.json", motion_set)
+    resolved = resolve_motion_set(tmp_path, tmp_path / "set.json", "walk")
+    assert resolved.solve_policy["body_support_coordinator"] == SCHEMA
+
+    baseline["solve_policy"]["body_support_coordinator"] = "unknown"
+    write_json(tmp_path / "baseline.json", baseline)
+    motion_set["baseline"] = bind(tmp_path, tmp_path / "baseline.json")
+    write_json(tmp_path / "set.json", motion_set)
+    with pytest.raises(ContractError, match="supported explicit solve policy"):
+        resolve_motion_set(tmp_path, tmp_path / "set.json", "walk")
+
+
 @pytest.mark.parametrize(
     "field",
     [

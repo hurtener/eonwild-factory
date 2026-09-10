@@ -111,6 +111,15 @@ class SourceFinalGeometryAdapter:
             }
         )
 
+    def law_for_coefficients(
+        self, coefficients: Sequence[float]
+    ) -> CanonicalConstantSkinTargetLaw:
+        """Return the validated query-bound final law without recalibration."""
+        trial = self._bound_trial(coefficients)
+        self._validate_trial_anchor(trial)
+        trial.law.receipt()
+        return trial.law
+
     def __call__(
         self,
         coefficients: tuple[float, ...],
@@ -136,23 +145,16 @@ class SourceFinalGeometryAdapter:
         )
         law_receipt = trial.law.receipt()
         floor_target_gap = float(law_receipt["floor_target_gap_m"])
+        mapping_tolerance = float(law_receipt["mapping_tolerance_m"])
         full_skin = np.asarray(trial.law._skin.skin(worlds), dtype=float)
         up_index = int(np.argmax(np.abs(trial.law._query.context.up)))
-        if (
-            full_skin.ndim != 2
-            or full_skin.shape[1:] != (3,)
-            or not len(full_skin)
-            or not np.isfinite(full_skin).all()
-        ):
-            raise ContractError("source body-support trial full posed skin is invalid")
-        full_skin_gap = float(
-            full_skin[:, up_index].min() - trial.law._skin.ground
+        _require_full_skin_floor(
+            full_skin,
+            up_index=up_index,
+            ground_m=trial.law._skin.ground,
+            target_gap_m=floor_target_gap,
+            numerical_tolerance_m=mapping_tolerance,
         )
-        if full_skin_gap < floor_target_gap:
-            raise ContractError(
-                "source body-support trial full posed skin violates its fixed floor: "
-                f"gap_m={full_skin_gap!r} target_m={floor_target_gap!r}"
-            )
         support_points = []
         for side in ("left", "right"):
             patch = trial.law._patch(trial.law._skin, worlds, side)
@@ -212,6 +214,30 @@ def _coefficients(value: Sequence[float]) -> tuple[float, ...]:
     ):
         raise ContractError("source body-support adapter requires 12 finite coefficients")
     return tuple(float(component) for component in raw)
+
+
+def _require_full_skin_floor(
+    points: np.ndarray,
+    *,
+    up_index: int,
+    ground_m: float,
+    target_gap_m: float,
+    numerical_tolerance_m: float,
+) -> None:
+    if (
+        points.ndim != 2
+        or points.shape[1:] != (3,)
+        or not len(points)
+        or not np.isfinite(points).all()
+    ):
+        raise ContractError("source body-support trial full posed skin is invalid")
+    full_skin_gap = float(points[:, up_index].min() - ground_m)
+    if full_skin_gap + numerical_tolerance_m < target_gap_m:
+        raise ContractError(
+            "source body-support trial full posed skin violates its fixed floor: "
+            f"gap_m={full_skin_gap!r} target_m={target_gap_m!r} "
+            f"numerical_tolerance_m={numerical_tolerance_m!r}"
+        )
 
 
 def _digest(value: Any) -> bool:

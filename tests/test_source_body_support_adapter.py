@@ -9,6 +9,7 @@ from eonwild_motion.dynamics.body_support_coordinator import (
 )
 from eonwild_motion.dynamics.source_body_support_adapter import (
     SourceFinalGeometryAdapter,
+    _require_full_skin_floor,
 )
 from eonwild_motion.errors import ContractError
 from eonwild_motion.solve.constant_skin_targets import CanonicalConstantSkinTargetLaw
@@ -123,6 +124,22 @@ def test_adapter_rejects_unmasked_full_skin_floor_failure(monkeypatch) -> None:
                 coefficients, time_s, adapter.body_control_cycle_s
             ),
             time_s,
+        )
+
+
+def test_full_skin_floor_uses_only_declared_mapping_numerical_allowance() -> None:
+    target = 0.0001
+    tolerance = 1e-10
+    _require_full_skin_floor(
+        np.asarray(((0.0, target - 0.5e-10, 0.0),)),
+        up_index=1, ground_m=0.0, target_gap_m=target,
+        numerical_tolerance_m=tolerance,
+    )
+    with pytest.raises(ContractError, match="fixed floor"):
+        _require_full_skin_floor(
+            np.asarray(((0.0, target - 1.5e-10, 0.0),)),
+            up_index=1, ground_m=0.0, target_gap_m=target,
+            numerical_tolerance_m=tolerance,
         )
 
 

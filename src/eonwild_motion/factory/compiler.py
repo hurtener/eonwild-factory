@@ -13,7 +13,7 @@ from pathlib import Path
 import platform
 import shutil
 import tempfile
-from typing import Any
+from typing import Any, Mapping, Sequence
 
 import numpy as np
 
@@ -75,6 +75,12 @@ from .motion_set import (
     resolve_motion_set_selection,
 )
 from .acquired_reference import packaged_reference, validate_clearance_policy
+from .body_support import (
+    BODY_SUPPORT_POLICY,
+    BodySupportCompilation,
+    body_support_payloads,
+    coordinate_body_support,
+)
 
 SCHEMA = "eonwild.motion.factory-recipe.v1"
 PROGRAMS = ("airborne_gait", "grounded_gait", "supported_action", "gait_transition")
@@ -357,6 +363,95 @@ def engine_fingerprint() -> dict[str, str]:
 
 
 _ENGINE_AT_IMPORT = engine_fingerprint()
+
+
+def _coordinate_selected_body_support(
+    *,
+    resolution: MotionSetResolution | None,
+    snapshots: Mapping[str, bytes],
+    query: SourceMotionQuery,
+    law: CanonicalConstantSkinTargetLaw,
+    plan: Mapping[str, Any],
+    forward_axis: Sequence[float],
+    up_axis: Sequence[float],
+    unavailable_checkpoint: Path | None = None,
+    recipe_bytes: bytes | None = None,
+    engine_identity: Mapping[str, str] | None = None,
+) -> BodySupportCompilation | None:
+    """Route only the explicit shared body-support solve policy."""
+    if resolution is None or "body_support_coordinator" not in resolution.solve_policy:
+        return None
+    if resolution.solve_policy["body_support_coordinator"] != BODY_SUPPORT_POLICY:
+        raise ContractError("motion-set body-support coordinator policy is unsupported")
+    if "rig" not in snapshots or "animal" not in snapshots:
+        raise ContractError(
+            "body-support coordination requires bound rig and animal snapshots"
+        )
+    compilation = coordinate_body_support(
+        source_bytes=snapshots["source"],
+        rig_bytes=snapshots["rig"],
+        animal_bytes=snapshots["animal"],
+        query=query,
+        law=law,
+        plan=plan,
+        forward_axis=forward_axis,
+        up_axis=up_axis,
+    )
+    if compilation.solution.status != "AVAILABLE":
+        if unavailable_checkpoint is not None:
+            if recipe_bytes is None or engine_identity is None:
+                raise ContractError(
+                    "body-support unavailable checkpoint lacks compiler provenance"
+                )
+            _write_body_support_unavailable_checkpoint(
+                unavailable_checkpoint,
+                compilation=compilation,
+                recipe_bytes=recipe_bytes,
+                snapshots=snapshots,
+                engine_identity=engine_identity,
+            )
+        raise ContractError(
+            "body-support coordination unavailable: " + str(compilation.solution.reason)
+        )
+    if compilation.law is None:
+        raise ContractError("body-support coordination omitted its accepted final law")
+    return compilation
+
+
+def _write_body_support_unavailable_checkpoint(
+    checkpoint: Path,
+    *,
+    compilation: BodySupportCompilation,
+    recipe_bytes: bytes,
+    snapshots: Mapping[str, bytes],
+    engine_identity: Mapping[str, str],
+) -> None:
+    """Preserve a source-bound unavailable result before emission can begin."""
+    payloads = body_support_payloads(compilation)
+    manifest = {
+        "schema": "eonwild.motion.body-support-unavailable-checkpoint.v1",
+        "kind": "pre_emission_body_support_diagnostic",
+        "status": "UNAVAILABLE",
+        "technical_status": "BLOCKED",
+        "production_approved": False,
+        "recipe_sha256": digest(recipe_bytes),
+        "inputs": {name: digest(raw) for name, raw in snapshots.items()},
+        "engine_files": dict(engine_identity),
+        "reason": compilation.solution.reason,
+        "files": {name: digest(raw) for name, raw in payloads.items()},
+    }
+    checkpoint.parent.mkdir(parents=True, exist_ok=True)
+    stage = Path(
+        tempfile.mkdtemp(prefix=".body-support-unavailable-", dir=checkpoint.parent)
+    )
+    try:
+        for name, raw in payloads.items():
+            (stage / name).write_bytes(raw)
+        write_json(stage / "manifest.json", manifest)
+        stage.rename(checkpoint)
+    except Exception:
+        shutil.rmtree(stage, ignore_errors=True)
+        raise
 
 
 def compile_recipe(
@@ -649,6 +744,7 @@ def compile_recipe(
     validate_plan(plan, recipe["program"])
     biomechanics = biomechanics_report(animal,plan,actual_semantic_height_m=height) if animal else None
     midpoint_plan = None
+    body_support_compilation = None
     if supported:
         if cubic:
             raise ContractError("source CUBICSPLINE emission requires grounded locomotion")
@@ -875,6 +971,20 @@ def compile_recipe(
                     else "canonical_constant_skin_targets.v1"
                 ),
             )
+        body_support_compilation = _coordinate_selected_body_support(
+            resolution=_motion_set_resolution,
+            snapshots=snapshots,
+            query=query,
+            law=law,
+            plan=plan,
+            forward_axis=forward,
+            up_axis=up,
+            unavailable_checkpoint=checkpoint,
+            recipe_bytes=recipe_bytes,
+            engine_identity=engine_identity,
+        )
+        if body_support_compilation is not None:
+            law = body_support_compilation.law
         emission = emit_source_cubics(
             source, law, plan, root_node=source.name_to_node[roles["root"]]
         )
@@ -975,6 +1085,10 @@ def compile_recipe(
                 "status": "AVAILABLE_AT_ALL_KEYS_STENCILS_AND_MIDPOINTS",
                 **law.receipt(),
             }
+        if body_support_compilation is not None:
+            receipt["body_support_coordination"] = dict(
+                body_support_compilation.receipt
+            )
         if transition_clearance is not None:
             receipt["grounded_transition_clearance"] = {
                 "policy": GROUNDED_TRANSITION_CLEARANCE_POLICY,
@@ -1074,6 +1188,23 @@ def compile_recipe(
             ),
             "runtime.json": json_bytes(checkpoint_runtime),
         }
+        if body_support_compilation is not None:
+            checkpoint_runtime["body_support_coordination"] = {
+                "policy_id": BODY_SUPPORT_POLICY,
+                "status": body_support_compilation.solution.status,
+                "final_law_binding_sha256": body_support_compilation.receipt[
+                    "accepted_binding"
+                ]["final_law_binding_sha256"],
+                "frozen_anchor_sha256": body_support_compilation.receipt[
+                    "frozen_anchor_sha256"
+                ],
+                "emitted_full_mesh_floor": "NOT_RUN",
+                "serialized_dynamics_parity": "NOT_RUN",
+            }
+            checkpoint_payloads["runtime.json"] = json_bytes(checkpoint_runtime)
+            checkpoint_payloads.update(
+                body_support_payloads(body_support_compilation)
+            )
         checkpoint_manifest = {
             "schema": "eonwild.motion.source-cubic-emission-checkpoint.v1",
             "kind": "pre_gate_source_cubic_diagnostic",
@@ -1194,9 +1325,10 @@ def compile_recipe(
             and midpoint_in_place_surface["verdict"] == "PASS"
         )
     )
+    body_support_emitted_ok = body_support_compilation is None
     technical = (refinement_ok and articulation_ok and all(row["status"] == "PASS" for row in evaluated.values()) and
                  all(row["status"] == "PASS" for row in rates.values()) and
-                 all(row["status"] in ("PASS", "NOT_APPLICABLE") for row in continuity.values()) and feasibility["status"] == "PASS" and surface["verdict"] == "PASS" and in_place_surface["verdict"] == "PASS" and midpoint_ok)
+                 all(row["status"] in ("PASS", "NOT_APPLICABLE") for row in continuity.values()) and feasibility["status"] == "PASS" and surface["verdict"] == "PASS" and in_place_surface["verdict"] == "PASS" and midpoint_ok and body_support_emitted_ok)
     validation = {"schema": "eonwild.motion.factory-validation.v1", "technical_status": "PASS" if technical else "BLOCKED",
         "outputs": evaluated, "rotation_rates": rates, "cyclic_continuity": continuity, "solver_feasibility": feasibility, "skinned_contact": surface, "in_place_skinned_contact": in_place_surface,
         "oral_contact": receipt.get("oral_contact"),
@@ -1207,6 +1339,18 @@ def compile_recipe(
             "in_place": midpoint_in_place_surface,
         }
         validation["cubic_midpoint_articulation_envelopes"] = midpoint_articulation
+    if body_support_compilation is not None:
+        validation["body_support_coordination"] = {
+            "source_sampled_dynamics": body_support_compilation.receipt[
+                "source_sampled_dynamics"
+            ],
+            "source_sampled_final_geometry": body_support_compilation.receipt[
+                "source_sampled_final_geometry"
+            ],
+            "emitted_full_mesh_floor": "NOT_RUN",
+            "serialized_dynamics_parity": "NOT_RUN",
+            "status": "BLOCKED_PENDING_EMITTED_MEASUREMENT",
+        }
     if articulation is not None:
         validation["articulation_envelopes"] = articulation
         receipt["final_emitted_articulation_gate"] = "PASS" if articulation_ok else "FAIL"
@@ -1246,6 +1390,15 @@ def compile_recipe(
         if acquired_binding is not None:
             state["authored_material_reference"] = acquired_binding
             receipt["authored_material_reference"] = acquired_binding
+        if body_support_compilation is not None:
+            state["body_support_coordination"] = {
+                "policy_id": BODY_SUPPORT_POLICY,
+                "status": body_support_compilation.solution.status,
+                "source_sampled_dynamics": body_support_compilation.receipt[
+                    "source_sampled_dynamics"
+                ],
+                "serialized_dynamics_parity": "NOT_RUN",
+            }
     if articulation_profile is not None:
         state["articulation_profile"] = articulation_profile.receipt()
     payloads = {"root_motion.glb": root_raw, "in_place.glb": inplace_raw, "plan.json": json_bytes(plan),
@@ -1259,6 +1412,8 @@ def compile_recipe(
     if biomechanics is not None:
         payloads["animal.json"] = snapshots["animal"]
         payloads["biomechanics.json"] = json_bytes(biomechanics)
+    if body_support_compilation is not None:
+        payloads.update(body_support_payloads(body_support_compilation))
     if _motion_set_resolution is not None:
         payloads.update(_motion_set_resolution.payloads)
         payloads["performance-profile.json"] = snapshots["performance_profile"]

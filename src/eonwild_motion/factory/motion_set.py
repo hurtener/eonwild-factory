@@ -94,6 +94,7 @@ def _validate_set(value: Any) -> Mapping[str, Any]:
 
 
 def _validate_baseline(value: Any) -> Mapping[str, Any]:
+    from ..dynamics.body_support_coordinator import SCHEMA as BODY_SUPPORT_POLICY
     from ..solve.gait_response import load_gait_response_policy
 
     common_fields = {
@@ -152,11 +153,13 @@ def _validate_baseline(value: Any) -> Mapping[str, Any]:
         "schema", "representation", "canonical_support_anchors",
         "skin_target_law", "skin_refinement",
     }
+    optional_solve_fields = {
+        "grounded_transition_clearance", "body_support_coordinator"
+    }
     if (
         not isinstance(solve, Mapping)
-        or set(solve) not in (
-            solve_fields, solve_fields | {"grounded_transition_clearance"}
-        )
+        or not solve_fields <= set(solve)
+        or set(solve) - solve_fields - optional_solve_fields
         or solve.get("schema") != "eonwild.motion.solve-policy.v1"
         or solve.get("representation") != "CUBICSPLINE"
         or solve.get("canonical_support_anchors") is not True
@@ -170,6 +173,10 @@ def _validate_baseline(value: Any) -> Mapping[str, Any]:
             "grounded_transition_clearance" in solve
             and solve["grounded_transition_clearance"]
             != "material_floor_scaled_excess.v1"
+        )
+        or (
+            "body_support_coordinator" in solve
+            and solve["body_support_coordinator"] != BODY_SUPPORT_POLICY
         )
     ):
         raise ContractError("motion baseline requires the supported explicit solve policy")
