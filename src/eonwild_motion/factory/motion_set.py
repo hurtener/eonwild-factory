@@ -163,6 +163,7 @@ def _validate_baseline(value: Any) -> Mapping[str, Any]:
         or solve.get("skin_target_law") not in (
             "canonical_constant_skin_targets.v1",
             "canonical_semantic_foot_frame_targets.v2",
+            "canonical_semantic_joint_contact_targets.v3",
         )
         or solve.get("skin_refinement") is not True
         or (

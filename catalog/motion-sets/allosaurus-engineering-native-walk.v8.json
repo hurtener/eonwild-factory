@@ -1,7 +1,7 @@
 {
   "baseline": {
     "path": "catalog/motion-baselines/allosaurus-engineering-locomotion.v8.json",
-    "sha256": "7891204cfc0b4a7048612fb90abb89ab93856707ef2af7f4963f3493829c0ef8"
+    "sha256": "254bcaab85e15d07fac09cb3f125ebfb6e59236093ca61e683e2d8acfaa1bd02"
   },
   "id": "allosaurus-engineering-native-walk-motion-set.v8",
   "motions": [

@@ -93,7 +93,7 @@
     "representation": "CUBICSPLINE",
     "schema": "eonwild.motion.solve-policy.v1",
     "skin_refinement": true,
-    "skin_target_law": "canonical_semantic_foot_frame_targets.v2"
+    "skin_target_law": "canonical_semantic_joint_contact_targets.v3"
   },
   "source": {
     "path": "assets/sha256/2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f.glb",
