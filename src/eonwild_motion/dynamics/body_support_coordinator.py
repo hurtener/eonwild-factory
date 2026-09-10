@@ -19,7 +19,7 @@ import numpy as np
 from ..errors import ContractError
 
 
-SCHEMA = "eonwild.motion.body-support-coordinator.v1"
+SCHEMA = "eonwild.motion.body-support-coordinator.v2"
 COEFFICIENT_COUNT = 12
 COEFFICIENTS = (
     "pelvis_forward_k2_sin",
@@ -87,6 +87,9 @@ class ContactWrenchSolution:
     normalized_moment_residual: float
     kkt_residual: float
     normalized_wrench_residual: tuple[float, float, float, float, float, float]
+    support_dimension: int
+    wrench_rank: int
+    planar_area_m2: float
     reason: str | None = None
 
 
@@ -159,15 +162,27 @@ def periodic_body_delta(
     )
 
 
-def _convex_hull_indices(points: np.ndarray, lateral: np.ndarray, forward: np.ndarray) -> list[int]:
+def _convex_hull_indices(
+    points: np.ndarray, lateral: np.ndarray, forward: np.ndarray
+) -> list[int]:
+    """Select deterministic point, line, or polygon support geometry."""
     projected = np.column_stack((points @ lateral, points @ forward))
-    order = sorted(range(len(points)), key=lambda i: (projected[i, 0], projected[i, 1], i))
-    unique = []
+    order = sorted(
+        range(len(points)),
+        key=lambda i: (
+            float(projected[i, 0]),
+            float(projected[i, 1]),
+            tuple(float(value) for value in points[i]),
+        ),
+    )
+    unique: list[int] = []
     for index in order:
         if not unique or not np.allclose(projected[index], projected[unique[-1]], atol=1e-12, rtol=0):
             unique.append(index)
-    if len(unique) < 3:
-        raise ContractError("support polygon needs at least three distinct points")
+    if not unique:
+        raise ContractError("support geometry needs at least one distinct point")
+    if len(unique) <= 2:
+        return unique
 
     def cross(o: int, a: int, b: int) -> float:
         oa, ob = projected[a] - projected[o], projected[b] - projected[o]
@@ -185,7 +200,7 @@ def _convex_hull_indices(points: np.ndarray, lateral: np.ndarray, forward: np.nd
         upper.append(index)
     hull = lower[:-1] + upper[:-1]
     if len(hull) < 3:
-        raise ContractError("support polygon is degenerate")
+        return [unique[0], unique[-1]]
     return hull
 
 
@@ -241,10 +256,12 @@ def solve_contact_wrench(
     up_axis: Sequence[float] = (0.0, 1.0, 0.0),
     forward_axis: Sequence[float] = (0.0, 0.0, 1.0),
 ) -> ContactWrenchSolution:
-    """Distribute a required centroidal wrench over an actual support hull."""
+    """Distribute a required centroidal wrench over actual support geometry."""
     points = np.asarray(support_points_m, dtype=float)
     if points.ndim != 2 or points.shape[1] != 3 or not np.isfinite(points).all():
         raise ContractError("support points must be finite three-vectors")
+    if len(points) == 0:
+        raise ContractError("support geometry needs at least one distinct point")
     center = _vector(com_m, "center of mass")
     force = _vector(required_force_n, "required force")
     moment = _vector(required_moment_nm, "required moment")
@@ -265,6 +282,22 @@ def solve_contact_wrench(
     forward /= np.linalg.norm(forward)
     lateral = np.cross(up, forward)
     hull = points[_convex_hull_indices(points, lateral, forward)]
+    support_dimension = 0 if len(hull) == 1 else 1 if len(hull) == 2 else 2
+    projected_hull = np.column_stack((hull @ lateral, hull @ forward))
+    planar_area_m2 = 0.0
+    if support_dimension == 2:
+        planar_area_m2 = float(
+            0.5
+            * abs(
+                sum(
+                    projected_hull[index, 0]
+                    * projected_hull[(index + 1) % len(projected_hull), 1]
+                    - projected_hull[(index + 1) % len(projected_hull), 0]
+                    * projected_hull[index, 1]
+                    for index in range(len(projected_hull))
+                )
+            )
+        )
     tangential = friction / math.sqrt(2.0)
     rays = tuple(
         up + tangential * (a * forward + b * lateral)
@@ -277,6 +310,7 @@ def solve_contact_wrench(
             columns.append(np.concatenate((ray, np.cross(point - center, ray))))
             owners.append(point_index)
     matrix = np.column_stack(columns)
+    wrench_rank = int(np.linalg.matrix_rank(matrix))
     target = np.concatenate((force, moment))
     force_scale = mass * 9.80665
     weights = np.diag([1 / force_scale] * 3 + [1 / (force_scale * height)] * 3)
@@ -312,6 +346,9 @@ def solve_contact_wrench(
         normalized_moment_residual=moment_residual,
         kkt_residual=kkt,
         normalized_wrench_residual=tuple(float(value) for value in normalized),
+        support_dimension=support_dimension,
+        wrench_rank=wrench_rank,
+        planar_area_m2=planar_area_m2,
         reason=None if available else "required centroidal wrench is outside the bounded contact wrench cone",
     )
 
