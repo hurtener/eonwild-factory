@@ -1,0 +1,11 @@
+{
+  "description": "Shared authored heel unrolling aligned to the existing 24 percent swing lift ramp. Preserves iteration11 stance, stride, toe-out and recovery amplitudes.",
+  "id": "heavy-biped.shared-adult-walk-visual-iteration.v12",
+  "program": "grounded_gait",
+  "program_profile": {
+    "path": "catalog/programs/heavy-biped.shared-adult-walk-visual-iteration.v14.json",
+    "sha256": "96e118bf240bd0544cf4957feaad1740c846d1ab09d8801005a16ab7061456f4"
+  },
+  "schema": "eonwild.motion.motion-intent.v2",
+  "version": 12
+}

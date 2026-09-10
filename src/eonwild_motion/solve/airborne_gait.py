@@ -1007,9 +1007,20 @@ def solve_airborne_plan_sample(
         contact_frame = _qmul(outward_yaw, contact_counterrotation_q)
         yawed_tip_offset = np.asarray(
             _qrotate(outward_yaw, tuple(initial_tip_offset)))
+        # Coordinate heel unrolling with the lift ramp through source-owned
+        # gait data. Omission preserves the previous .18-swing release.
+        roll_release_fraction = (
+            plan.get("parameters", {}).get("stance_roll_release_fraction", .18)
+            if context.stance_roll_carrier else .18)
+        if context.stance_roll_carrier and (
+                isinstance(roll_release_fraction, bool)
+                or not isinstance(roll_release_fraction, (int, float))
+                or not math.isfinite(roll_release_fraction)
+                or not .1 <= roll_release_fraction <= .5):
+            raise ContractError("invalid source-owned stance roll release fraction")
         early_swing_roll_release = (
             1.0 if foot_plan["contact"] else
-            1.0 - _smooth(min(1.0, swing_phase / 0.18))
+            1.0 - _smooth(min(1.0, swing_phase / roll_release_fraction))
         )
         authored_push_off_raw = plan.get("parameters", {}).get(
             "push_off_pitch_degrees")

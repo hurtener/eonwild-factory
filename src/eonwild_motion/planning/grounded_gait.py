@@ -48,6 +48,7 @@ class GroundedGait:
     knee_bend_plane_outward_degrees: float = 0.0
     foot_outward_yaw_degrees: float | None = None
     stance_roll_carrier: str | None = None
+    stance_roll_release_fraction: float | None = None
     rounded_swing_peak_fraction: float = 0.0
     centered_stance: bool = False
     handoff_phase_fraction: float | None = None
@@ -77,7 +78,7 @@ class GroundedGait:
                     raise ContractError('centered_stance must be boolean')
             elif key in ('toe_recovery_peak_fraction', 'metatarsal_recovery_world_degrees_from_down',
                          'metatarsal_recovery_release_fraction', 'pad_recovery_pitch_degrees',
-                         'foot_outward_yaw_degrees'):
+                         'foot_outward_yaw_degrees', 'stance_roll_release_fraction'):
                 if value is not None and (isinstance(value, bool) or not isinstance(value, (int, float))
                                           or not math.isfinite(value)):
                     raise ContractError(f'grounded optional control {key} must be finite numeric or null')
@@ -85,6 +86,9 @@ class GroundedGait:
                 raise ContractError(f"grounded gait {key} must be finite numeric")
         if self.step_period_s <= 0 or not 0.5 < self.duty_factor < 1:
             raise ContractError("grounded walking requires positive timing and double support")
+        if self.stance_roll_release_fraction is not None:
+            if self.stance_roll_carrier is None or not .1 <= self.stance_roll_release_fraction <= .5:
+                raise ContractError("stance roll release requires its carrier and a fraction in [.1,.5]")
         if not 0 < abs(self.step_length_body_heights) <= 0.6:
             raise ContractError("grounded signed step length must be nonzero and bounded")
         for key in ("touchdown_reach_body_heights", "swing_clearance_body_heights",
