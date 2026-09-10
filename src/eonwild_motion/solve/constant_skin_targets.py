@@ -238,7 +238,47 @@ class CanonicalConstantSkinTargetLaw:
                     if query._authored_material_contact is None
                     else query._authored_material_contact.binding()
                 ),
+                "body_support_control": (
+                    query.body_support_control_receipt()
+                    if hasattr(query, "body_support_control_receipt")
+                    else None
+                ),
             }
+        )
+
+    def frozen_anchor_binding_sha256(self) -> str:
+        """Digest exact immutable anchor/template authority across query rebinds."""
+        return _digest({
+            "provider": self._provider.receipt(),
+            "anchors": {
+                side: {
+                    "origin_m": self._provider.anchor_for(side).material_origin_m.tolist(),
+                    "material_vertex_indices": list(self._provider.anchor_for(side).material_vertex_indices),
+                    "support_positions": (
+                        None if self._support_patch_indices is None
+                        else list(self._support_patch_indices[side])
+                    ),
+                    "local_material_reference": (
+                        None if self._local_material_references is None
+                        else self._local_material_references[side].tolist()
+                    ),
+                }
+                for side in ("left", "right")
+            },
+        })
+
+    def with_query(self, query: SourceMotionQuery) -> "CanonicalConstantSkinTargetLaw":
+        """Rebind one final pose query without recalibrating frozen geometry."""
+        self._validate_integrity()
+        self._validate_actual_query(query, self._provider)
+        return type(self)(
+            query, self._calibration_query, self._provider, self._skin,
+            self._constants, law_id=self._law_id,
+            local_material_references=self._local_material_references,
+            support_patch_indices=self._support_patch_indices,
+            joint_contact_end_controls=self._joint_contact_end_controls,
+            boundary_residuals_m=self._boundary_residuals_m,
+            _token=_BUILD_TOKEN,
         )
 
     def _constants_sha256(self) -> str:
@@ -981,10 +1021,26 @@ class CanonicalConstantSkinTargetLaw:
             maximum = float(np.linalg.norm(trial.material_errors_m, axis=1).max())
             if maximum > _TOLERANCE_M:
                 failures.append(f"{active_side} residual={maximum!r}")
-        if full_gap < _TARGET_GAP_M or failures:
+        final_ik = max(
+            float(solved.pose.feet[foot_side]["foot_target_residual_m"])
+            for foot_side in active_sides
+        )
+        final_extension = float(solved.pose.maximum_unreachable_extension_m)
+        final_articulation = float(
+            solved.pose.maximum_articulation_envelope_violation_degrees
+        )
+        if (
+            full_gap < _TARGET_GAP_M
+            or final_ik > _IK_TOLERANCE_M
+            or final_extension > _IK_TOLERANCE_M
+            or final_articulation > _ARTICULATION_TOLERANCE_DEGREES
+            or failures
+        ):
             raise ContractError(
                 "bilateral joint contact endpoint is unavailable: "
                 f"time_s={time_s!r} full_skin_gap_m={full_gap!r} "
+                f"ik_residual_m={final_ik!r} extension_m={final_extension!r} "
+                f"articulation_degrees={final_articulation!r} "
                 + "; ".join(failures)
             )
         return np.asarray(fixed[side], dtype=float)
