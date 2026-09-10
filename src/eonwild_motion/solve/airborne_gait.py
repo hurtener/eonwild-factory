@@ -827,6 +827,17 @@ def solve_airborne_plan_sample(
         hip, knee, ankle, foot = chain
         foot_plan = row["feet"][side]
         material_partition = "performance" in plan
+        contact_counterrotation = foot_plan.get(
+            "semantic_foot_counterrotation_degrees", 0.0
+        )
+        if (
+            isinstance(contact_counterrotation, bool)
+            or not isinstance(contact_counterrotation, (int, float))
+            or not math.isfinite(float(contact_counterrotation))
+            or abs(float(contact_counterrotation)) > 45.0
+            or (contact_counterrotation and not material_partition)
+        ):
+            raise ContractError("invalid semantic foot counterrotation")
         swing_phase = foot_plan["swing_phase"]
         support_lock = (1.0 if foot_plan["contact"] else
                         1 - _smooth(min(swing_phase, 1 - swing_phase) / .18))
@@ -1048,7 +1059,13 @@ def solve_airborne_plan_sample(
             # Release that frame C2 during swing, allowing authored fold
             # and digit flex. No per-bone translation/scale is introduced.
             free_pitch = _qrotvec(tuple(lateral * math.radians(foot_plan.get("pad_pitch_degrees", 0.) * (1 - support_lock))))
-            foot_world = _qmul(free_pitch, _rotation_from_matrix(base_w[foot]))
+            contact_pitch = _qrotvec(
+                tuple(lateral * math.radians(float(contact_counterrotation)))
+            )
+            foot_world = _qmul(
+                contact_pitch,
+                _qmul(free_pitch, _rotation_from_matrix(base_w[foot])),
+            )
             rot[foot] = _world_rotation(source, w, foot, foot_world)
             w = _world_matrices(source, tr, rot, base_s)
         # During contact each distal digit endpoint stays independently

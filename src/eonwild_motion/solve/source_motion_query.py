@@ -991,12 +991,60 @@ class SourceMotionQuery:
         offsets = self._target_offsets(target_offsets)
         return self._evaluate_owned(time, side=side, target_offsets=offsets)
 
+    @staticmethod
+    def _joint_contact_controls(value: Mapping[str, Any]) -> dict[str, dict[str, Any]]:
+        if not isinstance(value, Mapping) or set(value) != {"left", "right"}:
+            raise ContractError("joint contact controls require left and right values")
+        result = {}
+        for side in ("left", "right"):
+            control = value[side]
+            if not isinstance(control, Mapping) or set(control) != {
+                "authored_pitch_degrees",
+                "foot_counterrotation_degrees",
+                "target_offset_m",
+            }:
+                raise ContractError("joint contact control has an invalid schema")
+            angles = []
+            for key in ("authored_pitch_degrees", "foot_counterrotation_degrees"):
+                item = control[key]
+                if isinstance(item, bool) or not isinstance(item, (int, float)) or not math.isfinite(float(item)):
+                    raise ContractError("joint contact control angles must be finite")
+                angles.append(float(item))
+            if not -45.0 <= angles[0] <= 85.0 or abs(angles[1]) > 45.0:
+                raise ContractError("joint contact control angle is outside its solver domain")
+            result[side] = {
+                "authored_pitch_degrees": angles[0],
+                "foot_counterrotation_degrees": angles[1],
+                "target_offset_m": SourceMotionQuery._target_offsets(
+                    {side: control["target_offset_m"], "right" if side == "left" else "left": [0., 0., 0.]}
+                )[side],
+            }
+        return result
+
+    def evaluate_with_joint_contact_controls(
+        self, time_s: Any, controls: Mapping[str, Any], *, side: str = "value"
+    ) -> SourceMotionResult | SourceMotionUnavailable:
+        """Apply complete shared joint/contact coordinates inside the pose solve."""
+        time = _finite_time(time_s)
+        admitted = self._joint_contact_controls(controls)
+        offsets = {
+            foot_side: admitted[foot_side]["target_offset_m"]
+            for foot_side in ("left", "right")
+        }
+        return self._evaluate_owned(
+            time,
+            side=side,
+            target_offsets=offsets,
+            joint_contact_controls=admitted,
+        )
+
     def _evaluate_owned(
         self,
         time: float,
         *,
         side: str,
         target_offsets: Mapping[str, list[float]] | None,
+        joint_contact_controls: Mapping[str, Mapping[str, Any]] | None = None,
         transition_clearance_integrity_proved: bool = False,
         authored_material_integrity_proved: bool = False,
     ) -> SourceMotionResult | SourceMotionUnavailable:
@@ -1012,7 +1060,10 @@ class SourceMotionQuery:
             self._authored_material_contact.validate_for_query(self)
         index = self._exact_index(time)
         if self._refined and (
-            target_offsets is not None or index is None or side != "value"
+            target_offsets is not None
+            or joint_contact_controls is not None
+            or index is None
+            or side != "value"
         ):
             return SourceMotionUnavailable(
                 CONTINUOUS_SKIN_TARGET_UNAVAILABLE,
@@ -1054,6 +1105,15 @@ class SourceMotionQuery:
                 row["feet"][foot_side]["target_offset_m"] = list(
                     target_offsets[foot_side]
                 )
+        if joint_contact_controls is not None:
+            for foot_side in ("left", "right"):
+                control = joint_contact_controls[foot_side]
+                row["feet"][foot_side]["foot_pitch_degrees"] = float(
+                    control["authored_pitch_degrees"]
+                )
+                row["feet"][foot_side][
+                    "semantic_foot_counterrotation_degrees"
+                ] = float(control["foot_counterrotation_degrees"])
         body = self._body_sample(index, row)
         material = None
 
