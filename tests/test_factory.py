@@ -23,6 +23,8 @@ from eonwild_motion.planning.grounded_gait import (
 from eonwild_motion.solve.whole_body_gait_transition import _append_accessor, _encode
 from test_v9_airborne_gait import fixture
 
+ROOT = Path(__file__).resolve().parents[1]
+
 
 def _midpoint_contact_result(verdict: str, sample_count: int) -> dict:
     return {
@@ -246,6 +248,92 @@ def test_profile_free_cubic_metadata_and_midpoint_verdict_are_bound(
     )
     write_json(output / "manifest.json", manifest)
     assert verify_package(output)["technical_status"] == "BLOCKED"
+
+
+def test_source_cubic_checkpoint_runtime_is_hash_bound_and_reviewable(tmp_path):
+    source_recipe = json.loads(
+        (
+            ROOT
+            / "recipes/heavy-biped/tarbosaurus-pin-552-1-adult-walk.v10.json"
+        ).read_text()
+    )
+    recipe = dict(source_recipe)
+    for key in (
+        "source",
+        "rig",
+        "animal",
+        "contact_profile",
+        "performance_profile",
+        "program_profile",
+        "articulation_profile",
+    ):
+        source_path = ROOT / source_recipe[key]["path"]
+        target_path = tmp_path / source_recipe[key]["path"]
+        target_path.parent.mkdir(parents=True, exist_ok=True)
+        target_path.write_bytes(source_path.read_bytes())
+        if key == "program_profile":
+            program = json.loads(target_path.read_text())
+            # A short source clock keeps this contract test focused on the
+            # checkpoint payload while retaining the real skinned source and
+            # all existing contact/semantic bindings.
+            program["parameters"]["sample_hz"] = 24
+            write_json(target_path, program)
+        recipe[key] = bind(tmp_path, target_path)
+    recipe["id"] = "checkpoint-review.tarbosaurus.v1"
+    recipe_path = tmp_path / "recipe.json"
+    write_json(recipe_path, recipe)
+
+    output = tmp_path / "candidate"
+    checkpoint = tmp_path / "checkpoint"
+    compile_recipe(
+        recipe_path,
+        root=tmp_path,
+        output=output,
+        interpolation="CUBICSPLINE",
+        emission_checkpoint=checkpoint,
+    )
+
+    manifest = json.loads((checkpoint / "manifest.json").read_text())
+    runtime = json.loads((checkpoint / "runtime.json").read_text())
+    plan = json.loads((checkpoint / "plan.json").read_text())
+    contact = json.loads(
+        (tmp_path / source_recipe["contact_profile"]["path"]).read_text()
+    )
+    animal = json.loads(
+        (tmp_path / source_recipe["animal"]["path"]).read_text()
+    )
+    rig = json.loads((tmp_path / source_recipe["rig"]["path"]).read_text())
+
+    assert manifest["schema"] == "eonwild.motion.source-cubic-emission-checkpoint.v1"
+    assert manifest["kind"] == "pre_gate_source_cubic_diagnostic"
+    assert manifest["status"] == "DIAGNOSTIC"
+    assert manifest["technical_status"] == "NOT_EVALUATED"
+    assert manifest["production_approved"] is False
+    assert manifest["visual_review"] == "PENDING"
+    assert manifest["unity_parity"] == "NOT_RUN"
+    assert manifest["claims"] == {
+        "physical": False,
+        "scientific": False,
+        "biological": False,
+    }
+    assert manifest["files"]["runtime.json"] == digest(
+        (checkpoint / "runtime.json").read_bytes()
+    )
+    assert runtime["duration_s"] == plan["samples"][-1]["time_s"]
+    assert runtime["plan_sha256"] == digest((checkpoint / "plan.json").read_bytes())
+    assert runtime["forward_axis"] == recipe["forward_axis"]
+    assert runtime["up_axis"] == recipe["up_axis"]
+    assert runtime["rig_roles"]["root"] == rig["roles"]["root"]
+    assert runtime["ground_plane"]["up_axis"] == "Y"
+    assert runtime["ground_plane"]["level_m"] == pytest.approx(
+        contact["geometry"]["ground"]["level_m"]
+        * runtime["animal"]["uniform_geometry_scale"]
+    )
+    assert runtime["body_height_m"] == runtime["animal"][
+        "semantic_pelvis_to_toe_plane_m"
+    ]
+    assert runtime["body_height_m"] == pytest.approx(plan["body_height_m"])
+    assert runtime["interpolation"] == "CUBICSPLINE"
 
 
 def test_serialized_cubic_exports_cannot_be_declared_linear(tmp_path):

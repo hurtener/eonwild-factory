@@ -1012,6 +1012,58 @@ def compile_recipe(
     outputs = {"root_motion": Glb.from_bytes(root_raw), "in_place": Glb.from_bytes(inplace_raw)}
     if checkpoint is not None:
         assert cubic and midpoint_plan is not None
+        # Keep the pre-gate bytes directly consumable by the native-time review
+        # tool.  This is a diagnostic sidecar built from the same in-memory
+        # plan, normalized frame, semantic roles and scaled contact plane that
+        # produced the checkpoint GLBs; it is not a technical result.
+        checkpoint_runtime = {
+            "schema": "eonwild.motion.runtime-data.v1",
+            "program": recipe["program"],
+            "family": recipe["family"],
+            "units": "m",
+            "time_units": "s",
+            "handedness": "right",
+            "forward_axis": forward.tolist(),
+            "up_axis": up.tolist(),
+            "root_authority": "choose motor OR applied root motion, never both",
+            "rig_roles": roles,
+            "duration_s": plan["samples"][-1]["time_s"],
+            "loop": plan.get("loop", True),
+            "initial_contacts": {
+                side: plan["samples"][0]["feet"][side]["contact"]
+                for side in ("left", "right")
+            },
+            "events": sorted(
+                event_track(plan) + plan.get("events", []),
+                key=lambda event: event["time_s"],
+            ),
+            "plan_sha256": digest(json_bytes(plan)),
+            "world_interaction_authority": (
+                "runtime decides contact, damage, grip resistance and release"
+            ),
+            "unity_import_status": "NOT_VERIFIED",
+            "transition_contract": plan.get("transition_contract"),
+            "ground_plane": contact_profile["geometry"]["ground"],
+            "animal": (
+                {
+                    "id": animal["document"]["id"],
+                    "specimen": animal["document"]["specimen"],
+                    "uniform_geometry_scale": animal["uniform_scale"],
+                    "semantic_pelvis_to_toe_plane_m": height,
+                    "biological_validation": "NOT_VALIDATED",
+                }
+                if animal
+                else None
+            ),
+            "body_height_m": height,
+            "interpolation": interpolation,
+            "diagnostic_scope": (
+                "pre-gate source-derived CUBICSPLINE emission; native-time "
+                "review metadata only"
+            ),
+            "technical_status": "NOT_EVALUATED",
+            "production_approved": False,
+        }
         checkpoint_payloads = {
             "root_motion.glb": root_raw,
             "in_place.glb": inplace_raw,
@@ -1020,10 +1072,18 @@ def compile_recipe(
             "tangent-estimate.json": json_bytes(
                 receipt["source_cubic_tangent_estimate"]
             ),
+            "runtime.json": json_bytes(checkpoint_runtime),
         }
         checkpoint_manifest = {
             "schema": "eonwild.motion.source-cubic-emission-checkpoint.v1",
+            "kind": "pre_gate_source_cubic_diagnostic",
             "classification": "pre-gate emitted bytes for reproducible diagnostics; not a candidate acceptance result",
+            "status": "DIAGNOSTIC",
+            "technical_status": "NOT_EVALUATED",
+            "visual_review": "PENDING",
+            "unity_parity": "NOT_RUN",
+            "production_approved": False,
+            "claims": {"physical": False, "scientific": False, "biological": False},
             "recipe_sha256": digest(recipe_bytes),
             "inputs": {name: digest(raw) for name, raw in snapshots.items()},
             "engine_files": engine_identity,
