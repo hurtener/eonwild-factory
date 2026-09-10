@@ -49,9 +49,9 @@ def _geometry(
     terminal_passed=None,
     calls=None,
 ):
-    def evaluate(delta, time_s):
+    def evaluate(coefficients, delta, time_s):
         if calls is not None:
-            calls.append((time_s, delta))
+            calls.append((time_s, coefficients, delta))
         matrix = np.eye(4)
         matrix[:3, 3] = np.asarray(travel) * time_s
         at_terminal = np.isclose(time_s, 1.0, rtol=0.0, atol=1e-12)
@@ -94,7 +94,7 @@ def test_bridge_aligns_midpoint_support_and_unwraps_travel_seam(monkeypatch) -> 
     )
     assert trial.samples[-1].com_m == pytest.approx((0.0, 0.0, 0.9))
     assert trial.samples[1].support_points_m[0][2] == pytest.approx(2.9)
-    assert [time for time, _ in calls] == pytest.approx(
+    assert [time for time, _, _ in calls] == pytest.approx(
         [0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 0.1, 0.3, 0.5, 0.7, 0.9]
     )
 
@@ -115,8 +115,9 @@ def test_bridge_forwards_periodic_body_coefficients_to_every_geometry_call(monke
     )
     coefficients = (0.01,) + (0.0,) * 11
     evaluator(coefficients)
-    assert calls[0][1].translation_m == pytest.approx((0.0, 0.0, 0.0))
-    assert calls[6][1].translation_m[0] != 0.0
+    assert all(call_coefficients == coefficients for _, call_coefficients, _ in calls)
+    assert calls[0][2].translation_m == pytest.approx((0.0, 0.0, 0.0))
+    assert calls[6][2].translation_m[0] != 0.0
 
 
 def test_bridge_rejects_actual_terminal_particle_deviation(monkeypatch) -> None:
@@ -233,8 +234,8 @@ def test_bridge_fails_closed_on_invalid_mass_anchor_or_geometry(
 def test_bridge_rejects_callback_time_alias(monkeypatch) -> None:
     _patch_vertex_evaluator(monkeypatch)
 
-    def wrong_time(delta, time_s):
-        sample = _geometry()(delta, time_s)
+    def wrong_time(coefficients, delta, time_s):
+        sample = _geometry()(coefficients, delta, time_s)
         return FinalGeometrySample(
             time_s + 1e-4,
             sample.joint_world_matrices,

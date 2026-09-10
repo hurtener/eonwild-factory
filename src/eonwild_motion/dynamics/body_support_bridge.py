@@ -49,7 +49,9 @@ class FinalGeometrySample:
     final_geometry_passed: bool
 
 
-FinalGeometryEvaluator = Callable[[BodyDelta, float], FinalGeometrySample]
+FinalGeometryEvaluator = Callable[
+    [tuple[float, ...], BodyDelta, float], FinalGeometrySample
+]
 
 
 def _vector3(value: Sequence[float], label: str) -> np.ndarray:
@@ -121,6 +123,9 @@ def build_surface_mass_trial_evaluator(
     interval midpoint, after the same final geometry law.  For travelling
     clips, the actual terminal full skin must match phase zero plus travel under
     the versioned final skin-loop tolerance before it enters the last interval.
+    Every callback receives the complete immutable coefficient tuple as well
+    as its derived delta so integration can build the bound query directly;
+    callbacks must not infer coefficients from a single sampled delta.
     """
 
     source = bytes(source_bytes)
@@ -163,11 +168,14 @@ def build_surface_mass_trial_evaluator(
     )
 
     def evaluate(coefficients: tuple[float, ...]) -> TrialEvaluation:
+        owned_coefficients = tuple(float(value) for value in coefficients)
         boundary_states: list[Mapping[str, object]] = []
         for index in range(sample_count):
             time_s = index * dt
             geometry = evaluate_final_geometry(
-                periodic_body_delta(coefficients, time_s, duration), time_s
+                owned_coefficients,
+                periodic_body_delta(owned_coefficients, time_s, duration),
+                time_s,
             )
             _validate_geometry_sample(
                 geometry,
@@ -181,7 +189,9 @@ def build_surface_mass_trial_evaluator(
             boundary_states.append(state)
 
         terminal_geometry = evaluate_final_geometry(
-            periodic_body_delta(coefficients, duration, duration), duration
+            owned_coefficients,
+            periodic_body_delta(owned_coefficients, duration, duration),
+            duration,
         )
         _validate_geometry_sample(
             terminal_geometry,
@@ -222,7 +232,9 @@ def build_surface_mass_trial_evaluator(
         for index in range(sample_count):
             midpoint_s = (index + 0.5) * dt
             geometry = evaluate_final_geometry(
-                periodic_body_delta(coefficients, midpoint_s, duration), midpoint_s
+                owned_coefficients,
+                periodic_body_delta(owned_coefficients, midpoint_s, duration),
+                midpoint_s,
             )
             _validate_geometry_sample(
                 geometry,

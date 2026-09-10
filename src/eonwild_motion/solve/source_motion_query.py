@@ -58,6 +58,7 @@ from .authored_material_contact import (
     TARGET_MATERIAL_GAP_M,
     TARGET_RESIDUAL_LIMIT_M,
 )
+from .body_support_control import BodySupportControl
 
 
 CONTINUOUS_SKIN_TARGET_UNAVAILABLE = "CONTINUOUS_SKIN_TARGET_UNAVAILABLE"
@@ -315,6 +316,7 @@ class SourceMotionQuery:
         contact_profile: Mapping[str, Any] | None = None,
         transition_clearance: GroundedTransitionClearanceResolver | None = None,
         authored_material_contact: AuthoredMaterialContactAdapter | None = None,
+        body_support_control: BodySupportControl | None = None,
     ) -> None:
         if not isinstance(solver_gait, AirborneGait):
             raise ContractError(
@@ -399,6 +401,16 @@ class SourceMotionQuery:
             legacy_overlay=self._legacy_overlay,
             articulation_profile=articulation_profile,
         )
+        if body_support_control is not None and type(body_support_control) is not BodySupportControl:
+            raise ContractError("source motion query body-support control must be its owned binding")
+        self._body_support_control = body_support_control
+        if self._body_support_control is not None:
+            self._body_support_control.validate_for_query(
+                same_foot_cycle_s=float(self._plan["same_foot_cycle_s"]),
+                body_height_m=self._context.body_height,
+                up_axis=self._context.up,
+                forward_axis=self._context.forward,
+            )
         self._times = tuple(
             _finite_time(row["time_s"]) for row in self._plan["samples"]
         )
@@ -474,6 +486,17 @@ class SourceMotionQuery:
     @property
     def refined(self) -> bool:
         return self._refined
+
+    def body_support_control_receipt(self) -> Mapping[str, Any] | None:
+        if self._body_support_control is None:
+            return None
+        self._body_support_control.validate_for_query(
+            same_foot_cycle_s=float(self._plan["same_foot_cycle_s"]),
+            body_height_m=self._context.body_height,
+            up_axis=self._context.up,
+            forward_axis=self._context.forward,
+        )
+        return _freeze_data(self._body_support_control.receipt())
 
     def _exact_index(self, time_s: float) -> int | None:
         for index, value in enumerate(self._times):
@@ -819,13 +842,37 @@ class SourceMotionQuery:
     def _body_sample(
         self, index: int | None, row: Mapping[str, Any]
     ) -> Mapping[str, Any] | None:
-        if self._body_response is None:
-            return None
-        return (
-            self._body_response["samples"][index]
-            if index is not None
-            else self._continuous_body_response(row)
+        if self._body_support_control is None:
+            if self._body_response is None:
+                return None
+            return (
+                self._body_response["samples"][index]
+                if index is not None
+                else self._continuous_body_response(row)
+            )
+        self._body_support_control.validate_for_query(
+            same_foot_cycle_s=float(self._plan["same_foot_cycle_s"]),
+            body_height_m=self._context.body_height,
+            up_axis=self._context.up,
+            forward_axis=self._context.forward,
         )
+        base = (
+            {"sagittal_node_degrees": {}}
+            if self._body_response is None
+            else _thaw(
+                self._body_response["samples"][index]
+                if index is not None
+                else self._continuous_body_response(row)
+            )
+        )
+        delta = self._body_support_control.delta(float(row["time_s"]))
+        base["body_support_control"] = {
+            "policy_id": self._body_support_control.policy_id,
+            "binding_sha256": self._body_support_control.binding_sha256,
+            "translation_forward_up_lateral_m": list(delta.translation_m),
+            "rotation_pitch_roll_yaw_radians": list(delta.rotation_radians),
+        }
+        return _freeze_data(base)
 
     def _branch_witness(
         self, row: Mapping[str, Any], pose: SolvedAirbornePose

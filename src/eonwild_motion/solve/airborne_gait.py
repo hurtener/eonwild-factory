@@ -409,6 +409,26 @@ def _require_body_response_sample(sample: Any) -> Mapping[str, Any] | None:
             raise ContractError("body response node name must be a nonempty string")
         if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
             raise ContractError("body response node degrees must be finite numeric")
+    control = sample.get("body_support_control")
+    if control is not None:
+        if not isinstance(control, Mapping) or set(control) != {
+            "policy_id", "binding_sha256", "translation_forward_up_lateral_m",
+            "rotation_pitch_roll_yaw_radians",
+        }:
+            raise ContractError("body response body-support control has an invalid schema")
+        if control["policy_id"] != "periodic_body_support_control.v1":
+            raise ContractError("body response body-support control has an invalid policy")
+        binding = control["binding_sha256"]
+        if (not isinstance(binding, str) or len(binding) != 64
+                or any(character not in "0123456789abcdef" for character in binding)):
+            raise ContractError("body response body-support control has an invalid binding")
+        for key in ("translation_forward_up_lateral_m", "rotation_pitch_roll_yaw_radians"):
+            try:
+                vector = np.asarray(control[key], dtype=float)
+            except (TypeError, ValueError) as exc:
+                raise ContractError("body response body-support transform must be finite") from exc
+            if vector.shape != (3,) or not np.isfinite(vector).all():
+                raise ContractError("body response body-support transform must be finite")
     return sample
 
 
@@ -717,6 +737,20 @@ def _prepare_body_pose(
     apply_performance(
         source, tr, rot, base_s, base_w, roles, context.plan, row, up, forward
     )
+    if body_response_sample is not None and body_response_sample.get("body_support_control") is not None:
+        control = body_response_sample["body_support_control"]
+        translation = np.asarray(control["translation_forward_up_lateral_m"], dtype=float)
+        rotation = np.asarray(control["rotation_pitch_roll_yaw_radians"], dtype=float)
+        worlds = _world_matrices(source, tr, rot, base_s)
+        world_delta = forward * translation[0] + up * translation[1] + lateral * translation[2]
+        tr[pelvis] = tuple(
+            float(value) for value in np.asarray(tr[pelvis])
+            + _local_delta(source, worlds, pelvis, world_delta)
+        )
+        worlds = _world_matrices(source, tr, rot, base_s)
+        world_rotvec = lateral * rotation[0] + forward * rotation[1] + up * rotation[2]
+        desired = _qmul(_qrotvec(tuple(world_rotvec)), _rotation_from_matrix(worlds[pelvis]))
+        rot[pelvis] = _world_rotation(source, worlds, pelvis, desired)
     return row, tr, rot
 
 
