@@ -30,8 +30,8 @@ def _patch_vertex_evaluator(monkeypatch):
         }
 
     monkeypatch.setattr(
-        "eonwild_motion.dynamics.body_support_bridge.surface_mass_vertex_state",
-        vertex_state,
+        "eonwild_motion.dynamics.body_support_bridge.prepare_surface_mass_vertex_evaluator",
+        lambda source, profile: lambda matrices: vertex_state(source, profile, matrices),
     )
 
 

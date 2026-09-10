@@ -7,8 +7,10 @@ an engineering control input, not an anatomical density or capacity model.
 from __future__ import annotations
 
 from collections import Counter
+from dataclasses import dataclass, field
 from hashlib import sha256
 import json
+from types import MappingProxyType
 from typing import Any, Mapping, Sequence
 
 import numpy as np
@@ -39,6 +41,20 @@ def _json(raw: bytes, label: str) -> Mapping[str, Any]:
     if not isinstance(value, Mapping):
         raise ContractError(f"{label} must be an object")
     return value
+
+
+def _profile_digest(profile: Mapping[str, Any]) -> str:
+    try:
+        encoded = json.dumps(
+            dict(profile),
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=True,
+            allow_nan=False,
+        ).encode("utf-8")
+    except (TypeError, ValueError) as exc:
+        raise ContractError("surface-mass profile is not canonical JSON") from exc
+    return _digest(encoded)
 
 
 def _column_major_matrix(row: Sequence[float]) -> np.ndarray:
@@ -453,50 +469,114 @@ def surface_mass_body_state(
     }
 
 
-def surface_mass_vertex_state(
+@dataclass(frozen=True)
+class PreparedSurfaceMassVertexEvaluator:
+    """Immutable parsed inputs for repeated exact full-LBS particle queries."""
+
+    source_sha256: str
+    profile_sha256: str
+    total_mass_kg: float
+    joint_names: tuple[str, ...]
+    expected_grams: Mapping[str, np.ndarray] = field(repr=False, compare=False)
+    inverse_bind_matrices: np.ndarray = field(repr=False, compare=False)
+    homogeneous_positions: np.ndarray = field(repr=False, compare=False)
+    triangles: np.ndarray = field(repr=False, compare=False)
+    joints: np.ndarray = field(repr=False, compare=False)
+    weights: np.ndarray = field(repr=False, compare=False)
+    vertex_mass_kg: np.ndarray = field(repr=False, compare=False)
+
+    def __call__(
+        self,
+        joint_world_matrices: Mapping[str, Sequence[Sequence[float]]],
+    ) -> dict[str, Any]:
+        matrices = []
+        for slot, name in enumerate(self.joint_names):
+            if name not in joint_world_matrices:
+                raise ContractError(
+                    f"surface-mass proxy is missing joint world matrix {name!r}"
+                )
+            matrix = np.asarray(joint_world_matrices[name], dtype=np.float64)
+            if matrix.shape != (4, 4) or not np.isfinite(matrix).all():
+                raise ContractError("surface-mass joint world matrix is invalid")
+            expected_gram = self.expected_grams.get(name)
+            if expected_gram is not None:
+                _validate_bound_linear(
+                    matrix[:3, :3], {"bind_world_gram_matrix": expected_gram}
+                )
+            matrices.append(matrix @ self.inverse_bind_matrices[slot])
+        transforms = np.asarray(matrices, dtype=np.float64)
+        posed = np.zeros((len(self.homogeneous_positions), 3), dtype=np.float64)
+        for column in range(self.joints.shape[1]):
+            moved = np.einsum(
+                "nij,nj->ni",
+                transforms[self.joints[:, column]],
+                self.homogeneous_positions,
+            )[:, :3]
+            posed += self.weights[:, column, None] * moved
+        areas, _ = _vertex_area_weights(posed, self.triangles)
+        masses = np.array(self.vertex_mass_kg, dtype=np.float64, copy=True)
+        com = np.sum(masses[:, None] * posed, axis=0) / self.total_mass_kg
+        return {
+            "total_mass_kg": self.total_mass_kg,
+            "vertex_mass_kg": masses,
+            "world_positions_m": posed,
+            "com_m": com,
+            "current_rendered_surface_area_m2": float(areas.sum()),
+        }
+
+    def receipt(self) -> dict[str, Any]:
+        return {
+            "source_sha256": self.source_sha256,
+            "profile_sha256": self.profile_sha256,
+            "vertex_count": int(len(self.vertex_mass_kg)),
+            "total_mass_kg": self.total_mass_kg,
+            "calculation": "fixed-neutral-area full-LBS vertex particles",
+        }
+
+
+def _readonly_array(value: np.ndarray) -> np.ndarray:
+    result = np.array(value, copy=True)
+    result.setflags(write=False)
+    return result
+
+
+def prepare_surface_mass_vertex_evaluator(
     source_bytes: bytes,
     profile: Mapping[str, Any],
-    joint_world_matrices: Mapping[str, Sequence[Sequence[float]]],
-) -> dict[str, Any]:
-    """Evaluate exact posed fixed-mass vertices for momentum calculations."""
+) -> PreparedSurfaceMassVertexEvaluator:
+    """Parse and bind immutable source inputs for repeated vertex evaluation."""
+    source_raw = bytes(source_bytes)
     try:
         expected_source = profile["identity"]["source_sha256"]
         total_mass_kg = float(profile["mass_model"]["total_mass_kg"])
     except (KeyError, TypeError, ValueError) as exc:
         raise ContractError("surface-mass proxy binding is incomplete") from exc
-    if profile.get("schema") != SCHEMA or _digest(source_bytes) != expected_source:
+    source_sha256 = _digest(source_raw)
+    if profile.get("schema") != SCHEMA or source_sha256 != expected_source:
         raise ContractError("surface-mass vertex source differs from profile binding")
     if not np.isfinite(total_mass_kg) or total_mass_kg <= 0:
         raise ContractError("surface-mass proxy has no valid total mass")
-    source = Glb.from_bytes(source_bytes)
+    profile_sha256 = _profile_digest(profile)
+    source = Glb.from_bytes(source_raw)
     _, skin, positions, triangles, joints, weights = _validated_inputs(source)
     inverse = np.asarray(
         [_column_major_matrix(row) for row in source.accessor_values(skin["inverseBindMatrices"])],
         dtype=np.float64,
     )
-    expected_bindings = {
-        binding["node"]: binding
-        for binding in profile["bindings"]
-    }
-    matrices = []
+    try:
+        expected_grams = {
+            str(binding["node"]): _readonly_array(
+                np.asarray(binding["bind_world_gram_matrix"], dtype=np.float64)
+            )
+            for binding in profile["bindings"]
+        }
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ContractError("surface-mass proxy binding is incomplete") from exc
+    joint_names = []
     for node_index in skin["joints"]:
         name = source.nodes[int(node_index)].get("name", f"node:{int(node_index)}")
-        if name not in joint_world_matrices:
-            raise ContractError(f"surface-mass proxy is missing joint world matrix {name!r}")
-        matrix = np.asarray(joint_world_matrices[name], dtype=np.float64)
-        if matrix.shape != (4, 4) or not np.isfinite(matrix).all():
-            raise ContractError("surface-mass joint world matrix is invalid")
-        if name in expected_bindings:
-            _validate_bound_linear(matrix[:3, :3], expected_bindings[name])
-        matrices.append(matrix @ inverse[len(matrices)])
-    transforms = np.asarray(matrices, dtype=np.float64)
+        joint_names.append(name)
     homogeneous = np.column_stack((positions, np.ones(len(positions))))
-    posed = np.zeros((len(positions), 3), dtype=np.float64)
-    for column in range(joints.shape[1]):
-        moved = np.einsum("nij,nj->ni", transforms[joints[:, column]], homogeneous)[:, :3]
-        posed += weights[:, column, None] * moved
-
-    areas, _ = _vertex_area_weights(posed, triangles)
     # Masses remain fixed from the admitted neutral profile. Recover their
     # normalized values from the source topology; uniform admission scale
     # cancels in normalization.
@@ -511,14 +591,30 @@ def surface_mass_vertex_state(
         neutral += weights[:, column, None] * moved
     neutral_areas, vertex_area = _vertex_area_weights(neutral, triangles)
     masses = total_mass_kg * vertex_area / float(neutral_areas.sum())
-    com = np.sum(masses[:, None] * posed, axis=0) / total_mass_kg
-    return {
-        "total_mass_kg": total_mass_kg,
-        "vertex_mass_kg": masses,
-        "world_positions_m": posed,
-        "com_m": com,
-        "current_rendered_surface_area_m2": float(areas.sum()),
-    }
+    return PreparedSurfaceMassVertexEvaluator(
+        source_sha256=source_sha256,
+        profile_sha256=profile_sha256,
+        total_mass_kg=total_mass_kg,
+        joint_names=tuple(joint_names),
+        expected_grams=MappingProxyType(expected_grams),
+        inverse_bind_matrices=_readonly_array(inverse),
+        homogeneous_positions=_readonly_array(homogeneous),
+        triangles=_readonly_array(triangles),
+        joints=_readonly_array(joints),
+        weights=_readonly_array(weights),
+        vertex_mass_kg=_readonly_array(masses),
+    )
+
+
+def surface_mass_vertex_state(
+    source_bytes: bytes,
+    profile: Mapping[str, Any],
+    joint_world_matrices: Mapping[str, Sequence[Sequence[float]]],
+) -> dict[str, Any]:
+    """Evaluate exact posed fixed-mass vertices for momentum calculations."""
+    return prepare_surface_mass_vertex_evaluator(source_bytes, profile)(
+        joint_world_matrices
+    )
 
 
 def surface_mass_interval_momentum(
@@ -572,8 +668,10 @@ def surface_mass_centroid(
 
 __all__ = [
     "COORDINATES",
+    "PreparedSurfaceMassVertexEvaluator",
     "SCHEMA",
     "prepare_surface_mass_proxy",
+    "prepare_surface_mass_vertex_evaluator",
     "surface_mass_body_state",
     "surface_mass_centroid",
     "surface_mass_interval_momentum",

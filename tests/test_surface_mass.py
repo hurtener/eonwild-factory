@@ -13,6 +13,7 @@ from eonwild_motion.dynamics.surface_mass import (
     COORDINATES,
     _vertex_area_weights,
     prepare_surface_mass_proxy,
+    prepare_surface_mass_vertex_evaluator,
     surface_mass_body_state,
     surface_mass_centroid,
     surface_mass_interval_momentum,
@@ -192,15 +193,41 @@ def test_exact_sources_match_compiler_scaled_full_lbs(
     named_worlds = {node.get("name", f"node:{index}"): worlds[index] for index, node in enumerate(source.nodes)}
     compact = surface_mass_body_state(profile_value, named_worlds)
     vertices = surface_mass_vertex_state(source_bytes, profile_value, named_worlds)
+    prepared = prepare_surface_mass_vertex_evaluator(source_bytes, profile_value)
+    cached_vertices = prepared(named_worlds)
     assert compact["com_m"] == pytest.approx(audit["direct_bind_centroid_m"], abs=2e-9)
     assert vertices["com_m"] == pytest.approx(audit["direct_bind_centroid_m"], abs=2e-9)
     assert float(np.sum(vertices["vertex_mass_kg"])) == pytest.approx(expected_mass, abs=2e-9)
+    assert prepared.receipt()["source_sha256"] == source_hash
+    assert len(prepared.receipt()["profile_sha256"]) == 64
+    for key in (
+        "vertex_mass_kg",
+        "world_positions_m",
+        "com_m",
+        "current_rendered_surface_area_m2",
+    ):
+        assert cached_vertices[key] == pytest.approx(vertices[key], abs=1e-12)
+
+    original_cached_positions = np.array(cached_vertices["world_positions_m"], copy=True)
+    cached_vertices["world_positions_m"][:] = 999.0
+    cached_vertices["vertex_mass_kg"][:] = 0.0
+    profile_value["mass_model"]["total_mass_kg"] = -1.0
+    profile_value["bindings"][0]["bind_world_gram_matrix"] = (
+        999.0 * np.eye(3)
+    ).tolist()
+    replay_cached = prepared(named_worlds)
+    assert replay_cached["world_positions_m"] == pytest.approx(
+        original_cached_positions, abs=1e-12
+    )
+    assert float(np.sum(replay_cached["vertex_mass_kg"])) == pytest.approx(
+        expected_mass, abs=2e-9
+    )
 
     distorted = {name: np.array(matrix, copy=True) for name, matrix in named_worlds.items()}
     active_name = profile_value["bindings"][0]["node"]
     distorted[active_name][:3, :3] = distorted[active_name][:3, :3] @ np.diag([2.0, 0.5, 1.0])
     with pytest.raises(ContractError, match="linear Gram"):
-        surface_mass_vertex_state(source_bytes, profile_value, distorted)
+        prepared(distorted)
 
 
 def test_missing_joint_and_bad_mass_sum_fail_closed() -> None:
@@ -236,3 +263,10 @@ def test_vertex_state_rejects_invalid_profile_mass_before_source_parse(mass) -> 
     bound["mass_model"]["total_mass_kg"] = mass
     with pytest.raises(ContractError, match="valid total mass"):
         surface_mass_vertex_state(b"expected", bound, {})
+
+
+def test_prepared_vertex_evaluator_rejects_corrupted_source_binding() -> None:
+    bound = profile()
+    bound["identity"] = {"source_sha256": hashlib.sha256(b"expected").hexdigest()}
+    with pytest.raises(ContractError, match="differs from profile binding"):
+        prepare_surface_mass_vertex_evaluator(b"corrupted", bound)

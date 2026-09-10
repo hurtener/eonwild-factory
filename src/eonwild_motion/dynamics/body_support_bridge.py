@@ -22,7 +22,10 @@ from .body_support_coordinator import (
     TrialEvaluator,
     periodic_body_delta,
 )
-from .surface_mass import surface_mass_interval_momentum, surface_mass_vertex_state
+from .surface_mass import (
+    prepare_surface_mass_vertex_evaluator,
+    surface_mass_interval_momentum,
+)
 
 
 SAMPLE_SEMANTICS = "full_lbs_interval_midpoints.v1"
@@ -143,6 +146,9 @@ def build_surface_mass_trial_evaluator(
     if not math.isfinite(total_mass) or total_mass <= 0:
         raise ContractError("surface-mass profile total mass must be positive")
     dt = duration / sample_count
+    vertex_evaluator = prepare_surface_mass_vertex_evaluator(
+        source, surface_mass_profile
+    )
 
     def evaluate(coefficients: tuple[float, ...]) -> TrialEvaluation:
         boundary_states: list[Mapping[str, object]] = []
@@ -156,9 +162,7 @@ def build_surface_mass_trial_evaluator(
                 expected_time_s=time_s,
                 frozen_anchor_sha256=frozen_anchor_sha256,
             )
-            state = surface_mass_vertex_state(
-                source, surface_mass_profile, geometry.joint_world_matrices
-            )
+            state = vertex_evaluator(geometry.joint_world_matrices)
             state_mass = float(state.get("total_mass_kg", math.nan))
             if not math.isclose(state_mass, total_mass, rel_tol=0.0, abs_tol=1e-10):
                 raise ContractError("surface-mass trial changed its bound total mass")
@@ -176,9 +180,7 @@ def build_surface_mass_trial_evaluator(
                 expected_time_s=midpoint_s,
                 frozen_anchor_sha256=frozen_anchor_sha256,
             )
-            midpoint_state = surface_mass_vertex_state(
-                source, surface_mass_profile, geometry.joint_world_matrices
-            )
+            midpoint_state = vertex_evaluator(geometry.joint_world_matrices)
             midpoint_mass = float(midpoint_state.get("total_mass_kg", math.nan))
             if not math.isclose(midpoint_mass, total_mass, rel_tol=0.0, abs_tol=1e-10):
                 raise ContractError("surface-mass trial changed its bound total mass")
