@@ -273,10 +273,6 @@ class CanonicalConstantSkinTargetLaw:
                         None if self._local_material_references is None
                         else self._local_material_references[side].tolist()
                     ),
-                    "joint_contact_lift_reference": (
-                        None if self._joint_contact_lift_references is None
-                        else self._joint_contact_lift_references[side].tolist()
-                    ),
                 }
                 for side in ("left", "right")
             },
@@ -500,6 +496,19 @@ class CanonicalConstantSkinTargetLaw:
                     _token=_BUILD_TOKEN,
                 )
                 lift_references = law._build_joint_contact_lift_references(
+                    calibration_query
+                )
+                law = cls(
+                    query, calibration_query, provider, skin, constants,
+                    law_id=law_id,
+                    local_material_references=references,
+                    support_patch_indices=support_indices,
+                    joint_contact_end_controls=endpoint_controls,
+                    joint_contact_lift_references=lift_references,
+                    boundary_residuals_m=boundary_residuals,
+                    _token=_BUILD_TOKEN,
+                )
+                lift_references = law._rebind_joint_contact_lift_references_from_final(
                     calibration_query
                 )
                 law = cls(
@@ -1027,9 +1036,52 @@ class CanonicalConstantSkinTargetLaw:
             worlds = np.asarray(solved.worlds)
             patch = self._patch(self._skin, worlds, side)
             anchor = self._provider.anchor_for(side)
-            effector, rotation = self._foot_frame(query, worlds, side)
+            _, rotation = self._foot_frame(query, worlds, side)
+            raw_row = deepcopy(row)
+            for foot in raw_row["feet"].values():
+                foot.pop("target_offset_m", None)
+            declared = grounded_touchdown_target(
+                query.context,
+                raw_row,
+                side=side,
+                body_response_sample=query._body_sample(
+                    query._exact_index(lift), raw_row
+                ),
+            )
+            declared_effector = np.asarray(
+                declared["target_foot_world_m"], dtype=float
+            )
             references[side] = rotation.T @ (
-                patch[anchor.lowest_patch_index] - effector
+                patch[anchor.lowest_patch_index] - declared_effector
+            )
+        return references
+
+    def _rebind_joint_contact_lift_references_from_final(
+        self, query: SourceMotionQuery
+    ) -> dict[str, np.ndarray]:
+        """Bind the post-mapping lift witness while retaining declared MTP authority."""
+        cycle = 2.0 * query._locomotion_gait.step_period_s
+        references = {}
+        for side, offset in (("left", 0.0), ("right", query._locomotion_gait.step_period_s)):
+            lift = (offset + cycle * query._locomotion_gait.duty_factor) % cycle
+            data = self._observe_semantic_foot_frame_pair(query, lift)
+            pose = data[side]["pose"]
+            worlds = np.asarray(_world_matrices(
+                query._source, pose.translations, pose.rotations, query.context.base_s
+            ))
+            patch = self._patch(self._skin, worlds, side)
+            anchor = self._provider.anchor_for(side)
+            _, rotation = self._foot_frame(query, worlds, side)
+            row = deepcopy(data[side]["row"])
+            for foot in row["feet"].values():
+                foot.pop("target_offset_m", None)
+            declared = grounded_touchdown_target(
+                query.context, row, side=side,
+                body_response_sample=query._body_sample(query._exact_index(lift), row),
+            )
+            references[side] = rotation.T @ (
+                patch[anchor.lowest_patch_index]
+                - np.asarray(declared["target_foot_world_m"], dtype=float)
             )
         return references
 
