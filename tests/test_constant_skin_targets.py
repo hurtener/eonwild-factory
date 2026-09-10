@@ -115,6 +115,14 @@ def test_joint_contact_candidate_selects_v3_and_binds_endpoint_controls(monkeypa
     assert receipt["binding_sha256"] != receipt["law_binding_sha256"]
     assert receipt["query_binding_sha256"] == law._query_binding_sha256
     assert law.value(0.2).status == "AVAILABLE"
+    lift = 2.0 * law._query._locomotion_gait.step_period_s * law._query._locomotion_gait.duty_factor
+    planted = law._observe_at(lift, evaluation_side="left_limit")
+    emitted = law.value(lift)
+    assert planted.status == emitted.status == "AVAILABLE"
+    assert np.linalg.norm(
+        np.asarray(planted.observations["left"]["material_witness_m"])
+        - np.asarray(emitted.observations["left"]["material_witness_m"])
+    ) <= 0.0002
     before = law.frozen_anchor_binding_sha256()
     rebound = law.with_query(law._query)
     assert rebound.frozen_anchor_binding_sha256() == before

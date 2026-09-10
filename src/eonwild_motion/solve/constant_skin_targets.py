@@ -522,24 +522,48 @@ class CanonicalConstantSkinTargetLaw:
                     _token=_BUILD_TOKEN,
                 )
             validation_phases = [
-                provider.anchor_for("left").touchdown_phase_s,
-                provider.anchor_for("right").touchdown_phase_s,
+                (provider.anchor_for("left").touchdown_phase_s, "value"),
+                (provider.anchor_for("right").touchdown_phase_s, "value"),
             ]
+            lift_phases = {}
             if law_id == _JOINT_CONTACT_LAW:
                 period = 2.0 * calibration_query._locomotion_gait.step_period_s
+                lift_phases = {
+                    side: (offset + period * calibration_query._locomotion_gait.duty_factor) % period
+                    for side, offset in (("left", 0.0), ("right", calibration_query._locomotion_gait.step_period_s))
+                }
                 validation_phases.extend(
-                    (offset + period * calibration_query._locomotion_gait.duty_factor) % period
-                    for offset in (0.0, calibration_query._locomotion_gait.step_period_s)
+                    (lift, side)
+                    for lift in lift_phases.values()
+                    for side in ("left_limit", "value")
                 )
-            for phase in validation_phases:
-                checked = law._observe_at(phase, query=calibration_query)
+            phase_checks = {}
+            for phase, evaluation_side in validation_phases:
+                checked = law._observe_at(
+                    phase, query=calibration_query,
+                    evaluation_side=evaluation_side,
+                )
                 if isinstance(checked, ConstantSkinTargetUnavailable):
                     raise ContractError(
                         "semantic foot-frame target calibration failed: "
-                        f"time_s={phase!r} {checked.reason}; "
+                        f"time_s={phase!r} evaluation_side={evaluation_side!r} "
+                        f"{checked.reason}; "
                         f"observations={_thaw(checked.observations)!r}; "
                         "joint_contact_endpoint_controls="
                         f"{None if law._joint_contact_end_controls is None else {side: law._joint_contact_end_controls[side].tolist() for side in ('left', 'right')}!r}"
+                    )
+                phase_checks[(phase, evaluation_side)] = checked
+            for side, lift in lift_phases.items():
+                planted = phase_checks[(lift, "left_limit")]
+                emitted = phase_checks[(lift, "value")]
+                handoff = float(np.linalg.norm(
+                    np.asarray(planted.observations[side]["material_witness_m"])
+                    - np.asarray(emitted.observations[side]["material_witness_m"])
+                ))
+                if handoff > _TOLERANCE_M:
+                    raise ContractError(
+                        "joint contact lift handoff is discontinuous: "
+                        f"side={side} time_s={lift!r} residual_m={handoff!r}"
                     )
             return law
         for _ in range(iterations):
@@ -802,11 +826,17 @@ class CanonicalConstantSkinTargetLaw:
         }
 
     def _observe_semantic_foot_frame_pair(
-        self, query: SourceMotionQuery, time_s: float
+        self,
+        query: SourceMotionQuery,
+        time_s: float,
+        *,
+        evaluation_side: str = "value",
     ) -> dict[str, dict[str, Any]]:
         """Map a target-owned material path through a fixed semantic MTP frame."""
         zero = {side: np.zeros(3) for side in ("left", "right")}
-        result = query.evaluate_with_target_offsets(time_s, zero)
+        result = query.evaluate_with_target_offsets(
+            time_s, zero, side=evaluation_side
+        )
         if isinstance(result, SourceMotionUnavailable):
             raise _source_unavailable_error(result)
         row = _thaw(result.row)
@@ -834,7 +864,9 @@ class CanonicalConstantSkinTargetLaw:
                         query.context.forward * values[2] + query.context.up * values[3]
                     ).tolist(),
                 }
-            result = query.evaluate_with_joint_contact_controls(time_s, controls)
+            result = query.evaluate_with_joint_contact_controls(
+                time_s, controls, side=evaluation_side
+            )
             if isinstance(result, SourceMotionUnavailable):
                 raise _source_unavailable_error(result)
             row = _thaw(result.row)
@@ -915,7 +947,9 @@ class CanonicalConstantSkinTargetLaw:
                     f"correction_m={correction_norms[side]!r} envelope_m={envelope!r}"
                 )
             if joint_coordinates is None:
-                solved = query.evaluate_with_target_offsets(time_s, corrections)
+                solved = query.evaluate_with_target_offsets(
+                    time_s, corrections, side=evaluation_side
+                )
             else:
                 controls = {}
                 for side in ("left", "right"):
@@ -929,7 +963,9 @@ class CanonicalConstantSkinTargetLaw:
                         "foot_counterrotation_degrees": float(values[1]),
                         "target_offset_m": np.asarray(offset, dtype=float).tolist(),
                     }
-                solved = query.evaluate_with_joint_contact_controls(time_s, controls)
+                solved = query.evaluate_with_joint_contact_controls(
+                    time_s, controls, side=evaluation_side
+                )
             if isinstance(solved, SourceMotionUnavailable):
                 raise _source_unavailable_error(solved)
             row = _thaw(solved.row)
@@ -960,7 +996,11 @@ class CanonicalConstantSkinTargetLaw:
                     # transported material-witness equality.
                     requested_gap = _TARGET_GAP_M
                     gap = float(patch[:, up_index].min() - self._skin.ground)
-                    error += query.context.up * max(0.0, requested_gap - gap)
+                    vertical_target = float(error @ query.context.up)
+                    error -= query.context.up * vertical_target
+                    error += query.context.up * max(
+                        vertical_target, requested_gap - gap
+                    )
                     residuals[side] = error
             if max(np.linalg.norm(value) for value in residuals.values()) <= (
                 _FRAME_MAPPING_TOLERANCE_M
@@ -973,6 +1013,7 @@ class CanonicalConstantSkinTargetLaw:
 
         data = {}
         for side in ("left", "right"):
+            anchor = self._provider.anchor_for(side)
             patch = self._patch(self._skin, worlds, side)
             data[side] = {
                 "loaded": bool(row["feet"][side]["contact"]),
@@ -1064,7 +1105,9 @@ class CanonicalConstantSkinTargetLaw:
         references = {}
         for side, offset in (("left", 0.0), ("right", query._locomotion_gait.step_period_s)):
             lift = (offset + cycle * query._locomotion_gait.duty_factor) % cycle
-            data = self._observe_semantic_foot_frame_pair(query, lift)
+            data = self._observe_semantic_foot_frame_pair(
+                query, lift, evaluation_side="left_limit"
+            )
             pose = data[side]["pose"]
             worlds = np.asarray(_world_matrices(
                 query._source, pose.translations, pose.rotations, query.context.base_s
@@ -1072,7 +1115,13 @@ class CanonicalConstantSkinTargetLaw:
             patch = self._patch(self._skin, worlds, side)
             anchor = self._provider.anchor_for(side)
             _, rotation = self._foot_frame(query, worlds, side)
-            row = deepcopy(data[side]["row"])
+            zero = {foot: [0.0, 0.0, 0.0] for foot in ("left", "right")}
+            nominal = query._evaluate_owned(
+                lift, side="left_limit", target_offsets=zero
+            )
+            if isinstance(nominal, SourceMotionUnavailable):
+                raise _source_unavailable_error(nominal)
+            row = _thaw(nominal.row)
             for foot in row["feet"].values():
                 foot.pop("target_offset_m", None)
             declared = grounded_touchdown_target(
@@ -1265,11 +1314,17 @@ class CanonicalConstantSkinTargetLaw:
         return None
 
     def _observe_pair(
-        self, query: SourceMotionQuery, time_s: float
+        self,
+        query: SourceMotionQuery,
+        time_s: float,
+        *,
+        evaluation_side: str = "value",
     ) -> dict[str, dict[str, Any]]:
         """Reuse one owned query and row solve for the two material patches."""
         if _semantic_law(self._law_id):
-            return self._observe_semantic_foot_frame_pair(query, time_s)
+            return self._observe_semantic_foot_frame_pair(
+                query, time_s, evaluation_side=evaluation_side
+            )
         if query._transition_clearance is None:
             result = query.evaluate_with_target_offsets(time_s, self._constants)
         else:
@@ -1314,7 +1369,11 @@ class CanonicalConstantSkinTargetLaw:
         return data
 
     def _observe_at(
-        self, time_s: float, *, query: SourceMotionQuery | None = None
+        self,
+        time_s: float,
+        *,
+        query: SourceMotionQuery | None = None,
+        evaluation_side: str = "value",
     ) -> ConstantSkinTargetValue | ConstantSkinTargetUnavailable:
         active_query = self._query if query is None else query
         observer = getattr(self._observe, "__func__", None)
@@ -1328,7 +1387,9 @@ class CanonicalConstantSkinTargetLaw:
             is SourceMotionQuery.evaluate_with_target_offsets
         )
         if observer is _DEFAULT_OBSERVE and owned_evaluate:
-            data = self._observe_pair(active_query, time_s)
+            data = self._observe_pair(
+                active_query, time_s, evaluation_side=evaluation_side
+            )
         else:
             # Preserve independently injected failure witnesses and subclasses.
             data = {
