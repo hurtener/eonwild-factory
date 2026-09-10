@@ -28,6 +28,7 @@ from .airborne_gait import (
 from ..layers.leg_contact_resolve_v3 import _rotation_from_matrix
 from .skin_rig import SkinRig, rotation_matrix
 from .joint_contact_control import JointContactTrial, solve_loaded_contact_controls
+from .minimax_contact import minimum_enclosing_residual_ball
 from .source_motion_query import SourceMotionQuery, SourceMotionUnavailable, _thaw
 from .support_anchors import CanonicalSupportAnchorProvider, _digest
 from ..planning.grounded_gait import GroundedGait, smooth as _smooth
@@ -71,6 +72,29 @@ def _finite_time(value: Any) -> float:
     if not math.isfinite(result):
         raise ContractError("constant skin target time must be finite numeric")
     return result
+
+
+def _floor_constrained_minimax_center(
+    errors_m: np.ndarray, up: np.ndarray, minimum_up_m: float
+) -> np.ndarray:
+    """Exact translation minimax center subject to one floor halfspace."""
+    center = np.asarray(
+        minimum_enclosing_residual_ball(errors_m).center_m, dtype=float
+    )
+    if float(center @ up) >= minimum_up_m:
+        return center
+    reflected = errors_m + (
+        2.0 * (minimum_up_m - errors_m @ up)[:, None] * up[None, :]
+    )
+    constrained = np.asarray(
+        minimum_enclosing_residual_ball(
+            np.vstack((errors_m, reflected))
+        ).center_m,
+        dtype=float,
+    )
+    if float(constrained @ up) + 1e-12 < minimum_up_m:
+        raise ContractError("floor-constrained contact minimax center is infeasible")
+    return constrained
 
 
 def _source_unavailable_error(result: SourceMotionUnavailable) -> ContractError:
@@ -978,15 +1002,15 @@ class CanonicalConstantSkinTargetLaw:
                     target_patch = support_targets[side]
                     active = np.asarray(self._support_patch_indices[side], dtype=int)
                     vertex_errors = target_patch[active] - patch[active]
-                    error = 0.5 * (
-                        vertex_errors.max(0) + vertex_errors.min(0)
+                    gap = float(patch[:, up_index].min() - self._skin.ground)
+                    error = _floor_constrained_minimax_center(
+                        vertex_errors,
+                        query.context.up,
+                        _TARGET_GAP_M - gap,
                     )
                     loaded_max_residuals[side] = float(
                         np.linalg.norm(vertex_errors, axis=1).max()
                     )
-                    gap = float(patch[:, up_index].min() - self._skin.ground)
-                    error -= query.context.up * float(error @ query.context.up)
-                    error += query.context.up * (_TARGET_GAP_M - gap)
                     residuals[side] = error
                 else:
                     witness = patch[anchor.lowest_patch_index]

@@ -18,6 +18,7 @@ from eonwild_motion.planning.grounded_gait import build_grounded_plan, sample_gr
 from eonwild_motion.solve.constant_skin_targets import (
     CanonicalConstantSkinTargetLaw,
     ConstantSkinTargetUnavailable,
+    _floor_constrained_minimax_center,
 )
 from eonwild_motion.solve.airborne_gait import _world_matrices
 from eonwild_motion.solve.performance import Performance, decorate_plan
@@ -155,6 +156,18 @@ def test_joint_contact_candidate_rejects_infeasible_endpoint_fallback(changed, v
     final[changed] = value
     with pytest.raises(ContractError, match="bilateral joint contact endpoint is unavailable"):
         CanonicalConstantSkinTargetLaw._require_joint_endpoint_final(**final)
+
+
+def test_loaded_contact_minimax_treats_floor_as_a_lower_bound():
+    errors = np.asarray(((0.0, 0.0, 0.0), (0.002, 0.002, 0.0)))
+    up = np.asarray((0.0, 1.0, 0.0))
+    lower = 0.003
+    center = _floor_constrained_minimax_center(errors, up, lower)
+    assert center == pytest.approx((0.0, lower, 0.0), abs=1e-12)
+    radius = np.linalg.norm(errors - center, axis=1).max()
+    assert radius == pytest.approx(0.003, abs=1e-12)
+    naive_clamp = np.asarray((0.001, lower, 0.0))
+    assert np.linalg.norm(errors - naive_clamp, axis=1).max() > radius
 
 
 def test_semantic_foot_frame_admits_boundaries_and_binds_local_templates():
