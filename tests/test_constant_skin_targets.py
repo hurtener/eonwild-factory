@@ -143,6 +143,9 @@ def test_semantic_foot_frame_receipt_hashes_source_material_vertex_ids():
     inputs = _inputs()
     law = _build_semantic_foot_frame(inputs)
     receipt = law.receipt()["loaded_support_membership"]["sides"]
+    membership = law.receipt()["loaded_support_membership"]
+    assert membership["policy_id"] == "canonical_touchdown_fixed_band.v2"
+    assert membership["support_band_m"] == 0.00125
     for side in ("left", "right"):
         positions = law._support_patch_indices[side]
         material_ids = [

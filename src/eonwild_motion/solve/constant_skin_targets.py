@@ -42,7 +42,8 @@ _CONSTANT_LAW = "canonical_constant_skin_targets.v1"
 _FRAME_MAPPING_TOLERANCE_M = 1e-10
 _FRAME_MAPPING_MAX_ITERATIONS = 40
 _FRAME_MAPPING_DAMPING = 0.5
-_SUPPORT_BAND_M = 0.001
+_SUPPORT_ADMISSION_POLICY_ID = "canonical_touchdown_fixed_band.v2"
+_SUPPORT_BAND_M = 0.00125
 _BUILD_TOKEN = object()
 
 
@@ -247,6 +248,14 @@ class CanonicalConstantSkinTargetLaw:
                 else {
                     side: list(self._support_patch_indices[side])
                     for side in ("left", "right")
+                }
+            ),
+            "support_admission_policy": (
+                None
+                if self._law_id != _SEMANTIC_FOOT_FRAME_LAW
+                else {
+                    "policy_id": _SUPPORT_ADMISSION_POLICY_ID,
+                    "fixed_band_m": _SUPPORT_BAND_M,
                 }
             ),
             "boundary_residuals_m": _thaw(self._boundary_residuals_m),
@@ -1008,6 +1017,7 @@ class CanonicalConstantSkinTargetLaw:
             "swing_target": "E_declared(t) + R_declared(t) * local_material_reference",
             "support_target": "immutable canonical material support subset; full sole/toe skin floor",
             "loaded_support_membership": {
+                "policy_id": _SUPPORT_ADMISSION_POLICY_ID,
                 "selection": "canonical touchdown vertices within fixed support band",
                 "support_band_m": _SUPPORT_BAND_M,
                 "sides": {
