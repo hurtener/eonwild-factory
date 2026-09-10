@@ -89,6 +89,39 @@ def _build_semantic_foot_frame(inputs):
     )
 
 
+def _build_joint_contact(inputs):
+    values = dict(inputs)
+    query = values.pop("query")
+    provider = values.pop("provider")
+    return CanonicalConstantSkinTargetLaw.build(
+        query,
+        provider,
+        law_id="canonical_semantic_joint_contact_targets.v3",
+        **values,
+    )
+
+
+def test_joint_contact_candidate_selects_v3_and_binds_endpoint_controls(monkeypatch):
+    monkeypatch.setattr(
+        CanonicalConstantSkinTargetLaw,
+        "_solve_joint_contact_endpoint",
+        lambda self, query, side, time_s: np.zeros(4),
+    )
+    law = _build_joint_contact(_inputs())
+    receipt = law.receipt()
+    assert receipt["law_id"] == "canonical_semantic_joint_contact_targets.v3"
+    assert receipt["joint_contact_policy"]["policy_id"] == "source_joint_contact_minimax.v1"
+    assert receipt["joint_contact_policy"]["target_offset_envelope_body_heights"] == 0.06
+    assert law.value(0.2).status == "AVAILABLE"
+    before = law.frozen_anchor_binding_sha256()
+    rebound = law.with_query(law._query)
+    assert rebound.frozen_anchor_binding_sha256() == before
+    law._joint_contact_end_controls["left"].setflags(write=True)
+    law._joint_contact_end_controls["left"][1] = 0.1
+    with pytest.raises(ContractError, match="law binding differs"):
+        law.value(0.2)
+
+
 def test_semantic_foot_frame_admits_boundaries_and_binds_local_templates():
     inputs = _inputs()
     law = _build_semantic_foot_frame(inputs)
