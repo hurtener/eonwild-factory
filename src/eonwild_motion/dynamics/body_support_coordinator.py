@@ -396,6 +396,20 @@ def _trial_residuals(
     return np.asarray(residuals, dtype=float), max_force, max_moment
 
 
+def _bounded_difference_probe(
+    coefficients: np.ndarray,
+    bounds: np.ndarray,
+    steps: np.ndarray,
+    column: int,
+) -> tuple[np.ndarray, float]:
+    direction = 1.0
+    if coefficients[column] + steps[column] > bounds[column]:
+        direction = -1.0
+    candidate = coefficients.copy()
+    candidate[column] += direction * steps[column]
+    return candidate, direction * steps[column]
+
+
 def solve_body_support_trajectory(
     evaluator: TrialEvaluator,
     *,
@@ -441,13 +455,14 @@ def solve_body_support_trajectory(
     for iteration in range(1, maximum_iterations + 1):
         jacobian = np.empty((len(residual), COEFFICIENT_COUNT))
         for column in range(COEFFICIENT_COUNT):
-            candidate = coefficients.copy()
-            candidate[column] += steps[column]
+            candidate, signed_step = _bounded_difference_probe(
+                coefficients, bounds, steps, column
+            )
             try:
                 _, shifted, _, _, _ = evaluate(candidate)
             except ContractError as exc:
                 return BodySupportSolution("UNAVAILABLE", tuple(coefficients), objective, force_error, moment_error, iteration - 1, evaluations, f"invalid finite-difference trial: {exc}")
-            jacobian[:, column] = (shifted - residual) / steps[column]
+            jacobian[:, column] = (shifted - residual) / signed_step
         regularization_hessian = 1e-3 * np.diag(1.0 / (bounds * bounds))
         damping = 1e-6 * np.eye(COEFFICIENT_COUNT)
         step = np.linalg.lstsq(

@@ -10,6 +10,7 @@ from eonwild_motion.dynamics.body_support_coordinator import (
     COEFFICIENT_COUNT,
     CoordinatorSample,
     TrialEvaluation,
+    _bounded_difference_probe,
     periodic_body_delta,
     solve_body_support_trajectory,
     solve_contact_wrench,
@@ -19,6 +20,18 @@ from eonwild_motion.errors import ContractError
 
 ANCHOR = "a" * 64
 SQUARE = ((-0.2, 0.0, -0.2), (-0.2, 0.0, 0.2), (0.2, 0.0, 0.2), (0.2, 0.0, -0.2))
+
+
+def test_finite_difference_probe_stays_inside_positive_bound() -> None:
+    coefficients = np.zeros(12)
+    bounds = np.ones(12)
+    steps = np.full(12, 0.01)
+    coefficients[4] = 1.0
+    candidate, signed_step = _bounded_difference_probe(
+        coefficients, bounds, steps, 4
+    )
+    assert candidate[4] == pytest.approx(0.99)
+    assert signed_step == pytest.approx(-0.01)
 
 
 def test_periodic_basis_has_exact_value_and_derivative_seams():
