@@ -47,6 +47,7 @@ class GroundedGait:
     swing_hip_lift_degrees: float = 0.0
     knee_bend_plane_outward_degrees: float = 0.0
     foot_outward_yaw_degrees: float | None = None
+    stance_roll_carrier: str | None = None
     rounded_swing_peak_fraction: float = 0.0
     centered_stance: bool = False
     handoff_phase_fraction: float | None = None
@@ -65,6 +66,11 @@ class GroundedGait:
                 if value is not None and value != 'rate_limited_c2':
                     raise ContractError(
                         'grounded metatarsal recovery carrier must be rate_limited_c2 or null')
+                continue
+            if key == 'stance_roll_carrier':
+                if value is not None and value != 'distal_contact_centroid':
+                    raise ContractError(
+                        'grounded stance roll carrier must be distal_contact_centroid or null')
                 continue
             if key == 'centered_stance':
                 if type(value) is not bool:

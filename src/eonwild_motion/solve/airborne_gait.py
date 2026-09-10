@@ -501,6 +501,7 @@ class AirborneSolveContext:
     toe_normals: Mapping[int, np.ndarray]
     knee_bend_plane_outward_degrees: float
     foot_outward_yaw_degrees: float
+    stance_roll_carrier: str | None
 
 
 @dataclass(frozen=True)
@@ -547,6 +548,7 @@ def build_airborne_solve_context(
     articulation_profile: ArticulationProfile | None = None,
     knee_bend_plane_outward_degrees: float = 0.0,
     foot_outward_yaw_degrees: float | None = None,
+    stance_roll_carrier: str | None = None,
 ) -> AirborneSolveContext:
     """Create the immutable source-owned state consumed by a plan-row solve.
 
@@ -567,6 +569,9 @@ def build_airborne_solve_context(
                  or not math.isfinite(foot_outward_yaw_degrees)
                  or not 0.0 <= foot_outward_yaw_degrees <= 15.0)):
         raise ContractError("foot outward yaw exceeds the engineering envelope")
+    if (stance_roll_carrier is not None
+            and stance_roll_carrier != "distal_contact_centroid"):
+        raise ContractError("unsupported stance roll carrier")
     roles = semantic_roles
     try:
         root, pelvis = (source.name_to_node[roles[k]] for k in ("root", "pelvis"))
@@ -672,6 +677,7 @@ def build_airborne_solve_context(
         knee_bend_plane_outward_degrees=float(knee_bend_plane_outward_degrees),
         foot_outward_yaw_degrees=(0.0 if foot_outward_yaw_degrees is None
                                   else float(foot_outward_yaw_degrees)),
+        stance_roll_carrier=stance_roll_carrier,
     )
 
 
@@ -911,6 +917,9 @@ def solve_airborne_plan_sample(
         if context.foot_outward_yaw_degrees and not material_partition:
             raise ContractError(
                 "semantic foot outward yaw requires the material contact partition")
+        if context.stance_roll_carrier is not None and not material_partition:
+            raise ContractError(
+                "stance roll carrier requires the material contact partition")
         contact_counterrotation = foot_plan.get(
             "semantic_foot_counterrotation_degrees", 0.0
         )
@@ -922,6 +931,9 @@ def solve_airborne_plan_sample(
             or (contact_counterrotation and not material_partition)
         ):
             raise ContractError("invalid semantic foot counterrotation")
+        if context.stance_roll_carrier and contact_counterrotation:
+            raise ContractError(
+                "stance roll with semantic foot counterrotation is not supported")
         swing_phase = foot_plan["swing_phase"]
         support_lock = (1.0 if foot_plan["contact"] else
                         1 - _smooth(min(swing_phase, 1 - swing_phase) / .18))
@@ -984,10 +996,31 @@ def solve_airborne_plan_sample(
             pa, pb, pc = (np.asarray(_world_position(w[n])) for n in (a, b, c))
             toe_geometry.append((pa - fp, np.asarray(_world_position(base_w[c])) + nominal_foot - np.asarray(_world_position(base_w[foot])), np.linalg.norm(pb - pa) + np.linalg.norm(pc - pb) - 1e-7))
 
+        outward_yaw = _qrotvec(tuple(
+            up * math.copysign(
+                math.radians(context.foot_outward_yaw_degrees),
+                hip_offsets[side],
+            )
+        ))
+        contact_counterrotation_q = _qrotvec(
+            tuple(lateral * math.radians(float(contact_counterrotation))))
+        contact_frame = _qmul(outward_yaw, contact_counterrotation_q)
+        yawed_tip_offset = np.asarray(
+            _qrotate(outward_yaw, tuple(initial_tip_offset)))
+        stance_roll_gain = (1.0 if foot_plan["contact"] else support_lock)
+
         def pitch_candidate(degrees, world_metatarsus_target=None):
             candidate_q = _qrotvec(tuple(lateral * math.radians(degrees)))
-            candidate_foot = (nominal_foot.copy() if material_partition else
-                              nominal_foot + initial_tip_offset - np.asarray(_qrotate(candidate_q, tuple(flexed_tip_offset))))
+            if (material_partition and context.stance_roll_carrier
+                    and stance_roll_gain > 0.0):
+                carried_pitch = _qrotvec(tuple(
+                    lateral * math.radians(degrees * stance_roll_gain)))
+                rolled_tip_offset = np.asarray(_qrotate(
+                    _qmul(contact_frame, carried_pitch), tuple(initial_tip_offset)))
+                candidate_foot = nominal_foot + yawed_tip_offset - rolled_tip_offset
+            else:
+                candidate_foot = (nominal_foot.copy() if material_partition else
+                                  nominal_foot + initial_tip_offset - np.asarray(_qrotate(candidate_q, tuple(flexed_tip_offset))))
             rotated_roots = [(np.asarray(_qrotate(candidate_q, tuple(offset))), tip, reach) for offset, tip, reach in toe_geometry]
             for _ in range(18 if not material_partition and lock > 1e-12 else 0):
                 largest_correction = 0.0
@@ -1152,20 +1185,16 @@ def solve_airborne_plan_sample(
             # Release that frame C2 during swing, allowing authored fold
             # and digit flex. No per-bone translation/scale is introduced.
             free_pitch = _qrotvec(tuple(lateral * math.radians(foot_plan.get("pad_pitch_degrees", 0.) * (1 - support_lock))))
-            contact_pitch = _qrotvec(
-                tuple(lateral * math.radians(float(contact_counterrotation)))
-            )
-            outward_yaw = _qrotvec(tuple(
-                up * math.copysign(
-                    math.radians(context.foot_outward_yaw_degrees),
-                    hip_offsets[side],
-                )
-            ))
+            contact_pitch = contact_counterrotation_q
+            stance_roll = (solved_pitch * stance_roll_gain
+                           if context.stance_roll_carrier else 0.0)
+            stance_pitch = _qrotvec(tuple(lateral * math.radians(stance_roll)))
             foot_world = _qmul(
                 outward_yaw,
                 _qmul(
                     contact_pitch,
-                    _qmul(free_pitch, _rotation_from_matrix(base_w[foot])),
+                    _qmul(stance_pitch,
+                          _qmul(free_pitch, _rotation_from_matrix(base_w[foot]))),
                 ),
             )
             rot[foot] = _world_rotation(source, w, foot, foot_world)
@@ -1174,7 +1203,8 @@ def solve_airborne_plan_sample(
         # planted. A centroid alone can hide one penetrating toe. Release
         # these constraints smoothly after lift and restore before land.
         for tc in toes[side]:
-            if material_partition:
+            if material_partition and not (
+                    context.stance_roll_carrier and stance_roll_gain > 0.0):
                 # Calibrated FK, not a nearly straight two-link toe IK:
                 # at full support the fixed foot frame plus zero local
                 # flex makes EVERY toe landmark stationary. During swing
@@ -1185,7 +1215,16 @@ def solve_airborne_plan_sample(
                 raise ContractError("airborne digit endpoint solve requires three-node toe chains")
             a, b, c = tc
             pa, pb, pc = (np.asarray(_world_position(w[n])) for n in tc)
-            desired_tip = np.asarray(_world_position(base_w[c])) + nominal_foot - np.asarray(_world_position(base_w[foot]))
+            desired_tip = (
+                nominal_foot + np.asarray(_qrotate(
+                    outward_yaw,
+                    tuple(np.asarray(_world_position(base_w[c]))
+                          - np.asarray(_world_position(base_w[foot]))),
+                ))
+                if material_partition else
+                np.asarray(_world_position(base_w[c])) + nominal_foot
+                - np.asarray(_world_position(base_w[foot]))
+            )
             target_tip = pc + lock * (desired_tip - pc)
             direction = _unit(target_tip - pa)
             first_len, second_len = np.linalg.norm(pb - pa), np.linalg.norm(pc - pb)
@@ -1213,7 +1252,11 @@ def solve_airborne_plan_sample(
             # Preserve its loaded world orientation, then progressively
             # permit distal flex only as the swing constraint releases.
             distal_flex = math.radians(foot_plan["toe_flex_degrees"] * .275 * (1 - lock))
-            distal_world = _qmul(_qrotvec(tuple(lateral * distal_flex)), _rotation_from_matrix(base_w[c]))
+            distal_world = _qmul(
+                contact_frame if material_partition else (0.0, 0.0, 0.0, 1.0),
+                _qmul(_qrotvec(tuple(lateral * distal_flex)),
+                      _rotation_from_matrix(base_w[c])),
+            )
             rot[c] = _world_rotation(source, w, c, distal_world)
             w = _world_matrices(source, tr, rot, base_s)
         actual = np.asarray(_world_position(w[foot]))

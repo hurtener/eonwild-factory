@@ -1,0 +1,16 @@
+{
+  "baseline": {
+    "path": "catalog/motion-baselines/allosaurus-engineering-locomotion.v9.json",
+    "sha256": "944b97bdb0dbf655d4c50e4bf67f5a01b9fccc821f143f5022b3d95cf00878b2"
+  },
+  "id": "allosaurus-engineering-native-walk-motion-set.v15",
+  "motions": [{
+    "intent": {
+      "path": "catalog/motion-intents/heavy-biped.shared-adult-walk-visual-iteration.v8.json",
+      "sha256": "b63277cb65e7c76059a0c2ca226e877df31bc713cdbf2dbdf94662f0a1b81618"
+    },
+    "name": "walk"
+  }],
+  "schema": "eonwild.motion.motion-set.v2",
+  "version": 15
+}

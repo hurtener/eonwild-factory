@@ -410,6 +410,11 @@ class SourceMotionQuery:
                 if isinstance(locomotion_gait, GroundedGait)
                 else None
             ),
+            stance_roll_carrier=(
+                locomotion_gait.stance_roll_carrier
+                if isinstance(locomotion_gait, GroundedGait)
+                else None
+            ),
         )
         if body_support_control is not None and type(body_support_control) is not BodySupportControl:
             raise ContractError("source motion query body-support control must be its owned binding")

@@ -1,0 +1,11 @@
+{
+  "description": "Shared accepted walk with a distal-contact stance-roll carrier so the rear pad rises around supported digits before toe release. Controls are authored engineering values.",
+  "id": "heavy-biped.shared-adult-walk-visual-iteration.v8",
+  "program": "grounded_gait",
+  "program_profile": {
+    "path": "catalog/programs/heavy-biped.shared-adult-walk-visual-iteration.v10.json",
+    "sha256": "127b7d5d4dd7cdc0b399d3ba72915f6d57c65eced6a3e4a8283995e0bbbb5a20"
+  },
+  "schema": "eonwild.motion.motion-intent.v2",
+  "version": 8
+}

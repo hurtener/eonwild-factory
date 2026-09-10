@@ -1,0 +1,16 @@
+{
+  "baseline": {
+    "path": "catalog/motion-baselines/tarbosaurus-pin-552-1-adult-locomotion.v4.json",
+    "sha256": "7224acf2bf74338800c993193d34541c68bb88ef30ef145d2b62f4e1edd6b196"
+  },
+  "id": "tarbosaurus-pin-552-1-adult-locomotion-motion-set.v10",
+  "motions": [{
+    "intent": {
+      "path": "catalog/motion-intents/heavy-biped.shared-adult-walk-visual-iteration.v8.json",
+      "sha256": "b63277cb65e7c76059a0c2ca226e877df31bc713cdbf2dbdf94662f0a1b81618"
+    },
+    "name": "walk"
+  }],
+  "schema": "eonwild.motion.motion-set.v2",
+  "version": 10
+}
