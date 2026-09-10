@@ -221,6 +221,7 @@ def _skin_influences(glb: Glb, profile: Mapping[str, Any]) -> tuple[np.ndarray, 
         try:
             mask = geometry["feet"][side]
             threshold = float(mask["weight_threshold"])
+            membership_policy = mask.get("membership_policy", "max_individual_weight.v1")
             regions = (("sole", mask["sole_joints"]), ("toe", mask["toe_joints"]))
         except (KeyError, TypeError, ValueError) as exc:
             raise ContractError("exact tangent skin mask is invalid") from exc
@@ -229,7 +230,14 @@ def _skin_influences(glb: Glb, profile: Mapping[str, Any]) -> tuple[np.ndarray, 
                 targets = {names[name] for name in names_for_region}
             except (KeyError, TypeError) as exc:
                 raise ContractError("exact tangent skin mask references unknown node") from exc
-            matches = [vertex for vertex, rows in enumerate(influences) if max((weight for slot, weight in rows if joint_nodes[slot] in targets), default=0.) >= threshold]
+            if membership_policy not in {"max_individual_weight.v1", "sum_declared_region_weights.v1"}:
+                raise ContractError("exact tangent skin mask membership policy is invalid")
+            def strength(rows):
+                values = [weight for slot, weight in rows if joint_nodes[slot] in targets]
+                if not values:
+                    return 0.0
+                return sum(values) if membership_policy == "sum_declared_region_weights.v1" else max(values)
+            matches = [vertex for vertex, rows in enumerate(influences) if strength(rows) >= threshold]
             if not matches:
                 raise ContractError("exact tangent skin mask selected no vertices")
             selected.extend((f"{side}:{region}:vertex-{vertex}", vertex) for vertex in matches)

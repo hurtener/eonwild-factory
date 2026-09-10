@@ -115,6 +115,7 @@ class CanonicalConstantSkinTargetLaw:
         local_material_references: Mapping[str, np.ndarray] | None = None,
         support_patch_indices: Mapping[str, tuple[int, ...]] | None = None,
         joint_contact_end_controls: Mapping[str, np.ndarray] | None = None,
+        joint_contact_lift_references: Mapping[str, np.ndarray] | None = None,
         boundary_residuals_m: Mapping[str, Mapping[str, float]] | None = None,
         _token: object | None = None,
     ) -> None:
@@ -166,8 +167,17 @@ class CanonicalConstantSkinTargetLaw:
                     control = np.array(control, copy=True); control.setflags(write=False)
                     frozen_controls[side] = control
                 self._joint_contact_end_controls = MappingProxyType(frozen_controls)
+                if joint_contact_lift_references is not None and set(joint_contact_lift_references) != {"left", "right"}:
+                    raise ContractError("joint contact lift references must be bilateral")
+                self._joint_contact_lift_references = (
+                    None if joint_contact_lift_references is None else MappingProxyType({
+                        side: _readonly_vector(joint_contact_lift_references[side])
+                        for side in ("left", "right")
+                    })
+                )
             else:
                 self._joint_contact_end_controls = None
+                self._joint_contact_lift_references = None
         else:
             if local_material_references is not None:
                 raise ContractError("constant skin target law does not accept foot-frame references")
@@ -176,6 +186,7 @@ class CanonicalConstantSkinTargetLaw:
                 raise ContractError("constant skin target law does not accept support membership")
             self._support_patch_indices = None
             self._joint_contact_end_controls = None
+            self._joint_contact_lift_references = None
         self._boundary_residuals_m = _freeze_data(
             {} if boundary_residuals_m is None else boundary_residuals_m
         )
@@ -262,6 +273,10 @@ class CanonicalConstantSkinTargetLaw:
                         None if self._local_material_references is None
                         else self._local_material_references[side].tolist()
                     ),
+                    "joint_contact_lift_reference": (
+                        None if self._joint_contact_lift_references is None
+                        else self._joint_contact_lift_references[side].tolist()
+                    ),
                 }
                 for side in ("left", "right")
             },
@@ -277,6 +292,7 @@ class CanonicalConstantSkinTargetLaw:
             local_material_references=self._local_material_references,
             support_patch_indices=self._support_patch_indices,
             joint_contact_end_controls=self._joint_contact_end_controls,
+            joint_contact_lift_references=self._joint_contact_lift_references,
             boundary_residuals_m=self._boundary_residuals_m,
             _token=_BUILD_TOKEN,
         )
@@ -314,6 +330,12 @@ class CanonicalConstantSkinTargetLaw:
             "joint_contact_policy_end_controls": (
                 None if self._joint_contact_end_controls is None else {
                     side: self._joint_contact_end_controls[side].tolist()
+                    for side in ("left", "right")
+                }
+            ),
+            "joint_contact_lift_references": (
+                None if self._joint_contact_lift_references is None else {
+                    side: self._joint_contact_lift_references[side].tolist()
                     for side in ("left", "right")
                 }
             ),
@@ -477,6 +499,19 @@ class CanonicalConstantSkinTargetLaw:
                     boundary_residuals_m=boundary_residuals,
                     _token=_BUILD_TOKEN,
                 )
+                lift_references = law._build_joint_contact_lift_references(
+                    calibration_query
+                )
+                law = cls(
+                    query, calibration_query, provider, skin, constants,
+                    law_id=law_id,
+                    local_material_references=references,
+                    support_patch_indices=support_indices,
+                    joint_contact_end_controls=endpoint_controls,
+                    joint_contact_lift_references=lift_references,
+                    boundary_residuals_m=boundary_residuals,
+                    _token=_BUILD_TOKEN,
+                )
             validation_phases = [
                 provider.anchor_for("left").touchdown_phase_s,
                 provider.anchor_for("right").touchdown_phase_s,
@@ -491,7 +526,11 @@ class CanonicalConstantSkinTargetLaw:
                 checked = law._observe_at(phase, query=calibration_query)
                 if isinstance(checked, ConstantSkinTargetUnavailable):
                     raise ContractError(
-                        f"semantic foot-frame target calibration failed: {checked.reason}"
+                        "semantic foot-frame target calibration failed: "
+                        f"time_s={phase!r} {checked.reason}; "
+                        f"observations={_thaw(checked.observations)!r}; "
+                        "joint_contact_endpoint_controls="
+                        f"{None if law._joint_contact_end_controls is None else {side: law._joint_contact_end_controls[side].tolist() for side in ('left', 'right')}!r}"
                     )
             return law
         for _ in range(iterations):
@@ -827,9 +866,16 @@ class CanonicalConstantSkinTargetLaw:
                 declared_effector = np.asarray(
                     declared["target_foot_world_m"], dtype=float
                 )
+                local_reference = self._local_material_references[side]
+                if self._joint_contact_lift_references is not None:
+                    blend = _smooth(float(np.clip(row["feet"][side]["swing_phase"], 0.0, 1.0)))
+                    local_reference = (
+                        (1.0 - blend) * self._joint_contact_lift_references[side]
+                        + blend * local_reference
+                    )
                 material_target = (
                     declared_effector
-                    + rotation @ self._local_material_references[side]
+                    + rotation @ local_reference
                 )
                 support_targets[side] = None
             targets[side] = material_target
@@ -934,8 +980,58 @@ class CanonicalConstantSkinTargetLaw:
                 "pose": pose,
                 "row": row,
                 "correction_m": corrections[side],
+                "material_witness_m": patch[anchor.lowest_patch_index].tolist(),
+                "semantic_target_m": targets[side].tolist(),
             }
         return data
+
+    def _build_joint_contact_lift_references(
+        self, query: SourceMotionQuery
+    ) -> dict[str, np.ndarray]:
+        """Bind the emitted constrained lift witness in its semantic MTP frame."""
+        cycle = 2.0 * query._locomotion_gait.step_period_s
+        zero = {foot: [0.0, 0.0, 0.0] for foot in ("left", "right")}
+        references = {}
+        for side, offset in (("left", 0.0), ("right", query._locomotion_gait.step_period_s)):
+            lift = (offset + cycle * query._locomotion_gait.duty_factor) % cycle
+            nominal = query._evaluate_owned(lift, side="left_limit", target_offsets=zero)
+            if isinstance(nominal, SourceMotionUnavailable):
+                raise _source_unavailable_error(nominal)
+            row = _thaw(nominal.row)
+            peak = float(query._locomotion_gait.push_off_pitch_degrees)
+            controls = {}
+            for foot_side in ("left", "right"):
+                foot = row["feet"][foot_side]
+                gain = (
+                    0.0 if peak == 0.0
+                    else float(np.clip(foot["foot_pitch_degrees"] / peak, 0.0, 1.0))
+                ) if foot["contact"] else 1.0 - _smooth(float(foot["swing_phase"]) / 0.35)
+                endpoint = self._joint_contact_end_controls[foot_side]
+                values = np.asarray([
+                    foot["foot_pitch_degrees"] + gain * (endpoint[0] - peak),
+                    gain * endpoint[1], gain * endpoint[2], gain * endpoint[3],
+                ])
+                controls[foot_side] = {
+                    "authored_pitch_degrees": float(values[0]),
+                    "foot_counterrotation_degrees": float(values[1]),
+                    "target_offset_m": (
+                        query.context.forward * values[2]
+                        + query.context.up * values[3]
+                    ).tolist(),
+                }
+            solved = query.evaluate_with_joint_contact_controls(
+                lift, controls, side="left_limit"
+            )
+            if isinstance(solved, SourceMotionUnavailable):
+                raise _source_unavailable_error(solved)
+            worlds = np.asarray(solved.worlds)
+            patch = self._patch(self._skin, worlds, side)
+            anchor = self._provider.anchor_for(side)
+            effector, rotation = self._foot_frame(query, worlds, side)
+            references[side] = rotation.T @ (
+                patch[anchor.lowest_patch_index] - effector
+            )
+        return references
 
     def _solve_joint_contact_endpoint(
         self, query: SourceMotionQuery, side: str, time_s: float
@@ -980,6 +1076,7 @@ class CanonicalConstantSkinTargetLaw:
                 raise _source_unavailable_error(solved)
             anchor = self._provider.anchor_for(active_side)
             patch = self._patch(self._skin, np.asarray(solved.worlds), active_side)
+            full_skin = self._skin.skin(np.asarray(solved.worlds))
             target = anchor.material_origin_m + query.context.forward * row["feet"][active_side]["forward_m"]
             up_i = int(np.argmax(np.abs(query.context.up)))
             base_gap = anchor.material_origin_m[anchor.lowest_patch_index][up_i] - self._skin.ground
@@ -988,7 +1085,7 @@ class CanonicalConstantSkinTargetLaw:
             foot = solved.pose.feet[active_side]
             return JointContactTrial(
                 patch[active] - target[active], target[active],
-                float(patch[:, up_i].min() - self._skin.ground),
+                float(full_skin[:, up_i].min() - self._skin.ground),
                 float(foot["foot_target_residual_m"]),
                 float(solved.pose.maximum_unreachable_extension_m),
                 float(solved.pose.maximum_articulation_envelope_violation_degrees),
@@ -1014,7 +1111,9 @@ class CanonicalConstantSkinTargetLaw:
             raise _source_unavailable_error(solved)
         worlds = np.asarray(solved.worlds)
         up_i = int(np.argmax(np.abs(query.context.up)))
-        full_gap = float(self._skin.skin(worlds)[:, up_i].min() - self._skin.ground)
+        full_skin = self._skin.skin(worlds)
+        full_argmin = int(np.argmin(full_skin[:, up_i]))
+        full_gap = float(full_skin[full_argmin, up_i] - self._skin.ground)
         failures = []
         for active_side in active_sides:
             trial = evaluate(active_side, fixed[active_side])
@@ -1029,21 +1128,44 @@ class CanonicalConstantSkinTargetLaw:
         final_articulation = float(
             solved.pose.maximum_articulation_envelope_violation_degrees
         )
+        self._require_joint_endpoint_final(
+            time_s=time_s,
+            full_gap_m=full_gap,
+            full_argmin_vertex=full_argmin,
+            ik_residual_m=final_ik,
+            extension_m=final_extension,
+            articulation_degrees=final_articulation,
+            contact_failures=failures,
+        )
+        return np.asarray(fixed[side], dtype=float)
+
+    @staticmethod
+    def _require_joint_endpoint_final(
+        *,
+        time_s: float,
+        full_gap_m: float,
+        full_argmin_vertex: int,
+        ik_residual_m: float,
+        extension_m: float,
+        articulation_degrees: float,
+        contact_failures: list[str],
+    ) -> None:
+        """Reject an optimizer fallback unless the exact combined pose is feasible."""
         if (
-            full_gap < _TARGET_GAP_M
-            or final_ik > _IK_TOLERANCE_M
-            or final_extension > _IK_TOLERANCE_M
-            or final_articulation > _ARTICULATION_TOLERANCE_DEGREES
-            or failures
+            full_gap_m < _TARGET_GAP_M
+            or ik_residual_m > _IK_TOLERANCE_M
+            or extension_m > _IK_TOLERANCE_M
+            or articulation_degrees > _ARTICULATION_TOLERANCE_DEGREES
+            or contact_failures
         ):
             raise ContractError(
                 "bilateral joint contact endpoint is unavailable: "
-                f"time_s={time_s!r} full_skin_gap_m={full_gap!r} "
-                f"ik_residual_m={final_ik!r} extension_m={final_extension!r} "
-                f"articulation_degrees={final_articulation!r} "
-                + "; ".join(failures)
+                f"time_s={time_s!r} full_skin_gap_m={full_gap_m!r} "
+                f"full_skin_argmin_vertex={full_argmin_vertex!r} "
+                f"ik_residual_m={ik_residual_m!r} extension_m={extension_m!r} "
+                f"articulation_degrees={articulation_degrees!r} "
+                + "; ".join(contact_failures)
             )
-        return np.asarray(fixed[side], dtype=float)
 
     @staticmethod
     def _failure_reason(side: str, observation: Mapping[str, Any]) -> str | None:
@@ -1200,6 +1322,9 @@ class CanonicalConstantSkinTargetLaw:
                 observation["loaded_material_max_residual_m"] = float(
                     value["loaded_material_max_residual_m"]
                 )
+            for name in ("material_witness_m", "semantic_target_m"):
+                if name in value:
+                    observation[name] = list(value[name])
             observations[side] = observation
             reason = self._failure_reason(side, observation)
             if reason is not None:
@@ -1299,6 +1424,11 @@ class CanonicalConstantSkinTargetLaw:
                         side: self._joint_contact_end_controls[side].tolist()
                         for side in ("left", "right")
                     },
+                    "lift_material_references_mtp_local_m": {
+                        side: self._joint_contact_lift_references[side].tolist()
+                        for side in ("left", "right")
+                    },
+                    "swing_reference_transport": "smooth_lift_to_touchdown_mtp_local.v1",
                     "target_offset_envelope_body_heights": _MAX_CORRECTION_BODY_HEIGHTS,
                     "swing_release_fraction": 0.35,
                 }

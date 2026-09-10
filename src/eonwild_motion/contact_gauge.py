@@ -753,7 +753,17 @@ def load_contact_gauge_source(path: Path) -> dict[str, Any]:
     for side, mask in feet.items():
         if not isinstance(mask, Mapping):
             raise ContractError(f"source {side} mask must be an object")
-        _keys(mask, {"side", "sole_joints", "toe_joints", "weight_threshold"}, label=f"source {side} mask")
+        required = {"side", "sole_joints", "toe_joints", "weight_threshold"}
+        missing = sorted(required - set(mask))
+        unknown = sorted(set(mask) - required - {"membership_policy"})
+        if missing:
+            raise ContractError(f"source {side} mask: missing fields {missing}")
+        if unknown:
+            raise ContractError(f"source {side} mask: unknown fields {unknown}")
+        if mask.get("membership_policy", "max_individual_weight.v1") not in {
+            "max_individual_weight.v1", "sum_declared_region_weights.v1"
+        }:
+            raise ContractError(f"source {side} mask has unsupported membership policy")
         if mask["side"] != side:
             raise ContractError(f"source {side} mask has a mismatched side identity")
         for key in ("sole_joints", "toe_joints"):
@@ -2215,17 +2225,15 @@ def _source_frames(
         sole_nodes = {name_to_index[name] for name in mask["sole_joints"]}
         toe_nodes = {name_to_index[name] for name in mask["toe_joints"]}
         threshold = float(mask["weight_threshold"])
+        membership_policy = mask.get("membership_policy", "max_individual_weight.v1")
         sole: list[tuple[int, float]] = []
         toe: list[tuple[int, float]] = []
         for vertex_index, rows in enumerate(influences):
-            sole_weight = max(
-                (weight for joint_slot, weight in rows if joint_nodes[joint_slot] in sole_nodes),
-                default=0.0,
-            )
-            toe_weight = max(
-                (weight for joint_slot, weight in rows if joint_nodes[joint_slot] in toe_nodes),
-                default=0.0,
-            )
+            reducer = sum if membership_policy == "sum_declared_region_weights.v1" else max
+            sole_values = [weight for joint_slot, weight in rows if joint_nodes[joint_slot] in sole_nodes]
+            toe_values = [weight for joint_slot, weight in rows if joint_nodes[joint_slot] in toe_nodes]
+            sole_weight = reducer(sole_values) if sole_values else 0.0
+            toe_weight = reducer(toe_values) if toe_values else 0.0
             if sole_weight >= threshold:
                 sole.append((vertex_index, sole_weight))
             if toe_weight >= threshold:
@@ -2236,6 +2244,7 @@ def _source_frames(
             "sole": sole,
             "toe": toe,
             "weight_threshold": threshold,
+            "membership_policy": membership_policy,
         }
 
     frames: list[dict[str, Any]] = []
@@ -2300,6 +2309,7 @@ def _source_frames(
                 "sole": len(masks_by_side[side]["sole"]),
                 "toe": len(masks_by_side[side]["toe"]),
                 "weight_threshold": masks_by_side[side]["weight_threshold"],
+                "membership_policy": masks_by_side[side]["membership_policy"],
                 "sole_vertex_indices": [vertex for vertex, _ in masks_by_side[side]["sole"]],
                 "toe_vertex_indices": [vertex for vertex, _ in masks_by_side[side]["toe"]],
             }
@@ -2409,6 +2419,7 @@ def analyze_glb(
         result.report["measured"]["feet"][side]["mask"].update(
             {
                 "weight_threshold": extraction["mask_counts"][side]["weight_threshold"],
+                "membership_policy": extraction["mask_counts"][side]["membership_policy"],
                 "sole_vertex_indices": extraction["mask_counts"][side]["sole_vertex_indices"],
                 "toe_vertex_indices": extraction["mask_counts"][side]["toe_vertex_indices"],
             }

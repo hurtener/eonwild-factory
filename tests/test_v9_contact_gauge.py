@@ -19,6 +19,7 @@ from eonwild_motion.contact_gauge import (
     load_narrow_gauge_policy,
 )
 from eonwild_motion.errors import ContractError
+from eonwild_motion.factory.emitted_tangent import _skin_influences
 from eonwild_motion.glb.container import Glb as ContainerGlb
 from eonwild_motion.hashing import sha256_file
 from eonwild_motion.solve.skin_rig import SkinRig
@@ -212,6 +213,37 @@ class ContactGaugeTests(unittest.TestCase):
         self.assertEqual(len(rig.positions), 40105)
         self.assertTrue(rig.foot_masks["left"].size)
         self.assertTrue(rig.foot_masks["right"].size)
+
+    def test_region_sum_membership_admits_split_declared_toe_vertex_consistently(self):
+        source_path = ROOT / (
+            "assets/sha256/"
+            "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f.glb"
+        )
+        roles = json.loads(
+            (ROOT / "catalog/rigs/heavy-biped.v9.json").read_text(encoding="utf-8")
+        )["roles"]
+        legacy = json.loads(
+            (ROOT / "catalog/contacts/heavy-biped.v10.json").read_text(encoding="utf-8")
+        )
+        summed = json.loads(
+            (ROOT / "catalog/contacts/heavy-biped.v11.json").read_text(encoding="utf-8")
+        )
+        source = ContainerGlb(source_path)
+        legacy_rig = SkinRig(source, roles, [0, 0, 1], [0, 1, 0], legacy)
+        summed_rig = SkinRig(source, roles, [0, 0, 1], [0, 1, 0], summed)
+        self.assertNotIn(50706, legacy_rig.foot_regions["left"]["toe"])
+        self.assertIn(50706, summed_rig.foot_regions["left"]["toe"])
+        _, _, _, _, selected = _skin_influences(source, summed)
+        self.assertIn(("left:toe:vertex-50706", 50706), selected)
+
+        corrupt = copy.deepcopy(summed)
+        corrupt["coordinate_system"] = copy.deepcopy(SOURCE["coordinate_system"])
+        corrupt["geometry"]["feet"]["left"]["membership_policy"] = "unknown"
+        with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
+            path = Path(temporary) / "unknown-membership-policy.json"
+            path.write_text(json.dumps(corrupt), encoding="utf-8")
+            with self.assertRaisesRegex(ContractError, "unsupported membership policy"):
+                load_contact_gauge_source(path)
 
     def test_profile_rejects_mismatched_skin_influence_accessor_counts(self):
         profile = copy.deepcopy(SOURCE)

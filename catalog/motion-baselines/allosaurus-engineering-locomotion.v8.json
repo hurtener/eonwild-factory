@@ -8,8 +8,8 @@
     "sha256": "5a353e237a6be84502f092cb64aa5a0bd4529e843534a59d888b6fb3409e0ede"
   },
   "contact_profile": {
-    "path": "catalog/contacts/allosaurus-engineering.v6.json",
-    "sha256": "af8ef97f71bfacecc928e871266b0601fb418427ebad5fef355564d4c942a647"
+    "path": "catalog/contacts/allosaurus-engineering.v7.json",
+    "sha256": "050fa156cd4133eed044779cff7639829f5cd07968adf1837e45ec2c3d3444be"
   },
   "family": "heavy-predatory-biped",
   "forward_axis": [

@@ -8,8 +8,8 @@
     "sha256": "c1206143387ad4d1084a413ee031018f5a61a8e0539ef8256c6bba74a0f4bc6a"
   },
   "contact_profile": {
-    "path": "catalog/contacts/heavy-biped.v10.json",
-    "sha256": "61e0351fe9f7170ddce7f0b83a8f0379d119349d3c392ffec43e544adb115db5"
+    "path": "catalog/contacts/heavy-biped.v11.json",
+    "sha256": "903be2dd28b445cdc45231b5fadd46f8f9162a42fdbe12a361b96f40a3f5603a"
   },
   "family": "heavy-predatory-biped",
   "forward_axis": [

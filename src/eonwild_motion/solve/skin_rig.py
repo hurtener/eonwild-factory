@@ -78,7 +78,14 @@ class SkinRig:
             regions = {}
             for region, label in (("sole", "sole_joints"), ("toe", "toe_joints")):
                 nodes = [glb.name_to_node[n] for n in mask[label]]
-                strength = np.where(np.isin(self.node_ids, nodes), self.weights, 0).max(axis=1)
+                declared = np.where(np.isin(self.node_ids, nodes), self.weights, 0)
+                policy = mask.get("membership_policy", "max_individual_weight.v1")
+                if policy == "max_individual_weight.v1":
+                    strength = declared.max(axis=1)
+                elif policy == "sum_declared_region_weights.v1":
+                    strength = declared.sum(axis=1)
+                else:
+                    raise ContractError("unsupported skin contact membership policy")
                 indices = np.flatnonzero(strength >= mask["weight_threshold"])
                 if not len(indices):
                     raise ContractError("skin contact mask is empty")

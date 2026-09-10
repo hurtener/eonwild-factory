@@ -124,6 +124,31 @@ def test_joint_contact_candidate_selects_v3_and_binds_endpoint_controls(monkeypa
         law.value(0.2)
 
 
+@pytest.mark.parametrize(
+    ("changed", "value"),
+    (
+        ("full_gap_m", 0.000099),
+        ("ik_residual_m", 0.001001),
+        ("extension_m", 0.001001),
+        ("articulation_degrees", 0.010001),
+        ("contact_failures", ["left residual=0.001"]),
+    ),
+)
+def test_joint_contact_candidate_rejects_infeasible_endpoint_fallback(changed, value):
+    final = {
+        "time_s": 1.0,
+        "full_gap_m": 0.0001,
+        "full_argmin_vertex": 42,
+        "ik_residual_m": 0.0,
+        "extension_m": 0.0,
+        "articulation_degrees": 0.0,
+        "contact_failures": [],
+    }
+    final[changed] = value
+    with pytest.raises(ContractError, match="bilateral joint contact endpoint is unavailable"):
+        CanonicalConstantSkinTargetLaw._require_joint_endpoint_final(**final)
+
+
 def test_semantic_foot_frame_admits_boundaries_and_binds_local_templates():
     inputs = _inputs()
     law = _build_semantic_foot_frame(inputs)
