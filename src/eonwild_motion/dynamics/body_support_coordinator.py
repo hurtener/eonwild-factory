@@ -37,6 +37,8 @@ COEFFICIENTS = (
 )
 FRICTION_COEFFICIENT = 0.5
 NORMALIZED_WRENCH_TOLERANCE = 1e-4
+# Existing final skin-loop authority used by factory.handoff and skin_targets.
+TERMINAL_PARTICLE_TOLERANCE_M = 0.0005
 _NNLS_KKT_TOLERANCE = 1e-10
 _NNLS_MAX_ITERATIONS_FACTOR = 12
 
@@ -113,6 +115,7 @@ def coordinator_policy():
             "rotation_coefficient_bound_degrees": 4.0,
             "friction_coefficient": FRICTION_COEFFICIENT,
             "normalized_wrench_tolerance": NORMALIZED_WRENCH_TOLERANCE,
+            "terminal_particle_tolerance_m": TERMINAL_PARTICLE_TOLERANCE_M,
             "maximum_outer_iterations": 4,
             "mass_model": "fixed-neutral-area full-LBS vertex particles",
         }
@@ -498,6 +501,7 @@ __all__ = [
     "FRICTION_COEFFICIENT",
     "NORMALIZED_WRENCH_TOLERANCE",
     "SCHEMA",
+    "TERMINAL_PARTICLE_TOLERANCE_M",
     "TrialEvaluation",
     "coordinator_policy",
     "periodic_body_delta",

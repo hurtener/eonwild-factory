@@ -7,11 +7,15 @@ from eonwild_motion.dynamics.body_support_bridge import (
     FinalGeometrySample,
     build_surface_mass_trial_evaluator,
 )
+from eonwild_motion.dynamics.body_support_coordinator import (
+    TERMINAL_PARTICLE_TOLERANCE_M,
+    coordinator_policy,
+)
 from eonwild_motion.errors import ContractError
 
 
 ANCHOR = "a" * 64
-TERMINAL_TOLERANCE_M = 0.0005
+TERMINAL_TOLERANCE_M = TERMINAL_PARTICLE_TOLERANCE_M
 SUPPORT = ((-0.1, 0.0, -0.1), (0.1, 0.0, -0.1), (0.1, 0.0, 0.1), (-0.1, 0.0, 0.1))
 
 
@@ -130,6 +134,42 @@ def test_bridge_rejects_actual_terminal_particle_deviation(monkeypatch) -> None:
     )
     with pytest.raises(ContractError, match="terminal full-LBS particles"):
         evaluator((0.0,) * 12)
+
+
+def test_bridge_uses_admitted_actual_terminal_particles_in_last_interval(monkeypatch) -> None:
+    _patch_vertex_evaluator(monkeypatch)
+    evaluator = build_surface_mass_trial_evaluator(
+        source_bytes=b"bound",
+        surface_mass_profile=_profile(),
+        duration_s=1.0,
+        body_height_m=2.0,
+        sample_count=5,
+        cycle_travel_m=(0.0, 0.0, 1.0),
+        terminal_particle_tolerance_m=TERMINAL_TOLERANCE_M,
+        frozen_anchor_sha256=ANCHOR,
+        evaluate_final_geometry=_geometry(terminal_offset=(0.0, 0.0004, 0.0)),
+    )
+    trial = evaluator((0.0,) * 12)
+    assert trial.samples[-1].linear_momentum_kg_mps == pytest.approx(
+        (0.0, 0.02, 10.0)
+    )
+
+
+def test_bridge_rejects_caller_relaxed_terminal_tolerance(monkeypatch) -> None:
+    _patch_vertex_evaluator(monkeypatch)
+    assert coordinator_policy()["terminal_particle_tolerance_m"] == 0.0005
+    with pytest.raises(ContractError, match="differs from versioned policy"):
+        build_surface_mass_trial_evaluator(
+            source_bytes=b"bound",
+            surface_mass_profile=_profile(),
+            duration_s=1.0,
+            body_height_m=2.0,
+            sample_count=5,
+            cycle_travel_m=(0.0, 0.0, 1.0),
+            terminal_particle_tolerance_m=10.0,
+            frozen_anchor_sha256=ANCHOR,
+            evaluate_final_geometry=_geometry(),
+        )
 
 
 def test_bridge_rejects_terminal_full_skin_floor_failure(monkeypatch) -> None:

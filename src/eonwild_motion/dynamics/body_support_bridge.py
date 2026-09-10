@@ -20,6 +20,7 @@ from .body_support_coordinator import (
     CoordinatorSample,
     TrialEvaluation,
     TrialEvaluator,
+    TERMINAL_PARTICLE_TOLERANCE_M,
     periodic_body_delta,
 )
 from .surface_mass import (
@@ -118,8 +119,8 @@ def build_surface_mass_trial_evaluator(
     Boundary full-LBS particle states provide finite-interval momentum.  The
     active support patch is evaluated independently at each corresponding
     interval midpoint, after the same final geometry law.  For travelling
-    clips, the final interval ends at a translated copy of phase zero, avoiding
-    a false seam impulse without changing the frozen contact anchors.
+    clips, the actual terminal full skin must match phase zero plus travel under
+    the versioned final skin-loop tolerance before it enters the last interval.
     """
 
     source = bytes(source_bytes)
@@ -141,9 +142,14 @@ def build_surface_mass_trial_evaluator(
         raise ContractError("body-support bridge requires a final geometry evaluator")
     travel = _vector3(cycle_travel_m, "cycle travel")
     terminal_tolerance = float(terminal_particle_tolerance_m)
-    if not math.isfinite(terminal_tolerance) or terminal_tolerance <= 0:
+    if not math.isfinite(terminal_tolerance) or not math.isclose(
+        terminal_tolerance,
+        TERMINAL_PARTICLE_TOLERANCE_M,
+        rel_tol=0.0,
+        abs_tol=1e-15,
+    ):
         raise ContractError(
-            "body-support bridge requires a positive declared terminal particle tolerance"
+            "body-support terminal particle tolerance differs from versioned policy"
         )
     try:
         total_mass = float(surface_mass_profile["mass_model"]["total_mass_kg"])  # type: ignore[index]
@@ -230,7 +236,7 @@ def build_surface_mass_trial_evaluator(
             after = (
                 boundary_states[index + 1]
                 if index + 1 < sample_count
-                else next_cycle_zero
+                else terminal_state
             )
             momentum = surface_mass_interval_momentum(
                 boundary_states[index], after, dt
