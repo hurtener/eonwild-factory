@@ -12,6 +12,7 @@ from typing import Callable, Iterable
 import numpy as np
 
 from ..errors import ContractError
+from .minimax_contact import minimum_enclosing_residual_ball
 
 
 JOINT_CONTACT_POLICY_ID = "source_joint_contact_minimax.v1"
@@ -132,15 +133,28 @@ def solve_fixed_authored_pitch(
         if not accepted:
             break
 
-    # Chebyshev recenter in the two target-translation coordinates.  This is
-    # based on extrema, so duplicated seam vertices cannot bias the result.
+    # Recenter the exact three-dimensional minimum enclosing residual ball
+    # through the available planar translations. Duplicated seam rows are
+    # removed by the minimax utility and every original row is regated below.
     for _ in range(4):
-        unique = _unique_material_rows(best)
-        errors = np.asarray(best.material_errors_m)[unique]
-        shift = 0.5 * (errors.max(axis=0) + errors.min(axis=0))
+        ball = minimum_enclosing_residual_ball(best.material_errors_m)
+        columns = []
+        for coordinate in (2, 3):
+            plus, minus = x.copy(), x.copy()
+            plus[coordinate] += _TARGET_STEP_M
+            minus[coordinate] -= _TARGET_STEP_M
+            p, m = evaluate(plus), evaluate(minus)
+            columns.append(
+                (np.asarray(p.material_errors_m).mean(axis=0)
+                 - np.asarray(m.material_errors_m).mean(axis=0))
+                / (2 * _TARGET_STEP_M)
+            )
+        translation_jacobian = np.column_stack(columns)
+        shift = np.linalg.lstsq(
+            translation_jacobian, -np.asarray(ball.center_m), rcond=1e-10
+        )[0]
         candidate = x.copy()
-        candidate[2] += float(shift[0])
-        candidate[3] += float(shift[1])
+        candidate[2:4] += shift
         trial = evaluate(candidate)
         _admit_trial(trial)
         if _hard_feasible(trial) and _max_error(trial) < _max_error(best):
