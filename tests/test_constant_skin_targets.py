@@ -112,6 +112,8 @@ def test_joint_contact_candidate_selects_v3_and_binds_endpoint_controls(monkeypa
     assert receipt["law_id"] == "canonical_semantic_joint_contact_targets.v3"
     assert receipt["joint_contact_policy"]["policy_id"] == "source_joint_contact_minimax.v1"
     assert receipt["joint_contact_policy"]["target_offset_envelope_body_heights"] == 0.06
+    assert receipt["binding_sha256"] != receipt["law_binding_sha256"]
+    assert receipt["query_binding_sha256"] == law._query_binding_sha256
     assert law.value(0.2).status == "AVAILABLE"
     before = law.frozen_anchor_binding_sha256()
     rebound = law.with_query(law._query)

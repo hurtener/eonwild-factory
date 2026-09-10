@@ -1273,7 +1273,22 @@ class CanonicalConstantSkinTargetLaw:
             }
         return {
             "law_id": self._law_id,
-            "binding_sha256": self._law_binding_sha256,
+            "binding_sha256": (
+                _digest({
+                    "law_binding_sha256": self._law_binding_sha256,
+                    "query_binding_sha256": self._query_binding_sha256,
+                })
+                if self._law_id == _JOINT_CONTACT_LAW
+                else self._law_binding_sha256
+            ),
+            "law_binding_sha256": (
+                self._law_binding_sha256
+                if self._law_id == _JOINT_CONTACT_LAW else None
+            ),
+            "query_binding_sha256": (
+                self._query_binding_sha256
+                if self._law_id == _JOINT_CONTACT_LAW else None
+            ),
             "material_reference": "provider-fixed full-skin vertex in semantic MTP local frame",
             "swing_target": "E_declared(t) + R_declared(t) * local_material_reference",
             "support_target": "immutable canonical material support subset; full sole/toe skin floor",
