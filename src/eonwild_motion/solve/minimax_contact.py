@@ -15,11 +15,16 @@ from ..errors import ContractError
 
 @dataclass(frozen=True)
 class MinimaxContactBall:
-    """The translation center and maximum distance for unique input points."""
+    """The translation center and maximum distance for unique residual rows.
+
+    ``unique_residual_count`` is not contact cardinality: distinct physical
+    contacts can have the same residual vector. Contact membership and support
+    dimension remain the caller's separately bound source geometry.
+    """
 
     center_m: tuple[float, float, float]
     radius_m: float
-    point_count: int
+    unique_residual_count: int
 
 
 def _candidate(points: np.ndarray) -> tuple[np.ndarray, float] | None:
@@ -79,7 +84,8 @@ def minimum_enclosing_residual_ball(residuals_m: Any) -> MinimaxContactBall:
     """Return the exact fixed-dimension minimax center for finite 3D residuals.
 
     Duplicate rows are removed before solving, so both the result and
-    ``point_count`` describe physical spatial points rather than mesh seams.
+    ``unique_residual_count`` describe distinct error vectors. It deliberately
+    does not report physical contact count or support-hull cardinality.
     A content-derived shuffle gives the randomized incremental algorithm its
     expected linear behavior while retaining deterministic, query-order
     independent output. The caller must apply ``-center_m`` as a candidate and
@@ -94,6 +100,12 @@ def minimum_enclosing_residual_ball(residuals_m: Any) -> MinimaxContactBall:
         raise ContractError("contact residuals must be a non-empty N by 3 array")
     if not np.isfinite(raw).all():
         raise ContractError("contact residuals must be finite three-dimensional points")
+    # Differences are squared by the ball construction. This explicit input
+    # bound keeps every subtraction, dot product, and norm in finite float64
+    # arithmetic rather than accepting a finite value that later overflows.
+    safe_magnitude = np.sqrt(np.finfo(float).max) / 4.0
+    if float(np.abs(raw).max()) > safe_magnitude:
+        raise ContractError("contact residuals exceed the finite arithmetic bound")
 
     points = np.unique(np.where(raw == 0.0, 0.0, raw), axis=0)
     digest = hashlib.sha256(np.asarray(points, dtype="<f8").tobytes()).digest()
@@ -120,12 +132,14 @@ def minimum_enclosing_residual_ball(residuals_m: Any) -> MinimaxContactBall:
 
     center, _ = ball
     radius = float(np.linalg.norm(points - center, axis=1).max())
+    if not np.isfinite(center).all() or not np.isfinite(radius):
+        raise ContractError("minimum enclosing residual ball produced a non-finite result")
     if not _contains(center, radius, points):
         raise ContractError("minimum enclosing residual ball failed containment verification")
     return MinimaxContactBall(
         center_m=tuple(float(value) for value in center),
         radius_m=radius,
-        point_count=len(points),
+        unique_residual_count=len(points),
     )
 
 
