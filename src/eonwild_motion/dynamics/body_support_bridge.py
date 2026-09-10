@@ -109,6 +109,7 @@ def build_surface_mass_trial_evaluator(
     body_height_m: float,
     sample_count: int,
     cycle_travel_m: Sequence[float],
+    terminal_particle_tolerance_m: float,
     frozen_anchor_sha256: str,
     evaluate_final_geometry: FinalGeometryEvaluator,
 ) -> TrialEvaluator:
@@ -139,6 +140,11 @@ def build_surface_mass_trial_evaluator(
     if not callable(evaluate_final_geometry):
         raise ContractError("body-support bridge requires a final geometry evaluator")
     travel = _vector3(cycle_travel_m, "cycle travel")
+    terminal_tolerance = float(terminal_particle_tolerance_m)
+    if not math.isfinite(terminal_tolerance) or terminal_tolerance <= 0:
+        raise ContractError(
+            "body-support bridge requires a positive declared terminal particle tolerance"
+        )
     try:
         total_mass = float(surface_mass_profile["mass_model"]["total_mass_kg"])  # type: ignore[index]
     except (KeyError, TypeError, ValueError) as exc:
@@ -168,7 +174,44 @@ def build_surface_mass_trial_evaluator(
                 raise ContractError("surface-mass trial changed its bound total mass")
             boundary_states.append(state)
 
+        terminal_geometry = evaluate_final_geometry(
+            periodic_body_delta(coefficients, duration, duration), duration
+        )
+        _validate_geometry_sample(
+            terminal_geometry,
+            expected_time_s=duration,
+            frozen_anchor_sha256=frozen_anchor_sha256,
+        )
+        terminal_state = vertex_evaluator(terminal_geometry.joint_world_matrices)
+        terminal_mass = float(terminal_state.get("total_mass_kg", math.nan))
+        if not math.isclose(terminal_mass, total_mass, rel_tol=0.0, abs_tol=1e-10):
+            raise ContractError("surface-mass trial changed its bound total mass")
         next_cycle_zero = _translated_vertex_state(boundary_states[0], travel)
+        actual_terminal = np.asarray(
+            terminal_state.get("world_positions_m"), dtype=np.float64
+        )
+        expected_terminal = np.asarray(
+            next_cycle_zero.get("world_positions_m"), dtype=np.float64
+        )
+        if (
+            actual_terminal.shape != expected_terminal.shape
+            or actual_terminal.ndim != 2
+            or actual_terminal.shape[1:] != (3,)
+            or not np.isfinite(actual_terminal).all()
+            or not np.isfinite(expected_terminal).all()
+        ):
+            raise ContractError("terminal full-LBS particle states are incompatible")
+        maximum_terminal_error = float(
+            np.linalg.norm(actual_terminal - expected_terminal, axis=1).max(
+                initial=0.0
+            )
+        )
+        if maximum_terminal_error > terminal_tolerance:
+            raise ContractError(
+                "terminal full-LBS particles differ from phase zero plus cycle travel: "
+                f"error_m={maximum_terminal_error!r} "
+                f"tolerance_m={terminal_tolerance!r}"
+            )
         samples: list[CoordinatorSample] = []
         for index in range(sample_count):
             midpoint_s = (index + 0.5) * dt
