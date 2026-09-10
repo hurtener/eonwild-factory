@@ -1,0 +1,11 @@
+{
+  "description": "Portable lower-recovery walk intent for cross-animal visual review: six-degree outward knee plane, 15-degree hip lift and 0.14-body-height clearance. These are authored engineering controls pending animal onboarding validation.",
+  "id": "heavy-biped.shared-adult-walk-visual-iteration.v4",
+  "program": "grounded_gait",
+  "program_profile": {
+    "path": "catalog/programs/heavy-biped.shared-adult-walk-visual-iteration.v6.json",
+    "sha256": "1f1d91a3c1b701e3e76530b497a6c7bd2f45217f84184273051af5b91b520ae5"
+  },
+  "schema": "eonwild.motion.motion-intent.v2",
+  "version": 4
+}

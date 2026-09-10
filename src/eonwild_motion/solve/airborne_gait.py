@@ -83,6 +83,35 @@ def stable_knee_geometry(hip: np.ndarray, target: np.ndarray, upper: float, lowe
     return knee, hip + direction * distance, abs(distance0 - distance)
 
 
+def _outward_knee_bend_normal(
+    direction: np.ndarray,
+    anatomical_normal: np.ndarray,
+    outward: np.ndarray,
+    degrees: float,
+) -> np.ndarray:
+    """Turn the semantic knee pole toward its side without moving the endpoint."""
+    if degrees <= 0.0:
+        return anatomical_normal
+    direction = _unit(direction)
+    bend = _unit(np.cross(direction, anatomical_normal))
+    outward = outward - direction * float(outward @ direction)
+    if np.linalg.norm(outward) <= 1e-10:
+        return anatomical_normal
+    outward = _unit(outward)
+    separation = math.acos(float(np.clip(bend @ outward, -1.0, 1.0)))
+    turn = min(math.radians(degrees), separation)
+    if separation <= 1e-10:
+        biased_bend = bend
+    elif abs(math.sin(separation)) <= 1e-10:
+        biased_bend = _unit((1.0 - turn / separation) * bend + (turn / separation) * outward)
+    else:
+        biased_bend = _unit(
+            math.sin(separation - turn) / math.sin(separation) * bend
+            + math.sin(turn) / math.sin(separation) * outward
+        )
+    return _unit(np.cross(biased_bend, direction))
+
+
 def _interior(a: np.ndarray, b: np.ndarray) -> float:
     return math.degrees(math.acos(float(np.clip(_unit(a) @ _unit(b), -1, 1))))
 
@@ -470,6 +499,7 @@ class AirborneSolveContext:
     neutral_jaw_calibration: Any | None
     anatomical_normals: Mapping[str, np.ndarray]
     toe_normals: Mapping[int, np.ndarray]
+    knee_bend_plane_outward_degrees: float
 
 
 @dataclass(frozen=True)
@@ -514,6 +544,7 @@ def build_airborne_solve_context(
     forward_axis: tuple[float, float, float] | None = None,
     legacy_overlay: bool = True,
     articulation_profile: ArticulationProfile | None = None,
+    knee_bend_plane_outward_degrees: float = 0.0,
 ) -> AirborneSolveContext:
     """Create the immutable source-owned state consumed by a plan-row solve.
 
@@ -523,6 +554,11 @@ def build_airborne_solve_context(
     legacy serialized payload remains the regression authority.
     """
     articulation_profile = _snapshot_articulation_profile(articulation_profile)
+    if (isinstance(knee_bend_plane_outward_degrees, bool)
+            or not isinstance(knee_bend_plane_outward_degrees, (int, float))
+            or not math.isfinite(knee_bend_plane_outward_degrees)
+            or not 0.0 <= knee_bend_plane_outward_degrees <= 15.0):
+        raise ContractError("knee bend-plane bias exceeds the engineering envelope")
     roles = semantic_roles
     try:
         root, pelvis = (source.name_to_node[roles[k]] for k in ("root", "pelvis"))
@@ -625,6 +661,7 @@ def build_airborne_solve_context(
         neutral_jaw_calibration=neutral_jaw_calibration,
         anatomical_normals=_freeze_data(anatomical_normals),
         toe_normals=_freeze_data(toe_normals),
+        knee_bend_plane_outward_degrees=float(knee_bend_plane_outward_degrees),
     )
 
 
@@ -951,7 +988,16 @@ def solve_airborne_plan_sample(
                 if largest_correction < 1e-12:
                     break
             target_ankle = candidate_foot - np.asarray(_qrotate(candidate_q, tuple(base_offset)))
-            candidate_knee, candidate_end, extension = stable_knee_geometry(hp, target_ankle, upper, lower, anatomical_normals[side])
+            outward = lateral * math.copysign(1.0, hip_offsets[side])
+            bend_normal = _outward_knee_bend_normal(
+                target_ankle - hp,
+                anatomical_normals[side],
+                outward,
+                context.knee_bend_plane_outward_degrees,
+            )
+            candidate_knee, candidate_end, extension = stable_knee_geometry(
+                hp, target_ankle, upper, lower, bend_normal
+            )
             hip_angle = math.degrees(math.atan2(float((candidate_knee - hp) @ forward), -float((candidate_knee - hp) @ up)))
             knee_angle = _interior(hp - candidate_knee, candidate_end - candidate_knee)
             ankle_angle = _interior(candidate_knee - candidate_end, candidate_foot - candidate_end)

@@ -400,6 +400,11 @@ class SourceMotionQuery:
             forward_axis=self._forward_axis,
             legacy_overlay=self._legacy_overlay,
             articulation_profile=articulation_profile,
+            knee_bend_plane_outward_degrees=(
+                locomotion_gait.knee_bend_plane_outward_degrees
+                if isinstance(locomotion_gait, GroundedGait)
+                else 0.0
+            ),
         )
         if body_support_control is not None and type(body_support_control) is not BodySupportControl:
             raise ContractError("source motion query body-support control must be its owned binding")

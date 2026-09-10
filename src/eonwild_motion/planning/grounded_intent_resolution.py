@@ -298,6 +298,7 @@ def resolve_grounded_intent(
     resolved_step_magnitude = requested_step_magnitude
     rows: list[tuple[str, float, float, float]] = []
     parsed: list[tuple[str, float, float, float, float]] = []
+    preferred_maximum_steps: dict[str, float] = {}
     for side in _SIDES:
         geometry = _object(support_sides[side], {
             "upper_length_m", "lower_length_m", "preferred_support_knee_degrees",
@@ -339,6 +340,7 @@ def resolve_grounded_intent(
             maximum_step = (maximum_forward - directional_zero) / gait.duty_factor
             if maximum_step <= 0:
                 raise ContractError(f"{side} neutral support posture has no directed step envelope")
+            preferred_maximum_steps[side] = maximum_step
         else:
             maximum_step = touchdown_reach(gait, body_height)
             fixed_distance = math.sqrt(
@@ -348,17 +350,22 @@ def resolve_grounded_intent(
                 raise ContractError(
                     f"{side} fixed touchdown placement exceeds the neutral support reach"
                 )
-        if gait.centered_stance:
-            resolved_step_magnitude = min(resolved_step_magnitude, maximum_step)
         parsed.append((side, preferred_reach, lateral, up, forward_zero))
 
     limited = (
         gait.centered_stance
-        and resolved_step_magnitude < requested_step_magnitude - tolerance
+        and any(
+            requested_step_magnitude > maximum_step + tolerance
+            for maximum_step in preferred_maximum_steps.values()
+        )
     )
     if not limited:
         resolved_step_magnitude = requested_step_magnitude
-    resolved_step = direction * resolved_step_magnitude
+    # The preferred neutral-support knee is diagnostic posture evidence, not
+    # authority to silently rewrite the behavior's authored stride. Preserve
+    # reachable intent and report a negative preference margin when exceeded.
+    resolved_step_magnitude = requested_step_magnitude
+    resolved_step = requested_step
     maximum_steps: dict[str, float] = {}
     for side, preferred_reach, lateral, up, forward_zero in parsed:
         maximum_forward = math.sqrt(
@@ -377,10 +384,6 @@ def resolve_grounded_intent(
             + (forward_zero + (gait.duty_factor * resolved_step
                                if gait.centered_stance else maximum_step)) ** 2
         )
-        if resolved_distance > preferred_reach + tolerance:
-            raise ContractError(
-                f"{side} resolved touchdown remains outside the neutral support reach"
-            )
         rows.append((side, preferred_reach - requested_distance,
                      preferred_reach - resolved_distance, maximum_step))
     limiting_side = min(maximum_steps, key=maximum_steps.get) if limited else None

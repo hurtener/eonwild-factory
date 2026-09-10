@@ -45,6 +45,7 @@ class GroundedGait:
     push_off_pitch_degrees: float = 0.0
     push_off_start_fraction: float = 0.60
     swing_hip_lift_degrees: float = 0.0
+    knee_bend_plane_outward_degrees: float = 0.0
     rounded_swing_peak_fraction: float = 0.0
     centered_stance: bool = False
     handoff_phase_fraction: float | None = None
@@ -85,6 +86,8 @@ class GroundedGait:
         for key in ("toe_flex_degrees", "foot_recovery_pitch_degrees", "push_off_pitch_degrees", "swing_hip_lift_degrees"):
             if not 0 <= getattr(self, key) <= 60:
                 raise ContractError(f"grounded {key} exceeds the articulation envelope")
+        if not 0 <= self.knee_bend_plane_outward_degrees <= 15:
+            raise ContractError("grounded knee bend-plane bias exceeds the engineering envelope")
         if self.pad_recovery_pitch_degrees is not None and not -60 <= self.pad_recovery_pitch_degrees <= 60:
             raise ContractError("grounded pad recovery pitch exceeds the signed articulation envelope")
         if (self.metatarsal_recovery_world_degrees_from_down is not None

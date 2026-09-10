@@ -110,11 +110,12 @@ def test_allosaurus_resolves_from_same_rule_and_declared_support_posture():
         ALLO_QUERY,
     )
     assert result.requested_step_length_m == pytest.approx(1.126481623363515)
-    assert result.resolved_step_length_m == pytest.approx(0.9192761737944692)
-    assert result.gait.step_length_body_heights == pytest.approx(0.4364656719419438)
+    assert result.resolved_step_length_m == pytest.approx(result.requested_step_length_m)
+    assert result.gait.step_length_body_heights == pytest.approx(
+        result.requested_step_length_m / 2.106182073161406
+    )
     assert result.limiting_side == "left"
-    assert min(row[2] for row in result.side_evidence) == pytest.approx(0.0, abs=1e-12)
-    assert all(row[2] >= -1e-12 for row in result.side_evidence)
+    assert min(row[2] for row in result.side_evidence) < 0.0
 
 
 def test_exact_touchdown_observations_recover_centered_fraction_basis():
@@ -234,7 +235,7 @@ def test_recursively_immutable_inputs_are_admitted_and_detached():
         family_policy=freeze(_policy()),
         touchdown_geometry=freeze(query),
     )
-    assert result.resolved_step_length_m == pytest.approx(0.9192761737944692)
+    assert result.resolved_step_length_m == pytest.approx(result.requested_step_length_m)
 
 
 @pytest.mark.parametrize(
@@ -410,7 +411,7 @@ def test_centered_reverse_uses_backward_reach_envelope():
     ("step", "forward_zero"),
     ((-.05, 2.), (.05, -2.)),
 )
-def test_centered_cap_rejects_when_small_stride_cannot_enter_reachable_interval(
+def test_centered_resolution_preserves_small_authored_stride_when_neutral_preference_is_missed(
     step, forward_zero,
 ):
     gait = GroundedGait(**{
@@ -422,18 +423,18 @@ def test_centered_cap_rejects_when_small_stride_cannot_enter_reachable_interval(
         "right": [-.349, -1., forward_zero],
     })
     query["gait_parameters_sha256"] = canonical_hash(gait_parameters(gait))
-    with pytest.raises(ContractError, match="resolved touchdown remains outside"):
-        resolve_grounded_intent(
-            gait,
-            body_height_m=2.2841755838983118,
-            animal_hindlimb_length_m=2.415,
-            source_geometry_sha256=TARBO_SHA,
-            neutral_support_geometry=_document(
-                "catalog/calibration/tarbosaurus-pin-552-1-adult-support.v1.json"
-            ),
-            family_policy=_policy(),
-            touchdown_geometry=query,
-        )
+    result = resolve_grounded_intent(
+        gait,
+        body_height_m=2.2841755838983118,
+        animal_hindlimb_length_m=2.415,
+        source_geometry_sha256=TARBO_SHA,
+        neutral_support_geometry=_document(
+            "catalog/calibration/tarbosaurus-pin-552-1-adult-support.v1.json"
+        ),
+        family_policy=_policy(),
+        touchdown_geometry=query,
+    )
+    assert result.gait.step_length_body_heights == step
 
 
 def test_uncapped_nonreference_geometry_uses_resolved_physical_step():
