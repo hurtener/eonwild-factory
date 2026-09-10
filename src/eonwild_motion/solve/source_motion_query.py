@@ -498,6 +498,36 @@ class SourceMotionQuery:
         )
         return _freeze_data(self._body_support_control.receipt())
 
+    def with_body_support_control(
+        self, control: BodySupportControl
+    ) -> "SourceMotionQuery":
+        """Rebuild this exact retained request with one owned body control."""
+        if type(control) is not BodySupportControl:
+            raise ContractError(
+                "source motion query body-support control must be its owned binding"
+            )
+        return SourceMotionQuery(
+            self._source,
+            semantic_roles=_thaw(self._roles),
+            solver_gait=self._solver_gait,
+            locomotion_gait=self._locomotion_gait,
+            plan=_thaw(self._plan),
+            up_axis=self._up_axis,
+            forward_axis=self._forward_axis,
+            transition=self._transition,
+            source_clip=self._source_clip,
+            legacy_overlay=self._legacy_overlay,
+            articulation_profile=self._context.articulation_profile,
+            contact_profile=(
+                None
+                if self._contact_profile is None
+                else _thaw(self._contact_profile)
+            ),
+            transition_clearance=self._transition_clearance,
+            authored_material_contact=self._authored_material_contact,
+            body_support_control=control,
+        )
+
     def _exact_index(self, time_s: float) -> int | None:
         for index, value in enumerate(self._times):
             if time_s == value:

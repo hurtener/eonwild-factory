@@ -109,6 +109,7 @@ def build_surface_mass_trial_evaluator(
     source_bytes: bytes,
     surface_mass_profile: Mapping[str, object],
     duration_s: float,
+    body_control_cycle_s: float,
     body_height_m: float,
     sample_count: int,
     cycle_travel_m: Sequence[float],
@@ -130,9 +131,12 @@ def build_surface_mass_trial_evaluator(
 
     source = bytes(source_bytes)
     duration = float(duration_s)
+    body_cycle = float(body_control_cycle_s)
     height = float(body_height_m)
     if not math.isfinite(duration) or duration <= 0:
         raise ContractError("body-support bridge duration must be positive")
+    if not math.isfinite(body_cycle) or body_cycle <= 0:
+        raise ContractError("body-support bridge body-control cycle must be positive")
     if not math.isfinite(height) or height <= 0:
         raise ContractError("body-support bridge body height must be positive")
     if type(sample_count) is not int or sample_count < 5:
@@ -174,7 +178,7 @@ def build_surface_mass_trial_evaluator(
             time_s = index * dt
             geometry = evaluate_final_geometry(
                 owned_coefficients,
-                periodic_body_delta(owned_coefficients, time_s, duration),
+                periodic_body_delta(owned_coefficients, time_s, body_cycle),
                 time_s,
             )
             _validate_geometry_sample(
@@ -190,7 +194,7 @@ def build_surface_mass_trial_evaluator(
 
         terminal_geometry = evaluate_final_geometry(
             owned_coefficients,
-            periodic_body_delta(owned_coefficients, duration, duration),
+            periodic_body_delta(owned_coefficients, duration, body_cycle),
             duration,
         )
         _validate_geometry_sample(
@@ -233,7 +237,7 @@ def build_surface_mass_trial_evaluator(
             midpoint_s = (index + 0.5) * dt
             geometry = evaluate_final_geometry(
                 owned_coefficients,
-                periodic_body_delta(owned_coefficients, midpoint_s, duration),
+                periodic_body_delta(owned_coefficients, midpoint_s, body_cycle),
                 midpoint_s,
             )
             _validate_geometry_sample(

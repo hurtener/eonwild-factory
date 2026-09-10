@@ -75,6 +75,7 @@ def test_bridge_aligns_midpoint_support_and_unwraps_travel_seam(monkeypatch) -> 
         source_bytes=b"bound",
         surface_mass_profile=_profile(),
         duration_s=1.0,
+        body_control_cycle_s=1.0,
         body_height_m=2.0,
         sample_count=5,
         cycle_travel_m=(0.0, 0.0, 1.0),
@@ -106,6 +107,7 @@ def test_bridge_forwards_periodic_body_coefficients_to_every_geometry_call(monke
         source_bytes=b"bound",
         surface_mass_profile=_profile(),
         duration_s=1.0,
+        body_control_cycle_s=0.5,
         body_height_m=2.0,
         sample_count=5,
         cycle_travel_m=(0.0, 0.0, 1.0),
@@ -120,12 +122,30 @@ def test_bridge_forwards_periodic_body_coefficients_to_every_geometry_call(monke
     assert calls[6][2].translation_m[0] != 0.0
 
 
+def test_bridge_rejects_invalid_body_control_cycle(monkeypatch) -> None:
+    _patch_vertex_evaluator(monkeypatch)
+    with pytest.raises(ContractError, match="body-control cycle"):
+        build_surface_mass_trial_evaluator(
+            source_bytes=b"bound",
+            surface_mass_profile=_profile(),
+            duration_s=1.0,
+            body_control_cycle_s=0.0,
+            body_height_m=2.0,
+            sample_count=5,
+            cycle_travel_m=(0.0, 0.0, 1.0),
+            terminal_particle_tolerance_m=TERMINAL_TOLERANCE_M,
+            frozen_anchor_sha256=ANCHOR,
+            evaluate_final_geometry=_geometry(),
+        )
+
+
 def test_bridge_rejects_actual_terminal_particle_deviation(monkeypatch) -> None:
     _patch_vertex_evaluator(monkeypatch)
     evaluator = build_surface_mass_trial_evaluator(
         source_bytes=b"bound",
         surface_mass_profile=_profile(),
         duration_s=1.0,
+        body_control_cycle_s=1.0,
         body_height_m=2.0,
         sample_count=5,
         cycle_travel_m=(0.0, 0.0, 1.0),
@@ -143,6 +163,7 @@ def test_bridge_uses_admitted_actual_terminal_particles_in_last_interval(monkeyp
         source_bytes=b"bound",
         surface_mass_profile=_profile(),
         duration_s=1.0,
+        body_control_cycle_s=1.0,
         body_height_m=2.0,
         sample_count=5,
         cycle_travel_m=(0.0, 0.0, 1.0),
@@ -164,6 +185,7 @@ def test_bridge_rejects_caller_relaxed_terminal_tolerance(monkeypatch) -> None:
             source_bytes=b"bound",
             surface_mass_profile=_profile(),
             duration_s=1.0,
+            body_control_cycle_s=1.0,
             body_height_m=2.0,
             sample_count=5,
             cycle_travel_m=(0.0, 0.0, 1.0),
@@ -179,6 +201,7 @@ def test_bridge_rejects_terminal_full_skin_floor_failure(monkeypatch) -> None:
         source_bytes=b"bound",
         surface_mass_profile=_profile(),
         duration_s=1.0,
+        body_control_cycle_s=1.0,
         body_height_m=2.0,
         sample_count=5,
         cycle_travel_m=(0.0, 0.0, 1.0),
@@ -208,6 +231,7 @@ def test_bridge_fails_closed_on_invalid_mass_anchor_or_geometry(
                 source_bytes=b"bound",
                 surface_mass_profile=profile,
                 duration_s=1.0,
+                body_control_cycle_s=1.0,
                 body_height_m=2.0,
                 sample_count=5,
                 cycle_travel_m=(0.0, 0.0, 1.0),
@@ -220,6 +244,7 @@ def test_bridge_fails_closed_on_invalid_mass_anchor_or_geometry(
         source_bytes=b"bound",
         surface_mass_profile=profile,
         duration_s=1.0,
+        body_control_cycle_s=1.0,
         body_height_m=2.0,
         sample_count=5,
         cycle_travel_m=(0.0, 0.0, 1.0),
@@ -248,6 +273,7 @@ def test_bridge_rejects_callback_time_alias(monkeypatch) -> None:
         source_bytes=b"bound",
         surface_mass_profile=_profile(),
         duration_s=1.0,
+        body_control_cycle_s=1.0,
         body_height_m=2.0,
         sample_count=5,
         cycle_travel_m=(0.0, 0.0, 1.0),

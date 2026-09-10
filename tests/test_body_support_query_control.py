@@ -130,6 +130,24 @@ def test_periodic_control_is_query_order_independent_at_source_cycle_seam():
     assert forward == reverse
 
 
+def test_query_rebuild_with_control_preserves_complete_retained_request():
+    query, _, _, _, _, _ = _grounded_query()
+    control = _control(query, [0.] * 12)
+    rebuilt = query.with_body_support_control(control)
+    assert (
+        rebuilt.body_support_control_receipt()["binding_sha256"]
+        == control.receipt()["binding_sha256"]
+    )
+    assert rebuilt._plan == query._plan
+    assert rebuilt._roles == query._roles
+    assert rebuilt._solver_gait == query._solver_gait
+    assert rebuilt._locomotion_gait == query._locomotion_gait
+    assert rebuilt._transition == query._transition
+    assert rebuilt._contact_profile == query._contact_profile
+    assert rebuilt.context.articulation_profile == query.context.articulation_profile
+    assert rebuilt.evaluate(.37).pose == query.evaluate(.37).pose
+
+
 @pytest.mark.parametrize(
     "coefficients,cycle,height,up,forward,message",
     [

@@ -1342,6 +1342,7 @@ class CanonicalConstantSkinTargetLaw:
             },
             "boundary_residuals_m": _thaw(self._boundary_residuals_m),
             "mapping_tolerance_m": _FRAME_MAPPING_TOLERANCE_M,
+            "floor_target_gap_m": _TARGET_GAP_M,
             "correction_envelope_body_heights": _MAX_CORRECTION_BODY_HEIGHTS,
             "body_height_use": "correction envelope normalization only",
             "mass_coupling": False,
