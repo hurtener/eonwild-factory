@@ -800,6 +800,11 @@ def compile_recipe(
             up_axis=tuple(up),
             forward_axis=tuple(forward),
             articulation_profile=articulation_profile,
+            law_id=(
+                _motion_set_resolution.solve_policy["skin_target_law"]
+                if _motion_set_resolution is not None
+                else "canonical_constant_skin_targets.v1"
+            ),
         )
         transition_clearance = None
         if transition is not None and (
@@ -864,6 +869,11 @@ def compile_recipe(
                 up_axis=tuple(up),
                 forward_axis=tuple(forward),
                 articulation_profile=articulation_profile,
+                law_id=(
+                    _motion_set_resolution.solve_policy["skin_target_law"]
+                    if _motion_set_resolution is not None
+                    else "canonical_constant_skin_targets.v1"
+                ),
             )
         emission = emit_source_cubics(
             source, law, plan, root_node=source.name_to_node[roles["root"]]
@@ -951,10 +961,20 @@ def compile_recipe(
             "stop_reason": refinement_stop,
             "attempts": refinement_attempts,
         }
-        receipt["constant_skin_target_law"] = {
-            "status": "AVAILABLE_AT_ALL_KEYS_STENCILS_AND_MIDPOINTS",
-            "classification": "pointwise checked values; derivative and global-C1 authority unavailable",
-        }
+        if law.receipt()["law_id"] == "canonical_constant_skin_targets.v1":
+            # Preserve the accepted v1 receipt byte-for-byte.  The richer
+            # binding receipt belongs only to newly selected laws.
+            receipt["constant_skin_target_law"] = {
+                "status": "AVAILABLE_AT_ALL_KEYS_STENCILS_AND_MIDPOINTS",
+                "classification": (
+                    "pointwise checked values; derivative and global-C1 authority unavailable"
+                ),
+            }
+        else:
+            receipt["constant_skin_target_law"] = {
+                "status": "AVAILABLE_AT_ALL_KEYS_STENCILS_AND_MIDPOINTS",
+                **law.receipt(),
+            }
         if transition_clearance is not None:
             receipt["grounded_transition_clearance"] = {
                 "policy": GROUNDED_TRANSITION_CLEARANCE_POLICY,

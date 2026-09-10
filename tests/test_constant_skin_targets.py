@@ -76,6 +76,71 @@ def _build(inputs):
     return CanonicalConstantSkinTargetLaw.build(query, provider, **values)
 
 
+def _build_semantic_foot_frame(inputs):
+    values = dict(inputs)
+    query = values.pop("query")
+    provider = values.pop("provider")
+    return CanonicalConstantSkinTargetLaw.build(
+        query,
+        provider,
+        law_id="canonical_semantic_foot_frame_targets.v2",
+        **values,
+    )
+
+
+def test_semantic_foot_frame_admits_boundaries_and_binds_local_templates():
+    inputs = _inputs()
+    law = _build_semantic_foot_frame(inputs)
+    assert law._law_id == "canonical_semantic_foot_frame_targets.v2"
+    assert max(
+        residual
+        for side in law._boundary_residuals_m.values()
+        for residual in side.values()
+    ) <= 0.0002
+    value = law.value(0.2)
+    assert value.status == "AVAILABLE"
+    law._local_material_references["left"].setflags(write=True)
+    law._local_material_references["left"][0] += 0.001
+    with pytest.raises(ContractError, match="law binding differs"):
+        law.value(0.2)
+
+
+def test_semantic_foot_frame_clearance_allows_only_mapping_numerical_error():
+    observation = {
+        "loaded": False,
+        "residual_m": 0.0,
+        "material_mapping_residual_m": 0.0,
+        "minimum_gap_m": 0.0001 - 0.5e-10,
+        "ik_target_residual_m": 0.0,
+        "unreachable_extension_m": 0.0,
+        "articulation_violation_degrees": 0.0,
+    }
+    assert CanonicalConstantSkinTargetLaw._failure_reason("left", observation) is None
+    observation["minimum_gap_m"] = 0.0001 - 2e-10
+    assert CanonicalConstantSkinTargetLaw._failure_reason(
+        "left", observation
+    ) == "left swing clearance is below target gap"
+
+
+def test_semantic_foot_frame_contact_boundary_is_history_independent_and_continuous():
+    inputs = _inputs()
+    law = _build_semantic_foot_frame(inputs)
+    gait = inputs["locomotion_gait"]
+    event = 2.0 * gait.step_period_s * gait.duty_factor
+    epsilon = 1e-7
+    ordered = law.values((event - epsilon, event, event + epsilon))
+    reverse = law.values((event + epsilon, event, event - epsilon))
+    assert all(value.status == "AVAILABLE" for value in ordered + reverse)
+    for first, second in zip(ordered, reversed(reverse)):
+        assert first.row == second.row
+        for side in ("left", "right"):
+            assert np.array_equal(first.corrections_m[side], second.corrections_m[side])
+    before, _, after = ordered
+    assert np.linalg.norm(
+        before.corrections_m["left"] - after.corrections_m["left"]
+    ) < 1e-6
+
+
 def test_transition_clearance_resolver_is_bound_and_returns_detached_rows():
     inputs = _inputs()
     transition = load_gait_transition(

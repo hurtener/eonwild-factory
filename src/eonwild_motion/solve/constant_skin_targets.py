@@ -1,4 +1,4 @@
-"""Non-emitting, pointwise constant skin-target diagnostics.
+"""Source-bound pointwise skin-target laws.
 
 One vector per semantic foot is calibrated at the canonical source touchdowns
 and applied unchanged at every requested source time. The existing row solver
@@ -22,11 +22,14 @@ from .airborne_gait import (
     SolvedAirbornePose,
     _freeze_data,
     _world_matrices,
+    grounded_touchdown_target,
     solve_airborne_plan_sample,
 )
-from .skin_rig import SkinRig
+from ..layers.leg_contact_resolve_v3 import _rotation_from_matrix
+from .skin_rig import SkinRig, rotation_matrix
 from .source_motion_query import SourceMotionQuery, SourceMotionUnavailable, _thaw
 from .support_anchors import CanonicalSupportAnchorProvider, _digest
+from ..planning.grounded_gait import GroundedGait
 
 _TARGET_GAP_M = 0.0001
 _TOLERANCE_M = 0.0002
@@ -34,6 +37,11 @@ _IK_TOLERANCE_M = 0.001
 _ARTICULATION_TOLERANCE_DEGREES = 0.01
 _DAMPING = 0.85
 _MAX_CORRECTION_BODY_HEIGHTS = 0.06
+_SEMANTIC_FOOT_FRAME_LAW = "canonical_semantic_foot_frame_targets.v2"
+_CONSTANT_LAW = "canonical_constant_skin_targets.v1"
+_FRAME_MAPPING_TOLERANCE_M = 1e-10
+_FRAME_MAPPING_MAX_ITERATIONS = 40
+_FRAME_MAPPING_DAMPING = 0.5
 _BUILD_TOKEN = object()
 
 
@@ -85,7 +93,7 @@ class ConstantSkinTargetValue:
 
 
 class CanonicalConstantSkinTargetLaw:
-    """Per-side canonical-touchdown constants bound to one actual query."""
+    """A selected, source-bound skin-target law bound to one actual query."""
 
     def __init__(
         self,
@@ -95,6 +103,9 @@ class CanonicalConstantSkinTargetLaw:
         skin: SkinRig,
         constants: Mapping[str, np.ndarray],
         *,
+        law_id: str = _CONSTANT_LAW,
+        local_material_references: Mapping[str, np.ndarray] | None = None,
+        boundary_residuals_m: Mapping[str, Mapping[str, float]] | None = None,
         _token: object | None = None,
     ) -> None:
         if _token is not _BUILD_TOKEN:
@@ -110,7 +121,24 @@ class CanonicalConstantSkinTargetLaw:
         self._constants = MappingProxyType(
             {side: _readonly_vector(constants[side]) for side in ("left", "right")}
         )
+        if law_id not in (_CONSTANT_LAW, _SEMANTIC_FOOT_FRAME_LAW):
+            raise ContractError("unsupported skin target law")
+        self._law_id = law_id
+        if law_id == _SEMANTIC_FOOT_FRAME_LAW:
+            if local_material_references is None or set(local_material_references) != {"left", "right"}:
+                raise ContractError("semantic foot-frame law requires bilateral local material references")
+            self._local_material_references = MappingProxyType(
+                {side: _readonly_vector(local_material_references[side]) for side in ("left", "right")}
+            )
+        else:
+            if local_material_references is not None:
+                raise ContractError("constant skin target law does not accept foot-frame references")
+            self._local_material_references = None
+        self._boundary_residuals_m = _freeze_data(
+            {} if boundary_residuals_m is None else boundary_residuals_m
+        )
         self._calibration_sha256 = self._constants_sha256()
+        self._law_binding_sha256 = self._current_law_binding_sha256()
         self._query_binding_sha256 = self._current_query_binding_sha256(query)
         self._calibration_query_binding_sha256 = self._current_query_binding_sha256(
             calibration_query
@@ -179,11 +207,30 @@ class CanonicalConstantSkinTargetLaw:
             )
         ).hexdigest()
 
+    def _current_law_binding_sha256(self) -> str:
+        return _digest({
+            "law_id": self._law_id,
+            "constants": {
+                side: self._constants[side].tolist() for side in ("left", "right")
+            },
+            "local_material_references": (
+                None
+                if self._local_material_references is None
+                else {
+                    side: self._local_material_references[side].tolist()
+                    for side in ("left", "right")
+                }
+            ),
+            "boundary_residuals_m": _thaw(self._boundary_residuals_m),
+        })
+
     def _validate_integrity(self) -> None:
         if self._constants_sha256() != self._calibration_sha256:
             raise ContractError(
                 "constant skin target calibration differs from validated values"
             )
+        if self._current_law_binding_sha256() != self._law_binding_sha256:
+            raise ContractError("skin target law binding differs from validated values")
         if self._current_query_binding_sha256(self._query) != self._query_binding_sha256:
             raise ContractError(
                 "constant skin target query differs from its validated request"
@@ -213,6 +260,7 @@ class CanonicalConstantSkinTargetLaw:
         forward_axis: tuple[float, float, float],
         articulation_profile: Any = None,
         iterations: int = 7,
+        law_id: str = _CONSTANT_LAW,
     ) -> CanonicalConstantSkinTargetLaw:
         if type(iterations) is not int or iterations < 1:
             raise ContractError(
@@ -269,7 +317,37 @@ class CanonicalConstantSkinTargetLaw:
             query.context.up,
             request["contact_profile"],
         )
+        if law_id not in (_CONSTANT_LAW, _SEMANTIC_FOOT_FRAME_LAW):
+            raise ContractError("unsupported skin target law")
         constants = {side: np.zeros(3) for side in ("left", "right")}
+        if law_id == _SEMANTIC_FOOT_FRAME_LAW:
+            references = cls._build_local_material_references(
+                calibration_query, provider, skin
+            )
+            boundary_residuals = cls._validate_foot_frame_boundaries(
+                calibration_query, provider, skin, references
+            )
+            law = cls(
+                query,
+                calibration_query,
+                provider,
+                skin,
+                constants,
+                law_id=law_id,
+                local_material_references=references,
+                boundary_residuals_m=boundary_residuals,
+                _token=_BUILD_TOKEN,
+            )
+            for phase in (
+                provider.anchor_for("left").touchdown_phase_s,
+                provider.anchor_for("right").touchdown_phase_s,
+            ):
+                checked = law._observe_at(phase, query=calibration_query)
+                if isinstance(checked, ConstantSkinTargetUnavailable):
+                    raise ContractError(
+                        f"semantic foot-frame target calibration failed: {checked.reason}"
+                    )
+            return law
         for _ in range(iterations):
             updates = {}
             for side in ("left", "right"):
@@ -302,6 +380,7 @@ class CanonicalConstantSkinTargetLaw:
             provider,
             skin,
             constants,
+            law_id=law_id,
             _token=_BUILD_TOKEN,
         )
         # At each canonical event, apply both constants and jointly admit every
@@ -316,6 +395,128 @@ class CanonicalConstantSkinTargetLaw:
                     f"constant skin target calibration failed: {checked.reason}"
                 )
         return law
+
+    @staticmethod
+    def _foot_frame(
+        query: SourceMotionQuery, worlds: np.ndarray, side: str
+    ) -> tuple[np.ndarray, np.ndarray]:
+        node = query.context.legs[side][-1]
+        matrix = np.asarray(worlds[node], dtype=float)
+        return (
+            np.asarray(matrix[:3, 3], dtype=float),
+            rotation_matrix(_rotation_from_matrix(worlds[node])),
+        )
+
+    @classmethod
+    def _build_local_material_references(
+        cls,
+        query: SourceMotionQuery,
+        provider: CanonicalSupportAnchorProvider,
+        skin: SkinRig,
+    ) -> dict[str, np.ndarray]:
+        """Bind one fixed source material witness in each semantic MTP frame."""
+        references = {}
+        up_index = int(np.argmax(np.abs(query.context.up)))
+        gait = query._locomotion_gait
+        if not isinstance(gait, GroundedGait):
+            raise ContractError("semantic foot-frame law requires grounded locomotion")
+        cycle = 2.0 * gait.step_period_s
+        for side, offset in (("left", 0.0), ("right", gait.step_period_s)):
+            anchor = provider.anchor_for(side)
+            lift_off = (offset + cycle * gait.duty_factor) % cycle
+            result = query._evaluate_owned(
+                lift_off,
+                side="left_limit",
+                target_offsets={foot: [0.0, 0.0, 0.0] for foot in ("left", "right")},
+            )
+            if isinstance(result, SourceMotionUnavailable):
+                raise _source_unavailable_error(result)
+            row = _thaw(result.row)
+            effector, rotation = cls._foot_frame(
+                query, np.asarray(result.worlds), side
+            )
+            target_patch = (
+                anchor.material_origin_m
+                + query.context.forward * row["feet"][side]["forward_m"]
+            )
+            target = np.asarray(
+                target_patch[anchor.lowest_patch_index], dtype=float
+            )
+            anchor_gap = float(target[up_index] - skin.ground)
+            target += query.context.up * (_TARGET_GAP_M - anchor_gap)
+            raw_row = deepcopy(row)
+            for foot in raw_row["feet"].values():
+                foot.pop("target_offset_m", None)
+            declared = grounded_touchdown_target(
+                query.context,
+                raw_row,
+                side=side,
+                body_response_sample=query._body_sample(None, raw_row),
+            )
+            declared_effector = np.asarray(
+                declared["target_foot_world_m"], dtype=float
+            )
+            references[side] = rotation.T @ (target - declared_effector)
+        return references
+
+    @classmethod
+    def _validate_foot_frame_boundaries(
+        cls,
+        query: SourceMotionQuery,
+        provider: CanonicalSupportAnchorProvider,
+        skin: SkinRig,
+        references: Mapping[str, np.ndarray],
+    ) -> dict[str, dict[str, float]]:
+        gait = query._locomotion_gait
+        if not isinstance(gait, GroundedGait):
+            raise ContractError("semantic foot-frame law requires grounded locomotion")
+        cycle = 2.0 * gait.step_period_s
+        zero = {side: [0.0, 0.0, 0.0] for side in ("left", "right")}
+        up_index = int(np.argmax(np.abs(query.context.up)))
+        residuals = {}
+        for side, offset in (("left", 0.0), ("right", gait.step_period_s)):
+            lift = (offset + cycle * gait.duty_factor) % cycle
+            touchdown = offset % cycle
+            if touchdown <= lift:
+                touchdown += cycle
+            side_residuals = {}
+            for label, time_s in (("lift_off", lift), ("touchdown", touchdown)):
+                result = query._evaluate_owned(
+                    time_s, side="left_limit", target_offsets=zero
+                )
+                if isinstance(result, SourceMotionUnavailable):
+                    raise _source_unavailable_error(result)
+                row = _thaw(result.row)
+                for foot in row["feet"].values():
+                    foot.pop("target_offset_m", None)
+                _, rotation = cls._foot_frame(query, np.asarray(result.worlds), side)
+                declared = grounded_touchdown_target(
+                    query.context,
+                    row,
+                    side=side,
+                    body_response_sample=query._body_sample(None, row),
+                )
+                transported = (
+                    np.asarray(declared["target_foot_world_m"], dtype=float)
+                    + rotation @ references[side]
+                )
+                anchor = provider.anchor_for(side)
+                support = np.asarray(
+                    anchor.material_origin_m[anchor.lowest_patch_index], dtype=float
+                ) + query.context.forward * row["feet"][side]["forward_m"]
+                anchor_gap = float(
+                    anchor.material_origin_m[anchor.lowest_patch_index][up_index]
+                    - skin.ground
+                )
+                support += query.context.up * (_TARGET_GAP_M - anchor_gap)
+                value = float(np.linalg.norm(transported - support))
+                if value > _TOLERANCE_M:
+                    raise ContractError(
+                        f"semantic foot-frame {side} {label} target is incompatible with support anchor"
+                    )
+                side_residuals[f"{label}_m"] = value
+            residuals[side] = side_residuals
+        return residuals
 
     @staticmethod
     def _patch(skin: SkinRig, worlds: np.ndarray, side: str) -> np.ndarray:
@@ -382,6 +583,133 @@ class CanonicalConstantSkinTargetLaw:
             "row": row,
         }
 
+    def _observe_semantic_foot_frame_pair(
+        self, query: SourceMotionQuery, time_s: float
+    ) -> dict[str, dict[str, Any]]:
+        """Map a target-owned material path through a fixed semantic MTP frame."""
+        zero = {side: np.zeros(3) for side in ("left", "right")}
+        result = query.evaluate_with_target_offsets(time_s, zero)
+        if isinstance(result, SourceMotionUnavailable):
+            raise _source_unavailable_error(result)
+        row = _thaw(result.row)
+        nominal_worlds = np.asarray(result.worlds)
+        targets: dict[str, np.ndarray] = {}
+        support_targets: dict[str, np.ndarray | None] = {}
+        corrections: dict[str, np.ndarray] = {}
+        up_index = int(np.argmax(np.abs(query.context.up)))
+        for side in ("left", "right"):
+            anchor = self._provider.anchor_for(side)
+            target_patch = (
+                anchor.material_origin_m
+                + query.context.forward * row["feet"][side]["forward_m"]
+            )
+            base_gap = float(
+                anchor.material_origin_m[anchor.lowest_patch_index][up_index]
+                - self._skin.ground
+            )
+            target_patch = target_patch + query.context.up * (_TARGET_GAP_M - base_gap)
+            _, rotation = self._foot_frame(query, nominal_worlds, side)
+            if row["feet"][side]["contact"]:
+                material_target = np.asarray(
+                    target_patch[anchor.lowest_patch_index], dtype=float
+                )
+                support_targets[side] = target_patch
+            else:
+                raw_row = deepcopy(row)
+                for foot in raw_row["feet"].values():
+                    foot.pop("target_offset_m", None)
+                declared = grounded_touchdown_target(
+                    query.context,
+                    raw_row,
+                    side=side,
+                    body_response_sample=query._body_sample(
+                        query._exact_index(time_s), raw_row
+                    ),
+                )
+                declared_effector = np.asarray(
+                    declared["target_foot_world_m"], dtype=float
+                )
+                material_target = (
+                    declared_effector
+                    + rotation @ self._local_material_references[side]
+                )
+                support_targets[side] = None
+            targets[side] = material_target
+            corrections[side] = np.zeros(3)
+
+        pose = result.pose
+        worlds = nominal_worlds
+        residuals = {
+            side: np.full(3, math.inf) for side in ("left", "right")
+        }
+        for _ in range(_FRAME_MAPPING_MAX_ITERATIONS):
+            correction_norms = {
+                side: float(np.linalg.norm(value))
+                for side, value in corrections.items()
+            }
+            envelope = _MAX_CORRECTION_BODY_HEIGHTS * query.context.body_height
+            if max(correction_norms.values()) > envelope:
+                side = max(correction_norms, key=correction_norms.get)
+                raise ContractError(
+                    "semantic foot-frame correction exceeds the solver envelope: "
+                    f"side={side} time_s={time_s!r} "
+                    f"correction_m={correction_norms[side]!r} envelope_m={envelope!r}"
+                )
+            solved = query.evaluate_with_target_offsets(time_s, corrections)
+            if isinstance(solved, SourceMotionUnavailable):
+                raise _source_unavailable_error(solved)
+            row = _thaw(solved.row)
+            pose = solved.pose
+            worlds = np.asarray(solved.worlds)
+            for side in ("left", "right"):
+                anchor = self._provider.anchor_for(side)
+                patch = self._patch(self._skin, worlds, side)
+                if support_targets[side] is not None:
+                    target_patch = support_targets[side]
+                    active = patch[:, up_index] <= patch[:, up_index].min() + 0.001
+                    error = 0.5 * (
+                        (target_patch[active] - patch[active]).max(0)
+                        + (target_patch[active] - patch[active]).min(0)
+                    )
+                    gap = float(patch[:, up_index].min() - self._skin.ground)
+                    error -= query.context.up * float(error @ query.context.up)
+                    error += query.context.up * (_TARGET_GAP_M - gap)
+                    residuals[side] = error
+                else:
+                    witness = patch[anchor.lowest_patch_index]
+                    error = targets[side] - witness
+                    # T(t) is authoritative in all three axes.  The full patch
+                    # contributes only the floor inequality in addition to the
+                    # transported material-witness equality.
+                    requested_gap = _TARGET_GAP_M
+                    gap = float(patch[:, up_index].min() - self._skin.ground)
+                    error += query.context.up * max(0.0, requested_gap - gap)
+                    residuals[side] = error
+            if max(np.linalg.norm(value) for value in residuals.values()) <= (
+                _FRAME_MAPPING_TOLERANCE_M
+            ):
+                break
+            corrections = {
+                side: corrections[side] + _FRAME_MAPPING_DAMPING * residuals[side]
+                for side in ("left", "right")
+            }
+
+        data = {}
+        for side in ("left", "right"):
+            patch = self._patch(self._skin, worlds, side)
+            data[side] = {
+                "loaded": bool(row["feet"][side]["contact"]),
+                "required_correction_m": residuals[side],
+                "material_mapping_residual_m": float(
+                    np.linalg.norm(residuals[side])
+                ),
+                "gap_m": float(patch[:, up_index].min() - self._skin.ground),
+                "pose": pose,
+                "row": row,
+                "correction_m": corrections[side],
+            }
+        return data
+
     @staticmethod
     def _failure_reason(side: str, observation: Mapping[str, Any]) -> str | None:
         numeric = (
@@ -393,9 +721,24 @@ class CanonicalConstantSkinTargetLaw:
         )
         if not all(math.isfinite(float(value)) for value in numeric):
             return f"{side} pointwise geometry contains non-finite values"
+        mapping_residual = observation.get("material_mapping_residual_m")
+        if (
+            mapping_residual is not None
+            and mapping_residual > _FRAME_MAPPING_TOLERANCE_M
+        ):
+            return f"{side} semantic foot-frame mapping did not converge"
         if observation["loaded"] and observation["residual_m"] > _TOLERANCE_M:
             return f"{side} loaded residual exceeds refinement tolerance"
-        if not observation["loaded"] and observation["minimum_gap_m"] < _TARGET_GAP_M:
+        numerical_gap_tolerance = (
+            _FRAME_MAPPING_TOLERANCE_M
+            if observation.get("material_mapping_residual_m") is not None
+            else 0.0
+        )
+        if (
+            not observation["loaded"]
+            and observation["minimum_gap_m"] + numerical_gap_tolerance
+            < _TARGET_GAP_M
+        ):
             return f"{side} swing clearance is below target gap"
         if abs(observation["ik_target_residual_m"]) > _IK_TOLERANCE_M:
             return f"{side} foot target residual exceeds solver tolerance"
@@ -412,6 +755,8 @@ class CanonicalConstantSkinTargetLaw:
         self, query: SourceMotionQuery, time_s: float
     ) -> dict[str, dict[str, Any]]:
         """Reuse one owned query and row solve for the two material patches."""
+        if self._law_id == _SEMANTIC_FOOT_FRAME_LAW:
+            return self._observe_semantic_foot_frame_pair(query, time_s)
         if query._transition_clearance is None:
             result = query.evaluate_with_target_offsets(time_s, self._constants)
         else:
@@ -508,6 +853,10 @@ class CanonicalConstantSkinTargetLaw:
                     ),
                 ),
             }
+            if "material_mapping_residual_m" in value:
+                observation["material_mapping_residual_m"] = float(
+                    value["material_mapping_residual_m"]
+                )
             observations[side] = observation
             reason = self._failure_reason(side, observation)
             if reason is not None:
@@ -529,12 +878,12 @@ class CanonicalConstantSkinTargetLaw:
                 branch,
             )
 
-        corrections = MappingProxyType(
-            {
-                side: _readonly_vector(value)
-                for side, value in self._constants.items()
-            }
-        )
+        corrections = MappingProxyType({
+            side: _readonly_vector(
+                data[side].get("correction_m", self._constants[side])
+            )
+            for side in ("left", "right")
+        })
         return ConstantSkinTargetValue(
             "AVAILABLE",
             float(time_s),
@@ -568,6 +917,34 @@ class CanonicalConstantSkinTargetLaw:
             raise ContractError("constant skin target times must not be empty")
         self._validate_integrity()
         return tuple(self._observe_at(time) for time in times)
+
+    def receipt(self) -> dict[str, Any]:
+        self._validate_integrity()
+        if self._law_id == _CONSTANT_LAW:
+            return {
+                "law_id": self._law_id,
+                "binding_sha256": self._law_binding_sha256,
+                "classification": (
+                    "pointwise checked values; derivative and global-C1 authority unavailable"
+                ),
+            }
+        return {
+            "law_id": self._law_id,
+            "binding_sha256": self._law_binding_sha256,
+            "material_reference": "provider-fixed full-skin vertex in semantic MTP local frame",
+            "swing_target": "E_declared(t) + R_declared(t) * local_material_reference",
+            "support_target": "immutable canonical full-skin material anchor patch",
+            "boundary_residuals_m": _thaw(self._boundary_residuals_m),
+            "mapping_tolerance_m": _FRAME_MAPPING_TOLERANCE_M,
+            "correction_envelope_body_heights": _MAX_CORRECTION_BODY_HEIGHTS,
+            "body_height_use": "correction envelope normalization only",
+            "mass_coupling": False,
+            "force_or_torque_claim": False,
+            "classification": (
+                "shared kinematic geometric contact foundation; full serialized, visual, "
+                "body-support, dynamics, and Unity validation remain separate"
+            ),
+        }
 
 
 __all__ = [

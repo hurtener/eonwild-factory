@@ -1,0 +1,112 @@
+{
+  "animal": {
+    "path": "catalog/animals/tarbosaurus-bataar-pin-552-1.adult.v2.json",
+    "sha256": "53ffeba22e24a87504d3dcc310bedacf6db94d60a25ffe56ad028b03f41e849d"
+  },
+  "articulation_profile": {
+    "path": "catalog/articulation/heavy-biped.tarbosaurus-adult-walk.v1.json",
+    "sha256": "c1206143387ad4d1084a413ee031018f5a61a8e0539ef8256c6bba74a0f4bc6a"
+  },
+  "contact_profile": {
+    "path": "catalog/contacts/heavy-biped.v10.json",
+    "sha256": "61e0351fe9f7170ddce7f0b83a8f0379d119349d3c392ffec43e544adb115db5"
+  },
+  "family": "heavy-predatory-biped",
+  "forward_axis": [
+    0,
+    0,
+    1
+  ],
+  "id": "tarbosaurus-pin-552-1-adult-locomotion.v3",
+  "locomotion_response_policy": {
+    "regimes": {
+      "airborne": {
+        "body_response": {
+          "carrier_mapping": {
+            "gaze_elevation": "constant_local_response",
+            "neck_counterpitch": "early_late_support_exchange",
+            "pelvis_forward_velocity": "integrated_early_late_support_exchange",
+            "pelvis_load_acceptance": "per_limb_early_support",
+            "pelvis_roll": "bilateral_support_difference",
+            "pelvis_support_pitch": "early_late_support_exchange",
+            "pelvis_sway": "bilateral_support_difference",
+            "pelvis_yaw": "bilateral_support_difference",
+            "tail_counterpitch": "early_late_support_exchange",
+            "tail_yaw": "lagged_bilateral_support_difference",
+            "upper_trunk_counterpitch": "early_late_support_exchange",
+            "upper_trunk_load_acceptance_pitch": "per_limb_early_support"
+          },
+          "forward_speed": {
+            "model": "reference_scaled_support_exchange.v1",
+            "reference_pelvis_forward_velocity_modulation_fraction": 0.14519967609352594,
+            "reference_speed_body_heights_per_s": 0.4878048780487805
+          },
+          "model": "explicit_contact_flight_coordination.v1",
+          "schema": "eonwild.motion.airborne-body-response.v1"
+        },
+        "intent_resolution": {
+          "model": "airborne_choreography_passthrough.v1"
+        }
+      },
+      "grounded": {
+        "body_response": {
+          "gait_response": {
+            "model": "reference_scaled_excursion_exchange.v1",
+            "reference": {
+              "pelvis_excursion_body_heights": 0.016,
+              "pelvis_forward_velocity_modulation_fraction": 0.14519967609352594,
+              "step_length_body_heights": 0.6,
+              "step_period_s": 1.23
+            },
+            "schema": "eonwild.motion.gait-response-policy.v1"
+          },
+          "model": "existing_grounded_shared_style.v1"
+        },
+        "intent_resolution": {
+          "path": "catalog/locomotion-response/heavy-biped-grounded-reference.v1.json",
+          "sha256": "d143e19026499ca6071a44995c1ce35e32f5a541b2b8667a7a9fbcc863f67980"
+        },
+        "neutral_support_profile": {
+          "path": "catalog/calibration/tarbosaurus-pin-552-1-adult-support.v1.json",
+          "sha256": "0a02f2842d309e7900829e567261d8c8e71ed2f90e14b76beb93a08fdadbdb2e"
+        }
+      }
+    },
+    "schema": "eonwild.motion.motion-set-locomotion-response.v1"
+  },
+  "neutral_pose_profile": {
+    "path": "catalog/calibration/tarbosaurus-pin-552-1-adult-neutral.v1.json",
+    "sha256": "787fc381ff5988cc846331b125f4096ce1e5500fb8e9263cf56f36dac5afd258"
+  },
+  "performance_profile": {
+    "path": "catalog/performance/heavy-biped.grounded-weight-transfer.v1.json",
+    "sha256": "517b8df482d8c0d6d1f28494eb45c2a488a2e1cd11f43db7e47225d7b6c988c9"
+  },
+  "rig": {
+    "path": "catalog/rigs/heavy-biped.v9.json",
+    "sha256": "c3de770bf7dcc68219a28fb9851e9b75f3d3eebe2c2c0c7deb0078850100fd7e"
+  },
+  "schema": "eonwild.motion.motion-baseline.v2",
+  "solve_policy": {
+    "canonical_support_anchors": true,
+    "grounded_transition_clearance": "material_floor_scaled_excess.v1",
+    "representation": "CUBICSPLINE",
+    "schema": "eonwild.motion.solve-policy.v1",
+    "skin_refinement": true,
+    "skin_target_law": "canonical_semantic_foot_frame_targets.v2"
+  },
+  "source": {
+    "path": "assets/sha256/2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f.glb",
+    "sha256": "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f"
+  },
+  "supported_programs": [
+    "grounded_gait",
+    "gait_transition"
+  ],
+  "up_axis": [
+    0,
+    1,
+    0
+  ],
+  "version": 3
+}

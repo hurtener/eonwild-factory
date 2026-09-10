@@ -160,7 +160,10 @@ def _validate_baseline(value: Any) -> Mapping[str, Any]:
         or solve.get("schema") != "eonwild.motion.solve-policy.v1"
         or solve.get("representation") != "CUBICSPLINE"
         or solve.get("canonical_support_anchors") is not True
-        or solve.get("skin_target_law") != "canonical_constant_skin_targets.v1"
+        or solve.get("skin_target_law") not in (
+            "canonical_constant_skin_targets.v1",
+            "canonical_semantic_foot_frame_targets.v2",
+        )
         or solve.get("skin_refinement") is not True
         or (
             "grounded_transition_clearance" in solve
