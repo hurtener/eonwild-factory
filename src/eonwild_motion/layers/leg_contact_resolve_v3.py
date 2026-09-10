@@ -466,16 +466,40 @@ def _world_matrices(
     rotations: Sequence[Quat],
     scales: Sequence[Vec3],
 ) -> tuple[Mat4, ...]:
-    worlds: list[Mat4 | None] = [None] * len(glb.nodes)
-
-    def resolve(index: int) -> Mat4:
-        if worlds[index] is None:
-            local = _local_matrix(translations[index], rotations[index], scales[index])
+    # Batch the independent local TRS arithmetic, then traverse the exact
+    # source hierarchy. Python scalar 4x4 products dominated repeated IK.
+    import numpy as np
+    count = len(glb.nodes)
+    q = np.asarray(rotations, dtype=float)
+    t = np.asarray(translations, dtype=float)
+    scale = np.asarray(scales, dtype=float)
+    if q.shape != (count, 4) or t.shape != (count, 3) or scale.shape != (count, 3):
+        raise ContractError("world pose TRS shape differs from source nodes")
+    norms = np.linalg.norm(q, axis=1)
+    if not np.isfinite(q).all() or np.any(norms <= 1e-15):
+        raise ContractError("rotation matrix quaternion is zero or nonfinite")
+    q = q / norms[:, None]
+    x, y, z, w = q.T
+    local = np.zeros((count, 4, 4), dtype=float)
+    local[:, :3, :3] = np.stack((
+        1-2*(y*y+z*z), 2*(x*y-z*w), 2*(x*z+y*w),
+        2*(x*y+z*w), 1-2*(x*x+z*z), 2*(y*z-x*w),
+        2*(x*z-y*w), 2*(y*z+x*w), 1-2*(x*x+y*y)), axis=1).reshape(count, 3, 3)
+    local[:, :3, :3] *= scale[:, None, :]
+    local[:, :3, 3] = t
+    local[:, 3, 3] = 1.
+    worlds = np.empty_like(local)
+    ready = np.zeros(count, dtype=bool)
+    def resolve(index):
+        if not ready[index]:
             parent = glb.parents[index]
-            worlds[index] = local if parent is None else _matmul(resolve(int(parent)), local)
-        return worlds[index]  # type: ignore[return-value]
+            worlds[index] = local[index] if parent is None else resolve(int(parent)) @ local[index]
+            ready[index] = True
+        return worlds[index]
+    for index in range(count):
+        resolve(index)
+    return tuple(tuple(tuple(row) for row in matrix) for matrix in worlds.tolist())
 
-    return tuple(resolve(index) for index in range(len(glb.nodes)))
 
 
 def _world_path_matrices(

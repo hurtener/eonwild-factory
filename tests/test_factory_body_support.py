@@ -264,3 +264,25 @@ def test_unavailable_checkpoint_preserves_bound_diagnostics(tmp_path):
     assert json.loads(
         (checkpoint / "body-support-coordination.json").read_text()
     )["solution"]["objective"] is None
+
+
+def test_coarse_proposal_cannot_approve_failing_source_resolution(monkeypatch):
+    import eonwild_motion.factory.body_support as module
+    monkeypatch.setattr(module, "prepare_surface_mass_proxy", lambda *a, **k: ({}, {}))
+    monkeypatch.setattr(module, "SourceFinalGeometryAdapter", _Adapter)
+    counts = []
+    def bridge(**kwargs):
+        counts.append(kwargs['sample_count'])
+        return lambda coefficients: object()
+    monkeypatch.setattr(module, "build_surface_mass_trial_evaluator", bridge)
+    monkeypatch.setattr(module, "solve_body_support_trajectory", lambda *a, **k:
+        BodySupportSolution('AVAILABLE', (.001,) + (0.,) * 11, 0., 0., 0., 1, 14))
+    monkeypatch.setattr(module, "_trial_residuals", lambda *a, **k: (np.array([.01]), .01, .02))
+    plan = {'samples': [{'time_s': i/120, 'root_forward_m': i/240} for i in range(121)]}
+    result = coordinate_body_support(source_bytes=b's', rig_bytes=b'r', animal_bytes=b'a',
+        query=object(), law=object(), plan=plan, forward_axis=(0.,0.,1.), up_axis=(0.,1.,0.))
+    assert counts == [12, 120]
+    assert result.solution.status == 'UNAVAILABLE'
+    assert result.law is None
+    assert result.receipt['proposal_sampling']['solution']['status'] == 'AVAILABLE'
+    assert result.solution.maximum_normalized_moment_residual == .02

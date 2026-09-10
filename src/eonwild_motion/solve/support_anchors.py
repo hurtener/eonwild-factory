@@ -187,6 +187,12 @@ class CanonicalSupportAnchorProvider:
             forward_axis=forward_axis,
             legacy_overlay=False,
             articulation_profile=articulation_profile,
+            knee_bend_plane_outward_degrees=(locomotion_gait.knee_bend_plane_outward_degrees
+                                             if isinstance(locomotion_gait, GroundedGait) else 0.0),
+            foot_outward_yaw_degrees=(locomotion_gait.foot_outward_yaw_degrees
+                                      if isinstance(locomotion_gait, GroundedGait) else None),
+            stance_roll_carrier=(locomotion_gait.stance_roll_carrier
+                                 if isinstance(locomotion_gait, GroundedGait) else None),
         )
         if not math.isclose(context.body_height, body_height, rel_tol=0, abs_tol=1e-10):
             raise ContractError("canonical support anchor plan height differs from source geometry")

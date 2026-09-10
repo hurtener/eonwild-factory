@@ -27,7 +27,7 @@ from .airborne_gait import (
 )
 from ..layers.leg_contact_resolve_v3 import _rotation_from_matrix
 from .skin_rig import SkinRig, rotation_matrix
-from .joint_contact_control import JointContactTrial, solve_loaded_contact_controls
+from .joint_contact_control import JointContactDomainError, JointContactTrial, solve_loaded_contact_controls
 from .minimax_contact import minimum_enclosing_residual_ball
 from .source_motion_query import SourceMotionQuery, SourceMotionUnavailable, _thaw
 from .support_anchors import CanonicalSupportAnchorProvider, _digest
@@ -141,6 +141,7 @@ class CanonicalConstantSkinTargetLaw:
         joint_contact_end_controls: Mapping[str, np.ndarray] | None = None,
         joint_contact_lift_references: Mapping[str, np.ndarray] | None = None,
         boundary_residuals_m: Mapping[str, Mapping[str, float]] | None = None,
+        rolling_contact_plan: Any | None = None,
         _token: object | None = None,
     ) -> None:
         if _token is not _BUILD_TOKEN:
@@ -158,6 +159,8 @@ class CanonicalConstantSkinTargetLaw:
         )
         if law_id not in (_CONSTANT_LAW, _SEMANTIC_FOOT_FRAME_LAW, _JOINT_CONTACT_LAW):
             raise ContractError("unsupported skin target law")
+        if getattr(query._locomotion_gait, "stance_roll_carrier", None) and law_id != _JOINT_CONTACT_LAW:
+            raise ContractError("rolling contact requires separate joint-law lift and touchdown references")
         self._law_id = law_id
         if _semantic_law(law_id):
             if local_material_references is None or set(local_material_references) != {"left", "right"}:
@@ -214,6 +217,10 @@ class CanonicalConstantSkinTargetLaw:
         self._boundary_residuals_m = _freeze_data(
             {} if boundary_residuals_m is None else boundary_residuals_m
         )
+        self._rolling_contact_plan = rolling_contact_plan
+        if query.context.stance_roll_carrier and self._rolling_contact_plan is None:
+            from .rolling_surfaces import build_rolling_contact_plan
+            self._rolling_contact_plan = build_rolling_contact_plan(calibration_query, provider, skin)
         self._calibration_sha256 = self._constants_sha256()
         self._law_binding_sha256 = self._current_law_binding_sha256()
         self._query_binding_sha256 = self._current_query_binding_sha256(query)
@@ -285,6 +292,7 @@ class CanonicalConstantSkinTargetLaw:
         """Digest exact immutable anchor/template authority across query rebinds."""
         return _digest({
             "provider": self._provider.receipt(),
+            "rolling_contact_plan": None if self._rolling_contact_plan is None else self._rolling_contact_plan.binding_sha256,
             "anchors": {
                 side: {
                     "origin_m": self._provider.anchor_for(side).material_origin_m.tolist(),
@@ -314,6 +322,7 @@ class CanonicalConstantSkinTargetLaw:
             joint_contact_end_controls=self._joint_contact_end_controls,
             joint_contact_lift_references=self._joint_contact_lift_references,
             boundary_residuals_m=self._boundary_residuals_m,
+            rolling_contact_plan=self._rolling_contact_plan,
             _token=_BUILD_TOKEN,
         )
 
@@ -328,6 +337,7 @@ class CanonicalConstantSkinTargetLaw:
     def _current_law_binding_sha256(self) -> str:
         return _digest({
             "law_id": self._law_id,
+            "rolling_contact_plan": None if self._rolling_contact_plan is None else self._rolling_contact_plan.binding_sha256,
             "constants": {
                 side: self._constants[side].tolist() for side in ("left", "right")
             },
@@ -380,6 +390,9 @@ class CanonicalConstantSkinTargetLaw:
         })
 
     def _validate_integrity(self) -> None:
+        if (self._rolling_contact_plan is not None and
+            self._rolling_contact_plan.current_binding_sha256() != self._rolling_contact_plan.binding_sha256):
+            raise ContractError("rolling material choreography differs from its frozen binding")
         if self._constants_sha256() != self._calibration_sha256:
             raise ContractError(
                 "constant skin target calibration differs from validated values"
@@ -502,7 +515,7 @@ class CanonicalConstantSkinTargetLaw:
                 boundary_residuals_m=boundary_residuals,
                 _token=_BUILD_TOKEN,
             )
-            if law_id == _JOINT_CONTACT_LAW:
+            if law_id == _JOINT_CONTACT_LAW and not query.context.stance_roll_carrier:
                 period = 2.0 * calibration_query._locomotion_gait.step_period_s
                 endpoint_controls = {}
                 for side, offset in (("left", 0.0), ("right", calibration_query._locomotion_gait.step_period_s)):
@@ -689,9 +702,10 @@ class CanonicalConstantSkinTargetLaw:
         cycle = 2.0 * gait.step_period_s
         for side, offset in (("left", 0.0), ("right", gait.step_period_s)):
             anchor = provider.anchor_for(side)
-            lift_off = (offset + cycle * gait.duty_factor) % cycle
+            reference_time = ((offset if offset else cycle) if gait.stance_roll_carrier
+                              else (offset + cycle * gait.duty_factor) % cycle)
             result = query._evaluate_owned(
-                lift_off,
+                reference_time,
                 side="left_limit",
                 target_offsets={foot: [0.0, 0.0, 0.0] for foot in ("left", "right")},
             )
@@ -747,6 +761,12 @@ class CanonicalConstantSkinTargetLaw:
                 touchdown += cycle
             side_residuals = {}
             for label, time_s in (("lift_off", lift), ("touchdown", touchdown)):
+                if label == "lift_off" and gait.stance_roll_carrier:
+                    # A rolling pad has a different lift frame. Its reference
+                    # is built from corrected geometry below and the final
+                    # lift handoff is checked after that solve, not against
+                    # the touchdown-only local reference at initialization.
+                    continue
                 result = query._evaluate_owned(
                     time_s, side="left_limit", target_offsets=zero
                 )
@@ -981,7 +1001,7 @@ class CanonicalConstantSkinTargetLaw:
                     offset = corrections[side]
                     envelope = _MAX_CORRECTION_BODY_HEIGHTS * query.context.body_height
                     if np.linalg.norm(offset) > envelope:
-                        raise ContractError("joint contact target offset exceeds body-height envelope")
+                        raise JointContactDomainError("joint contact target offset exceeds body-height envelope")
                     controls[side] = {
                         "authored_pitch_degrees": float(values[0]),
                         "foot_counterrotation_degrees": float(values[1]),
@@ -1178,7 +1198,7 @@ class CanonicalConstantSkinTargetLaw:
         def controls_for(active_side: str, x: np.ndarray) -> dict[str, Any]:
             envelope = _MAX_CORRECTION_BODY_HEIGHTS * query.context.body_height
             if np.linalg.norm(x[2:]) > envelope:
-                raise ContractError("joint contact target offset exceeds body-height envelope")
+                raise JointContactDomainError("joint contact target offset exceeds body-height envelope")
             controls = {}
             for foot_side in ("left", "right"):
                 values = x if foot_side == active_side else fixed[foot_side]
@@ -1345,6 +1365,9 @@ class CanonicalConstantSkinTargetLaw:
         evaluation_side: str = "value",
     ) -> dict[str, dict[str, Any]]:
         """Reuse one owned query and row solve for the two material patches."""
+        if self._rolling_contact_plan is not None:
+            from .rolling_surfaces import solve_rolling_surfaces
+            return solve_rolling_surfaces(self, query, time_s, evaluation_side)
         if _semantic_law(self._law_id):
             return self._observe_semantic_foot_frame_pair(
                 query, time_s, evaluation_side=evaluation_side
@@ -1551,9 +1574,22 @@ class CanonicalConstantSkinTargetLaw:
                 self._query_binding_sha256
                 if self._law_id == _JOINT_CONTACT_LAW else None
             ),
-            "material_reference": "provider-fixed full-skin vertex in semantic MTP local frame",
-            "swing_target": "E_declared(t) + R_declared(t) * local_material_reference",
-            "support_target": "immutable canonical material support subset; full sole/toe skin floor",
+            "rolling_contact_plan": (None if self._rolling_contact_plan is None else {
+                "policy_id": "source_rolling_material_acquisition.v1",
+                "binding_sha256": self._rolling_contact_plan.binding_sha256,
+                "events": [[{"phase_s":e.phase_s,"patch_index":e.patch_index,"anchor_m":list(e.anchor_m)} for e in group]
+                           for group in self._rolling_contact_plan.events],
+                "choreography": "each material point stays fixed during its source-owned support interval; heel-to-toe support transfer",
+            }),
+            "material_reference": ("source-acquired full-LBS material point per frozen support interval"
+                if self._rolling_contact_plan is not None else
+                "provider-fixed full-skin vertex in semantic MTP local frame"),
+            "swing_target": ("smooth end-to-start foot correction over source recovery"
+                if self._rolling_contact_plan is not None else
+                "E_declared(t) + R_declared(t) * local_material_reference"),
+            "support_target": ("frozen rolling material anchor; full sole/toe skin floor"
+                if self._rolling_contact_plan is not None else
+                "immutable canonical material support subset; full sole/toe skin floor"),
             "joint_contact_policy": (
                 None if self._joint_contact_end_controls is None else {
                     "policy_id": "source_joint_contact_minimax.v1",
@@ -1561,16 +1597,20 @@ class CanonicalConstantSkinTargetLaw:
                         side: self._joint_contact_end_controls[side].tolist()
                         for side in ("left", "right")
                     },
-                    "lift_material_references_mtp_local_m": {
+                    "lift_material_references_mtp_local_m": (None if self._joint_contact_lift_references is None else {
                         side: self._joint_contact_lift_references[side].tolist()
                         for side in ("left", "right")
-                    },
+                    }),
                     "swing_reference_transport": "smooth_lift_to_touchdown_mtp_local.v1",
                     "target_offset_envelope_body_heights": _MAX_CORRECTION_BODY_HEIGHTS,
                     "swing_release_fraction": 0.35,
                 }
             ),
-            "loaded_support_membership": {
+            "loaded_support_membership": ({
+                "policy_id": "source_rolling_material_acquisition.v1",
+                "selection": "source sole lower envelope with frozen material acquisition and release",
+                "events_binding_sha256": self._rolling_contact_plan.binding_sha256,
+            } if self._rolling_contact_plan is not None else {
                 "policy_id": _SUPPORT_ADMISSION_POLICY_ID,
                 "selection": "canonical touchdown vertices within fixed support band",
                 "support_band_m": _SUPPORT_BAND_M,
@@ -1606,7 +1646,7 @@ class CanonicalConstantSkinTargetLaw:
                     }
                     for side in ("left", "right")
                 },
-            },
+            }),
             "boundary_residuals_m": _thaw(self._boundary_residuals_m),
             "mapping_tolerance_m": _FRAME_MAPPING_TOLERANCE_M,
             "floor_target_gap_m": _TARGET_GAP_M,

@@ -1137,6 +1137,7 @@ class SourceMotionQuery:
         side: str,
         target_offsets: Mapping[str, list[float]] | None,
         joint_contact_controls: Mapping[str, Mapping[str, Any]] | None = None,
+        rolling_material_authority: bool = False,
         transition_clearance_integrity_proved: bool = False,
         authored_material_integrity_proved: bool = False,
     ) -> SourceMotionResult | SourceMotionUnavailable:
@@ -1197,9 +1198,18 @@ class SourceMotionQuery:
                 row["feet"][foot_side]["target_offset_m"] = list(
                     target_offsets[foot_side]
                 )
+        if rolling_material_authority:
+            if not self._context.stance_roll_carrier:
+                raise ContractError("rolling material authority requires rolling choreography")
+            for foot_side in ("left", "right"):
+                row["feet"][foot_side]["distal_endpoint_role"] = "shape_preference"
         if joint_contact_controls is not None:
             for foot_side in ("left", "right"):
                 control = joint_contact_controls[foot_side]
+                # Contact correction may adjust the metatarsal solve without
+                # replacing the behavior-owned pad roll at toe-off.
+                row["feet"][foot_side]["stance_roll_pitch_degrees"] = float(
+                    row["feet"][foot_side]["foot_pitch_degrees"])
                 row["feet"][foot_side]["foot_pitch_degrees"] = float(
                     control["authored_pitch_degrees"]
                 )

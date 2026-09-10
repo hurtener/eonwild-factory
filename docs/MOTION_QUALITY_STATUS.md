@@ -4,7 +4,19 @@ PR #2 continues the existing engine and approved references. **Quality-01 is
 REJECTED**. Technical acceptance, source integrity, native visual review and
 Unity parity are separate; none transfers automatically to a newer candidate.
 
-## Current integration checkpoint
+## Current visual checkpoint
+
+Iteration 15 preserves the user-approved Allosaurus and compares reduced
+Tarbosaurus pelvis lift with the same lateral transfer. Local review and exact
+recipe: `/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a087f8-b58c-7530-9fd8-e1ed39b8d526/outputs/visual-iteration-15/CHECKPOINT.md`.
+Await visual feedback before further changes.
+
+The [contact and mass checkpoint](CONTACT_MASS_VISUAL_CHECKPOINT.md) applies
+rolling contact and the first mass-derived body correction to both admitted
+animals. Native side/front videos are ready. Pause for feedback; production
+force/moment convergence and Unity parity are not claimed.
+
+## Earlier integration checkpoints (historical)
 
 The [emitted Allosaurus acquired-walk checkpoint](../reports/ALLOSAURUS-ACQUIRED-WALK-7C-BLOCKED-001/README.md) now records the first complete public factory emission through the licensed-reference adapter. Both GLBs were written and package integrity reopens as `PASS`, but the motion is **TECHNICALLY BLOCKED** by a 2.715 nm residual excess, a 750.143°/s solved foot-pitch rate against 600°/s, and a source-derived node rotation jump observed at about 7,522°/s against 1,200°/s. Ten diagnostic stills were inspected; no full-cycle, native-speed, Unity, anatomical, biological or production acceptance follows. This is not an accepted second animated animal.
 
@@ -383,3 +395,12 @@ catalog is not green, and draft PR #2 must not merge yet.
 Tarbosaurus walk verification: PASS; continuous Animator/runtime and Allosaurus
 parity: PENDING.
 Production promotion: NOT_GRANTED.**
+
+
+## Iteration 16 — connected walking review checkpoint (paused)
+
+Both admitted animals now have source-driven idle → start → normal walk → faster walk → slow down → stop diagnostic sequences. The approved Allosaurus iteration 14 and reduced-lift Tarbosaurus iteration 15 remain the normal-walk references. Faster walk changes cadence by 1.35, preserving configured stride. A shared slow-speed toe-off fix carries actual push-off amplitude into swing release.
+
+Full side/front native-time videos, both final `*-sequence-b` packages, 40 focused passing tests, source snapshot and playback measurements are recorded under the task output `visual-iteration-16`; see `docs/CONNECTED_WALK_VISUAL_CHECKPOINT.md` and that output's `CHECKPOINT.md`. Loaded material residuals are 0.131 mm Allosaurus and 0.230 mm Tarbosaurus. Full-mesh interpolation dips remain 0.703 mm and 5.646 mm respectively; production contact acceptance remains unpassed. Body response is the approved engineering control, not a newly converged dynamics solve.
+
+STOP at this checkpoint for user playback feedback. No next behaviors, Unity work, merge or push. Root implemented directly; no subagents were used for this pass.

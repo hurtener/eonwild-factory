@@ -150,3 +150,30 @@ def test_full_skin_floor_uses_only_declared_mapping_numerical_allowance() -> Non
 def test_adapter_rejects_invalid_coefficient_vectors(monkeypatch, coefficients) -> None:
     with pytest.raises(ContractError, match="12 finite coefficients"):
         _adapter(monkeypatch).binding_receipt(coefficients)
+
+
+def test_owned_batch_matches_pointwise_and_checks_each_floor(monkeypatch):
+    adapter = _adapter(monkeypatch)
+    skin = adapter._frozen_law._skin
+    original = skin.skin
+    def raised(worlds, indices=None):
+        points = original(worlds, indices)
+        if indices is None:
+            points = np.array(points, copy=True)
+            points[:, 1] += 0.002
+        return points
+    monkeypatch.setattr(skin, "skin", raised)
+    coefficients = (0.,) * 12
+    times = (0.2, 0.3)
+    batch = adapter.evaluate_many(coefficients, times)
+    direct = tuple(adapter(coefficients, periodic_body_delta(
+        coefficients, t, adapter.body_control_cycle_s), t) for t in times)
+    assert batch == direct
+    def buried(worlds, indices=None):
+        points = raised(worlds, indices)
+        if indices is None:
+            points[:, 1] -= 1.0
+        return points
+    monkeypatch.setattr(skin, "skin", buried)
+    with pytest.raises(ContractError, match="fixed floor"):
+        adapter.evaluate_many(coefficients, times)

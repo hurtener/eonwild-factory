@@ -134,6 +134,22 @@ class SourceFinalGeometryAdapter:
                 "source body-support trial delta differs from its bound coefficients"
             )
         value = trial.law.value(time_s)
+        return self._geometry_sample(trial, value, time_s, trial.law.receipt())
+
+    def evaluate_many(self, coefficients, times_s):
+        """Own a complete trial batch; bind once and check every final pose."""
+        trial = self._bound_trial(coefficients)
+        self._validate_trial_anchor(trial)
+        times = tuple(float(t) for t in times_s)
+        receipt = trial.law.receipt()
+        values = trial.law.values(times)
+        result = tuple(self._geometry_sample(trial, value, time, receipt)
+                       for time, value in zip(times, values, strict=True))
+        self._validate_trial_anchor(trial)
+        trial.law._validate_integrity()
+        return result
+
+    def _geometry_sample(self, trial, value, time_s, law_receipt):
         if isinstance(value, ConstantSkinTargetUnavailable):
             raise ContractError(
                 "source body-support trial failed final geometry: " + value.reason
@@ -143,7 +159,6 @@ class SourceFinalGeometryAdapter:
             value.pose.rotations,
             trial.law._query.context.base_s,
         )
-        law_receipt = trial.law.receipt()
         floor_target_gap = float(law_receipt["floor_target_gap_m"])
         mapping_tolerance = float(law_receipt["mapping_tolerance_m"])
         full_skin = np.asarray(trial.law._skin.skin(worlds), dtype=float)
@@ -170,9 +185,16 @@ class SourceFinalGeometryAdapter:
                     "source body-support trial final skin differs from its law witness"
                 )
             if bool(value.row["feet"][side]["contact"]):
-                support_points.extend(
-                    patch[np.asarray(trial.law._support_patch_indices[side], dtype=int)]
-                )
+                if trial.law._rolling_contact_plan is not None:
+                    # The normal-force support region follows actual ground
+                    # proximity; rolling material anchors retain their own
+                    # separately frozen acquisition/release choreography.
+                    active = patch[:, up_index] <= trial.law._skin.ground + floor_target_gap + 0.00125
+                    support_points.extend(patch[active])
+                else:
+                    support_points.extend(
+                        patch[np.asarray(trial.law._support_patch_indices[side], dtype=int)]
+                    )
         if not support_points:
             raise ContractError("source body-support trial has no active material support")
         named_worlds = _named_world_matrices(
@@ -252,9 +274,15 @@ def _named_world_matrices(
     query: SourceMotionQuery, worlds: np.ndarray, joint_indices: Sequence[int]
 ) -> Mapping[str, tuple[tuple[float, ...], ...]]:
     result = {}
-    for index in joint_indices:
+    required = set(int(index) for index in joint_indices)
+    for index in tuple(required):
+        parent = query._source.parents[index]
+        while parent is not None:
+            required.add(parent)
+            parent = query._source.parents[parent]
+    for index in sorted(required):
         node = query._source.document["nodes"][int(index)]
-        name = node.get("name")
+        name = node.get("name", f"node:{index}")
         if not isinstance(name, str) or not name:
             raise ContractError("source body-support deform joint has no stable name")
         if name in result:

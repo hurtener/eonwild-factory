@@ -93,6 +93,26 @@ def _validate_bound_linear(
         )
 
 
+def _validate_kinematic_frames(bindings, matrices):
+    """Validate immutable local scales, including unskinned ancestors.
+
+    World Gram matrices are not rotation-invariant beneath nonuniformly
+    scaled ancestors, even when their anisotropy is only source roundoff.
+    """
+    for binding in bindings:
+        name, parent = binding["node"], binding["parent_node"]
+        if name not in matrices or (parent is not None and parent not in matrices):
+            raise ContractError("surface-mass kinematic frame is missing")
+        world = np.asarray(matrices[name], dtype=float)
+        if world.shape != (4, 4) or not np.isfinite(world).all():
+            raise ContractError("surface-mass kinematic frame is invalid")
+        try:
+            local = world if parent is None else np.linalg.solve(np.asarray(matrices[parent], dtype=float), world)
+        except (ValueError, np.linalg.LinAlgError) as exc:
+            raise ContractError("surface-mass parent frame is invalid") from exc
+        _validate_bound_linear(local[:3,:3], {"bind_world_gram_matrix": binding["bind_local_gram_matrix"]})
+
+
 def _role_paths(value: Any, path: tuple[str, ...] = ()) -> dict[str, list[str]]:
     result: dict[str, list[str]] = {}
     if isinstance(value, str):
@@ -351,8 +371,24 @@ def prepare_surface_mass_proxy(
             "surface-mass aggregate differs from direct bind centroid "
             f"({residual:.12g} m; aggregate={aggregate_world_first.tolist()}; direct={direct.tolist()})"
         )
+    frame_nodes = set(int(n) for n in skin["joints"])
+    for node in tuple(frame_nodes):
+        parent = source.parents[node]
+        while parent is not None:
+            frame_nodes.add(parent)
+            parent = source.parents[parent]
+    frame_bindings = []
+    for node in sorted(frame_nodes):
+        parent = source.parents[node]
+        local = worlds[node] if parent is None else np.linalg.solve(worlds[parent], worlds[node])
+        frame_bindings.append({
+            "node": source.nodes[node].get("name", f"node:{node}"),
+            "parent_node": None if parent is None else source.nodes[parent].get("name", f"node:{parent}"),
+            "bind_local_gram_matrix": (local[:3,:3].T @ local[:3,:3]).tolist(),
+        })
     profile = {
         "schema": SCHEMA,
+        "kinematic_frame_bindings": frame_bindings,
         "id": f"{animal['id']}.surface-mass-proxy.v1",
         "version": 1,
         "classification": "low-confidence source-shaped engineering coordination proxy",
@@ -419,6 +455,8 @@ def surface_mass_body_state(
     result = np.zeros(3)
     total = 0.0
     states = []
+    if profile.get("kinematic_frame_bindings"):
+        _validate_kinematic_frames(profile["kinematic_frame_bindings"], joint_world_matrices)
     for binding in profile["bindings"]:
         name = binding["node"]
         if name not in joint_world_matrices:
@@ -431,7 +469,8 @@ def surface_mass_body_state(
             raise ContractError("surface-mass binding fraction is invalid")
         linear = matrix[:3, :3]
         source_linear = linear / instance_scale
-        _validate_bound_linear(linear, binding)
+        if not profile.get("kinematic_frame_bindings"):
+            _validate_bound_linear(linear, binding)
         local_com = np.asarray(binding["com_local_m"], dtype=np.float64)
         local_inertia = np.asarray(
             binding["allocation_point_mass_inertia_tensor_fraction_m2"], dtype=np.float64
@@ -478,6 +517,7 @@ class PreparedSurfaceMassVertexEvaluator:
     total_mass_kg: float
     joint_names: tuple[str, ...]
     expected_grams: Mapping[str, np.ndarray] = field(repr=False, compare=False)
+    kinematic_frame_bindings: tuple = field(repr=False, compare=False)
     inverse_bind_matrices: np.ndarray = field(repr=False, compare=False)
     homogeneous_positions: np.ndarray = field(repr=False, compare=False)
     triangles: np.ndarray = field(repr=False, compare=False)
@@ -490,6 +530,8 @@ class PreparedSurfaceMassVertexEvaluator:
         joint_world_matrices: Mapping[str, Sequence[Sequence[float]]],
     ) -> dict[str, Any]:
         matrices = []
+        if self.kinematic_frame_bindings:
+            _validate_kinematic_frames(self.kinematic_frame_bindings, joint_world_matrices)
         for slot, name in enumerate(self.joint_names):
             if name not in joint_world_matrices:
                 raise ContractError(
@@ -499,7 +541,7 @@ class PreparedSurfaceMassVertexEvaluator:
             if matrix.shape != (4, 4) or not np.isfinite(matrix).all():
                 raise ContractError("surface-mass joint world matrix is invalid")
             expected_gram = self.expected_grams.get(name)
-            if expected_gram is not None:
+            if expected_gram is not None and not self.kinematic_frame_bindings:
                 _validate_bound_linear(
                     matrix[:3, :3], {"bind_world_gram_matrix": expected_gram}
                 )
@@ -597,6 +639,10 @@ def prepare_surface_mass_vertex_evaluator(
         total_mass_kg=total_mass_kg,
         joint_names=tuple(joint_names),
         expected_grams=MappingProxyType(expected_grams),
+        kinematic_frame_bindings=tuple(MappingProxyType({
+            "node": b["node"], "parent_node": b["parent_node"],
+            "bind_local_gram_matrix": _readonly_array(np.asarray(b["bind_local_gram_matrix"], dtype=float)),
+        }) for b in profile.get("kinematic_frame_bindings", ())),
         inverse_bind_matrices=_readonly_array(inverse),
         homogeneous_positions=_readonly_array(homogeneous),
         triangles=_readonly_array(triangles),

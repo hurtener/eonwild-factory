@@ -1,0 +1,17 @@
+{
+  "status": "MEASURED_DIAGNOSTIC",
+  "glb_sha256": "635307bed533083f27bb15ea4893a37581cc9b5f9113d769d277089996daa1e0",
+  "sample_count": 2253,
+  "loaded_material_measurements": 2893,
+  "sampling": "all emitted keys and midpoints; material interpolation measured within unchanged support intervals",
+  "minimum_full_mesh_gap_m": -0.005646176921861451,
+  "maximum_loaded_material_residual_m": 0.0002298301715474304,
+  "production_contact_pass": false,
+  "worst": {
+    "floor_time_s": 1.0914401412010193,
+    "material_time_s": 11.006048679351807,
+    "material_side": "left"
+  },
+  "visual": "PENDING",
+  "serialized_dynamics_parity": "NOT_RUN"
+}

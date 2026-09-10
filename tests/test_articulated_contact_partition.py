@@ -8,6 +8,7 @@ from eonwild_motion.planning.airborne_gait import AirborneGait
 from eonwild_motion.planning.airborne_gait import build_airborne_plan
 from eonwild_motion.planning.grounded_gait import GroundedGait, build_grounded_plan
 from eonwild_motion.solve.airborne_gait import (
+    _fit_digit_chain,
     _recovery_pitch_target, build_airborne_solve_context, solve_airborne_gait,
     solve_airborne_plan_sample,
 )
@@ -16,6 +17,25 @@ from eonwild_motion.solve.performance import Performance, decorate_plan
 from eonwild_motion.layers.leg_contact_resolve_v3 import _clip_state, _pose, _world_matrices
 from eonwild_motion.glb.container import Glb
 from test_v9_airborne_gait import fixture
+
+
+def test_longer_digit_keeps_segment_lengths_and_reaches_supported_tip():
+    points = np.array([[0., 0., 0.], [.04, .015, 0.],
+                       [.08, .02, 0.], [.12, 0., 0.]])
+    target = np.array([.10, -.01, 0.])
+    fitted = _fit_digit_chain(points, target)
+    assert np.allclose(fitted[0], points[0])
+    assert np.allclose(np.linalg.norm(np.diff(fitted, axis=0), axis=1),
+                       np.linalg.norm(np.diff(points, axis=0), axis=1))
+    assert np.linalg.norm(fitted[-1] - target) < 1e-5
+
+
+def test_longer_digit_does_not_stretch_to_unreachable_tip():
+    points = np.array([[0., 0., 0.], [.04, .01, 0.],
+                       [.08, .02, 0.], [.12, 0., 0.]])
+    fitted = _fit_digit_chain(points, np.array([1., 0., 0.]))
+    assert np.isclose(np.linalg.norm(fitted[-1] - fitted[0]),
+                      np.linalg.norm(np.diff(points, axis=0), axis=1).sum())
 
 
 @pytest.mark.parametrize('travel',[.18,-.18])

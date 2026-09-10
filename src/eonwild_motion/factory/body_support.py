@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 import math
 from typing import Any, Mapping, Sequence
 
@@ -17,6 +17,7 @@ from ..dynamics.body_support_coordinator import (
     BodySupportSolution,
     coordinator_policy,
     solve_body_support_trajectory,
+    _trial_residuals, NORMALIZED_WRENCH_TOLERANCE,
 )
 from ..dynamics.source_body_support_adapter import SourceFinalGeometryAdapter
 from ..dynamics.surface_mass import COORDINATES, prepare_surface_mass_proxy
@@ -95,7 +96,7 @@ def coordinate_body_support(
         - plan["samples"][0]["root_forward_m"]
     )
     policy = dict(coordinator_policy())
-    trial_evaluator = build_surface_mass_trial_evaluator(
+    trial_arguments = dict(
         source_bytes=source_bytes,
         surface_mass_profile=profile,
         duration_s=duration,
@@ -109,10 +110,30 @@ def coordinate_body_support(
         frozen_anchor_sha256=adapter.frozen_anchor_sha256,
         evaluate_final_geometry=adapter,
     )
+    # Search the low-frequency body basis on a smaller exact-geometry grid.
+    # Acceptance still measures the complete source clock at its original
+    # resolution and original force, moment, contact and floor tolerances.
+    proposal_intervals = min(len(times) - 1, max(5, math.ceil(duration * 12)))
+    trial_evaluator = build_surface_mass_trial_evaluator(
+        **{**trial_arguments, "sample_count": proposal_intervals})
     solution = solve_body_support_trajectory(
         trial_evaluator,
         frozen_anchor_sha256=adapter.frozen_anchor_sha256,
     )
+    proposal_solution = solution
+    if proposal_intervals != len(times) - 1:
+        try:
+            final_trial = build_surface_mass_trial_evaluator(**trial_arguments)(solution.coefficients)
+            residual, force_error, moment_error = _trial_residuals(
+                final_trial, frozen_anchor_sha256=adapter.frozen_anchor_sha256)
+            available = max(force_error, moment_error) <= NORMALIZED_WRENCH_TOLERANCE
+            solution = replace(solution, status="AVAILABLE" if available else "UNAVAILABLE",
+                objective=float(residual @ residual), maximum_normalized_force_residual=force_error,
+                maximum_normalized_moment_residual=moment_error,
+                evaluation_count=solution.evaluation_count + 1,
+                reason=None if available else "final source-resolution wrench residual exceeds policy")
+        except ContractError as exc:
+            solution = replace(solution, status="UNAVAILABLE", reason=str(exc))
     accepted_law = (
         adapter.law_for_coefficients(solution.coefficients)
         if solution.status == "AVAILABLE"
@@ -124,6 +145,9 @@ def coordinate_body_support(
         "policy_id": BODY_SUPPORT_POLICY,
         "status": solution.status,
         "solution": _json_safe(asdict(solution)),
+        "proposal_sampling": {"interval_count": proposal_intervals, "target_hz": 12,
+            "classification": "optimization only; final source resolution remains authoritative",
+            "solution": _json_safe(asdict(proposal_solution))},
         "surface_mass_profile_sha256": digest(json_bytes(profile)),
         "surface_mass_audit_sha256": digest(json_bytes(audit)),
         "frozen_anchor_sha256": adapter.frozen_anchor_sha256,

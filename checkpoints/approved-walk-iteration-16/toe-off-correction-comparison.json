@@ -1,0 +1,26 @@
+{
+  "allo": {
+    "initial": {
+      "largest_adjacent_key_rotation_degrees": 41.29649076706649,
+      "node": "AllosaurusPedalOuterEndpoint.R",
+      "time_s": 16.929819107055664
+    },
+    "-b": {
+      "largest_adjacent_key_rotation_degrees": 35.075084766565105,
+      "node": "AllosaurusPedalOuterEndpoint.R",
+      "time_s": 12.480742454528809
+    }
+  },
+  "tarbo": {
+    "initial": {
+      "largest_adjacent_key_rotation_degrees": 36.51629694252536,
+      "node": "Bone_054",
+      "time_s": 16.929819107055664
+    },
+    "-b": {
+      "largest_adjacent_key_rotation_degrees": 36.51629694252536,
+      "node": "Bone_054",
+      "time_s": 16.929819107055664
+    }
+  }
+}

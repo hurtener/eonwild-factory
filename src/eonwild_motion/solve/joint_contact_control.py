@@ -27,6 +27,10 @@ _TARGET_STEP_M = 1e-5
 _MAX_GAUSS_NEWTON_ITERATIONS = 18
 
 
+class JointContactDomainError(ContractError):
+    """A numerical trial leaves the caller-declared coordinate domain."""
+
+
 @dataclass(frozen=True)
 class JointContactTrial:
     material_errors_m: np.ndarray
@@ -144,15 +148,21 @@ def _bounded_stencil(
     if plus_step:
         plus = x.copy()
         plus[coordinate] += plus_step
-        plus_trial = evaluate(plus)
-        _admit_trial(plus_trial)
+        try:
+            plus_trial = evaluate(plus)
+            _admit_trial(plus_trial)
+        except JointContactDomainError:
+            plus_trial, plus_step = base, 0.0
     else:
         plus_trial = base
     if minus_step:
         minus = x.copy()
         minus[coordinate] -= minus_step
-        minus_trial = evaluate(minus)
-        _admit_trial(minus_trial)
+        try:
+            minus_trial = evaluate(minus)
+            _admit_trial(minus_trial)
+        except JointContactDomainError:
+            minus_trial, minus_step = base, 0.0
     else:
         minus_trial = base
     return plus_trial, minus_trial, plus_step, minus_step
@@ -233,8 +243,11 @@ def solve_fixed_authored_pitch(
             candidate = x.copy()
             candidate[1:] += fraction * delta * scale
             candidate[1] = float(np.clip(candidate[1], *_COUNTERROTATION_BOUNDS_DEGREES))
-            trial = evaluate(candidate)
-            _admit_trial(trial)
+            try:
+                trial = evaluate(candidate)
+                _admit_trial(trial)
+            except JointContactDomainError:
+                continue
             if _trial_merit(trial) < _trial_merit(best):
                 x, best, accepted = candidate, trial, True
                 break
@@ -265,8 +278,11 @@ def solve_fixed_authored_pitch(
         )[0]
         candidate = x.copy()
         candidate[2:4] += shift
-        trial = evaluate(candidate)
-        _admit_trial(trial)
+        try:
+            trial = evaluate(candidate)
+            _admit_trial(trial)
+        except JointContactDomainError:
+            break
         if _trial_merit(trial) < _trial_merit(best):
             x, best = candidate, trial
         else:

@@ -1,0 +1,24 @@
+{
+  "allosaurus": {
+    "file": "allosaurus-connected-walk.mp4",
+    "sha256": "cf82a685539e46455d250cdbec62d10ca293c76271c65e257628f651f87ada21",
+    "playback": {
+      "width": 1000,
+      "height": 360,
+      "r_frame_rate": "24/1",
+      "duration": "18.708333",
+      "nb_read_frames": "449"
+    }
+  },
+  "tarbosaurus": {
+    "file": "tarbosaurus-connected-walk.mp4",
+    "sha256": "2596cb961de3f2d3815f9e96a597a26f625ca7e56744e28cee881541cc64017d",
+    "playback": {
+      "width": 1000,
+      "height": 360,
+      "r_frame_rate": "24/1",
+      "duration": "18.708333",
+      "nb_read_frames": "449"
+    }
+  }
+}

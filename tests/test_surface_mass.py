@@ -270,3 +270,23 @@ def test_prepared_vertex_evaluator_rejects_corrupted_source_binding() -> None:
     bound["identity"] = {"source_sha256": hashlib.sha256(b"expected").hexdigest()}
     with pytest.raises(ContractError, match="differs from profile binding"):
         prepare_surface_mass_vertex_evaluator(b"corrupted", bound)
+
+
+def test_local_scale_binding_allows_rotation_under_nonuniform_parent():
+    from eonwild_motion.dynamics.surface_mass import _validate_kinematic_frames
+    parent = np.diag([1.0, 1.0000005, 1.0, 1.0])
+    angle = .7
+    child_local = np.array([[np.cos(angle), -np.sin(angle), 0., 0.],
+                            [np.sin(angle), np.cos(angle), 0., 0.],
+                            [0., 0., 1., 0.], [0., 0., 0., 1.]])
+    frames = [
+        {'node':'parent','parent_node':None,'bind_local_gram_matrix':(parent[:3,:3].T@parent[:3,:3]).tolist()},
+        {'node':'child','parent_node':'parent','bind_local_gram_matrix':np.eye(3).tolist()},
+    ]
+    posed = {'parent':parent, 'child':parent@child_local}
+    _validate_kinematic_frames(frames, posed)
+    corrupted = {'parent':parent, 'child':posed['child']@np.diag([1.01, 1., 1., 1.])}
+    with pytest.raises(ContractError, match='linear Gram'):
+        _validate_kinematic_frames(frames, corrupted)
+    with pytest.raises(ContractError, match='missing'):
+        _validate_kinematic_frames(frames, {'child':posed['child']})

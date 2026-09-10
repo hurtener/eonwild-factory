@@ -1,0 +1,63 @@
+{
+  "schema": "eonwild.motion.visual-sequence-recipe.v1",
+  "id": "heavy-biped.walk-speed-checkpoint.v1",
+  "classification": "authored engineering review; not a converged force simulation",
+  "sequence": {
+    "stages": [
+      "idle/start walking",
+      "normal walk",
+      "speed up",
+      "faster walk",
+      "slow down",
+      "stop/idle"
+    ],
+    "faster_cadence_ratio": 1.35,
+    "ramp_cycles": 1,
+    "anticipation_seconds": 0.8,
+    "settle_seconds": 0.8,
+    "idle_crouch_body_heights": 0.025,
+    "support_placement": "integrated_support"
+  },
+  "animals": {
+    "allosaurus": {
+      "motion_set": "catalog/motion-sets/allosaurus-engineering-native-walk.v21.json",
+      "approved_body_coefficients": [
+        0.004132658583746928,
+        -0.004295767254322293,
+        -0.03695006687452403,
+        -0.0013508483373356273,
+        -0.0589363242449526,
+        0.014703697937816576,
+        -0.020735579336719323,
+        0.0028264133983643166,
+        -0.03147199380992796,
+        0.011212735687608803,
+        0.006447665614336561,
+        -0.004175156660749306
+      ],
+      "approved_body_receipt_sha256": "16db017c1c9bdbcaab3e497e881a47dfbf3056d4bdaa5311e19376eb8d010cb3",
+      "review_status": "user-approved normal walk baseline",
+      "body_response": "phase-locked approved coefficients scaled by locomotion activity; faster walk changes cadence only"
+    },
+    "tarbosaurus": {
+      "motion_set": "catalog/motion-sets/tarbosaurus-pin-552-1-adult-locomotion.v15.json",
+      "approved_body_coefficients": [
+        -0.008594985856279517,
+        -0.013963672929243496,
+        0.01713131687923733,
+        -0.01713131687923733,
+        -0.06852526751694932,
+        0.06852526751694932,
+        0.0004641793232294665,
+        -0.02836630497553942,
+        -0.017392594877972657,
+        0.034614934128801685,
+        0.004561453768363734,
+        -0.02293483071106042
+      ],
+      "approved_body_receipt_sha256": "f0aa646efa2cb0eab8859a623fe9d39de3ce0e5671f67a522b4808661b46ace8",
+      "review_status": "user-approved normal walk baseline",
+      "body_response": "phase-locked approved coefficients scaled by locomotion activity; faster walk changes cadence only"
+    }
+  }
+}

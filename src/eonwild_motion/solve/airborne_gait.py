@@ -37,6 +37,33 @@ def _qrotvec(vector):
     return _scalar_qrotvec(tuple(float(v) for v in vector))
 
 
+def _fit_digit_chain(points: np.ndarray, target: np.ndarray) -> np.ndarray:
+    """Fit a longer semantic digit to its endpoint without changing lengths."""
+    result = points.copy()
+    root = result[0].copy()
+    lengths = np.linalg.norm(np.diff(result, axis=0), axis=1)
+    if np.any(lengths < 1e-9):
+        raise ContractError("digit chain has a zero-length segment")
+    if np.linalg.norm(target - root) >= lengths.sum():
+        direction = _unit(target - root)
+        for i, length in enumerate(lengths):
+            result[i + 1] = result[i] + direction * length
+        return result
+    for _ in range(32):
+        result[-1] = target
+        for i in range(len(lengths) - 1, -1, -1):
+            direction = result[i] - result[i + 1]
+            if np.linalg.norm(direction) < 1e-12:
+                direction = points[i] - points[i + 1]
+            result[i] = result[i + 1] + _unit(direction) * lengths[i]
+        result[0] = root
+        for i, length in enumerate(lengths):
+            result[i + 1] = result[i] + _unit(result[i + 1] - result[i]) * length
+        if np.linalg.norm(result[-1] - target) < 1e-6:
+            break
+    return result
+
+
 def _unit(v: Any) -> np.ndarray:
     a = np.asarray(v, dtype=float)
     length = np.linalg.norm(a)
@@ -581,8 +608,8 @@ def build_airborne_solve_context(
         raise ContractError("airborne gait needs complete semantic root/pelvis/leg/toe bindings") from exc
     if any(len(chain) != 4 for chain in legs.values()):
         raise ContractError("airborne gait requires hip/knee/ankle/foot chains")
-    if any(len(chain) != 3 for digit_chains in toes.values() for chain in digit_chains):
-        raise ContractError("airborne digit endpoint solve requires three-node toe chains")
+    if any(len(chain) not in (3, 4) for digit_chains in toes.values() for chain in digit_chains):
+        raise ContractError("digit endpoint solve requires three- or four-node toe chains")
     for chain in legs.values():
         if any(source.parents[b] != a for a, b in zip(chain, chain[1:])):
             raise ContractError("semantic contact chain must follow actual parent topology")
@@ -655,7 +682,8 @@ def build_airborne_solve_context(
     toe_normals = {}
     if "performance" in plan:
         for side, chains in toes.items():
-            for a, b, c in chains:
+            for chain in chains:
+                a, b, c = chain[0], chain[1], chain[-1]
                 pa, pb, pc = (np.asarray(_world_position(base_w[n])) for n in (a, b, c))
                 normal = np.cross(pb - pa, pc - pb)
                 toe_normals[a] = _unit(normal if np.linalg.norm(normal) > 1e-8 else lateral)
@@ -931,16 +959,13 @@ def solve_airborne_plan_sample(
             or (contact_counterrotation and not material_partition)
         ):
             raise ContractError("invalid semantic foot counterrotation")
-        if context.stance_roll_carrier and contact_counterrotation:
-            raise ContractError(
-                "stance roll with semantic foot counterrotation is not supported")
         swing_phase = foot_plan["swing_phase"]
         support_lock = (1.0 if foot_plan["contact"] else
                         1 - _smooth(min(swing_phase, 1 - swing_phase) / .18))
         for toe_chain in toes[side]:
             for index, n in enumerate(toe_chain):
                 axis = _qrotate(_qinv(_rotation_from_matrix(base_w[n])), tuple(lateral))
-                flex = foot_plan["toe_flex_degrees"] * (0.45 if index == 0 else 0.275)
+                flex = foot_plan["toe_flex_degrees"] * (0.45 if index == 0 else .55 / (len(toe_chain) - 1))
                 if material_partition:
                     flex *= 1 - support_lock
                 rot[n] = _qmul(base_r[n], _qrotvec(tuple(np.asarray(axis) * math.radians(flex))))
@@ -992,9 +1017,10 @@ def solve_airborne_plan_sample(
         world_metatarsus_recovery = _world_metatarsus_recovery(foot_plan)
         upper, lower = np.linalg.norm(kp - hp), np.linalg.norm(ap - kp)
         toe_geometry = []
-        for a, b, c in toes[side]:
-            pa, pb, pc = (np.asarray(_world_position(w[n])) for n in (a, b, c))
-            toe_geometry.append((pa - fp, np.asarray(_world_position(base_w[c])) + nominal_foot - np.asarray(_world_position(base_w[foot])), np.linalg.norm(pb - pa) + np.linalg.norm(pc - pb) - 1e-7))
+        for digit in toes[side]:
+            points = [np.asarray(_world_position(w[n])) for n in digit]
+            reach = sum(np.linalg.norm(b - a) for a, b in zip(points, points[1:]))
+            toe_geometry.append((points[0] - fp, np.asarray(_world_position(base_w[digit[-1]])) + nominal_foot - np.asarray(_world_position(base_w[foot])), reach - 1e-7))
 
         outward_yaw = _qrotvec(tuple(
             up * math.copysign(
@@ -1033,10 +1059,16 @@ def solve_airborne_plan_sample(
                 "stance roll carrier requires authored grounded push-off")
         authored_push_off = (0.0 if authored_push_off_raw is None
                              else float(authored_push_off_raw))
+        # Starts/stops leave stance with their current push-off amplitude.
+        # Releasing an unscaled steady-walk roll here creates a distal snap.
+        release_scale = foot_plan.get("stance_roll_release_scale", 1.0)
+        if (isinstance(release_scale, bool) or not isinstance(release_scale, (int, float))
+                or not math.isfinite(release_scale) or not 0 <= release_scale <= 1):
+            raise ContractError("invalid stance roll release scale")
         stance_roll_degrees = (
             None if context.stance_roll_carrier is None else
-            float(foot_plan["foot_pitch_degrees"]) if foot_plan["contact"] else
-            authored_push_off * early_swing_roll_release
+            float(foot_plan.get("stance_roll_pitch_degrees", foot_plan["foot_pitch_degrees"])) if foot_plan["contact"] else
+            authored_push_off * early_swing_roll_release * release_scale
         )
 
         def pitch_candidate(degrees, world_metatarsus_target=None):
@@ -1231,6 +1263,7 @@ def solve_airborne_plan_sample(
         # During contact each distal digit endpoint stays independently
         # planted. A centroid alone can hide one penetrating toe. Release
         # these constraints smoothly after lift and restore before land.
+        toe_shape_residual = 0.0
         for tc in toes[side]:
             if material_partition and not (
                     stance_roll_degrees is not None
@@ -1240,6 +1273,31 @@ def solve_airborne_plan_sample(
                 # flex makes EVERY toe landmark stationary. During swing
                 # the existing bounded flex is explicit choreography.
                 # Final material-point and skeleton checks remain required.
+                continue
+            if len(tc) == 4:
+                points = np.array([_world_position(w[n]) for n in tc], dtype=float)
+                anchor = nominal_foot + np.asarray(_qrotate(
+                    outward_yaw, tuple(np.asarray(_world_position(base_w[tc[-1]]))
+                    - np.asarray(_world_position(base_w[foot])))))
+                target_tip = points[-1] + lock * (anchor - points[-1])
+                fitted = _fit_digit_chain(points, target_tip)
+                for j, node in enumerate(tc[:-1]):
+                    here = np.asarray(_world_position(w[node]))
+                    child = np.asarray(_world_position(w[tc[j + 1]]))
+                    desired = fitted[j + 1] - fitted[j]
+                    rot[node] = _world_rotation(source, w, node, _qmul(
+                        _between(child - here, desired), _rotation_from_matrix(w[node])))
+                    w = _world_matrices(source, tr, rot, base_s)
+                distal_flex = math.radians(foot_plan["toe_flex_degrees"] * (.55 / 3) * (1 - lock))
+                distal_world = _qmul(contact_frame, _qmul(
+                    _qrotvec(tuple(lateral * distal_flex)),
+                    _rotation_from_matrix(base_w[tc[-1]])))
+                rot[tc[-1]] = _world_rotation(source, w, tc[-1], distal_world)
+                w = _world_matrices(source, tr, rot, base_s)
+                shape_error = float(np.linalg.norm(np.asarray(_world_position(w[tc[-1]])) - target_tip))
+                toe_shape_residual = max(toe_shape_residual, shape_error)
+                if foot_plan.get("distal_endpoint_role") != "shape_preference":
+                    max_extension = max(max_extension, shape_error)
                 continue
             if len(tc) != 3:
                 raise ContractError("airborne digit endpoint solve requires three-node toe chains")
@@ -1260,7 +1318,12 @@ def solve_airborne_plan_sample(
             first_len, second_len = np.linalg.norm(pb - pa), np.linalg.norm(pc - pb)
             raw_dist = np.linalg.norm(target_tip - pa)
             dist = float(np.clip(raw_dist, abs(first_len - second_len) + 1e-8, first_len + second_len - 1e-8))
-            max_extension = max(max_extension, float(abs(raw_dist - dist)))
+            toe_shape_residual = max(toe_shape_residual, float(abs(raw_dist - dist)))
+            # The rolling law owns actual material support. Its auxiliary
+            # skeletal endpoint remains a bounded shape preference; neither
+            # segment lengths nor the final material/floor gates are changed.
+            if foot_plan.get("distal_endpoint_role") != "shape_preference":
+                max_extension = max(max_extension, float(abs(raw_dist - dist)))
             along = (first_len ** 2 - second_len ** 2 + dist ** 2) / (2 * dist)
             if "performance" in plan:
                 foot_delta = _qmul(_rotation_from_matrix(w[foot]), _qinv(_rotation_from_matrix(base_w[foot])))
@@ -1295,6 +1358,10 @@ def solve_airborne_plan_sample(
         toe_height = min(float(np.asarray(_world_position(w[n])) @ up - ground) for tc in toes[side] for n in tc)
         tip_centroid = np.mean([np.asarray(_world_position(w[n])) for n in tips], axis=0)
         facts[side] = {"contact": foot_plan["contact"], "foot_world_m": actual.tolist(), "distal_contact_centroid_m": tip_centroid.tolist(), "target_foot_world_m": desired_foot.tolist(), "foot_target_residual_m": residual, "minimum_toe_joint_height_m": toe_height, "solved_foot_pitch_degrees": solved_pitch, "articulation_envelope_violation_degrees": envelope_error}
+        if foot_plan.get("distal_endpoint_role") == "shape_preference":
+            facts[side]["maximum_toe_shape_residual_m"] = toe_shape_residual
+            facts[side]["contact_authority"] = "rolling_material_surface"
+
         if articulation_profile is not None:
             facts[side]["articulation_phase"] = "support" if foot_plan["contact"] else "swing"
             facts[side]["articulation_angles_degrees"] = articulation_angles

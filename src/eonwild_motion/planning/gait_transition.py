@@ -231,6 +231,8 @@ class _Choreography:
             'toe_flex_degrees': float(toe), 'foot_pitch_degrees': float(pitch), 'swing_phase': float(swing),
             'touchdown_time_s': float(self.delay + max(0., touchdown) if self.start else touchdown),
             'articulation_scale': float(amplitude), 'liftoff_time_s': float(lift), 'next_touchdown_time_s': float(next_touchdown)}
+        if self.grounded and not contact:
+            result['stance_roll_release_scale'] = float(at_lift)
         if (self.grounded and not contact
                 and self.gait.metatarsal_recovery_world_degrees_from_down is not None):
             result['metatarsal_recovery_world_degrees_from_down'] = float(

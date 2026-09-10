@@ -126,3 +126,19 @@ def test_source_query_applies_joint_contact_controls_inside_pose_solve():
     controls["left"]["foot_counterrotation_degrees"] = 1.0
     rotated = query.evaluate_with_joint_contact_controls(0.2, controls)
     assert not np.allclose(rotated.worlds, baseline.worlds, atol=1e-10, rtol=0)
+
+
+def test_translation_domain_rejection_keeps_last_feasible_trial():
+    from eonwild_motion.solve.joint_contact_control import JointContactDomainError
+
+    def evaluate(x):
+        if np.linalg.norm(x[2:]) > 0.005:
+            raise JointContactDomainError('outside declared translation envelope')
+        return JointContactTrial(
+            np.asarray([[x[2] - 0.02, x[3], 0.]] * 3),
+            np.zeros((3, 3)), 0.0001, 0., 0., 0., x[0],
+        )
+
+    solved = solve_fixed_authored_pitch(evaluate, authored_pitch_degrees=22.)
+    assert 0. < solved.coordinates[2] <= 0.005
+    assert np.linalg.norm(solved.coordinates[2:]) <= 0.005

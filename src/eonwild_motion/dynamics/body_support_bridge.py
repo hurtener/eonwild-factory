@@ -173,14 +173,26 @@ def build_surface_mass_trial_evaluator(
 
     def evaluate(coefficients: tuple[float, ...]) -> TrialEvaluation:
         owned_coefficients = tuple(float(value) for value in coefficients)
+        # Production adapters can retain one integrity proof for this owned
+        # immutable coefficient/time batch. Callback-only adapters keep the
+        # same pointwise contract.
+        batch = getattr(evaluate_final_geometry, "evaluate_many", None)
+        if callable(batch):
+            times = tuple(index * dt for index in range(sample_count)) + (duration,) + tuple(
+                (index + 0.5) * dt for index in range(sample_count))
+            geometries = dict(zip(times, batch(owned_coefficients, times), strict=True))
+            def geometry_at(time_s):
+                return geometries[time_s]
+        else:
+            def geometry_at(time_s):
+                return evaluate_final_geometry(
+                    owned_coefficients,
+                    periodic_body_delta(owned_coefficients, time_s, body_cycle),
+                    time_s)
         boundary_states: list[Mapping[str, object]] = []
         for index in range(sample_count):
             time_s = index * dt
-            geometry = evaluate_final_geometry(
-                owned_coefficients,
-                periodic_body_delta(owned_coefficients, time_s, body_cycle),
-                time_s,
-            )
+            geometry = geometry_at(time_s)
             _validate_geometry_sample(
                 geometry,
                 expected_time_s=time_s,
@@ -192,11 +204,7 @@ def build_surface_mass_trial_evaluator(
                 raise ContractError("surface-mass trial changed its bound total mass")
             boundary_states.append(state)
 
-        terminal_geometry = evaluate_final_geometry(
-            owned_coefficients,
-            periodic_body_delta(owned_coefficients, duration, body_cycle),
-            duration,
-        )
+        terminal_geometry = geometry_at(duration)
         _validate_geometry_sample(
             terminal_geometry,
             expected_time_s=duration,
@@ -235,11 +243,7 @@ def build_surface_mass_trial_evaluator(
         samples: list[CoordinatorSample] = []
         for index in range(sample_count):
             midpoint_s = (index + 0.5) * dt
-            geometry = evaluate_final_geometry(
-                owned_coefficients,
-                periodic_body_delta(owned_coefficients, midpoint_s, body_cycle),
-                midpoint_s,
-            )
+            geometry = geometry_at(midpoint_s)
             _validate_geometry_sample(
                 geometry,
                 expected_time_s=midpoint_s,

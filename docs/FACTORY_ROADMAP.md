@@ -1,145 +1,65 @@
-# V9 factory baseline and next acceptance gates
+# Factory movement roadmap and acceptance tracker
 
-## Shared animal motion sets
+Updated 2026-09-10. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
 
-A versioned motion set binds one animal baseline and an ordered list of portable
-motion intents. The baseline owns admitted source geometry, semantic rig,
-animal scale, contact and articulation limits, coordinate frame, neutral-pose
-calibration, shared body style, gait-response policy, and solve policy. An
-intent owns only its program and gait/timing profiles. Unknown fields and body
-overrides fail closed.
+## Current accepted baseline
 
-`python -m eonwild_motion.factory compile-set` resolves every selected intent
-from one immutable baseline snapshot. Each package retains a canonical flat v1
-`recipe.json` for existing consumers plus the authored set, baseline, intent,
-style, and neutral-calibration snapshots. Verification reconstructs the recipe
-and effective performance from those package-local bytes. Grounded gait and
-grounded transitions are the initial supported capability; other programs must
-be admitted explicitly rather than inheriting grounded controllers.
+The user approved iteration 16 as smooth and credible, while correctly distinguishing locomotion from a living animal's attention and intent. Preserve Allosaurus iteration 14 and Tarbosaurus iteration 15 normal walks; iteration 16 adds the connected speed sequence. Approved motion is not automatically production certified.
 
-Source: `feat/spark-muse` / `8c1f5c2bfea481a56916ee6e0bfa74961ca0d141`.
-This document supersedes historical instructions that made Babylon the fixed
-consumer or treated a numbered experiment as the public factory interface.
-The product's embodiment, scientific-honesty and reproducibility principles
-remain. Unity is the intended runtime; it has not been implemented here.
+| Movement family | Allosaurus | Tarbosaurus | Current boundary |
+|---|---|---|---|
+| Grounded stance / held idle | Reviewed | Reviewed | Neutral/held pose; spontaneous breathing and attention still to add |
+| Normal walking | Visually approved, iteration 14 | Visually approved, iteration 15 | Same reusable solver; researched/authored stride and body differences in data |
+| Faster walking | Sequence approved | Sequence approved | 1.35× cadence, still grounded; not running |
+| Idle → start → walk → faster → slow → stop | Visually approved, iteration 16 | Visually approved, iteration 16 | 18.68-second source-driven sequence; runtime import not yet verified |
+| Heel roll, toe-off, swing recovery | Reviewed | Reviewed | Shared articulation; Allosaurus has added intermediate toe joints |
+| Lateral weight transfer / pelvis response | Reviewed engineering response | Reviewed reduced vertical response | Not a converged whole-body force simulation |
+| Reverse walking | Reusable planner exists; not reviewed on this animal | Reusable planner exists; not reviewed on this animal | No game-ready claim |
+| Turning / curved paths / pivots | Missing approved motion | Missing approved motion | Must preserve stance during heading changes |
+| Running / sprinting | Missing approved transfer | Approved historical Run010 / Sprint006 references | Shared airborne generation exists; current two-animal/runtime acceptance missing |
+| Independent gaze / neck attention | Next | Next | Game chooses target; bounded additive articulation must retain gait |
+| Expressive idle / breathing / listening | Missing approved behavior | Missing approved behavior | Intentional responses, not random noise |
+| Feeding / gripping / pulling | Missing approved transfer | Historical Feeding003 reference | Persistent support and oral contact need current-engine/runtime acceptance |
+| Drinking / swallowing | Missing | Missing | Separate choreography and interaction authority |
+| Rest / sit / lie down / rise / sleep | Missing | Missing | Topology and support transitions required |
+| Bite / attack / recoil / defense | Missing | Missing | World confirms outcomes; animation only supplies windows |
+| Injury / limp / stumble / fall / death | Missing | Missing | No current reusable, reviewed family |
+| Jump / airborne landing / recovery | Missing reviewed behavior | Missing reviewed behavior | Airborne gait implementation does not certify jumping |
+| Terrain adaptation / slopes / stepping over | Missing runtime acceptance | Missing runtime acceptance | Flat-floor factory evidence is not terrain proof |
+| Swim / wade / enter/leave water | Missing | Missing | Mini-world water is scenery until interaction is implemented |
+| Social / display / vocalization | Missing | Missing | Future breadth after embodiment checkpoint |
 
-## Baseline scope
+## Current limitations
 
-The baseline adds a neutral-geometry admission boundary, locked recipe inputs,
-an immutable candidate compiler, a genuine grounded reverse-walk planner,
-reopened final-channel checks, skinned-contact evaluation, runtime sidecars,
-corruption tests, and reproducible review tooling. It extracts the already
-reusable V9 locomotion emitter rather than rewriting it.
+- Saved sequence contact residuals: Allosaurus 0.131 mm; Tarbosaurus 0.230 mm at loaded material anchors.
+- Brief interpolation floor dips: Allosaurus 0.703 mm; Tarbosaurus 5.646 mm at first toe-off. Production contact acceptance remains open; these do not block visual iteration.
+- Body controls are approved engineering responses, not newly converged dynamics solutions.
+- Unity import/compression parity, runtime movement ownership, target-device budgets and attention-layer contact preservation are not yet verified.
 
-The old reproduction/promotion pipeline remains for approved-byte regression.
-It must not be confused with candidate creation. V8/V8.1 are recovered through
-Git history; the V8.2 release capsule moves intact into legacy/capsules. Do not
-mistake a retired engine folder for permission to discard an approved take.
+## Active milestone: a living animal in a small world
 
-## Status is multi-dimensional
+Player question: does the approved gait still feel credible when viewed from animal height in a coherent landscape, with independent attention to surroundings?
 
-| Dimension | Evidence | Meaning |
-|---|---|---|
-| Generation | compiler completed and emitted inventory | A candidate exists |
-| Integrity | final file hashes match manifest | Files are the recorded files |
-| Skeleton mechanics | reopened FK and plan witnesses | Proxies satisfy declared checks |
-| Skinned contact | actual serialized sole/toe vertices | Contact at the declared floor |
-| Perceptual quality | native-speed multi-view comparison and human decision | Looks convincing |
-| Unity parity | imported/compressed motion and live controller checks | Survives the engine boundary |
-| Device budget | measured target devices | Fits the shipped runtime |
+1. **Tracker and safe cleanup — IN PROGRESS.** Preserve approved sources, media, unique work and recovery refs; remove only obsolete clean checkouts.
+2. **Mini-world — NEXT.** A small Unity validation slice in the principal Eonwild repository: forest edge, open muddy clearing, shallow stream, rocks/logs/ferns and distant cliffs. Reuse the user's existing assets. Reference image informs composition and atmosphere; its quest/combat UI is not a product requirement.
+3. **Motion consumer — NEXT.** Immutable packages for both animals; one movement owner; native-time review, scale/axes and landmark/contact comparisons. No sibling Factory code imports.
+4. **Attention — NEXT.** Look left/right, hold and track a target, return smoothly. Neck distributes the turn within bounded range. Camera follows the body with its own damping and only restrained attention influence.
+5. **Playable review — CHECKPOINT.** Movement/speed controls, animal switch and attention demonstration. Capture actual runtime visuals and pause for feedback.
 
-Integrity is not approval. An animation may look useful while remaining
-mechanically blocked; retain the evidence instead of relaxing the threshold.
-A missing skin measurement is NOT_MEASURED, not zero drift. The compiler's
-manifest never claims production approval. A future publisher must require
-all applicable approvals and cannot be the candidate generator itself.
+The user approved Unity for this validation checkpoint. This does not silently replace the canonical browser-first distribution decision; shipping platform and performance acceptance remain separate.
 
-## Work sequence
+## Following checkpoints (not started)
 
-### 1. Consolidation and invariant regression (this baseline)
+- Player-driven turns, stopping and terrain contact; improve the remaining observed contact issue.
+- Transfer approved running/sprinting into the current shared engine and both animals.
+- Persistent-support feeding, drinking and interaction handoff.
+- Resting, injury and other movement breadth, in response to the playable loop.
+- Ecology, sensory behavior, world expansion and deployment/device budgets.
 
-Preserve the approved checkpoints; stop new code imports from experiment
-folders; separate geometry from choreography; add candidate/input identity.
-Keep exact legacy solver behavior as the default API path during extraction.
-Prove repeat compilation and negative tests before changing performance.
+## Status discipline
 
-### 2. Final contact authority and gait seam acceptance
+Track **implemented**, **source-rig generated**, **exported**, **human reviewed**, **runtime verified**, and **production accepted** separately. Record source identity, recipe, native-speed evidence and known gaps. Do not declare an entire movement family complete from a legacy reference or synthetic test. Keep iteration short and visible; broad release gates follow a reviewed candidate.
 
-Fix actual final skin contact, not just toe-joint proxies. Audit contact masks,
-initial pose/floor calibration, stance roll versus slip, and duplicate terminal
-loop samples. A loop-seam evaluator must unwrap root motion and preserve the
-same contact phase across cycles; never simply omit a failing physical phase.
-Test the validator with lifted feet, slipping feet, phase shifts, corrupted
-geometry, and final post-solve edits. Use normalized/physical tolerances with
-explicit provenance; no broad proximity band masquerading as ground contact.
+## Factory contracts
 
-Exit: accepted run and sprint contact witnesses on their final GLBs, with the
-same criteria applied before and after Blender/Unity import.
-
-### 3. Extract persistent-support feeding
-
-Recover Feeding001 support and Feeding003 oral anchoring into a typed behavior
-module, not a wrapper that imports their historical Python files. The input
-must declare semantic spine/neck/mouth roles, articulation envelopes, target
-frame, grip windows, resistance/yield, and performance curves. State belongs to
-one compilation instance, never a monkey-patched module or mutable rig cache
-shared across simultaneous builds. Remap different neck chain lengths through
-normalized chain coordinates rather than slices such as neck[:3].
-
-Feeding004 remains an experiment. Do not migrate its hardcoded bone lists,
-post-validation tremor, relaxed rate thresholds, or moving anchors on solver
-failure. A yielding target is an explicit interaction state; infeasibility
-must trigger a documented regrip/reposition/failure branch.
-
-Exit: reproduce the accepted Feeding003 performance; vary target height,
-resistance and duration; validate oral and foot contact on final serialized
-motion; compile two requests in reversed order and prove no cross-run state.
-
-### 4. Temporal performance and signed response
-
-Add reference-backed, versioned performance curves and temporal objectives.
-Carry prior pose/velocity through related phases; preserve intention instead
-of independently solving every frame. Replace unsigned head-rate magnitude in
-momentum-related paths with a correctly framed signed quantity, or explicitly
-classify that path as an artistic response. Do not change the approved runs
-while fixing a different dynamics path. Test mirrored impulses and reversals.
-
-Review silhouette, load/response ordering, stance compression, head attention,
-neck curvature and distributed tail response. Random noise is not a substitute
-for coherent performance. Variants in this baseline are candidates, not proof
-that this workstream is complete.
-
-### 5. Unity validation scene (begin before the full world)
-
-One animal, flat floor, slope, obstacle, adjustable food target, and scripted
-resistance/yield. Test play/pause, speed changes, start/stop, turns, and contact
-handoff. Compare world-space traces against the factory reference. Confirm
-animation event delivery at frame zero, exact loop boundary, large frame jumps,
-pause/resume and interruption. See UNITY_MOTION_CONTRACT.md.
-
-### 6. Real family transfer
-
-Admit a second independently rigged and skinned compatible biped with different
-segment proportions. Change data, not shared Python behavior. Synthetic
-renamed/scaled tests remain useful but do not certify this. Then test a third
-holdout body. An incompatible topology should reject with a capability reason,
-not silently stretch a limb or reuse an unrelated gait.
-
-Exit: locomotion, feeding and transitions pass mechanical and perceptual
-review on more than one real body without per-species branches.
-
-### 7. Breadth and production release
-
-Use the V5.5 catalog to recover missing actions in dependency order: idle and
-attention, starts/stops/turns, feed/drink, committed bite/recovery, injury and
-rest. Add different engineering families only after the first family proves
-reuse. Publish a motion package with source identity, approved review,
-Unity parity, runtime envelope and rollback reference.
-
-## Integrated quality benchmark
-
-A one-minute controlled sequence: notice something to the side, shift support,
-start walking, accelerate, turn, sprint briefly, brake, approach food, grip and
-pull, react to yield, retract, and return to an attentive idle. Repeat with
-another support foot, target height and player input. This benchmark is a
-planned acceptance test, not a cinematic already delivered by this baseline.
+Continue `src/eonwild_motion`. Preserve immutable legacy capsules and approved references. Animal differences belong in semantic rig/body/behavior data. A behavior owns contact choreography. Reopen final emitted assets after contact-affecting changes. See `UNITY_MOTION_CONTRACT.md` for the consumer boundary.

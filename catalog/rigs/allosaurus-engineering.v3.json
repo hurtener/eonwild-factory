@@ -1,0 +1,135 @@
+{
+  "accessorContract": {
+    "byteStride": 16,
+    "commonTimeline": true,
+    "componentType": 5126,
+    "interpolation": "LINEAR",
+    "type": "VEC4"
+  },
+  "coordinate": {
+    "forwardAxis": "Z",
+    "handedness": "right",
+    "units": "metres",
+    "upAxis": "Y"
+  },
+  "expectedParents": {
+    "chest": "spine_parent",
+    "head": "neck:1",
+    "neck": [
+      "chest",
+      "neck:0"
+    ],
+    "pelvis": "root"
+  },
+  "id": "allosaurus-engineering-v3",
+  "provenance": {
+    "input_sha256": "4e7683a94a7bf3866fa6b453fe2147756ef42c11fe3b54e0f25e04db58f57964",
+    "purpose": "Additional intermediate deformation hinge; not fossil reconstruction",
+    "status": "engineering_candidate"
+  },
+  "roles": {
+    "chest": "Bone_015",
+    "head": "Bone_045",
+    "jaw_lower": "Bone_044",
+    "leftFoot": "Bone_020",
+    "leftLeg": [
+      "Bone_023",
+      "Bone_022",
+      "Bone_021",
+      "Bone_020"
+    ],
+    "legs": {
+      "left": {
+        "contactChain": [
+          "Bone_023",
+          "Bone_022",
+          "Bone_021",
+          "Bone_020"
+        ],
+        "toeChains": [
+          [
+            "AllosaurusPedalInnerProximal.L",
+            "PedalIntermediate.left.0",
+            "AllosaurusPedalInnerDistal.L",
+            "AllosaurusPedalInnerEndpoint.L"
+          ],
+          [
+            "Bone_019",
+            "PedalIntermediate.left.1",
+            "Bone_018",
+            "AllosaurusToeEndpoint.L"
+          ],
+          [
+            "AllosaurusPedalOuterProximal.L",
+            "PedalIntermediate.left.2",
+            "AllosaurusPedalOuterDistal.L",
+            "AllosaurusPedalOuterEndpoint.L"
+          ]
+        ]
+      },
+      "right": {
+        "contactChain": [
+          "Bone_029",
+          "Bone_028",
+          "Bone_027",
+          "Bone_026"
+        ],
+        "toeChains": [
+          [
+            "AllosaurusPedalInnerProximal.R",
+            "PedalIntermediate.right.0",
+            "AllosaurusPedalInnerDistal.R",
+            "AllosaurusPedalInnerEndpoint.R"
+          ],
+          [
+            "Bone_025",
+            "PedalIntermediate.right.1",
+            "Bone_024",
+            "AllosaurusToeEndpoint.R"
+          ],
+          [
+            "AllosaurusPedalOuterProximal.R",
+            "PedalIntermediate.right.2",
+            "AllosaurusPedalOuterDistal.R",
+            "AllosaurusPedalOuterEndpoint.R"
+          ]
+        ]
+      }
+    },
+    "neck": [
+      "Bone_047",
+      "Bone_046"
+    ],
+    "pelvis": "Bone_001",
+    "rightFoot": "Bone_026",
+    "rightLeg": [
+      "Bone_029",
+      "Bone_028",
+      "Bone_027",
+      "Bone_026"
+    ],
+    "root": "Bone_000",
+    "spine": [
+      "Bone_003",
+      "Bone_002",
+      "Bone_017",
+      "Bone_016"
+    ],
+    "tail": [
+      "Bone_014",
+      "Bone_013",
+      "Bone_012",
+      "Bone_011",
+      "Bone_010",
+      "Bone_009",
+      "Bone_008",
+      "Bone_007",
+      "Bone_006",
+      "Bone_005",
+      "Bone_004"
+    ]
+  },
+  "schema": "eonwild.motion.semantic-rig.v1",
+  "spineParent": "Bone_016",
+  "version": 3
+}
