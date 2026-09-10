@@ -405,6 +405,11 @@ class SourceMotionQuery:
                 if isinstance(locomotion_gait, GroundedGait)
                 else 0.0
             ),
+            foot_outward_yaw_degrees=(
+                locomotion_gait.foot_outward_yaw_degrees
+                if isinstance(locomotion_gait, GroundedGait)
+                else None
+            ),
         )
         if body_support_control is not None and type(body_support_control) is not BodySupportControl:
             raise ContractError("source motion query body-support control must be its owned binding")

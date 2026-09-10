@@ -8,8 +8,10 @@ from eonwild_motion.planning.airborne_gait import AirborneGait
 from eonwild_motion.planning.airborne_gait import build_airborne_plan
 from eonwild_motion.planning.grounded_gait import GroundedGait, build_grounded_plan
 from eonwild_motion.solve.airborne_gait import (
-    _recovery_pitch_target, solve_airborne_gait, solve_airborne_plan_sample,
+    _recovery_pitch_target, build_airborne_solve_context, solve_airborne_gait,
+    solve_airborne_plan_sample,
 )
+from eonwild_motion.errors import ContractError
 from eonwild_motion.solve.performance import Performance, decorate_plan
 from eonwild_motion.layers.leg_contact_resolve_v3 import _clip_state, _pose, _world_matrices
 from eonwild_motion.glb.container import Glb
@@ -71,6 +73,28 @@ def test_no_nearly_straight_toe_projection_in_new_material_partition():
     body=inspect.getsource(solve_airborne_plan_sample)
     assert 'rot[foot] = _world_rotation' in body
     assert 'for _ in range(18 if not material_partition' in body
+
+
+def test_toe_out_rejects_a_plan_without_material_contact_partition():
+    source, roles = fixture()
+    gait = AirborneGait(cycles=1, sample_hz=24)
+    plan = build_airborne_plan(gait, 1.0)
+    context = build_airborne_solve_context(
+        source,
+        source_clip=None,
+        semantic_roles=roles,
+        gait=gait,
+        up_axis=(0, 1, 0),
+        forward_axis=(0, 0, 1),
+        plan=plan,
+        legacy_overlay=False,
+        foot_outward_yaw_degrees=5.0,
+    )
+    with pytest.raises(
+        ContractError,
+        match="semantic foot outward yaw requires the material contact partition",
+    ):
+        solve_airborne_plan_sample(context, plan["samples"][0])
 
 
 def test_same_authored_phase_is_independent_of_prior_sampling_history():

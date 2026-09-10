@@ -500,6 +500,7 @@ class AirborneSolveContext:
     anatomical_normals: Mapping[str, np.ndarray]
     toe_normals: Mapping[int, np.ndarray]
     knee_bend_plane_outward_degrees: float
+    foot_outward_yaw_degrees: float
 
 
 @dataclass(frozen=True)
@@ -545,6 +546,7 @@ def build_airborne_solve_context(
     legacy_overlay: bool = True,
     articulation_profile: ArticulationProfile | None = None,
     knee_bend_plane_outward_degrees: float = 0.0,
+    foot_outward_yaw_degrees: float | None = None,
 ) -> AirborneSolveContext:
     """Create the immutable source-owned state consumed by a plan-row solve.
 
@@ -559,6 +561,12 @@ def build_airborne_solve_context(
             or not math.isfinite(knee_bend_plane_outward_degrees)
             or not 0.0 <= knee_bend_plane_outward_degrees <= 15.0):
         raise ContractError("knee bend-plane bias exceeds the engineering envelope")
+    if (foot_outward_yaw_degrees is not None
+            and (isinstance(foot_outward_yaw_degrees, bool)
+                 or not isinstance(foot_outward_yaw_degrees, (int, float))
+                 or not math.isfinite(foot_outward_yaw_degrees)
+                 or not 0.0 <= foot_outward_yaw_degrees <= 15.0)):
+        raise ContractError("foot outward yaw exceeds the engineering envelope")
     roles = semantic_roles
     try:
         root, pelvis = (source.name_to_node[roles[k]] for k in ("root", "pelvis"))
@@ -662,6 +670,8 @@ def build_airborne_solve_context(
         anatomical_normals=_freeze_data(anatomical_normals),
         toe_normals=_freeze_data(toe_normals),
         knee_bend_plane_outward_degrees=float(knee_bend_plane_outward_degrees),
+        foot_outward_yaw_degrees=(0.0 if foot_outward_yaw_degrees is None
+                                  else float(foot_outward_yaw_degrees)),
     )
 
 
@@ -898,6 +908,9 @@ def solve_airborne_plan_sample(
         hip, knee, ankle, foot = chain
         foot_plan = row["feet"][side]
         material_partition = "performance" in plan
+        if context.foot_outward_yaw_degrees and not material_partition:
+            raise ContractError(
+                "semantic foot outward yaw requires the material contact partition")
         contact_counterrotation = foot_plan.get(
             "semantic_foot_counterrotation_degrees", 0.0
         )
@@ -1142,9 +1155,18 @@ def solve_airborne_plan_sample(
             contact_pitch = _qrotvec(
                 tuple(lateral * math.radians(float(contact_counterrotation)))
             )
+            outward_yaw = _qrotvec(tuple(
+                up * math.copysign(
+                    math.radians(context.foot_outward_yaw_degrees),
+                    hip_offsets[side],
+                )
+            ))
             foot_world = _qmul(
-                contact_pitch,
-                _qmul(free_pitch, _rotation_from_matrix(base_w[foot])),
+                outward_yaw,
+                _qmul(
+                    contact_pitch,
+                    _qmul(free_pitch, _rotation_from_matrix(base_w[foot])),
+                ),
             )
             rot[foot] = _world_rotation(source, w, foot, foot_world)
             w = _world_matrices(source, tr, rot, base_s)

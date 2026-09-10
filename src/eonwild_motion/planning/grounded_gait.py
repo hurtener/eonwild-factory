@@ -46,6 +46,7 @@ class GroundedGait:
     push_off_start_fraction: float = 0.60
     swing_hip_lift_degrees: float = 0.0
     knee_bend_plane_outward_degrees: float = 0.0
+    foot_outward_yaw_degrees: float | None = None
     rounded_swing_peak_fraction: float = 0.0
     centered_stance: bool = False
     handoff_phase_fraction: float | None = None
@@ -69,7 +70,8 @@ class GroundedGait:
                 if type(value) is not bool:
                     raise ContractError('centered_stance must be boolean')
             elif key in ('toe_recovery_peak_fraction', 'metatarsal_recovery_world_degrees_from_down',
-                         'metatarsal_recovery_release_fraction', 'pad_recovery_pitch_degrees'):
+                         'metatarsal_recovery_release_fraction', 'pad_recovery_pitch_degrees',
+                         'foot_outward_yaw_degrees'):
                 if value is not None and (isinstance(value, bool) or not isinstance(value, (int, float))
                                           or not math.isfinite(value)):
                     raise ContractError(f'grounded optional control {key} must be finite numeric or null')
@@ -88,6 +90,9 @@ class GroundedGait:
                 raise ContractError(f"grounded {key} exceeds the articulation envelope")
         if not 0 <= self.knee_bend_plane_outward_degrees <= 15:
             raise ContractError("grounded knee bend-plane bias exceeds the engineering envelope")
+        if (self.foot_outward_yaw_degrees is not None
+                and not 0 <= self.foot_outward_yaw_degrees <= 15):
+            raise ContractError("grounded foot outward yaw exceeds the engineering envelope")
         if self.pad_recovery_pitch_degrees is not None and not -60 <= self.pad_recovery_pitch_degrees <= 60:
             raise ContractError("grounded pad recovery pitch exceeds the signed articulation envelope")
         if (self.metatarsal_recovery_world_degrees_from_down is not None

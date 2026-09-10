@@ -1,0 +1,11 @@
+{
+  "description": "Shared lower-recovery walk with accepted 22-degree toe-off, 6-degree outward knee bend plane, and a constant 5-degree outward foot heading. Controls are authored engineering values.",
+  "id": "heavy-biped.shared-adult-walk-visual-iteration.v7",
+  "program": "grounded_gait",
+  "program_profile": {
+    "path": "catalog/programs/heavy-biped.shared-adult-walk-visual-iteration.v9.json",
+    "sha256": "06921995a265f4422fe9e5a09648ed74a1991ce10936dc33f68c9fe910b86377"
+  },
+  "schema": "eonwild.motion.motion-intent.v2",
+  "version": 7
+}
