@@ -1023,7 +1023,18 @@ class CanonicalConstantSkinTargetLaw:
                                 for index in self._support_patch_indices[side]
                             ),
                         },
-                        "patch_indices_sha256": hashlib.sha256(
+                        "material_vertex_ids_sha256": hashlib.sha256(
+                            np.asarray(
+                                [
+                                    self._provider.anchor_for(side).material_vertex_indices[
+                                        index
+                                    ]
+                                    for index in self._support_patch_indices[side]
+                                ],
+                                dtype="<i8",
+                            ).tobytes()
+                        ).hexdigest(),
+                        "anchor_array_positions_sha256": hashlib.sha256(
                             np.asarray(
                                 self._support_patch_indices[side], dtype="<i8"
                             ).tobytes()

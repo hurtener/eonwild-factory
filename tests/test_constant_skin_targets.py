@@ -1,5 +1,6 @@
 from copy import deepcopy
 from dataclasses import replace
+import hashlib
 import json
 from pathlib import Path
 
@@ -136,6 +137,27 @@ def test_semantic_foot_frame_loaded_gate_uses_max_frozen_vertex_residual():
     assert CanonicalConstantSkinTargetLaw._failure_reason(
         "left", observation
     ) == "left loaded residual exceeds refinement tolerance"
+
+
+def test_semantic_foot_frame_receipt_hashes_source_material_vertex_ids():
+    inputs = _inputs()
+    law = _build_semantic_foot_frame(inputs)
+    receipt = law.receipt()["loaded_support_membership"]["sides"]
+    for side in ("left", "right"):
+        positions = law._support_patch_indices[side]
+        material_ids = [
+            inputs["provider"].anchor_for(side).material_vertex_indices[position]
+            for position in positions
+        ]
+        assert receipt[side]["material_vertex_ids_sha256"] == hashlib.sha256(
+            np.asarray(material_ids, dtype="<i8").tobytes()
+        ).hexdigest()
+        assert receipt[side]["anchor_array_positions_sha256"] == hashlib.sha256(
+            np.asarray(positions, dtype="<i8").tobytes()
+        ).hexdigest()
+        assert receipt[side]["material_vertex_ids_sha256"] != receipt[side][
+            "anchor_array_positions_sha256"
+        ]
 
 
 def test_semantic_foot_frame_contact_boundary_is_history_independent_and_continuous():
