@@ -1180,6 +1180,18 @@ def solve_airborne_plan_sample(
                 pitch_cost = ((1 - world_metatarsus_gain) * authored_pitch_cost
                               + world_metatarsus_gain * world_cost)
             score = pitch_cost + recovery * (hip_angle - hip_target) ** 2 + preferred_gain * gait.articulation_preferred_margin_weight * preferred + 1e5 * sum(e * e for e in errors) + 1e8 * extension * extension
+            turn_shape = foot_plan.get("turn_leg_shape")
+            if turn_shape is not None:
+                knee_preference = float(turn_shape["knee_interior_degrees"])
+                ankle_preference = float(turn_shape["ankle_interior_degrees"])
+                if not (0 < knee_preference < 180 and 0 < ankle_preference < 180):
+                    raise ContractError("invalid turning leg shape preference")
+                # Turning preserves comfortable leg flexion. Walking's forward
+                # recovery/hip-lift objective must not launch or extend the leg.
+                shape_cost = 4*(knee_angle-knee_preference)**2 + (ankle_angle-ankle_preference)**2
+                score = (.2*degrees**2 + shape_cost
+                         + gait.articulation_preferred_margin_weight*preferred
+                         + 1e5*sum(e*e for e in errors) + 1e8*extension*extension)
             return (score, candidate_q, candidate_foot, target_ankle,
                     candidate_knee, candidate_end, extension, max(errors),
                     {"hip_sagittal_degrees": hip_angle,
@@ -1382,6 +1394,8 @@ def solve_airborne_plan_sample(
             facts[side]["maximum_toe_shape_residual_m"] = toe_shape_residual
             facts[side]["contact_authority"] = "rolling_material_surface"
 
+        if foot_plan.get("turn_leg_shape") is not None:
+            facts[side]["turn_leg_angles_degrees"] = articulation_angles
         if articulation_profile is not None:
             facts[side]["articulation_phase"] = "support" if foot_plan["contact"] else "swing"
             facts[side]["articulation_angles_degrees"] = articulation_angles

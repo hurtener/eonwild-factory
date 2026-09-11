@@ -44,22 +44,21 @@ def test_attention_leads_turns_and_settles():
     assert max(abs(turn_look_yaw(p,t,1.6,32)) for t in np.linspace(0,p.duration,400))<np.radians(32)
 
 
-def test_turn_body_waits_for_leading_foot_support():
+def test_turn_body_does_not_pause_for_foot_commands():
     p=planner()
     b=next(b for b in p.blocks if b['stationary'])
-    start=b['start']
-    assert p.body(start+.80*p.period)[1]==b['heading']
-    assert p.body(start+1.3*p.period)[1]>b['heading']
-    lead=next(e for e in p.events if e['block'] is b)
-    planted=p.sample(start+.83*p.period)['feet'][lead['side']]
-    assert planted['contact']
-    assert planted['heading']>p.body(start+.83*p.period)[1]
+    for t in np.linspace(b['start']+.1,b['end']-.1,60):
+        assert p.body(t+.001)[1]>p.body(t-.001)[1]
+    # The pelvis is already turning while the first foot is recovering.
+    t=b['start']+.5*p.period
+    assert p.body(t)[1]>b['heading']
+    assert any(not f['contact'] for f in p.sample(t)['feet'].values())
 
 
 def test_turn_heel_release_is_continuous_and_recovery_is_low():
     p=planner();b=next(b for b in p.blocks if b['stationary'])
     e=next(e for e in p.events if e['block'] is b);side=e['side']
-    t=e['start']+.18*p.period
+    t=e['start']+.08*p.period
     a=p.sample(t-1e-6)['feet'][side];z=p.sample(t+1e-6)['feet'][side]
     assert abs(a['roll_degrees']-z['roll_degrees'])<1e-6
     max_height=max(p.sample(t)['feet'][side]['position'][1] for t in np.linspace(e['start'],e['end'],100))

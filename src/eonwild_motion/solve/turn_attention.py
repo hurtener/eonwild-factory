@@ -8,11 +8,16 @@ from ..layers.leg_contact_resolve_v3 import _rotation_from_matrix
 def turn_look_yaw(sequence, time_s, lead_seconds, maximum_degrees):
     """Look toward the upcoming heading, then settle as the body catches up."""
     current = sequence.body(time_s)[1]
-    future = sequence.body(time_s + lead_seconds)[1]
+    # Anticipate the current turn without looking into the following reversal
+    # prematurely. The anticipation onset itself eases in continuously.
+    from ..planning.grounded_gait import smooth
+    block = next((b for b in reversed(sequence.blocks) if time_s >= b['start']-.8), sequence.blocks[0])
+    onset = smooth((time_s-(block['start']-.8))/.8)
+    future = sequence.body(min(block['end'],time_s + lead_seconds))[1]
     difference = math.atan2(math.sin(future-current), math.cos(future-current))
     limit = math.radians(maximum_degrees)
     # Soft saturation preserves smooth velocity when attention reaches its range.
-    return limit * math.tanh(difference / limit) if limit > 0 else 0.0
+    return onset * limit * math.tanh(difference / limit) if limit > 0 else 0.0
 
 
 def apply_turn_attention(context, rotations, yaw_radians, neck_share):
