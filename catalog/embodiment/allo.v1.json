@@ -1,0 +1,607 @@
+{
+  "schema": "eonwild.animal-embodiment.v1",
+  "id": "allo",
+  "version": 1,
+  "source": {
+    "motionSha256": "339d887a2abbb7ab7e7768d00a996c7f4cdc91818ece982385326f84da205f45",
+    "runtimeSha256": "b2ea779ac8dffcbcc4abbc2598946ef22157190fcbaac9c3ed8e0800785af028",
+    "approvedFactoryCommit": "f1edb4148c6b263665ffaa7992c844dc404f8a06"
+  },
+  "bindings": [
+    {
+      "role": "chest",
+      "bone": "Bone_015"
+    },
+    {
+      "role": "head",
+      "bone": "Bone_045"
+    },
+    {
+      "role": "jaw_lower",
+      "bone": "Bone_044"
+    },
+    {
+      "role": "leftFoot",
+      "bone": "Bone_020"
+    },
+    {
+      "role": "leftLeg.0",
+      "bone": "Bone_023"
+    },
+    {
+      "role": "leftLeg.1",
+      "bone": "Bone_022"
+    },
+    {
+      "role": "leftLeg.2",
+      "bone": "Bone_021"
+    },
+    {
+      "role": "leftLeg.3",
+      "bone": "Bone_020"
+    },
+    {
+      "role": "legs.left.contactChain.0",
+      "bone": "Bone_023"
+    },
+    {
+      "role": "legs.left.contactChain.1",
+      "bone": "Bone_022"
+    },
+    {
+      "role": "legs.left.contactChain.2",
+      "bone": "Bone_021"
+    },
+    {
+      "role": "legs.left.contactChain.3",
+      "bone": "Bone_020"
+    },
+    {
+      "role": "legs.left.toeChains.0.0",
+      "bone": "AllosaurusPedalInnerProximal.L"
+    },
+    {
+      "role": "legs.left.toeChains.0.1",
+      "bone": "PedalIntermediate.left.0"
+    },
+    {
+      "role": "legs.left.toeChains.0.2",
+      "bone": "AllosaurusPedalInnerDistal.L"
+    },
+    {
+      "role": "legs.left.toeChains.0.3",
+      "bone": "AllosaurusPedalInnerEndpoint.L"
+    },
+    {
+      "role": "legs.left.toeChains.1.0",
+      "bone": "Bone_019"
+    },
+    {
+      "role": "legs.left.toeChains.1.1",
+      "bone": "PedalIntermediate.left.1"
+    },
+    {
+      "role": "legs.left.toeChains.1.2",
+      "bone": "Bone_018"
+    },
+    {
+      "role": "legs.left.toeChains.1.3",
+      "bone": "AllosaurusToeEndpoint.L"
+    },
+    {
+      "role": "legs.left.toeChains.2.0",
+      "bone": "AllosaurusPedalOuterProximal.L"
+    },
+    {
+      "role": "legs.left.toeChains.2.1",
+      "bone": "PedalIntermediate.left.2"
+    },
+    {
+      "role": "legs.left.toeChains.2.2",
+      "bone": "AllosaurusPedalOuterDistal.L"
+    },
+    {
+      "role": "legs.left.toeChains.2.3",
+      "bone": "AllosaurusPedalOuterEndpoint.L"
+    },
+    {
+      "role": "legs.right.contactChain.0",
+      "bone": "Bone_029"
+    },
+    {
+      "role": "legs.right.contactChain.1",
+      "bone": "Bone_028"
+    },
+    {
+      "role": "legs.right.contactChain.2",
+      "bone": "Bone_027"
+    },
+    {
+      "role": "legs.right.contactChain.3",
+      "bone": "Bone_026"
+    },
+    {
+      "role": "legs.right.toeChains.0.0",
+      "bone": "AllosaurusPedalInnerProximal.R"
+    },
+    {
+      "role": "legs.right.toeChains.0.1",
+      "bone": "PedalIntermediate.right.0"
+    },
+    {
+      "role": "legs.right.toeChains.0.2",
+      "bone": "AllosaurusPedalInnerDistal.R"
+    },
+    {
+      "role": "legs.right.toeChains.0.3",
+      "bone": "AllosaurusPedalInnerEndpoint.R"
+    },
+    {
+      "role": "legs.right.toeChains.1.0",
+      "bone": "Bone_025"
+    },
+    {
+      "role": "legs.right.toeChains.1.1",
+      "bone": "PedalIntermediate.right.1"
+    },
+    {
+      "role": "legs.right.toeChains.1.2",
+      "bone": "Bone_024"
+    },
+    {
+      "role": "legs.right.toeChains.1.3",
+      "bone": "AllosaurusToeEndpoint.R"
+    },
+    {
+      "role": "legs.right.toeChains.2.0",
+      "bone": "AllosaurusPedalOuterProximal.R"
+    },
+    {
+      "role": "legs.right.toeChains.2.1",
+      "bone": "PedalIntermediate.right.2"
+    },
+    {
+      "role": "legs.right.toeChains.2.2",
+      "bone": "AllosaurusPedalOuterDistal.R"
+    },
+    {
+      "role": "legs.right.toeChains.2.3",
+      "bone": "AllosaurusPedalOuterEndpoint.R"
+    },
+    {
+      "role": "neck.0",
+      "bone": "Bone_047"
+    },
+    {
+      "role": "neck.1",
+      "bone": "Bone_046"
+    },
+    {
+      "role": "pelvis",
+      "bone": "Bone_001"
+    },
+    {
+      "role": "rightFoot",
+      "bone": "Bone_026"
+    },
+    {
+      "role": "rightLeg.0",
+      "bone": "Bone_029"
+    },
+    {
+      "role": "rightLeg.1",
+      "bone": "Bone_028"
+    },
+    {
+      "role": "rightLeg.2",
+      "bone": "Bone_027"
+    },
+    {
+      "role": "rightLeg.3",
+      "bone": "Bone_026"
+    },
+    {
+      "role": "root",
+      "bone": "Bone_000"
+    },
+    {
+      "role": "spine.0",
+      "bone": "Bone_003"
+    },
+    {
+      "role": "spine.1",
+      "bone": "Bone_002"
+    },
+    {
+      "role": "spine.2",
+      "bone": "Bone_017"
+    },
+    {
+      "role": "spine.3",
+      "bone": "Bone_016"
+    },
+    {
+      "role": "tail.0",
+      "bone": "Bone_014"
+    },
+    {
+      "role": "tail.1",
+      "bone": "Bone_013"
+    },
+    {
+      "role": "tail.2",
+      "bone": "Bone_012"
+    },
+    {
+      "role": "tail.3",
+      "bone": "Bone_011"
+    },
+    {
+      "role": "tail.4",
+      "bone": "Bone_010"
+    },
+    {
+      "role": "tail.5",
+      "bone": "Bone_009"
+    },
+    {
+      "role": "tail.6",
+      "bone": "Bone_008"
+    },
+    {
+      "role": "tail.7",
+      "bone": "Bone_007"
+    },
+    {
+      "role": "tail.8",
+      "bone": "Bone_006"
+    },
+    {
+      "role": "tail.9",
+      "bone": "Bone_005"
+    },
+    {
+      "role": "tail.10",
+      "bone": "Bone_004"
+    },
+    {
+      "role": "leftShoulder",
+      "bone": "Bone_034"
+    },
+    {
+      "role": "leftElbow",
+      "bone": "Bone_033"
+    },
+    {
+      "role": "leftWrist",
+      "bone": "Bone_032"
+    },
+    {
+      "role": "rightShoulder",
+      "bone": "Bone_040"
+    },
+    {
+      "role": "rightElbow",
+      "bone": "Bone_039"
+    },
+    {
+      "role": "rightWrist",
+      "bone": "Bone_038"
+    }
+  ],
+  "neckRoles": [
+    "neck.0",
+    "neck.1"
+  ],
+  "sequence": {
+    "duration": 18.679456264775418,
+    "walkStart": 5.72,
+    "walkEnd": 8.18,
+    "stopStart": 14.189456264775416,
+    "fastCadence": 1.35,
+    "cadenceResponsePerSecond": 0.7,
+    "steeringDegreesPerSecond": 22
+  },
+  "secondary": {
+    "description": "Authored relaxed arm carriage and jaw breath cycle. Not physiological measurement. Axes calibrated from admitted frame-zero body right. Walk response follows actual foot separation with per-joint settling; no independent arm oscillator.",
+    "breathPeriod": 4.8,
+    "phase": 0.5,
+    "arms": [
+      {
+        "restDegrees": 14,
+        "walkDegrees": 2.5,
+        "breathDegrees": 0.6,
+        "walkSign": 1,
+        "responseSeconds": 0.12,
+        "role": "leftShoulder",
+        "axis": [
+          0.9927323733091524,
+          -0.10101572424880247,
+          -0.06540839730850616
+        ],
+        "axisProvenance": "Calibrated from admitted motion frame 0 body-right; right-handed local angular axis."
+      },
+      {
+        "restDegrees": -56,
+        "walkDegrees": 4,
+        "breathDegrees": -1,
+        "walkSign": 1,
+        "responseSeconds": 0.2,
+        "role": "leftElbow",
+        "axis": [
+          0.9935326689927662,
+          0.06851887142005927,
+          0.09054280702204753
+        ],
+        "axisProvenance": "Calibrated from admitted motion frame 0 body-right; right-handed local angular axis."
+      },
+      {
+        "restDegrees": 12,
+        "walkDegrees": 2,
+        "breathDegrees": 0.5,
+        "walkSign": 1,
+        "responseSeconds": 0.28,
+        "role": "leftWrist",
+        "axis": [
+          0.8000000117401737,
+          0.4472141855411063,
+          0.3999993168325754
+        ],
+        "axisProvenance": "Calibrated from admitted motion frame 0 body-right; right-handed local angular axis."
+      },
+      {
+        "restDegrees": 14,
+        "walkDegrees": 2.5,
+        "breathDegrees": 0.6,
+        "walkSign": -1,
+        "responseSeconds": 0.12,
+        "role": "rightShoulder",
+        "axis": [
+          0.9927324287916638,
+          0.10101526325320273,
+          0.06540826717847144
+        ],
+        "axisProvenance": "Calibrated from admitted motion frame 0 body-right; right-handed local angular axis."
+      },
+      {
+        "restDegrees": -56,
+        "walkDegrees": 4,
+        "breathDegrees": -1,
+        "walkSign": -1,
+        "responseSeconds": 0.2,
+        "role": "rightElbow",
+        "axis": [
+          0.993532621337609,
+          -0.06851897271238291,
+          -0.09054325329067389
+        ],
+        "axisProvenance": "Calibrated from admitted motion frame 0 body-right; right-handed local angular axis."
+      },
+      {
+        "restDegrees": 12,
+        "walkDegrees": 2,
+        "breathDegrees": 0.5,
+        "walkSign": -1,
+        "responseSeconds": 0.28,
+        "role": "rightWrist",
+        "axis": [
+          0.7999998237249072,
+          -0.44721426462743313,
+          -0.39999960444213123
+        ],
+        "axisProvenance": "Calibrated from admitted motion frame 0 body-right; right-handed local angular axis."
+      }
+    ],
+    "jaw": {
+      "restDegrees": -14,
+      "breathDegrees": 5,
+      "role": "jaw_lower",
+      "axis": [
+        0.9998008550550213,
+        0.014111414579629515,
+        -0.014110925193283946
+      ],
+      "axisProvenance": "Calibrated from admitted motion frame 0 body-right; right-handed local angular axis."
+    },
+    "hasJaw": true,
+    "contract": "eonwild.secondary.v1",
+    "fullWalkSpeed": 0.65,
+    "walkBlendRate": 3.0
+  },
+  "attention": {
+    "yawLimit": 48,
+    "pitchUpLimit": 12,
+    "pitchDownLimit": 10,
+    "yawSmoothSeconds": 0.6,
+    "pitchSmoothSeconds": 0.7,
+    "yawSpeed": 65,
+    "pitchSpeed": 25,
+    "neckShare": 0.68
+  },
+  "authoring": {
+    "animalInstance": {
+      "geometry_calibration": {
+        "scale_policy": "uniform_hindlimb_match",
+        "source_geometry_sha256": "b605b9934a5585a6387361dffd054467af0d1a1d7b9ed2c46b442b7744687e9a",
+        "source_measurements": {
+          "left_semantic_hindlimb": {
+            "confidence": "measured_source_geometry",
+            "evidence_kind": "fitted semantic chain world-length sum",
+            "source": {
+              "citation": "source-bound standing preparation and exact full-influence reconstruction",
+              "locator": "left_semantic_hindlimb"
+            },
+            "unit": "m",
+            "value": 0.999551721806013
+          },
+          "left_semantic_segments": {
+            "confidence": "measured_source_geometry",
+            "evidence_kind": "fitted hip-knee-ankle-MTP consecutive lengths",
+            "source": {
+              "citation": "source-bound standing preparation and exact full-influence reconstruction",
+              "locator": "left_semantic_segments"
+            },
+            "unit": "m",
+            "value": [
+              0.4216715333301876,
+              0.3718046987351905,
+              0.20607548974063494
+            ]
+          },
+          "pelvis_to_skin_floor": {
+            "confidence": "measured_source_geometry",
+            "evidence_kind": "prepared pelvis height above full-weight skin floor",
+            "source": {
+              "citation": "source-bound standing preparation and exact full-influence reconstruction",
+              "locator": "pelvis_to_skin_floor"
+            },
+            "unit": "m",
+            "value": 1.0047289784760902
+          },
+          "right_semantic_hindlimb": {
+            "confidence": "measured_source_geometry",
+            "evidence_kind": "fitted semantic chain world-length sum",
+            "source": {
+              "citation": "source-bound standing preparation and exact full-influence reconstruction",
+              "locator": "right_semantic_hindlimb"
+            },
+            "unit": "m",
+            "value": 0.9995517210539264
+          },
+          "right_semantic_segments": {
+            "confidence": "measured_source_geometry",
+            "evidence_kind": "fitted hip-knee-ankle-MTP consecutive lengths",
+            "source": {
+              "citation": "source-bound standing preparation and exact full-influence reconstruction",
+              "locator": "right_semantic_segments"
+            },
+            "unit": "m",
+            "value": [
+              0.4216715333301876,
+              0.37180469873519056,
+              0.20607548898854827
+            ]
+          },
+          "skin_length": {
+            "confidence": "measured_source_geometry",
+            "evidence_kind": "reopened prepared GLB full-weight skin extent along +Z",
+            "source": {
+              "citation": "source-bound standing preparation and exact full-influence reconstruction",
+              "locator": "skin_length"
+            },
+            "unit": "m",
+            "value": 4.958295123108622
+          }
+        }
+      },
+      "id": "allosaurus-composite-engineering.adult.v7",
+      "life_stage": "adult diagnostic",
+      "limitations": [
+        "Mass and hindlimb length are a published composite-model row, not direct measurements of this artist mesh.",
+        "Hip height is a 0.8 hindlimb posture proxy, not a required standing pose.",
+        "The fitted joint centers are reproducible engineering surface landmarks, not fossil joint centers.",
+        "Uniform scaling does not validate morphology, forces, muscle capacity, tissue collisions, or digit anatomy.",
+        "Three weighted pedal branches are engineering deformation proxies; digit anatomy remains unverified.",
+        "The default standing pose is an authored engineering calibration; it is not a fossil-derived habitual posture.",
+        "The default standing pose is an authored engineering calibration; it is not a fossil-derived habitual posture."
+      ],
+      "measurements": {
+        "body_mass": {
+          "confidence": "published_estimate",
+          "evidence_kind": "published composite-model estimate",
+          "source": {
+            "citation": "Dececchi et al. 2020, PLOS ONE 15:e0223698",
+            "locator": "Table 1, Allosaurus USNM 4734/UUVP 6000 composite row"
+          },
+          "unit": "kg",
+          "value": 1512.0
+        },
+        "hindlimb_length": {
+          "confidence": "published_estimate",
+          "evidence_kind": "published composite hindlimb length",
+          "source": {
+            "citation": "Dececchi et al. 2020, PLOS ONE 15:e0223698",
+            "locator": "Table 1, same composite row"
+          },
+          "unit": "m",
+          "value": 1.985
+        },
+        "hip_height_proxy": {
+          "confidence": "derived_proxy",
+          "evidence_kind": "posture proxy calculated as 0.8 times composite hindlimb length",
+          "source": {
+            "citation": "Dececchi et al. 2020, PLOS ONE 15:e0223698",
+            "locator": "Methods and Table 1; HH=0.8*HL"
+          },
+          "unit": "m",
+          "value": 1.588
+        }
+      },
+      "morphology_comparison": {
+        "segment_order": [
+          "femur",
+          "tibia",
+          "central_metatarsal"
+        ],
+        "source": {
+          "citation": "White et al. 2013, PLOS ONE 8:e68649",
+          "locator": "Table 2, UUVP 6000r"
+        },
+        "status": "UNVERIFIED",
+        "taxon_level_lengths_m": [
+          0.88,
+          0.73,
+          0.375
+        ],
+        "use_policy": "comparison only after source-surface fitting; no per-bone resizing and no artist-model specimen identity"
+      },
+      "schema": "eonwild.motion.animal-instance.v1",
+      "specimen": "USNM 4734 / UUVP 6000 composite literature row; artist mesh correspondence UNVERIFIED",
+      "taxon": "Allosaurus fragilis",
+      "version": 7
+    },
+    "animalInstancePath": "catalog/animals/allosaurus-composite-engineering.adult.v7.json",
+    "bodyHeightM": 1.96454414149842,
+    "stepLengthM": 1.126481623363515,
+    "sameFootStrideM": 2.25296324672703,
+    "strideClassification": "Preserved authored emitted intent; original research/estimation rationale remains in referenced Factory motion-intent catalog, not inferred from mesh dimensions.",
+    "motionIntentCatalog": "catalog/motion-intents/heavy-biped.shared-adult-walk-visual-iteration.v12.json",
+    "parameters": {
+      "centered_stance": true,
+      "cycles": 1,
+      "duty_factor": 0.62,
+      "foot_outward_yaw_degrees": 5.0,
+      "foot_recovery_pitch_degrees": 0,
+      "knee_bend_plane_outward_degrees": 6.0,
+      "metatarsal_recovery_carrier": "rate_limited_c2",
+      "metatarsal_recovery_release_fraction": 0.9,
+      "metatarsal_recovery_world_degrees_from_down": -20,
+      "pad_recovery_pitch_degrees": 35,
+      "pelvis_crouch_body_heights": 0,
+      "pelvis_excursion_body_heights": 0.016,
+      "pelvis_height_carrier": "stance_vault_proxy",
+      "push_off_pitch_degrees": 22.0,
+      "push_off_start_fraction": 0.35,
+      "rounded_swing_peak_fraction": 0.42,
+      "sample_hz": 120,
+      "stance_roll_carrier": "distal_contact_centroid",
+      "stance_roll_release_fraction": 0.24,
+      "step_length_body_heights": 0.5734061147154026,
+      "step_period_s": 1.23,
+      "swing_clearance_body_heights": 0.14,
+      "swing_hip_lift_degrees": 15.0,
+      "toe_flex_degrees": 25,
+      "toe_recovery_peak_fraction": 0.42,
+      "touchdown_reach_body_heights": 0.25
+    },
+    "solvePolicy": {
+      "body_support_coordinator": "eonwild.motion.body-support-coordinator.v2",
+      "canonical_support_anchors": true,
+      "grounded_transition_clearance": "material_floor_scaled_excess.v1",
+      "representation": "CUBICSPLINE",
+      "schema": "eonwild.motion.solve-policy.v1",
+      "skin_refinement": true,
+      "skin_target_law": "canonical_semantic_joint_contact_targets.v3"
+    }
+  }
+}

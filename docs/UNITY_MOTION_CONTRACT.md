@@ -4,6 +4,10 @@ Decision: Python remains the offline motion factory. Unity is the intended
 consumer. This document is an implementation contract, not a claim that Unity
 runtime integration or mobile performance has been validated.
 
+## Consolidated animal profile
+
+See [animal embodiment v1](ANIMAL_EMBODIMENT_CONTRACT.md). The current mini-world consumer loads a versioned profile exported from `catalog/embodiment/`, replacing independently editable Unity arm/jaw settings and embedded clip intervals. Explicit local angular axes and Python reference vectors bind the secondary layer across adapters. This does not certify every Unity parity requirement below.
+
 ## Transport
 
 Each candidate contains root-motion and in-place GLBs, an exact input lock,

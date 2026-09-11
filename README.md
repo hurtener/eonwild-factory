@@ -27,6 +27,10 @@ Read-only review may inspect a specifically hash-bound historical asset; its
 animation is not an input to new choreography. Species differences belong in
 geometry, semantic bindings and profile data rather than literal bone names.
 
+## Animal profile and secondary-motion portability
+
+Read [the animal embodiment contract](docs/ANIMAL_EMBODIMENT_CONTRACT.md) before adding a model or changing its consumer mappings/settings. Canonical profiles live in `catalog/embodiment/`; export copies and numerical reference vectors for the game, or bake a new Blender preview with the same Python secondary-motion law. Approved locomotion assets remain immutable.
+
 ## Install and generate
 
 Use Python 3.12 or newer and the existing pinned dependencies:
