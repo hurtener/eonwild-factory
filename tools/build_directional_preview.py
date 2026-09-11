@@ -15,6 +15,7 @@ from eonwild_motion.solve.airborne_gait import solve_airborne_plan_sample, _qrot
 from eonwild_motion.layers.leg_contact_resolve_v3 import _world_matrices, _rotation_from_matrix
 from eonwild_motion.solve.whole_body_gait_transition import _append_accessor, _encode
 from eonwild_motion.planning.directional_steps import DirectionalSteps
+from eonwild_motion.solve.turn_attention import turn_look_yaw
 
 class Captured(Exception): pass
 
@@ -54,15 +55,18 @@ def main():
                 node=source.name_to_node[name]
                 local_axis=np.asarray(_qrotate(_qinv(_rotation_from_matrix(c.base_w[node])),c.up))
                 base_r[node]=_qmul(base_r[node],_qrotvec(local_axis*angular_rate*lag/max(1,len(names))))
+        attention=recipe["turn_attention"]
+        look_yaw=turn_look_yaw(sequence,t,attention["lead_seconds"],attention["maximum_degrees"])
         context=replace(c,base_r=tuple(base_r),legacy_overlay=False)
         row={'time_s':float(t),'root_forward_m':0.,'pelvis_height_offset_m':-.018*c.body_height,'flight':False,'support_count':sum(f['contact'] for f in step['feet'].values()),'performance_gain':0.,'feet':{}}
         for s,f in step['feet'].items():
             target=c.origin+np.asarray(_qrotate(inv,f['position']-c.origin-step['center']))
             u=f['swing_phase'];roll=f.get('roll_degrees',0.)
-            row['feet'][s]={'contact':f['contact'],'forward_m':0.,'height_m':0.,'swing_phase':u,'toe_flex_degrees':14*math.sin(math.pi*u)**2,'foot_pitch_degrees':-10*math.sin(math.pi*u)**2,'world_foot_target_m':target.tolist(),'foot_yaw_radians':f['heading']-step['heading'],'stance_roll_pitch_degrees':roll,'stance_roll_release_scale':f.get('roll_scale',0.),'distal_endpoint_role':'shape_preference'}
+            in_place=step['label'].startswith('turn in place')
+            row['feet'][s]={'contact':f['contact'],'forward_m':0.,'height_m':0.,'swing_phase':u,'toe_flex_degrees':(5 if in_place else 14)*math.sin(math.pi*u)**2,'foot_pitch_degrees':(-3 if in_place else -10)*math.sin(math.pi*u)**2,'articulation_scale':.15 if in_place else 1.,'world_foot_target_m':target.tolist(),'foot_yaw_radians':f['heading']-step['heading'],'stance_roll_pitch_degrees':roll,'stance_roll_swing_pitch_degrees':roll,'stance_roll_release_scale':f.get('roll_scale',0.),'distal_endpoint_role':'shape_preference'}
         # Fast floor correction only. Tangential material locking is measured separately at review.
         for iteration in range(3):
-            pose=solve_airborne_plan_sample(context,row,body_response_sample={'sagittal_node_degrees':{}})
+            pose=solve_airborne_plan_sample(context,row,body_response_sample={'sagittal_node_degrees':{},'turn_attention':{'yaw_radians':look_yaw,'neck_share':attention['neck_share']}})
             worlds=np.asarray(_world_matrices(source,pose.translations,pose.rotations,c.base_s))
             patches={s:skin.skin(worlds,v) for s,v in ids.items()}
             errors={s:skin.ground-float((p@c.up).min()) for s,p in patches.items()}
@@ -74,7 +78,7 @@ def main():
         rootworld=worlds[c.root];newpos=c.origin+np.asarray(_qrotate(yaw,rootworld[:3,3]-c.origin))+step['center']
         tr[c.root]=tuple(np.asarray(tr[c.root])+_local_delta(source,worlds,c.root,newpos-rootworld[:3,3]))
         rot[c.root]=_world_rotation(source,worlds,c.root,_qmul(yaw,_rotation_from_matrix(rootworld)))
-        poses.append((tr,rot));samples.append({'time_s':float(t),'label':step['label'],'heading':step['heading'],'center':step['center'].tolist(),'feet':{s:{'contact':f['contact'],'heading':f['heading'],'position':f['position'].tolist()} for s,f in step['feet'].items()}})
+        poses.append((tr,rot));samples.append({'look_yaw_degrees':math.degrees(look_yaw),'time_s':float(t),'label':step['label'],'heading':step['heading'],'center':step['center'].tolist(),'feet':{s:{'contact':f['contact'],'heading':f['heading'],'position':f['position'].tolist()} for s,f in step['feet'].items()}})
         checks.append({'time_s':float(t),'floor_gap_m':{s:-e for s,e in errors.items()},'unreachable_extension_m':pose.maximum_unreachable_extension_m,'foot_target_residual_m':pose.maximum_foot_target_residual_m})
         if i%24==0:print('Solved',i,'/',len(times),flush=True)
     translations=np.asarray([p[0] for p in poses]);rotations=np.asarray([p[1] for p in poses]);rotations/=np.linalg.norm(rotations,axis=2)[:,:,None]

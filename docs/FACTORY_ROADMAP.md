@@ -12,12 +12,12 @@ User requested walking turns, coordinated turns without forward travel, backward
 
 | Checkpoint | Scope, both animals | Status |
 |---|---|---|
-| A — turning | Gentle walking curves, tighter low-speed turns, alternating stepping turns in place | Source-driven diagnostic generated; 22.42-second native Unity clips saved; awaiting user review, not approved |
+| A — turning | Gentle walking curves, tighter low-speed turns, alternating stepping turns in place | Source-driven diagnostic generated; First draft rejected for forward-fixed gaze and micro-jumping footwork; revised leading-foot turn plus head/neck lead in native review |
 | B — reverse | Backward start, several coordinated steps, stop; its own grounded contact choreography | Requested, not yet implemented in this pass |
 | C — lateral recovery | Left/right recovery steps, support transfer, whole-body settling | Requested, not yet implemented |
 | D — connected controls | Blend the reviewed directional behaviors with idle and walking; runtime root ownership and contact | After visual acceptance of A–C |
 
-Checkpoint A currently uses fixed support positions/headings in the planner, foot reorientation during swing, shared leg/toe articulation, anticipatory foot placement, and authored lateral support shift. It is not a force simulation. Limited floor correction is present; final material contact locking and mass correction remain pending. The new directional files are separate from approved clips. Evidence: principal game `game/Evidence/directional-turns-checkpoint/`. Fifteen focused tests passed; both GLBs reopened for skin sampling. One in-place direction is demonstrated so far; the opposite direction and normal-speed curves still need coverage. Heel-release amplitude coordination remains a visible refinement item. Pause for user review at A before developing B/C. A numeric diagnostic is not an approved animation.
+Checkpoint A currently uses fixed support positions/headings in the planner, foot reorientation during swing, shared leg/toe articulation, anticipatory foot placement, and authored lateral support shift. It is not a force simulation. Limited floor correction is present; final material contact locking and mass correction remain pending. The new directional files are separate from approved clips. Evidence: principal game `game/Evidence/directional-turns-checkpoint/`. Fifteen focused tests passed; both GLBs reopened for skin sampling. The revision demonstrates both in-place directions. The leading foot opens and plants before the main body rotation; the trailing foot follows with reduced lift. Turn attention now follows gaze stabilization so it is not cancelled. Heel release uses one continuous amplitude. Normal-speed curve coverage remains pending. Pause for user review at A before developing B/C. A numeric diagnostic is not an approved animation.
 
 ## Current accepted baseline
 

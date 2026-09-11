@@ -818,6 +818,10 @@ def _prepare_body_pose(
     apply_performance(
         source, tr, rot, base_s, base_w, roles, context.plan, row, up, forward
     )
+    if body_response_sample is not None and body_response_sample.get("turn_attention") is not None:
+        from .turn_attention import apply_turn_attention
+        attention = body_response_sample["turn_attention"]
+        apply_turn_attention(context, rot, attention["yaw_radians"], attention["neck_share"])
     if body_response_sample is not None and body_response_sample.get("body_support_control") is not None:
         control = body_response_sample["body_support_control"]
         translation = np.asarray(control["translation_forward_up_lateral_m"], dtype=float)
@@ -1081,6 +1085,12 @@ def solve_airborne_plan_sample(
             authored_push_off * early_swing_roll_release * release_scale
         )
 
+        if not foot_plan["contact"] and "stance_roll_swing_pitch_degrees" in foot_plan:
+            authored_release = float(foot_plan["stance_roll_swing_pitch_degrees"])
+            if not math.isfinite(authored_release) or not 0 <= authored_release <= 60:
+                raise ContractError("invalid choreographed swing heel release")
+            stance_roll_degrees = authored_release
+
         def pitch_candidate(degrees, world_metatarsus_target=None):
             candidate_q = _qmul(foot_yaw_q,_qrotvec(tuple(lateral * math.radians(degrees))))
             if (material_partition and stance_roll_degrees is not None
@@ -1109,7 +1119,7 @@ def solve_airborne_plan_sample(
             outward = lateral * math.copysign(1.0, hip_offsets[side])
             bend_normal = _outward_knee_bend_normal(
                 target_ankle - hp,
-                anatomical_normals[side],
+                np.asarray(_qrotate(foot_yaw_q, tuple(anatomical_normals[side]))),
                 outward,
                 context.knee_bend_plane_outward_degrees,
             )

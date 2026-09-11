@@ -4,8 +4,35 @@
   "normal_stride_policy": "Preserve admitted normal-walk stride. These deliberately slower turn steps are separate behavior intent, not a replacement or silent reach clamp.",
   "step_seconds": 1.15,
   "blocks": [
-    {"steps": 6, "step_length_body_heights": 0.25, "turn_degrees": 35, "label": "gentle walking turn"},
-    {"steps": 4, "step_length_body_heights": 0.15, "turn_degrees": -40, "label": "tight walking turn"},
-    {"steps": 6, "step_length_body_heights": 0, "turn_degrees": 75, "label": "turn in place"}
-  ]
+    {
+      "steps": 6,
+      "step_length_body_heights": 0.25,
+      "turn_degrees": 35,
+      "label": "gentle walking turn"
+    },
+    {
+      "steps": 4,
+      "step_length_body_heights": 0.15,
+      "turn_degrees": -40,
+      "label": "tight walking turn"
+    },
+    {
+      "steps": 4,
+      "step_length_body_heights": 0,
+      "turn_degrees": 75,
+      "label": "turn in place"
+    },
+    {
+      "steps": 4,
+      "step_length_body_heights": 0,
+      "turn_degrees": -75,
+      "label": "turn in place opposite direction"
+    }
+  ],
+  "turn_attention": {
+    "lead_seconds": 1.6,
+    "maximum_degrees": 32,
+    "neck_share": 0.7,
+    "classification": "authored artistic response: neck and head anticipate intended turn; body catches up"
+  }
 }
