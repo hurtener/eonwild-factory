@@ -1,0 +1,11 @@
+{
+  "schema": "eonwild.directional-review.v1",
+  "classification": "authored low-speed diagnostic; not measured dinosaur biomechanics",
+  "normal_stride_policy": "Preserve admitted normal-walk stride. These deliberately slower turn steps are separate behavior intent, not a replacement or silent reach clamp.",
+  "step_seconds": 1.15,
+  "blocks": [
+    {"steps": 6, "step_length_body_heights": 0.25, "turn_degrees": 35, "label": "gentle walking turn"},
+    {"steps": 4, "step_length_body_heights": 0.15, "turn_degrees": -40, "label": "tight walking turn"},
+    {"steps": 6, "step_length_body_heights": 0, "turn_degrees": 75, "label": "turn in place"}
+  ]
+}

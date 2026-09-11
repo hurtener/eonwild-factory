@@ -983,6 +983,15 @@ def solve_airborne_plan_sample(
         foot_height = float(np.asarray(_world_position(base_w[foot])) @ up - ground)
         desired_foot = origin + forward * foot_plan["forward_m"] + lateral * side_lane
         desired_foot += up * (ground + foot_height + foot_plan["height_m"] - float(desired_foot @ up))
+        if "world_foot_target_m" in foot_plan:
+            target=np.asarray(foot_plan["world_foot_target_m"],dtype=float)
+            if target.shape!=(3,) or not np.isfinite(target).all():
+                raise ContractError("invalid directional foot target")
+            desired_foot=target.copy()
+        foot_yaw=float(foot_plan.get("foot_yaw_radians",0.))
+        if not math.isfinite(foot_yaw) or abs(foot_yaw)>2*math.pi:
+            raise ContractError("invalid directional foot heading")
+        foot_yaw_q=_qrotvec(tuple(up*foot_yaw))
         # Regrounding: lower this foot's targets by a constant per-side
         # offset on EVERY frame (stance and swing). A constant shift
         # preserves C1 continuity, loop closure and the pelvis/root
@@ -1028,6 +1037,7 @@ def solve_airborne_plan_sample(
                 hip_offsets[side],
             )
         ))
+        outward_yaw = _qmul(foot_yaw_q,outward_yaw)
         contact_counterrotation_q = _qrotvec(
             tuple(lateral * math.radians(float(contact_counterrotation))))
         contact_frame = _qmul(outward_yaw, contact_counterrotation_q)
@@ -1072,7 +1082,7 @@ def solve_airborne_plan_sample(
         )
 
         def pitch_candidate(degrees, world_metatarsus_target=None):
-            candidate_q = _qrotvec(tuple(lateral * math.radians(degrees)))
+            candidate_q = _qmul(foot_yaw_q,_qrotvec(tuple(lateral * math.radians(degrees))))
             if (material_partition and stance_roll_degrees is not None
                     and abs(stance_roll_degrees) > 0.0):
                 carried_pitch = _qrotvec(tuple(
