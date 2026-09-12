@@ -1,23 +1,25 @@
 # Factory movement roadmap and acceptance tracker
 
-Updated 2026-09-10. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
+Updated 2026-09-12. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
 
 ## Animal profile housekeeping
 
 Canonical embodiment profiles now collect the approved rig bindings, explicit axes, sequence timing and consumer settings. Python reference evaluation, Unity parity vectors and Blender preview baking are documented in [the embodiment contract](ANIMAL_EMBODIMENT_CONTRACT.md). This is portability work, not a new animation family or blanket production acceptance.
 
-## Active directional locomotion set — 2026-09-10
+## Active directional locomotion set — 2026-09-12
 
 User requested walking turns, coordinated turns without forward travel, backward walking, and lateral balance-recovery steps. Work directly, without subagents. Preserve the approved straight gait and secondary-motion baseline.
 
 | Checkpoint | Scope, both animals | Status |
 |---|---|---|
-| A — turning | Gentle walking curves, tighter low-speed turns, alternating stepping turns in place | Source-driven diagnostic generated; Both staged drafts rejected as robotic. New continuous whole-body turn study removes per-step body waits and walking leg-extension/push-off objectives; user review pending |
+| A — turning | Gentle walking curves, tighter low-speed turns, alternating stepping turns in place | Draft 10 accepted as a good turning baseline. Draft 11 adds numerical animal capabilities to the shared planner; both-rig Unity renders and all-frame audit complete, user re-review pending. Walking curves and final mass/contact remain open |
 | B — reverse | Backward start, several coordinated steps, stop; its own grounded contact choreography | Requested, not yet implemented in this pass |
 | C — lateral recovery | Left/right recovery steps, support transfer, whole-body settling | Requested, not yet implemented |
 | D — connected controls | Blend the reviewed directional behaviors with idle and walking; runtime root ownership and contact | After visual acceptance of A–C |
 
-Checkpoint A is being rebuilt around continuous body rotation and weight transfer, low curved foot recovery, comfortable leg flexion and stronger neck/head anticipation. The earlier leading-foot → body → trailing-foot sequencing was rejected as robotic. The current short study isolates turns in both directions; walking curves still need re-evaluation after this movement basis is accepted. Evidence: principal game `game/Evidence/continuous-turn-study/`; previous rejected drafts remain preserved. Eighteen focused tests passed and actual exports are reopened for skin/leg sampling; these checks do not establish believable motion. Final material contact locking and mass correction remain pending. Pause for review before progressing to reverse walking or lateral recovery.
+Draft 10 is the user-accepted turning reference, preserved in `game/Evidence/continuous-release-turn-study/`. Draft 11 adds profile mass/inertia, authored force/torque budgets, walking speed/cadence, braking, lateral response and attention/response timing. The shared planner consumes these values without species branches. Both actual rigs generated and were captured in Unity; all 470 captured frames were visually inspected. Current evidence: principal game `game/Evidence/capability-turn-study/`. Pause for user re-review before changing the baseline.
+
+Next, polish pelvis weight transfer and contact using the reviewed turn, then revisit walking curves and regenerate a walking comparison from the new capability resolver. The existing approved straight walks are preserved; this pass does not replace them. These limits constrain the locomotion path and heading, excluding local pelvis accommodation. Final whole-body force balance and material contact remain pending. Reverse walking and lateral recovery follow the directional review checkpoint.
 
 ## Current accepted baseline
 
@@ -32,7 +34,7 @@ The user approved iteration 16 as smooth and credible, while correctly distingui
 | Heel roll, toe-off, swing recovery | Reviewed | Reviewed | Shared articulation; Allosaurus has added intermediate toe joints |
 | Lateral weight transfer / pelvis response | Reviewed engineering response | Reviewed reduced vertical response | Not a converged whole-body force simulation |
 | Reverse walking | Reusable planner exists; not reviewed on this animal | Reusable planner exists; not reviewed on this animal | No game-ready claim |
-| Turning / curved paths / pivots | Directional draft A | Directional draft A | Generated, not yet approved; support material locking pending |
+| Turning / curved paths / pivots | Turn 10 accepted baseline; 11 re-review pending | Turn 10 accepted baseline; 11 re-review pending | Walking curves, final mass and material contact remain pending |
 | Running / sprinting | Missing approved transfer | Approved historical Run010 / Sprint006 references | Shared airborne generation exists; current two-animal/runtime acceptance missing |
 | Independent gaze / neck attention | Runtime demonstration reviewed | Runtime demonstration reviewed | World interest points; not complete sensory behavior |
 | Expressive idle / breathing / listening | Missing approved behavior | Missing approved behavior | Intentional responses, not random noise |
@@ -104,3 +106,14 @@ Both animals generated and reopened. Twelve focused checks pass. A direct compar
 Draft 09 was rejected for robotic stop–start motion. The next shared-engine candidate overlaps rotation across steps and replaces the planted/free pitch switch with continuous turn pitch and bend-plane recovery. Pelvis accommodation blends support-plane projections to avoid unstable double-support solves. Both animals generated, reopened and captured in Unity. All 187 frames of each new clip were visually inspected chronologically, with all-sample joint-angle differences; twelve focused checks pass. Evidence: principal game `game/Evidence/continuous-release-turn-study/`.
 
 Peak ankle angle changes are reduced from about 403/387 to 103/120 degrees per second (Allosaurus/Tarbosaurus). This is not visual acceptance. Planted lateral knee travel rises to about 32 mm versus draft 09's 11/14 mm; that tradeoff is recorded, not hidden. Deliberate reversal settling remains. Final material contact and force/mass certification remain pending. Pause for user review; approved walking baselines remain untouched.
+
+
+## Numerical animal capabilities 11 — 2026-09-12
+
+The user accepted draft 10 as a good baseline and requested reusable numerical semantics before further mass polishing. Canonical profiles now retain units, classifications and sources for yaw inertia, mass, force/torque budgets, traction, walking speed/cadence, heading per step, effort and attention/response time. Published inertia/ilium evidence remains separate from authored control budgets and the engineering agility components. There is no universal species agility rank.
+
+Shared Factory resolution, directional regeneration, profile export and labeled future-model similarity seeding are implemented. Both animals exported and were captured in Unity at 1280×720, 24 fps, 235 frames each. All frames were visually inspected chronologically. Twenty-nine focused checks pass; profile export and seeding CLI checks also pass. New capability sidecars bind profile and emitted turn hashes. Unity plays these baked clips and displays their metadata; live gameplay control integration is not claimed.
+
+Allosaurus effective forward acceleration is 0.833 m/s² and yaw acceleration 95.8 deg/s²; Tarbosaurus 0.696 m/s² and 129.6 deg/s². These are authored effective responses derived using the stored mass/inertia, not measured animal performance. The turn in each direction can take a different time because its support path differs. Preferred walking speeds resolve to 1.05 and 1.00 m/s while preserving step/stride intent; approved straight-walk clips were not regenerated.
+
+Review is PENDING. The deliberate reversal settling remains visible. Maximum planted-interval knee displacement along the foot lateral axis is 31.6 mm for Allosaurus and 33.8 mm for Tarbosaurus, close to draft 10's 31.9/32.5 mm. This is a positional diagnostic, not proof of joint loading. Locomotion-path acceleration limits exclude additional local pelvis support accommodation; final mass/contact correction is still open. Evidence and the next work are tracked in the current checkpoint above.

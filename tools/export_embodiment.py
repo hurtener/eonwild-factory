@@ -13,3 +13,8 @@ for i in range(1500):
  frames.append({'delta':dt,'speed':speed,'strideSignal':signal,'angles':s.step(dt,speed,signal)})
 (a.output/(d['id']+'.secondary-vectors.json')).write_text(json.dumps({'profileSha256':hashlib.sha256(raw).hexdigest(),'frames':frames},separators=(',',':')))
 print(d['id'],'exported validated profile and',len(frames),'cross-runtime reference frames')
+
+if 'locomotion' in d:
+ from eonwild_motion.planning.locomotion_capabilities import resolve_capabilities,resolve_walk
+ c=resolve_capabilities(d)
+ (a.output/(d['id']+'.capabilities.json')).write_text(json.dumps({'profileSha256':hashlib.sha256(raw).hexdigest(),'resolved':c,'walking':resolve_walk(c)},indent=2)+'\n')

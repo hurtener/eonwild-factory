@@ -589,5 +589,179 @@
       "skin_refinement": true,
       "skin_target_law": "canonical_semantic_joint_contact_targets.v3"
     }
+  },
+  "locomotion": {
+    "contract": "eonwild.locomotion-capabilities.v1",
+    "family": "heavy-predatory-biped",
+    "body": {
+      "yawInertia": {
+        "value": 4486.0,
+        "unit": "kg*m^2",
+        "classification": "published_estimate",
+        "source": {
+          "citation": "Snively et al. 2019, PeerJ 7:e6432",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6387760/",
+          "locator": "Table 3: PIN 552-1",
+          "limitations": "Literature reconstruction matched by specimen/composite; not measured inertia of the artist mesh. The area/inertia index is not angular velocity."
+        }
+      },
+      "iliumArea": {
+        "value": 2977.0,
+        "unit": "cm^2",
+        "classification": "published_estimate",
+        "source": {
+          "citation": "Snively et al. 2019, PeerJ 7:e6432",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6387760/",
+          "locator": "Table 3: PIN 552-1",
+          "limitations": "Literature reconstruction matched by specimen/composite; not measured inertia of the artist mesh. The area/inertia index is not angular velocity."
+        }
+      }
+    },
+    "control": {
+      "forwardForce": {
+        "value": 2800,
+        "unit": "N",
+        "classification": "authored_estimate",
+        "source": {
+          "citation": "Eonwild capability calibration 01, 2026-09-12",
+          "rationale": "Authored low-speed effective whole-body control budgets for a visible profile comparison. Not reconstructed muscle forces or measured dinosaur performance. Re-review against the preserved turn10 and walking references."
+        }
+      },
+      "brakingForce": {
+        "value": 4100,
+        "unit": "N",
+        "classification": "authored_estimate",
+        "source": {
+          "citation": "Eonwild capability calibration 01, 2026-09-12",
+          "rationale": "Authored low-speed effective whole-body control budgets for a visible profile comparison. Not reconstructed muscle forces or measured dinosaur performance. Re-review against the preserved turn10 and walking references."
+        }
+      },
+      "lateralForce": {
+        "value": 2600,
+        "unit": "N",
+        "classification": "authored_estimate",
+        "source": {
+          "citation": "Eonwild capability calibration 01, 2026-09-12",
+          "rationale": "Authored low-speed effective whole-body control budgets for a visible profile comparison. Not reconstructed muscle forces or measured dinosaur performance. Re-review against the preserved turn10 and walking references."
+        }
+      },
+      "yawTorque": {
+        "value": 14500,
+        "unit": "N*m",
+        "classification": "authored_estimate",
+        "source": {
+          "citation": "Eonwild capability calibration 01, 2026-09-12",
+          "rationale": "Authored low-speed effective whole-body control budgets for a visible profile comparison. Not reconstructed muscle forces or measured dinosaur performance. Re-review against the preserved turn10 and walking references."
+        }
+      },
+      "yawBrakingTorque": {
+        "value": 19000,
+        "unit": "N*m",
+        "classification": "authored_estimate",
+        "source": {
+          "citation": "Eonwild capability calibration 01, 2026-09-12",
+          "rationale": "Authored low-speed effective whole-body control budgets for a visible profile comparison. Not reconstructed muscle forces or measured dinosaur performance. Re-review against the preserved turn10 and walking references."
+        }
+      },
+      "maximumYawRate": {
+        "value": 70,
+        "unit": "deg/s",
+        "classification": "authored_estimate",
+        "source": {
+          "citation": "Eonwild capability calibration 01, 2026-09-12",
+          "rationale": "Authored low-speed effective whole-body control budgets for a visible profile comparison. Not reconstructed muscle forces or measured dinosaur performance. Re-review against the preserved turn10 and walking references."
+        }
+      },
+      "tractionCoefficient": {
+        "value": 0.65,
+        "unit": "1",
+        "classification": "authored_estimate",
+        "source": {
+          "citation": "Eonwild capability calibration 01, 2026-09-12",
+          "rationale": "Authored low-speed effective whole-body control budgets for a visible profile comparison. Not reconstructed muscle forces or measured dinosaur performance. Re-review against the preserved turn10 and walking references."
+        }
+      }
+    },
+    "walk": {
+      "preferredSpeed": {
+        "value": 1.0,
+        "unit": "m/s",
+        "classification": "authored_estimate",
+        "source": {
+          "citation": "Eonwild capability calibration 01, 2026-09-12",
+          "rationale": "Authored low-speed effective whole-body control budgets for a visible profile comparison. Not reconstructed muscle forces or measured dinosaur performance. Re-review against the preserved turn10 and walking references."
+        }
+      },
+      "maximumGroundedSpeed": {
+        "value": 1.5,
+        "unit": "m/s",
+        "classification": "authored_estimate",
+        "source": {
+          "citation": "Eonwild capability calibration 01, 2026-09-12",
+          "rationale": "Authored low-speed effective whole-body control budgets for a visible profile comparison. Not reconstructed muscle forces or measured dinosaur performance. Re-review against the preserved turn10 and walking references."
+        }
+      },
+      "maximumStepFrequency": {
+        "value": 1.8,
+        "unit": "steps/s",
+        "classification": "authored_estimate",
+        "source": {
+          "citation": "Eonwild capability calibration 01, 2026-09-12",
+          "rationale": "Authored low-speed effective whole-body control budgets for a visible profile comparison. Not reconstructed muscle forces or measured dinosaur performance. Re-review against the preserved turn10 and walking references."
+        }
+      }
+    },
+    "style": {
+      "effort": {
+        "value": 0.7,
+        "unit": "1",
+        "classification": "authored_estimate",
+        "source": {
+          "citation": "Eonwild capability calibration 01, 2026-09-12",
+          "rationale": "Authored low-speed effective whole-body control budgets for a visible profile comparison. Not reconstructed muscle forces or measured dinosaur performance. Re-review against the preserved turn10 and walking references."
+        }
+      },
+      "turnCadenceMultiplier": {
+        "value": 1.5,
+        "unit": "1",
+        "classification": "authored_estimate",
+        "source": {
+          "citation": "Eonwild capability calibration 01, 2026-09-12",
+          "rationale": "Authored low-speed effective whole-body control budgets for a visible profile comparison. Not reconstructed muscle forces or measured dinosaur performance. Re-review against the preserved turn10 and walking references."
+        }
+      },
+      "maximumHeadingPerStep": {
+        "value": 30,
+        "unit": "deg",
+        "classification": "authored_estimate",
+        "source": {
+          "citation": "Eonwild capability calibration 01, 2026-09-12",
+          "rationale": "Authored low-speed effective whole-body control budgets for a visible profile comparison. Not reconstructed muscle forces or measured dinosaur performance. Re-review against the preserved turn10 and walking references."
+        }
+      },
+      "attentionLead": {
+        "value": 1.35,
+        "unit": "s",
+        "classification": "authored_estimate",
+        "source": {
+          "citation": "Eonwild capability calibration 01, 2026-09-12",
+          "rationale": "Authored low-speed effective whole-body control budgets for a visible profile comparison. Not reconstructed muscle forces or measured dinosaur performance. Re-review against the preserved turn10 and walking references."
+        }
+      },
+      "responseTimeScale": {
+        "value": 0.4,
+        "unit": "1",
+        "classification": "authored_estimate",
+        "source": {
+          "citation": "Eonwild capability calibration 01, 2026-09-12",
+          "rationale": "Authored low-speed effective whole-body control budgets for a visible profile comparison. Not reconstructed muscle forces or measured dinosaur performance. Re-review against the preserved turn10 and walking references."
+        }
+      }
+    },
+    "limitations": [
+      "Capabilities cover flat-ground low-speed locomotion only. Sprint speed, airborne behavior and uneven terrain are not admitted here.",
+      "Whole-body effective force/torque budgets do not solve distributed joint forces, tissue stresses or final contact.",
+      "Mass and preserved step/stride intent come from authoring; published estimates and authored control budgets must not be conflated."
+    ]
   }
 }

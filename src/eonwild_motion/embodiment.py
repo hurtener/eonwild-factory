@@ -51,6 +51,9 @@ def validate(profile, node_names=None):
             raise ValueError('Joint axis must be an explicit local unit angular axis')
         if joint in s['arms'] and (joint['responseSeconds'] <= 0 or abs(joint['walkSign']) != 1):
             raise ValueError('Invalid joint response')
+    if 'locomotion' in profile:
+        from .planning.locomotion_capabilities import resolve_capabilities
+        resolve_capabilities(profile)
     return profile
 
 

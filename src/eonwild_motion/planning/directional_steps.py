@@ -20,8 +20,9 @@ class DirectionalSteps:
         time, center, heading = .45, np.zeros(3), 0.
         for spec in blocks:
             count, angle = spec['steps'], math.radians(spec['turn_degrees'])
+            period = spec.get('step_seconds', self.period)
             stationary = abs(spec['step_length_body_heights']) < 1e-12
-            block = dict(start=time, end=time+count*self.period, center=center.copy(),
+            block = dict(start=time, end=time+count*period, center=center.copy(),
                          heading=heading, angle=angle, count=count, stationary=stationary,
                          length=count*spec['step_length_body_heights']*height,
                          label=spec['label'])
@@ -33,9 +34,9 @@ class DirectionalSteps:
             for index in range(count):
                 side = (leading if index % 2 == 0 else trailing)
                 inner = side == inner_side
-                duration = self.period * ((.84 if inner else 1.16) if stationary else 1.)
+                duration = period * ((.84 if inner else 1.16) if stationary else 1.)
                 entry = dict(start=time, end=time+duration, side=side, block=block, index=index,
-                             inner=inner, duration=duration)
+                             inner=inner, duration=duration, period=period)
                 self.steps.append(entry)
                 block['turn_steps'].append(entry)
                 time += duration
@@ -50,7 +51,7 @@ class DirectionalSteps:
         self.events = []
         for step in self.steps:
             side, block = step['side'], step['block']
-            target_center, target_heading = self.body(min(block['end'],step['end']+.35*self.period))
+            target_center, target_heading = self.body(min(block['end'],step['end']+.35*step['period']))
             lane = self.lateral*math.cos(target_heading)-self.forward*math.sin(target_heading)
             target = self.origin+target_center+lane*lanes[side]
             if block['stationary'] and step['index'] < block['count']-2:

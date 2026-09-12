@@ -16,6 +16,7 @@ from eonwild_motion.layers.leg_contact_resolve_v3 import _world_matrices, _rotat
 from eonwild_motion.solve.whole_body_gait_transition import _append_accessor, _encode
 from eonwild_motion.planning.directional_steps import DirectionalSteps
 from eonwild_motion.solve.turn_attention import turn_look_yaw
+from eonwild_motion.planning.locomotion_capabilities import resolve_capabilities, plan_directional
 from eonwild_motion.solve.turn_support import accommodate_support_planes
 from eonwild_motion.planning.grounded_gait import smooth
 
@@ -23,6 +24,7 @@ class Captured(Exception): pass
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--motion-set',type=Path,required=True);ap.add_argument('--output',type=Path,required=True);ap.add_argument('--fps',type=int,default=24);ap.add_argument('--limit',type=float)
+    ap.add_argument('--profile',type=Path,help='Animal embodiment with locomotion capabilities; omit to reproduce the preserved choreography')
     a=ap.parse_args(); repo=Path.cwd(); out=a.output.resolve()
     if out.exists(): raise RuntimeError('refusing to overwrite diagnostic')
     capture={}; original=CanonicalConstantSkinTargetLaw.__dict__['build']
@@ -43,6 +45,18 @@ def main():
     lanes={s:c.hip_lane_center+math.copysign(half,c.hip_offsets[s]) for s in c.legs}
     heights={s:float(c.base_w[ch[-1]][:3,3]@c.up) for s,ch in c.legs.items()}
     sequence=DirectionalSteps(c.origin,c.forward,c.lateral,c.up,c.body_height,lanes,heights,recipe['blocks'],recipe['step_seconds'],turn_stance=recipe['turn_stance'])
+    capabilities=None; capability_plan=None; profile=None
+    if a.profile:
+        profile=json.loads(a.profile.read_text()); capabilities=resolve_capabilities(profile)
+        motion_set=json.loads(a.motion_set.read_text())
+        baseline=json.loads((repo/motion_set['baseline']['path']).read_text())
+        if profile['authoring']['animalInstance']['geometry_calibration']['source_geometry_sha256'] != baseline['source']['sha256']:
+            raise ValueError('Profile geometry identity mismatch')
+        if not math.isclose(profile['authoring']['bodyHeightM'],c.body_height,rel_tol=1e-6):
+            raise ValueError('Profile body calibration does not match admitted rig')
+        sequence,capability_plan=plan_directional(capabilities,c.origin,c.forward,c.lateral,c.up,c.body_height,lanes,heights,recipe)
+        recipe=deepcopy(recipe);recipe['turn_attention']['lead_seconds']=capabilities['attentionLeadSeconds']
+    response_seconds=capabilities['responseSeconds'] if capabilities else .24
     turn_shapes={}
     for side,chain in c.legs.items():
         hp,kp,ap,fp=[np.asarray(c.base_w[n])[:3,3] for n in chain]
@@ -88,7 +102,7 @@ def main():
         accommodation=accommodate_support_planes(hips,ankles,normals,gains,c.up,c.forward,c.lateral,c.body_height)
         step['center']=step['center']+accommodation
         angular_rate=(sequence.body(t+.01)[1]-sequence.body(t-.01)[1])/.02
-        tail_rate += (angular_rate-tail_rate)*(1-math.exp(-1/(a.fps*.24)))
+        tail_rate += (angular_rate-tail_rate)*(1-math.exp(-1/(a.fps*response_seconds)))
         base_r=list(c.base_r)
         for role,lag in [('spine',.20),('tail',-.55)]:
             names=list(c.roles.get(role,[]))
@@ -139,6 +153,12 @@ def main():
     document['animations']=[{'name':'directional-review','samplers':samplers,'channels':channels}];document['buffers'][0]['byteLength']=len(binary)
     out.mkdir(parents=True);glb=_encode(document,binary);(out/'root_motion.glb').write_bytes(glb)
     receipt={'recipe':recipe,'motion_set':str(a.motion_set),'status':'DIRECTIONAL_DIAGNOSTIC','visual':'PENDING','production':False,'duration_s':duration,'source_sha256':hashlib.sha256(source.raw).hexdigest(),'emitted_sha256':hashlib.sha256(glb).hexdigest(),'mass':'pelvis accommodation to planted leg planes; authored kinematics, not final mass correction','contact':'three-pass floor correction; material tangential locking not certified','samples':samples,'checks':checks}
+    if capabilities:
+        receipt['capabilities']=capabilities;receipt['capability_plan']=capability_plan
+        receipt['profile_sha256']=hashlib.sha256(a.profile.read_bytes()).hexdigest()
+        receipt['mass']='mass/inertia and authored force/torque budgets constrain the planned trajectory; geometric hip accommodation; final force balance remains pending'
+        (out/'source-animal.profile.json').write_bytes(a.profile.read_bytes())
+        (out/'resolved-capabilities.json').write_text(json.dumps({'profileSha256':receipt['profile_sha256'],'motionSha256':receipt['emitted_sha256'],'resolved':capabilities,'walking':capability_plan['walk']},indent=2)+'\n')
     from eonwild_motion.glb.container import Glb
     from eonwild_motion.glb.animation import read_animation_tracks
     emitted=Glb(out/'root_motion.glb');tracks,_=read_animation_tracks(emitted,'directional-review',require_common_timeline=True)
