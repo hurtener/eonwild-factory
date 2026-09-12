@@ -18,10 +18,11 @@ def test_support_is_stationary_and_heading_frozen():
                     assert abs(f['heading']-old['heading'])<1e-12
         previous=sample
 
-def test_in_place_has_no_path_translation_and_alternates():
+def test_in_place_travels_around_support_and_alternates():
     p=planner();events=[e for e in p.events if e['label']=='turn in place']
     a,_=p.body(events[0]['start']);b,_=p.body(events[-1]['end'])
-    np.testing.assert_allclose(a,b,atol=1e-12)
+    assert np.linalg.norm(a-b)>.005
+    assert np.linalg.norm(a-b)<p.height*.3
     assert all(x['side']!=y['side'] for x,y in zip(events,events[1:]))
 
 def test_path_is_continuous_at_block_boundaries():
@@ -70,7 +71,8 @@ def test_turn_heel_release_is_continuous_and_recovery_is_low():
 def test_turn_unloads_before_release_and_varies_inner_outer_steps():
     p=planner();b=next(b for b in p.blocks if b['stationary'])
     events=[e for e in p.events if e['block'] is b]
-    assert events[0]['duration'] < events[1]['duration']
+    assert not events[0]['inner'] and events[1]['inner']
+    assert events[0]['duration'] > events[1]['duration']
     for e in events:
         t=e['start']+.18*e['duration']
         assert p.weight(t)*p.lanes[e['side']] < 0
@@ -82,3 +84,20 @@ def test_turn_unloads_before_release_and_varies_inner_outer_steps():
             a=p.sample(t-1e-6)['feet'][e['side']]['position']
             z=p.sample(t+1e-6)['feet'][e['side']]['position']
             assert np.linalg.norm(a-z)<1e-5
+
+
+def test_turn_opens_with_outside_foot_in_both_directions():
+    for angle in (100,-100):
+        lanes={'left':-.36,'right':.36}
+        p=DirectionalSteps([0,2,0],[0,0,1],[1,0,0],[0,1,0],2.,lanes,
+            {'left':.1,'right':.1},[{'steps':4,'step_length_body_heights':0,
+            'turn_degrees':angle,'label':'turn'}],turn_stance={'outside_opening_body_heights':.045})
+        first=p.events[0]
+        assert first['side']==('left' if angle>0 else 'right')
+        assert not first['inner']
+        h=first['targetHeading'];axis=p.lateral*np.cos(h)-p.forward*np.sin(h)
+        assert abs((first['target']-p.origin)@axis) > abs(lanes[first['side']])+.08
+        for e in p.events[-2:]:
+            h=e['targetHeading'];axis=p.lateral*np.cos(h)-p.forward*np.sin(h)
+            center,_=p.body(min(e['block']['end'],e['end']+.35*p.period))
+            assert abs(abs((e['target']-p.origin-center)@axis)-.36)<1e-10

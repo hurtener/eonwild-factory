@@ -28,5 +28,12 @@
     "maximum_preferred_knee_interior_degrees": 145,
     "pelvis_settle_body_heights": 0.015,
     "classification": "Authored changing support and recovery preferences; asymmetric inner/outer steps and support-timed unloading, not measured biomechanics"
+  },
+  "turn_stance": {
+    "width_body_heights": 0.36,
+    "outside_opening_body_heights": 0.045,
+    "support_shift_fraction_of_half_width": 0.42,
+    "classification": "Authored broad turning/rest stance, distinct from narrow walking lanes. Outside foot opens first; inner foot follows with continuing body rotation.",
+    "support_pivot_fraction_of_lane": 1.0
   }
 }

@@ -83,3 +83,10 @@ The previous continuous-turn study was rejected for robotic coordination. The us
 Implemented directly without subagents: unequal inner/outer step durations and heading contributions; outward recovery clearance and staggered intermediate placements; support shift before release; phase-dependent knee/ankle preferences; restored restrained toe articulation; reduced constant crouch; delayed tail response. The shared source-admission and limb solver remain in use, with no species branch or edits to approved straight walks.
 
 Both real animals generated and reopened. Seven focused planner checks pass. Native Unity side and three-quarter captures are in principal game `game/Evidence/adaptive-turn-study/`. Visual approval is PENDING. This is a revised authored support choreography, not adaptive terrain steering or solved whole-body dynamics. Final material tangential locking and production contact/mass acceptance remain open. Pause here before further directional breadth.
+
+
+## Wide stance / outside-opening turn 08 — 2026-09-12
+
+The user rejected draft 07's narrow support stance and inner-first opening. Draft 08 separates the turning stance from walking width: authored full stance 0.36 body heights versus the previous 0.24, with an additional 0.045 body-height outside placement during opening. The outside leg opens first in either direction; the inner leg contributes more of the overlapping rotation and follows into broad support. The body center now travels around alternating support pivots instead of a fixed central axis. A fixed review camera exposes that travel. These are shared behavior parameters, not species branches or a new force model.
+
+Both admitted animals exported and reopened; eight focused planner checks pass, including outside-first direction, support anchoring and moving-center continuity. Principal game evidence: `game/Evidence/wide-stance-turn-study/`. Visual review is PENDING. Approved straight walks remain preserved; final material contact and mass certification remain open. Pause at this checkpoint.

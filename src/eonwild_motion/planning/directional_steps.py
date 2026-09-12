@@ -10,11 +10,12 @@ from .grounded_gait import smooth
 
 class DirectionalSteps:
     def __init__(self, origin, forward, lateral, up, height, lanes, foot_heights,
-                 blocks, step_seconds=1.15):
+                 blocks, step_seconds=1.15, turn_stance=None):
         self.origin = np.asarray(origin)
         self.forward, self.lateral, self.up = map(np.asarray, (forward, lateral, up))
         self.height, self.lanes, self.foot_heights = height, lanes, foot_heights
         self.period = step_seconds
+        self.turn_stance = turn_stance or {}
         self.blocks, self.steps = [], []
         time, center, heading = .45, np.zeros(3), 0.
         for spec in blocks:
@@ -26,13 +27,15 @@ class DirectionalSteps:
                          label=spec['label'])
             block['turn_steps'] = []
             self.blocks.append(block)
-            leading = max(lanes, key=lanes.get) if angle > 0 else min(lanes, key=lanes.get)
+            inner_side = max(lanes, key=lanes.get) if angle > 0 else min(lanes, key=lanes.get)
+            leading = next(s for s in lanes if s != inner_side) if stationary else inner_side
             trailing = next(s for s in lanes if s != leading)
             for index in range(count):
                 side = (leading if index % 2 == 0 else trailing)
-                duration = self.period * ((.84 if index % 2 == 0 else 1.16) if stationary else 1.)
+                inner = side == inner_side
+                duration = self.period * ((.84 if inner else 1.16) if stationary else 1.)
                 entry = dict(start=time, end=time+duration, side=side, block=block, index=index,
-                             inner=index % 2 == 0, duration=duration)
+                             inner=inner, duration=duration)
                 self.steps.append(entry)
                 block['turn_steps'].append(entry)
                 time += duration
@@ -53,6 +56,8 @@ class DirectionalSteps:
             if block['stationary'] and step['index'] < block['count']-2:
                 forward = self.forward*math.cos(target_heading)+self.lateral*math.sin(target_heading)
                 target += forward*self.height*(-.018 if step['inner'] else .032)
+                if not step['inner']:
+                    target += lane*math.copysign(self.turn_stance.get('outside_opening_body_heights',.045)*height,lanes[side])
             target += self.up*(foot_heights[side]-target@self.up)
             self.events.append(dict(step, old=anchors[side].copy(), target=target,
                 oldHeading=headings[side], targetHeading=target_heading, label=block['label']))
@@ -62,13 +67,32 @@ class DirectionalSteps:
         b = next((b for b in self.blocks if time <= b['end']), self.blocks[-1])
         u = smooth((time-b['start'])/(b['end']-b['start']))
         if b['stationary'] and b['turn_steps']:
-            # Overlapping support exchanges advance heading, with a shorter
-            # opening step and a longer outer accommodation step.
-            weights = [.72 if e['inner'] else 1.28 for e in b['turn_steps']]
+            # The outside step opens space; the inner step contributes more
+            # rotation as support passes onto the opened foot. Intervals overlap.
+            weights = [1.20 if e['inner'] else .80 for e in b['turn_steps']]
             u = sum(w*smooth((time-max(b['start'],e['start']-.12*e['duration'])) /
                             (min(b['end'],e['end']+.12*e['duration'])-max(b['start'],e['start']-.12*e['duration'])))
                     for w,e in zip(weights,b['turn_steps'])) / sum(weights)
         theta, h = b['angle']*u, b['heading']
+        if b['stationary'] and b['turn_steps']:
+            # Translate around changing support locations instead of a fixed
+            # pelvis pivot. The same overlapping turn progress drives yaw and
+            # travel; planted foot targets remain world anchored.
+            center = b['center'].copy()
+            previous_heading = h
+            gain = self.turn_stance.get('support_pivot_fraction_of_lane',1.)
+            for weight,e in zip(weights,b['turn_steps']):
+                start=max(b['start'],e['start']-.12*e['duration'])
+                end=min(b['end'],e['end']+.12*e['duration'])
+                progress=smooth((time-start)/(end-start))
+                increment=b['angle']*weight/sum(weights)
+                support=next(side for side in self.lanes if side!=e['side'])
+                pivot=self.lanes[support]*gain
+                a=previous_heading; z=a+increment*progress
+                center += pivot*(self.lateral*(math.cos(a)-math.cos(z))
+                                 -self.forward*(math.sin(a)-math.sin(z)))
+                previous_heading += increment
+            return center,h+theta
         if abs(b['angle']) > 1e-8:
             radius = b['length']/b['angle']
             x,z = radius*(math.cos(h)-math.cos(h+theta)), radius*(math.sin(h+theta)-math.sin(h))
@@ -128,6 +152,7 @@ class DirectionalSteps:
             feet[side] = dict(contact=contact, position=position, heading=yaw,
                              swing_phase=swing, roll_degrees=roll)
         axis = self.lateral*math.cos(heading)-self.forward*math.sin(heading)
-        shift = axis*(.055*self.height*self.weight(time))
+        half_width = (max(self.lanes.values())-min(self.lanes.values()))/2
+        shift = axis*(self.turn_stance.get('support_shift_fraction_of_half_width',.42)*half_width*self.weight(time))
         label = next((e['label'] for e in self.events if e['start']<=time<=e['end']), 'settle')
         return dict(weight=self.weight(time), time=time, center=center+shift, heading=heading, feet=feet, label=label, turn_in_place=next((b['stationary'] for b in self.blocks if time<=b['end']),self.blocks[-1]['stationary']))

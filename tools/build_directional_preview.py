@@ -34,11 +34,13 @@ def main():
     q=capture['query'];c=q.context; source=capture['kwargs']['source']; provider=capture['provider']
     skin=SkinRig(source,c.roles,c.forward,c.up,capture['kwargs']['contact_profile'])
     ids={s:np.asarray(provider.anchor_for(s).material_vertex_indices) for s in c.legs}
+    recipe=json.loads((repo/'catalog/behaviors/directional-review.v1.json').read_text())
     half=float(c.plan['performance']['lane_width_body_heights'])*c.body_height/2
+    if all(abs(b['step_length_body_heights'])<1e-12 for b in recipe['blocks']):
+        half=.5*recipe['turn_stance']['width_body_heights']*c.body_height
     lanes={s:c.hip_lane_center+math.copysign(half,c.hip_offsets[s]) for s in c.legs}
     heights={s:float(c.base_w[ch[-1]][:3,3]@c.up) for s,ch in c.legs.items()}
-    recipe=json.loads((repo/'catalog/behaviors/directional-review.v1.json').read_text())
-    sequence=DirectionalSteps(c.origin,c.forward,c.lateral,c.up,c.body_height,lanes,heights,recipe['blocks'],recipe['step_seconds'])
+    sequence=DirectionalSteps(c.origin,c.forward,c.lateral,c.up,c.body_height,lanes,heights,recipe['blocks'],recipe['step_seconds'],turn_stance=recipe['turn_stance'])
     turn_shapes={}
     for side,chain in c.legs.items():
         hp,kp,ap,fp=[np.asarray(c.base_w[n])[:3,3] for n in chain]
