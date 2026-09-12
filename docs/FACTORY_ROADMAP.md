@@ -97,3 +97,10 @@ Both admitted animals exported and reopened; eight focused planner checks pass, 
 The user identified sideways knee/ankle articulation during weight acceptance. The turn now binds a world bend plane to each planted interval, reorients it during recovery, and accommodates that plane at the pelvis. Planted turn pitch is held instead of allowing the knee-shape objective to rock the ankle; recovery blends out that restriction. Ordinary walking does not opt into these constraints.
 
 Both animals generated and reopened. Twelve focused checks pass. A direct comparison of reopened joint motion reduced maximum planted-interval knee travel across the foot lateral axis from 154 to 10.6 mm for Allosaurus and 213 to 13.5 mm for Tarbosaurus. This is a positional diagnostic, not a joint-stress or force certificate. The remaining lateral-axis component can include motion within an inclined leg plane. Allosaurus sampled floor dip is 2.73 mm, Tarbosaurus 0.19 mm. Final contact and mass acceptance remain pending. Principal game evidence: `game/Evidence/hip-support-turn-study/`; pause for visual review.
+
+
+## Continuous articulation release 10 — 2026-09-12
+
+Draft 09 was rejected for robotic stop–start motion. The next shared-engine candidate overlaps rotation across steps and replaces the planted/free pitch switch with continuous turn pitch and bend-plane recovery. Pelvis accommodation blends support-plane projections to avoid unstable double-support solves. Both animals generated, reopened and captured in Unity. All 187 frames of each new clip were visually inspected chronologically, with all-sample joint-angle differences; twelve focused checks pass. Evidence: principal game `game/Evidence/continuous-release-turn-study/`.
+
+Peak ankle angle changes are reduced from about 403/387 to 103/120 degrees per second (Allosaurus/Tarbosaurus). This is not visual acceptance. Planted lateral knee travel rises to about 32 mm versus draft 09's 11/14 mm; that tradeoff is recorded, not hidden. Deliberate reversal settling remains. Final material contact and force/mass certification remain pending. Pause for user review; approved walking baselines remain untouched.

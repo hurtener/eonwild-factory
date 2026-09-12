@@ -61,7 +61,7 @@ def test_turn_body_does_not_pause_for_foot_commands():
 def test_turn_heel_release_is_continuous_and_recovery_is_low():
     p=planner();b=next(b for b in p.blocks if b['stationary'])
     e=next(e for e in p.events if e['block'] is b);side=e['side']
-    t=e['start']+.18*e['duration']
+    t=e['start']+.10*e['duration']
     a=p.sample(t-1e-6)['feet'][side];z=p.sample(t+1e-6)['feet'][side]
     assert abs(a['roll_degrees']-z['roll_degrees'])<1e-6
     max_height=max(p.sample(t)['feet'][side]['position'][1] for t in np.linspace(e['start'],e['end'],100))
@@ -74,12 +74,12 @@ def test_turn_unloads_before_release_and_varies_inner_outer_steps():
     assert not events[0]['inner'] and events[1]['inner']
     assert events[0]['duration'] > events[1]['duration']
     for e in events:
-        t=e['start']+.18*e['duration']
+        t=e['start']+.10*e['duration']
         assert p.weight(t)*p.lanes[e['side']] < 0
         assert not p.sample(t+1e-6)['feet'][e['side']]['contact']
     # Changing recovery geometry must not create position jumps at release/landing.
     for e in events:
-        for u in (.18,.82):
+        for u in (.10,.90):
             t=e['start']+u*e['duration']
             a=p.sample(t-1e-6)['feet'][e['side']]['position']
             z=p.sample(t+1e-6)['feet'][e['side']]['position']

@@ -104,9 +104,10 @@ def main():
             target=c.origin+np.asarray(_qrotate(inv,f['position']-c.origin-step['center']))
             u=f['swing_phase'];roll=f.get('roll_degrees',0.)
             in_place=step['turn_in_place']
-            row['feet'][s]={'contact':f['contact'],'forward_m':0.,'height_m':0.,'swing_phase':u,'toe_flex_degrees':(10 if in_place else 14)*math.sin(math.pi*u)**2,'foot_pitch_degrees':(-7 if in_place else -10)*math.sin(math.pi*u)**2,'articulation_scale':0. if in_place else 1.,'world_foot_target_m':target.tolist(),'foot_yaw_radians':f['heading']-step['heading'],'stance_roll_pitch_degrees':roll,'stance_roll_swing_pitch_degrees':roll,'stance_roll_release_scale':f.get('roll_scale',0.),'distal_endpoint_role':'shape_preference'}
+            row['feet'][s]={'contact':f['contact'],'forward_m':0.,'height_m':0.,'swing_phase':u,'toe_flex_degrees':(10 if in_place else 14)*math.sin(math.pi*u)**2,'foot_pitch_degrees':(-12 if in_place else -10)*math.sin(math.pi*u)**2,'articulation_scale':0. if in_place else 1.,'world_foot_target_m':target.tolist(),'foot_yaw_radians':f['heading']-step['heading'],'stance_roll_pitch_degrees':roll,'stance_roll_swing_pitch_degrees':roll,'stance_roll_release_scale':f.get('roll_scale',0.),'distal_endpoint_role':'shape_preference'}
             if in_place:
                 row['feet'][s]['turn_support_normal']=list(_qrotate(inv,normals[s]))
+                row['feet'][s]['turn_choreographed_pitch_degrees']=row['feet'][s]['foot_pitch_degrees']
                 fold=math.sin(math.pi*u)**2
                 row['feet'][s]['turn_leg_shape']={
                     'knee_interior_degrees':turn_shapes[s]['knee_interior_degrees']+5-22*fold,

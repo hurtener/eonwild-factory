@@ -70,8 +70,8 @@ class DirectionalSteps:
             # The outside step opens space; the inner step contributes more
             # rotation as support passes onto the opened foot. Intervals overlap.
             weights = [1.20 if e['inner'] else .80 for e in b['turn_steps']]
-            u = sum(w*smooth((time-max(b['start'],e['start']-.12*e['duration'])) /
-                            (min(b['end'],e['end']+.12*e['duration'])-max(b['start'],e['start']-.12*e['duration'])))
+            u = sum(w*smooth((time-max(b['start'],e['start']-.65*e['duration'])) /
+                            (min(b['end'],e['end']+.65*e['duration'])-max(b['start'],e['start']-.65*e['duration'])))
                     for w,e in zip(weights,b['turn_steps'])) / sum(weights)
         theta, h = b['angle']*u, b['heading']
         if b['stationary'] and b['turn_steps']:
@@ -82,8 +82,8 @@ class DirectionalSteps:
             previous_heading = h
             gain = self.turn_stance.get('support_pivot_fraction_of_lane',1.)
             for weight,e in zip(weights,b['turn_steps']):
-                start=max(b['start'],e['start']-.12*e['duration'])
-                end=min(b['end'],e['end']+.12*e['duration'])
+                start=max(b['start'],e['start']-.65*e['duration'])
+                end=min(b['end'],e['end']+.65*e['duration'])
                 progress=smooth((time-start)/(end-start))
                 increment=b['angle']*weight/sum(weights)
                 support=next(side for side in self.lanes if side!=e['side'])
@@ -106,8 +106,8 @@ class DirectionalSteps:
         weight = 0.
         for e in self.events:
             d = e['duration']
-            unload = smooth((time-(e['start']-.16*d))/(.34*d))
-            reload = smooth((time-(e['end']-.18*d))/(.34*d))
+            unload = smooth((time-(e['start']-.20*d))/(.30*d))
+            reload = smooth((time-(e['end']-.10*d))/(.30*d))
             weight -= math.copysign(1.,self.lanes[e['side']]) * unload*(1-reload)
         return weight
 
@@ -125,10 +125,10 @@ class DirectionalSteps:
                 if time < e['start']: break
                 phase = (time-e['start'])/e['duration']
                 peak_roll = 5. if e['block']['stationary'] else 18.
-                if phase <= .18:
-                    roll = peak_roll*smooth(phase/.18)
-                elif phase < .82:
-                    swing = (phase-.18)/.64
+                if phase <= .10:
+                    roll = peak_roll*smooth(phase/.10)
+                elif phase < .90:
+                    swing = (phase-.10)/.80
                     blend = smooth(swing)
                     # The foot opens early in recovery; it is already aimed
                     # toward the intended support before weight arrives.
