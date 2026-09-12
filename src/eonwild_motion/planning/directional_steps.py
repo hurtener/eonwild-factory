@@ -16,7 +16,7 @@ class DirectionalSteps:
         self.height, self.lanes, self.foot_heights = height, lanes, foot_heights
         self.period = step_seconds
         self.blocks, self.steps = [], []
-        time, center, heading = 1., np.zeros(3), 0.
+        time, center, heading = .45, np.zeros(3), 0.
         for spec in blocks:
             count, angle = spec['steps'], math.radians(spec['turn_degrees'])
             stationary = abs(spec['step_length_body_heights']) < 1e-12
@@ -24,15 +24,21 @@ class DirectionalSteps:
                          heading=heading, angle=angle, count=count, stationary=stationary,
                          length=count*spec['step_length_body_heights']*height,
                          label=spec['label'])
+            block['turn_steps'] = []
             self.blocks.append(block)
             leading = max(lanes, key=lanes.get) if angle > 0 else min(lanes, key=lanes.get)
             trailing = next(s for s in lanes if s != leading)
             for index in range(count):
                 side = (leading if index % 2 == 0 else trailing)
-                self.steps.append(dict(start=time+index*self.period,
-                    end=time+(index+1)*self.period, side=side, block=block, index=index))
+                duration = self.period * ((.84 if index % 2 == 0 else 1.16) if stationary else 1.)
+                entry = dict(start=time, end=time+duration, side=side, block=block, index=index,
+                             inner=index % 2 == 0, duration=duration)
+                self.steps.append(entry)
+                block['turn_steps'].append(entry)
+                time += duration
+            block['end'] = time
             center, heading = self.body(block['end'])
-            time = block['end']+1.
+            time = block['end']+.45
         self.duration = time
         self.anchors = {s:self.origin+self.lateral*lanes[s]
             +self.up*(foot_heights[s]-self.origin@self.up) for s in lanes}
@@ -41,9 +47,12 @@ class DirectionalSteps:
         self.events = []
         for step in self.steps:
             side, block = step['side'], step['block']
-            target_center, target_heading = self.body(min(block['end'],step['end']+.45*self.period))
+            target_center, target_heading = self.body(min(block['end'],step['end']+.35*self.period))
             lane = self.lateral*math.cos(target_heading)-self.forward*math.sin(target_heading)
             target = self.origin+target_center+lane*lanes[side]
+            if block['stationary'] and step['index'] < block['count']-2:
+                forward = self.forward*math.cos(target_heading)+self.lateral*math.sin(target_heading)
+                target += forward*self.height*(-.018 if step['inner'] else .032)
             target += self.up*(foot_heights[side]-target@self.up)
             self.events.append(dict(step, old=anchors[side].copy(), target=target,
                 oldHeading=headings[side], targetHeading=target_heading, label=block['label']))
@@ -52,6 +61,13 @@ class DirectionalSteps:
     def body(self, time):
         b = next((b for b in self.blocks if time <= b['end']), self.blocks[-1])
         u = smooth((time-b['start'])/(b['end']-b['start']))
+        if b['stationary'] and b['turn_steps']:
+            # Overlapping support exchanges advance heading, with a shorter
+            # opening step and a longer outer accommodation step.
+            weights = [.72 if e['inner'] else 1.28 for e in b['turn_steps']]
+            u = sum(w*smooth((time-max(b['start'],e['start']-.12*e['duration'])) /
+                            (min(b['end'],e['end']+.12*e['duration'])-max(b['start'],e['start']-.12*e['duration'])))
+                    for w,e in zip(weights,b['turn_steps'])) / sum(weights)
         theta, h = b['angle']*u, b['heading']
         if abs(b['angle']) > 1e-8:
             radius = b['length']/b['angle']
@@ -61,13 +77,15 @@ class DirectionalSteps:
         return b['center']+self.lateral*x+self.forward*z, h+theta
 
     def weight(self, time):
-        # One continuous transfer wave, not a list of hold/shift commands.
-        b = next((b for b in self.blocks if time <= b['end']), self.blocks[-1])
-        phase = (time-b['start'])/self.period
-        if phase < 0 or phase > b['count']: return 0.
-        lead = next(e['side'] for e in self.events if e['block'] is b)
-        envelope = smooth(phase/.35)*smooth((b['count']-phase)/.35)
-        return -math.copysign(1.,self.lanes[lead])*math.sin(math.pi*phase)*envelope
+        # Unload before departure and accept weight after arrival. Overlap
+        # adjacent exchanges instead of returning the pelvis to center per step.
+        weight = 0.
+        for e in self.events:
+            d = e['duration']
+            unload = smooth((time-(e['start']-.16*d))/(.34*d))
+            reload = smooth((time-(e['end']-.18*d))/(.34*d))
+            weight -= math.copysign(1.,self.lanes[e['side']]) * unload*(1-reload)
+        return weight
 
     def sample(self, time):
         center, heading = self.body(time)
@@ -81,25 +99,24 @@ class DirectionalSteps:
                     position, yaw = e['target'].copy(), e['targetHeading']
                     continue
                 if time < e['start']: break
-                phase = (time-e['start'])/self.period
-                peak_roll = 0. if e['block']['stationary'] else 18.
-                if phase <= .08:
-                    roll = peak_roll*smooth(phase/.08)
-                elif phase < .92:
-                    swing = (phase-.08)/.84
+                phase = (time-e['start'])/e['duration']
+                peak_roll = 5. if e['block']['stationary'] else 18.
+                if phase <= .18:
+                    roll = peak_roll*smooth(phase/.18)
+                elif phase < .82:
+                    swing = (phase-.18)/.64
                     blend = smooth(swing)
                     # The foot opens early in recovery; it is already aimed
                     # toward the intended support before weight arrives.
-                    yaw_blend = blend
+                    yaw_blend = smooth(swing/.90)
                     position = (1-blend)*e['old']+blend*e['target']
+                    clearance = (.028 if e['inner'] else .036) if e['block']['stationary'] else .035
                     if e['block']['stationary']:
-                        # Carry the foot around the body on an arc, with no
-                        # marching push-off or early completed yaw command.
                         carried = (1-blend)*e['oldHeading']+blend*e['targetHeading']
                         axis = self.lateral*math.cos(carried)-self.forward*math.sin(carried)
-                        position = self.origin+e['block']['center']+axis*self.lanes[side]
-                        position += self.up*(self.foot_heights[side]-position@self.up)
-                    clearance = .015 if e['block']['stationary'] else .035
+                        # A free leg opens away from the other leg, not through
+                        # a fixed-radius circle which can crowd the support.
+                        position += axis*math.copysign(.022*self.height,self.lanes[side])*math.sin(math.pi*swing)**2
                     lift = 64*swing**3*(1-swing)**3
                     position += self.up*(clearance*self.height*lift)
                     yaw = (1-yaw_blend)*e['oldHeading']+yaw_blend*e['targetHeading']
@@ -111,6 +128,6 @@ class DirectionalSteps:
             feet[side] = dict(contact=contact, position=position, heading=yaw,
                              swing_phase=swing, roll_degrees=roll)
         axis = self.lateral*math.cos(heading)-self.forward*math.sin(heading)
-        shift = axis*(.035*self.height*self.weight(time))
+        shift = axis*(.055*self.height*self.weight(time))
         label = next((e['label'] for e in self.events if e['start']<=time<=e['end']), 'settle')
-        return dict(time=time, center=center+shift, heading=heading, feet=feet, label=label, turn_in_place=next((b['stationary'] for b in self.blocks if time<=b['end']),self.blocks[-1]['stationary']))
+        return dict(weight=self.weight(time), time=time, center=center+shift, heading=heading, feet=feet, label=label, turn_in_place=next((b['stationary'] for b in self.blocks if time<=b['end']),self.blocks[-1]['stationary']))

@@ -74,3 +74,12 @@ Track **implemented**, **source-rig generated**, **exported**, **human reviewed*
 ## Factory contracts
 
 Continue `src/eonwild_motion`. Preserve immutable legacy capsules and approved references. Animal differences belong in semantic rig/body/behavior data. A behavior owns contact choreography. Reopen final emitted assets after contact-affecting changes. See `UNITY_MOTION_CONTRACT.md` for the consumer boundary.
+
+
+## Adaptive turn checkpoint 07 — 2026-09-12
+
+The previous continuous-turn study was rejected for robotic coordination. The user emphasized changing gait to preserve leg space and different inner/outer leg work, using the Allosaurus reference stored as `assets/examples/tarbosaurus/tarbo-turning-example.mp4`.
+
+Implemented directly without subagents: unequal inner/outer step durations and heading contributions; outward recovery clearance and staggered intermediate placements; support shift before release; phase-dependent knee/ankle preferences; restored restrained toe articulation; reduced constant crouch; delayed tail response. The shared source-admission and limb solver remain in use, with no species branch or edits to approved straight walks.
+
+Both real animals generated and reopened. Seven focused planner checks pass. Native Unity side and three-quarter captures are in principal game `game/Evidence/adaptive-turn-study/`. Visual approval is PENDING. This is a revised authored support choreography, not adaptive terrain steering or solved whole-body dynamics. Final material tangential locking and production contact/mass acceptance remain open. Pause here before further directional breadth.

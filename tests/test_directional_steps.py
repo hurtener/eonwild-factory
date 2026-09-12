@@ -36,12 +36,14 @@ def test_path_is_continuous_at_block_boundaries():
 def test_attention_leads_turns_and_settles():
     from eonwild_motion.solve.turn_attention import turn_look_yaw
     p=planner()
-    assert p.body(.5)[1]==0
-    assert turn_look_yaw(p,.5,1.6,32)>0
-    assert turn_look_yaw(p,10,1.6,32)<0
-    assert turn_look_yaw(p,17,1.6,32)>0
+    before=p.blocks[0]['start']-.1
+    assert p.body(before)[1]==0
+    for block in p.blocks:
+        t=block['start']+.2
+        assert turn_look_yaw(p,t,1.6,32)*block['angle']>0
     assert abs(turn_look_yaw(p,p.duration,1.6,32))<1e-12
     assert max(abs(turn_look_yaw(p,t,1.6,32)) for t in np.linspace(0,p.duration,400))<np.radians(32)
+
 
 
 def test_turn_body_does_not_pause_for_foot_commands():
@@ -58,8 +60,25 @@ def test_turn_body_does_not_pause_for_foot_commands():
 def test_turn_heel_release_is_continuous_and_recovery_is_low():
     p=planner();b=next(b for b in p.blocks if b['stationary'])
     e=next(e for e in p.events if e['block'] is b);side=e['side']
-    t=e['start']+.08*p.period
+    t=e['start']+.18*e['duration']
     a=p.sample(t-1e-6)['feet'][side];z=p.sample(t+1e-6)['feet'][side]
     assert abs(a['roll_degrees']-z['roll_degrees'])<1e-6
     max_height=max(p.sample(t)['feet'][side]['position'][1] for t in np.linspace(e['start'],e['end'],100))
-    assert max_height-p.foot_heights[side]<=.018*p.height+1e-12
+    assert max_height-p.foot_heights[side]<=.037*p.height+1e-12
+
+
+def test_turn_unloads_before_release_and_varies_inner_outer_steps():
+    p=planner();b=next(b for b in p.blocks if b['stationary'])
+    events=[e for e in p.events if e['block'] is b]
+    assert events[0]['duration'] < events[1]['duration']
+    for e in events:
+        t=e['start']+.18*e['duration']
+        assert p.weight(t)*p.lanes[e['side']] < 0
+        assert not p.sample(t+1e-6)['feet'][e['side']]['contact']
+    # Changing recovery geometry must not create position jumps at release/landing.
+    for e in events:
+        for u in (.18,.82):
+            t=e['start']+u*e['duration']
+            a=p.sample(t-1e-6)['feet'][e['side']]['position']
+            z=p.sample(t+1e-6)['feet'][e['side']]['position']
+            assert np.linalg.norm(a-z)<1e-5

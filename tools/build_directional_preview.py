@@ -49,26 +49,32 @@ def main():
     # Keep admitted neutral posture; directional timing replaces periodic straight-walk body response.
     context=replace(c,legacy_overlay=False)
     print('Captured admitted source',len(times),'samples; height',c.body_height,flush=True)
+    tail_rate = 0.
     for i,t in enumerate(times):
         step=sequence.sample(t);yaw=_qrotvec(c.up*step['heading']); inv=_qinv(yaw)
         angular_rate=(sequence.body(t+.01)[1]-sequence.body(t-.01)[1])/.02
+        tail_rate += (angular_rate-tail_rate)*(1-math.exp(-1/(a.fps*.24)))
         base_r=list(c.base_r)
         for role,lag in [('spine',.20),('tail',-.55)]:
             names=list(c.roles.get(role,[]))
             for name in names:
                 node=source.name_to_node[name]
                 local_axis=np.asarray(_qrotate(_qinv(_rotation_from_matrix(c.base_w[node])),c.up))
-                base_r[node]=_qmul(base_r[node],_qrotvec(local_axis*angular_rate*lag/max(1,len(names))))
+                base_r[node]=_qmul(base_r[node],_qrotvec(local_axis*(tail_rate if role=='tail' else angular_rate)*lag/max(1,len(names))))
         attention=recipe["turn_attention"]
         look_yaw=turn_look_yaw(sequence,t,attention["lead_seconds"],attention["maximum_degrees"])
         context=replace(c,base_r=tuple(base_r),legacy_overlay=False)
-        row={'time_s':float(t),'root_forward_m':0.,'pelvis_height_offset_m':-recipe['turn_leg_shape']['pelvis_settle_body_heights']*c.body_height,'flight':False,'support_count':sum(f['contact'] for f in step['feet'].values()),'performance_gain':0.,'feet':{}}
+        row={'time_s':float(t),'root_forward_m':0.,'pelvis_height_offset_m':-(recipe['turn_leg_shape']['pelvis_settle_body_heights']+.008*step['weight']**2)*c.body_height,'flight':False,'support_count':sum(f['contact'] for f in step['feet'].values()),'performance_gain':0.,'feet':{}}
         for s,f in step['feet'].items():
             target=c.origin+np.asarray(_qrotate(inv,f['position']-c.origin-step['center']))
             u=f['swing_phase'];roll=f.get('roll_degrees',0.)
             in_place=step['turn_in_place']
-            row['feet'][s]={'contact':f['contact'],'forward_m':0.,'height_m':0.,'swing_phase':u,'toe_flex_degrees':(2 if in_place else 14)*math.sin(math.pi*u)**2,'foot_pitch_degrees':(0 if in_place else -10)*math.sin(math.pi*u)**2,'articulation_scale':0. if in_place else 1.,'world_foot_target_m':target.tolist(),'foot_yaw_radians':f['heading']-step['heading'],'stance_roll_pitch_degrees':roll,'stance_roll_swing_pitch_degrees':roll,'stance_roll_release_scale':f.get('roll_scale',0.),'distal_endpoint_role':'shape_preference'}
-            if in_place: row['feet'][s]['turn_leg_shape']=turn_shapes[s]
+            row['feet'][s]={'contact':f['contact'],'forward_m':0.,'height_m':0.,'swing_phase':u,'toe_flex_degrees':(10 if in_place else 14)*math.sin(math.pi*u)**2,'foot_pitch_degrees':(-7 if in_place else -10)*math.sin(math.pi*u)**2,'articulation_scale':0. if in_place else 1.,'world_foot_target_m':target.tolist(),'foot_yaw_radians':f['heading']-step['heading'],'stance_roll_pitch_degrees':roll,'stance_roll_swing_pitch_degrees':roll,'stance_roll_release_scale':f.get('roll_scale',0.),'distal_endpoint_role':'shape_preference'}
+            if in_place:
+                fold=math.sin(math.pi*u)**2
+                row['feet'][s]['turn_leg_shape']={
+                    'knee_interior_degrees':turn_shapes[s]['knee_interior_degrees']+5-22*fold,
+                    'ankle_interior_degrees':turn_shapes[s]['ankle_interior_degrees']-12*fold}
         # Fast floor correction only. Tangential material locking is measured separately at review.
         for iteration in range(3):
             pose=solve_airborne_plan_sample(context,row,body_response_sample={'sagittal_node_degrees':{},'turn_attention':{'yaw_radians':look_yaw,'neck_share':attention['neck_share']}})
