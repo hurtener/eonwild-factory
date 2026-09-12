@@ -90,3 +90,10 @@ Both real animals generated and reopened. Seven focused planner checks pass. Nat
 The user rejected draft 07's narrow support stance and inner-first opening. Draft 08 separates the turning stance from walking width: authored full stance 0.36 body heights versus the previous 0.24, with an additional 0.045 body-height outside placement during opening. The outside leg opens first in either direction; the inner leg contributes more of the overlapping rotation and follows into broad support. The body center now travels around alternating support pivots instead of a fixed central axis. A fixed review camera exposes that travel. These are shared behavior parameters, not species branches or a new force model.
 
 Both admitted animals exported and reopened; eight focused planner checks pass, including outside-first direction, support anchoring and moving-center continuity. Principal game evidence: `game/Evidence/wide-stance-turn-study/`. Visual review is PENDING. Approved straight walks remain preserved; final material contact and mass certification remain open. Pause at this checkpoint.
+
+
+## Loaded hip / planted leg plane 09 — 2026-09-12
+
+The user identified sideways knee/ankle articulation during weight acceptance. The turn now binds a world bend plane to each planted interval, reorients it during recovery, and accommodates that plane at the pelvis. Planted turn pitch is held instead of allowing the knee-shape objective to rock the ankle; recovery blends out that restriction. Ordinary walking does not opt into these constraints.
+
+Both animals generated and reopened. Twelve focused checks pass. A direct comparison of reopened joint motion reduced maximum planted-interval knee travel across the foot lateral axis from 154 to 10.6 mm for Allosaurus and 213 to 13.5 mm for Tarbosaurus. This is a positional diagnostic, not a joint-stress or force certificate. The remaining lateral-axis component can include motion within an inclined leg plane. Allosaurus sampled floor dip is 2.73 mm, Tarbosaurus 0.19 mm. Final contact and mass acceptance remain pending. Principal game evidence: `game/Evidence/hip-support-turn-study/`; pause for visual review.

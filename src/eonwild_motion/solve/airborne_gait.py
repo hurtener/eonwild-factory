@@ -1123,6 +1123,13 @@ def solve_airborne_plan_sample(
                 outward,
                 context.knee_bend_plane_outward_degrees,
             )
+            if 'turn_support_normal' in foot_plan:
+                fixed_normal=np.asarray(foot_plan['turn_support_normal'],dtype=float)
+                if fixed_normal.shape!=(3,) or not np.isfinite(fixed_normal).all() or np.linalg.norm(fixed_normal)<1e-8:
+                    raise ContractError('invalid planted turn plane')
+                fixed_normal/=np.linalg.norm(fixed_normal)
+                blend=support_lock
+                bend_normal=_unit((1-blend)*bend_normal+blend*fixed_normal)
             candidate_knee, candidate_end, extension = stable_knee_geometry(
                 hp, target_ankle, upper, lower, bend_normal
             )
@@ -1192,6 +1199,8 @@ def solve_airborne_plan_sample(
                 score = (.2*degrees**2 + shape_cost
                          + gait.articulation_preferred_margin_weight*preferred
                          + 1e5*sum(e*e for e in errors) + 1e8*extension*extension)
+            if 'turn_support_normal' in foot_plan:
+                score += 2e5*support_lock/(1-support_lock+.001)*degrees**2
             return (score, candidate_q, candidate_foot, target_ankle,
                     candidate_knee, candidate_end, extension, max(errors),
                     {"hip_sagittal_degrees": hip_angle,
@@ -1242,7 +1251,7 @@ def solve_airborne_plan_sample(
                 step *= .5
             return best_candidate
 
-        baseline_best = minimize_pitch()
+        baseline_best = (pitch_candidate(0.) if 'turn_support_normal' in foot_plan and foot_plan['contact'] else minimize_pitch())
         if world_metatarsus_recovery is None:
             world_metatarsus_baseline = None
             world_metatarsus_target = None
