@@ -60,3 +60,12 @@ Export with `tools/export_embodiment.py`; it now adds resolved capability JSON t
 ### Future animals
 
 Start with an admitted rig/profile, documented mass, limb dimensions and step/stride. `tools/seed_locomotion_capabilities.py --target TARGET --reference REFERENCE --output NEW_PROFILE` generates an explicitly unreviewed similarity prior. Length comes from hindlimb measurements; inertia scales by mass ratio × length ratio², force by length ratio², and torque by length ratio³. All inherited/scaled values are relabeled derived estimates with reference hashes. These assumptions are a starting point, never new biological measurements. Replace them with specimen evidence or deliberate calibration, regenerate both the new animal and a reference animal, inspect every rendered frame, and review native-time motion. Unsupported body families still require shared implementation.
+
+
+## Turn support response — checkpoint 12 candidate
+
+`solve/turn_support.py` uses the behavior's contact schedule to plan continuous normalized load shares; an airborne foot carries zero. `turn_load_response` in the shared directional recipe sets transfer width, maximum roll and response scale. The offline response time is `response_scale * sqrt(body_height / effective_lateral_acceleration)`, where the profile resolver supplies effective force/mass. Symmetric filtering prepares for known future support; it is not a causal runtime controller or measured ground-reaction force.
+
+A pelvis roll preserves the load-weighted hip height before the shared leg IK. `turn_load_response.v1` uses the existing body-support control interface with a source/recipe/capability SHA-256 binding. Foot contact is corrected afterwards: freeze the admitted material subset's horizontal centroid for each planted interval, solve vertical floor and tangential offsets, and release the accumulated tangential offset into early recovery. Exported assets are reopened at every source key; receipts distinguish centroid drift from maximum per-vertex deformation.
+
+This adds no species branch, edits no approved straight-walk asset, and does not establish whole-body force balance, joint stress, rigid full-patch locking or continuous-time contact acceptance. See the current roadmap and principal game checkpoint 12 evidence before promotion.

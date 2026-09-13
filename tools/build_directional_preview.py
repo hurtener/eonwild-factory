@@ -17,7 +17,8 @@ from eonwild_motion.solve.whole_body_gait_transition import _append_accessor, _e
 from eonwild_motion.planning.directional_steps import DirectionalSteps
 from eonwild_motion.solve.turn_attention import turn_look_yaw
 from eonwild_motion.planning.locomotion_capabilities import resolve_capabilities, plan_directional
-from eonwild_motion.solve.turn_support import accommodate_support_planes
+from eonwild_motion.solve.turn_support import accommodate_support_planes, TurnLoadResponse, loaded_hip_roll
+from eonwild_motion.solve.turn_contact import tangent, material_patch_correction, material_patch_drift
 from eonwild_motion.planning.grounded_gait import smooth
 
 class Captured(Exception): pass
@@ -57,6 +58,8 @@ def main():
         sequence,capability_plan=plan_directional(capabilities,c.origin,c.forward,c.lateral,c.up,c.body_height,lanes,heights,recipe)
         recipe=deepcopy(recipe);recipe['turn_attention']['lead_seconds']=capabilities['attentionLeadSeconds']
     response_seconds=capabilities['responseSeconds'] if capabilities else .24
+    load_response=TurnLoadResponse(sequence,capabilities,recipe['turn_load_response']) if capabilities and 'turn_load_response' in recipe else None
+    load_binding=hashlib.sha256(json.dumps({'recipe':recipe,'capabilities':capabilities,'source':hashlib.sha256(source.raw).hexdigest()},sort_keys=True).encode()).hexdigest()
     turn_shapes={}
     for side,chain in c.legs.items():
         hp,kp,ap,fp=[np.asarray(c.base_w[n])[:3,3] for n in chain]
@@ -82,9 +85,14 @@ def main():
     context=replace(c,legacy_overlay=False)
     print('Captured admitted source',len(times),'samples; height',c.body_height,flush=True)
     tail_rate = 0.
+    contact_references={s:None for s in c.legs};release_offsets={s:np.zeros(3) for s in c.legs}
     for i,t in enumerate(times):
         step=sequence.sample(t);yaw=_qrotvec(c.up*step['heading']); inv=_qinv(yaw)
         normals={};gains={};hips={};ankles={}
+        loads=load_response.loads(t) if load_response else None
+        roll_angle=load_response.roll(t) if load_response else 0.
+        settle=recipe['turn_leg_shape']['pelvis_settle_body_heights']+(0. if load_response else .008*step['weight']**2)
+        support_delta=np.zeros(3)
         for side,chain in c.legs.items():
             f=step['feet'][side];entries=support_planes[side]
             n=entries[0][1]
@@ -95,10 +103,13 @@ def main():
                     n=(1-smooth(u))*entries[idx][1]+smooth(u)*entries[idx+1][1]
                     break
             normals[side]=n/np.linalg.norm(n)
-            u=f['swing_phase'];gains[side]=1. if f['contact'] else 1-smooth(min(u,1-u)/.18)
+            u=f['swing_phase'];gains[side]=loads[side] if loads is not None else (1. if f['contact'] else 1-smooth(min(u,1-u)/.18))
             hips[side]=c.origin+np.asarray(_qrotate(yaw,c.base_w[chain[0]][:3,3]-c.origin))+step['center']
-            hips[side]-=c.up*(recipe['turn_leg_shape']['pelvis_settle_body_heights']+.008*step['weight']**2)*c.body_height
+            hips[side]-=c.up*settle*c.body_height
             ankles[side]=f['position']-np.asarray(_qrotate(_qrotvec(c.up*f['heading']),c.base_w[chain[-1]][:3,3]-c.base_w[chain[-2]][:3,3]))
+        if load_response:
+            pelvis=c.origin+np.asarray(_qrotate(yaw,c.base_w[c.pelvis][:3,3]-c.origin))+step['center']-c.up*settle*c.body_height
+            hips,support_delta=loaded_hip_roll(hips,pelvis,loads,np.asarray(_qrotate(yaw,c.forward)),c.up,roll_angle)
         accommodation=accommodate_support_planes(hips,ankles,normals,gains,c.up,c.forward,c.lateral,c.body_height)
         step['center']=step['center']+accommodation
         angular_rate=(sequence.body(t+.01)[1]-sequence.body(t-.01)[1])/.02
@@ -113,7 +124,7 @@ def main():
         attention=recipe["turn_attention"]
         look_yaw=turn_look_yaw(sequence,t,attention["lead_seconds"],attention["maximum_degrees"])
         context=replace(c,base_r=tuple(base_r),legacy_overlay=False)
-        row={'time_s':float(t),'root_forward_m':0.,'pelvis_height_offset_m':-(recipe['turn_leg_shape']['pelvis_settle_body_heights']+.008*step['weight']**2)*c.body_height,'flight':False,'support_count':sum(f['contact'] for f in step['feet'].values()),'performance_gain':0.,'feet':{}}
+        row={'time_s':float(t),'root_forward_m':0.,'pelvis_height_offset_m':-settle*c.body_height,'flight':False,'support_count':sum(f['contact'] for f in step['feet'].values()),'performance_gain':0.,'feet':{}}
         for s,f in step['feet'].items():
             target=c.origin+np.asarray(_qrotate(inv,f['position']-c.origin-step['center']))
             u=f['swing_phase'];roll=f.get('roll_degrees',0.)
@@ -126,21 +137,37 @@ def main():
                 row['feet'][s]['turn_leg_shape']={
                     'knee_interior_degrees':turn_shapes[s]['knee_interior_degrees']+5-22*fold,
                     'ankle_interior_degrees':turn_shapes[s]['ankle_interior_degrees']-12*fold}
-        # Fast floor correction only. Tangential material locking is measured separately at review.
-        for iteration in range(3):
-            pose=solve_airborne_plan_sample(context,row,body_response_sample={'sagittal_node_degrees':{},'turn_attention':{'yaw_radians':look_yaw,'neck_share':attention['neck_share']}})
+        body_sample={'sagittal_node_degrees':{},'turn_attention':{'yaw_radians':look_yaw,'neck_share':attention['neck_share']}}
+        if load_response:
+            body_sample['body_support_control']={'policy_id':'turn_load_response.v1','binding_sha256':load_binding,'translation_forward_up_lateral_m':[0.,float(support_delta@c.up),0.],'rotation_pitch_roll_yaw_radians':[0.,roll_angle,0.]}
+        nominal_targets={s:np.asarray(f['world_foot_target_m']).copy() for s,f in row['feet'].items()}
+        for s,f in row['feet'].items():
+            if not f['contact']:
+                contact_references[s]=None
+                release=release_offsets[s]*(1-smooth(f['swing_phase']/.25))
+                f['world_foot_target_m']=(nominal_targets[s]+np.asarray(_qrotate(inv,release))).tolist()
+        # Correct material tangential drift and the floor after all body changes.
+        for iteration in range(4):
+            pose=solve_airborne_plan_sample(context,row,body_response_sample=body_sample)
             worlds=np.asarray(_world_matrices(source,pose.translations,pose.rotations,c.base_s))
             patches={s:skin.skin(worlds,v) for s,v in ids.items()}
             errors={s:skin.ground-float((p@c.up).min()) for s,p in patches.items()}
-            if iteration==2:break
+            world_patches={s:np.asarray([c.origin+_qrotate(yaw,v-c.origin)+step['center'] for v in p]) for s,p in patches.items()}
+            for s,f in row['feet'].items():
+                if f['contact'] and contact_references[s] is None:contact_references[s]=world_patches[s].copy()
+            if iteration==3:break
             for s,e in errors.items():
-                if row['feet'][s]['contact'] or e>0:
-                    row['feet'][s]['world_foot_target_m']=(np.asarray(row['feet'][s]['world_foot_target_m'])+c.up*e).tolist()
+                delta=c.up*e if row['feet'][s]['contact'] or e>0 else np.zeros(3)
+                if row['feet'][s]['contact']:
+                    delta+=np.asarray(_qrotate(inv,material_patch_correction(world_patches[s],contact_references[s],c.up)))
+                row['feet'][s]['world_foot_target_m']=(np.asarray(row['feet'][s]['world_foot_target_m'])+delta).tolist()
+        for s,f in row['feet'].items():
+            if f['contact']:release_offsets[s]=tangent(np.asarray(_qrotate(yaw,np.asarray(f['world_foot_target_m'])-nominal_targets[s])),c.up)
         tr=list(pose.translations);rot=list(pose.rotations)
         rootworld=worlds[c.root];newpos=c.origin+np.asarray(_qrotate(yaw,rootworld[:3,3]-c.origin))+step['center']
         tr[c.root]=tuple(np.asarray(tr[c.root])+_local_delta(source,worlds,c.root,newpos-rootworld[:3,3]))
         rot[c.root]=_world_rotation(source,worlds,c.root,_qmul(yaw,_rotation_from_matrix(rootworld)))
-        poses.append((tr,rot));samples.append({'look_yaw_degrees':math.degrees(look_yaw),'time_s':float(t),'label':step['label'],'heading':step['heading'],'center':step['center'].tolist(),'feet':{s:{'contact':f['contact'],'heading':f['heading'],'position':f['position'].tolist()} for s,f in step['feet'].items()}})
+        poses.append((tr,rot));samples.append({'load_shares':loads,'pelvis_roll_degrees':math.degrees(roll_angle),'support_pelvis_drop_m':float(support_delta@c.up),'look_yaw_degrees':math.degrees(look_yaw),'time_s':float(t),'label':step['label'],'heading':step['heading'],'center':step['center'].tolist(),'feet':{s:{'contact':f['contact'],'heading':f['heading'],'position':f['position'].tolist()} for s,f in step['feet'].items()}})
         checks.append({'time_s':float(t),'floor_gap_m':{s:-e for s,e in errors.items()},'unreachable_extension_m':pose.maximum_unreachable_extension_m,'foot_target_residual_m':pose.maximum_foot_target_residual_m,'turn_leg_angles':{s:f.get('turn_leg_angles_degrees') for s,f in pose.feet.items()}})
         if i%24==0:print('Solved',i,'/',len(times),flush=True)
     translations=np.asarray([p[0] for p in poses]);rotations=np.asarray([p[1] for p in poses]);rotations/=np.linalg.norm(rotations,axis=2)[:,:,None]
@@ -152,25 +179,35 @@ def main():
             access=_append_accessor(document,binary,values,'VEC3' if path=='translation' else 'VEC4');samplers.append({'input':ta,'output':access,'interpolation':'LINEAR'});channels.append({'sampler':len(samplers)-1,'target':{'node':node,'path':path}})
     document['animations']=[{'name':'directional-review','samplers':samplers,'channels':channels}];document['buffers'][0]['byteLength']=len(binary)
     out.mkdir(parents=True);glb=_encode(document,binary);(out/'root_motion.glb').write_bytes(glb)
-    receipt={'recipe':recipe,'motion_set':str(a.motion_set),'status':'DIRECTIONAL_DIAGNOSTIC','visual':'PENDING','production':False,'duration_s':duration,'source_sha256':hashlib.sha256(source.raw).hexdigest(),'emitted_sha256':hashlib.sha256(glb).hexdigest(),'mass':'pelvis accommodation to planted leg planes; authored kinematics, not final mass correction','contact':'three-pass floor correction; material tangential locking not certified','samples':samples,'checks':checks}
+    receipt={'recipe':recipe,'motion_set':str(a.motion_set),'status':'DIRECTIONAL_DIAGNOSTIC','visual':'PENDING','production':False,'duration_s':duration,'source_sha256':hashlib.sha256(source.raw).hexdigest(),'emitted_sha256':hashlib.sha256(glb).hexdigest(),'mass':'pelvis accommodation to planted leg planes; authored kinematics, not final mass correction','contact':'four-pass frozen material-patch centroid tangential correction and floor solve; full-patch drift measured separately','samples':samples,'checks':checks}
     if capabilities:
         receipt['capabilities']=capabilities;receipt['capability_plan']=capability_plan
         receipt['profile_sha256']=hashlib.sha256(a.profile.read_bytes()).hexdigest()
-        receipt['mass']='mass/inertia and authored force/torque budgets constrain the planned trajectory; geometric hip accommodation; final force balance remains pending'
+        receipt['mass']='mass/force-scaled preparation; load-weighted hip-plane accommodation and compliant pelvis roll; final whole-body force balance remains pending'
+        receipt['load_response_seconds']=load_response.response_seconds if load_response else None
         (out/'source-animal.profile.json').write_bytes(a.profile.read_bytes())
         (out/'resolved-capabilities.json').write_text(json.dumps({'profileSha256':receipt['profile_sha256'],'motionSha256':receipt['emitted_sha256'],'resolved':capabilities,'walking':capability_plan['walk']},indent=2)+'\n')
     from eonwild_motion.glb.container import Glb
     from eonwild_motion.glb.animation import read_animation_tracks
     emitted=Glb(out/'root_motion.glb');tracks,_=read_animation_tracks(emitted,'directional-review',require_common_timeline=True)
     reopened_skin=SkinRig(emitted,c.roles,c.forward,c.up,capture['kwargs']['contact_profile'])
-    final_checks=[]
-    for t in np.linspace(0,duration,37):
+    final_checks=[];reopened_contacts=[];references={s:None for s in c.legs}
+    for t in times:
         tr=list(c.base_t);ro=list(c.base_r)
         for (node,path),track in tracks.items():
             if path=='translation':tr[node]=tuple(track.sample(float(t)))
             elif path=='rotation':ro[node]=tuple(track.sample(float(t)))
         w=np.asarray(_world_matrices(emitted,tr,ro,c.base_s))
-        final_checks.append({'time_s':float(t),'floor_gap_m':{side:float((reopened_skin.skin(w,v)@c.up).min()-skin.ground) for side,v in ids.items()}})
+        pp={s:reopened_skin.skin(w,v) for s,v in ids.items()}
+        final_checks.append({'time_s':float(t),'floor_gap_m':{side:float((patch@c.up).min()-skin.ground) for side,patch in pp.items()}})
+        observed={}
+        for side,f in sequence.sample(t)['feet'].items():
+            if f['contact']:
+                if references[side] is None:references[side]=pp[side].copy()
+                observed[side]=material_patch_drift(pp[side],references[side],c.up)
+            else:references[side]=None
+        reopened_contacts.append({'time_s':float(t),'planted':observed})
     receipt['reopened_emitted_skin_samples']=final_checks
+    receipt['reopened_material_contact_samples']=reopened_contacts
     (out/'directional.json').write_text(json.dumps(receipt,indent=2));print('EMITTED',out,flush=True)
 if __name__=='__main__':main()

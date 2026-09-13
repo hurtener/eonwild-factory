@@ -472,7 +472,7 @@ def _require_body_response_sample(sample: Any) -> Mapping[str, Any] | None:
             "rotation_pitch_roll_yaw_radians",
         }:
             raise ContractError("body response body-support control has an invalid schema")
-        if control["policy_id"] != "periodic_body_support_control.v1":
+        if control["policy_id"] not in ("periodic_body_support_control.v1", "turn_load_response.v1"):
             raise ContractError("body response body-support control has an invalid policy")
         binding = control["binding_sha256"]
         if (not isinstance(binding, str) or len(binding) != 64

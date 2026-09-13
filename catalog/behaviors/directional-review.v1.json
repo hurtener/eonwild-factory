@@ -35,5 +35,11 @@
     "support_shift_fraction_of_half_width": 0.42,
     "classification": "Authored broad turning/rest stance, distinct from narrow walking lanes. Outside foot opens first; inner foot follows with continuing body rotation.",
     "support_pivot_fraction_of_lane": 1.0
+  },
+  "turn_load_response": {
+    "transfer_fraction_of_step": 0.35,
+    "maximum_roll_degrees": 2.0,
+    "response_scale": 0.1,
+    "classification": "Authored compliant pelvis roll and preplanned load sharing; response time scales with body height and effective force/mass; not solved whole-body forces"
   }
 }
