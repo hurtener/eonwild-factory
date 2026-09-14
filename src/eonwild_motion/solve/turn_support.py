@@ -3,6 +3,7 @@ import numpy as np
 import math
 from scipy.ndimage import gaussian_filter1d
 from ..planning.grounded_gait import smooth
+from ..planning.walking_response import recovery_window
 
 
 def contact_loads(sequence, time, transfer_fraction=.35):
@@ -13,7 +14,8 @@ def contact_loads(sequence, time, transfer_fraction=.35):
     """
     loads={s:1. for s in sequence.anchors}
     for e in sequence.events:
-        d=e['duration'];lift=e['start']+.10*d;touch=e['end']-.10*d
+        d=e['duration'];a,b=recovery_window(e,sequence.walking)
+        lift=e['start']+a*d;touch=e['start']+b*d
         unload=smooth((time-(lift-transfer_fraction*d))/(transfer_fraction*d))
         reload=smooth((time-touch)/(transfer_fraction*d))
         loads[e['side']]*=1-unload*(1-reload)

@@ -5,7 +5,7 @@ from .airborne_gait import _qrotvec, _qrotate, _qinv, _qmul
 from ..layers.leg_contact_resolve_v3 import _rotation_from_matrix
 
 
-def turn_look_yaw(sequence, time_s, lead_seconds, maximum_degrees):
+def turn_look_yaw(sequence, time_s, lead_seconds, maximum_degrees, anticipation_gain=1.):
     """Look toward the upcoming heading, then settle as the body catches up."""
     current = sequence.body(time_s)[1]
     # Anticipate the current turn without looking into the following reversal
@@ -17,7 +17,7 @@ def turn_look_yaw(sequence, time_s, lead_seconds, maximum_degrees):
     difference = math.atan2(math.sin(future-current), math.cos(future-current))
     limit = math.radians(maximum_degrees)
     # Soft saturation preserves smooth velocity when attention reaches its range.
-    return onset * limit * math.tanh(difference / limit) if limit > 0 else 0.0
+    return onset * limit * math.tanh(anticipation_gain * difference / limit) if limit > 0 else 0.0
 
 
 def apply_turn_attention(context, rotations, yaw_radians, neck_share):

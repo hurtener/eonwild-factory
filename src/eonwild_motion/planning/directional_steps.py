@@ -7,6 +7,7 @@ import math
 import numpy as np
 from .grounded_gait import smooth
 from .airborne_gait import rounded_swing_height
+from .walking_response import recovery_window
 
 
 class DirectionalSteps:
@@ -126,8 +127,9 @@ class DirectionalSteps:
         weight = 0.
         for e in self.events:
             d = e['duration']
-            unload = smooth((time-(e['start']-.20*d))/(.30*d))
-            reload = smooth((time-(e['end']-.10*d))/(.30*d))
+            lift,touch=recovery_window(e,self.walking)
+            unload = smooth((time-(e['start']+(lift-.30)*d))/(.30*d))
+            reload = smooth((time-(e['start']+touch*d))/(.30*d))
             weight -= math.copysign(1.,self.lanes[e['side']]) * unload*(1-reload)
         return weight
 
@@ -148,22 +150,26 @@ class DirectionalSteps:
                 prepare=self.walking.get('heel_prepare_step_fraction',0.) if walking else 0.
                 peak_roll=articulation_scale*self.walking.get('heel_roll_degrees',18.) if walking else (5. if e['block']['stationary'] else 18.)
                 phase = (time-e['start'])/e['duration']
+                lift,touch=recovery_window(e,self.walking)
+                span=touch-lift
+                if walking and self.walking.get('heel_prepare_seconds'):
+                    prepare=self.walking['heel_prepare_seconds']/e['duration']-lift
                 overlap=walking and 'heel_peak_swing_fraction' in self.walking
                 if overlap:
                     # Continue heel rise THROUGH toe release. Recovery travel
                     # is already moving before the heel reaches its maximum.
-                    peak=.10+.80*self.walking['heel_peak_swing_fraction']
-                    end=.10+.80*self.walking['heel_release_swing_fraction']
+                    peak=lift+span*self.walking['heel_peak_swing_fraction']
+                    end=lift+span*self.walking['heel_release_swing_fraction']
                     carried_roll=peak_roll*(smooth((phase+prepare)/(peak+prepare))
                         if phase<=peak else 1-smooth((phase-peak)/(end-peak)))
                 if time < e['start']:
                     if walking:
                         roll=carried_roll if overlap else peak_roll*smooth((time-e['start']+prepare*e['duration'])/((prepare+.1)*e['duration']))
                     break
-                if phase <= .10:
+                if phase <= lift:
                     roll = carried_roll if overlap else peak_roll*smooth((phase+prepare)/(.10+prepare))
-                elif phase < .90:
-                    swing = (phase-.10)/.80
+                elif phase < touch:
+                    swing = (phase-lift)/span
                     blend = smooth(swing)
                     # The foot opens early in recovery; it is already aimed
                     # toward the intended support before weight arrives.

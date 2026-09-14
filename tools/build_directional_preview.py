@@ -70,6 +70,7 @@ def main():
             raise ValueError('Profile body calibration does not match admitted rig')
         sequence,capability_plan=plan_directional(capabilities,c.origin,c.forward,c.lateral,c.up,c.body_height,lanes,heights,recipe)
         recipe=deepcopy(recipe);recipe['turn_attention']['lead_seconds']=capabilities['attentionLeadSeconds']
+        if recipe.get('walking'):recipe['walking']=dict(sequence.walking)
     response_seconds=capabilities['responseSeconds'] if capabilities else .24
     load_response=TurnLoadResponse(sequence,capabilities,recipe['turn_load_response']) if capabilities and 'turn_load_response' in recipe else None
     load_binding=hashlib.sha256(json.dumps({'recipe':recipe,'capabilities':capabilities,'source':hashlib.sha256(source.raw).hexdigest()},sort_keys=True).encode()).hexdigest()
@@ -135,7 +136,7 @@ def main():
                 local_axis=np.asarray(_qrotate(_qinv(_rotation_from_matrix(c.base_w[node])),c.up))
                 base_r[node]=_qmul(base_r[node],_qrotvec(local_axis*(tail_rate if role=='tail' else angular_rate)*lag/max(1,len(names))))
         attention=recipe["turn_attention"]
-        look_yaw=turn_look_yaw(sequence,t,attention["lead_seconds"],attention["maximum_degrees"])
+        look_yaw=turn_look_yaw(sequence,t,attention["lead_seconds"],attention["maximum_degrees"],attention.get("anticipation_gain",1.))
         context=replace(c,base_r=tuple(base_r),legacy_overlay=False)
         row={'time_s':float(t),'root_forward_m':0.,'pelvis_height_offset_m':-settle*c.body_height,'flight':False,'support_count':sum(f['contact'] for f in step['feet'].values()),'performance_gain':0.,'feet':{}}
         for s,f in step['feet'].items():

@@ -49,6 +49,8 @@ def main() -> None:
     parser.add_argument("--motion-set", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--mass-receipt", type=Path, required=True)
+    parser.add_argument("--response-recipe", type=Path)
+    parser.add_argument("--sample-hz", type=int, default=60)
     args = parser.parse_args()
     repo, target = args.repo.resolve(), args.output.resolve()
     if target.exists():
@@ -109,9 +111,11 @@ def main() -> None:
     plan = plain(captured["kwargs"]["plan"])
     from eonwild_motion.planning.locomotion_sequence import WalkSequence
     from eonwild_motion.solve.locomotion_sequence import SequenceEvaluator
-    sequence = WalkSequence(query._locomotion_gait, query.context.body_height, plan['parameters'])
+    response = json.loads(args.response_recipe.read_text()) if args.response_recipe else {}
+    sequence = WalkSequence(query._locomotion_gait, query.context.body_height, plan['parameters'], walking_response=response.get('walking_response'))
+    plan['walking_response_recipe'] = response
     duration = sequence.duration
-    times = np.unique(np.concatenate((np.linspace(0., duration, round(duration*60)+1), sequence.bounds)))
+    times = np.unique(np.concatenate((np.linspace(0., duration, round(duration*args.sample_hz)+1), sequence.bounds)))
     evaluator = SequenceEvaluator(neutral_query, sequence, captured['law']._skin, captured['provider'], control)
     poses, rows, checks = [], [], []
     print('Evaluating connected source sequence', duration, len(times), flush=True)
@@ -178,7 +182,7 @@ def main() -> None:
         "provider_class": type(captured["provider"]).__name__,
         "source_sha256": digest(source.raw),
         "plan_sha256": digest(canonical(plan)),
-        "sampling": {"source_keys_per_second": 60, "review_fps": 24, "key_count": len(times), "start_s": 0.0, "end_s": duration, "timeline": "inclusive native extent"},
+        "sampling": {"source_keys_per_second": args.sample_hz, "review_fps": 24, "key_count": len(times), "start_s": 0.0, "end_s": duration, "timeline": "inclusive native extent"},
         "limitations": {"final_contact_corrections": "APPLIED_SOURCE_LAW", "mass_coupling": "APPLIED_ENGINEERING_PROXY", "shared_final_law": "NOT_CLAIMED", "visual": "PENDING"},
     }
     runtime = {

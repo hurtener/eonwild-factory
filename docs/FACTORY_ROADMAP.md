@@ -1,6 +1,6 @@
 # Factory movement roadmap and acceptance tracker
 
-Updated 2026-09-13. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
+Updated 2026-09-14. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
 
 ## Animal profile housekeeping
 
@@ -12,7 +12,7 @@ User requested walking turns, coordinated turns without forward travel, backward
 
 | Checkpoint | Scope, both animals | Status |
 |---|---|---|
-| A — turning | Gentle walking curves, tighter low-speed turns, alternating stepping turns in place | Draft 10 accepted as a good turning baseline. Draft 11 adds numerical animal capabilities to the shared planner; both-rig Unity renders and all-frame audit complete; user accepted draft 11 as a good indie-game baseline. Draft 12 hip/contact polish visually accepted by the user. Draft 13 walking curves rejected for missing walking recovery articulation. Draft 14 restored walking recovery; user retained direction and requested timing polish. Draft 15 overlaps unloading and recovery; both-rig native videos await review. Final mass/contact remain open |
+| A — turning | Gentle walking curves, tighter low-speed turns, alternating stepping turns in place | Draft 10 accepted as a good turning baseline. Draft 11 adds numerical animal capabilities to the shared planner; both-rig Unity renders and all-frame audit complete; user accepted draft 11 as a good indie-game baseline. Draft 12 hip/contact polish visually accepted by the user. Draft 13 walking curves rejected for missing walking recovery articulation. Draft 14 restored walking recovery; user retained direction and requested timing polish. Draft 15 overlaps unloading and recovery; user requested stronger neck turning and more purposeful startup. Draft 16 updates curved and straight response; review pending. Final mass/contact remain open |
 | B — reverse | Backward start, several coordinated steps, stop; its own grounded contact choreography | Requested, not yet implemented in this pass |
 | C — lateral recovery | Left/right recovery steps, support transfer, whole-body settling | Requested, not yet implemented |
 | D — connected controls | Blend the reviewed directional behaviors with idle and walking; runtime root ownership and contact | After visual acceptance of A–C |
@@ -23,15 +23,25 @@ The user visually accepted draft 12 on 2026-09-13 as the next turning baseline. 
 
 This is a reduced authored support response, not converged whole-body force balance. Individual contact vertices still deform: maximum horizontal drift is 12.2 mm Allosaurus and 21.1 mm Tarbosaurus. Planted-interval knee travel projected onto the foot lateral axis increased from 31.6/33.8 mm in draft 11 to 38.1/55.4 mm in draft 12; this includes changing flexion and is not a joint-stress measurement, but remains a visible-polish concern, especially for Tarbosaurus. No isolated abrupt buckle was identified in the captured frame sequence; occlusion limits that observation.
 
-Checkpoint 12 is accepted and preserved. Checkpoint 13 walking curves are rejected; checkpoint 14 needs timing polish; checkpoint 15 is the current review candidate below. Approved straight walks are preserved. Locomotion acceleration limits exclude added local pelvis accommodation. Reverse walking and lateral recovery remain subsequent checkpoints after review.
+Checkpoint 12 is accepted and preserved. Checkpoint 13 walking curves are rejected; checkpoint 14 needs timing polish; checkpoint 16 is the current review candidate below. Approved straight walks are preserved. Locomotion acceleration limits exclude added local pelvis accommodation. Reverse walking and lateral recovery remain subsequent checkpoints after review.
 
-## Continuous walking release — checkpoint 15, review pending
+## Purposeful walking response — checkpoint 16, review pending
+
+User feedback requested a little more neck turning and quicker establishment of walking rhythm, including straight starts/stops. Approved steady walks and the earlier connected sequence remain preserved.
+
+Straight starts reach full body speed over 0.9 of one step after 0.35 s preparation. Moving-foot articulation has a separate 0.85 floor; this gain is not physical load. Stops preserve the incoming step, concentrate braking into the last 0.9-step interval, then complete placement and settling. Contact anchors and steady cadence retain the shared gait law. This is an authored response candidate: the straight sequence does not yet enforce numerical capability acceleration budgets or solve new whole-body forces.
+
+Walking curves retain the capability-limited body path and use recovery duration from normal profile cadence: 0.76 of a normal step (0.815 s Allosaurus, 1.042 s Tarbosaurus). Extra time goes into support before and after recovery; heel preparation uses 0.40 of a normal step. Load response and foot sampling share the same contact window. The first draft delayed release too far and overextended Allosaurus; the candidate releases earlier and has zero reach overflow on both emitted rigs. Attention gain is 1.25 and neck share 0.83.
+
+Both straight and curved motions generated and reopened on the actual rigs. Unity build and all four captures completed; 76 focused checks passed. All 1,567 captured frames were inspected across 68 sheets. Straight reopened contact remains diagnostic: floor minima -4.49/-10.90 mm and loaded-material residuals 2.90/2.07 mm (Allosaurus/Tarbosaurus). Curve planted vertices still deform up to 75.4/100.6 mm, including heel articulation. Native videos and frame inspection are saved in principal game game/Evidence/purposeful-walking-response-study/. Final contact and force acceptance remain open. **Pause for feedback; do not advance to reverse/lateral work or promote these candidates automatically.**
+
+## Continuous walking release — checkpoint 15, response polish requested
 
 The user retained checkpoint 14's direction but reported a brief unloading stop before recovery. The shared heel curve had reached zero velocity exactly where foot travel, lift and recovery began from zero. Recipe `walking-curve-review.v3.json` now continues heel rise through release, peaks at 10% of swing and relaxes by 40%. Recovery lift reuses the approved walk's rounded height curve, resolved from the admitted gait. Contact times, path, placements, pointing and load schedule retain checkpoint 14's settings; no species branches or changes to approved straight walks.
 
 Both actual rigs generated, reopened and ran in Unity. Native 24 fps videos and all 691 inspected frames are saved in principal game `game/Evidence/continuous-walking-release-study/`. Thirty-five focused checks pass. Earlier lift makes early joint flexion more pronounced, especially Allosaurus; native-speed feel still requires user review. Final individual planted-vertex drift is 78.1/99.7 mm (Allosaurus/Tarbosaurus), including articulation/deformation, despite stable centroids. Reach overflow is zero at emitted keys. Whole-body forces, continuous-time contact and live steering remain open.
 
-**Pause at checkpoint 15 for feedback. Checkpoint 14 requested timing changes; checkpoint 13 remains rejected; checkpoint 12 remains accepted for in-place turns.** Reverse walking and lateral recovery stay queued.
+**Checkpoint 15 feedback requests stronger neck turning and faster establishment of walking rhythm. Checkpoint 16 is the current candidate; checkpoint 12 remains accepted for in-place turns.** Reverse walking and lateral recovery stay queued.
 
 ## Articulated walking curves — checkpoint 14, timing changes requested
 

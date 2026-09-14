@@ -7,18 +7,20 @@ from .foot_articulation import declare_pad_recovery_sample
 
 
 class WalkSequence:
-    def __init__(self, gait, height, parameters, faster_rate=1.35):
+    def __init__(self, gait, height, parameters, faster_rate=1.35, walking_response=None):
         if not math.isfinite(faster_rate) or not 1 < faster_rate <= 1.5:
             raise ValueError('faster walking cadence must be in (1, 1.5]')
         self.gait, self.height, self.parameters = gait, height, deepcopy(parameters)
         self.period = 2 * gait.step_period_s
         self.rate = faster_rate
+        response = walking_response or {}
+        transition_response = {k:response[k] for k in ("response_step_fraction", "moving_articulation_floor") if k in response}
         self.start = _Choreography(GaitTransition('start', ramp_cycles=1,
-            anticipation_seconds=.8, idle_crouch_body_heights=.025,
-            support_placement='integrated_support'), gait, height)
+            anticipation_seconds=response.get('anticipation_seconds',.8), idle_crouch_body_heights=.025,
+            support_placement='integrated_support', **transition_response), gait, height)
         self.stop = _Choreography(GaitTransition('stop', ramp_cycles=1,
             settle_seconds=.8, idle_crouch_body_heights=.025,
-            support_placement='integrated_support'), gait, height)
+            support_placement='integrated_support', **transition_response), gait, height)
         self.ramp_duration = self.period / ((1 + self.rate) / 2)
         lengths = [self.start.duration, self.period, self.ramp_duration,
                    self.period / self.rate, self.ramp_duration, self.stop.duration]

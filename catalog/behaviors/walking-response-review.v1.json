@@ -1,0 +1,9 @@
+{
+  "schema": "eonwild.walking-response-review.v1",
+  "classification": "Authored purposeful ordinary walking target, not universal animal biomechanics. Body response and moving-foot articulation have separate envelopes.",
+  "walking_response": {
+    "response_step_fraction": 0.9,
+    "moving_articulation_floor": 0.85,
+    "anticipation_seconds": 0.35
+  }
+}

@@ -110,7 +110,11 @@ def plan_directional(c, origin, forward, lateral, up, height, lanes, foot_height
 Fit the shared planner's body trajectory to the capability budgets. All joint
 and skin constraints run afterwards. This does not certify forces in the final rig.
 """
+    recipe=deepcopy(recipe)
     blocks=deepcopy(recipe['blocks']); walk=resolve_walk(c)
+    if recipe.get('walking',{}).get('recovery_fraction_of_normal_step'):
+        recipe['walking']['recovery_seconds']=walk['stepSeconds']*recipe['walking']['recovery_fraction_of_normal_step']
+        recipe['walking']['heel_prepare_seconds']=walk['stepSeconds']*recipe['walking']['heel_prepare_fraction_of_normal_step']
     for b in blocks:
         if 'step_scale_of_normal' in b:
             factor=b['step_scale_of_normal']

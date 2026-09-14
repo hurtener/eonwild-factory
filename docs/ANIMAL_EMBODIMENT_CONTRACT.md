@@ -89,3 +89,9 @@ Both actual rigs have new native videos and every-frame inspection in principal 
 Recipe v3 opts into `walking.recovery_timing: overlapping_walk_release`, with `heel_peak_swing_fraction: 0.10` and `heel_release_swing_fraction: 0.40`. The builder resolves `rounded_swing_peak_fraction` from the admitted gait. Heel pitch continues increasing through the support-to-swing boundary while the free-foot lift ramps into recovery. These timings are authored shared behavior data, not new animal-specific anatomy or measured biological facts. Existing pivot recipes retain their law. Contact times, path and load scheduling are unchanged from checkpoint 14.
 
 Both emitted rigs have native videos and every-frame inspection in `game/Evidence/continuous-walking-release-study/`. Earlier flexion is more pronounced; user review remains pending. This is timing polish and does not close final force/contact acceptance.
+
+### Purposeful walking response (checkpoint 16 candidate)
+
+The shared walking_response module defines a compact recovery window and independent moving articulation gain. The v4 walking-curve recipe derives swing and heel preparation durations from resolved normal step cadence, preserving the capability-limited body path. Foot sampling, pelvis shift and support loads consume the same window.
+
+The walking-response-review.v1 recipe opts the connected straight sequence into a 0.9-step body response and 0.85 moving articulation floor. These are shared authored controls; numerical capability acceleration enforcement and revised whole-body force solving for the straight sequence remain pending. The normal steady gait and approved exports are unchanged. The builder's --response-recipe selects the candidate; default generation retains the preceding law. New contact evaluation and reopened measurements accompany the candidate.

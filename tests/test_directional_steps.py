@@ -1,4 +1,5 @@
 """Check the defining turn constraint: loaded feet cannot spin or skate."""
+import pytest
 import numpy as np
 from eonwild_motion.planning.directional_steps import DirectionalSteps
 
@@ -164,3 +165,21 @@ def test_walking_unload_keeps_heel_moving_through_release():
                     np.testing.assert_allclose(f['position'],old['position'],atol=1e-12)
                     assert f['heading']==old['heading']
         previous=row
+
+
+def test_compact_recovery_keeps_support_load_clock_aligned():
+    from eonwild_motion.solve.turn_support import contact_loads
+    from eonwild_motion.planning.walking_response import recovery_window
+    walking={'travel_ramp_fraction':.2,'heel_prepare_step_fraction':.35,'heel_roll_degrees':22.,'clearance_body_heights':.14,'recovery_outward_body_heights':.012,'rounded_swing_peak_fraction':.42,'heel_peak_swing_fraction':.1,'heel_release_swing_fraction':.4,'recovery_seconds':.82,'heel_prepare_seconds':.43}
+    p=DirectionalSteps([0,2,0],[0,0,1],[1,0,0],[0,1,0],2.,{'left':-.24,'right':.24},{'left':0.,'right':0.},[{'steps':4,'step_length_body_heights':.25,'turn_degrees':35,'label':'curve'}],step_seconds=2.,walking=walking)
+    for e in p.events:
+        a,b=recovery_window(e,walking)
+        assert (b-a)*e['duration']==pytest.approx(.82)
+        lift=e['start']+a*e['duration']
+        before=p.sample(lift-1e-6)['feet'][e['side']];after=p.sample(lift+1e-6)['feet'][e['side']]
+        assert before['contact'] and not after['contact']
+        assert after['roll_degrees']>before['roll_degrees']
+    for t in np.linspace(0,p.duration,500):
+        row=p.sample(t);loads=contact_loads(p,t)
+        for side,f in row['feet'].items():
+            if not f['contact']: assert loads[side]==pytest.approx(0.)

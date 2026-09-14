@@ -4,10 +4,10 @@ import pytest
 from eonwild_motion.planning.grounded_gait import GroundedGait
 from eonwild_motion.planning.locomotion_sequence import WalkSequence
 
-@pytest.fixture
-def sequence():
+@pytest.fixture(params=[None, {"response_step_fraction":.9,"moving_articulation_floor":.85,"anticipation_seconds":.35}])
+def sequence(request):
     gait = GroundedGait(step_period_s=1.23, step_length_body_heights=.6, duty_factor=.62)
-    return WalkSequence(gait, 2., {})
+    return WalkSequence(gait, 2., {}, walking_response=request.param)
 
 def test_stage_joins_preserve_body_and_feet(sequence):
     for boundary in sequence.bounds[1:-1]:
@@ -44,4 +44,14 @@ def test_slow_toe_off_releases_its_actual_roll_amplitude(sequence):
                 if lift < 0: continue
                 foot = choreography.foot(side, lift + 1e-7)
                 if foot['contact']: continue
-                assert foot['stance_roll_release_scale'] == pytest.approx(choreography.envelope(foot['liftoff_time_s'])[0])
+                assert foot['stance_roll_release_scale'] == pytest.approx(choreography.articulation_weight(foot['liftoff_time_s']))
+
+
+def test_purposeful_start_reaches_speed_before_second_step():
+    gait=GroundedGait(step_period_s=1.23, step_length_body_heights=.6, duty_factor=.62)
+    s=WalkSequence(gait,2.,{},walking_response={"response_step_fraction":.9,"moving_articulation_floor":.85,"anticipation_seconds":.35})
+    assert s.start.sample(s.start.delay+gait.step_period_s)['root_velocity_mps']==pytest.approx(s.speed)
+    for c in (s.start,s.stop):
+        begin,duration=c.response_window()
+        for t in np.linspace(begin+.001,begin+duration-.001,80):
+            assert (c.root(t+1e-5)[0]-c.root(t-1e-5)[0])/2e-5==pytest.approx(c.root(t)[1],abs=1e-7)

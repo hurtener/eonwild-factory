@@ -24,6 +24,7 @@ from .grounded_gait import (
     touchdown_reach,
 )
 from .parameters import gait_parameters
+from .walking_response import moving_articulation
 
 
 @dataclass(frozen=True)
@@ -39,8 +40,14 @@ class GaitTransition:
     support_placement: str = "instantaneous_speed"
     handoff_phase_fraction: float = 0.0
     handoff_sample_hz: int | None = None
+    response_step_fraction: float | None = None
+    moving_articulation_floor: float = 0.
 
     def __post_init__(self):
+        if self.response_step_fraction is not None and (not isinstance(self.response_step_fraction, Real) or isinstance(self.response_step_fraction, bool) or not math.isfinite(self.response_step_fraction) or not .5 <= self.response_step_fraction <= 2):
+            raise ContractError('walking response must span .5 to 2 steps')
+        if not isinstance(self.moving_articulation_floor, Real) or not math.isfinite(self.moving_articulation_floor) or not 0 <= self.moving_articulation_floor <= 1:
+            raise ContractError('moving articulation floor must be in [0, 1]')
         if self.kind not in ('start', 'stop'):
             raise ContractError('transition kind must be start or stop')
         if type(self.ramp_cycles) is not int or not 1 <= self.ramp_cycles <= 4:
@@ -129,13 +136,33 @@ class _Choreography:
         self.stance = self.period * gait.duty_factor if self.grounded else self.step * (1 - gait.flight_fraction)
         self.sampler = sample_grounded_gait if self.grounded else sample_airborne_gait
 
+    def response_window(self):
+        duration = self.ramp if self.transition.response_step_fraction is None else min(self.ramp, self.transition.response_step_fraction * self.step)
+        return (0. if self.start else self.ramp-duration), duration
+
+    def articulation_weight(self, time):
+        weight = self.envelope(time)[0]
+        prepare = smooth(time/(.2*self.step)) if self.start else 1.
+        return moving_articulation(weight, self.transition.moving_articulation_floor, prepare) if self.transition.moving_articulation_floor else weight
+
     def envelope(self, time):
-        u = min(1., max(0., time / self.ramp))
+        begin, duration = self.response_window()
+        u = min(1., max(0., (time-begin) / duration))
         weight = smooth(u)
-        velocity = _smooth_derivative(u) / self.ramp
+        velocity = _smooth_derivative(u) / duration
         return (weight, velocity) if self.start else (1 - weight, -velocity)
 
     def root(self, time):
+        if self.transition.response_step_fraction is not None:
+            begin, duration = self.response_window()
+            if time <= begin:
+                return (0., 0., 0.) if self.start else (self.speed*time, self.speed, 0.)
+            active = time-begin
+            if active >= duration:
+                return (self.speed*(time-duration*.5), self.speed, 0.) if self.start else (self.speed*(begin+duration*.5), 0., 0.)
+            u=active/duration; weight, derivative=self.envelope(time)
+            distance=duration*_smooth_integral(u) if self.start else begin+active-duration*_smooth_integral(u)
+            return self.speed*distance, self.speed*weight, self.speed*derivative
         if time <= 0:
             return (0., 0., 0.) if self.start else (self.speed * time, self.speed, 0.)
         if time >= self.ramp:
@@ -206,7 +233,7 @@ class _Choreography:
             touchdown = min(touchdown, last)
         next_touchdown = touchdown + self.period
         lift = self.liftoff(touchdown)
-        weight, _ = self.envelope(time)
+        weight = self.articulation_weight(time)
         contact = time < lift - 1e-9
         if contact:
             fraction = min(1., max(0., (time - touchdown) / (lift - touchdown)))
@@ -217,8 +244,8 @@ class _Choreography:
         else:
             swing = min(1., max(0., (time - lift) / (next_touchdown - lift)))
             original = self.canonical_foot(side, self.stance + swing * (self.period - self.stance))
-            at_lift, _ = self.envelope(lift)
-            at_land, _ = self.envelope(next_touchdown)
+            at_lift = self.articulation_weight(lift)
+            at_land = self.articulation_weight(next_touchdown)
             amplitude = max(self.transition.minimum_swing_scale, at_lift, at_land)
             pitch_scale = at_lift + (amplitude - at_lift) * smooth(swing / .35)
             progress = (transport_progress(swing, self.gait.swing_transport_ramp_fraction)
