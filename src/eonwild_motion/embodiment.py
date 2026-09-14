@@ -54,6 +54,8 @@ def validate(profile, node_names=None):
     if 'locomotion' in profile:
         from .planning.locomotion_capabilities import resolve_capabilities
         resolve_capabilities(profile)
+    from .attention import resolve_attention
+    resolve_attention(profile)
     return profile
 
 

@@ -821,7 +821,7 @@ def _prepare_body_pose(
     if body_response_sample is not None and body_response_sample.get("turn_attention") is not None:
         from .turn_attention import apply_turn_attention
         attention = body_response_sample["turn_attention"]
-        apply_turn_attention(context, rot, attention["yaw_radians"], attention["neck_share"])
+        apply_turn_attention(context, rot, attention["yaw_radians"], attention["neck_share"], attention.get("neck_weights"))
     if body_response_sample is not None and body_response_sample.get("body_support_control") is not None:
         control = body_response_sample["body_support_control"]
         translation = np.asarray(control["translation_forward_up_lateral_m"], dtype=float)

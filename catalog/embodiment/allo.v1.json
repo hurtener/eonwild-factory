@@ -409,14 +409,32 @@
     "walkBlendRate": 3.0
   },
   "attention": {
-    "yawLimit": 48,
+    "yawLimit": 80,
     "pitchUpLimit": 12,
     "pitchDownLimit": 10,
     "yawSmoothSeconds": 0.6,
     "pitchSmoothSeconds": 0.7,
     "yawSpeed": 65,
     "pitchSpeed": 25,
-    "neckShare": 0.68
+    "neckShare": 0.83,
+    "envelope": {
+      "contract": "eonwild.attention-envelope.v1",
+      "normalDegrees": 40,
+      "scanDegrees": 55,
+      "strongDegrees": 70,
+      "maximumDegrees": 80,
+      "hardDegrees": 85,
+      "bodyFollowStartDegrees": 70,
+      "neckWeights": [
+        0.48,
+        0.52
+      ],
+      "classification": "authored reconstruction envelope; not a measured biological hard stop",
+      "source": "docs/research/THEROPOD_NECK_BASELINE.md",
+      "confidence": "medium for qualitative regional distinction; low for precise animation degrees",
+      "headingDefinition": "skull forward heading relative to torso forward; cumulative cervical chain plus head; not atlas-only rotation",
+      "distributionClassification": "authored weights over available rig controls, not individual fossil vertebrae"
+    }
   },
   "authoring": {
     "animalInstance": {

@@ -2,6 +2,32 @@
 
 Updated 2026-09-14. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
 
+
+## Neck baseline — checkpoint 19, review pending
+
+The user's neck investigation is preserved with a reviewed evidence/implementation
+summary in [the neck baseline](research/THEROPOD_NECK_BASELINE.md). T. rex's modeled
+60-degree posture is verified; Tarbosaurus uses a comparative estimate and the
+Allosaurus numeric ranges remain authored. Whole-head heading, regional curvature,
+ordinary/strong/exceptional ranges and body-follow requests are distinct.
+
+Canonical animal profiles now own ordinary/scan/strong/routine-cap/exceptional-cap
+values: Allosaurus 40/55/70/80/85 degrees, Tarbosaurus 35/45/55/60/65 degrees per
+side. Directional generation and Unity consume the same envelope. Ordinary reverse
+recipe v2 requests 40/35 degrees; final exports reopen at 40.00001/34.99999 degrees
+relative to torso. Tarbosaurus has reduced base contribution; Allosaurus distributes
+bend more evenly through its two available neck controls. This is not newly measured
+vertebral anatomy. Numerical envelope parity passes 60 Python/Unity cases; the
+existing secondary layer retains parity across 3,000 cases.
+
+All 282 captured frames were inspected chronologically across 13 sheets; 57 focused tests passed. Checkpoint 19 has new native front three-quarter footage in principal game
+`game/Evidence/neck-baseline-study/`. Preserve checkpoint 18 and approved curves.
+Maximum-range poses have not been visually accepted. Coupled regional roll/pitch,
+automatic body follow with grounded footwork, visibility/occlusion, and migration
+of older compiler families remain pending. Neck articulation does not change the
+leg contact choreography or establish new whole-body force balance. Pause for
+visual feedback before lateral recovery.
+
 ## Animal profile housekeeping
 
 Canonical embodiment profiles now collect the approved rig bindings, explicit axes, sequence timing and consumer settings. Python reference evaluation, Unity parity vectors and Blender preview baking are documented in [the embodiment contract](ANIMAL_EMBODIMENT_CONTRACT.md). This is portability work, not a new animation family or blanket production acceptance.

@@ -13,6 +13,10 @@ for i in range(1500):
  frames.append({'delta':dt,'speed':speed,'strideSignal':signal,'angles':s.step(dt,speed,signal)})
 (a.output/(d['id']+'.secondary-vectors.json')).write_text(json.dumps({'profileSha256':hashlib.sha256(raw).hexdigest(),'frames':frames},separators=(',',':')))
 print(d['id'],'exported validated profile and',len(frames),'cross-runtime reference frames')
+from eonwild_motion.attention import resolve_attention,attention_vectors
+attention=resolve_attention(d)
+if attention:
+ (a.output/(d['id']+'.attention-vectors.json')).write_text(json.dumps({'profileSha256':hashlib.sha256(raw).hexdigest(),'attention':attention,'frames':attention_vectors(attention)},indent=2)+'\n')
 
 if 'locomotion' in d:
  from eonwild_motion.planning.locomotion_capabilities import resolve_capabilities,resolve_walk

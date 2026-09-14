@@ -108,3 +108,26 @@ Use `tools/measure_directional_joint_angles.py --package <candidate> --output <n
 `reverse-walking-review.v1.json` declares `travel_direction: backward`, positive profile-relative step magnitudes and the `backward_grounded` articulation source. `plan_directional` resolves a negative displacement and preserves the original onboarded normal step intent. The first review supports straight retreats only; ambiguous absolute distances and forward-articulation policies are rejected. Animal acceleration and cadence budgets constrain timing, while reverse-specific step/speed fractions remain explicitly authored estimates.
 
 The reverse module owns toe curl, metatarsal pitch preference and a bounded attention cue. The same semantic rig, limb solver, knee flexion preference, support-plane accommodation, load response and material correction are reused for both animals. No animal profile or approved take is changed. The Unity diagnostic selects the new immutable exports with `-reverse`, optionally `-capture-allo` and `-three-quarter`; one sampled root still owns movement.
+
+
+## Profile-owned attention envelope — checkpoint 19
+
+Read [the neck baseline](research/THEROPOD_NECK_BASELINE.md) and preserve its evidence classes when
+onboarding or extending a motion family. attention.envelope stores explicit
+whole-head degree ranges, ordered semantic neck weights and provenance. The
+reference law is src/eonwild_motion/attention.py; the optional contract preserves
+historical profiles. New profiles must select their envelope deliberately.
+
+Export adds hash-bound attention-vectors.json. Unity AttentionLaw matches the
+Python saturation; its scene layer applies profile weights and compensates existing
+source yaw so the requested gaze is not added twice. Grounded directional exports
+bake bounded attention before final contact correction. Each exported candidate
+retains its original profile snapshot and must reopen its head/torso heading with
+tools/measure_attention_envelope.py. This does not certify arbitrary source poses
+or maximum-range soft-tissue behavior.
+
+No automatic body/root motion is added: body-follow output requests a separately
+coordinated turn. Ordinary cap is 80 degrees Allosaurus / 60 Tarbosaurus;
+exceptional cap 85 / 65 requires explicit selection. Numerical settings are
+reconstruction estimates, not direct biological measurements. Coupled roll/pitch
+and older authoring paths remain separate migration work.

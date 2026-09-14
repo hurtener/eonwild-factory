@@ -22,6 +22,7 @@ from eonwild_motion.solve.turn_contact import tangent, material_patch_correction
 from eonwild_motion.planning.grounded_gait import smooth, grounded_swing_articulation
 from eonwild_motion.planning.foot_articulation import declare_pad_recovery_sample
 from eonwild_motion.planning.reverse_walking import reverse_articulation, reverse_attention
+from eonwild_motion.attention import resolve_attention, bound_attention
 
 class Captured(Exception): pass
 
@@ -75,6 +76,20 @@ def main():
         sequence,capability_plan=plan_directional(capabilities,c.origin,c.forward,c.lateral,c.up,c.body_height,lanes,heights,recipe)
         recipe=deepcopy(recipe);recipe['turn_attention']['lead_seconds']=capabilities['attentionLeadSeconds']
         if recipe.get('walking'):recipe['walking']=dict(sequence.walking)
+    animal_attention=resolve_attention(profile) if profile else None
+    neck_weights=None
+    if animal_attention:
+        bindings={b['role']:b['bone'] for b in profile['bindings']}
+        weight_by_bone=dict(zip((bindings[r] for r in profile['neckRoles']),animal_attention['envelope']['neckWeights']))
+        neck_weights=[weight_by_bone[n] for n in c.roles['neck']]
+        recipe['turn_attention']['neck_share']=animal_attention['neckShare']
+        if reverse_recovery and 'look_mode' in recipe['reverse']:
+            mode=recipe['reverse']['look_mode']
+            key={'normal':'normalDegrees','scan':'scanDegrees','strong':'strongDegrees','none':None}.get(mode,'invalid')
+            if key=='invalid':raise ValueError('Unsupported reverse attention intent')
+            recipe['reverse']['look_degrees']=animal_attention['envelope'][key] if key else 0.
+    elif reverse_recovery and 'look_mode' in recipe['reverse']:
+        raise ValueError('Reverse attention mode requires an animal attention envelope')
     response_seconds=capabilities['responseSeconds'] if capabilities else .24
     load_response=TurnLoadResponse(sequence,capabilities,recipe['turn_load_response']) if capabilities and 'turn_load_response' in recipe else None
     load_binding=hashlib.sha256(json.dumps({'recipe':recipe,'capabilities':capabilities,'source':hashlib.sha256(source.raw).hexdigest()},sort_keys=True).encode()).hexdigest()
@@ -143,6 +158,8 @@ def main():
         look_yaw=turn_look_yaw(sequence,t,attention["lead_seconds"],attention["maximum_degrees"],attention.get("anticipation_gain",1.))
         if reverse_recovery:
             look_yaw=reverse_attention(sequence,t,recipe['reverse'])
+        attention_result=bound_attention(math.degrees(look_yaw),animal_attention) if animal_attention else None
+        if attention_result:look_yaw=math.radians(attention_result['yawDegrees'])
         context=replace(c,base_r=tuple(base_r),legacy_overlay=False)
         row={'time_s':float(t),'root_forward_m':0.,'pelvis_height_offset_m':-settle*c.body_height,'flight':False,'support_count':sum(f['contact'] for f in step['feet'].values()),'performance_gain':0.,'feet':{}}
         for s,f in step['feet'].items():
@@ -177,6 +194,7 @@ def main():
         if walk_recovery and not step['turn_in_place']:
             declare_pad_recovery_sample(dict(c.plan['parameters']),row)
         body_sample={'sagittal_node_degrees':{},'turn_attention':{'yaw_radians':look_yaw,'neck_share':attention['neck_share']}}
+        if neck_weights is not None:body_sample['turn_attention']['neck_weights']=neck_weights
         if load_response:
             body_sample['body_support_control']={'policy_id':'turn_load_response.v1','binding_sha256':load_binding,'translation_forward_up_lateral_m':[0.,float(support_delta@c.up),0.],'rotation_pitch_roll_yaw_radians':[0.,roll_angle,0.]}
         nominal_targets={s:np.asarray(f['world_foot_target_m']).copy() for s,f in row['feet'].items()}
@@ -220,6 +238,7 @@ def main():
     out.mkdir(parents=True);glb=_encode(document,binary);(out/'root_motion.glb').write_bytes(glb)
     receipt={'recipe':recipe,'motion_set':str(a.motion_set),'status':'DIRECTIONAL_DIAGNOSTIC','visual':'PENDING','production':False,'duration_s':duration,'source_sha256':hashlib.sha256(source.raw).hexdigest(),'emitted_sha256':hashlib.sha256(glb).hexdigest(),'mass':'pelvis accommodation to planted leg planes; authored kinematics, not final mass correction','contact':'four-pass frozen material-patch centroid tangential correction and floor solve; full-patch drift measured separately','samples':samples,'checks':checks}
     receipt['recipe_input']=recipe_input
+    if animal_attention:receipt['attention_envelope']=animal_attention
     if walk_recovery:receipt['walking_articulation_parameters']=dict(c.plan['parameters'])
     if capabilities:
         receipt['capabilities']=capabilities;receipt['capability_plan']=capability_plan

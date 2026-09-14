@@ -20,7 +20,7 @@ def turn_look_yaw(sequence, time_s, lead_seconds, maximum_degrees, anticipation_
     return onset * limit * math.tanh(anticipation_gain * difference / limit) if limit > 0 else 0.0
 
 
-def apply_turn_attention(context, rotations, yaw_radians, neck_share):
+def apply_turn_attention(context, rotations, yaw_radians, neck_share, neck_weights=None):
     """Distribute world-up yaw along semantic neck joints and the head.
 
     Apply before the final leg/contact evaluation. There is no species branch
@@ -32,7 +32,11 @@ def apply_turn_attention(context, rotations, yaw_radians, neck_share):
         raise ValueError('turn attention requires semantic neck and head bindings')
     if not 0 <= neck_share <= 1:
         raise ValueError('invalid turn attention neck share')
-    for name, share in [(n, neck_share/len(neck)) for n in neck] + [(head, 1-neck_share)]:
+    weights = neck_weights if neck_weights is not None else [1/len(neck)]*len(neck)
+    if len(weights) != len(neck) or not math.isclose(sum(weights), 1., abs_tol=1e-6) or any(w <= 0 for w in weights):
+        raise ValueError('invalid semantic neck distribution')
+    shares = [neck_share/len(neck)]*len(neck) if neck_weights is None else [neck_share*w for w in weights]
+    for name, share in list(zip(neck,shares)) + [(head, 1-neck_share)]:
         node = context.source.name_to_node[name]
         axis = np.asarray(_qrotate(_qinv(_rotation_from_matrix(context.base_w[node])), context.up))
         rotations[node] = _qmul(rotations[node], _qrotvec(axis*yaw_radians*share))
