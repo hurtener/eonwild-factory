@@ -3,7 +3,17 @@
 Updated 2026-09-14. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
 
 
-## Exceptional neck glance — checkpoint 20, review pending
+## Exceptional neck glance — checkpoint 20, user accepted
+
+User accepted both exceptional-glance videos on 2026-09-14 (“i like both!”).
+Source: Factory f5a597589e2d1716b02bad90256559fd1ca67277; game
+ed6e74932ead85dcc002c4cc43c99194adb00e13. Immutable media SHA-256:
+- allo-neck.mp4: d36a641ff7702efe5a4e9a8f14641cc7b18aa9df6feb65ac3bac7ea4728139c8
+- tarbo-neck.mp4: e4e1404643fec1d4f9c126ef8ccbe262d12a5823da1a146251f6e8a2335d6738
+
+The original candidate receipts remain unchanged. This is visual acceptance of
+these poses and timing, not a new biological measurement or production certificate.
+
 
 The user accepted checkpoint 19's ordinary-range backward footage and requested a
 stronger glance. Named `exceptional` intent now selects the existing animal
@@ -27,7 +37,8 @@ This is a neck-range study, not coordinated body following or new force balance.
 The Factory embodiment contract is now the explicit ownership index. Profile
 numbers are canonical; Unity exports and evidence snapshots are derived. Research
 mirrors, two delivery roadmaps and legacy review tooling still exist. A unified
-editor and complete migration are not claimed. Pause for user review here.
+editor and complete migration are not claimed. The user requested the next
+iteration: checkpoint 21, left/right lateral balance recovery for both animals.
 
 ## Neck baseline — checkpoint 19, user accepted
 
@@ -54,10 +65,10 @@ existing secondary layer retains parity across 3,000 cases.
 
 All 282 captured frames were inspected chronologically across 13 sheets; 57 focused tests passed. Checkpoint 19 has new native front three-quarter footage in principal game
 `game/Evidence/neck-baseline-study/`. Preserve checkpoint 18 and approved curves.
-Maximum-range poses have not been visually accepted. Coupled regional roll/pitch,
+Exceptional poses were subsequently accepted at checkpoint 20. Coupled regional roll/pitch,
 automatic body follow with grounded footwork, visibility/occlusion, and migration
 of older compiler families remain pending. Neck articulation does not change the
-leg contact choreography or establish new whole-body force balance. The requested next checkpoint is exceptional neck-glance footage; lateral recovery remains queued.
+leg contact choreography or establish new whole-body force balance. Ordinary and exceptional glances are now accepted; lateral recovery is next.
 
 ## Animal profile housekeeping
 
@@ -70,7 +81,7 @@ User requested walking turns, coordinated turns without forward travel, backward
 | Checkpoint | Scope, both animals | Status |
 |---|---|---|
 | A — turning | Gentle walking curves, tighter low-speed turns, alternating stepping turns in place | Draft 10 accepted as a good turning baseline. Draft 11 adds numerical animal capabilities to the shared planner; both-rig Unity renders and all-frame audit complete; user accepted draft 11 as a good indie-game baseline. Draft 12 hip/contact polish visually accepted by the user. Draft 13 walking curves rejected for missing walking recovery articulation. Draft 14 restored walking recovery; user retained direction and requested timing polish. Draft 15 overlaps unloading and recovery; user requested stronger neck turning and more purposeful startup. Draft 16 received an Allosaurus walking-turn knee-overextension correction request. Draft 17 adds continuous knee flexion reserve; both native walking-turn videos visually accepted by the user ("good both", 2026-09-14). Final mass/contact remain open |
-| B — reverse | Backward start, several coordinated steps, stop; its own grounded contact choreography | Checkpoint 18 generated on both admitted rigs and captured in Unity; native visual review pending |
+| B — reverse | Backward start, several coordinated steps, stop; its own grounded contact choreography | Checkpoint 18 remains historical. Checkpoint 19 ordinary-neck reverse and checkpoint 20 exceptional-neck reverse were visually accepted for both animals; final force/contact certification remains open |
 | C — lateral recovery | Left/right recovery steps, support transfer, whole-body settling | Requested, not yet implemented |
 | D — connected controls | Blend the reviewed directional behaviors with idle and walking; runtime root ownership and contact | After visual acceptance of A–C |
 
