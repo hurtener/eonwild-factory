@@ -22,6 +22,7 @@ from eonwild_motion.solve.turn_contact import tangent, material_patch_correction
 from eonwild_motion.planning.grounded_gait import smooth, grounded_swing_articulation
 from eonwild_motion.planning.foot_articulation import declare_pad_recovery_sample
 from eonwild_motion.planning.reverse_walking import reverse_articulation, reverse_attention
+from eonwild_motion.planning.lateral_recovery import lateral_articulation, lateral_attention
 from eonwild_motion.attention import resolve_attention, bound_attention, attention_intent
 
 class Captured(Exception): pass
@@ -49,6 +50,8 @@ def main():
     recipe_input=deepcopy(recipe)
     walk_recovery=recipe.get('walking',{}).get('articulation_source')=='admitted_grounded_walk'
     reverse_recovery=recipe.get('walking',{}).get('articulation_source')=='backward_grounded'
+    lateral_recovery=recipe.get('walking',{}).get('articulation_source')=='lateral_grounded'
+    if lateral_recovery and not a.profile:raise ValueError('Lateral recovery requires an animal profile')
     if a.reverse_look_mode:
         if not reverse_recovery:raise ValueError('Reverse look override requires backward choreography')
         recipe['reverse']['look_mode']=a.reverse_look_mode
@@ -62,7 +65,9 @@ def main():
     half=float(c.plan['performance']['lane_width_body_heights'])*c.body_height/2
     if reverse_recovery:
         half=.5*recipe['reverse']['stance_width_body_heights']*c.body_height
-    if all(abs(b.get('step_scale_of_normal',b.get('step_length_body_heights',0.)))<1e-12 for b in recipe['blocks']):
+    if lateral_recovery:
+        half=.5*recipe['lateral']['stance_width_body_heights']*c.body_height
+    if not lateral_recovery and all(abs(b.get('step_scale_of_normal',b.get('step_length_body_heights',0.)))<1e-12 for b in recipe['blocks']):
         half=.5*recipe['turn_stance']['width_body_heights']*c.body_height
     lanes={s:c.hip_lane_center+math.copysign(half,c.hip_offsets[s]) for s in c.legs}
     heights={s:float(c.base_w[ch[-1]][:3,3]@c.up) for s,ch in c.legs.items()}
@@ -82,6 +87,7 @@ def main():
         recipe=deepcopy(recipe);recipe['turn_attention']['lead_seconds']=capabilities['attentionLeadSeconds']
         if recipe.get('walking'):recipe['walking']=dict(sequence.walking)
     animal_attention=resolve_attention(profile) if profile else None
+    if lateral_recovery and not animal_attention:raise ValueError('Lateral recovery requires profile attention')
     neck_weights=None; exceptional_attention=False
     if animal_attention:
         bindings={b['role']:b['bone'] for b in profile['bindings']}
@@ -162,6 +168,8 @@ def main():
         look_yaw=turn_look_yaw(sequence,t,attention["lead_seconds"],attention["maximum_degrees"],attention.get("anticipation_gain",1.))
         if reverse_recovery:
             look_yaw=reverse_attention(sequence,t,recipe['reverse'])
+        if lateral_recovery:
+            look_yaw=lateral_attention(sequence,t,recipe['lateral'],animal_attention)
         attention_result=bound_attention(math.degrees(look_yaw),animal_attention,exceptional=exceptional_attention) if animal_attention else None
         if attention_result:look_yaw=math.radians(attention_result['yawDegrees'])
         context=replace(c,base_r=tuple(base_r),legacy_overlay=False)
@@ -187,6 +195,8 @@ def main():
                 foot['foot_pitch_degrees']=roll
             if reverse_recovery:
                 row['feet'][s].update(reverse_articulation(u,f['contact'],roll,recipe['reverse']))
+            if lateral_recovery:
+                row['feet'][s].update(lateral_articulation(u,f['contact'],roll,recipe['lateral']))
             if in_place or recipe.get('walking',{}).get('preserve_support_planes',False):
                 row['feet'][s]['turn_support_normal']=list(_qrotate(inv,normals[s]))
             if in_place:

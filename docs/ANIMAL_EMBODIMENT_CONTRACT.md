@@ -149,3 +149,18 @@ coordinated turn. Ordinary cap is 80 degrees Allosaurus / 60 Tarbosaurus;
 exceptional cap 85 / 65 requires explicit selection. Numerical settings are
 reconstruction estimates, not direct biological measurements. Coupled roll/pitch
 and older authoring paths remain separate migration work.
+
+## Lateral recovery — checkpoint 21
+
+The lateral recovery recipe owns a broad stance, semantic travel-side opening,
+follower placement, modest toe release and recovery height. Its single stance-width
+value is lateral.stance_width_body_heights; do not duplicate it in turn settings.
+The profile remains authoritative for mass, effective lateral force, cadence and
+attention range. The lateral planner consumes force per mass and cadence to select
+a period, then uses the shared directional support/event interface and leg/contact
+solvers. It adds no species branches.
+
+The result is a planned open-and-follow adjustment, not a simulated shove, COM
+feedback controller, slip detector or terrain response. The pelvis trajectory and
+load shares remain authored kinematics. Preserve the approved walking, turning
+and ordinary/exceptional glances. Lateral visual review is pending.

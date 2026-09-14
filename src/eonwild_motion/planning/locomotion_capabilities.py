@@ -113,6 +113,14 @@ and skin constraints run afterwards. This does not certify forces in the final r
     recipe=deepcopy(recipe)
     blocks=deepcopy(recipe['blocks']); walk=resolve_walk(c)
     direction=recipe.get('travel_direction','forward')
+    if direction=='lateral':
+        if recipe.get('walking',{}).get('articulation_source')!='lateral_grounded':
+            raise ValueError('Lateral travel requires its own grounded articulation policy')
+        from .lateral_recovery import LateralRecoverySteps
+        sequence=LateralRecoverySteps(origin,forward,lateral,up,height,lanes,foot_heights,c,recipe)
+        return sequence,dict(walk=walk,blocks=[dict(label=b['label'],side=b['side'],
+            distanceM=b['length'],stepSeconds=b['period']) for b in sequence.blocks],
+            method='Open-and-follow lateral recovery; quintic path duration bounded by effective lateral force/mass and cadence. Local support accommodation is not a solved whole-body COM response.')
     if direction not in ('forward','backward'):
         raise ValueError('Unsupported travel direction')
     if direction=='backward' and recipe.get('walking',{}).get('articulation_source')!='backward_grounded':

@@ -3,6 +3,35 @@
 Updated 2026-09-14. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
 
 
+## Lateral balance recovery — checkpoint 21, review pending
+
+The shared engine now generates a controlled rightward recovery and matching
+leftward recovery for both admitted animals. The travel-side foot opens support,
+then the other foot follows to restore the broad stance. Low recovery, a modest
+toe/metatarsal release, load-weighted hip roll and bounded attention overlap.
+This is authored planned recovery; external impacts and dynamic balance detection
+are not implemented.
+
+Behavior shape and stance live in `catalog/behaviors/lateral-recovery-review.v1.json`.
+Animal mass, lateral force, cadence and attention ranges come from the canonical
+profiles. The new behavior planner reuses directional foot sampling, support/load
+response, semantic limb IK and final material-contact correction. No animal profile
+or approved locomotion asset was retuned.
+
+Native Unity evidence: principal game `game/Evidence/lateral-recovery-study/`.
+Allosaurus 5.458333 seconds / 131 frames; Tarbosaurus 6.041667 seconds / 145 frames,
+both 24 fps. All 276 captured frames were inspected in 13 chronological sheets;
+opening and transfer frames were also inspected at full capture resolution.
+The response is deliberately restrained; review whether the catch and settling
+communicate enough weight before adding stronger reactions.
+
+38 focused tests passed; actual-rig generation, Unity build, capture and video
+decode passed. Reopened source exports have zero reach overflow. Maximum planted
+skin-vertex drift is 14.08 mm Allosaurus / 16.47 mm Tarbosaurus; full material
+contact and whole-body force balance remain open. This is a diagnostic checkpoint,
+not production acceptance. Pause for user review. Connected controls follow only
+after the directional movement baselines are accepted.
+
 ## Exceptional neck glance — checkpoint 20, user accepted
 
 User accepted both exceptional-glance videos on 2026-09-14 (“i like both!”).
@@ -82,7 +111,7 @@ User requested walking turns, coordinated turns without forward travel, backward
 |---|---|---|
 | A — turning | Gentle walking curves, tighter low-speed turns, alternating stepping turns in place | Draft 10 accepted as a good turning baseline. Draft 11 adds numerical animal capabilities to the shared planner; both-rig Unity renders and all-frame audit complete; user accepted draft 11 as a good indie-game baseline. Draft 12 hip/contact polish visually accepted by the user. Draft 13 walking curves rejected for missing walking recovery articulation. Draft 14 restored walking recovery; user retained direction and requested timing polish. Draft 15 overlaps unloading and recovery; user requested stronger neck turning and more purposeful startup. Draft 16 received an Allosaurus walking-turn knee-overextension correction request. Draft 17 adds continuous knee flexion reserve; both native walking-turn videos visually accepted by the user ("good both", 2026-09-14). Final mass/contact remain open |
 | B — reverse | Backward start, several coordinated steps, stop; its own grounded contact choreography | Checkpoint 18 remains historical. Checkpoint 19 ordinary-neck reverse and checkpoint 20 exceptional-neck reverse were visually accepted for both animals; final force/contact certification remains open |
-| C — lateral recovery | Left/right recovery steps, support transfer, whole-body settling | Requested, not yet implemented |
+| C — lateral recovery | Left/right recovery steps, support transfer, whole-body settling | Checkpoint 21 generated on both admitted rigs; 276 native Unity frames inspected. User review pending; impact response and final force/contact certification remain open |
 | D — connected controls | Blend the reviewed directional behaviors with idle and walking; runtime root ownership and contact | After visual acceptance of A–C |
 
 Draft 10 is the user-accepted turning reference, preserved in `game/Evidence/continuous-release-turn-study/`. Draft 11 adds profile mass/inertia, authored force/torque budgets, walking speed/cadence, braking, lateral response and attention/response timing. The shared planner consumes these values without species branches. Both actual rigs generated and were captured in Unity; all 470 captured frames were visually inspected. Current evidence: principal game `game/Evidence/capability-turn-study/`. User re-review accepted draft 11 for both animals as a good indie-game turning baseline. Draft 10 remains preserved as the preceding reference.
