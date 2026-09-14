@@ -47,6 +47,8 @@ def main():
     if walk_recovery:
         recipe['walking']['heel_roll_degrees']=q._locomotion_gait.push_off_pitch_degrees
         recipe['walking']['clearance_body_heights']=q._locomotion_gait.swing_clearance_body_heights
+        if recipe['walking'].get('recovery_timing')=='overlapping_walk_release':
+            recipe['walking']['rounded_swing_peak_fraction']=q._locomotion_gait.rounded_swing_peak_fraction
     if any('step_scale_of_normal' in b for b in recipe['blocks']) and not a.profile:
         raise ValueError('Profile-relative walking steps require an animal capability profile')
     half=float(c.plan['performance']['lane_width_body_heights'])*c.body_height/2

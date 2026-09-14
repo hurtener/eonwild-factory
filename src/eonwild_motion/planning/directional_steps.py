@@ -6,6 +6,7 @@ There is no per-step body wait or marching push-off in the turn-in-place law.
 import math
 import numpy as np
 from .grounded_gait import smooth
+from .airborne_gait import rounded_swing_height
 
 
 class DirectionalSteps:
@@ -17,6 +18,12 @@ class DirectionalSteps:
         self.period = step_seconds
         self.turn_stance = turn_stance or {}
         self.walking = walking or {}
+        if 'heel_peak_swing_fraction' in self.walking:
+            peak=self.walking['heel_peak_swing_fraction']
+            release=self.walking.get('heel_release_swing_fraction')
+            if (not all(isinstance(v,(int,float)) and not isinstance(v,bool) and math.isfinite(v)
+                        for v in (peak,release)) or not 0 < peak < release < .9):
+                raise ValueError('Walking heel overlap requires 0 < peak < release < .9')
         self.blocks, self.steps = [], []
         time, center, heading = .45, np.zeros(3), 0.
         for spec in blocks:
@@ -140,13 +147,21 @@ class DirectionalSteps:
                 articulation_scale=e['block']['walk_articulation_scale'] if walking else 1.
                 prepare=self.walking.get('heel_prepare_step_fraction',0.) if walking else 0.
                 peak_roll=articulation_scale*self.walking.get('heel_roll_degrees',18.) if walking else (5. if e['block']['stationary'] else 18.)
+                phase = (time-e['start'])/e['duration']
+                overlap=walking and 'heel_peak_swing_fraction' in self.walking
+                if overlap:
+                    # Continue heel rise THROUGH toe release. Recovery travel
+                    # is already moving before the heel reaches its maximum.
+                    peak=.10+.80*self.walking['heel_peak_swing_fraction']
+                    end=.10+.80*self.walking['heel_release_swing_fraction']
+                    carried_roll=peak_roll*(smooth((phase+prepare)/(peak+prepare))
+                        if phase<=peak else 1-smooth((phase-peak)/(end-peak)))
                 if time < e['start']:
                     if walking:
-                        roll=peak_roll*smooth((time-e['start']+prepare*e['duration'])/((prepare+.1)*e['duration']))
+                        roll=carried_roll if overlap else peak_roll*smooth((time-e['start']+prepare*e['duration'])/((prepare+.1)*e['duration']))
                     break
-                phase = (time-e['start'])/e['duration']
                 if phase <= .10:
-                    roll = peak_roll*smooth((phase+prepare)/(.10+prepare))
+                    roll = carried_roll if overlap else peak_roll*smooth((phase+prepare)/(.10+prepare))
                 elif phase < .90:
                     swing = (phase-.10)/.80
                     blend = smooth(swing)
@@ -166,10 +181,12 @@ class DirectionalSteps:
                         carried=(1-blend)*e['oldHeading']+blend*e['targetHeading']
                         axis=self.lateral*math.cos(carried)-self.forward*math.sin(carried)
                         position+=axis*math.copysign(self.walking['recovery_outward_body_heights']*self.height,self.lanes[side])*math.sin(math.pi*swing)**2
-                    lift = 64*swing**3*(1-swing)**3
+                    lift = (rounded_swing_height(swing,self.walking['rounded_swing_peak_fraction'])
+                            if walking and self.walking.get('rounded_swing_peak_fraction') else
+                            64*swing**3*(1-swing)**3)
                     position += self.up*(clearance*self.height*lift)
                     yaw = (1-yaw_blend)*e['oldHeading']+yaw_blend*e['targetHeading']
-                    roll = peak_roll*(1-smooth(swing/.32))
+                    roll = carried_roll if overlap else peak_roll*(1-smooth(swing/.32))
                     contact = False
                 else:
                     position, yaw = e['target'].copy(), e['targetHeading']

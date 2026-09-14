@@ -78,8 +78,14 @@ This adds no species branch, edits no approved straight-walk asset, and does not
 The separate `walking-curve-review.v1.json` recipe chooses shorter steps for tighter slow turns without changing the canonical normal stride. Its optional `walking` policy controls smooth travel ramps, anticipatory heel preparation and low outward recovery. Existing pivot recipes retain their prior law. Generation accepts `--recipe` with `--profile`; profile-relative steps require a profile. The resulting clips are offline authored curves with settling between blocks, not an online steering controller. Native videos and unresolved material contact are recorded in the game evidence package.
 
 
-### Combined walking-turn recovery (checkpoint 14 candidate)
+### Combined walking-turn recovery (checkpoint 14, timing polish requested)
 
 Checkpoint 13 was rejected for missing walking articulation. `walking-curve-review.v2.json` opts into `walking.articulation_source: admitted_grounded_walk`. The builder resolves heel pitch and clearance from the admitted gait, reuses `grounded_swing_articulation` and `declare_pad_recovery_sample`, and applies authored per-block articulation/clearance scales. Directional choreography still owns support, path, foot yaw and heel timing. Metatarsal direction, recovery timing, pad and digit settings remain in the admitted motion program. Ordinary gait sampling is preserved; no prior animated take supplies timing or joint trajectories.
 
-Both actual rigs have new native videos and every-frame inspection in principal game `game/Evidence/articulated-walking-curve-study/`. User review and final material contact remain pending. Keep accepted in-place turns and straight walks separate from this unapproved candidate.
+Both actual rigs have new native videos and every-frame inspection in principal game `game/Evidence/articulated-walking-curve-study/`. User retained the direction and requested unloading/recovery timing polish. Final material contact remains open. Keep accepted in-place turns and straight walks separate from this unapproved candidate.
+
+### Overlapping walking release (checkpoint 15 candidate)
+
+Recipe v3 opts into `walking.recovery_timing: overlapping_walk_release`, with `heel_peak_swing_fraction: 0.10` and `heel_release_swing_fraction: 0.40`. The builder resolves `rounded_swing_peak_fraction` from the admitted gait. Heel pitch continues increasing through the support-to-swing boundary while the free-foot lift ramps into recovery. These timings are authored shared behavior data, not new animal-specific anatomy or measured biological facts. Existing pivot recipes retain their law. Contact times, path and load scheduling are unchanged from checkpoint 14.
+
+Both emitted rigs have native videos and every-frame inspection in `game/Evidence/continuous-walking-release-study/`. Earlier flexion is more pronounced; user review remains pending. This is timing polish and does not close final force/contact acceptance.

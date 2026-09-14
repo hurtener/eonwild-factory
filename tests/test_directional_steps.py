@@ -128,3 +128,39 @@ def test_walking_curve_carries_velocity_across_steps_and_prepares_heel_on_suppor
         right_rate=(b['roll_degrees']-middle)/1e-6
         assert abs(left_rate-right_rate)<.005
         assert np.linalg.norm(a['position']-b['position'])<1e-5
+
+
+def test_walking_unload_keeps_heel_moving_through_release():
+    walking={'travel_ramp_fraction':.2,'heel_prepare_step_fraction':.35,
+             'heel_roll_degrees':22.,'clearance_body_heights':.14,
+             'recovery_outward_body_heights':.012,'rounded_swing_peak_fraction':.42,
+             'heel_peak_swing_fraction':.10,'heel_release_swing_fraction':.40}
+    p=DirectionalSteps([0,2,0],[0,0,1],[1,0,0],[0,1,0],2.,
+        {'left':-.24,'right':.24},{'left':0.,'right':0.},
+        [{'steps':6,'step_length_body_heights':.25,'turn_degrees':35,'label':'curve'}],
+        step_seconds=1.,walking=walking)
+    e=p.events[2];side=e['side'];lift=e['start']+.1*e['duration'];eps=1e-5
+    before=p.sample(lift-eps)['feet'][side];after=p.sample(lift+eps)['feet'][side]
+    assert before['contact'] and not after['contact']
+    assert (after['roll_degrees']-before['roll_degrees'])/(2*eps)>10
+    np.testing.assert_allclose(before['position'],after['position'],atol=1e-8)
+    # At the later heel maximum the free foot already moves upward, so the
+    # entire leg cannot stop at the old common release boundary.
+    peak=lift+.8*e['duration']*.10
+    a=p.sample(peak-eps)['feet'][side];b=p.sample(peak+eps)['feet'][side]
+    assert (b['position'][1]-a['position'][1])/(2*eps)>.1
+    for t in (lift,peak,lift+.8*.40):
+        a=p.sample(t-eps)['feet'][side];m=p.sample(t)['feet'][side];b=p.sample(t+eps)['feet'][side]
+        assert abs((m['roll_degrees']-a['roll_degrees'])/eps-(b['roll_degrees']-m['roll_degrees'])/eps)<.02
+    # All planted targets remain fixed; overlapping heel motion is articulation.
+    previous=None
+    for t in np.linspace(0,p.duration,1001):
+        row=p.sample(t)
+        assert any(f['contact'] for f in row['feet'].values())
+        if previous:
+            for side,f in row['feet'].items():
+                old=previous['feet'][side]
+                if old['contact'] and f['contact']:
+                    np.testing.assert_allclose(f['position'],old['position'],atol=1e-12)
+                    assert f['heading']==old['heading']
+        previous=row
