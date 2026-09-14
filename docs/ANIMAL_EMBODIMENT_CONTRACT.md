@@ -62,7 +62,7 @@ Export with `tools/export_embodiment.py`; it now adds resolved capability JSON t
 Start with an admitted rig/profile, documented mass, limb dimensions and step/stride. `tools/seed_locomotion_capabilities.py --target TARGET --reference REFERENCE --output NEW_PROFILE` generates an explicitly unreviewed similarity prior. Length comes from hindlimb measurements; inertia scales by mass ratio × length ratio², force by length ratio², and torque by length ratio³. All inherited/scaled values are relabeled derived estimates with reference hashes. These assumptions are a starting point, never new biological measurements. Replace them with specimen evidence or deliberate calibration, regenerate both the new animal and a reference animal, inspect every rendered frame, and review native-time motion. Unsupported body families still require shared implementation.
 
 
-## Turn support response — checkpoint 12 candidate
+## Turn support response — checkpoint 12 visually accepted
 
 `solve/turn_support.py` uses the behavior's contact schedule to plan continuous normalized load shares; an airborne foot carries zero. `turn_load_response` in the shared directional recipe sets transfer width, maximum roll and response scale. The offline response time is `response_scale * sqrt(body_height / effective_lateral_acceleration)`, where the profile resolver supplies effective force/mass. Symmetric filtering prepares for known future support; it is not a causal runtime controller or measured ground-reaction force.
 
@@ -76,3 +76,10 @@ This adds no species branch, edits no approved straight-walk asset, and does not
 `plan_directional` also accepts `step_scale_of_normal` per behavior block, resolving it against the profile's documented one-step distance. It is mutually exclusive with `step_length_body_heights`; resolved metres remain in the receipt. `speed_scale` selects an initial average timing below the preferred walking speed, followed by the existing cadence/acceleration/turn budget fit. It is not a strict instantaneous speed multiplier through the acceleration ramp.
 
 The separate `walking-curve-review.v1.json` recipe chooses shorter steps for tighter slow turns without changing the canonical normal stride. Its optional `walking` policy controls smooth travel ramps, anticipatory heel preparation and low outward recovery. Existing pivot recipes retain their prior law. Generation accepts `--recipe` with `--profile`; profile-relative steps require a profile. The resulting clips are offline authored curves with settling between blocks, not an online steering controller. Native videos and unresolved material contact are recorded in the game evidence package.
+
+
+### Combined walking-turn recovery (checkpoint 14 candidate)
+
+Checkpoint 13 was rejected for missing walking articulation. `walking-curve-review.v2.json` opts into `walking.articulation_source: admitted_grounded_walk`. The builder resolves heel pitch and clearance from the admitted gait, reuses `grounded_swing_articulation` and `declare_pad_recovery_sample`, and applies authored per-block articulation/clearance scales. Directional choreography still owns support, path, foot yaw and heel timing. Metatarsal direction, recovery timing, pad and digit settings remain in the admitted motion program. Ordinary gait sampling is preserved; no prior animated take supplies timing or joint trajectories.
+
+Both actual rigs have new native videos and every-frame inspection in principal game `game/Evidence/articulated-walking-curve-study/`. User review and final material contact remain pending. Keep accepted in-place turns and straight walks separate from this unapproved candidate.

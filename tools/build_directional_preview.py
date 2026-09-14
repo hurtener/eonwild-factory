@@ -19,7 +19,8 @@ from eonwild_motion.solve.turn_attention import turn_look_yaw
 from eonwild_motion.planning.locomotion_capabilities import resolve_capabilities, plan_directional
 from eonwild_motion.solve.turn_support import accommodate_support_planes, TurnLoadResponse, loaded_hip_roll
 from eonwild_motion.solve.turn_contact import tangent, material_patch_correction, material_patch_drift
-from eonwild_motion.planning.grounded_gait import smooth
+from eonwild_motion.planning.grounded_gait import smooth, grounded_swing_articulation
+from eonwild_motion.planning.foot_articulation import declare_pad_recovery_sample
 
 class Captured(Exception): pass
 
@@ -42,6 +43,10 @@ def main():
     ids={s:np.asarray(provider.anchor_for(s).material_vertex_indices) for s in c.legs}
     recipe=json.loads((repo/a.recipe).read_text())
     recipe_input=deepcopy(recipe)
+    walk_recovery=recipe.get('walking',{}).get('articulation_source')=='admitted_grounded_walk'
+    if walk_recovery:
+        recipe['walking']['heel_roll_degrees']=q._locomotion_gait.push_off_pitch_degrees
+        recipe['walking']['clearance_body_heights']=q._locomotion_gait.swing_clearance_body_heights
     if any('step_scale_of_normal' in b for b in recipe['blocks']) and not a.profile:
         raise ValueError('Profile-relative walking steps require an animal capability profile')
     half=float(c.plan['performance']['lane_width_body_heights'])*c.body_height/2
@@ -136,6 +141,18 @@ def main():
             u=f['swing_phase'];roll=f.get('roll_degrees',0.)
             in_place=step['turn_in_place']
             row['feet'][s]={'contact':f['contact'],'forward_m':0.,'height_m':0.,'swing_phase':u,'toe_flex_degrees':(10 if in_place else 14)*math.sin(math.pi*u)**2,'foot_pitch_degrees':(-12 if in_place else -10)*math.sin(math.pi*u)**2,'articulation_scale':0. if in_place else 1.,'world_foot_target_m':target.tolist(),'foot_yaw_radians':f['heading']-step['heading'],'stance_roll_pitch_degrees':roll,'stance_roll_swing_pitch_degrees':roll,'stance_roll_release_scale':f.get('roll_scale',0.),'distal_endpoint_role':'shape_preference'}
+            if walk_recovery and not in_place:
+                scale=f['walk_articulation_scale']
+                foot=row['feet'][s]
+                foot['articulation_scale']=scale
+                # The curve owns support/heading/heel timing; the admitted walk
+                # supplies coordinated metatarsal, pad and toe recovery.
+                if not f['contact']:
+                    foot.update(grounded_swing_articulation(q._locomotion_gait,u))
+                    foot['toe_flex_degrees']*=scale
+                    if 'metatarsal_recovery_gain' in foot:
+                        foot['metatarsal_recovery_gain']*=scale
+                foot['foot_pitch_degrees']=roll
             if in_place or recipe.get('walking',{}).get('preserve_support_planes',False):
                 row['feet'][s]['turn_support_normal']=list(_qrotate(inv,normals[s]))
             if in_place:
@@ -144,6 +161,8 @@ def main():
                 row['feet'][s]['turn_leg_shape']={
                     'knee_interior_degrees':turn_shapes[s]['knee_interior_degrees']+5-22*fold,
                     'ankle_interior_degrees':turn_shapes[s]['ankle_interior_degrees']-12*fold}
+        if walk_recovery and not step['turn_in_place']:
+            declare_pad_recovery_sample(dict(c.plan['parameters']),row)
         body_sample={'sagittal_node_degrees':{},'turn_attention':{'yaw_radians':look_yaw,'neck_share':attention['neck_share']}}
         if load_response:
             body_sample['body_support_control']={'policy_id':'turn_load_response.v1','binding_sha256':load_binding,'translation_forward_up_lateral_m':[0.,float(support_delta@c.up),0.],'rotation_pitch_roll_yaw_radians':[0.,roll_angle,0.]}
@@ -188,6 +207,7 @@ def main():
     out.mkdir(parents=True);glb=_encode(document,binary);(out/'root_motion.glb').write_bytes(glb)
     receipt={'recipe':recipe,'motion_set':str(a.motion_set),'status':'DIRECTIONAL_DIAGNOSTIC','visual':'PENDING','production':False,'duration_s':duration,'source_sha256':hashlib.sha256(source.raw).hexdigest(),'emitted_sha256':hashlib.sha256(glb).hexdigest(),'mass':'pelvis accommodation to planted leg planes; authored kinematics, not final mass correction','contact':'four-pass frozen material-patch centroid tangential correction and floor solve; full-patch drift measured separately','samples':samples,'checks':checks}
     receipt['recipe_input']=recipe_input
+    if walk_recovery:receipt['walking_articulation_parameters']=dict(c.plan['parameters'])
     if capabilities:
         receipt['capabilities']=capabilities;receipt['capability_plan']=capability_plan
         receipt['profile_sha256']=hashlib.sha256(a.profile.read_bytes()).hexdigest()

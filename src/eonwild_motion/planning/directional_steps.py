@@ -26,6 +26,8 @@ class DirectionalSteps:
             block = dict(start=time, end=time+count*period, center=center.copy(),
                          heading=heading, angle=angle, count=count, stationary=stationary,
                          length=count*spec['step_length_body_heights']*height,
+                         walk_articulation_scale=spec.get('walk_articulation_scale',1.),
+                         walk_clearance_scale=spec.get('walk_clearance_scale',1.),
                          label=spec['label'])
             block['turn_steps'] = []
             self.blocks.append(block)
@@ -128,14 +130,16 @@ class DirectionalSteps:
         for side in self.anchors:
             position, yaw = self.anchors[side].copy(), 0.
             contact, swing, roll = True, 0., 0.
+            articulation_scale = 1.
             for e in self.events:
                 if e['side'] != side: continue
                 if time >= e['end']:
                     position, yaw = e['target'].copy(), e['targetHeading']
                     continue
                 walking=not e['block']['stationary'] and bool(self.walking)
+                articulation_scale=e['block']['walk_articulation_scale'] if walking else 1.
                 prepare=self.walking.get('heel_prepare_step_fraction',0.) if walking else 0.
-                peak_roll=self.walking.get('heel_roll_degrees',18.) if walking else (5. if e['block']['stationary'] else 18.)
+                peak_roll=articulation_scale*self.walking.get('heel_roll_degrees',18.) if walking else (5. if e['block']['stationary'] else 18.)
                 if time < e['start']:
                     if walking:
                         roll=peak_roll*smooth((time-e['start']+prepare*e['duration'])/((prepare+.1)*e['duration']))
@@ -158,7 +162,7 @@ class DirectionalSteps:
                         # a fixed-radius circle which can crowd the support.
                         position += axis*math.copysign(.022*self.height,self.lanes[side])*math.sin(math.pi*swing)**2
                     if walking:
-                        clearance=self.walking['clearance_body_heights']
+                        clearance=self.walking['clearance_body_heights']*e['block']['walk_clearance_scale']
                         carried=(1-blend)*e['oldHeading']+blend*e['targetHeading']
                         axis=self.lateral*math.cos(carried)-self.forward*math.sin(carried)
                         position+=axis*math.copysign(self.walking['recovery_outward_body_heights']*self.height,self.lanes[side])*math.sin(math.pi*swing)**2
@@ -171,7 +175,7 @@ class DirectionalSteps:
                     position, yaw = e['target'].copy(), e['targetHeading']
                 break
             feet[side] = dict(contact=contact, position=position, heading=yaw,
-                             swing_phase=swing, roll_degrees=roll)
+                             swing_phase=swing, roll_degrees=roll, walk_articulation_scale=articulation_scale)
         axis = self.lateral*math.cos(heading)-self.forward*math.sin(heading)
         half_width = (max(self.lanes.values())-min(self.lanes.values()))/2
         shift = axis*(self.turn_stance.get('support_shift_fraction_of_half_width',.42)*half_width*self.weight(time))

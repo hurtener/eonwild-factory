@@ -12,7 +12,7 @@ User requested walking turns, coordinated turns without forward travel, backward
 
 | Checkpoint | Scope, both animals | Status |
 |---|---|---|
-| A — turning | Gentle walking curves, tighter low-speed turns, alternating stepping turns in place | Draft 10 accepted as a good turning baseline. Draft 11 adds numerical animal capabilities to the shared planner; both-rig Unity renders and all-frame audit complete; user accepted draft 11 as a good indie-game baseline. Draft 12 hip/contact polish visually accepted by the user. Draft 13 walking curves generated and captured; user review pending. Final mass/contact remain open |
+| A — turning | Gentle walking curves, tighter low-speed turns, alternating stepping turns in place | Draft 10 accepted as a good turning baseline. Draft 11 adds numerical animal capabilities to the shared planner; both-rig Unity renders and all-frame audit complete; user accepted draft 11 as a good indie-game baseline. Draft 12 hip/contact polish visually accepted by the user. Draft 13 walking curves rejected for missing walking recovery articulation. Draft 14 restores shared walking recovery; both-rig native videos await review. Final mass/contact remain open |
 | B — reverse | Backward start, several coordinated steps, stop; its own grounded contact choreography | Requested, not yet implemented in this pass |
 | C — lateral recovery | Left/right recovery steps, support transfer, whole-body settling | Requested, not yet implemented |
 | D — connected controls | Blend the reviewed directional behaviors with idle and walking; runtime root ownership and contact | After visual acceptance of A–C |
@@ -23,9 +23,17 @@ The user visually accepted draft 12 on 2026-09-13 as the next turning baseline. 
 
 This is a reduced authored support response, not converged whole-body force balance. Individual contact vertices still deform: maximum horizontal drift is 12.2 mm Allosaurus and 21.1 mm Tarbosaurus. Planted-interval knee travel projected onto the foot lateral axis increased from 31.6/33.8 mm in draft 11 to 38.1/55.4 mm in draft 12; this includes changing flexion and is not a joint-stress measurement, but remains a visible-polish concern, especially for Tarbosaurus. No isolated abrupt buckle was identified in the captured frame sequence; occlusion limits that observation.
 
-Checkpoint 12 is accepted and preserved. Checkpoint 13 walking curves are the current review candidate below. Approved straight walks are preserved. Locomotion acceleration limits exclude added local pelvis accommodation. Reverse walking and lateral recovery remain subsequent checkpoints after review.
+Checkpoint 12 is accepted and preserved. Checkpoint 13 walking curves are rejected; checkpoint 14 articulated curves are the current review candidate below. Approved straight walks are preserved. Locomotion acceleration limits exclude added local pelvis accommodation. Reverse walking and lateral recovery remain subsequent checkpoints after review.
 
-## Walking curves — checkpoint 13, review pending (2026-09-13)
+## Articulated walking curves — checkpoint 14, review pending
+
+Checkpoint 13 was rejected: head/foot pointing was acceptable, but recovery lacked the walking articulations. The shared engine now reuses the admitted walk's metatarsal recovery, separate pad pitch and digit flexion on the curve's contact clock. It retains the curve's foot placement, pointing, heel preparation and hip-load response. Gentle/tight turns use authored articulation scales of 0.90/0.75 and clearance scales of 0.80/0.65; no species branch or changes to normal stride.
+
+Both actual rigs generated, reopened and captured in Unity at native 24 fps. All 691 captured frames were inspected. Fifty-eight focused tests pass; 493 approved-gait samples exactly match the pre-extraction implementation. Evidence: principal game `game/Evidence/articulated-walking-curve-study/`, including videos, all-frame sheets, recipes, source/profile snapshots and measurements.
+
+The recovery now visibly folds and reopens. Final material contact remains open: maximum individual planted-vertex drift is 82.0 mm Allosaurus / 104.9 mm Tarbosaurus, including heel-roll articulation/deformation, despite stable patch centroids. No unreachable extension at source keys; continuous-time contact, whole-body forces and live steering remain unvalidated. Initial heel preparation is not a certified idle join. **Pause at checkpoint 14 for user feedback; 13 remains rejected and 12 remains the accepted in-place-turn baseline.**
+
+## Walking curves — checkpoint 13, rejected
 
 Generated both animals directly from the shared solver using a separate `walking-curve-review.v1.json` recipe. Each performs a four-step 35-degree gentle curve, settles, then makes a four-step 65-degree turn in the opposite direction at a shorter step setting. These are two movements separated by settling, not continuous S steering. The curve recipe uses 70% and 42% of each profile's documented normal step respectively; normal step/stride values and approved straight-walk assets are preserved. Explicit authored reductions replace the earlier fixed short pivot-step distance for this walking study.
 
@@ -33,7 +41,7 @@ The shared planner integrates a smooth speed ramp into continuous arc travel and
 
 Both emitted rigs reopened, the Unity build and native captures completed, and all 691 captured frames were inspected chronologically (316 Allosaurus, 375 Tarbosaurus; 24 fps). Twenty-seven focused tests pass. Fixed-camera videos, every-frame sheets, source/profile snapshots and receipts are in principal game `game/Evidence/walking-curve-study/`. No isolated abrupt joint buckle was identified in the visible frames; far-leg occlusion and the wider framing limit this observation.
 
-Open technical limits: individual planted material vertices move up to 43.4 mm Allosaurus and 34.7 mm Tarbosaurus, despite stable patch centroids. That includes articulation/deformation and does not establish rigid patch contact. Source-key floor samples and reach are acceptable for this diagnostic, but continuous interpolation, whole-body forces, joint loading and live gameplay steering are not certified. Checkpoint 12 remains the accepted turn baseline. **Pause for checkpoint 13 review before reverse walking or lateral recovery.**
+Open technical limits: individual planted material vertices move up to 43.4 mm Allosaurus and 34.7 mm Tarbosaurus, despite stable patch centroids. That includes articulation/deformation and does not establish rigid patch contact. Source-key floor samples and reach are acceptable for this diagnostic, but continuous interpolation, whole-body forces, joint loading and live gameplay steering are not certified. Checkpoint 12 remains the accepted turn baseline. **User rejected checkpoint 13: preserve head/foot pointing, restore articulated walking recovery in the combined walking-turn behavior. Checkpoint 14 is recorded above; do not advance to reverse or lateral recovery before review.**
 
 ## Current accepted baseline
 
@@ -48,7 +56,7 @@ The user approved iteration 16 as smooth and credible, while correctly distingui
 | Heel roll, toe-off, swing recovery | Reviewed | Reviewed | Shared articulation; Allosaurus has added intermediate toe joints |
 | Lateral weight transfer / pelvis response | Reviewed engineering response | Reviewed reduced vertical response | Not a converged whole-body force simulation |
 | Reverse walking | Reusable planner exists; not reviewed on this animal | Reusable planner exists; not reviewed on this animal | No game-ready claim |
-| Turning / curved paths / pivots | Turn 12 visually accepted baseline | Turn 12 visually accepted baseline | Curve 13 native videos pending review; final mass and material contact remain pending |
+| Turning / curved paths / pivots | Turn 12 visually accepted baseline | Turn 12 visually accepted baseline | Curve 13 rejected; curve 14 articulated recovery awaits review; final mass and material contact remain pending |
 | Running / sprinting | Missing approved transfer | Approved historical Run010 / Sprint006 references | Shared airborne generation exists; current two-animal/runtime acceptance missing |
 | Independent gaze / neck attention | Runtime demonstration reviewed | Runtime demonstration reviewed | World interest points; not complete sensory behavior |
 | Expressive idle / breathing / listening | Missing approved behavior | Missing approved behavior | Intentional responses, not random noise |

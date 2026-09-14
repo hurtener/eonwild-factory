@@ -159,6 +159,30 @@ def load_grounded_gait(document: Mapping[str, Any]) -> GroundedGait:
     return GroundedGait(**params)
 
 
+def grounded_swing_articulation(gait: GroundedGait, swing: float) -> dict[str, Any]:
+    """Walking recovery joint controls, independent of the foot-placement path.
+
+    Directional walking can reuse the same metatarsal/pad/digit choreography
+    with its own contact clock and world anchors. This does not sample a take.
+    """
+    recovery = math.sin(math.pi * smooth(swing)) ** 2
+    push_off = gait.push_off_pitch_degrees * (1 - smooth(swing / .35))
+    pitch = (push_off - gait.foot_recovery_pitch_degrees * recovery
+             if gait.metatarsal_recovery_world_degrees_from_down is None
+             else push_off)
+    flex = (-recovery_pitch(swing, gait.toe_flex_degrees, gait.toe_recovery_peak_fraction)
+            if gait.toe_recovery_peak_fraction is not None else gait.toe_flex_degrees * recovery)
+    foot = {"toe_flex_degrees": flex, "foot_pitch_degrees": pitch}
+    if gait.metatarsal_recovery_world_degrees_from_down is not None:
+        peak = gait.toe_recovery_peak_fraction or gait.rounded_swing_peak_fraction or .42
+        foot["metatarsal_recovery_world_degrees_from_down"] = gait.metatarsal_recovery_world_degrees_from_down
+        foot["metatarsal_recovery_gain"] = (
+            rate_limited_recovery_gain(swing, peak, gait.metatarsal_recovery_release_fraction)
+            if gait.metatarsal_recovery_carrier == 'rate_limited_c2' else
+            -recovery_pitch(swing, 1.0, peak, gait.metatarsal_recovery_release_fraction))
+    return foot
+
+
 def sample_grounded_gait(gait: GroundedGait, time_s: float, body_height_m: float) -> dict[str, Any]:
     if not math.isfinite(time_s) or not math.isfinite(body_height_m) or body_height_m <= 0:
         raise ContractError("grounded sampling requires finite time and positive height")
@@ -179,25 +203,16 @@ def sample_grounded_gait(gait: GroundedGait, time_s: float, body_height_m: float
             height = 0.0
         else:
             recovery = math.sin(math.pi * smooth(swing)) ** 2
-            push_off = gait.push_off_pitch_degrees * (1 - smooth(swing / .35))
-            pitch = (push_off - gait.foot_recovery_pitch_degrees * recovery
-                     if gait.metatarsal_recovery_world_degrees_from_down is None
-                     else push_off)
-            flex = (-recovery_pitch(swing, gait.toe_flex_degrees, gait.toe_recovery_peak_fraction)
-                    if gait.toe_recovery_peak_fraction is not None else gait.toe_flex_degrees * recovery)
+            articulation = grounded_swing_articulation(gait, swing)
+            pitch, flex = articulation['foot_pitch_degrees'], articulation['toe_flex_degrees']
             crown = (rounded_swing_height(swing, gait.rounded_swing_peak_fraction)
                      if gait.rounded_swing_peak_fraction else recovery)
             height = body_height_m * gait.swing_clearance_body_heights * crown
         feet[side] = {"contact": contact, "forward_m": anchor + (0 if contact else velocity * period * smooth(swing)),
             "height_m": height, "toe_flex_degrees": flex, "foot_pitch_degrees": pitch,
             "swing_phase": swing, "touchdown_time_s": touchdown}
-        if not contact and gait.metatarsal_recovery_world_degrees_from_down is not None:
-            peak = gait.toe_recovery_peak_fraction or gait.rounded_swing_peak_fraction or .42
-            feet[side]["metatarsal_recovery_world_degrees_from_down"] = gait.metatarsal_recovery_world_degrees_from_down
-            feet[side]["metatarsal_recovery_gain"] = (
-                rate_limited_recovery_gain(swing, peak, gait.metatarsal_recovery_release_fraction)
-                if gait.metatarsal_recovery_carrier == 'rate_limited_c2' else
-                -recovery_pitch(swing, 1.0, peak, gait.metatarsal_recovery_release_fraction))
+        if not contact:
+            feet[side].update(articulation)
     support = sum(int(foot["contact"]) for foot in feet.values())
     if support == 0:
         raise ContractError("grounded program produced unsupported flight")
