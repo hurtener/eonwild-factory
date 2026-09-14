@@ -1,6 +1,6 @@
 # Factory movement roadmap and acceptance tracker
 
-Updated 2026-09-12. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
+Updated 2026-09-13. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
 
 ## Animal profile housekeeping
 
@@ -12,18 +12,18 @@ User requested walking turns, coordinated turns without forward travel, backward
 
 | Checkpoint | Scope, both animals | Status |
 |---|---|---|
-| A — turning | Gentle walking curves, tighter low-speed turns, alternating stepping turns in place | Draft 10 accepted as a good turning baseline. Draft 11 adds numerical animal capabilities to the shared planner; both-rig Unity renders and all-frame audit complete; user accepted draft 11 as a good indie-game baseline. Draft 12 hip/contact polish rendered, all frames inspected, awaiting user review. Walking curves and final mass/contact remain open |
+| A — turning | Gentle walking curves, tighter low-speed turns, alternating stepping turns in place | Draft 10 accepted as a good turning baseline. Draft 11 adds numerical animal capabilities to the shared planner; both-rig Unity renders and all-frame audit complete; user accepted draft 11 as a good indie-game baseline. Draft 12 hip/contact polish visually accepted by the user. Walking curves and final mass/contact remain open |
 | B — reverse | Backward start, several coordinated steps, stop; its own grounded contact choreography | Requested, not yet implemented in this pass |
 | C — lateral recovery | Left/right recovery steps, support transfer, whole-body settling | Requested, not yet implemented |
 | D — connected controls | Blend the reviewed directional behaviors with idle and walking; runtime root ownership and contact | After visual acceptance of A–C |
 
 Draft 10 is the user-accepted turning reference, preserved in `game/Evidence/continuous-release-turn-study/`. Draft 11 adds profile mass/inertia, authored force/torque budgets, walking speed/cadence, braking, lateral response and attention/response timing. The shared planner consumes these values without species branches. Both actual rigs generated and were captured in Unity; all 470 captured frames were visually inspected. Current evidence: principal game `game/Evidence/capability-turn-study/`. User re-review accepted draft 11 for both animals as a good indie-game turning baseline. Draft 10 remains preserved as the preceding reference.
 
-Draft 12 is the next weight-transfer/contact candidate, awaiting user review. It replaces the turn's vertical pelvis pulse with a small roll that preserves the load-weighted supporting-hip height. Load acceptance is spread across touchdown/lift, and preparation time scales with height and effective lateral force/mass. The shared solver corrects planted material-patch centroid drift after body changes. Both actual rigs were generated, reopened and captured in Unity; every one of the 470 captured frames was inspected. Evidence: principal game `game/Evidence/hip-load-contact-turn-study/`.
+The user visually accepted draft 12 on 2026-09-13 as the next turning baseline. It replaces the turn's vertical pelvis pulse with a small roll that preserves the load-weighted supporting-hip height. Load acceptance is spread across touchdown/lift, and preparation time scales with height and effective lateral force/mass. The shared solver corrects planted material-patch centroid drift after body changes. Both actual rigs were generated, reopened and captured in Unity; every one of the 470 captured frames was inspected. Evidence: principal game `game/Evidence/hip-load-contact-turn-study/`.
 
 This is a reduced authored support response, not converged whole-body force balance. Individual contact vertices still deform: maximum horizontal drift is 12.2 mm Allosaurus and 21.1 mm Tarbosaurus. Planted-interval knee travel projected onto the foot lateral axis increased from 31.6/33.8 mm in draft 11 to 38.1/55.4 mm in draft 12; this includes changing flexion and is not a joint-stress measurement, but remains a visible-polish concern, especially for Tarbosaurus. No isolated abrupt buckle was identified in the captured frame sequence; occlusion limits that observation.
 
-Pause for draft 12 feedback. Checkpoint 11 remains the accepted reference. After review, address the remaining observed support/contact issue, then regenerate walking curves and a walking comparison from the capability resolver. Approved straight walks are preserved. Locomotion acceleration limits exclude added local pelvis accommodation. Reverse walking and lateral recovery remain requested subsequent checkpoints.
+Checkpoint 12 is accepted and preserved. Next, generate walking curves and tighter walking turns from the capability resolver, retaining support/contact concerns as open polish. Approved straight walks are preserved. Locomotion acceleration limits exclude added local pelvis accommodation. Reverse walking and lateral recovery remain requested subsequent checkpoints.
 
 ## Current accepted baseline
 
@@ -38,7 +38,7 @@ The user approved iteration 16 as smooth and credible, while correctly distingui
 | Heel roll, toe-off, swing recovery | Reviewed | Reviewed | Shared articulation; Allosaurus has added intermediate toe joints |
 | Lateral weight transfer / pelvis response | Reviewed engineering response | Reviewed reduced vertical response | Not a converged whole-body force simulation |
 | Reverse walking | Reusable planner exists; not reviewed on this animal | Reusable planner exists; not reviewed on this animal | No game-ready claim |
-| Turning / curved paths / pivots | Turn 11 visually accepted baseline | Turn 11 visually accepted baseline | Walking curves, final mass and material contact remain pending |
+| Turning / curved paths / pivots | Turn 12 visually accepted baseline | Turn 12 visually accepted baseline | Walking curves, final mass and material contact remain pending |
 | Running / sprinting | Missing approved transfer | Approved historical Run010 / Sprint006 references | Shared airborne generation exists; current two-animal/runtime acceptance missing |
 | Independent gaze / neck attention | Runtime demonstration reviewed | Runtime demonstration reviewed | World interest points; not complete sensory behavior |
 | Expressive idle / breathing / listening | Missing approved behavior | Missing approved behavior | Intentional responses, not random noise |
