@@ -96,7 +96,7 @@ The shared walking_response module defines a compact recovery window and indepen
 
 The walking-response-review.v1 recipe opts the connected straight sequence into a 0.9-step body response and 0.85 moving articulation floor. These are shared authored controls; numerical capability acceleration enforcement and revised whole-body force solving for the straight sequence remain pending. The normal steady gait and approved exports are unchanged. The builder's --response-recipe selects the candidate; default generation retains the preceding law. New contact evaluation and reopened measurements accompany the candidate.
 
-### Walking-curve knee flexion reserve (checkpoint 17 candidate)
+### Walking-curve knee flexion reserve (checkpoint 17 visually accepted)
 
 `walking-curve-review.v5.json` owns the optional authored `walking.knee_extension_preference_degrees` value, currently 155 degrees for both animals. The directional adapter passes this into the shared pose solve as `walking_knee_preference_degrees`. A continuous quartic cost above the preference redistributes sagittal articulation without changing the existing hard ROM, segment lengths, contact schedule or pelvis path. The same control applies across support and recovery to avoid a contact-switch discontinuity. Omission preserves preceding recipes. This is a behavior preference, not a newly measured animal limit; profile hard constraints retain priority.
 
