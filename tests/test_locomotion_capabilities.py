@@ -106,3 +106,20 @@ def test_bad_capabilities_are_not_silently_used(mutation):
     elif mutation=='provenance':v['source']={}
     else:d['authoring']['sameFootStrideM']*=.5
     with pytest.raises(ValueError):resolve_capabilities(d)
+
+
+def test_walking_curve_uses_documented_step_fraction_and_animal_response():
+    recipe=json.loads((ROOT/'catalog/behaviors/walking-curve-review.v1.json').read_text())
+    durations=[]
+    for animal in ('allo','tarbo'):
+        d=json.loads((ROOT/f'catalog/embodiment/{animal}.v1.json').read_text())
+        c=resolve_capabilities(d);h=d['authoring']['bodyHeightM']
+        p,receipt=plan_directional(c,[0,h,0],[0,0,1],[1,0,0],[0,1,0],h,
+            {'left':-.12*h,'right':.12*h},{'left':0,'right':0},recipe)
+        durations.append(p.duration)
+        for source,resolved,b in zip(recipe['blocks'],receipt['blocks'],p.blocks):
+            expected=source['step_scale_of_normal']*c['stepLengthM']
+            assert resolved['resolved_step_length_m']==pytest.approx(expected)
+            assert b['length']==pytest.approx(expected*source['steps'])
+        assert c['sameFootStrideM']==d['authoring']['sameFootStrideM']
+    assert durations[1]>durations[0]

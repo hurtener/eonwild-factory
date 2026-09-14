@@ -101,3 +101,30 @@ def test_turn_opens_with_outside_foot_in_both_directions():
             h=e['targetHeading'];axis=p.lateral*np.cos(h)-p.forward*np.sin(h)
             center,_=p.body(min(e['block']['end'],e['end']+.35*p.period))
             assert abs(abs((e['target']-p.origin-center)@axis)-.36)<1e-10
+
+
+def test_walking_curve_carries_velocity_across_steps_and_prepares_heel_on_support():
+    walking={'travel_ramp_fraction':.2,'heel_prepare_step_fraction':.35,
+             'heel_roll_degrees':8.,'clearance_body_heights':.035,
+             'recovery_outward_body_heights':.012}
+    p=DirectionalSteps([0,2,0],[0,0,1],[1,0,0],[0,1,0],2.,
+        {'left':-.24,'right':.24},{'left':0.,'right':0.},
+        [{'steps':6,'step_length_body_heights':.25,'turn_degrees':35,'label':'curve'}],
+        step_seconds=1.,walking=walking)
+    block=p.blocks[0];speeds=[]
+    for t in np.linspace(block['start']+1.3,block['end']-1.3,80):
+        speeds.append(np.linalg.norm(p.body(t+.0001)[0]-p.body(t-.0001)[0])/.0002)
+    assert max(speeds)-min(speeds)<1e-6
+    e=p.events[2];side=e['side'];d=e['duration'];t=e['start']-.15*d
+    before=p.sample(t)['feet'][side];later=p.sample(t+.02*d)['feet'][side]
+    assert before['contact'] and later['contact']
+    assert 0<before['roll_degrees']<later['roll_degrees']<8
+    np.testing.assert_array_equal(before['position'],later['position'])
+    for phase in (0.,.10,.90):
+        t=e['start']+phase*d
+        a=p.sample(t-1e-6)['feet'][side];b=p.sample(t+1e-6)['feet'][side]
+        middle=p.sample(t)['feet'][side]['roll_degrees']
+        left_rate=(middle-a['roll_degrees'])/1e-6
+        right_rate=(b['roll_degrees']-middle)/1e-6
+        assert abs(left_rate-right_rate)<.005
+        assert np.linalg.norm(a['position']-b['position'])<1e-5

@@ -112,16 +112,25 @@ and skin constraints run afterwards. This does not certify forces in the final r
 """
     blocks=deepcopy(recipe['blocks']); walk=resolve_walk(c)
     for b in blocks:
+        if 'step_scale_of_normal' in b:
+            factor=b['step_scale_of_normal']
+            if not positive(factor) or 'step_length_body_heights' in b:
+                raise ValueError('Declare one positive walking step scale, without a competing absolute length')
+            b['step_length_body_heights']=factor*c['stepLengthM']/height
+            b['resolved_step_length_m']=factor*c['stepLengthM']
+        speed_scale=b.get('speed_scale',1.)
+        if not positive(speed_scale) or speed_scale>1:
+            raise ValueError('Walking speed scale must be in (0,1]')
         if abs(b['step_length_body_heights'])<1e-12:
             count=max(b['steps'],math.ceil(abs(b['turn_degrees'])/c['maximumHeadingPerStepDegrees']))
             b['steps']=count+(count%2)  # recover both feet to broad support
             b['step_seconds']=max(1/c['maximumStepFrequencyHz'],walk['stepSeconds']/c['turnCadenceMultiplier'])
         else:
             b['step_seconds']=max(1/c['maximumStepFrequencyHz'],
-                abs(b['step_length_body_heights'])*height/walk['speedMps'])
+                abs(b['step_length_body_heights'])*height/(walk['speedMps']*speed_scale))
     def make():
         return DirectionalSteps(origin,forward,lateral,up,height,lanes,foot_heights,
-            blocks,recipe['step_seconds'],turn_stance=recipe['turn_stance'])
+            blocks,recipe['step_seconds'],turn_stance=recipe['turn_stance'],walking=recipe.get('walking'))
     diagnostics=[]
     # The path shape is unchanged under block time scaling; two rounds account
     # for support envelopes reaching across the fixed inter-block settling gap.

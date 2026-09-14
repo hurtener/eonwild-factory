@@ -10,12 +10,13 @@ from .grounded_gait import smooth
 
 class DirectionalSteps:
     def __init__(self, origin, forward, lateral, up, height, lanes, foot_heights,
-                 blocks, step_seconds=1.15, turn_stance=None):
+                 blocks, step_seconds=1.15, turn_stance=None, walking=None):
         self.origin = np.asarray(origin)
         self.forward, self.lateral, self.up = map(np.asarray, (forward, lateral, up))
         self.height, self.lanes, self.foot_heights = height, lanes, foot_heights
         self.period = step_seconds
         self.turn_stance = turn_stance or {}
+        self.walking = walking or {}
         self.blocks, self.steps = [], []
         time, center, heading = .45, np.zeros(3), 0.
         for spec in blocks:
@@ -74,6 +75,15 @@ class DirectionalSteps:
             u = sum(w*smooth((time-max(b['start'],e['start']-.65*e['duration'])) /
                             (min(b['end'],e['end']+.65*e['duration'])-max(b['start'],e['start']-.65*e['duration'])))
                     for w,e in zip(weights,b['turn_steps'])) / sum(weights)
+        if not b['stationary'] and self.walking:
+            # Integrate a smooth speed ramp around steady travel; keep heading
+            # on the same arc. No per-step start/stop pulse.
+            x=max(0.,min(1.,(time-b['start'])/(b['end']-b['start'])))
+            r=self.walking['travel_ramp_fraction']
+            integral=lambda z:z**6-3*z**5+2.5*z**4
+            if x<r:u=r*integral(x/r)/(1-r)
+            elif x>1-r:u=1-r*integral((1-x)/r)/(1-r)
+            else:u=(x-r/2)/(1-r)
         theta, h = b['angle']*u, b['heading']
         if b['stationary'] and b['turn_steps']:
             # Translate around changing support locations instead of a fixed
@@ -123,11 +133,16 @@ class DirectionalSteps:
                 if time >= e['end']:
                     position, yaw = e['target'].copy(), e['targetHeading']
                     continue
-                if time < e['start']: break
+                walking=not e['block']['stationary'] and bool(self.walking)
+                prepare=self.walking.get('heel_prepare_step_fraction',0.) if walking else 0.
+                peak_roll=self.walking.get('heel_roll_degrees',18.) if walking else (5. if e['block']['stationary'] else 18.)
+                if time < e['start']:
+                    if walking:
+                        roll=peak_roll*smooth((time-e['start']+prepare*e['duration'])/((prepare+.1)*e['duration']))
+                    break
                 phase = (time-e['start'])/e['duration']
-                peak_roll = 5. if e['block']['stationary'] else 18.
                 if phase <= .10:
-                    roll = peak_roll*smooth(phase/.10)
+                    roll = peak_roll*smooth((phase+prepare)/(.10+prepare))
                 elif phase < .90:
                     swing = (phase-.10)/.80
                     blend = smooth(swing)
@@ -142,6 +157,11 @@ class DirectionalSteps:
                         # A free leg opens away from the other leg, not through
                         # a fixed-radius circle which can crowd the support.
                         position += axis*math.copysign(.022*self.height,self.lanes[side])*math.sin(math.pi*swing)**2
+                    if walking:
+                        clearance=self.walking['clearance_body_heights']
+                        carried=(1-blend)*e['oldHeading']+blend*e['targetHeading']
+                        axis=self.lateral*math.cos(carried)-self.forward*math.sin(carried)
+                        position+=axis*math.copysign(self.walking['recovery_outward_body_heights']*self.height,self.lanes[side])*math.sin(math.pi*swing)**2
                     lift = 64*swing**3*(1-swing)**3
                     position += self.up*(clearance*self.height*lift)
                     yaw = (1-yaw_blend)*e['oldHeading']+yaw_blend*e['targetHeading']

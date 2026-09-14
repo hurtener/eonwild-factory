@@ -69,3 +69,10 @@ Start with an admitted rig/profile, documented mass, limb dimensions and step/st
 A pelvis roll preserves the load-weighted hip height before the shared leg IK. `turn_load_response.v1` uses the existing body-support control interface with a source/recipe/capability SHA-256 binding. Foot contact is corrected afterwards: freeze the admitted material subset's horizontal centroid for each planted interval, solve vertical floor and tangential offsets, and release the accumulated tangential offset into early recovery. Exported assets are reopened at every source key; receipts distinguish centroid drift from maximum per-vertex deformation.
 
 This adds no species branch, edits no approved straight-walk asset, and does not establish whole-body force balance, joint stress, rigid full-patch locking or continuous-time contact acceptance. See the current roadmap and principal game checkpoint 12 evidence before promotion.
+
+
+### Profile-relative walking curves (checkpoint 13)
+
+`plan_directional` also accepts `step_scale_of_normal` per behavior block, resolving it against the profile's documented one-step distance. It is mutually exclusive with `step_length_body_heights`; resolved metres remain in the receipt. `speed_scale` selects an initial average timing below the preferred walking speed, followed by the existing cadence/acceleration/turn budget fit. It is not a strict instantaneous speed multiplier through the acceleration ramp.
+
+The separate `walking-curve-review.v1.json` recipe chooses shorter steps for tighter slow turns without changing the canonical normal stride. Its optional `walking` policy controls smooth travel ramps, anticipatory heel preparation and low outward recovery. Existing pivot recipes retain their prior law. Generation accepts `--recipe` with `--profile`; profile-relative steps require a profile. The resulting clips are offline authored curves with settling between blocks, not an online steering controller. Native videos and unresolved material contact are recorded in the game evidence package.

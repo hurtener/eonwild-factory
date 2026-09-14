@@ -26,6 +26,7 @@ class Captured(Exception): pass
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--motion-set',type=Path,required=True);ap.add_argument('--output',type=Path,required=True);ap.add_argument('--fps',type=int,default=24);ap.add_argument('--limit',type=float)
     ap.add_argument('--profile',type=Path,help='Animal embodiment with locomotion capabilities; omit to reproduce the preserved choreography')
+    ap.add_argument('--recipe',type=Path,default=Path('catalog/behaviors/directional-review.v1.json'))
     a=ap.parse_args(); repo=Path.cwd(); out=a.output.resolve()
     if out.exists(): raise RuntimeError('refusing to overwrite diagnostic')
     capture={}; original=CanonicalConstantSkinTargetLaw.__dict__['build']
@@ -39,13 +40,18 @@ def main():
     q=capture['query'];c=q.context; source=capture['kwargs']['source']; provider=capture['provider']
     skin=SkinRig(source,c.roles,c.forward,c.up,capture['kwargs']['contact_profile'])
     ids={s:np.asarray(provider.anchor_for(s).material_vertex_indices) for s in c.legs}
-    recipe=json.loads((repo/'catalog/behaviors/directional-review.v1.json').read_text())
+    recipe=json.loads((repo/a.recipe).read_text())
+    recipe_input=deepcopy(recipe)
+    if any('step_scale_of_normal' in b for b in recipe['blocks']) and not a.profile:
+        raise ValueError('Profile-relative walking steps require an animal capability profile')
     half=float(c.plan['performance']['lane_width_body_heights'])*c.body_height/2
-    if all(abs(b['step_length_body_heights'])<1e-12 for b in recipe['blocks']):
+    if all(abs(b.get('step_scale_of_normal',b.get('step_length_body_heights',0.)))<1e-12 for b in recipe['blocks']):
         half=.5*recipe['turn_stance']['width_body_heights']*c.body_height
     lanes={s:c.hip_lane_center+math.copysign(half,c.hip_offsets[s]) for s in c.legs}
     heights={s:float(c.base_w[ch[-1]][:3,3]@c.up) for s,ch in c.legs.items()}
-    sequence=DirectionalSteps(c.origin,c.forward,c.lateral,c.up,c.body_height,lanes,heights,recipe['blocks'],recipe['step_seconds'],turn_stance=recipe['turn_stance'])
+    sequence=None
+    if not a.profile:
+        sequence=DirectionalSteps(c.origin,c.forward,c.lateral,c.up,c.body_height,lanes,heights,recipe['blocks'],recipe['step_seconds'],turn_stance=recipe['turn_stance'])
     capabilities=None; capability_plan=None; profile=None
     if a.profile:
         profile=json.loads(a.profile.read_text()); capabilities=resolve_capabilities(profile)
@@ -130,8 +136,9 @@ def main():
             u=f['swing_phase'];roll=f.get('roll_degrees',0.)
             in_place=step['turn_in_place']
             row['feet'][s]={'contact':f['contact'],'forward_m':0.,'height_m':0.,'swing_phase':u,'toe_flex_degrees':(10 if in_place else 14)*math.sin(math.pi*u)**2,'foot_pitch_degrees':(-12 if in_place else -10)*math.sin(math.pi*u)**2,'articulation_scale':0. if in_place else 1.,'world_foot_target_m':target.tolist(),'foot_yaw_radians':f['heading']-step['heading'],'stance_roll_pitch_degrees':roll,'stance_roll_swing_pitch_degrees':roll,'stance_roll_release_scale':f.get('roll_scale',0.),'distal_endpoint_role':'shape_preference'}
-            if in_place:
+            if in_place or recipe.get('walking',{}).get('preserve_support_planes',False):
                 row['feet'][s]['turn_support_normal']=list(_qrotate(inv,normals[s]))
+            if in_place:
                 row['feet'][s]['turn_choreographed_pitch_degrees']=row['feet'][s]['foot_pitch_degrees']
                 fold=math.sin(math.pi*u)**2
                 row['feet'][s]['turn_leg_shape']={
@@ -180,6 +187,7 @@ def main():
     document['animations']=[{'name':'directional-review','samplers':samplers,'channels':channels}];document['buffers'][0]['byteLength']=len(binary)
     out.mkdir(parents=True);glb=_encode(document,binary);(out/'root_motion.glb').write_bytes(glb)
     receipt={'recipe':recipe,'motion_set':str(a.motion_set),'status':'DIRECTIONAL_DIAGNOSTIC','visual':'PENDING','production':False,'duration_s':duration,'source_sha256':hashlib.sha256(source.raw).hexdigest(),'emitted_sha256':hashlib.sha256(glb).hexdigest(),'mass':'pelvis accommodation to planted leg planes; authored kinematics, not final mass correction','contact':'four-pass frozen material-patch centroid tangential correction and floor solve; full-patch drift measured separately','samples':samples,'checks':checks}
+    receipt['recipe_input']=recipe_input
     if capabilities:
         receipt['capabilities']=capabilities;receipt['capability_plan']=capability_plan
         receipt['profile_sha256']=hashlib.sha256(a.profile.read_bytes()).hexdigest()

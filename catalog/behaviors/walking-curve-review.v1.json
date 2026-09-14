@@ -1,0 +1,56 @@
+{
+  "schema": "eonwild.walking-curve-review.v1",
+  "classification": "authored low-speed diagnostic; not measured dinosaur biomechanics",
+  "normal_stride_policy": "Profile normal step is preserved as the reference. Curve steps use explicit authored fractions (0.70 gentle, 0.42 tight), not a reach-derived clamp; total planned arc length is steps times selected step intent. Startup/braking cause individual placement distances to vary.",
+  "step_seconds": 0.8,
+  "blocks": [
+    {
+      "steps": 4,
+      "step_scale_of_normal": 0.7,
+      "speed_scale": 0.75,
+      "turn_degrees": 35,
+      "label": "gentle walking curve"
+    },
+    {
+      "steps": 4,
+      "step_scale_of_normal": 0.42,
+      "speed_scale": 0.5,
+      "turn_degrees": -65,
+      "label": "tighter slow walking turn"
+    }
+  ],
+  "turn_attention": {
+    "lead_seconds": 1.35,
+    "maximum_degrees": 75,
+    "neck_share": 0.78,
+    "classification": "authored artistic response: neck and head anticipate intended turn; body catches up"
+  },
+  "turn_leg_shape": {
+    "knee_softening_degrees_from_neutral": 10,
+    "maximum_preferred_knee_interior_degrees": 145,
+    "pelvis_settle_body_heights": 0.015,
+    "classification": "Authored changing support and recovery preferences; asymmetric inner/outer steps and support-timed unloading, not measured biomechanics"
+  },
+  "turn_stance": {
+    "width_body_heights": 0.36,
+    "outside_opening_body_heights": 0.045,
+    "support_shift_fraction_of_half_width": 0.42,
+    "classification": "Authored broad turning/rest stance, distinct from narrow walking lanes. Outside foot opens first; inner foot follows with continuing body rotation.",
+    "support_pivot_fraction_of_lane": 1.0
+  },
+  "turn_load_response": {
+    "transfer_fraction_of_step": 0.35,
+    "maximum_roll_degrees": 2.0,
+    "response_scale": 0.1,
+    "classification": "Authored compliant pelvis roll and preplanned load sharing; response time scales with body height and effective force/mass; not solved whole-body forces"
+  },
+  "walking": {
+    "travel_ramp_fraction": 0.2,
+    "heel_prepare_step_fraction": 0.35,
+    "heel_roll_degrees": 8.0,
+    "clearance_body_heights": 0.035,
+    "recovery_outward_body_heights": 0.012,
+    "preserve_support_planes": true,
+    "classification": "Authored slow curve choreography. Ramp speed around steady travel; prepare heel release during late support. Normal stride remains unchanged in animal onboarding."
+  }
+}
