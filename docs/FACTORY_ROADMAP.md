@@ -13,7 +13,7 @@ User requested walking turns, coordinated turns without forward travel, backward
 | Checkpoint | Scope, both animals | Status |
 |---|---|---|
 | A — turning | Gentle walking curves, tighter low-speed turns, alternating stepping turns in place | Draft 10 accepted as a good turning baseline. Draft 11 adds numerical animal capabilities to the shared planner; both-rig Unity renders and all-frame audit complete; user accepted draft 11 as a good indie-game baseline. Draft 12 hip/contact polish visually accepted by the user. Draft 13 walking curves rejected for missing walking recovery articulation. Draft 14 restored walking recovery; user retained direction and requested timing polish. Draft 15 overlaps unloading and recovery; user requested stronger neck turning and more purposeful startup. Draft 16 received an Allosaurus walking-turn knee-overextension correction request. Draft 17 adds continuous knee flexion reserve; both native walking-turn videos visually accepted by the user ("good both", 2026-09-14). Final mass/contact remain open |
-| B — reverse | Backward start, several coordinated steps, stop; its own grounded contact choreography | Requested, not yet implemented in this pass |
+| B — reverse | Backward start, several coordinated steps, stop; its own grounded contact choreography | Checkpoint 18 generated on both admitted rigs and captured in Unity; native visual review pending |
 | C — lateral recovery | Left/right recovery steps, support transfer, whole-body settling | Requested, not yet implemented |
 | D — connected controls | Blend the reviewed directional behaviors with idle and walking; runtime root ownership and contact | After visual acceptance of A–C |
 
@@ -24,6 +24,14 @@ The user visually accepted draft 12 on 2026-09-13 as the next turning baseline. 
 This is a reduced authored support response, not converged whole-body force balance. Individual contact vertices still deform: maximum horizontal drift is 12.2 mm Allosaurus and 21.1 mm Tarbosaurus. Planted-interval knee travel projected onto the foot lateral axis increased from 31.6/33.8 mm in draft 11 to 38.1/55.4 mm in draft 12; this includes changing flexion and is not a joint-stress measurement, but remains a visible-polish concern, especially for Tarbosaurus. No isolated abrupt buckle was identified in the captured frame sequence; occlusion limits that observation.
 
 Checkpoint 12 remains the accepted in-place turn. Checkpoint 17 is now the visually accepted walking-curve baseline for both animals, superseding curve drafts 13–16. Approved straight walks are preserved. Locomotion acceleration limits exclude added local pelvis accommodation. Backward start, several steps and stop is the next checkpoint for both animals; lateral balance recovery follows.
+
+## Backward walking — checkpoint 18, review pending
+
+The next bounded movement family is a short backward start, four alternating steps and a settled stop for both animals. The shared planner resolves a signed backward path from the animal's onboarded normal step and speed; the new reverse behavior owns its release, toe curl, recovery pitch and flank glance. It uses no reversed animation take or species branch. Existing support transfer, hip-plane accommodation, compliant pelvis roll and final material contact correction run on both rigs.
+
+Recipe `reverse-walking-review.v1.json` uses authored fractions: 0.32 of normal step length and 0.36 of normal speed, with capability acceleration/cadence budgets. Nominal steps are 0.360 m Allosaurus / 0.439 m Tarbosaurus, with fitted step intervals 1.124 / 1.357 s. The total retreat is 1.442 / 1.754 m. These are authored reverse estimates, not paleobiological measurements. The first/last placements vary with startup and braking. Reverse stance width is 0.28 body heights; release is restrained to 4 degrees, with a low recovery arc and toes relaxed before contact.
+
+Source durations are 5.397 / 6.328 s. Both final GLBs were reopened; maximum sampled knee angles are 133.03 / 120.12 degrees with zero source-key reach overflow. Final sampled material-vertex drift is 8.69 / 10.60 mm; stable centroids do not certify a rigid contact patch. Full force balance, continuous skin contact and complete Unity parity remain open. Native-time side and front three-quarter review evidence is in principal game `game/Evidence/backward-walking-study/`. All 564 delivered frames were inspected across 26 sheets; 41 focused tests passed. User review is pending; stop here before lateral recovery. Checkpoint 17 remains the accepted walking-turn baseline.
 
 ## Walking-turn knee flexion — checkpoint 17, visually accepted
 
@@ -81,7 +89,7 @@ The user approved iteration 16 as smooth and credible, while correctly distingui
 | Idle → start → walk → faster → slow → stop | Visually approved, iteration 16 | Visually approved, iteration 16 | 18.68-second source-driven sequence; runtime import not yet verified |
 | Heel roll, toe-off, swing recovery | Reviewed | Reviewed | Shared articulation; Allosaurus has added intermediate toe joints |
 | Lateral weight transfer / pelvis response | Reviewed engineering response | Reviewed reduced vertical response | Not a converged whole-body force simulation |
-| Reverse walking | Reusable planner exists; not reviewed on this animal | Reusable planner exists; not reviewed on this animal | No game-ready claim |
+| Reverse walking | Checkpoint 18: four-step retreat, visual review pending | Checkpoint 18: four-step retreat, visual review pending | Shared reverse policy, contact/load response and actual Unity captures; production acceptance pending |
 | Turning / curved paths / pivots | In-place turn 12 and walking curves 17 visually accepted | In-place turn 12 and walking curves 17 visually accepted | Curve 17 supersedes drafts 13–16; final mass and material contact remain pending |
 | Running / sprinting | Missing approved transfer | Approved historical Run010 / Sprint006 references | Shared airborne generation exists; current two-animal/runtime acceptance missing |
 | Independent gaze / neck attention | Runtime demonstration reviewed | Runtime demonstration reviewed | World interest points; not complete sensory behavior |

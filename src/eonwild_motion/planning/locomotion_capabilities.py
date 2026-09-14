@@ -112,16 +112,26 @@ and skin constraints run afterwards. This does not certify forces in the final r
 """
     recipe=deepcopy(recipe)
     blocks=deepcopy(recipe['blocks']); walk=resolve_walk(c)
+    direction=recipe.get('travel_direction','forward')
+    if direction not in ('forward','backward'):
+        raise ValueError('Unsupported travel direction')
+    if direction=='backward' and recipe.get('walking',{}).get('articulation_source')!='backward_grounded':
+        raise ValueError('Backward travel requires its own grounded articulation policy')
     if recipe.get('walking',{}).get('recovery_fraction_of_normal_step'):
         recipe['walking']['recovery_seconds']=walk['stepSeconds']*recipe['walking']['recovery_fraction_of_normal_step']
         recipe['walking']['heel_prepare_seconds']=walk['stepSeconds']*recipe['walking']['heel_prepare_fraction_of_normal_step']
     for b in blocks:
+        if direction=='backward' and ('step_scale_of_normal' not in b or b.get('turn_degrees')!=0):
+            raise ValueError('Backward review requires profile-relative straight steps')
         if 'step_scale_of_normal' in b:
             factor=b['step_scale_of_normal']
             if not positive(factor) or 'step_length_body_heights' in b:
                 raise ValueError('Declare one positive walking step scale, without a competing absolute length')
             b['step_length_body_heights']=factor*c['stepLengthM']/height
             b['resolved_step_length_m']=factor*c['stepLengthM']
+            if direction=='backward':
+                b['step_length_body_heights']*=-1
+                b['resolved_step_length_m']*=-1
         speed_scale=b.get('speed_scale',1.)
         if not positive(speed_scale) or speed_scale>1:
             raise ValueError('Walking speed scale must be in (0,1]')
