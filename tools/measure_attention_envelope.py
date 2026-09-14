@@ -35,9 +35,14 @@ def measure(package):
         delta=headings['head']-headings['chest'];yaw=math.degrees(math.atan2(math.sin(delta),math.cos(delta)))
         rows.append({'time_s':float(t),'head_relative_torso_yaw_degrees':yaw})
     maximum=max(abs(r['head_relative_torso_yaw_degrees']) for r in rows)
+    exceptional=d.get('attention_exceptional',False)
+    if not isinstance(exceptional,bool):raise ValueError('Invalid exceptional attention selection')
+    selected_cap=a['envelope']['hardDegrees' if exceptional else 'maximumDegrees']
     return {'method':'Projected head/torso forward axes calibrated from the neutral frame-zero pose; admitted +Y up/+Z forward; keys and midpoints. Not eye field of view, anatomical joint ROM or continuous-time certification.',
             'motion_sha256':d['emitted_sha256'],'profile_sha256':d['profile_sha256'],
             'maximum_absolute_yaw_degrees':maximum,'routine_cap_degrees':a['envelope']['maximumDegrees'],
+            'exceptional':exceptional,'selected_cap_degrees':selected_cap,
+            'within_selected_cap':maximum<=selected_cap+1e-4,
             'within_routine_cap':maximum<=a['envelope']['maximumDegrees']+1e-4,'samples':rows}
 
 
@@ -45,4 +50,4 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser();parser.add_argument('--package',type=Path,required=True);parser.add_argument('--output',type=Path,required=True);args=parser.parse_args()
     data=measure(args.package);args.output.write_text(json.dumps(data,indent=2)+'\n')
     print(json.dumps({k:v for k,v in data.items() if k!='samples'},indent=2))
-    if not data['within_routine_cap']:raise SystemExit('Emitted attention exceeds routine envelope')
+    if not data['within_selected_cap']:raise SystemExit('Emitted attention exceeds selected envelope')

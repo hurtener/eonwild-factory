@@ -22,7 +22,7 @@ from eonwild_motion.solve.turn_contact import tangent, material_patch_correction
 from eonwild_motion.planning.grounded_gait import smooth, grounded_swing_articulation
 from eonwild_motion.planning.foot_articulation import declare_pad_recovery_sample
 from eonwild_motion.planning.reverse_walking import reverse_articulation, reverse_attention
-from eonwild_motion.attention import resolve_attention, bound_attention
+from eonwild_motion.attention import resolve_attention, bound_attention, attention_intent
 
 class Captured(Exception): pass
 
@@ -30,6 +30,8 @@ def main():
     ap=argparse.ArgumentParser();ap.add_argument('--motion-set',type=Path,required=True);ap.add_argument('--output',type=Path,required=True);ap.add_argument('--fps',type=int,default=24);ap.add_argument('--limit',type=float)
     ap.add_argument('--profile',type=Path,help='Animal embodiment with locomotion capabilities; omit to reproduce the preserved choreography')
     ap.add_argument('--recipe',type=Path,default=Path('catalog/behaviors/directional-review.v1.json'))
+    ap.add_argument('--reverse-look-mode', choices=('none','normal','scan','strong','exceptional'),
+                    help='Diagnostic intent override; animal angles still come from the profile')
     a=ap.parse_args(); repo=Path.cwd(); out=a.output.resolve()
     if out.exists(): raise RuntimeError('refusing to overwrite diagnostic')
     capture={}; original=CanonicalConstantSkinTargetLaw.__dict__['build']
@@ -47,6 +49,9 @@ def main():
     recipe_input=deepcopy(recipe)
     walk_recovery=recipe.get('walking',{}).get('articulation_source')=='admitted_grounded_walk'
     reverse_recovery=recipe.get('walking',{}).get('articulation_source')=='backward_grounded'
+    if a.reverse_look_mode:
+        if not reverse_recovery:raise ValueError('Reverse look override requires backward choreography')
+        recipe['reverse']['look_mode']=a.reverse_look_mode
     if walk_recovery:
         recipe['walking']['heel_roll_degrees']=q._locomotion_gait.push_off_pitch_degrees
         recipe['walking']['clearance_body_heights']=q._locomotion_gait.swing_clearance_body_heights
@@ -77,17 +82,16 @@ def main():
         recipe=deepcopy(recipe);recipe['turn_attention']['lead_seconds']=capabilities['attentionLeadSeconds']
         if recipe.get('walking'):recipe['walking']=dict(sequence.walking)
     animal_attention=resolve_attention(profile) if profile else None
-    neck_weights=None
+    neck_weights=None; exceptional_attention=False
     if animal_attention:
         bindings={b['role']:b['bone'] for b in profile['bindings']}
         weight_by_bone=dict(zip((bindings[r] for r in profile['neckRoles']),animal_attention['envelope']['neckWeights']))
         neck_weights=[weight_by_bone[n] for n in c.roles['neck']]
         recipe['turn_attention']['neck_share']=animal_attention['neckShare']
         if reverse_recovery and 'look_mode' in recipe['reverse']:
-            mode=recipe['reverse']['look_mode']
-            key={'normal':'normalDegrees','scan':'scanDegrees','strong':'strongDegrees','none':None}.get(mode,'invalid')
-            if key=='invalid':raise ValueError('Unsupported reverse attention intent')
-            recipe['reverse']['look_degrees']=animal_attention['envelope'][key] if key else 0.
+            intent=attention_intent(recipe['reverse']['look_mode'],animal_attention)
+            recipe['reverse']['look_degrees']=intent['requestedDegrees']
+            exceptional_attention=intent['exceptional']
     elif reverse_recovery and 'look_mode' in recipe['reverse']:
         raise ValueError('Reverse attention mode requires an animal attention envelope')
     response_seconds=capabilities['responseSeconds'] if capabilities else .24
@@ -158,7 +162,7 @@ def main():
         look_yaw=turn_look_yaw(sequence,t,attention["lead_seconds"],attention["maximum_degrees"],attention.get("anticipation_gain",1.))
         if reverse_recovery:
             look_yaw=reverse_attention(sequence,t,recipe['reverse'])
-        attention_result=bound_attention(math.degrees(look_yaw),animal_attention) if animal_attention else None
+        attention_result=bound_attention(math.degrees(look_yaw),animal_attention,exceptional=exceptional_attention) if animal_attention else None
         if attention_result:look_yaw=math.radians(attention_result['yawDegrees'])
         context=replace(c,base_r=tuple(base_r),legacy_overlay=False)
         row={'time_s':float(t),'root_forward_m':0.,'pelvis_height_offset_m':-settle*c.body_height,'flight':False,'support_count':sum(f['contact'] for f in step['feet'].values()),'performance_gain':0.,'feet':{}}
@@ -238,7 +242,10 @@ def main():
     out.mkdir(parents=True);glb=_encode(document,binary);(out/'root_motion.glb').write_bytes(glb)
     receipt={'recipe':recipe,'motion_set':str(a.motion_set),'status':'DIRECTIONAL_DIAGNOSTIC','visual':'PENDING','production':False,'duration_s':duration,'source_sha256':hashlib.sha256(source.raw).hexdigest(),'emitted_sha256':hashlib.sha256(glb).hexdigest(),'mass':'pelvis accommodation to planted leg planes; authored kinematics, not final mass correction','contact':'four-pass frozen material-patch centroid tangential correction and floor solve; full-patch drift measured separately','samples':samples,'checks':checks}
     receipt['recipe_input']=recipe_input
-    if animal_attention:receipt['attention_envelope']=animal_attention
+    if animal_attention:
+        receipt['attention_envelope']=animal_attention
+        receipt['attention_exceptional']=exceptional_attention
+    if a.reverse_look_mode:receipt['diagnostic_overrides']={'reverse.look_mode':a.reverse_look_mode}
     if walk_recovery:receipt['walking_articulation_parameters']=dict(c.plan['parameters'])
     if capabilities:
         receipt['capabilities']=capabilities;receipt['capability_plan']=capability_plan

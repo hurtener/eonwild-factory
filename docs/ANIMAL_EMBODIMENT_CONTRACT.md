@@ -4,6 +4,24 @@ Canonical files: `catalog/embodiment/allo.v1.json` and `tarbo.v1.json`. These co
 
 ## Authority
 
+This document is the central ownership index. There is not yet one editor or a
+single authoring path covering every historical motion family.
+
+| Concern | Editable authority | Consumers / records |
+| --- | --- | --- |
+| Animal anatomy, semantic bindings, capability and attention numbers | Factory `catalog/embodiment/{id}.v1.json` | Unity `Motion/{id}.profile.json` is an exported copy; candidate profile snapshots preserve provenance |
+| Shared attention law and named glance intents | `src/eonwild_motion/attention.py` | Unity's port is checked against exported reference vectors |
+| Action choreography and choice of attention intent | `catalog/behaviors/` and shared planners | A behavior selects normal/scan/strong/exceptional; it does not copy animal range numbers |
+| Neck research interpretation and citations | Factory `docs/research/THEROPOD_NECK_BASELINE.md` | The game copy is a reference mirror; the original user report is archival evidence |
+| Artistic direction | Principal game `docs/ANIMATION_ART_DIRECTION.md` | Guides all authoring and visual reviews |
+| Acceptance and reproducibility | Roadmaps and immutable checkpoint evidence | Historical numbers describe that take; they are not tuning inputs |
+
+Change numerical intent once in the Factory profile, regenerate affected motion,
+export to consumers, and review both animals. Do not independently tune copied
+Unity profiles, research tables or old receipts. The two repository roadmaps track
+their own delivery state and link to evidence; they are not parallel parameter
+stores. Legacy compiler migration and consolidation of review tooling remain debt.
+
 An animal profile is the editable entry point for semantic bindings, calibrated axes, sequence timing, attention and secondary-motion settings. `authoring` preserves the original animal-instance evidence, approved emitted gait parameters and original intent references. Historical recipes remain reproducibility inputs, not editable game copies. This checkpoint does not replace every historical compiler configuration format or automatically admit new topology.
 
 `tools/export_embodiment.py` validates required/unique roles, available nodes, finite values, explicit unit axes, sequence intervals and the motion SHA-256, then exports exact profile bytes and Python numerical reference vectors. Consumers receive files; they do not import Factory Python at runtime. Keep profile version, asset hashes and evidence together.

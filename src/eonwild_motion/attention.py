@@ -35,6 +35,17 @@ def resolve_attention(profile):
     return a
 
 
+def attention_intent(mode, attention):
+    """Resolve a behavior's named glance without copying animal angles into it."""
+    fields = {'none': None, 'normal': 'normalDegrees', 'scan': 'scanDegrees',
+              'strong': 'strongDegrees', 'exceptional': 'hardDegrees'}
+    if mode not in fields:
+        raise ValueError('Unsupported attention intent')
+    key = fields[mode]
+    return {'requestedDegrees': attention['envelope'][key] if key else 0.,
+            'exceptional': mode == 'exceptional'}
+
+
 def bound_attention(requested_degrees, attention, exceptional=False):
     """Identity through strong range, then C1 saturation toward the selected cap.
 

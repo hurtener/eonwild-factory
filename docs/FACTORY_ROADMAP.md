@@ -3,7 +3,39 @@
 Updated 2026-09-14. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
 
 
-## Neck baseline — checkpoint 19, review pending
+## Exceptional neck glance — checkpoint 20, review pending
+
+The user accepted checkpoint 19's ordinary-range backward footage and requested a
+stronger glance. Named `exceptional` intent now selects the existing animal
+envelope explicitly; no anatomy numbers or footwork were retuned. The same reverse
+v2 recipe is reused with a recorded diagnostic override instead of a copied recipe.
+
+Actual emitted head heading relative to the torso peaks at 81.424 degrees for
+Allosaurus and 62.616 for Tarbosaurus. These are smoothed results of authored
+85/65-degree targets, not measured biological maxima. Routine limits remain
+unchanged and the measurement receipt explicitly records routine-cap exceedance
+under exceptional selection.
+
+Native Unity evidence: principal game `game/Evidence/neck-range-study/`.
+All 282 captured frames were inspected chronologically; peak frames were also
+inspected at full capture resolution. Allosaurus shows a more pronounced, tighter
+inner-neck bend; Tarbosaurus retains a broader, stiffer silhouette. Non-attention
+local channels match checkpoint 19 exactly at every source key. Twenty-four
+focused tests, actual-rig generation, Unity build and full video decoding passed.
+This is a neck-range study, not coordinated body following or new force balance.
+
+The Factory embodiment contract is now the explicit ownership index. Profile
+numbers are canonical; Unity exports and evidence snapshots are derived. Research
+mirrors, two delivery roadmaps and legacy review tooling still exist. A unified
+editor and complete migration are not claimed. Pause for user review here.
+
+## Neck baseline — checkpoint 19, user accepted
+
+User accepted the ordinary-neck backward previews on 2026-09-14 (“this was good”).
+Acceptance binds Factory source 8de1ff68b31c445090e19023db372f5577543de7,
+game source f0c6173 and the immutable media in game/Evidence/neck-baseline-study.
+Its original pending-review receipt remains unchanged as historical evidence.
+This accepts that ordinary-range take, not exceptional poses or production certification.
 
 The user's neck investigation is preserved with a reviewed evidence/implementation
 summary in [the neck baseline](research/THEROPOD_NECK_BASELINE.md). T. rex's modeled
@@ -25,8 +57,7 @@ All 282 captured frames were inspected chronologically across 13 sheets; 57 focu
 Maximum-range poses have not been visually accepted. Coupled regional roll/pitch,
 automatic body follow with grounded footwork, visibility/occlusion, and migration
 of older compiler families remain pending. Neck articulation does not change the
-leg contact choreography or establish new whole-body force balance. Pause for
-visual feedback before lateral recovery.
+leg contact choreography or establish new whole-body force balance. The requested next checkpoint is exceptional neck-glance footage; lateral recovery remains queued.
 
 ## Animal profile housekeeping
 

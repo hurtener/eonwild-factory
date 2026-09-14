@@ -3,7 +3,7 @@ import math
 from copy import deepcopy
 from pathlib import Path
 import pytest
-from eonwild_motion.attention import resolve_attention, bound_attention
+from eonwild_motion.attention import resolve_attention, bound_attention, attention_intent
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -45,3 +45,18 @@ def test_historical_profile_keeps_legacy_behavior():
     p=json.loads((ROOT/'catalog/embodiment/allo.v1.json').read_text())
     p['attention'].pop('envelope')
     assert resolve_attention(p) is None
+
+
+@pytest.mark.parametrize('animal', ['allo', 'tarbo'])
+def test_only_explicit_exceptional_intent_enters_exceptional_range(animal):
+    p=json.loads((ROOT/f'catalog/embodiment/{animal}.v1.json').read_text())
+    a=resolve_attention(p);e=a['envelope']
+    for mode in ('none','normal','scan','strong'):
+        intent=attention_intent(mode,a)
+        assert intent['exceptional'] is False
+        assert bound_attention(intent['requestedDegrees'],a)['yawDegrees']<=e['maximumDegrees']
+    intent=attention_intent('exceptional',a)
+    value=bound_attention(intent['requestedDegrees'],a,intent['exceptional'])
+    assert e['maximumDegrees']<value['yawDegrees']<e['hardDegrees']
+    with pytest.raises(ValueError):
+        attention_intent('unrecognized',a)
