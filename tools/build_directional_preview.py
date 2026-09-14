@@ -147,6 +147,8 @@ def main():
             if walk_recovery and not in_place:
                 scale=f['walk_articulation_scale']
                 foot=row['feet'][s]
+                if 'knee_extension_preference_degrees' in recipe['walking']:
+                    foot['walking_knee_preference_degrees']=recipe['walking']['knee_extension_preference_degrees']
                 foot['articulation_scale']=scale
                 # The curve owns support/heading/heel timing; the admitted walk
                 # supplies coordinated metatarsal, pad and toe recovery.

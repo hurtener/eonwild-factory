@@ -1186,6 +1186,18 @@ def solve_airborne_plan_sample(
                 pitch_cost = ((1 - world_metatarsus_gain) * authored_pitch_cost
                               + world_metatarsus_gain * world_cost)
             score = pitch_cost + recovery * (hip_angle - hip_target) ** 2 + preferred_gain * gait.articulation_preferred_margin_weight * preferred + 1e5 * sum(e * e for e in errors) + 1e8 * extension * extension
+            extension_preference = foot_plan.get("walking_knee_preference_degrees")
+            if extension_preference is not None:
+                if (isinstance(extension_preference, bool)
+                        or not isinstance(extension_preference, (int, float))
+                        or not math.isfinite(extension_preference)
+                        or not 90 <= extension_preference < 180):
+                    raise ContractError("invalid walking knee extension preference")
+                # Reserve flexion as the supported leg lengthens. This C2
+                # cost redistributes articulation through the ankle while
+                # retaining walking recovery, the fixed foot and hard ROM.
+                excess = max(0., knee_angle - extension_preference)
+                score += excess ** 4
             turn_shape = foot_plan.get("turn_leg_shape")
             if turn_shape is not None:
                 knee_preference = float(turn_shape["knee_interior_degrees"])
@@ -1401,7 +1413,7 @@ def solve_airborne_plan_sample(
             facts[side]["maximum_toe_shape_residual_m"] = toe_shape_residual
             facts[side]["contact_authority"] = "rolling_material_surface"
 
-        if foot_plan.get("turn_leg_shape") is not None:
+        if foot_plan.get("turn_leg_shape") is not None or foot_plan.get("walking_knee_preference_degrees") is not None:
             facts[side]["turn_leg_angles_degrees"] = articulation_angles
         if articulation_profile is not None:
             facts[side]["articulation_phase"] = "support" if foot_plan["contact"] else "swing"
