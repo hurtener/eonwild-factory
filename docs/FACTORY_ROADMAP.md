@@ -3,7 +3,47 @@
 Updated 2026-09-15. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
 
 
-## Continuous body recovery — checkpoint 25, review pending
+## Current animation inventory
+
+Current review authority as of checkpoint 25. **Approved means visually accepted
+in the reviewed clips**, not fully certified for arbitrary gameplay. Unless a row
+says otherwise, both admitted animals use the same shared engine with profile data.
+Historical sections and capture-time receipts below retain earlier review states.
+
+| Movement family | Allosaurus | Tarbosaurus | What remains |
+|---|---|---|---|
+| Grounded stance / held idle | Reviewed baseline | Reviewed baseline | Broader expressive idle behavior |
+| Normal walking | Approved, iteration 14 | Approved, iteration 15 | Preserve gait while completing production contact work |
+| Faster walking | Approved in sequence | Approved in sequence | Grounded fast walk; running is a separate family |
+| Idle → start → normal → faster → slow → stop | Approved, iteration 16 sequence | Approved, iteration 16 sequence | Later purposeful-start/stop retiming needs its own straight-motion review; full contact parity pending |
+| Heel roll, toe-off and swing recovery | Reviewed; added intermediate toe joints | Reviewed | Maintain articulation across combined behaviors |
+| Walking curves / tight walking turns | Approved, checkpoint 17 | Approved, checkpoint 17 | Connect to player steering; final material contact and mass work |
+| Stepping turns in place | Approved, checkpoint 12 | Approved, checkpoint 12 | Connect to other movement states; final material contact and mass work |
+| Backward start, steps and stop | Approved, checkpoints 19/20 | Approved, checkpoints 19/20 | Connected controls and runtime obstacle awareness |
+| Deliberate lateral balance recovery | Approved, checkpoint 21 | Approved, checkpoint 21 | Live balance detection and triggering |
+| Side-hit stumble / catch / settle | Positive baseline; body continuity approved, checkpoint 25 | Positive baseline; body continuity approved, checkpoint 25 | Early Allosaurus ankle unfolding; live collision transfer, full contact and force certification |
+| Independent gaze / neck attention | Mini-world demo and routine/exceptional glances approved | Mini-world demo and routine/exceptional glances approved | Sensory decisions, visibility/occlusion and coordinated body following |
+| Arm carriage and secondary motion | Full-transition pass approved | Full-transition pass approved | Behavior-specific overrides for attacks, rest and interaction |
+| Jaw relaxation / breathing-like cycle | Full-transition pass approved | Full-transition pass approved | Full-body breathing and behavior-specific mouth control |
+| Expressive idle / listening / alert scanning | No complete approved family | No complete approved family | Compose meaningful attention, posture and breathing behaviors from existing layers |
+| Running / sprinting | Current approved transfer missing | Historical Run010 / Sprint006 references preserved | Transfer and review through current shared engine on both animals |
+| Feeding / gripping / pulling | Current approved transfer missing | Historical Feeding003 reference preserved | Current grounded support, oral contact and interaction handoff |
+| Drinking / swallowing | Missing | Missing | New choreography and world interaction |
+| Rest / sit / lie down / rise / sleep | Missing | Missing | New support transitions and resting behavior |
+| Bite / attack / active defense | Missing complete family | Missing complete family | Offensive/action choreography and gameplay windows; received side-hit reaction already exists |
+| Injury / limp / fall / get up / death | Missing | Missing | New support and failure/recovery families |
+| Jump / airborne landing / recovery | No reviewed behavior | No reviewed behavior | Airborne gait code is not a reviewed jump/landing family |
+| Terrain adaptation / slopes / stepping over | Runtime acceptance missing | Runtime acceptance missing | Adapt contacts on uneven ground and obstacles |
+| Swim / wade / enter or leave water | Missing | Missing | Water interaction and locomotion; current mini-world water is scenery |
+| Social / display / vocalization | Missing | Missing | Behavior breadth and intent |
+| Connected runtime movement controls | Partial prototype | Partial prototype | Link reviewed forward, turn, reverse, lateral and impact motions with contact-safe handovers |
+
+Working sequence after checkpoint 25: local ankle polish and review of the later
+straight-start/stop response; connected controls; running/sprinting transfer;
+feeding/drinking; then rest, combat/injury and other breadth. This is a roadmap,
+not approval of any unreviewed take. Continue in bounded visual checkpoints.
+
+## Continuous body recovery — checkpoint 25, continuity approved
 
 The shared impact response now carries the incoming walking articulation clock
 into the shorter catch and starts the following preparation during late weight
@@ -23,9 +63,11 @@ The body path is measured on every native 24 fps frame, alongside joint/contact
 receipts and chronological image review. Checkpoint 24 remains preserved.
 
 Implementation, actual-rig export and native Unity playback are delivered at
-this checkpoint. User approval and production contact/force certification remain
-pending. Early Allosaurus ankle unfolding still needs polish. Pause for feedback
-before extending this motion family or starting falls/gameplay interruption.
+this checkpoint. User feedback: “Recovery feels continuous.” The sideways body
+continuity is approved for both review videos; preserve this as the current
+recovery baseline. Early Allosaurus ankle unfolding remains the next local polish
+target. Production contact/force certification remains pending; this feedback
+does not approve those gates or a new motion family.
 
 ## Side-impact recovery — checkpoint 24 positively reviewed, transition polish next
 
@@ -245,7 +287,7 @@ User requested walking turns, coordinated turns without forward travel, backward
 |---|---|---|
 | A — turning | Gentle walking curves, tighter low-speed turns, alternating stepping turns in place | Draft 10 accepted as a good turning baseline. Draft 11 adds numerical animal capabilities to the shared planner; both-rig Unity renders and all-frame audit complete; user accepted draft 11 as a good indie-game baseline. Draft 12 hip/contact polish visually accepted by the user. Draft 13 walking curves rejected for missing walking recovery articulation. Draft 14 restored walking recovery; user retained direction and requested timing polish. Draft 15 overlaps unloading and recovery; user requested stronger neck turning and more purposeful startup. Draft 16 received an Allosaurus walking-turn knee-overextension correction request. Draft 17 adds continuous knee flexion reserve; both native walking-turn videos visually accepted by the user ("good both", 2026-09-14). Final mass/contact remain open |
 | B — reverse | Backward start, several coordinated steps, stop; its own grounded contact choreography | Checkpoint 18 remains historical. Checkpoint 19 ordinary-neck reverse and checkpoint 20 exceptional-neck reverse were visually accepted for both animals; final force/contact certification remains open |
-| C — lateral recovery | Left/right recovery steps, support transfer, whole-body settling | Checkpoint 21 visually accepted on both admitted rigs; 276 native Unity frames inspected. Stronger side-impact recovery is the next requested checkpoint; final force/contact certification remains open |
+| C — lateral recovery | Left/right recovery steps, support transfer, whole-body settling | Checkpoint 21 visually accepted on both admitted rigs; 276 native Unity frames inspected. Side-impact recovery subsequently reached checkpoint 25; final force/contact certification remains open |
 | D — connected controls | Blend the reviewed directional behaviors with idle and walking; runtime root ownership and contact | After visual acceptance of A–C |
 
 Draft 10 is the user-accepted turning reference, preserved in `game/Evidence/continuous-release-turn-study/`. Draft 11 adds profile mass/inertia, authored force/torque budgets, walking speed/cadence, braking, lateral response and attention/response timing. The shared planner consumes these values without species branches. Both actual rigs generated and were captured in Unity; all 470 captured frames were visually inspected. Current evidence: principal game `game/Evidence/capability-turn-study/`. User re-review accepted draft 11 for both animals as a good indie-game turning baseline. Draft 10 remains preserved as the preceding reference.
@@ -308,35 +350,6 @@ Both emitted rigs reopened, the Unity build and native captures completed, and a
 
 Open technical limits: individual planted material vertices move up to 43.4 mm Allosaurus and 34.7 mm Tarbosaurus, despite stable patch centroids. That includes articulation/deformation and does not establish rigid patch contact. Source-key floor samples and reach are acceptable for this diagnostic, but continuous interpolation, whole-body forces, joint loading and live gameplay steering are not certified. Checkpoint 12 remains the accepted turn baseline. **User rejected checkpoint 13: preserve head/foot pointing, restore articulated walking recovery in the combined walking-turn behavior. Checkpoints 14 and 15 are recorded above; do not advance to reverse or lateral recovery before review.**
 
-## Current accepted baseline
-
-The user approved iteration 16 as smooth and credible, while correctly distinguishing locomotion from a living animal's attention and intent. Preserve Allosaurus iteration 14 and Tarbosaurus iteration 15 normal walks; iteration 16 adds the connected speed sequence. Approved motion is not automatically production certified.
-
-| Movement family | Allosaurus | Tarbosaurus | Current boundary |
-|---|---|---|---|
-| Grounded stance / held idle | Reviewed | Reviewed | Held pose reviewed; arm/jaw secondary life subsequently approved |
-| Normal walking | Visually approved, iteration 14 | Visually approved, iteration 15 | Same reusable solver; researched/authored stride and body differences in data |
-| Faster walking | Sequence approved | Sequence approved | 1.35× cadence, still grounded; not running |
-| Idle → start → walk → faster → slow → stop | Visually approved, iteration 16 | Visually approved, iteration 16 | 18.68-second source-driven sequence; runtime import not yet verified |
-| Heel roll, toe-off, swing recovery | Reviewed | Reviewed | Shared articulation; Allosaurus has added intermediate toe joints |
-| Lateral weight transfer / pelvis response | Reviewed engineering response | Reviewed reduced vertical response | Not a converged whole-body force simulation |
-| Reverse walking | Checkpoints 19/20 visually accepted | Checkpoints 19/20 visually accepted | Ordinary and stronger flank glances; production contact and connected controls pending |
-| Deliberate lateral balance recovery | Checkpoint 21 visually accepted | Checkpoint 21 visually accepted | Open-and-follow support choreography; live balance feedback pending |
-| Turning / curved paths / pivots | In-place turn 12 and walking curves 17 visually accepted | In-place turn 12 and walking curves 17 visually accepted | Curve 17 supersedes drafts 13–16; final mass and material contact remain pending |
-| Running / sprinting | Missing approved transfer | Approved historical Run010 / Sprint006 references | Shared airborne generation exists; current two-animal/runtime acceptance missing |
-| Independent gaze / neck attention | Runtime demonstration reviewed | Runtime demonstration reviewed | World interest points; not complete sensory behavior |
-| Expressive idle / breathing / listening | Missing approved behavior | Missing approved behavior | Intentional responses, not random noise |
-| Feeding / gripping / pulling | Missing approved transfer | Historical Feeding003 reference | Persistent support and oral contact need current-engine/runtime acceptance |
-| Drinking / swallowing | Missing | Missing | Separate choreography and interaction authority |
-| Rest / sit / lie down / rise / sleep | Missing | Missing | Topology and support transitions required |
-| Bite / attack / recoil / defense | Missing | Missing | World confirms outcomes; animation only supplies windows |
-| Side-hit stumble and recovery | Checkpoint 24 candidate | Checkpoint 24 candidate | Support-dependent response, phase-aware catches and alert aftermath; visual review pending, live collision/fall simulation missing |
-| Injury / limp / fall / death | Missing | Missing | No current reusable, reviewed family |
-| Jump / airborne landing / recovery | Missing reviewed behavior | Missing reviewed behavior | Airborne gait implementation does not certify jumping |
-| Terrain adaptation / slopes / stepping over | Missing runtime acceptance | Missing runtime acceptance | Flat-floor factory evidence is not terrain proof |
-| Swim / wade / enter/leave water | Missing | Missing | Mini-world water is scenery until interaction is implemented |
-| Social / display / vocalization | Missing | Missing | Future breadth after embodiment checkpoint |
-
 ## Current limitations
 
 - Saved sequence contact residuals: Allosaurus 0.131 mm; Tarbosaurus 0.230 mm at loaded material anchors.
@@ -348,7 +361,7 @@ The user approved iteration 16 as smooth and credible, while correctly distingui
 
 The user approved the mini-world, its FPS improvement, attention demonstration and full-transition arm/jaw life. The source walk remains preserved. The game tracker records native Unity captures, import parity, focused secondary-contact checks and measured M4 performance. Canonical embodiment profiles, explicit axes, Python/Unity secondary-motion parity and Blender preview imports were implemented in the housekeeping checkpoint. These are focused validations, not full production contact or terrain acceptance.
 
-Unity remains the approved validation consumer; shipping platform decisions are separate. Directional checkpoint A is the active work above.
+Unity remains the approved validation consumer; shipping platform decisions are separate. Directional and impact checkpoints are tracked in the current inventory above.
 
 ## Following checkpoints (not started)
 
