@@ -5,8 +5,8 @@ Updated 2026-09-15. This is a living evidence tracker, not a fixed plan inherite
 
 ## Current animation inventory
 
-Current checkpoint 27 revision is awaiting feedback on retained braking support. Latest approval
-remains checkpoint 26. **Approved means visually accepted
+Checkpoint 27 retained-braking-support stops are approved for both animals.
+Latest visual approval is checkpoint 27. **Approved means visually accepted
 in the reviewed clips**, not fully certified for arbitrary gameplay. Unless a row
 says otherwise, both admitted animals use the same shared engine with profile data.
 Historical sections and capture-time receipts below retain earlier review states.
@@ -17,7 +17,7 @@ Checkpoint 26 is the approved walking side-hit recovery baseline; standing impac
 | Grounded stance / held idle | Reviewed baseline | Reviewed baseline | Broader expressive idle behavior |
 | Normal walking | Approved, iteration 14 | Approved, iteration 15 | Preserve gait while completing production contact work |
 | Faster walking | Approved in sequence | Approved in sequence | Grounded fast walk; running is a separate family |
-| Idle → start → normal → faster → slow → stop | Approved, iteration 16 sequence | Approved, iteration 16 sequence | Checkpoint 27: revised stop retains braking support; awaiting feedback; full contact parity pending |
+| Idle → start → normal → faster → slow → stop | Approved sequence; revised stop approved, checkpoint 27 | Approved sequence; revised stop approved, checkpoint 27 | Preserve retained braking support in connected controls; full contact parity pending |
 | Heel roll, toe-off and swing recovery | Reviewed; added intermediate toe joints | Reviewed | Maintain articulation across combined behaviors |
 | Walking curves / tight walking turns | Approved, checkpoint 17 | Approved, checkpoint 17 | Connect to player steering; final material contact and mass work |
 | Stepping turns in place | Approved, checkpoint 12 | Approved, checkpoint 12 | Connect to other movement states; final material contact and mass work |
@@ -46,7 +46,7 @@ Checkpoint 26 is the approved walking side-hit recovery baseline; standing impac
 | Social / display / vocalization | Missing | Missing | Behavior breadth and intent |
 | Connected runtime movement controls | Partial prototype | Partial prototype | Link reviewed forward, turn, reverse, lateral and impact motions with contact-safe handovers |
 
-Current pause: checkpoint 27 retained-braking-support stop review. Then connected
+Checkpoint 27 stopping baseline is approved and preserved. Next: connected
 controls; running/sprinting transfer;
 running and sprinting side-hit recovery; hit-induced knockdowns from walking,
 running and sprinting with grounded aftermath/get-up; feeding/drinking and the
@@ -61,7 +61,7 @@ Detailed impact scope: principal Eonwild `docs/SIDE_IMPACT_RECOVERY_SPEC.md`,
 runtime import.
 
 
-## Retained braking stance — checkpoint 27 revision, awaiting feedback
+## Retained braking stance — checkpoint 27 revision, approved
 
 The user identified an unnecessary half-step followed by a return toward rest in
 both stopping animals, and preferred the fluid stance recovery of the approved
@@ -94,8 +94,11 @@ checkpoint-27 replay is retained with the user's requested stop correction.
 Both native Unity captures completed successfully: 438 frames per animal at
 24 fps, 18.25 seconds each. All 876 frames were inspected in chronological
 sheets; no additional post-stop reset was identified. Runtime secondary arm/jaw
-motion remains active. Review both revised stops at native speed and pause for
-feedback before connected controls or additional movement families.
+motion remains active. User approval on 2026-09-15: “much much better! approved”.
+These exact revised stops are now the visual baseline for both animals.
+Capture-time receipts remain unchanged; user-review.json records the approval.
+Connected controls are next, with actual final foot placements preserved.
+Full force and production contact acceptance remain open.
 
 ## Earlier straight response replay — checkpoint 27, stop changes requested
 
