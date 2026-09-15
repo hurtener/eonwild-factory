@@ -44,10 +44,10 @@ Checkpoint 26 is the approved walking side-hit recovery baseline; standing impac
 | Terrain adaptation / slopes / stepping over | Runtime acceptance missing | Runtime acceptance missing | Adapt contacts on uneven ground and obstacles |
 | Swim / wade / enter or leave water | Missing | Missing | Water interaction and locomotion; current mini-world water is scenery |
 | Social / display / vocalization | Missing | Missing | Behavior breadth and intent |
-| Connected runtime movement controls | Partial prototype | Partial prototype | Link reviewed forward, turn, reverse, lateral and impact motions with contact-safe handovers |
+| Connected runtime movement controls | Checkpoint 28 candidate | Checkpoint 28 candidate | Forward/curves/in-place turns/reverse/stops connected; visual review pending. Lateral/impact controls, terrain and full contact parity remain open |
 
-Checkpoint 27 stopping baseline is approved and preserved. Next: connected
-controls; running/sprinting transfer;
+Checkpoint 27 stopping baseline is approved and preserved. Current: checkpoint
+28 connected controls, pending review. Next: running/sprinting transfer;
 running and sprinting side-hit recovery; hit-induced knockdowns from walking,
 running and sprinting with grounded aftermath/get-up; feeding/drinking and the
 remaining rest, combat/injury and behavior breadth. Each new entry gait and
@@ -60,6 +60,37 @@ Detailed impact scope: principal Eonwild `docs/SIDE_IMPACT_RECOVERY_SPEC.md`,
 “Requested impact coverage” section. This is documentation guidance, not a
 runtime import.
 
+
+## Dynamic connected controls — checkpoint 28, review pending
+
+The player can request walking, faster walking, left/right walking turns,
+in-place turns, reverse and stopping. Runtime motion uses the approved 27/17/12/19
+source clips unchanged, with a shared contact/pose adapter for both rigs. Endpoints
+are the actual resulting world pose and support placements. Incoming motion selects
+a compatible phase, carries linear/angular velocity, and releases inherited foot
+placement during recovery. Reverse stopping uses reverse choreography.
+
+The public state-adoption entry point carries articulated pose, body position,
+heading, linear/angular velocity, and world foot poses/velocities/contact flags.
+Six actual-rig checks displaced and rotated each animal mid-step before adopting
+walking, a curve and reverse. These checks exercise grounded adoption; the full
+hit-to-run example still needs live collision handoff and the incoming run solver.
+
+Evidence lives in principal Eonwild `game/Evidence/connected-movement-study/`.
+The separate native app is `game/Builds/Eonwild Connected.app`; the approved
+mini-world scene and earlier checkpoints are preserved. This adapter does not
+certify skin contact, joint loads or full physical inertia. Current planar travel
+still needs terrain/collision reconciliation. Capability-driven straight cadence
+and acceleration budgets remain open; approved straight timing is preserved.
+Both native 42-second Unity recordings completed (1,008 frames each at 24 fps),
+with all 2,016 frames inspected chronologically. Each sequence made 17 handoffs.
+Maximum foot-joint target residual was 1.29 mm Allosaurus / 1.73 mm Tarbosaurus;
+these are adapter diagnostics, not skin-contact certificates. Focused native
+keyboard checks verified input/release, animal selection, pause/reset and exit.
+Held-key combinations were exercised through the demo intent path; live FPS was
+not measured in this pass. The player was closed after verification.
+
+Pause for both-animal review before adding new animation families.
 
 ## Retained braking stance — checkpoint 27 revision, approved
 

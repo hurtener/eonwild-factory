@@ -66,6 +66,28 @@ exactly-once event delivery across loop wrap, pause, seeking and interruption.
 A transition carries support foot, contact anchors, phase, velocity, target and
 grip state; an arbitrary crossfade does not guarantee those constraints.
 
+### Dynamic movement state
+
+Do not require a canonical beginning or ending stance. A displaced animal must
+be able to change intent without first returning to an authored rest pose.
+Carry its articulated local pose, world body center and root orientation,
+heading, linear/angular velocity, and each foot's world pose, velocity and
+observed support state. Units remain metres, seconds and explicitly declared
+angular units (the current Unity review adapter uses degrees/second).
+
+The outgoing movement relinquishes root ownership before the incoming adapter
+adopts this state. Select a compatible support phase; preserve inherited
+placements until release; reconcile reach at the body before solving the legs.
+Future running and collision recovery consume the same handoff state, but each
+behavior still owns contact choreography. Clip contact tracks are planned cues;
+world-confirmed contacts and gameplay outcomes remain world authority.
+
+Checkpoint 28 in principal Eonwild implements a grounded review adapter over
+immutable approved clips, including actual-state adoption and decaying pose/
+velocity offsets. Its runtime corrections require new review and measurements;
+old source contact receipts do not certify the adjusted runtime output.
+Airborne/hit-to-run transfer and full material contact/force parity remain open.
+
 ## First consumer acceptance scene
 
 - Flat floor, slope, obstacle, food target and controllable resistance.
