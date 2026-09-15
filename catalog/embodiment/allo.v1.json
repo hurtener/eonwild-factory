@@ -794,7 +794,33 @@
       "Capabilities cover flat-ground low-speed locomotion only. Sprint speed, airborne behavior and uneven terrain are not admitted here.",
       "Whole-body effective force/torque budgets do not solve distributed joint forces, tissue stresses or final contact.",
       "Mass and preserved step/stride intent come from authoring; published estimates and authored control budgets must not be conflated."
-    ]
+    ],
+    "run": {
+      "preferredSpeed": {
+        "value": 3.8,
+        "unit": "m/s",
+        "classification": "authored_estimate",
+        "source": {
+          "citation": "Eonwild running calibration 01, checkpoint 29. Authored moderate run target; not a reconstructed maximum speed or measured fossil gait."
+        }
+      },
+      "stepLength": {
+        "value": 1.7,
+        "unit": "m",
+        "classification": "authored_estimate",
+        "source": {
+          "citation": "Eonwild running calibration 01, checkpoint 29. Authored moderate run target; not a reconstructed maximum speed or measured fossil gait."
+        }
+      },
+      "sameFootStride": {
+        "value": 3.4,
+        "unit": "m",
+        "classification": "authored_estimate",
+        "source": {
+          "citation": "Eonwild running calibration 01, checkpoint 29. Authored moderate run target; not a reconstructed maximum speed or measured fossil gait."
+        }
+      }
+    }
   },
   "impactResponse": {
     "contract": "eonwild.impact-compliance.v1",

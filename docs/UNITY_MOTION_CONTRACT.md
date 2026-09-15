@@ -101,3 +101,10 @@ Airborne/hit-to-run transfer and full material contact/force parity remain open.
 Unity engine/package versions should be pinned in the consumer project when
 that scene is created. No untested Unity project is included merely to make
 this factory PR appear more complete.
+
+Checkpoint 29 adds grounded-to-run state adoption to the same adapter. Two
+displaced actual-rig checks retain the first adopted pose and foot placements.
+Its new running source is generated from admitted geometry through the shared
+airborne-family solver. Neither these checks nor the plain-stage clips establish
+arbitrary airborne interruption, live collision-to-run or full material/force
+parity. Source and adjusted runtime diagnostics are kept separately.

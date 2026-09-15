@@ -6,7 +6,7 @@ Updated 2026-09-15. This is a living evidence tracker, not a fixed plan inherite
 ## Current animation inventory
 
 Checkpoint 27 retained-braking-support stops are approved for both animals.
-Latest visual approval is checkpoint 27. **Approved means visually accepted
+Latest visual approval is checkpoint 28. **Approved means visually accepted
 in the reviewed clips**, not fully certified for arbitrary gameplay. Unless a row
 says otherwise, both admitted animals use the same shared engine with profile data.
 Historical sections and capture-time receipts below retain earlier review states.
@@ -34,7 +34,7 @@ Checkpoint 26 is the approved walking side-hit recovery baseline; standing impac
 | Arm carriage and secondary motion | Full-transition pass approved | Full-transition pass approved | Behavior-specific overrides for attacks, rest and interaction |
 | Jaw relaxation / breathing-like cycle | Full-transition pass approved | Full-transition pass approved | Full-body breathing and behavior-specific mouth control |
 | Expressive idle / listening / alert scanning | No complete approved family | No complete approved family | Compose meaningful attention, posture and breathing behaviors from existing layers |
-| Running / sprinting | Current approved transfer missing | Historical Run010 / Sprint006 references preserved | Transfer and review through current shared engine on both animals |
+| Running / sprinting | Normal run candidate, checkpoint 29; sprint missing | Normal run candidate, checkpoint 29; historical Run010 / Sprint006 preserved | Transfer and review through current shared engine on both animals |
 | Feeding / gripping / pulling | Current approved transfer missing | Historical Feeding003 reference preserved | Current grounded support, oral contact and interaction handoff |
 | Drinking / swallowing | Missing | Missing | New choreography and world interaction |
 | Rest / sit / lie down / rise / sleep | Missing | Missing | New support transitions and resting behavior |
@@ -44,10 +44,10 @@ Checkpoint 26 is the approved walking side-hit recovery baseline; standing impac
 | Terrain adaptation / slopes / stepping over | Runtime acceptance missing | Runtime acceptance missing | Adapt contacts on uneven ground and obstacles |
 | Swim / wade / enter or leave water | Missing | Missing | Water interaction and locomotion; current mini-world water is scenery |
 | Social / display / vocalization | Missing | Missing | Behavior breadth and intent |
-| Connected runtime movement controls | Checkpoint 28 candidate | Checkpoint 28 candidate | Forward/curves/in-place turns/reverse/stops connected; visual review pending. Lateral/impact controls, terrain and full contact parity remain open |
+| Connected runtime movement controls | Approved, checkpoint 28 | Approved, checkpoint 28 | Forward/curves/in-place turns/reverse/stops connected; visually approved. Lateral/impact controls, terrain and full contact parity remain open |
 
 Checkpoint 27 stopping baseline is approved and preserved. Current: checkpoint
-28 connected controls, pending review. Next: running/sprinting transfer;
+28 connected controls, approved for both animals. Next: running/sprinting transfer;
 running and sprinting side-hit recovery; hit-induced knockdowns from walking,
 running and sprinting with grounded aftermath/get-up; feeding/drinking and the
 remaining rest, combat/injury and behavior breadth. Each new entry gait and
@@ -61,7 +61,7 @@ Detailed impact scope: principal Eonwild `docs/SIDE_IMPACT_RECOVERY_SPEC.md`,
 runtime import.
 
 
-## Dynamic connected controls — checkpoint 28, review pending
+## Dynamic connected controls — checkpoint 28, approved
 
 The player can request walking, faster walking, left/right walking turns,
 in-place turns, reverse and stopping. Runtime motion uses the approved 27/17/12/19
@@ -90,7 +90,7 @@ keyboard checks verified input/release, animal selection, pause/reset and exit.
 Held-key combinations were exercised through the demo intent path; live FPS was
 not measured in this pass. The player was closed after verification.
 
-Pause for both-animal review before adding new animation families.
+User approved both animals on 2026-09-15. Checkpoint 29 begins normal running transfer; sprinting remains a separate later review.
 
 ## Retained braking stance — checkpoint 27 revision, approved
 
@@ -569,3 +569,57 @@ Shared Factory resolution, directional regeneration, profile export and labeled 
 Allosaurus effective forward acceleration is 0.833 m/s² and yaw acceleration 95.8 deg/s²; Tarbosaurus 0.696 m/s² and 129.6 deg/s². These are authored effective responses derived using the stored mass/inertia, not measured animal performance. The turn in each direction can take a different time because its support path differs. Preferred walking speeds resolve to 1.05 and 1.00 m/s while preserving step/stride intent; approved straight-walk clips were not regenerated.
 
 User review: ACCEPTED as a good indie-game turning baseline, with further choreography polish still open. The deliberate reversal settling remains visible. Maximum planted-interval knee displacement along the foot lateral axis is 31.6 mm for Allosaurus and 33.8 mm for Tarbosaurus, close to draft 10's 31.9/32.5 mm. This is a positional diagnostic, not proof of joint loading. Locomotion-path acceleration limits exclude additional local pelvis support accommodation; final mass/contact correction is still open. Evidence and the next work are tracked in the current checkpoint above.
+
+
+## Normal running transfer — checkpoint 29 D, awaiting review
+
+Checkpoint 28 connected controls are approved for both animals. The next bounded
+review adds normal running with the existing airborne-family planner and the
+current source rigs. The normal walk and historical Run010/Sprint006 are preserved.
+Sprinting and their impact reactions are later checkpoints.
+
+Canonical `locomotion.run` inputs declare moderate authored target speed, one-step
+distance and complete same-foot stride. Allosaurus uses 3.8 m/s, 1.70 m per step
+and 3.40 m per stride; Tarbosaurus uses 3.4 m/s, 2.02 m and 4.04 m. These are game
+animation calibration values, not fossil measurements, maximum speeds or a claim
+of which species was biologically faster. The shared resolver derives cadence
+from distance/speed, never from species names.
+
+The candidate preserves current toe-chain topology, outward leg/foot orientation,
+heel release and distal-pad recovery. Loading, launch and catch share a continuous
+body carrier with restrained chest/head/tail response. The Unity adapter accepts
+running intent using the same actual-pose/velocity/contact handoff state. The
+review sequence is walk → run → walk → retained-support stop. Full force balance,
+terrain contact, running steering and collision-triggered hit → escape are open.
+
+Evidence will be recorded in `game/Evidence/running-study/` in principal Eonwild.
+Both-animal visual approval is pending.
+
+Checkpoint 29 uses a plain animation stage at the user’s request; ordinary
+animation iteration returns embedded videos instead of launching the demo world.
+The supplied running/sprinting examples were inspected at all 145 frames each.
+The reference-led revision raises running compression/flight excursion and tail
+response. Both newly emitted GLBs were reopened; 24 focused checks pass. Two
+actual-rig displaced-state adoption checks also pass in Unity. These are diagnostic
+checks, not final force/contact certification. Allosaurus has up to 8.86 mm of
+requested foot overreach during late flight, with bone lengths preserved.
+
+
+Checkpoint 29 articulation review (2026-09-15): the early Allosaurus preview
+received feedback on deep knee gathering, ankle motion and heel rise. Actual-rig
+analysis confirms prolonged recovery at the configured ankle limit on both rigs.
+The stronger internal C bounce also creates a late-flight Allosaurus straight-knee
+lock. Running is not approved. Next: coordinated hip/knee/foot trajectories and
+contact, then both-animal plain-stage videos. See principal Eonwild
+`game/Evidence/running-study/JOINT_REVIEW.md`; sprinting remains pending.
+
+
+Checkpoint 29 D correction: reduced heel roll, shallower support compression and
+recovery, and touchdown at 40% of one step ahead of the root preserve the declared
+step/stride and cadence. Removed the additional world-metatarsal recovery target.
+Both rigs were re-emitted and reopened: zero sampled reach excess, no recovery
+keys at the former 90-degree ankle limit, no straight-knee lock. Both 20-second
+plain-stage videos were recorded, all 960 frames inspected, and the candidate is
+paused for user feedback. Contact-centroid/floor corrections are included; full
+material contact and physical force balance remain uncertified. This is running
+only; approved walks and historical Run010/Sprint006 were not regenerated.
