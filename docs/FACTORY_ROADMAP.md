@@ -5,7 +5,8 @@ Updated 2026-09-15. This is a living evidence tracker, not a fixed plan inherite
 
 ## Current animation inventory
 
-Current review authority as of checkpoint 26. **Approved means visually accepted
+Current checkpoint 27 is awaiting straight-response feedback. Latest approval
+remains checkpoint 26. **Approved means visually accepted
 in the reviewed clips**, not fully certified for arbitrary gameplay. Unless a row
 says otherwise, both admitted animals use the same shared engine with profile data.
 Historical sections and capture-time receipts below retain earlier review states.
@@ -16,7 +17,7 @@ Checkpoint 26 is the approved walking side-hit recovery baseline; standing impac
 | Grounded stance / held idle | Reviewed baseline | Reviewed baseline | Broader expressive idle behavior |
 | Normal walking | Approved, iteration 14 | Approved, iteration 15 | Preserve gait while completing production contact work |
 | Faster walking | Approved in sequence | Approved in sequence | Grounded fast walk; running is a separate family |
-| Idle → start → normal → faster → slow → stop | Approved, iteration 16 sequence | Approved, iteration 16 sequence | Later purposeful-start/stop retiming needs its own straight-motion review; full contact parity pending |
+| Idle → start → normal → faster → slow → stop | Approved, iteration 16 sequence | Approved, iteration 16 sequence | Purposeful retiming replayed in checkpoint 27; awaiting feedback; full contact parity pending |
 | Heel roll, toe-off and swing recovery | Reviewed; added intermediate toe joints | Reviewed | Maintain articulation across combined behaviors |
 | Walking curves / tight walking turns | Approved, checkpoint 17 | Approved, checkpoint 17 | Connect to player steering; final material contact and mass work |
 | Stepping turns in place | Approved, checkpoint 12 | Approved, checkpoint 12 | Connect to other movement states; final material contact and mass work |
@@ -45,8 +46,8 @@ Checkpoint 26 is the approved walking side-hit recovery baseline; standing impac
 | Social / display / vocalization | Missing | Missing | Behavior breadth and intent |
 | Connected runtime movement controls | Partial prototype | Partial prototype | Link reviewed forward, turn, reverse, lateral and impact motions with contact-safe handovers |
 
-Working sequence after checkpoint 26: review of the later straight-start/stop
-response; connected controls; running/sprinting transfer;
+Current pause: checkpoint 27 straight-start/stop response review. Then connected
+controls; running/sprinting transfer;
 running and sprinting side-hit recovery; hit-induced knockdowns from walking,
 running and sprinting with grounded aftermath/get-up; feeding/drinking and the
 remaining rest, combat/injury and behavior breadth. Each new entry gait and
@@ -59,6 +60,43 @@ Detailed impact scope: principal Eonwild `docs/SIDE_IMPACT_RECOVERY_SPEC.md`,
 “Requested impact coverage” section. This is documentation guidance, not a
 runtime import.
 
+
+## Straight response review — checkpoint 27, awaiting feedback
+
+This checkpoint addresses an outstanding review gap: the purposeful straight
+start/stop retiming first emitted during checkpoint 16 was never separately
+approved when the walking curves advanced to checkpoint 17. The original
+approved connected sequence (iteration 16) is a different baseline.
+
+The exact existing straight GLBs are preserved and replayed in fresh native-time
+three-quarter recordings on both animals, alongside their original side views.
+There is no new solver or motion export in checkpoint 27. The review isolates
+first-step acceleration, sideways weight transfer, recovery through normal/faster
+walking, final placement and settling. Arm and jaw secondary motion stays active.
+The recordings retain the source take's on-screen label “16”; this is review
+checkpoint 27 of that existing motion, not a relabeled new animation.
+
+The authored response reaches full speed over 0.9 of one step after 0.35 s
+preparation. Moving-foot articulation has its own 0.85 floor. These clips retain
+the earlier gait cadence (1.23 s per step for both animals), anatomy and body
+support coefficients; they do not demonstrate the newer capability-driven
+cadence/acceleration differences. That integration remains work for connected
+controls and must preserve the approved visual rhythm.
+
+Both fresh captures exited successfully; all 876 frames were inspected in 30
+chronological sheets. Forty-seven focused transition checks pass. The motion
+hashes match the original receipts; existing reopened contact measurements still apply to the same assets:
+floor penetration maxima 4.49/10.90 mm and loaded-material residual maxima
+2.90/2.07 mm (Allosaurus/Tarbosaurus). Those are diagnostic results, not new
+production passes. Full force balance, numeric capability acceleration budgets
+and complete Unity contact parity remain pending. The initial body rise,
+particularly Tarbosaurus, is explicitly left for native-speed weight judgment.
+
+Evidence: principal game `game/Evidence/straight-response-review-checkpoint27/`.
+Pause for both-animal feedback here. Do not infer approval of this response from
+the approved original sequence, curves, or side-hit recoveries. After review,
+resume connected controls, then the incoming run/sprint families before their
+hit reactions. A requested visible correction comes before that expansion.
 
 ## Earlier catch articulation — checkpoint 26, visually approved
 
