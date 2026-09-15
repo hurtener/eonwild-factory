@@ -37,12 +37,14 @@ class StumbleRecoverySteps(DirectionalSteps):
                 raise ValueError('Impact requires a semantic side and positive finite received impulse in N s')
             direction = math.copysign(1., lanes[side])
             velocity = impulse/capabilities['massKg']
-            distance = velocity*self.policy['reaction_seconds'] + velocity**2/(2*capabilities['lateralAccelerationMps2'])
+            distance = velocity*self.policy.get('braking_delay_seconds',self.policy['reaction_seconds']) + velocity**2/(2*capabilities['lateralAccelerationMps2'])
             if distance > self.policy['maximum_recoverable_distance_body_heights']*height:
                 raise ValueError('Impact exceeds this grounded recovery study; a fall behavior is required')
             pairs = max(1, math.ceil(distance/(self.policy['catch_reach_body_heights']*height)))
             count = pairs*2
-            end = time+self.policy['reaction_seconds']+count*period
+            scales = self.policy.get('catch_duration_scales',[1.])
+            durations = [period*scales[min(i,len(scales)-1)] for i in range(count)]
+            end = time+self.policy['reaction_seconds']+sum(durations)
             b = dict(start=time,end=end,center=center.copy(),delta=self.lateral*direction*distance,
                      heading=0.,angle=0.,stationary=False,count=count,length=distance,
                      side=side,direction=direction,label=spec['label'],period=period,
@@ -51,6 +53,7 @@ class StumbleRecoverySteps(DirectionalSteps):
                      severity=velocity/self.policy['reference_velocity_mps'])
             self.blocks.append(b)
             follower = next(s for s in lanes if s != side)
+            start = time+self.policy['reaction_seconds']
             for index in range(count):
                 moving = side if index%2 == 0 else follower
                 # Early opening catches most momentum. Later pairs make smaller
@@ -58,14 +61,19 @@ class StumbleRecoverySteps(DirectionalSteps):
                 fraction = 1-(1-(index//2+1)/pairs)**1.25
                 target = self.anchors[moving]+center+b['delta']*fraction
                 target_heading = math.copysign(math.radians(self.policy['opening_yaw_degrees']), lanes[moving])
-                start = time+self.policy['reaction_seconds']+index*period
-                e = dict(start=start,end=start+period,duration=period,period=period,
+                d = durations[index]
+                e = dict(start=start,end=start+d,duration=d,period=period,
                          side=moving,block=b,index=index,inner=index%2==1,
                          old=anchors[moving].copy(),target=target,
                          oldHeading=headings[moving],targetHeading=target_heading,
                          label=spec['label']+('/catch' if index == 0 else '/absorb and recover'))
+                if 'catch_recovery_window' in self.policy:
+                    e.update(recovery_window=self.policy['catch_recovery_window'],
+                             load_release_not_before_s=time,
+                             swing_ease_power=self.policy['catch_swing_ease_power'])
                 self.events.append(e); self.steps.append(e)
                 anchors[moving], headings[moving] = target, target_heading
+                start += d
             center += b['delta']
             time = end+self.policy['settle_seconds']
         self.duration = time
@@ -79,7 +87,7 @@ class StumbleRecoverySteps(DirectionalSteps):
         return b['center']+b['delta']*progress, 0.
 
     def response(self, time):
-        roll = drop = look = torso_roll = tail_yaw = 0.
+        roll = drop = look = torso_roll = torso_yaw = tail_yaw = 0.
         for b in self.blocks:
             age = time-b['start']
             if age <= 0: continue
@@ -94,8 +102,12 @@ class StumbleRecoverySteps(DirectionalSteps):
             # Chest gives first; head and tail lag and then recover, rather than
             # looking toward an unannounced collision before it has happened.
             torso_roll -= b['direction']*math.radians(self.policy['torso_roll_degrees'])*severity*envelope
-            delayed = smooth((age-.10)/.30)*math.exp(-max(0.,age-.10)/(span*.7))*finish
+            torso_yaw -= b['direction']*math.radians(self.policy.get('torso_yaw_degrees',0.))*severity*envelope
+            delay = self.policy.get('extremity_lag_seconds',.10)
+            rise_time = self.policy.get('extremity_rise_seconds',.30)
+            delayed = smooth((age-delay)/rise_time)*math.exp(-max(0.,age-delay)/(span*.7))*finish
             look -= b['direction']*self.policy['attention_fraction_of_normal']*min(severity,1.)*delayed
             tail_yaw += b['direction']*math.radians(self.policy['tail_yaw_degrees'])*severity*delayed
         return dict(roll_radians=roll,drop_m=drop,look_normal_fraction=look,
-                    torso_roll_radians=torso_roll,tail_yaw_radians=tail_yaw)
+                    torso_roll_radians=torso_roll,torso_yaw_radians=torso_yaw,
+                    tail_yaw_radians=tail_yaw)

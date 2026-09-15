@@ -3,7 +3,7 @@ import numpy as np
 import math
 from scipy.ndimage import gaussian_filter1d
 from ..planning.grounded_gait import smooth
-from ..planning.walking_response import recovery_window
+from ..planning.walking_response import support_transfer_times
 
 
 def contact_loads(sequence, time, transfer_fraction=.35):
@@ -14,10 +14,9 @@ def contact_loads(sequence, time, transfer_fraction=.35):
     """
     loads={s:1. for s in sequence.anchors}
     for e in sequence.events:
-        d=e['duration'];a,b=recovery_window(e,sequence.walking)
-        lift=e['start']+a*d;touch=e['start']+b*d
-        unload=smooth((time-(lift-transfer_fraction*d))/(transfer_fraction*d))
-        reload=smooth((time-touch)/(transfer_fraction*d))
+        start,lift,touch,end=support_transfer_times(e,sequence.walking,transfer_fraction)
+        unload=smooth((time-start)/(lift-start))
+        reload=smooth((time-touch)/(end-touch))
         loads[e['side']]*=1-unload*(1-reload)
     total=sum(loads.values())
     if total<=1e-10:raise ValueError('Turn load schedule has no support')

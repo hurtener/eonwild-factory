@@ -3,7 +3,39 @@
 Updated 2026-09-14. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
 
 
-## Side-hit stumble and recovery — checkpoint 22, review pending
+## Immediate curved impact — checkpoint 23, review pending
+
+The shared response now bends the chest sideways with head/tail lag, while a low
+catch begins almost immediately. Reaction onset, first-foot release and load
+transfer share one clock; unexpected hits no longer anticipate an unload. An
+authored emergency cadence shortens the first catch and progressively returns
+to the profile-derived base period. Recipe authority is
+`catalog/behaviors/stumble-recovery-review.v2.json`; v1 and earlier assets remain.
+
+First release occurs 33.8 / 35.6 ms after impact (Allosaurus / Tarbosaurus), with
+first landing at 295.6 / 332.7 ms. These are authored timings, not biological
+reflex measurements. The same 1000 / 1800 N s inputs and profile mass settings
+retain checkpoint 22's planned distances and catch counts. A draft ankle snap
+on Allosaurus was corrected by lowering catch clearance and vertical compression
+before the final exports and captures.
+
+Native Unity evidence: `game/Evidence/immediate-curved-impact-study` in the
+principal game. Allosaurus: 127 frames / 5.291667 s; Tarbosaurus: 106 frames /
+4.416667 s, both 1280×720 at 24 fps. All 233 frames inspected chronologically in
+11 sheets, plus six full-size frames. A fixed elevated three-quarter camera
+exposes the sideways curve. 47 focused tests, both actual-rig generations,
+reopened export measurements, Unity build, captures and full video decode pass.
+
+Maximum knee angles are 146.76 / 114.07 degrees; ankle angles 128.69 / 135.01.
+Zero sampled reach overflow. Maximum planted skin-vertex drift is 7.01 / 2.13 mm;
+full material contact and whole-body force balance remain pending. This remains
+a baked authored recovery, without live collision transfer or fall dynamics.
+Checkpoint 21 is accepted; 22 is a revision reference; 23 awaits user review.
+Pause here before connected controls or another motion family.
+
+## Side-hit stumble and recovery — checkpoint 22, revision requested
+
+User feedback: checkpoint 22 is too restrained and the catch appears delayed. The next pass must bend the body sideways into a curve and begin recovery almost immediately. Checkpoint 21 remains accepted; checkpoint 22 was not approved.
 
 Checkpoint 21 is accepted. The requested stronger version now receives an
 authored side impulse before catching and recovering, with continuous torso/hip
@@ -216,7 +248,8 @@ The user approved iteration 16 as smooth and credible, while correctly distingui
 | Idle → start → walk → faster → slow → stop | Visually approved, iteration 16 | Visually approved, iteration 16 | 18.68-second source-driven sequence; runtime import not yet verified |
 | Heel roll, toe-off, swing recovery | Reviewed | Reviewed | Shared articulation; Allosaurus has added intermediate toe joints |
 | Lateral weight transfer / pelvis response | Reviewed engineering response | Reviewed reduced vertical response | Not a converged whole-body force simulation |
-| Reverse walking | Checkpoint 18: four-step retreat, visual review pending | Checkpoint 18: four-step retreat, visual review pending | Shared reverse policy, contact/load response and actual Unity captures; production acceptance pending |
+| Reverse walking | Checkpoints 19/20 visually accepted | Checkpoints 19/20 visually accepted | Ordinary and stronger flank glances; production contact and connected controls pending |
+| Deliberate lateral balance recovery | Checkpoint 21 visually accepted | Checkpoint 21 visually accepted | Open-and-follow support choreography; live balance feedback pending |
 | Turning / curved paths / pivots | In-place turn 12 and walking curves 17 visually accepted | In-place turn 12 and walking curves 17 visually accepted | Curve 17 supersedes drafts 13–16; final mass and material contact remain pending |
 | Running / sprinting | Missing approved transfer | Approved historical Run010 / Sprint006 references | Shared airborne generation exists; current two-animal/runtime acceptance missing |
 | Independent gaze / neck attention | Runtime demonstration reviewed | Runtime demonstration reviewed | World interest points; not complete sensory behavior |
@@ -225,7 +258,8 @@ The user approved iteration 16 as smooth and credible, while correctly distingui
 | Drinking / swallowing | Missing | Missing | Separate choreography and interaction authority |
 | Rest / sit / lie down / rise / sleep | Missing | Missing | Topology and support transitions required |
 | Bite / attack / recoil / defense | Missing | Missing | World confirms outcomes; animation only supplies windows |
-| Injury / limp / stumble / fall / death | Missing | Missing | No current reusable, reviewed family |
+| Side-hit stumble and recovery | Checkpoint 23 candidate | Checkpoint 23 candidate | Immediate catch and curved impact; visual review pending, live collision/fall simulation missing |
+| Injury / limp / fall / death | Missing | Missing | No current reusable, reviewed family |
 | Jump / airborne landing / recovery | Missing reviewed behavior | Missing reviewed behavior | Airborne gait implementation does not certify jumping |
 | Terrain adaptation / slopes / stepping over | Missing runtime acceptance | Missing runtime acceptance | Flat-floor factory evidence is not terrain proof |
 | Swim / wade / enter/leave water | Missing | Missing | Mini-world water is scenery until interaction is implemented |

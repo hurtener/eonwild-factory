@@ -1,6 +1,5 @@
 """Impact causality, intensity response and shared grounded support."""
 import json
-from copy import deepcopy
 from pathlib import Path
 import numpy as np
 import pytest
@@ -14,7 +13,7 @@ def make(animal='allo', mass_scale=1., side='right', impulse=None):
     c=resolve_capabilities(p)
     c['massKg']*=mass_scale
     c['lateralAccelerationMps2']/=mass_scale
-    r=json.loads((ROOT/'catalog/behaviors/stumble-recovery-review.v1.json').read_text())
+    r=json.loads((ROOT/'catalog/behaviors/stumble-recovery-review.v2.json').read_text())
     for b in r['blocks']:
         b['side']=side
         if impulse is not None:b['received_impulse_ns']=impulse
@@ -29,7 +28,14 @@ def test_hit_arrives_before_foot_release_and_support_stays_grounded(animal):
         assert all(f['contact'] for f in p.sample(t)['feet'].values())
         assert all(v==0 for v in p.response(t).values())
     assert p.response(hit+.08)['drop_m']>0
-    assert all(f['contact'] for f in p.sample(hit+.08)['feet'].values())
+    catching=p.sample(hit+.08)['feet']['right']
+    assert not catching['contact']
+    assert np.linalg.norm(catching['position']-p.anchors['right'])>.015
+    assert p.response(hit+.10)['torso_yaw_radians']<0
+    assert p.response(hit+.15)['tail_yaw_radians']>0
+    for t in np.linspace(hit-.10,hit,31):
+        assert contact_loads(p,t)=={'left':.5,'right':.5}
+        np.testing.assert_allclose(p.sample(t)['center'],np.zeros(3),atol=1e-12)
     for t in np.linspace(0,p.duration,1201):
         feet=p.sample(t)['feet'];loads=contact_loads(p,t)
         assert any(f['contact'] for f in feet.values())

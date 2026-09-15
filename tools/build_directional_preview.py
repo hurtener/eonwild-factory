@@ -140,7 +140,9 @@ def main():
         impact_response=sequence.response(t) if stumble_recovery else None
         roll_angle=load_response.roll(t) if load_response else 0.
         if impact_response:
-            roll_angle*=smooth((t-sequence.blocks[0]['start'])/.10)
+            active=max(smooth((t-b['start'])/.04)*
+                (1-smooth((t-b['end'])/recipe['impact']['settle_seconds'])) for b in sequence.blocks)
+            roll_angle*=active
             roll_angle+=impact_response['roll_radians']
         settle=recipe['turn_leg_shape']['pelvis_settle_body_heights']+(0. if load_response else .008*step['weight']**2)
         if impact_response:settle+=impact_response['drop_m']/c.body_height
@@ -175,6 +177,7 @@ def main():
                 base_r[node]=_qmul(base_r[node],_qrotvec(local_axis*(tail_rate if role=='tail' else angular_rate)*lag/max(1,len(names))))
         if impact_response:
             for role,axis,angle in [('spine',c.forward,impact_response['torso_roll_radians']),
+                                    ('spine',c.up,impact_response['torso_yaw_radians']),
                                     ('tail',c.up,impact_response['tail_yaw_radians'])]:
                 names=list(c.roles.get(role,[]))
                 for name in names:

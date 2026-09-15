@@ -7,7 +7,7 @@ import math
 import numpy as np
 from .grounded_gait import smooth
 from .airborne_gait import rounded_swing_height
-from .walking_response import recovery_window
+from .walking_response import recovery_window, support_transfer_times
 
 
 class DirectionalSteps:
@@ -126,10 +126,9 @@ class DirectionalSteps:
         # adjacent exchanges instead of returning the pelvis to center per step.
         weight = 0.
         for e in self.events:
-            d = e['duration']
-            lift,touch=recovery_window(e,self.walking)
-            unload = smooth((time-(e['start']+(lift-.30)*d))/(.30*d))
-            reload = smooth((time-(e['start']+touch*d))/(.30*d))
+            start,lift,touch,end = support_transfer_times(e,self.walking,.30)
+            unload = smooth((time-start)/(lift-start))
+            reload = smooth((time-touch)/(end-touch))
             weight -= math.copysign(1.,self.lanes[e['side']]) * unload*(1-reload)
         return weight
 
@@ -170,7 +169,10 @@ class DirectionalSteps:
                     roll = carried_roll if overlap else peak_roll*smooth((phase+prepare)/(.10+prepare))
                 elif phase < touch:
                     swing = (phase-lift)/span
-                    blend = smooth(swing)
+                    # Emergency catches can travel earlier without changing
+                    # the articulation/contact clock or pausing at touchdown.
+                    travel_phase = 1-(1-swing)**e.get('swing_ease_power',1.)
+                    blend = smooth(travel_phase)
                     # The foot opens early in recovery; it is already aimed
                     # toward the intended support before weight arrives.
                     yaw_blend = smooth(swing/.90)

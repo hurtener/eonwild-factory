@@ -163,7 +163,7 @@ solvers. It adds no species branches.
 The result is a planned open-and-follow adjustment, not a simulated shove, COM
 feedback controller, slip detector or terrain response. The pelvis trajectory and
 load shares remain authored kinematics. Preserve the approved walking, turning
-and ordinary/exceptional glances. Lateral visual review is pending.
+and ordinary/exceptional glances. Checkpoint 21 lateral visual review is accepted; production acceptance remains pending.
 
 ### Received side-hit recovery (checkpoint 22)
 
@@ -181,3 +181,25 @@ The Unity viewer consumes a baked result and an optional diagnostic
 `*.review.json` impact timeline. This file annotates the capture only; it owns no
 movement, damage or animal tuning. Profile files are unchanged. A reusable
 Python behavior exists; interactive Unity dispatch/parity is still pending.
+
+### Immediate curved impact (checkpoint 23 candidate)
+
+The current candidate authority is `catalog/behaviors/stumble-recovery-review.v2.json`;
+v1 remains the checkpoint 22 revision reference. The behavior owns an explicit
+catch recovery window, no-prehit load release boundary, earlier swing travel,
+and per-catch duration scales. `support_transfer_times` aligns planner weights
+and contact loads. Defaults preserve other walking/turning policies.
+
+`reaction_seconds` controls first event onset. `braking_delay_seconds` belongs to
+the authored stopping-distance estimate and is not a second foot-reaction delay.
+`catch_duration_scales` multiplies the ordinary profile-derived base period;
+this emergency burst is authored and does not change the canonical animal's
+normal cadence. The capability receipt's `stepSeconds` remains that unscaled
+base period; actual event timing is in the evidence measurements summary.
+
+Chest yaw is distributed through semantic spine joints before shared limb solve
+and final contact correction. Head attention retains profile bounds; tail lag
+completes the side bend. Lower clearance and vertical compression avoid the
+first draft's Allosaurus ankle snap. No animal names or literal bone names enter
+the shared policy. Final source-rig measurements and every captured frame were
+reviewed; user approval and full physical/contact acceptance remain pending.
