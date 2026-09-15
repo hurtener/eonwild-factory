@@ -3,7 +3,7 @@
 Updated 2026-09-15. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
 
 
-## Side-impact recovery — checkpoint 24 implemented, visual review pending
+## Side-impact recovery — checkpoint 24 positively reviewed, transition polish next
 
 All six requested ideas are represented in the shared engine and exported on
 both actual rigs: localized point/vector input; support-dependent braking and
@@ -29,7 +29,7 @@ All eight actual-rig exports reopened; Unity build and captures completed.
 Two chaptered native 1280×720, 24 fps videos contain 568 Allosaurus and 588
 Tarbosaurus frames. Every frame inspected in 53 chronological sheets, with
 selected full-size transition views. 53 focused tests and full video decode pass.
-Implementation/generation/export/Unity playback: complete. User review: pending.
+Implementation/generation/export/Unity playback: complete. User review: positive first-pass feedback; transition polish requested.
 
 No sampled reach overflow. Emitted attention stays within the selected profile
 caps. Standing planted patches remain stable; the moving cases retain up to
@@ -39,7 +39,13 @@ specific visual review point. Full material-contact acceptance and whole-body
 force balance remain pending. The evidence records final pelvis/proxy differences;
 the reduced proxy must not be mistaken for measured whole-body COM.
 
-Pause here for feedback. Live collision transfer, arbitrary runtime interruption,
+User feedback: “they are super good starters”; overall direction is positively reviewed, with transition smoothness still needing polish. Preserve checkpoint 24 as the starting reference for that pass. This feedback does not certify production contact or forces.
+
+Next polish target: continuous weight acceptance into the following correction,
+ankle unfolding, and settling into the alert stance, while preserving urgency.
+Remain paused until the next implementation request.
+
+Live collision transfer, arbitrary runtime interruption,
 unknown-threat search, connected controls, falls and other motion families are
 not delivered by these baked review clips.
 
