@@ -3,6 +3,30 @@
 Updated 2026-09-15. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
 
 
+## Continuous body recovery — checkpoint 25, review pending
+
+The shared impact response now carries the incoming walking articulation clock
+into the shorter catch and starts the following preparation during late weight
+acceptance. The currently accepting foot cannot immediately lift again.
+
+In the first preview, the user identified sideways push-stop staircases. The
+emitted trajectory confirmed that neutral support-plane accommodation cancelled
+continuous body travel during single support, then released it at support
+switches. During impact this geometric root preference now yields over 65 ms;
+fixed foot anchors, anatomical leg solving and final material/floor correction
+still run afterwards. This is authored support compliance, not full force balance.
+
+Recipe: `stumble-recovery-review.v4.json`; canonical animal profiles are unchanged.
+Both actual rigs have standing chest/hip and opposite walking-phase impact cases.
+Evidence: principal game `game/Evidence/continuous-body-impact-study/`.
+The body path is measured on every native 24 fps frame, alongside joint/contact
+receipts and chronological image review. Checkpoint 24 remains preserved.
+
+Implementation, actual-rig export and native Unity playback are delivered at
+this checkpoint. User approval and production contact/force certification remain
+pending. Early Allosaurus ankle unfolding still needs polish. Pause for feedback
+before extending this motion family or starting falls/gameplay interruption.
+
 ## Side-impact recovery — checkpoint 24 positively reviewed, transition polish next
 
 All six requested ideas are represented in the shared engine and exported on

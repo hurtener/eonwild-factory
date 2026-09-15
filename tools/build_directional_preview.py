@@ -17,7 +17,7 @@ from eonwild_motion.solve.whole_body_gait_transition import _append_accessor, _e
 from eonwild_motion.planning.directional_steps import DirectionalSteps
 from eonwild_motion.solve.turn_attention import turn_look_yaw
 from eonwild_motion.planning.locomotion_capabilities import resolve_capabilities, plan_directional
-from eonwild_motion.solve.turn_support import accommodate_support_planes, TurnLoadResponse, loaded_hip_roll
+from eonwild_motion.solve.turn_support import accommodate_support_planes, TurnLoadResponse, loaded_hip_roll, impact_plane_accommodation
 from eonwild_motion.solve.turn_contact import tangent, material_patch_correction, material_patch_drift
 from eonwild_motion.planning.grounded_gait import smooth, grounded_swing_articulation
 from eonwild_motion.planning.foot_articulation import declare_pad_recovery_sample
@@ -179,6 +179,9 @@ def main():
             pelvis=c.origin+np.asarray(_qrotate(yaw,c.base_w[c.pelvis][:3,3]-c.origin))+step['center']-c.up*settle*c.body_height
             hips,support_delta=loaded_hip_roll(hips,pelvis,loads,np.asarray(_qrotate(yaw,c.forward)),c.up,roll_angle)
         accommodation=accommodate_support_planes(hips,ankles,normals,gains,c.up,c.forward,c.lateral,c.body_height)
+        if impact_response:
+            accommodation=impact_plane_accommodation(
+                accommodation,t-sequence.hit,recipe['impact'])
         step['center']=step['center']+accommodation
         angular_rate=(sequence.body(t+.01)[1]-sequence.body(t-.01)[1])/.02
         tail_rate += (angular_rate-tail_rate)*(1-math.exp(-1/(a.fps*response_seconds)))
@@ -249,16 +252,17 @@ def main():
                 row['feet'][s].update(lateral_articulation(u,f['contact'],roll,recipe['lateral']))
             if stumble_recovery:
                 row['feet'][s].update(lateral_articulation(u,f['contact'],roll,recipe['impact']))
-                if entry_blend>0:
+                foot_entry_blend=f.get('entry_articulation_weight',entry_blend)
+                if foot_entry_blend>0:
                     foot=row['feet'][s]
-                    foot['articulation_scale']=.30+.70*entry_blend
-                    foot['walking_knee_preference_degrees']=145.+10.*entry_blend
+                    foot['articulation_scale']=.30+.70*foot_entry_blend
+                    foot['walking_knee_preference_degrees']=145.+10.*foot_entry_blend
                     if not f['contact']:
-                        normal=grounded_swing_articulation(q._locomotion_gait,u)
-                        foot['toe_flex_degrees']=(1-entry_blend)*foot['toe_flex_degrees']+entry_blend*normal['toe_flex_degrees']
+                        normal=grounded_swing_articulation(q._locomotion_gait,f.get('walking_swing_phase',u))
+                        foot['toe_flex_degrees']=(1-foot_entry_blend)*foot['toe_flex_degrees']+foot_entry_blend*normal['toe_flex_degrees']
                         if 'metatarsal_recovery_gain' in normal:
                             foot['metatarsal_recovery_world_degrees_from_down']=normal['metatarsal_recovery_world_degrees_from_down']
-                            foot['metatarsal_recovery_gain']=normal['metatarsal_recovery_gain']*entry_blend
+                            foot['metatarsal_recovery_gain']=normal['metatarsal_recovery_gain']*foot_entry_blend
             if in_place or recipe.get('walking',{}).get('preserve_support_planes',False):
                 row['feet'][s]['turn_support_normal']=list(_qrotate(inv,normals[s]))
             if in_place:
@@ -270,8 +274,12 @@ def main():
         if walk_recovery and not step['turn_in_place']:
             declare_pad_recovery_sample(dict(c.plan['parameters']),row)
         if entry_blend>0:
-            declare_pad_recovery_sample(dict(c.plan['parameters']),row)
-            for foot in row['feet'].values():foot['pad_pitch_degrees']*=entry_blend
+            pad_row=deepcopy(row)
+            for s,foot in pad_row['feet'].items():
+                foot['swing_phase']=step['feet'][s].get('walking_swing_phase',foot['swing_phase'])
+            declare_pad_recovery_sample(dict(c.plan['parameters']),pad_row)
+            for s,foot in row['feet'].items():
+                foot['pad_pitch_degrees']=pad_row['feet'][s]['pad_pitch_degrees']*step['feet'][s].get('entry_articulation_weight',entry_blend)
         body_sample={'sagittal_node_degrees':{},'turn_attention':{'yaw_radians':look_yaw,'neck_share':attention['neck_share']}}
         if neck_weights is not None:body_sample['turn_attention']['neck_weights']=neck_weights
         if load_response:

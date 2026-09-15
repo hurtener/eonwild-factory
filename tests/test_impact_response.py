@@ -78,3 +78,28 @@ def test_location_load_acceptance_and_mirroring_change_the_response():
     np.testing.assert_array_equal(chest.values,again.values)
     assert chest.exit_state['stance']=='alert_recovery'
     assert chest.exit_state['injury']=='not_inferred'
+
+
+@pytest.mark.parametrize('animal',['allo','tarbo'])
+@pytest.mark.parametrize('case',['A','B','C','D'])
+def test_continuous_catches_keep_support_and_the_incoming_joint_clock(animal,case):
+    s=make(animal,case,overrides={'next_catch_acceptance_fraction':.72,
+                                'carry_entry_articulation':True})
+    for t in np.arange(s.hit,s.duration,1/240):
+        feet=s.sample(t)['feet'];loads=s.planned_loads(t)
+        assert sum(loads.values())==pytest.approx(1.)
+        assert any(f['contact'] for f in feet.values())
+        for side,f in feet.items():
+            if not f['contact']:assert loads[side]==0.
+    assert any(b['start']<a['end'] for a,b in zip(s.catches,s.catches[1:]))
+    for a,b in zip(s.catches,s.catches[1:]):
+        if b['start']<a['end']:
+            assert b['side']!=a['side']
+            assert b['lift']>a['touch']
+    if s.entry:
+        e=s.catches[0];side=e['side']
+        t=(e['lift']+e['touch'])/2
+        foot=s.sample(t)['feet'][side]
+        assert foot['walking_swing_phase']==s.entry.sample(t)['feet'][side]['swing_phase']
+        assert foot['walking_swing_phase']!=pytest.approx(foot['swing_phase'])
+        assert s.sample(e['touch'])['feet'][side]['entry_articulation_weight']==0.

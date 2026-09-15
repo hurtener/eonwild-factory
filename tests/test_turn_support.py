@@ -71,3 +71,18 @@ def test_unloaded_leg_does_not_drive_pelvis():
         {'left':np.array([1.,0.,0.])},{'left':0.},np.array([0.,1.,0.]),
         np.array([0.,0.,1.]),np.array([1.,0.,0.]),2.)
     np.testing.assert_array_equal(correction,np.zeros(3))
+
+
+def test_impact_path_is_not_cancelled_until_the_next_support_change():
+    from eonwild_motion.solve.turn_support import impact_plane_accommodation
+    policy={'support_plane_accommodation_fraction':0.,
+            'support_plane_release_seconds':.065}
+    correction=np.array([-.2,0.,.01])
+    np.testing.assert_array_equal(impact_plane_accommodation(correction,-.1,policy),correction)
+    np.testing.assert_array_equal(impact_plane_accommodation(correction,.2,{}),correction)
+    # During a planted interval, growing neutral-plane corrections must no
+    # longer cancel the continuous body displacement and form a plateau.
+    for position in [.10,.15,.20,.25]:
+        planned=np.array([position,0.,0.])
+        emitted=planned+impact_plane_accommodation(-planned,.2,policy)
+        np.testing.assert_array_equal(emitted,planned)

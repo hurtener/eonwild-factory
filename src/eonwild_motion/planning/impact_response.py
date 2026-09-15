@@ -78,7 +78,11 @@ class ReactiveImpactSteps(DirectionalSteps):
         yaw_rate=0.; status='recovering'
         for t in self.times:
             age=t-self.hit; feet=self._feet(t); loads=self._loads(t)
-            active=next((e for e in self.catches if t<e['end']),None)
+            # Begin the next preparation once the previous catch can bear
+            # weight, while its final compression is still settling.
+            handover=self.policy.get('next_catch_acceptance_fraction',1.)
+            active=next((e for e in self.catches if t<e['touch']+
+                         handover*self.policy['acceptance_seconds']),None)
             impulse_remaining=1-smooth(age/self.policy['pulse_seconds'])
             predicted_velocity=velocity+self.impulse_velocity*impulse_remaining
             midpoint=sum(f['position']-self.origin for f in feet.values())/2
@@ -95,7 +99,9 @@ class ReactiveImpactSteps(DirectionalSteps):
                         d-=self.up*(d@self.up)
                         return float(np.linalg.norm(d))+.015*float((feet[s]['position']-self.origin)@self.lateral)*self.direction
                     scores={s:deficit(s) for s in lanes}
-                    side=max(scores,key=scores.get);reason='largest reachable support deficit'
+                    # A catch still accepting weight cannot immediately lift again.
+                    eligible=[s for s in scores if not any(e['side']==s and t<e['end'] for e in self.catches)]
+                    side=max(eligible,key=scores.get);reason='largest reachable support deficit'
                 other=next(s for s in lanes if s!=side)
                 if len(self.catches)>=self.policy['maximum_catches']:
                     status='requires_fall_or_other_behavior';break
@@ -184,6 +190,13 @@ class ReactiveImpactSteps(DirectionalSteps):
             feet[s]=dict(position=p,heading=e['oldHeading']+(e['targetHeading']-e['oldHeading'])*smooth(u),
                          contact=bool(time<=e['lift'] and not e['alreadyFree'] or time>=e['touch']),swing_phase=e['oldSwing']+(1-e['oldSwing'])*u if time<e['touch'] else 0.,
                          roll_degrees=(1-smooth(u/.35))*e['oldRoll']+self.walking['heel_roll_degrees']*math.sin(math.pi*u)**2,walk_articulation_scale=1.)
+            if self.policy.get('carry_entry_articulation') and e['alreadyFree']:
+                # Keep the incoming joint clock independent of the shortened
+                # catch trajectory; blend its shape into contact over the flight.
+                incoming=self.entry.sample(time)['feet'][s]
+                feet[s]['walking_swing_phase']=incoming['swing_phase']
+                start_gain=1-smooth((e['start']-self.hit)/self.policy['entry_articulation_blend_seconds'])
+                feet[s]['entry_articulation_weight']=start_gain*(1-smooth(u))
         return feet
 
     def _loads(self,time):

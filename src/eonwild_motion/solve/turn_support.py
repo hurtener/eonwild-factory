@@ -87,3 +87,18 @@ def accommodate_support_planes(hips, ankles, normals, gains, up, forward, latera
     length=np.linalg.norm(delta)
     if length>.12*height:delta*=.12*height/length
     return basis@delta
+
+
+def impact_plane_accommodation(correction, response_age_s, policy):
+    """Yield a neutral-plane pose preference to continuous impact travel.
+
+    The default preserves existing motion. This changes only a geometric root
+    preference; foot anchors and final leg/contact constraints remain downstream.
+    """
+    fraction=policy.get('support_plane_accommodation_fraction',1.)
+    if fraction==1.:return correction
+    seconds=policy['support_plane_release_seconds']
+    if not (math.isfinite(fraction) and 0<=fraction<=1 and
+            math.isfinite(seconds) and seconds>0):
+        raise ValueError('Invalid impact plane accommodation policy')
+    return correction*(1-(1-fraction)*smooth(response_age_s/seconds))
