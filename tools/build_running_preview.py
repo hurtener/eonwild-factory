@@ -15,7 +15,7 @@ from eonwild_motion.solve.constant_skin_targets import CanonicalConstantSkinTarg
 from eonwild_motion.solve.skin_rig import SkinRig
 from eonwild_motion.solve.airborne_gait import solve_airborne_plan_sample, driven_body_response
 from eonwild_motion.planning.airborne_gait import build_airborne_plan
-from eonwild_motion.planning.running import resolve_running, running_sample
+from eonwild_motion.planning.running import resolve_running, build_running_review_plan
 from eonwild_motion.solve.performance import Performance
 from eonwild_motion.layers.leg_contact_resolve_v3 import _world_matrices
 from eonwild_motion.solve.whole_body_gait_transition import _append_accessor,_encode
@@ -39,8 +39,8 @@ def main():
  q=captured['query'];c=q.context;source=captured['kwargs']['source'];provider=captured['provider'];profile=json.loads(a.profile.read_text());recipe=json.loads(a.recipe.read_text())
  if not math.isclose(profile['authoring']['bodyHeightM'],c.body_height,rel_tol=1e-6):raise ValueError('Profile height mismatch')
  if hashlib.sha256(source.raw).hexdigest()!=profile['authoring']['animalInstance']['geometry_calibration']['source_geometry_sha256']:raise ValueError('Profile geometry mismatch')
- gait=resolve_running(profile,recipe);plan=build_airborne_plan(gait,c.body_height)
- times=[r['time_s'] for r in plan['samples']];plan['samples']=[running_sample(gait,t,c.body_height) for t in times]
+ gait=resolve_running(profile,recipe);plan=build_running_review_plan(gait,c.body_height,profile['locomotion']['walk']['preferredSpeed']['value'])
+ times=[r['time_s'] for r in plan['samples']]
  # Preserve neutral jaw and centered-tail admissions; gait-specific body phase
  # uses a restrained continuous carrier instead of walking support timing.
  perf=asdict(Performance(lane_width_body_heights=c.plan['performance']['lane_width_body_heights'],pelvis_sway_body_heights=.006,pelvis_roll_degrees=.7,pelvis_yaw_degrees=1.2,tail_yaw_degrees=6,gaze_elevation_degrees=0,center_lanes_on_bilateral_hip_midpoint=True))
@@ -53,6 +53,8 @@ def main():
  refs={s:None for s in c.legs};release={s:np.zeros(3) for s in c.legs};poses=[];checks=[]
  print('RUN_SOURCE',len(times),'samples',gait.step_period_s,'seconds per step',flush=True)
  for i,(row,body) in enumerate(zip(plan['samples'],response)):
+  if i==0 or row['review_segment']!=plan['samples'][i-1]['review_segment']:
+   refs={s:None for s in c.legs};release={s:np.zeros(3) for s in c.legs}
   half=.5*perf['lane_width_body_heights']*c.body_height;nominal={}
   for s,f in row['feet'].items():
    lane=c.hip_lane_center+math.copysign(half,c.hip_offsets[s]);base=c.base_w[c.legs[s][-1]][:3,3]
@@ -82,6 +84,8 @@ def main():
  document['animations']=[{'name':'running-review','samplers':samplers,'channels':channels}];document['buffers'][0]['byteLength']=len(binary);out.mkdir(parents=True);payload=_encode(document,binary);(out/'root_motion.glb').write_bytes(payload)
  emitted=Glb(out/'root_motion.glb');tracks,_=read_animation_tracks(emitted,'running-review',require_common_timeline=True);reopened=SkinRig(emitted,c.roles,c.forward,c.up,captured['kwargs']['contact_profile']);measured=[];refs={s:None for s in c.legs}
  for i,t in enumerate(times):
+  if i==0 or plan['samples'][i]['review_segment']!=plan['samples'][i-1]['review_segment']:
+   refs={s:None for s in c.legs}
   ts=list(c.base_t);rs=list(c.base_r)
   for (node,path),track in tracks.items():
    if path=='translation':ts[node]=tuple(track.sample(t))

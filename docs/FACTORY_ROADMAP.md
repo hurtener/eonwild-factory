@@ -623,3 +623,22 @@ plain-stage videos were recorded, all 960 frames inspected, and the candidate is
 paused for user feedback. Contact-centroid/floor corrections are included; full
 material contact and physical force balance remain uncertified. This is running
 only; approved walks and historical Run010/Sprint006 were not regenerated.
+
+### Running correction — checkpoint 29 F
+
+D was not accepted: the user identified unfinished foot/ankle recovery and
+Tarbosaurus raised-toe support during its walking-derived slowdown. The creative
+Allosaurus turning example supplies qualitative short-step/continuous-intent
+reference, not biological measurements. F adds a shared short entry and a
+retained-support braking catch with left/right entry variants. Running no longer
+needs walking-stop choreography to finish. The returning pad/digits open before
+landing; the running-owned pitch curve avoids the extra late-swing fold.
+
+Both current rigs were generated and reopened. No sampled reach excess or
+reported articulation-envelope violations; no keys at the old 90-degree ankle
+limit. Twenty-seven focused checks pass. Unity source import/build and two
+actual-state adoption checks pass. Native videos and feedback are the next gate.
+The current straight pass does not claim running reversals, hit-to-run, physical
+braking forces, terrain or final material-contact certification. Approved walking,
+turning and historical Run010/Sprint006 remain unchanged. Principal evidence is
+`game/Evidence/running-study/`; stop for review before more choreography.

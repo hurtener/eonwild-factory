@@ -4,6 +4,7 @@ import json
 import numpy as np
 import pytest
 from eonwild_motion.planning.running import resolve_running,running_sample
+from eonwild_motion.planning.running import running_adjustment_sample,build_running_review_plan
 ROOT=Path(__file__).resolve().parents[1]
 RECIPE=json.loads((ROOT/'catalog/behaviors/running-review.v1.json').read_text())
 
@@ -44,3 +45,28 @@ def test_running_values_reject_incoherent_units_and_stride():
  with pytest.raises(ValueError):resolve_running(p,RECIPE)
  r=deepcopy(RECIPE);r['touchdown_reach_step_fraction']=0
  with pytest.raises(ValueError):resolve_running(profile(),r)
+
+@pytest.mark.parametrize('animal',['allo','tarbo'])
+def test_run_braking_retains_useful_support_and_stops_without_a_reverse_step(animal):
+ p=profile(animal);g=resolve_running(p,RECIPE);h=p['authoring']['bodyHeightM'];walk=p['locomotion']['walk']['preferredSpeed']['value']
+ rows=[running_adjustment_sample(g,t,h,kind='brake',walking_speed=walk) for t in np.linspace(0,1.8*g.step_period_s,181)]
+ assert all(r['feet']['left']['contact'] for r in rows)
+ assert all(r['feet']['left']['foot_pitch_degrees']==0 for r in rows)
+ assert all(r['feet']['left']['forward_m']==rows[0]['feet']['left']['forward_m'] for r in rows)
+ assert np.min(np.diff([r['root_forward_m'] for r in rows]))>=-1e-9
+ assert np.min(np.diff([r['feet']['right']['forward_m'] for r in rows]))>=-1e-9
+ assert rows[-1]['support_count']==2
+ assert rows[-1]['root_forward_m']==pytest.approx(rows[-2]['root_forward_m'])
+ for f in rows[-1]['feet'].values():assert f['foot_pitch_degrees']==0
+ plan=build_running_review_plan(g,h,walk)
+ assert np.min(np.diff(np.asarray([r['time_s'] for r in plan['samples']],dtype=np.float32)))>0
+ assert {s['name'] for s in plan['segments']}=={'run','runEntryLeft','runEntryRight','runBrakeLeft','runBrakeRight'}
+
+def test_running_approach_does_not_add_a_second_recovery_fold():
+ from eonwild_motion.solve.airborne_gait import _recovery_pitch_target
+ p=profile();g=resolve_running(p,RECIPE);h=p['authoring']['bodyHeightM']
+ for u in np.linspace(.45,.99,30):
+  t=g.step_period_s*(1-g.flight_fraction)+u*g.step_period_s*(1+g.flight_fraction)
+  f=running_sample(g,t,h)['feet']['left']
+  assert _recovery_pitch_target(g,f,airborne=True)==f['foot_pitch_degrees']
+  if u>.8: assert abs(f['pad_pitch_degrees'])<1e-8

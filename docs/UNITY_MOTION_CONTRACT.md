@@ -108,3 +108,10 @@ Its new running source is generated from admitted geometry through the shared
 airborne-family solver. Neither these checks nor the plain-stage clips establish
 arbitrary airborne interruption, live collision-to-run or full material/force
 parity. Source and adjusted runtime diagnostics are kept separately.
+
+Checkpoint 29 F exports named run-entry and run-brake segments alongside the
+steady run. The consumer selects a left/right catch at a running landing and
+adopts current pose/velocity; it no longer feeds running recovery into a slow
+walking stop. The loaded catch opens into its own foot attitude as offsets decay.
+These new corrected consumer poses need their own visual/contact review. Rapid
+running direction changes and arbitrary airborne interruption remain open.

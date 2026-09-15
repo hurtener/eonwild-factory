@@ -174,6 +174,10 @@ def _recovery_pitch_target(gait: AirborneGait, foot_plan: Mapping[str, Any], *, 
     recovery branch without consulting a previously sampled pose.
     """
     authored = float(foot_plan["foot_pitch_degrees"])
+    # A behavior may own the entire recovery curve. Do not add a second
+    # late-swing fold after that curve has already started opening for contact.
+    if foot_plan.get("recovery_pitch_carrier") == "authored":
+        return authored
     u = float(foot_plan["swing_phase"])
     peak = gait.swing_recovery_peak_fraction
     if not airborne or foot_plan["contact"] or u <= peak:
