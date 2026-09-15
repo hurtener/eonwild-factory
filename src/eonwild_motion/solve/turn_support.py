@@ -12,6 +12,8 @@ def contact_loads(sequence, time, transfer_fraction=.35):
     The fractions are choreography, not a measured ground-reaction force.
     An airborne foot never carries a share of the body's weight.
     """
+    if hasattr(sequence,"planned_loads"):
+        return sequence.planned_loads(time)
     loads={s:1. for s in sequence.anchors}
     for e in sequence.events:
         start,lift,touch,end=support_transfer_times(e,sequence.walking,transfer_fraction)

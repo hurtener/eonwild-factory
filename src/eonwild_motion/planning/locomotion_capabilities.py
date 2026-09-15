@@ -77,6 +77,8 @@ def resolve_capabilities(profile):
         lateral=result['lateralAccelerationMps2']/9.81,
         turning=result['yawAccelerationRadps2']/9.81)
     result['agilityNormalization'] = 'Linear components divided by g; turning divided by g/(1 metre). Authored effort included; not the published index.'
+    if "impactResponse" in profile:
+        result["impactResponse"] = deepcopy(profile["impactResponse"])
     return result
 
 
@@ -117,7 +119,11 @@ and skin constraints run afterwards. This does not certify forces in the final r
         if recipe.get('walking',{}).get('articulation_source')!='stumble_grounded':
             raise ValueError('Impact recovery requires its own grounded articulation policy')
         from .stumble_recovery import StumbleRecoverySteps
-        sequence=StumbleRecoverySteps(origin,forward,lateral,up,height,lanes,foot_heights,c,recipe)
+        if recipe["impact"].get("response_model")=="support_coupled":
+            from .impact_response import ReactiveImpactSteps
+            sequence=ReactiveImpactSteps(origin,forward,lateral,up,height,lanes,foot_heights,c,recipe)
+        else:
+            sequence=StumbleRecoverySteps(origin,forward,lateral,up,height,lanes,foot_heights,c,recipe)
         return sequence,dict(walk=walk,blocks=[dict(label=b['label'],side=b['side'],
             receivedImpulseNs=b['received_impulse_ns'],velocityChangeMps=b['velocity_change_mps'],
             distanceM=b['length'],stepSeconds=b['period'],catchSteps=b['count'],impactTimeS=b['start'])

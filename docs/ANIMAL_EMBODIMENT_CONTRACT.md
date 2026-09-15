@@ -14,7 +14,7 @@ single authoring path covering every historical motion family.
 | Action choreography and choice of attention intent | `catalog/behaviors/` and shared planners | A behavior selects normal/scan/strong/exceptional; it does not copy animal range numbers |
 | Neck research interpretation and citations | Factory `docs/research/THEROPOD_NECK_BASELINE.md` | The game copy is a reference mirror; the original user report is archival evidence |
 | Artistic direction | Principal game `docs/ANIMATION_ART_DIRECTION.md` | Guides all authoring and visual reviews |
-| Side-impact checkpoint 24 design | Principal game `docs/SIDE_IMPACT_RECOVERY_SPEC.md` | Single detailed proposed behavior/mechanics/review specification; implementation pending, never a second tuning store |
+| Side-impact checkpoint 24 | Principal game `docs/SIDE_IMPACT_RECOVERY_SPEC.md` | Detailed intent and delivered-scope record; profile and recipe remain tuning authority |
 | Acceptance and reproducibility | Roadmaps and immutable checkpoint evidence | Historical numbers describe that take; they are not tuning inputs |
 
 Change numerical intent once in the Factory profile, regenerate affected motion,
@@ -205,13 +205,37 @@ first draft's Allosaurus ankle snap. No animal names or literal bone names enter
 the shared policy. Final source-rig measurements and every captured frame were
 reviewed; user approval and full physical/contact acceptance remain pending.
 
-### Planned side-impact expansion (checkpoint 24)
+### Support-dependent impact response (checkpoint 24 candidate)
 
-The single detailed design lives in principal Eonwild
-`docs/SIDE_IMPACT_RECOVERY_SPEC.md`; locate that repository explicitly from an
-isolated Factory checkout. Its six-part choreography, proposed state/input
-contract, provenance boundaries, bounded review cases and implementation order
-are ready. No new input schema, profile field or runtime behavior is implemented
-by this documentation update. Extend the existing shared planner and canonical
-profiles during the next implementation pass; do not copy the specification's
-illustrative values into independent game configuration.
+Select `impact.response_model: support_coupled` in the v3 behavior recipe.
+Legacy impact recipes retain their original planner. The shared
+`planning/impact_response.py` integrates body offset/velocity, yaw/rate,
+contact/load state and five response channels at 240 Hz. Finite horizontal
+impulse and yaw lever arm use canonical mass and yaw inertia. Effective support
+reactions use canonical acceleration budgets; contact acceptance changes braking.
+This is a reduced model with authored vertical compliance.
+
+Optional canonical `impactResponse` profile data owns application-landmark
+fallbacks, response times, regional bend and secondary-motion ranges. Every new
+value is labeled authored. The real-rig producer maps chest/pelvis through
+semantic bindings and records the resolved point in metres; it does not branch
+on animal names. The v3 recipe owns event cases, reaction/acceptance timing,
+placement limits, entry gait and ready stance. Profile copies in Unity are
+immutable export snapshots.
+
+Walking entries reuse current foot position, derivatives and swing phase.
+A committed catch curve targets support; remaining placements respond to
+residual body motion. Exit receipts preserve velocity, anchors, support shares,
+heading, channels and a known threat target. They do not infer injury.
+
+Secondary motion is baked before final contact correction. The diagnostic Unity
+timeline declares `secondaryBaked` so playback does not apply it twice. Timeline
+hit/target markers annotate the review; they never own root motion or gameplay.
+Unity plays the emitted clip with one root owner. Live collision and arbitrary
+runtime state transfer are not implemented.
+
+The principal game's `docs/SIDE_IMPACT_RECOVERY_SPEC.md` records the detailed
+intent and bounded implementation. Evidence under
+`game/Evidence/support-coupled-impact-study/` includes final GLB identities,
+profiles, recipes, contact/joint/attention/body traces and all-frame review.
+User approval and production force/material-contact certification remain pending.

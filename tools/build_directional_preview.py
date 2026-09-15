@@ -33,6 +33,7 @@ def main():
     ap.add_argument('--recipe',type=Path,default=Path('catalog/behaviors/directional-review.v1.json'))
     ap.add_argument('--reverse-look-mode', choices=('none','normal','scan','strong','exceptional'),
                     help='Diagnostic intent override; animal angles still come from the profile')
+    ap.add_argument('--impact-case',choices=('A','B','C','D'),default='A')
     a=ap.parse_args(); repo=Path.cwd(); out=a.output.resolve()
     if out.exists(): raise RuntimeError('refusing to overwrite diagnostic')
     capture={}; original=CanonicalConstantSkinTargetLaw.__dict__['build']
@@ -47,6 +48,8 @@ def main():
     skin=SkinRig(source,c.roles,c.forward,c.up,capture['kwargs']['contact_profile'])
     ids={s:np.asarray(provider.anchor_for(s).material_vertex_indices) for s in c.legs}
     recipe=json.loads((repo/a.recipe).read_text())
+    if recipe.get("impact",{}).get("response_model")=="support_coupled":
+        recipe["blocks"]=[b for b in recipe["blocks"] if b["case"]==a.impact_case]
     recipe_input=deepcopy(recipe)
     walk_recovery=recipe.get('walking',{}).get('articulation_source')=='admitted_grounded_walk'
     reverse_recovery=recipe.get('walking',{}).get('articulation_source')=='backward_grounded'
@@ -87,6 +90,14 @@ def main():
             raise ValueError('Profile geometry identity mismatch')
         if not math.isclose(profile['authoring']['bodyHeightM'],c.body_height,rel_tol=1e-6):
             raise ValueError('Profile body calibration does not match admitted rig')
+        if recipe.get('impact',{}).get('response_model')=='support_coupled':
+            semantic={b['role']:b['bone'] for b in profile['bindings']}
+            for spec in recipe['blocks']:
+                joint='chest' if spec['region']=='chest' else 'pelvis'
+                point=np.asarray(c.base_w[source.name_to_node[semantic[joint]]])[:3,3]-c.origin
+                point-=c.lateral*math.copysign(.12*c.body_height,spec['impulse_lateral_up_forward_ns'][0])
+                spec['application_offset_m']=[float(point@axis) for axis in (c.lateral,c.up,c.forward)]
+                spec['application_point_source']='admitted semantic '+joint+' landmark with authored flank offset'
         sequence,capability_plan=plan_directional(capabilities,c.origin,c.forward,c.lateral,c.up,c.body_height,lanes,heights,recipe)
         recipe=deepcopy(recipe);recipe['turn_attention']['lead_seconds']=capabilities['attentionLeadSeconds']
         if recipe.get('walking'):recipe['walking']=dict(sequence.walking)
@@ -131,13 +142,16 @@ def main():
     # Keep admitted neutral posture; directional timing replaces periodic straight-walk body response.
     context=replace(c,legacy_overlay=False)
     print('Captured admitted source',len(times),'samples; height',c.body_height,flush=True)
+    from eonwild_motion.embodiment import SecondaryState
+    baked_secondary = SecondaryState(profile) if hasattr(sequence,"review_receipt") else None
     tail_rate = 0.
     contact_references={s:None for s in c.legs};release_offsets={s:np.zeros(3) for s in c.legs}
     for i,t in enumerate(times):
-        step=sequence.sample(t);yaw=_qrotvec(c.up*step['heading']); inv=_qinv(yaw)
+        step=sequence.sample(t);planned_center=step['center'].copy();yaw=_qrotvec(c.up*step['heading']); inv=_qinv(yaw)
         normals={};gains={};hips={};ankles={}
         loads=load_response.loads(t) if load_response else None
         impact_response=sequence.response(t) if stumble_recovery else None
+        entry_blend=1-smooth((t-sequence.hit)/recipe['impact']['entry_articulation_blend_seconds']) if getattr(sequence,'entry',None) else 0.
         roll_angle=load_response.roll(t) if load_response else 0.
         if impact_response:
             active=max(smooth((t-b['start'])/.04)*
@@ -191,9 +205,23 @@ def main():
         if lateral_recovery:
             look_yaw=lateral_attention(sequence,t,recipe['lateral'],animal_attention)
         if impact_response:
-            look_yaw=math.radians(animal_attention['envelope']['normalDegrees'])*impact_response['look_normal_fraction']
+            look_yaw=impact_response.get('look_yaw_radians',math.radians(animal_attention['envelope']['normalDegrees'])*impact_response['look_normal_fraction'])
         attention_result=bound_attention(math.degrees(look_yaw),animal_attention,exceptional=exceptional_attention) if animal_attention else None
-        if attention_result:look_yaw=math.radians(attention_result['yawDegrees'])
+        if attention_result:
+            look_yaw=math.radians(attention_result['yawDegrees'])
+            if hasattr(sequence,'review_receipt'):look_yaw*=recipe['impact']['attention_range_fraction']
+        if baked_secondary:
+            dt=float(t-times[i-1]) if i else 0.
+            speed=float(np.linalg.norm(sequence.body(t+.001)[0]-sequence.body(t-.001)[0])/.002)
+            stride=float((step['feet']['left']['position']-step['feet']['right']['position'])@c.forward)
+            angles=baked_secondary.step(dt,speed,stride)
+            for j,angle in zip(baked_secondary.joints,angles):
+                node=source.name_to_node[bindings[j['role']]]
+                if j in baked_secondary.settings['arms']:
+                    angle+=math.copysign(abs(j['walkDegrees'])*profile['impactResponse']['armGuardRangeMultiplier']*impact_response['arm_guard'],j['restDegrees'])
+                else:
+                    angle-=abs(j['breathDegrees'])*profile['impactResponse']['jawStartleRangeMultiplier']*impact_response['jaw_startle']
+                base_r[node]=_qmul(base_r[node],_qrotvec(np.asarray(j['axis'])*math.radians(angle)))
         context=replace(c,base_r=tuple(base_r),legacy_overlay=False)
         row={'time_s':float(t),'root_forward_m':0.,'pelvis_height_offset_m':-settle*c.body_height,'flight':False,'support_count':sum(f['contact'] for f in step['feet'].values()),'performance_gain':0.,'feet':{}}
         for s,f in step['feet'].items():
@@ -221,6 +249,16 @@ def main():
                 row['feet'][s].update(lateral_articulation(u,f['contact'],roll,recipe['lateral']))
             if stumble_recovery:
                 row['feet'][s].update(lateral_articulation(u,f['contact'],roll,recipe['impact']))
+                if entry_blend>0:
+                    foot=row['feet'][s]
+                    foot['articulation_scale']=.30+.70*entry_blend
+                    foot['walking_knee_preference_degrees']=145.+10.*entry_blend
+                    if not f['contact']:
+                        normal=grounded_swing_articulation(q._locomotion_gait,u)
+                        foot['toe_flex_degrees']=(1-entry_blend)*foot['toe_flex_degrees']+entry_blend*normal['toe_flex_degrees']
+                        if 'metatarsal_recovery_gain' in normal:
+                            foot['metatarsal_recovery_world_degrees_from_down']=normal['metatarsal_recovery_world_degrees_from_down']
+                            foot['metatarsal_recovery_gain']=normal['metatarsal_recovery_gain']*entry_blend
             if in_place or recipe.get('walking',{}).get('preserve_support_planes',False):
                 row['feet'][s]['turn_support_normal']=list(_qrotate(inv,normals[s]))
             if in_place:
@@ -231,6 +269,9 @@ def main():
                     'ankle_interior_degrees':turn_shapes[s]['ankle_interior_degrees']-12*fold}
         if walk_recovery and not step['turn_in_place']:
             declare_pad_recovery_sample(dict(c.plan['parameters']),row)
+        if entry_blend>0:
+            declare_pad_recovery_sample(dict(c.plan['parameters']),row)
+            for foot in row['feet'].values():foot['pad_pitch_degrees']*=entry_blend
         body_sample={'sagittal_node_degrees':{},'turn_attention':{'yaw_radians':look_yaw,'neck_share':attention['neck_share']}}
         if neck_weights is not None:body_sample['turn_attention']['neck_weights']=neck_weights
         if load_response:
@@ -263,7 +304,10 @@ def main():
         tr[c.root]=tuple(np.asarray(tr[c.root])+_local_delta(source,worlds,c.root,newpos-rootworld[:3,3]))
         rot[c.root]=_world_rotation(source,worlds,c.root,_qmul(yaw,_rotation_from_matrix(rootworld)))
         poses.append((tr,rot));samples.append({'load_shares':loads,'pelvis_roll_degrees':math.degrees(roll_angle),'support_pelvis_drop_m':float(support_delta@c.up),'look_yaw_degrees':math.degrees(look_yaw),'time_s':float(t),'label':step['label'],'heading':step['heading'],'center':step['center'].tolist(),'feet':{s:{'contact':f['contact'],'heading':f['heading'],'position':f['position'].tolist()} for s,f in step['feet'].items()}})
-        if impact_response:samples[-1]['impact_response']=impact_response
+        if impact_response:
+            samples[-1]['impact_response']=impact_response
+            samples[-1]['planned_center_m']=planned_center.tolist()
+            samples[-1]['support_accommodation_m']=accommodation.tolist()
         checks.append({'time_s':float(t),'floor_gap_m':{s:-e for s,e in errors.items()},'unreachable_extension_m':pose.maximum_unreachable_extension_m,'foot_target_residual_m':pose.maximum_foot_target_residual_m,'turn_leg_angles':{s:f.get('turn_leg_angles_degrees') for s,f in pose.feet.items()}})
         if i%24==0:print('Solved',i,'/',len(times),flush=True)
     translations=np.asarray([p[0] for p in poses]);rotations=np.asarray([p[1] for p in poses]);rotations/=np.linalg.norm(rotations,axis=2)[:,:,None]
@@ -276,6 +320,9 @@ def main():
     document['animations']=[{'name':'directional-review','samplers':samplers,'channels':channels}];document['buffers'][0]['byteLength']=len(binary)
     out.mkdir(parents=True);glb=_encode(document,binary);(out/'root_motion.glb').write_bytes(glb)
     receipt={'recipe':recipe,'motion_set':str(a.motion_set),'status':'DIRECTIONAL_DIAGNOSTIC','visual':'PENDING','production':False,'duration_s':duration,'source_sha256':hashlib.sha256(source.raw).hexdigest(),'emitted_sha256':hashlib.sha256(glb).hexdigest(),'mass':'pelvis accommodation to planted leg planes; authored kinematics, not final mass correction','contact':'four-pass frozen material-patch centroid tangential correction and floor solve; full-patch drift measured separately','samples':samples,'checks':checks}
+    if hasattr(sequence,'review_receipt'):
+        receipt['reactive_impact']=sequence.review_receipt()
+        receipt['secondary_baked']=True
     receipt['recipe_input']=recipe_input
     if animal_attention:
         receipt['attention_envelope']=animal_attention

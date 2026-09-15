@@ -1,0 +1,169 @@
+{
+  "schema": "eonwild.stumble-recovery-review.v3",
+  "classification": "Authored received-impulse stumble study. No attacker collision simulation or measured dinosaur impact inputs.",
+  "travel_direction": "impact_lateral",
+  "step_seconds": 0.8,
+  "blocks": [
+    {
+      "case": "A",
+      "entry": "standing",
+      "region": "chest",
+      "side": "right",
+      "impulse_lateral_up_forward_ns": [
+        1000,
+        0,
+        0
+      ],
+      "threat_lateral_forward": [
+        -3,
+        -0.5
+      ],
+      "label": "A / chest hit / standing"
+    },
+    {
+      "case": "B",
+      "entry": "standing",
+      "region": "pelvis",
+      "side": "right",
+      "impulse_lateral_up_forward_ns": [
+        1000,
+        0,
+        0
+      ],
+      "threat_lateral_forward": [
+        -3,
+        -0.5
+      ],
+      "label": "B / hip hit / standing"
+    },
+    {
+      "case": "C",
+      "entry": "walk",
+      "entry_step_index": 1,
+      "region": "chest",
+      "side": "right",
+      "impulse_lateral_up_forward_ns": [
+        1800,
+        0,
+        0
+      ],
+      "threat_lateral_forward": [
+        -3,
+        -0.5
+      ],
+      "label": "C / walking hit / right swing"
+    },
+    {
+      "case": "D",
+      "entry": "walk",
+      "entry_step_index": 2,
+      "region": "chest",
+      "side": "right",
+      "impulse_lateral_up_forward_ns": [
+        1800,
+        0,
+        0
+      ],
+      "threat_lateral_forward": [
+        -3,
+        -0.5
+      ],
+      "label": "D / walking hit / left swing"
+    }
+  ],
+  "turn_attention": {
+    "lead_seconds": 1.0,
+    "maximum_degrees": 75,
+    "neck_share": 0.83
+  },
+  "turn_leg_shape": {
+    "knee_softening_degrees_from_neutral": 10,
+    "maximum_preferred_knee_interior_degrees": 145,
+    "pelvis_settle_body_heights": 0.025
+  },
+  "turn_stance": {
+    "support_shift_fraction_of_half_width": 0.0
+  },
+  "turn_load_response": {
+    "transfer_fraction_of_step": 0.35,
+    "maximum_roll_degrees": 2.0,
+    "response_scale": 0.1,
+    "classification": "Authored load-weighted hip response; temporal compliance derives from effective lateral force/mass."
+  },
+  "walking": {
+    "articulation_source": "stumble_grounded",
+    "preserve_support_planes": true,
+    "heel_prepare_step_fraction": 0.0,
+    "heel_roll_degrees": 3.0,
+    "heel_peak_swing_fraction": 0.12,
+    "heel_release_swing_fraction": 0.45,
+    "clearance_body_heights": 0.028,
+    "rounded_swing_peak_fraction": 0.4,
+    "recovery_outward_body_heights": 0.0
+  },
+  "impact": {
+    "stance_width_body_heights": 0.36,
+    "step_fraction_of_normal_step": 0.46,
+    "initial_hold_seconds": 0.65,
+    "reaction_seconds": 0.02,
+    "settle_seconds": 0.95,
+    "catch_reach_body_heights": 0.32,
+    "maximum_recoverable_distance_body_heights": 1.25,
+    "reference_velocity_mps": 0.8,
+    "recoil_rise_seconds": 0.1,
+    "pelvis_roll_degrees": 10.0,
+    "torso_roll_degrees": 6.0,
+    "compression_body_heights": 0.04,
+    "tail_yaw_degrees": 26.0,
+    "attention_fraction_of_normal": 0.55,
+    "opening_yaw_degrees": 10.0,
+    "toe_curl_degrees": 14.0,
+    "metatarsal_pitch_degrees": -8.0,
+    "knee_extension_preference_degrees": 145.0,
+    "classification": "Received lateral impulse in N s; delta velocity J/m and braking-distance estimate determine catch count and travel. Response shapes are authored. Side names indicate receiving travel direction, not attacker species. Version 2 uses an authored emergency catch burst relative to ordinary cadence, not a new measured reaction-time limit. Braking delay models the distance estimate separately from foot reaction. First-step timing is shared across body sizes, with profile-scaled duration.",
+    "braking_delay_seconds": 0.16,
+    "catch_duration_scales": [
+      0.62,
+      0.82,
+      0.94,
+      1.0
+    ],
+    "catch_recovery_window": [
+      0.04,
+      0.8
+    ],
+    "catch_swing_ease_power": 1.65,
+    "torso_yaw_degrees": 24.0,
+    "extremity_lag_seconds": 0.025,
+    "extremity_rise_seconds": 0.12,
+    "response_model": "support_coupled",
+    "pulse_seconds": 0.06,
+    "recovery_horizon_seconds": 3.4,
+    "ready_hold_seconds": 1.2,
+    "acceptance_seconds": 0.14,
+    "existing_support_fraction": 0.24,
+    "braking_response_seconds": 0.32,
+    "support_position_gain": 1.4,
+    "maximum_catches": 8,
+    "minimum_width_body_heights": 0.22,
+    "maximum_velocity_change_mps": 2.0,
+    "entry_step_fraction": 0.4,
+    "entry_speed_fraction": 0.55,
+    "body_follow_degrees": 20.0,
+    "ready_crouch_body_heights": 0.008,
+    "settled_speed_mps": 0.14,
+    "support_error_body_heights": 0.09,
+    "attention_range_fraction": 0.97,
+    "entry_articulation_blend_seconds": 0.3
+  },
+  "entry_walking": {
+    "travel_ramp_fraction": 0.15,
+    "heel_prepare_step_fraction": 0.2,
+    "heel_roll_degrees": 10.0,
+    "heel_peak_swing_fraction": 0.1,
+    "heel_release_swing_fraction": 0.4,
+    "clearance_body_heights": 0.028,
+    "rounded_swing_peak_fraction": 0.4,
+    "recovery_outward_body_heights": 0.006
+  }
+}

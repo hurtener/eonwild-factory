@@ -784,5 +784,38 @@
       "Whole-body effective force/torque budgets do not solve distributed joint forces, tissue stresses or final contact.",
       "Mass and preserved step/stride intent come from authoring; published estimates and authored control budgets must not be conflated."
     ]
+  },
+  "impactResponse": {
+    "contract": "eonwild.impact-compliance.v1",
+    "classification": "authored_estimate",
+    "source": {
+      "citation": "Eonwild checkpoint 24, 2026-09-15",
+      "rationale": "Conservative regional compliance shared across current rigs; not measured dinosaur dynamics. Application offsets reference the admitted body-height origin as a center proxy."
+    },
+    "applicationOffsetsBodyHeights": {
+      "chest": [
+        0,
+        0.1,
+        0.32
+      ],
+      "pelvis": [
+        0,
+        0,
+        -0.06
+      ]
+    },
+    "responseSeconds": [
+      0.035,
+      0.11,
+      0.09,
+      0.16,
+      0.055
+    ],
+    "pelvisRollDegrees": 10.0,
+    "torsoRollDegrees": 6.0,
+    "torsoYawDegrees": 24.0,
+    "tailYawDegrees": 26.0,
+    "armGuardRangeMultiplier": 1.4,
+    "jawStartleRangeMultiplier": 0.65
   }
 }

@@ -3,23 +3,45 @@
 Updated 2026-09-15. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
 
 
-## Side-impact recovery — checkpoint 24 design ready, implementation not started
+## Side-impact recovery — checkpoint 24 implemented, visual review pending
 
-The user described checkpoint 23 as better and endorsed six improvements:
-localized impact, landing-driven weight absorption, support-aware foot choice,
-evolving trunk curvature, threat-directed attention with arm/jaw response, and
-an alert changed stance after recovery. The detailed specification is complete;
-no new motion, asset or runtime implementation is claimed by this entry.
+All six requested ideas are represented in the shared engine and exported on
+both actual rigs: localized point/vector input; support-dependent braking and
+absorption; available-foot selection with walking-swing redirection; changing
+trunk/tail response; bounded threat attention with arms/jaw; and an explicit
+displaced alert exit state. This is a reduced horizontal/yaw model with authored
+regional/vertical compliance, not articulated whole-body dynamics.
 
-Detailed authority: principal Eonwild `docs/SIDE_IMPACT_RECOVERY_SPEC.md` (locate the principal game repository when using an isolated Factory checkout).
-It defines each movement's intent, shared mechanics, ownership, review criteria,
-research limits, four bounded review cases and implementation order. This is the
-single detailed design; animal values remain in Factory profiles and choreography
-in behavior recipes. Both roadmaps point to it rather than copy tuning values.
+Recipe: Factory `catalog/behaviors/stumble-recovery-review.v3.json`.
+Canonical profiles hold optional `impactResponse` settings, with authored
+provenance. Existing mass, agility, attention and semantic bindings are reused.
+Earlier recipes and approved clips remain preserved. The detailed authority is
+the principal game's `docs/SIDE_IMPACT_RECOVERY_SPEC.md`.
 
-Implement directly without subagents. Show an early actual-rig preview, complete
-all six ideas for both animals, inspect every delivered native-time frame, and
-pause at checkpoint 24. User endorsement covers the direction, not unseen motion.
+Cases A/B compare standing chest/hip hits at 1000 N s; C/D interrupt opposite
+slow-walking swing phases at 1800 N s. Both walking cases carry current foot
+position/velocity/phase into the catch. Allosaurus selects 3/3/5/5 placements;
+Tarbosaurus 3/3/4/4. The first foot changes between C and D. Landings increase
+braking authority; changing acceptance time changes subsequent body travel.
+
+Evidence: principal game `game/Evidence/support-coupled-impact-study/`.
+All eight actual-rig exports reopened; Unity build and captures completed.
+Two chaptered native 1280×720, 24 fps videos contain 568 Allosaurus and 588
+Tarbosaurus frames. Every frame inspected in 53 chronological sheets, with
+selected full-size transition views. 53 focused tests and full video decode pass.
+Implementation/generation/export/Unity playback: complete. User review: pending.
+
+No sampled reach overflow. Emitted attention stays within the selected profile
+caps. Standing planted patches remain stable; the moving cases retain up to
+35.82/44.34 mm individual planted skin-vertex drift (Allosaurus/Tarbosaurus),
+despite stable centroids. Case C has a quick ankle unfolding that remains a
+specific visual review point. Full material-contact acceptance and whole-body
+force balance remain pending. The evidence records final pelvis/proxy differences;
+the reduced proxy must not be mistaken for measured whole-body COM.
+
+Pause here for feedback. Live collision transfer, arbitrary runtime interruption,
+unknown-threat search, connected controls, falls and other motion families are
+not delivered by these baked review clips.
 
 ## Immediate curved impact — checkpoint 23, feedback received
 
@@ -278,7 +300,7 @@ The user approved iteration 16 as smooth and credible, while correctly distingui
 | Drinking / swallowing | Missing | Missing | Separate choreography and interaction authority |
 | Rest / sit / lie down / rise / sleep | Missing | Missing | Topology and support transitions required |
 | Bite / attack / recoil / defense | Missing | Missing | World confirms outcomes; animation only supplies windows |
-| Side-hit stumble and recovery | Checkpoint 23 candidate | Checkpoint 23 candidate | Immediate catch and curved impact; visual review pending, live collision/fall simulation missing |
+| Side-hit stumble and recovery | Checkpoint 24 candidate | Checkpoint 24 candidate | Support-dependent response, phase-aware catches and alert aftermath; visual review pending, live collision/fall simulation missing |
 | Injury / limp / fall / death | Missing | Missing | No current reusable, reviewed family |
 | Jump / airborne landing / recovery | Missing reviewed behavior | Missing reviewed behavior | Airborne gait implementation does not certify jumping |
 | Terrain adaptation / slopes / stepping over | Missing runtime acceptance | Missing runtime acceptance | Flat-floor factory evidence is not terrain proof |
