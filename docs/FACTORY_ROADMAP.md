@@ -21,7 +21,13 @@ Historical sections and capture-time receipts below retain earlier review states
 | Stepping turns in place | Approved, checkpoint 12 | Approved, checkpoint 12 | Connect to other movement states; final material contact and mass work |
 | Backward start, steps and stop | Approved, checkpoints 19/20 | Approved, checkpoints 19/20 | Connected controls and runtime obstacle awareness |
 | Deliberate lateral balance recovery | Approved, checkpoint 21 | Approved, checkpoint 21 | Live balance detection and triggering |
-| Side-hit stumble / catch / settle | Positive baseline; body continuity approved, checkpoint 25 | Positive baseline; body continuity approved, checkpoint 25 | Early Allosaurus ankle unfolding; live collision transfer, full contact and force certification |
+| Standing / slow-walking side-hit stumble / catch / settle | Positive baseline; body continuity approved, checkpoint 25 | Positive baseline; body continuity approved, checkpoint 25 | Early Allosaurus ankle unfolding; live collision transfer, full contact and force certification |
+| Running side-hit stumble / recovery | Requested; not implemented or reviewed | Requested; not implemented or reviewed | Carry running momentum, support phase and articulation into urgent catch steps and a controlled exit |
+| Sprinting side-hit stumble / recovery | Requested; not implemented or reviewed | Requested; not implemented or reviewed | Sprint-specific support availability and momentum; review recoverable hits independently from knockdowns |
+| Hit-induced knockdown from walking | Requested; not implemented or reviewed | Requested; not implemented or reviewed | Loss of support → descent → actual body-ground contact → displaced grounded settle |
+| Hit-induced knockdown from running | Requested; not implemented or reviewed | Requested; not implemented or reviewed | Retain incoming travel through the fall; choreograph ground contact and residual slide/rotation where appropriate |
+| Hit-induced knockdown from sprinting | Requested; not implemented or reviewed | Requested; not implemented or reviewed | Review sprint entry and ground arrival separately; no assumed approval from the running fall |
+| Grounded aftermath / get up after a hit | Missing | Missing | Transition from actual displaced fallen pose into supported rise; exit depends on gameplay state |
 | Independent gaze / neck attention | Mini-world demo and routine/exceptional glances approved | Mini-world demo and routine/exceptional glances approved | Sensory decisions, visibility/occlusion and coordinated body following |
 | Arm carriage and secondary motion | Full-transition pass approved | Full-transition pass approved | Behavior-specific overrides for attacks, rest and interaction |
 | Jaw relaxation / breathing-like cycle | Full-transition pass approved | Full-transition pass approved | Full-body breathing and behavior-specific mouth control |
@@ -31,7 +37,7 @@ Historical sections and capture-time receipts below retain earlier review states
 | Drinking / swallowing | Missing | Missing | New choreography and world interaction |
 | Rest / sit / lie down / rise / sleep | Missing | Missing | New support transitions and resting behavior |
 | Bite / attack / active defense | Missing complete family | Missing complete family | Offensive/action choreography and gameplay windows; received side-hit reaction already exists |
-| Injury / limp / fall / get up / death | Missing | Missing | New support and failure/recovery families |
+| Injury / limp / death | Missing | Missing | Injury-specific movement and terminal outcomes; hit-induced falls/get-up are tracked separately above |
 | Jump / airborne landing / recovery | No reviewed behavior | No reviewed behavior | Airborne gait code is not a reviewed jump/landing family |
 | Terrain adaptation / slopes / stepping over | Runtime acceptance missing | Runtime acceptance missing | Adapt contacts on uneven ground and obstacles |
 | Swim / wade / enter or leave water | Missing | Missing | Water interaction and locomotion; current mini-world water is scenery |
@@ -40,8 +46,18 @@ Historical sections and capture-time receipts below retain earlier review states
 
 Working sequence after checkpoint 25: local ankle polish and review of the later
 straight-start/stop response; connected controls; running/sprinting transfer;
-feeding/drinking; then rest, combat/injury and other breadth. This is a roadmap,
-not approval of any unreviewed take. Continue in bounded visual checkpoints.
+running and sprinting side-hit recovery; hit-induced knockdowns from walking,
+running and sprinting with grounded aftermath/get-up; feeding/drinking and the
+remaining rest, combat/injury and behavior breadth. Each new entry gait and
+outcome needs its own both-animal visual checkpoint. Running/sprinting reactions
+need reviewed incoming gaits; walking knockdowns can be developed independently
+once the current recovery baseline is preserved. This is a roadmap, not approval
+of any unreviewed take.
+
+Detailed impact scope: principal Eonwild `docs/SIDE_IMPACT_RECOVERY_SPEC.md`,
+“Requested impact coverage” section. This is documentation guidance, not a
+runtime import.
+
 
 ## Continuous body recovery — checkpoint 25, continuity approved
 
