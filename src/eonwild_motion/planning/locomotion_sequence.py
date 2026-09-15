@@ -20,6 +20,7 @@ class WalkSequence:
             support_placement='integrated_support', **transition_response), gait, height)
         self.stop = _Choreography(GaitTransition('stop', ramp_cycles=1,
             settle_seconds=.8, idle_crouch_body_heights=.025,
+            stop_stance_policy=response.get('stop_stance_policy','closing_step'),
             support_placement='integrated_support', **transition_response), gait, height)
         self.ramp_duration = self.period / ((1 + self.rate) / 2)
         lengths = [self.start.duration, self.period, self.ramp_duration,

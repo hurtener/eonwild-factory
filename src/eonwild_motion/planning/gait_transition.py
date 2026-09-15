@@ -42,8 +42,13 @@ class GaitTransition:
     handoff_sample_hz: int | None = None
     response_step_fraction: float | None = None
     moving_articulation_floor: float = 0.
+    stop_stance_policy: str = 'closing_step'
 
     def __post_init__(self):
+        if self.stop_stance_policy not in ('closing_step', 'retain_braking_support'):
+            raise ContractError('unknown stop stance policy')
+        if self.stop_stance_policy != 'closing_step' and self.kind != 'stop':
+            raise ContractError('retained braking support requires a stop')
         if self.response_step_fraction is not None and (not isinstance(self.response_step_fraction, Real) or isinstance(self.response_step_fraction, bool) or not math.isfinite(self.response_step_fraction) or not .5 <= self.response_step_fraction <= 2):
             raise ContractError('walking response must span .5 to 2 steps')
         if not isinstance(self.moving_articulation_floor, Real) or not math.isfinite(self.moving_articulation_floor) or not 0 <= self.moving_articulation_floor <= 1:
@@ -133,6 +138,9 @@ class _Choreography:
         if self.duration > 30:
             raise ContractError('transition duration exceeds 30 seconds')
         self.grounded = isinstance(gait, GroundedGait)
+        self.retain_braking_support = transition.stop_stance_policy == 'retain_braking_support'
+        if self.retain_braking_support and not self.grounded:
+            raise ContractError('retained braking support currently requires grounded walking')
         self.stance = self.period * gait.duty_factor if self.grounded else self.step * (1 - gait.flight_fraction)
         self.sampler = sample_grounded_gait if self.grounded else sample_airborne_gait
 
@@ -192,7 +200,8 @@ class _Choreography:
         return self.root(time)[0] + self.reach * weight
 
     def liftoff(self, touchdown):
-        if not self.start and touchdown >= self.ramp - 1e-8:
+        last_support = self.ramp - (self.step if self.retain_braking_support else 0.)
+        if not self.start and touchdown >= last_support - 1e-8:
             return self.end + self.period  # final placement remains planted
         duration = self.stance
         if not self.grounded:
@@ -230,6 +239,8 @@ class _Choreography:
         touchdown = offset + index * self.period - self.clock_offset
         if not self.start:
             last = self.ramp + offset
+            if self.retain_braking_support and offset:
+                last -= self.period
             touchdown = min(touchdown, last)
         next_touchdown = touchdown + self.period
         lift = self.liftoff(touchdown)
@@ -241,6 +252,12 @@ class _Choreography:
             original = self.canonical_foot(side, virtual)
             forward, height, toe, pitch, swing = self.touchdown(touchdown), 0., original['toe_flex_degrees'] * weight, original['foot_pitch_degrees'] * weight, 0.
             amplitude = weight
+            if self.retain_braking_support and touchdown >= self.ramp-self.step-1e-8:
+                # A braking placement is useful support, not preparation for
+                # another launch. Hold its acquired location and flat pad while
+                # the partner finishes the stop; never lift it just to align
+                # both feet with a prescribed idle pose.
+                toe = pitch = amplitude = 0.
         else:
             swing = min(1., max(0., (time - lift) / (next_touchdown - lift)))
             original = self.canonical_foot(side, self.stance + swing * (self.period - self.stance))
@@ -348,7 +365,7 @@ def build_transition_plan(
         'parameters': gait_parameters(gait), 'transition_parameters': gait_parameters(transition), 'samples': rows, 'events': cues,
         'transition_contract': {'kind': transition.kind, 'entry_speed_mps': entry_speed, 'exit_speed_mps': exit_speed,
             'entry_pose': 'calibrated_ready' if c.start else ('locomotion_declared_phase' if c.join_phase else 'locomotion_phase_zero'),
-            'exit_pose': ('locomotion_declared_phase' if c.join_phase else 'locomotion_phase_zero') if c.start else 'calibrated_ready',
+            'exit_pose': ('locomotion_declared_phase' if c.join_phase else 'locomotion_phase_zero') if c.start else ('retained_braking_stance' if c.retain_braking_support else 'calibrated_ready'),
             'steady_phase_s': c.join_phase, 'interface_schema': 'eonwild.motion.gait-interface.v2' if c.join_phase else 'eonwild.motion.gait-interface.v1',
             'root_distance_m': rows[-1]['root_forward_m'],
             'verification': 'Requires final emitted pose/velocity and skin-contact parity; planner intent is not proof.'},

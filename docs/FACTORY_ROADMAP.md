@@ -5,7 +5,7 @@ Updated 2026-09-15. This is a living evidence tracker, not a fixed plan inherite
 
 ## Current animation inventory
 
-Current checkpoint 27 is awaiting straight-response feedback. Latest approval
+Current checkpoint 27 revision is awaiting feedback on retained braking support. Latest approval
 remains checkpoint 26. **Approved means visually accepted
 in the reviewed clips**, not fully certified for arbitrary gameplay. Unless a row
 says otherwise, both admitted animals use the same shared engine with profile data.
@@ -17,7 +17,7 @@ Checkpoint 26 is the approved walking side-hit recovery baseline; standing impac
 | Grounded stance / held idle | Reviewed baseline | Reviewed baseline | Broader expressive idle behavior |
 | Normal walking | Approved, iteration 14 | Approved, iteration 15 | Preserve gait while completing production contact work |
 | Faster walking | Approved in sequence | Approved in sequence | Grounded fast walk; running is a separate family |
-| Idle → start → normal → faster → slow → stop | Approved, iteration 16 sequence | Approved, iteration 16 sequence | Purposeful retiming replayed in checkpoint 27; awaiting feedback; full contact parity pending |
+| Idle → start → normal → faster → slow → stop | Approved, iteration 16 sequence | Approved, iteration 16 sequence | Checkpoint 27: revised stop retains braking support; awaiting feedback; full contact parity pending |
 | Heel roll, toe-off and swing recovery | Reviewed; added intermediate toe joints | Reviewed | Maintain articulation across combined behaviors |
 | Walking curves / tight walking turns | Approved, checkpoint 17 | Approved, checkpoint 17 | Connect to player steering; final material contact and mass work |
 | Stepping turns in place | Approved, checkpoint 12 | Approved, checkpoint 12 | Connect to other movement states; final material contact and mass work |
@@ -46,7 +46,7 @@ Checkpoint 26 is the approved walking side-hit recovery baseline; standing impac
 | Social / display / vocalization | Missing | Missing | Behavior breadth and intent |
 | Connected runtime movement controls | Partial prototype | Partial prototype | Link reviewed forward, turn, reverse, lateral and impact motions with contact-safe handovers |
 
-Current pause: checkpoint 27 straight-start/stop response review. Then connected
+Current pause: checkpoint 27 retained-braking-support stop review. Then connected
 controls; running/sprinting transfer;
 running and sprinting side-hit recovery; hit-induced knockdowns from walking,
 running and sprinting with grounded aftermath/get-up; feeding/drinking and the
@@ -61,7 +61,43 @@ Detailed impact scope: principal Eonwild `docs/SIDE_IMPACT_RECOVERY_SPEC.md`,
 runtime import.
 
 
-## Straight response review — checkpoint 27, awaiting feedback
+## Retained braking stance — checkpoint 27 revision, awaiting feedback
+
+The user identified an unnecessary half-step followed by a return toward rest in
+both stopping animals, and preferred the fluid stance recovery of the approved
+side-hit motion. The ordinary stop planner was releasing its earlier braking foot
+after forward travel had ended, solely to bring it into a prescribed closing pose.
+
+Shared recipe `walking-response-review.v2.json` opts into
+`retain_braking_support`: retain each foot's last braking placement, suppress its
+preparation for another toe-off, and let the other foot finish its committed
+recovery as the body stops. Both contacts then remain planted. The ending stance
+is slightly staggered (about 7.9 cm Allosaurus / 9.6 cm Tarbosaurus between planned
+forward placements). The transition contract names `retained_braking_stance`;
+future controls must consume that actual stance rather than assume canonical idle.
+Legacy recipes retain their previous behavior. This is shared grounded-stop
+choreography, not a species branch or a claim of full force simulation.
+
+Both actual-rig GLBs are newly emitted and reopened. All sampled translations and
+rotations before the stop stage match the previous straight assets exactly.
+Fifty-three focused checks pass, including retained anchors, continuous landings
+and the truthful exit contract. Final contact is solved on the new support plan;
+new reopened measurements cover all 444 keys and their midpoints on each animal.
+Existing whole-clip maxima do not increase (floor penetration 4.49/10.90 mm,
+loaded-material residual 2.90/2.07 mm), and production contact passes remain false.
+The preceding speed, first-step body response, profile cadence limitations and
+full force/parity work remain as documented in the earlier review.
+
+Evidence: principal game `game/Evidence/retained-support-stop-study/` and separate
+runtime assets `game/Assets/Eonwild/Directional/StraightStop27/`. The earlier
+checkpoint-27 replay is retained with the user's requested stop correction.
+Both native Unity captures completed successfully: 438 frames per animal at
+24 fps, 18.25 seconds each. All 876 frames were inspected in chronological
+sheets; no additional post-stop reset was identified. Runtime secondary arm/jaw
+motion remains active. Review both revised stops at native speed and pause for
+feedback before connected controls or additional movement families.
+
+## Earlier straight response replay — checkpoint 27, stop changes requested
 
 This checkpoint addresses an outstanding review gap: the purposeful straight
 start/stop retiming first emitted during checkpoint 16 was never separately
@@ -70,7 +106,7 @@ approved connected sequence (iteration 16) is a different baseline.
 
 The exact existing straight GLBs are preserved and replayed in fresh native-time
 three-quarter recordings on both animals, alongside their original side views.
-There is no new solver or motion export in checkpoint 27. The review isolates
+There was no new solver or motion export in the initial checkpoint-27 replay. The review isolates
 first-step acceleration, sideways weight transfer, recovery through normal/faster
 walking, final placement and settling. Arm and jaw secondary motion stays active.
 The recordings retain the source take's on-screen label “16”; this is review
