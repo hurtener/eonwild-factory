@@ -103,3 +103,33 @@ def test_continuous_catches_keep_support_and_the_incoming_joint_clock(animal,cas
         assert foot['walking_swing_phase']==s.entry.sample(t)['feet'][side]['swing_phase']
         assert foot['walking_swing_phase']!=pytest.approx(foot['swing_phase'])
         assert s.sample(e['touch'])['feet'][side]['entry_articulation_weight']==0.
+
+
+@pytest.mark.parametrize('animal',['allo','tarbo'])
+@pytest.mark.parametrize('case',['C','D'])
+def test_earlier_articulation_release_preserves_accepted_body_and_footwork(animal,case):
+    old=json.loads((ROOT/'catalog/behaviors/stumble-recovery-review.v4.json').read_text())['impact']
+    new=json.loads((ROOT/'catalog/behaviors/stumble-recovery-review.v5.json').read_text())['impact']
+    baseline=make(animal,case,old); candidate=make(animal,case,new)
+    np.testing.assert_array_equal(candidate.values,baseline.values)
+    for t in np.linspace(0,candidate.duration,161):
+        a,b=candidate.sample(t),baseline.sample(t)
+        np.testing.assert_array_equal(a['center'],b['center'])
+        for side in a['feet']:
+            np.testing.assert_array_equal(a['feet'][side]['position'],b['feet'][side]['position'])
+            assert a['feet'][side]['contact']==b['feet'][side]['contact']
+    e=candidate.catches[0];side=e['side']
+    release=e['lift']+(e['touch']-e['lift'])*new['entry_articulation_release_fraction_of_catch']
+    weight=lambda t:candidate.sample(t)['feet'][side]['entry_articulation_weight']
+    assert weight(release)==pytest.approx(0.,abs=1e-12)
+    assert baseline.sample(release)['feet'][side]['entry_articulation_weight']>.01
+    # Unfolding must hand over before contact without a new engagement corner.
+    eps=1e-4
+    assert abs((weight(release)-weight(release-eps))/eps)<.001
+    assert abs((weight(release)-2*weight(release-eps)+weight(release-2*eps))/eps**2)<3.
+
+
+@pytest.mark.parametrize('value',[0,-.1,1.1,float('nan'),True,'0.65'])
+def test_rejects_invalid_entry_articulation_release(value):
+    with pytest.raises(ValueError,match='entry articulation release fraction'):
+        make(overrides={'entry_articulation_release_fraction_of_catch':value})

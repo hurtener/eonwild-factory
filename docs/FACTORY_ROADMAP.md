@@ -9,6 +9,7 @@ Current review authority as of checkpoint 25. **Approved means visually accepted
 in the reviewed clips**, not fully certified for arbitrary gameplay. Unless a row
 says otherwise, both admitted animals use the same shared engine with profile data.
 Historical sections and capture-time receipts below retain earlier review states.
+Checkpoint 26 adds a pending articulation candidate; it does not replace approval.
 
 | Movement family | Allosaurus | Tarbosaurus | What remains |
 |---|---|---|---|
@@ -21,7 +22,7 @@ Historical sections and capture-time receipts below retain earlier review states
 | Stepping turns in place | Approved, checkpoint 12 | Approved, checkpoint 12 | Connect to other movement states; final material contact and mass work |
 | Backward start, steps and stop | Approved, checkpoints 19/20 | Approved, checkpoints 19/20 | Connected controls and runtime obstacle awareness |
 | Deliberate lateral balance recovery | Approved, checkpoint 21 | Approved, checkpoint 21 | Live balance detection and triggering |
-| Standing / slow-walking side-hit stumble / catch / settle | Positive baseline; body continuity approved, checkpoint 25 | Positive baseline; body continuity approved, checkpoint 25 | Early Allosaurus ankle unfolding; live collision transfer, full contact and force certification |
+| Standing / slow-walking side-hit stumble / catch / settle | Positive baseline; body continuity approved, checkpoint 25 | Positive baseline; body continuity approved, checkpoint 25 | Checkpoint 26 ankle candidate awaiting review; live collision transfer, full contact and force certification |
 | Running side-hit stumble / recovery | Requested; not implemented or reviewed | Requested; not implemented or reviewed | Carry running momentum, support phase and articulation into urgent catch steps and a controlled exit |
 | Sprinting side-hit stumble / recovery | Requested; not implemented or reviewed | Requested; not implemented or reviewed | Sprint-specific support availability and momentum; review recoverable hits independently from knockdowns |
 | Hit-induced knockdown from walking | Requested; not implemented or reviewed | Requested; not implemented or reviewed | Loss of support → descent → actual body-ground contact → displaced grounded settle |
@@ -58,6 +59,27 @@ Detailed impact scope: principal Eonwild `docs/SIDE_IMPACT_RECOVERY_SPEC.md`,
 “Requested impact coverage” section. This is documentation guidance, not a
 runtime import.
 
+
+## Earlier catch articulation — checkpoint 26, candidate pending review
+
+The first redirected walking catch previously continued the walking fold until
+the knee reached its hard flexion boundary, then unfolded sharply. The shared
+planner now permits an authored earlier release of that incoming articulation
+objective. Recipe `stumble-recovery-review.v5.json` uses 65% of catch flight;
+previous recipes retain the full-flight release. The incoming gait phase remains
+continuous, with a C2 release into catch articulation before touchdown.
+
+Both animals' C/D packages are exported and reopened. The planned body/footwork
+and measured final pelvis paths match checkpoint 25 exactly. In case C, the
+largest early ankle change between keys/midpoints falls from 17.79 to 11.04 degrees
+for Allosaurus and 11.51 to 10.32 for Tarbosaurus; neither sampled first-catch knee
+reaches the previous 65-degree corner. Case D unfolds earlier too, with a slightly
+larger peak angular change; judge that tradeoff in native-time motion.
+
+Evidence: principal game `game/Evidence/earlier-catch-articulation-study/`.
+The prior body-continuity approval remains checkpoint 25; this articulation change
+requires separate user feedback. Final contact and whole-body force certification
+remain pending. Pause at the both-animal video checkpoint before new behaviors.
 
 ## Continuous body recovery — checkpoint 25, continuity approved
 

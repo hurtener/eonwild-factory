@@ -27,6 +27,11 @@ class ReactiveImpactSteps(DirectionalSteps):
         self.height,self.lanes,self.foot_heights=height,lanes,foot_heights
         self.walking=recipe['walking'];self.turn_stance={'support_shift_fraction_of_half_width':0.}
         self.policy=recipe['impact']; self.c=capabilities
+        release_fraction=self.policy.get('entry_articulation_release_fraction_of_catch',1.)
+        if (isinstance(release_fraction,bool) or not isinstance(release_fraction,(int,float))
+                or not math.isfinite(release_fraction) or not 0<release_fraction<=1):
+            raise ValueError('entry articulation release fraction must be in (0, 1]')
+        self.entry_articulation_release_fraction=release_fraction
         self.anatomy=capabilities['impactResponse']; spec=recipe['blocks'][0]
         self.period=max(capabilities['stepLengthM']/capabilities['preferredSpeedMps']*
                         self.policy['step_fraction_of_normal_step'],1/capabilities['maximumStepFrequencyHz'])
@@ -196,7 +201,10 @@ class ReactiveImpactSteps(DirectionalSteps):
                 incoming=self.entry.sample(time)['feet'][s]
                 feet[s]['walking_swing_phase']=incoming['swing_phase']
                 start_gain=1-smooth((e['start']-self.hit)/self.policy['entry_articulation_blend_seconds'])
-                feet[s]['entry_articulation_weight']=start_gain*(1-smooth(u))
+                # An urgent catch can need the foot to unfold before landing.
+                # Release the incoming walk objective over an authored part of
+                # the catch, keeping the trajectory and source joint clock intact.
+                feet[s]['entry_articulation_weight']=start_gain*(1-smooth(u/self.entry_articulation_release_fraction))
         return feet
 
     def _loads(self,time):
