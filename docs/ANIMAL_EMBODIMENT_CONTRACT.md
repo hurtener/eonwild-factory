@@ -164,3 +164,20 @@ The result is a planned open-and-follow adjustment, not a simulated shove, COM
 feedback controller, slip detector or terrain response. The pelvis trajectory and
 load shares remain authored kinematics. Preserve the approved walking, turning
 and ordinary/exceptional glances. Lateral visual review is pending.
+
+### Received side-hit recovery (checkpoint 22)
+
+Behavior authority is `catalog/behaviors/stumble-recovery-review.v1.json`.
+The `impact` section owns broad stance, reaction/settling times, per-pair reach
+and compliant pose envelopes. Blocks supply received impulse in N s and the
+semantic travel side. The shared planner divides received impulse by the victim
+profile's mass and estimates braking distance with its lateral acceleration;
+that estimate chooses catch count/placements. Effective impulse transfer from an
+attacker, contact height/angular impulse, live state-dependent balance, falls,
+terrain and arbitrary incoming velocity are not implemented. Do not present
+the finite authored recovery envelope as a physics or biological threshold.
+
+The Unity viewer consumes a baked result and an optional diagnostic
+`*.review.json` impact timeline. This file annotates the capture only; it owns no
+movement, damage or animal tuning. Profile files are unchanged. A reusable
+Python behavior exists; interactive Unity dispatch/parity is still pending.

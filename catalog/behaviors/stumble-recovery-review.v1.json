@@ -1,0 +1,69 @@
+{
+  "schema": "eonwild.stumble-recovery-review.v1",
+  "classification": "Authored received-impulse stumble study. No attacker collision simulation or measured dinosaur impact inputs.",
+  "travel_direction": "impact_lateral",
+  "step_seconds": 0.8,
+  "blocks": [
+    {
+      "side": "right",
+      "received_impulse_ns": 1000.0,
+      "label": "moderate side hit"
+    },
+    {
+      "side": "right",
+      "received_impulse_ns": 1800.0,
+      "label": "stronger side hit"
+    }
+  ],
+  "turn_attention": {
+    "lead_seconds": 1.0,
+    "maximum_degrees": 75,
+    "neck_share": 0.83
+  },
+  "turn_leg_shape": {
+    "knee_softening_degrees_from_neutral": 10,
+    "maximum_preferred_knee_interior_degrees": 145,
+    "pelvis_settle_body_heights": 0.025
+  },
+  "turn_stance": {
+    "support_shift_fraction_of_half_width": 0.16
+  },
+  "turn_load_response": {
+    "transfer_fraction_of_step": 0.35,
+    "maximum_roll_degrees": 2.0,
+    "response_scale": 0.1,
+    "classification": "Authored load-weighted hip response; temporal compliance derives from effective lateral force/mass."
+  },
+  "walking": {
+    "articulation_source": "stumble_grounded",
+    "preserve_support_planes": true,
+    "heel_prepare_step_fraction": 0.1,
+    "heel_roll_degrees": 3.0,
+    "heel_peak_swing_fraction": 0.12,
+    "heel_release_swing_fraction": 0.45,
+    "clearance_body_heights": 0.05,
+    "rounded_swing_peak_fraction": 0.4,
+    "recovery_outward_body_heights": 0.0
+  },
+  "impact": {
+    "stance_width_body_heights": 0.36,
+    "step_fraction_of_normal_step": 0.46,
+    "initial_hold_seconds": 0.65,
+    "reaction_seconds": 0.16,
+    "settle_seconds": 0.95,
+    "catch_reach_body_heights": 0.32,
+    "maximum_recoverable_distance_body_heights": 1.25,
+    "reference_velocity_mps": 0.8,
+    "recoil_rise_seconds": 0.22,
+    "pelvis_roll_degrees": 9.0,
+    "torso_roll_degrees": 4.0,
+    "compression_body_heights": 0.045,
+    "tail_yaw_degrees": 7.0,
+    "attention_fraction_of_normal": 0.65,
+    "opening_yaw_degrees": 10.0,
+    "toe_curl_degrees": 14.0,
+    "metatarsal_pitch_degrees": -8.0,
+    "knee_extension_preference_degrees": 145.0,
+    "classification": "Received lateral impulse in N s; delta velocity J/m and braking-distance estimate determine catch count and travel. Response shapes are authored. Side names indicate receiving travel direction, not attacker species."
+  }
+}

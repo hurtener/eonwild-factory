@@ -3,7 +3,38 @@
 Updated 2026-09-14. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
 
 
-## Lateral balance recovery — checkpoint 21, review pending
+## Side-hit stumble and recovery — checkpoint 22, review pending
+
+Checkpoint 21 is accepted. The requested stronger version now receives an
+authored side impulse before catching and recovering, with continuous torso/hip
+compression, delayed head/tail response and low articulated foot release. A new
+shared impact planner consumes canonical victim mass, lateral acceleration and
+cadence; the approved deliberate sidestep and all older assets remain preserved.
+
+The same two rightward received impulses (1000 / 1800 N s) are shown on both
+animals. Allosaurus plans 0.401 / 1.147 m of travel and 2 / 4 catching steps;
+Tarbosaurus plans 0.154 / 0.418 m and 2 / 2 steps. These are authored diagnostic
+inputs and planned distances, not measurements of dinosaur collisions or final
+COM travel. Head/torso yaw stays within the ordinary profile envelope.
+
+Native Unity videos: principal game game/Evidence/stumble-recovery-study.
+Allosaurus 6.208333 s / 149 frames; Tarbosaurus 5.416667 s / 130 frames, 24 fps.
+All 279 frames were inspected chronologically in 13 sheets, plus six full-size
+neutral/recoil/catch frames. The stronger Allosaurus response opens a larger
+support area and adds another catch pair; Tarbosaurus remains more restrained.
+Review the perceived urgency and weight; no user approval is inferred.
+
+47 focused tests, actual-rig generation, final-export measurements, Unity build,
+native capture and complete video decoding passed. Zero reach overflow; maximum
+knee interior angles 130.28 / 110.35 degrees. Maximum planted skin-vertex drift
+8.71 / 7.58 mm remains, despite near-fixed patch centroids. Full contact and
+whole-body force balance are pending. This is a new authored behavior family,
+not a live collision or fall solver. Hit timing is an annotation in the viewer,
+not gameplay damage. Other directions are supported by semantic input and a
+mirrored planner check; only rightward hits were rendered in this checkpoint.
+Pause here for feedback before connected controls or additional motion families.
+
+## Lateral balance recovery — checkpoint 21, user accepted
 
 The shared engine now generates a controlled rightward recovery and matching
 leftward recovery for both admitted animals. The travel-side foot opens support,
@@ -29,8 +60,7 @@ communicate enough weight before adding stronger reactions.
 decode passed. Reopened source exports have zero reach overflow. Maximum planted
 skin-vertex drift is 14.08 mm Allosaurus / 16.47 mm Tarbosaurus; full material
 contact and whole-body force balance remain open. This is a diagnostic checkpoint,
-not production acceptance. Pause for user review. Connected controls follow only
-after the directional movement baselines are accepted.
+not production acceptance. User accepted both animals on 2026-09-14: “i liked the idea! and how it looks.” Preserve Factory 0ddf799ac83fac0cae9f83c0dd9d10a2ce81b963 and game 1ee439b5df82ed53fc13f55ae874d54d5e7b5121. The immutable capture receipts retain their original pending state. The requested next checkpoint is a stronger side-impact stumble and recovery, before connected controls.
 
 ## Exceptional neck glance — checkpoint 20, user accepted
 
@@ -111,7 +141,7 @@ User requested walking turns, coordinated turns without forward travel, backward
 |---|---|---|
 | A — turning | Gentle walking curves, tighter low-speed turns, alternating stepping turns in place | Draft 10 accepted as a good turning baseline. Draft 11 adds numerical animal capabilities to the shared planner; both-rig Unity renders and all-frame audit complete; user accepted draft 11 as a good indie-game baseline. Draft 12 hip/contact polish visually accepted by the user. Draft 13 walking curves rejected for missing walking recovery articulation. Draft 14 restored walking recovery; user retained direction and requested timing polish. Draft 15 overlaps unloading and recovery; user requested stronger neck turning and more purposeful startup. Draft 16 received an Allosaurus walking-turn knee-overextension correction request. Draft 17 adds continuous knee flexion reserve; both native walking-turn videos visually accepted by the user ("good both", 2026-09-14). Final mass/contact remain open |
 | B — reverse | Backward start, several coordinated steps, stop; its own grounded contact choreography | Checkpoint 18 remains historical. Checkpoint 19 ordinary-neck reverse and checkpoint 20 exceptional-neck reverse were visually accepted for both animals; final force/contact certification remains open |
-| C — lateral recovery | Left/right recovery steps, support transfer, whole-body settling | Checkpoint 21 generated on both admitted rigs; 276 native Unity frames inspected. User review pending; impact response and final force/contact certification remain open |
+| C — lateral recovery | Left/right recovery steps, support transfer, whole-body settling | Checkpoint 21 visually accepted on both admitted rigs; 276 native Unity frames inspected. Stronger side-impact recovery is the next requested checkpoint; final force/contact certification remains open |
 | D — connected controls | Blend the reviewed directional behaviors with idle and walking; runtime root ownership and contact | After visual acceptance of A–C |
 
 Draft 10 is the user-accepted turning reference, preserved in `game/Evidence/continuous-release-turn-study/`. Draft 11 adds profile mass/inertia, authored force/torque budgets, walking speed/cadence, braking, lateral response and attention/response timing. The shared planner consumes these values without species branches. Both actual rigs generated and were captured in Unity; all 470 captured frames were visually inspected. Current evidence: principal game `game/Evidence/capability-turn-study/`. User re-review accepted draft 11 for both animals as a good indie-game turning baseline. Draft 10 remains preserved as the preceding reference.

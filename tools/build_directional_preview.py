@@ -51,6 +51,8 @@ def main():
     walk_recovery=recipe.get('walking',{}).get('articulation_source')=='admitted_grounded_walk'
     reverse_recovery=recipe.get('walking',{}).get('articulation_source')=='backward_grounded'
     lateral_recovery=recipe.get('walking',{}).get('articulation_source')=='lateral_grounded'
+    stumble_recovery=recipe.get('walking',{}).get('articulation_source')=='stumble_grounded'
+    if stumble_recovery and not a.profile:raise ValueError('Stumble recovery requires an animal profile')
     if lateral_recovery and not a.profile:raise ValueError('Lateral recovery requires an animal profile')
     if a.reverse_look_mode:
         if not reverse_recovery:raise ValueError('Reverse look override requires backward choreography')
@@ -67,7 +69,9 @@ def main():
         half=.5*recipe['reverse']['stance_width_body_heights']*c.body_height
     if lateral_recovery:
         half=.5*recipe['lateral']['stance_width_body_heights']*c.body_height
-    if not lateral_recovery and all(abs(b.get('step_scale_of_normal',b.get('step_length_body_heights',0.)))<1e-12 for b in recipe['blocks']):
+    if stumble_recovery:
+        half=.5*recipe['impact']['stance_width_body_heights']*c.body_height
+    if not (lateral_recovery or stumble_recovery) and all(abs(b.get('step_scale_of_normal',b.get('step_length_body_heights',0.)))<1e-12 for b in recipe['blocks']):
         half=.5*recipe['turn_stance']['width_body_heights']*c.body_height
     lanes={s:c.hip_lane_center+math.copysign(half,c.hip_offsets[s]) for s in c.legs}
     heights={s:float(c.base_w[ch[-1]][:3,3]@c.up) for s,ch in c.legs.items()}
@@ -133,8 +137,13 @@ def main():
         step=sequence.sample(t);yaw=_qrotvec(c.up*step['heading']); inv=_qinv(yaw)
         normals={};gains={};hips={};ankles={}
         loads=load_response.loads(t) if load_response else None
+        impact_response=sequence.response(t) if stumble_recovery else None
         roll_angle=load_response.roll(t) if load_response else 0.
+        if impact_response:
+            roll_angle*=smooth((t-sequence.blocks[0]['start'])/.10)
+            roll_angle+=impact_response['roll_radians']
         settle=recipe['turn_leg_shape']['pelvis_settle_body_heights']+(0. if load_response else .008*step['weight']**2)
+        if impact_response:settle+=impact_response['drop_m']/c.body_height
         support_delta=np.zeros(3)
         for side,chain in c.legs.items():
             f=step['feet'][side];entries=support_planes[side]
@@ -164,12 +173,22 @@ def main():
                 node=source.name_to_node[name]
                 local_axis=np.asarray(_qrotate(_qinv(_rotation_from_matrix(c.base_w[node])),c.up))
                 base_r[node]=_qmul(base_r[node],_qrotvec(local_axis*(tail_rate if role=='tail' else angular_rate)*lag/max(1,len(names))))
+        if impact_response:
+            for role,axis,angle in [('spine',c.forward,impact_response['torso_roll_radians']),
+                                    ('tail',c.up,impact_response['tail_yaw_radians'])]:
+                names=list(c.roles.get(role,[]))
+                for name in names:
+                    node=source.name_to_node[name]
+                    local_axis=np.asarray(_qrotate(_qinv(_rotation_from_matrix(c.base_w[node])),axis))
+                    base_r[node]=_qmul(base_r[node],_qrotvec(local_axis*angle/max(1,len(names))))
         attention=recipe["turn_attention"]
         look_yaw=turn_look_yaw(sequence,t,attention["lead_seconds"],attention["maximum_degrees"],attention.get("anticipation_gain",1.))
         if reverse_recovery:
             look_yaw=reverse_attention(sequence,t,recipe['reverse'])
         if lateral_recovery:
             look_yaw=lateral_attention(sequence,t,recipe['lateral'],animal_attention)
+        if impact_response:
+            look_yaw=math.radians(animal_attention['envelope']['normalDegrees'])*impact_response['look_normal_fraction']
         attention_result=bound_attention(math.degrees(look_yaw),animal_attention,exceptional=exceptional_attention) if animal_attention else None
         if attention_result:look_yaw=math.radians(attention_result['yawDegrees'])
         context=replace(c,base_r=tuple(base_r),legacy_overlay=False)
@@ -197,6 +216,8 @@ def main():
                 row['feet'][s].update(reverse_articulation(u,f['contact'],roll,recipe['reverse']))
             if lateral_recovery:
                 row['feet'][s].update(lateral_articulation(u,f['contact'],roll,recipe['lateral']))
+            if stumble_recovery:
+                row['feet'][s].update(lateral_articulation(u,f['contact'],roll,recipe['impact']))
             if in_place or recipe.get('walking',{}).get('preserve_support_planes',False):
                 row['feet'][s]['turn_support_normal']=list(_qrotate(inv,normals[s]))
             if in_place:
@@ -239,6 +260,7 @@ def main():
         tr[c.root]=tuple(np.asarray(tr[c.root])+_local_delta(source,worlds,c.root,newpos-rootworld[:3,3]))
         rot[c.root]=_world_rotation(source,worlds,c.root,_qmul(yaw,_rotation_from_matrix(rootworld)))
         poses.append((tr,rot));samples.append({'load_shares':loads,'pelvis_roll_degrees':math.degrees(roll_angle),'support_pelvis_drop_m':float(support_delta@c.up),'look_yaw_degrees':math.degrees(look_yaw),'time_s':float(t),'label':step['label'],'heading':step['heading'],'center':step['center'].tolist(),'feet':{s:{'contact':f['contact'],'heading':f['heading'],'position':f['position'].tolist()} for s,f in step['feet'].items()}})
+        if impact_response:samples[-1]['impact_response']=impact_response
         checks.append({'time_s':float(t),'floor_gap_m':{s:-e for s,e in errors.items()},'unreachable_extension_m':pose.maximum_unreachable_extension_m,'foot_target_residual_m':pose.maximum_foot_target_residual_m,'turn_leg_angles':{s:f.get('turn_leg_angles_degrees') for s,f in pose.feet.items()}})
         if i%24==0:print('Solved',i,'/',len(times),flush=True)
     translations=np.asarray([p[0] for p in poses]);rotations=np.asarray([p[1] for p in poses]);rotations/=np.linalg.norm(rotations,axis=2)[:,:,None]
