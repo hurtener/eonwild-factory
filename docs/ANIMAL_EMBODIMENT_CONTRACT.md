@@ -14,6 +14,7 @@ single authoring path covering every historical motion family.
 | Action choreography and choice of attention intent | `catalog/behaviors/` and shared planners | A behavior selects normal/scan/strong/exceptional; it does not copy animal range numbers |
 | Neck research interpretation and citations | Factory `docs/research/THEROPOD_NECK_BASELINE.md` | The game copy is a reference mirror; the original user report is archival evidence |
 | Artistic direction | Principal game `docs/ANIMATION_ART_DIRECTION.md` | Guides all authoring and visual reviews |
+| Side-impact checkpoint 24 design | Principal game `docs/SIDE_IMPACT_RECOVERY_SPEC.md` | Single detailed proposed behavior/mechanics/review specification; implementation pending, never a second tuning store |
 | Acceptance and reproducibility | Roadmaps and immutable checkpoint evidence | Historical numbers describe that take; they are not tuning inputs |
 
 Change numerical intent once in the Factory profile, regenerate affected motion,
@@ -203,3 +204,14 @@ completes the side bend. Lower clearance and vertical compression avoid the
 first draft's Allosaurus ankle snap. No animal names or literal bone names enter
 the shared policy. Final source-rig measurements and every captured frame were
 reviewed; user approval and full physical/contact acceptance remain pending.
+
+### Planned side-impact expansion (checkpoint 24)
+
+The single detailed design lives in principal Eonwild
+`docs/SIDE_IMPACT_RECOVERY_SPEC.md`; locate that repository explicitly from an
+isolated Factory checkout. Its six-part choreography, proposed state/input
+contract, provenance boundaries, bounded review cases and implementation order
+are ready. No new input schema, profile field or runtime behavior is implemented
+by this documentation update. Extend the existing shared planner and canonical
+profiles during the next implementation pass; do not copy the specification's
+illustrative values into independent game configuration.

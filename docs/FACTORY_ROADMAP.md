@@ -1,9 +1,27 @@
 # Factory movement roadmap and acceptance tracker
 
-Updated 2026-09-14. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
+Updated 2026-09-15. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
 
 
-## Immediate curved impact — checkpoint 23, review pending
+## Side-impact recovery — checkpoint 24 design ready, implementation not started
+
+The user described checkpoint 23 as better and endorsed six improvements:
+localized impact, landing-driven weight absorption, support-aware foot choice,
+evolving trunk curvature, threat-directed attention with arm/jaw response, and
+an alert changed stance after recovery. The detailed specification is complete;
+no new motion, asset or runtime implementation is claimed by this entry.
+
+Detailed authority: principal Eonwild `docs/SIDE_IMPACT_RECOVERY_SPEC.md` (locate the principal game repository when using an isolated Factory checkout).
+It defines each movement's intent, shared mechanics, ownership, review criteria,
+research limits, four bounded review cases and implementation order. This is the
+single detailed design; animal values remain in Factory profiles and choreography
+in behavior recipes. Both roadmaps point to it rather than copy tuning values.
+
+Implement directly without subagents. Show an early actual-rig preview, complete
+all six ideas for both animals, inspect every delivered native-time frame, and
+pause at checkpoint 24. User endorsement covers the direction, not unseen motion.
+
+## Immediate curved impact — checkpoint 23, feedback received
 
 The shared response now bends the chest sideways with head/tail lag, while a low
 catch begins almost immediately. Reaction onset, first-foot release and load
@@ -30,8 +48,10 @@ Maximum knee angles are 146.76 / 114.07 degrees; ankle angles 128.69 / 135.01.
 Zero sampled reach overflow. Maximum planted skin-vertex drift is 7.01 / 2.13 mm;
 full material contact and whole-body force balance remain pending. This remains
 a baked authored recovery, without live collision transfer or fall dynamics.
-Checkpoint 21 is accepted; 22 is a revision reference; 23 awaits user review.
-Pause here before connected controls or another motion family.
+Checkpoint 21 is accepted; 22 is a revision reference. The user described 23 as
+better and requested development of the six improvements specified for 24. This
+is positive feedback and continued refinement, not full production acceptance.
+Connected controls and other motion families remain after the impact checkpoint.
 
 ## Side-hit stumble and recovery — checkpoint 22, revision requested
 
