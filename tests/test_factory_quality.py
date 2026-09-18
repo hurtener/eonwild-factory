@@ -22,6 +22,21 @@ def test_solver_missing_or_nonfinite_evidence_cannot_pass():
             assert solver_checks({**valid, key: value})["status"] == "FAIL"
 
 
+def test_phase_pure_pitch_rate_keeps_its_authored_limit_as_a_gate():
+    valid = {
+        "max_foot_target_residual_m": 0.0,
+        "max_unreachable_extension_m": 0.0,
+        "maximum_articulation_envelope_violation_degrees": 0.0,
+        "maximum_solved_foot_pitch_velocity_degrees_per_s": 599.0,
+        "solved_foot_pitch_velocity_limit_degrees_per_s": 600.0,
+    }
+    result = solver_checks(valid)
+    assert result["status"] == "PASS"
+    assert result["limits"]["maximum_solved_foot_pitch_velocity_degrees_per_s"] == 600.0
+    assert solver_checks({**valid, "maximum_solved_foot_pitch_velocity_degrees_per_s": 601.0})["status"] == "FAIL"
+    assert solver_checks({k: v for k, v in valid.items() if k != "solved_foot_pitch_velocity_limit_degrees_per_s"})["status"] == "FAIL"
+
+
 def test_final_rotation_rate_reads_serialized_motion():
     source, roles = fixture()
     root = source.name_to_node[roles["root"]]

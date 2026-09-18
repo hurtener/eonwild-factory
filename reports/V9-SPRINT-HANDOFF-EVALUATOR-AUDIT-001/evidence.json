@@ -1,0 +1,106 @@
+{
+  "schema": "eonwild.motion.sprint-handoff-evaluator-audit.v1",
+  "status": "BLOCKED",
+  "scope": {
+    "behavior": "heavy-biped.sprint.v4",
+    "steady_phase_s": 0.11666666666666667,
+    "linear_velocity_limit_mps": 0.001,
+    "evaluator_changed": false,
+    "gate_changed": false,
+    "visual_review": "PENDING",
+    "unity_validation": "NOT_RUN",
+    "production_approved": false
+  },
+  "source_identity": {
+    "result_reported_git_sha": "65276b6f27f6ab1a0eba0d81d9ca147dcbb9307b",
+    "reported_git_sha_is_sufficient": false,
+    "package_lock_engine_files_entries": 87,
+    "all_six_engine_file_maps_identical": true,
+    "engine_files_canonical_json_sha256": "fdef5b5b2fd0a44755ab1649e07f93467c9d0b65d8a9b6ed8dccf6f98b355e40",
+    "matching_interface_commit": "747683b",
+    "selected_engine_files": {
+      "factory/handoff.py": "32a2c59b711a68e926275687cba0b6503bc0aa81703c09223bdc4bc1de453621",
+      "factory/quality.py": "0fd805992b4f2790b26d67c1282daf1371501c6362c708f217e52cf705f3a564",
+      "planning/airborne_gait.py": "b265a4999e8f085f23bff4e0bc74eb47fbddb9d2b02b0c3888acf7667fa4244f",
+      "planning/gait_transition.py": "ea6ade42df0c871edbc076c8302a2da953e62e9d314650698a6e0ad6a33ebe1b",
+      "planning/grounded_gait.py": "597a42ba5c908cef7ccf13403bff8343d69492a5fb93d829f0a531fc7936656b",
+      "solve/airborne_gait.py": "e160d9f839f16644b4e09c28fc9edb86909a071ad508dca0f3c6b0d7a1f168b3"
+    }
+  },
+  "trios": {
+    "fixed_480_hz": {
+      "results_path": "reports/V9-SPRINT-HANDOFF-EVALUATOR-AUDIT-001/fixed480-results.json",
+      "results_sha256": "d9dcf249372b78bee0d6fa3975badd874330463f55dbaf9de83fcd29a79446e5",
+      "all_individual_packages_technical_pass": true,
+      "start": {
+        "status": "BLOCKED",
+        "root_motion_world_velocity_mps": 0.001412795423835449,
+        "root_motion_skin_velocity_mps": 0.0009012148425972775,
+        "in_place_world_velocity_mps": 0.0014937008574257393,
+        "in_place_skin_velocity_mps": 0.0011868597926251135,
+        "manifest_sha256": "f3f0b58adc4184eb11136d13127fcc7b2485f1d018d866c85ea23931e84ce2cd"
+      },
+      "steady_manifest_sha256": "29b7d1278708c96efd4528627c8421d4858f71bde22c9447adbf3352ee0ea9ca",
+      "stop": {
+        "status": "BLOCKED",
+        "root_motion_world_velocity_mps": 0.0012021339623317963,
+        "root_motion_skin_velocity_mps": 0.00019195711957614315,
+        "in_place_world_velocity_mps": 0.0011997154483533727,
+        "in_place_skin_velocity_mps": 0.000201646197245435,
+        "manifest_sha256": "66dc498b1befc6bb3a3dd48b3f49ac8b42a8991dd06df6077bc6430e0678745b"
+      }
+    },
+    "fixed_960_hz": {
+      "results_path": "reports/V9-SPRINT-HANDOFF-EVALUATOR-AUDIT-001/fixed960-results.json",
+      "results_sha256": "d03cb2a7084ad57e30e08b4f0bfb9fb0928c6f8b24d37cf31dad2ebafc2086ce",
+      "all_individual_packages_technical_pass": true,
+      "start": {
+        "status": "BLOCKED",
+        "root_motion_world_velocity_mps": 0.0017593694999780292,
+        "root_motion_skin_velocity_mps": 0.0005223159911292601,
+        "in_place_world_velocity_mps": 0.0017572588415907678,
+        "in_place_skin_velocity_mps": 0.0004381181819599254,
+        "manifest_sha256": "4d22243a7fc27433c21a122b43859e6e316fccde6a33d59a6f58735af4dc0755"
+      },
+      "steady_manifest_sha256": "f9d02d73f3ad193b3940423dffd81a3318450acb5a370e1ec37581d75f812708",
+      "stop": {
+        "status": "BLOCKED",
+        "root_motion_world_velocity_mps": 0.0017680685185054083,
+        "root_motion_skin_velocity_mps": 0.00041516362015144156,
+        "in_place_world_velocity_mps": 0.0017679645394887936,
+        "in_place_skin_velocity_mps": 0.0004147260413619874,
+        "manifest_sha256": "76115a8166304e0963011cc7f14a52b49630889e43d6e32de174ddfd0a4b85f8"
+      }
+    }
+  },
+  "evaluator_probe": {
+    "script_path": "reports/V9-SPRINT-HANDOFF-EVALUATOR-AUDIT-001/evaluator-adversarial.py",
+    "script_sha256": "1cec0ada7f14681b3cd9b384f17a1e574f7dadc15a8a39df558d8cb81409a034",
+    "report_sha256": "016ec2412d8ead045c42334528114c089133b633f666e2b58431185e64a83f86",
+    "host_reproduction_receipt_sha256": "a70f5121554199160e9da91cc93e053365b9a0a69cf6c25ec15f8dcec369aba9",
+    "host_report_byte_identical": true,
+    "smooth_false_positive": {
+      "tail_length_m": 4.0,
+      "third_harmonic_amplitude_degrees": 5.0,
+      "peak_angular_speed_degrees_per_s": 196.69,
+      "quadratic_3_start_mps": 0.0013868551125352335,
+      "quadratic_3_stop_mps": 0.0013779617839378272,
+      "quartic_5_start_mps": 0.0008476696989614148,
+      "quartic_5_stop_mps": 0.000550186185811602
+    },
+    "quartic_5_actual_emitted_mps": {
+      "start_root_motion": 0.002104167541156944,
+      "start_in_place": 0.0025588707791016807,
+      "stop_root_motion": 0.006603929994599647,
+      "stop_in_place": 0.006601146937209568
+    },
+    "adversarial_0_00125_mps_minimum_reported": {
+      "quadratic_3_start_mps": 0.0009189848192869743,
+      "quadratic_3_stop_mps": 0.0009239150273457261,
+      "quartic_5_start_mps": 0.00007245735493848065,
+      "quartic_5_stop_mps": 0.00034663801717824697
+    },
+    "all_tested_directions_detected_for_0_002_through_0_005_mps": true,
+    "decision": "KEEP_CURRENT_EVALUATOR_AND_GATE"
+  }
+}

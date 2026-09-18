@@ -1,0 +1,38 @@
+{
+  "code_head": "b31bcf655d72883d98e899e70f86213d3cec9730",
+  "input_binding_head": "2c5dc911d15e60b4a37a0d6b9248fa547168672b",
+  "module_path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/worktrees/eonwild-source-query-jaw-integration/src/eonwild_motion/solve/airborne_gait.py",
+  "files": {
+    "root_motion.glb": {
+      "new": "db5b2123e156fa218cc426cf8774972a8c02f9cfce7eea9c80fcf91a8c129ebe",
+      "retained": "db5b2123e156fa218cc426cf8774972a8c02f9cfce7eea9c80fcf91a8c129ebe",
+      "identical": true
+    },
+    "in_place.glb": {
+      "new": "5a16382521ebf06e73662b37d53151048df5c7f430b776fb7950d2c480abec51",
+      "retained": "5a16382521ebf06e73662b37d53151048df5c7f430b776fb7950d2c480abec51",
+      "identical": true
+    },
+    "plan.json": {
+      "new": "48e68639efd930c4209fd38fb484f4712461b5945cfbc90dd35fa047d1a7c513",
+      "retained": "48e68639efd930c4209fd38fb484f4712461b5945cfbc90dd35fa047d1a7c513",
+      "identical": true
+    },
+    "solver-receipt.json": {
+      "new": "1748708cdc6b33bc8d076713a30054e9b32d52ab515e0d6754a6a3a46c4daaac",
+      "retained": "1748708cdc6b33bc8d076713a30054e9b32d52ab515e0d6754a6a3a46c4daaac",
+      "identical": true
+    },
+    "validation.json": {
+      "new": "4341487eb6f88f180289647b9dfb3f26e1e02cb400595161f9df649abcdc3ecb",
+      "retained": "4341487eb6f88f180289647b9dfb3f26e1e02cb400595161f9df649abcdc3ecb",
+      "identical": true
+    },
+    "runtime.json": {
+      "new": "317fc65f52ad48a0992e0c6d59f4dc79efc4a6e7969ac1b22dc9c9804e13e5be",
+      "retained": "317fc65f52ad48a0992e0c6d59f4dc79efc4a6e7969ac1b22dc9c9804e13e5be",
+      "identical": true
+    }
+  },
+  "classification": "SourceQ extraction integration regression only; no new motion or approval"
+}

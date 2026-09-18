@@ -1,0 +1,56 @@
+{
+  "schema": "eonwild.motion.host-body-final-verification.v1",
+  "source_sha": "2199e7f2fb4040b4988a7a267f2b0a9b7eb5a2a5",
+  "captured_utc": "2026-09-08T05:43:45.040695+00:00",
+  "engine_git_tree": "5ea309164941b728a17aeb6c398a185c81324364",
+  "tracked_differences_during_tests": [
+    "README.md",
+    "docs/MOTION_QUALITY_STATUS.md"
+  ],
+  "source_tests_and_ci_frozen": true,
+  "full_suite": {
+    "status": "PASS",
+    "tests_passed": 716,
+    "subtests_passed": 21,
+    "seconds": 306.42,
+    "log_sha256": "02a6f506ebca5289c99227f2fcb1deccc3c70c62c6227f8039ffa9a4df7cfde9",
+    "xml_sha256": "0cf9a313c1bfe29fe0caa8abc08332ee148c0f71b53a43414f038c32d27f52d5",
+    "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=2 uv run --frozen python -m pytest tests -q --tb=short --junitxml=out/continuation-body-final-2199e7f/full-tests.xml",
+    "platform": "macOS arm64",
+    "python": "3.12.10",
+    "blender": "5.2.0 LTS fbe6228777e7",
+    "khronos_gltf_validator": "2.0.0-dev.3.10",
+    "scope": "complete mandatory suite, full tracked checkout, real tools, no exclusions",
+    "junit_case_elements": 716,
+    "subtest_count_source": "pytest summary; successful subtests are not separate testcase elements in this JUnit output"
+  },
+  "setup_attempt": {
+    "status": "COLLECTION_ERROR_NO_TESTS_RAN",
+    "reason": "The reused sparse checkout omitted tracked historical profiles; full tracked checkout was restored on the external SSD before the unchanged suite passed.",
+    "log_sha256": "714565d2f16f72009b3667621491f6099f2a86584a56e669d570e8fa00addc6e"
+  },
+  "review_rounds": 2,
+  "maximum_independent_reviewers_per_round": 2,
+  "post_round2_p1_findings": 1,
+  "p1_fix_sha": "64dd6b4ae45e297eef968b116bbc2cca700617b8",
+  "p1_narrow_rereview": "CLEAN",
+  "outstanding_p0_p1": 0,
+  "review_receipts": {
+    "body-a-mechanics": "d36b5fc6e3f8c75c830036b4a748c863e07a11f84c8a7cf7ccc7a8ad54a8df4b",
+    "body-a-integrity": "2f65d566ecfaa31228fb776da039ecc57c65e2a1a404688b2bd1b73ea32b542d",
+    "body-b-mechanics": "ec987baf928960a20927d4d14e3f0aa71c7a5da7d4da9f1d695aa7a77d5d7fbe",
+    "body-b-integrity": "0cf85c8b36d18b3161ee71fb9ae4c300ba44aec35878b0abb36bf51bbf4c33b1",
+    "body-b-p1-closure": "07584728d55a35b4f7ef34c8891fbd5e64426378be4c8c44bca94a25e1ce3e44"
+  },
+  "host_body_review_sha256": "1dc16b5220ff06eea00735237d9635109534787674e54ab26d819bed9c4945d6",
+  "host_postfix_equivalence_sha256": "7ceb1555c4a1b4a4d8ec833bc135be86d89ca022a86fd0e94ac3aa2481406e46",
+  "remaining": {
+    "body_visual_polish": "REQUIRED",
+    "sprint_direct_joins": "BLOCKED",
+    "fast_walk_visual_polish": "REQUIRED",
+    "unity_parity": "NOT_RUN",
+    "biological_validation": "NOT_VALIDATED",
+    "production_approved": false,
+    "hosted_ci_for_this_head": "NOT_RUN"
+  }
+}

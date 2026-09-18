@@ -1,0 +1,139 @@
+{
+  "geometry_calibration": {
+    "scale_policy": "uniform_hindlimb_match",
+    "source_geometry_sha256": "f1ac3ddebc2b8471af1a55439d0631ed0d350a750e59edaa661a9cd76ced4684",
+    "source_measurements": {
+      "left_semantic_hindlimb": {
+        "confidence": "measured_source_geometry",
+        "evidence_kind": "fitted semantic chain world-length sum",
+        "source": {
+          "citation": "source-bound landmark fit",
+          "locator": "left contactChain"
+        },
+        "unit": "m",
+        "value": 0.9995518420850027
+      },
+      "left_semantic_segments": {
+        "confidence": "measured_source_geometry",
+        "evidence_kind": "fitted hip-knee-ankle-MTP consecutive lengths",
+        "source": {
+          "citation": "source-bound landmark fit",
+          "locator": "left contactChain segments"
+        },
+        "unit": "m",
+        "value": [
+          0.42167160501801665,
+          0.3718047321561249,
+          0.2060755049108611
+        ]
+      },
+      "pelvis_to_skin_floor": {
+        "confidence": "measured_source_geometry",
+        "evidence_kind": "prepared pelvis height above full-weight skin floor",
+        "source": {
+          "citation": "Allosaurus engineering candidate",
+          "locator": "pelvis world origin minus minimum skin height"
+        },
+        "unit": "m",
+        "value": 1.0727360465333562
+      },
+      "right_semantic_hindlimb": {
+        "confidence": "measured_source_geometry",
+        "evidence_kind": "fitted semantic chain world-length sum",
+        "source": {
+          "citation": "source-bound landmark fit",
+          "locator": "right contactChain"
+        },
+        "unit": "m",
+        "value": 0.9995518420850027
+      },
+      "right_semantic_segments": {
+        "confidence": "measured_source_geometry",
+        "evidence_kind": "fitted hip-knee-ankle-MTP consecutive lengths",
+        "source": {
+          "citation": "source-bound landmark fit",
+          "locator": "right contactChain segments"
+        },
+        "unit": "m",
+        "value": [
+          0.42167160501801665,
+          0.371804732156125,
+          0.20607550491086102
+        ]
+      },
+      "skin_length": {
+        "confidence": "measured_source_geometry",
+        "evidence_kind": "reopened prepared GLB full-weight skin extent along +Z",
+        "source": {
+          "citation": "Allosaurus engineering candidate",
+          "locator": "full skin POSITION extent"
+        },
+        "unit": "m",
+        "value": 4.958295103153509
+      }
+    }
+  },
+  "id": "allosaurus-composite-engineering.adult.v4",
+  "life_stage": "adult diagnostic",
+  "limitations": [
+    "Mass and hindlimb length are a published composite-model row, not direct measurements of this artist mesh.",
+    "Hip height is a 0.8 hindlimb posture proxy, not a required standing pose.",
+    "The fitted joint centers are reproducible engineering surface landmarks, not fossil joint centers.",
+    "Uniform scaling does not validate morphology, forces, muscle capacity, tissue collisions, or digit anatomy.",
+    "Three weighted pedal branches are engineering deformation proxies; digit anatomy remains unverified."
+  ],
+  "measurements": {
+    "body_mass": {
+      "confidence": "published_estimate",
+      "evidence_kind": "published composite-model estimate",
+      "source": {
+        "citation": "Dececchi et al. 2020, PLOS ONE 15:e0223698",
+        "locator": "Table 1, Allosaurus USNM 4734/UUVP 6000 composite row"
+      },
+      "unit": "kg",
+      "value": 1512.0
+    },
+    "hindlimb_length": {
+      "confidence": "published_estimate",
+      "evidence_kind": "published composite hindlimb length",
+      "source": {
+        "citation": "Dececchi et al. 2020, PLOS ONE 15:e0223698",
+        "locator": "Table 1, same composite row"
+      },
+      "unit": "m",
+      "value": 1.985
+    },
+    "hip_height_proxy": {
+      "confidence": "derived_proxy",
+      "evidence_kind": "posture proxy calculated as 0.8 times composite hindlimb length",
+      "source": {
+        "citation": "Dececchi et al. 2020, PLOS ONE 15:e0223698",
+        "locator": "Methods and Table 1; HH=0.8*HL"
+      },
+      "unit": "m",
+      "value": 1.588
+    }
+  },
+  "morphology_comparison": {
+    "segment_order": [
+      "femur",
+      "tibia",
+      "central_metatarsal"
+    ],
+    "source": {
+      "citation": "White et al. 2013, PLOS ONE 8:e68649",
+      "locator": "Table 2, UUVP 6000r"
+    },
+    "status": "UNVERIFIED",
+    "taxon_level_lengths_m": [
+      0.88,
+      0.73,
+      0.375
+    ],
+    "use_policy": "comparison only after source-surface fitting; no per-bone resizing and no artist-model specimen identity"
+  },
+  "schema": "eonwild.motion.animal-instance.v1",
+  "specimen": "USNM 4734 / UUVP 6000 composite literature row; artist mesh correspondence UNVERIFIED",
+  "taxon": "Allosaurus fragilis",
+  "version": 4
+}

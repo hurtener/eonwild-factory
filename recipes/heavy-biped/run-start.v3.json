@@ -1,0 +1,43 @@
+{
+  "contact_profile": {
+    "path": "catalog/contacts/heavy-biped.v9.json",
+    "sha256": "fef6279c1e7653ae6c7c485c3f934fd647410a726acb59393312b72af754a89f"
+  },
+  "description": "Integrated-support start with an explicit loaded-phase handoff to the bound steady program; independent emitted acceptance required.",
+  "family": "heavy-predatory-biped",
+  "forward_axis": [
+    0.03893162055641767,
+    0.0,
+    0.9992418770852486
+  ],
+  "id": "heavy-biped.run-start.v3",
+  "performance_profile": {
+    "path": "catalog/performance/heavy-biped.run.v3.json",
+    "sha256": "ade6d37243d4b9597c9d2c15a86a667b5528654aca3998315abe7f2f06a968be"
+  },
+  "program": "gait_transition",
+  "program_profile": {
+    "path": "catalog/programs/heavy-biped.start.v2.json",
+    "sha256": "062bc956067bdbc96ebd2901d5e657f36adf46ae34a126cfcea2aa1f7592b480"
+  },
+  "rig": {
+    "path": "catalog/rigs/heavy-biped.v9.json",
+    "sha256": "c3de770bf7dcc68219a28fb9851e9b75f3d3eebe2c2c0c7deb0078850100fd7e"
+  },
+  "schema": "eonwild.motion.factory-recipe.v1",
+  "source": {
+    "path": "assets/sha256/044a8be907eb650fa71c613f19655eb10a0dd23c1d6bce86dfef93cd8d9575f6.glb",
+    "sha256": "044a8be907eb650fa71c613f19655eb10a0dd23c1d6bce86dfef93cd8d9575f6"
+  },
+  "supersedes": "heavy-biped.run-start.v2",
+  "up_axis": [
+    0.0,
+    1.0,
+    0.0
+  ],
+  "version": 3,
+  "gait_profile": {
+    "path": "catalog/programs/heavy-biped.run.v4.json",
+    "sha256": "b8d22b3d73f3388de4d2c55cb4a07a3f1fdf972b82914653ecd015df2f00267d"
+  }
+}

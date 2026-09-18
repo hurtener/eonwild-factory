@@ -1,0 +1,114 @@
+{
+  "animations": 0,
+  "articulations": [
+    {
+      "axis": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "axis_frame": "joint_parent_local",
+      "descendants": [
+        "Bone_043",
+        "Bone_042"
+      ],
+      "node": "Bone_044",
+      "parent": "Bone_045",
+      "role": "jaw_lower"
+    }
+  ],
+  "config_sha256": "0efd39ebcb744d213a9110f2780e4bad50d352b7c6cfefca155a7a82d56c2019",
+  "coordinate": {
+    "forward": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "frame": "source_world",
+    "lateral": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "up": [
+      0.0,
+      1.0,
+      0.0
+    ]
+  },
+  "input_source_sha256": "91d9816b6bbaeb1037f3e9cbf253261799d8a4121efd91e0e2185f76908a6bf7",
+  "joint_count": 48,
+  "limitations": [
+    "The artist model is not established as UUVP 6000r and the published lengths do not determine exact surface landmarks.",
+    "The jaw hinge is an inferred engineering landmark supported by existing hierarchy and weights, not a fossil-derived joint center.",
+    "The upper-skull weight halfspace is an engineering ownership boundary requiring static articulation review; it is not fossil anatomy or tooth-contact evidence.",
+    "Hand and pedal digit anatomy remains unresolved; no independent digit pivots are invented.",
+    "The candidate is not admitted to a baseline, motion catalog, Unity project or production asset set."
+  ],
+  "limits": {
+    "neutral_skin_m": 3e-06,
+    "reopened_world_matrix": 3e-06
+  },
+  "measurements": {
+    "maximum_input_neutral_skin_error_m": 7.774061190383236e-07,
+    "maximum_local_trs_projection_error": 9.488937663393315e-09,
+    "maximum_reopened_neutral_skin_error_m": 3.749428662070317e-07,
+    "maximum_reopened_world_matrix_error": 1.0374803127710663e-08
+  },
+  "output_source_sha256": "c56772d63045d3410b8efe81eb45f7ee06ad97307fa076a32033553dab372c41",
+  "relocated_pivots": [
+    "Bone_021",
+    "Bone_022",
+    "Bone_027",
+    "Bone_028"
+  ],
+  "reparented_nodes": [
+    "Bone_023",
+    "Bone_029"
+  ],
+  "schema": "eonwild.motion.rig-preparation-receipt.v1",
+  "skin_index": 0,
+  "status": "NON_PROMOTED_CANDIDATE",
+  "touched_local_transforms": [
+    "Bone_023",
+    "Bone_029",
+    "Bone_022",
+    "Bone_028",
+    "Bone_021",
+    "Bone_027",
+    "Bone_020",
+    "Bone_026"
+  ],
+  "vertex_count": 40105,
+  "weight_transfers": [
+    {
+      "changed_vertex_count": 6132,
+      "from_articulation": "jaw_lower",
+      "maximum_transferred_weight": 1.0000000074505806,
+      "role": "upper_skull",
+      "selected_vertex_count": 6672,
+      "selector": {
+        "frame": "source_world",
+        "halfspaces": [
+          {
+            "minimum_dot_m": 1.672917706490115,
+            "normal": [
+              0.0,
+              0.9889363528682975,
+              0.14834045293024462
+            ]
+          },
+          {
+            "minimum_dot_m": 1.95,
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        ]
+      },
+      "to_node": "Bone_045"
+    }
+  ]
+}

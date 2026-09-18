@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "/Volumes/m2-extended-disk/Repos/eonwild-factory/.venv/bin/python",
+    "-m",
+    "eonwild_motion.factory",
+    "compile",
+    "--recipe",
+    "recipes/heavy-biped/walk-stop.v3.json",
+    "--output",
+    "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/source-cubic-walk-stop-v3-f9ca924",
+    "--interpolation",
+    "CUBICSPLINE",
+    "--emission-checkpoint",
+    "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/source-cubic-walk-stop-v3-emission-checkpoint-f9ca924"
+  ],
+  "cwd": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/worktrees/eonwild-closed-diagnostics-integration",
+  "head": "f9ca924bcc79943d2d2b7eeab28bef8763c18ec4",
+  "clean_at_start": true,
+  "started_at": "2026-09-08T17:58:53.808416+00:00",
+  "status": "COMPLETE",
+  "pid": 26148,
+  "exit_code": 0,
+  "elapsed_s": 2253.0011165000033,
+  "finished_at": "2026-09-08T18:36:26.823082+00:00",
+  "head_at_end": "f9ca924bcc79943d2d2b7eeab28bef8763c18ec4"
+}

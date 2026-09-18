@@ -1,0 +1,50 @@
+{
+  "materialized_complete_sections": [
+    {
+      "path": "catalog/programs/heavy-biped.alert.v1.json",
+      "git_blob": "a8e9bfe524ca080ea256c36615c0771ff1f520b3"
+    },
+    {
+      "path": "catalog/programs/heavy-biped.bite-miss.v1.json",
+      "git_blob": "5073629110833b415e2da1dabfdfc2ed0715273a"
+    },
+    {
+      "path": "catalog/programs/heavy-biped.call.v1.json",
+      "git_blob": "d159feadea5d75917f5e14bd18501f8f92e6c7f3"
+    },
+    {
+      "path": "catalog/programs/heavy-biped.feeding.v1.json",
+      "git_blob": "5e6e0cc20c6ac663414a2ba8d3639801578f26e3"
+    },
+    {
+      "path": "catalog/programs/heavy-biped.idle.v1.json",
+      "git_blob": "15b79a60c37353a91e89a158c7e506691fd681bd"
+    },
+    {
+      "path": "recipes/heavy-biped/alert.v1.json",
+      "git_blob": "3e14f147bcf32f0eb17c53793819b87f3050cdec"
+    },
+    {
+      "path": "recipes/heavy-biped/bite-miss.v1.json",
+      "git_blob": "ee3b17b33d95c964b6b49cc9b366f35aec4174dd"
+    },
+    {
+      "path": "recipes/heavy-biped/call.v1.json",
+      "git_blob": "a2ec9517bb3feb0c491d5b940849ddb554b975ea"
+    },
+    {
+      "path": "recipes/heavy-biped/feeding.v1.json",
+      "git_blob": "85126d7b9299e3b733845234f15f0271e334b690"
+    },
+    {
+      "path": "recipes/heavy-biped/idle.v1.json",
+      "git_blob": "d56868757fb476dcbd49f96f0178b0d32650026d"
+    },
+    {
+      "path": "src/eonwild_motion/factory/compiler.py",
+      "git_blob": "6074c471a6f83f23651fedfc35c6112084d4feae"
+    }
+  ],
+  "truncated_supported_profile": "reconstructed as typed source, never treated as a complete recovered file",
+  "validation": "Pending executable tests; no visual or Unity claim"
+}

@@ -1,0 +1,8 @@
+{
+  "actual_source_sha256": "a403679deb968ec88f7b8b89e3e399cc0881e9cc602e765a6e55934c28ad3826",
+  "complete_influence_sets": 2,
+  "complete_vertices": 40105,
+  "error": "source geometry skin accessors differ from the complete primitive attributes",
+  "head_before_fix": "729ff70e741341e051275d81528d1516d5b41d19",
+  "truncated_profile": "REJECTED"
+}

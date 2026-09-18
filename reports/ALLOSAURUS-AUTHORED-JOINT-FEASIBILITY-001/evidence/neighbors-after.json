@@ -1,0 +1,379 @@
+{
+  "head": "24c0651e6d815f946049c516899c2bebe8539bab",
+  "tree": "310af9feb7419a8ed5bedd3946bfef0a7936a246",
+  "target_offsets": {
+    "left": [
+      1.887379141862766e-16,
+      8.495449939674257e-05,
+      -1.1324274851176596e-15
+    ],
+    "right": [
+      -1.4155343563970745e-16,
+      0.00012038048120269108,
+      -7.549516567451064e-16
+    ]
+  },
+  "rows": [
+    {
+      "time_s": 0.22389189189189188,
+      "status": "AVAILABLE",
+      "reason": null,
+      "pose_rotations_sha256": "6b9b693708cad101110c0e8d98e0ed3169429e876e280fd9eb29d88126d953b5",
+      "maximum_foot_target_residual_m": 6.127572412498476e-05,
+      "maximum_unreachable_extension_m": 6.136629698660911e-05,
+      "maximum_articulation_envelope_violation_degrees": 0.0,
+      "branch_witness": {
+        "classification": "existing row-solver witnesses; no optimizer branch or slack authority is exposed",
+        "feet": {
+          "left": {
+            "contact": true,
+            "swing_phase": 0.0,
+            "solved_foot_pitch_degrees": 1.2317483903929858,
+            "foot_target_residual_m": 1.6356758843994355e-07,
+            "articulation_envelope_violation_degrees": 0.0,
+            "optimizer_tie_margin": "UNAVAILABLE_FROM_EXISTING_ROW_SOLVER",
+            "active_toe_reach_correction": "UNAVAILABLE_FROM_EXISTING_ROW_SOLVER"
+          },
+          "right": {
+            "contact": false,
+            "swing_phase": 0.06318476074573631,
+            "solved_foot_pitch_degrees": 56.63284420967102,
+            "foot_target_residual_m": 6.127572412498476e-05,
+            "articulation_envelope_violation_degrees": 0.0,
+            "optimizer_tie_margin": "UNAVAILABLE_FROM_EXISTING_ROW_SOLVER",
+            "active_toe_reach_correction": "UNAVAILABLE_FROM_EXISTING_ROW_SOLVER"
+          }
+        },
+        "maximum_unreachable_extension_m": 6.136629698660911e-05,
+        "maximum_articulation_envelope_violation_degrees": 0.0
+      },
+      "feet": {
+        "left": {
+          "contact": true,
+          "forward_m": 0.5799745716805035,
+          "height_m": 2.1061820731614063e-05,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 1.2317483903929858,
+          "swing_phase": 0.0,
+          "touchdown_time_s": 0.0,
+          "pad_pitch_degrees": 0.0,
+          "authored_material_clearance_m": 0.0,
+          "target_offset_m": [
+            1.887379141862766e-16,
+            8.495449939674257e-05,
+            -1.1324274851176596e-15
+          ],
+          "authored_material_achieved_clearance_m": 6.0054992880935975e-06,
+          "authored_material_adaptation_m": 6.0054992880935975e-06
+        },
+        "right": {
+          "contact": false,
+          "forward_m": -0.23528663252327264,
+          "height_m": 0.014290152360902806,
+          "toe_flex_degrees": 0.6706732565739963,
+          "foot_pitch_degrees": 80.1473305441918,
+          "swing_phase": 0.06318476074573631,
+          "touchdown_time_s": -1.2696774193548386,
+          "pad_pitch_degrees": 0.9389425592035949,
+          "authored_material_clearance_m": 0.013191004300055353,
+          "target_offset_m": [
+            -1.4155343563970745e-16,
+            0.00012038048120269108,
+            -7.549516567451064e-16
+          ],
+          "authored_material_achieved_clearance_m": 0.013246940292119874,
+          "authored_material_adaptation_m": 5.593599206452082e-05
+        }
+      }
+    },
+    {
+      "time_s": 0.2238908918918919,
+      "status": "AVAILABLE",
+      "reason": null,
+      "pose_rotations_sha256": "fb9abc38c30587dcf4cd805b9259236ecfe6816b69de7ceebf3b49f5430ec72b",
+      "maximum_foot_target_residual_m": 6.12752172360177e-05,
+      "maximum_unreachable_extension_m": 6.136578997906206e-05,
+      "maximum_articulation_envelope_violation_degrees": 0.0,
+      "branch_witness": {
+        "classification": "existing row-solver witnesses; no optimizer branch or slack authority is exposed",
+        "feet": {
+          "left": {
+            "contact": true,
+            "swing_phase": 0.0,
+            "solved_foot_pitch_degrees": 1.2317463112514146,
+            "foot_target_residual_m": 1.6356739435062614e-07,
+            "articulation_envelope_violation_degrees": 0.0,
+            "optimizer_tie_margin": "UNAVAILABLE_FROM_EXISTING_ROW_SOLVER",
+            "active_toe_reach_correction": "UNAVAILABLE_FROM_EXISTING_ROW_SOLVER"
+          },
+          "right": {
+            "contact": false,
+            "swing_phase": 0.06318379138988896,
+            "solved_foot_pitch_degrees": 56.63289785385132,
+            "foot_target_residual_m": 6.12752172360177e-05,
+            "articulation_envelope_violation_degrees": 0.0,
+            "optimizer_tie_margin": "UNAVAILABLE_FROM_EXISTING_ROW_SOLVER",
+            "active_toe_reach_correction": "UNAVAILABLE_FROM_EXISTING_ROW_SOLVER"
+          }
+        },
+        "maximum_unreachable_extension_m": 6.136578997906206e-05,
+        "maximum_articulation_envelope_violation_degrees": 0.0
+      },
+      "feet": {
+        "left": {
+          "contact": true,
+          "forward_m": 0.5799745716805035,
+          "height_m": 2.1061820731614063e-05,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 1.2317463112514146,
+          "swing_phase": 0.0,
+          "touchdown_time_s": 0.0,
+          "pad_pitch_degrees": 0.0,
+          "authored_material_clearance_m": 0.0,
+          "target_offset_m": [
+            1.887379141862766e-16,
+            8.495449939674257e-05,
+            -1.1324274851176596e-15
+          ],
+          "authored_material_achieved_clearance_m": 6.005499479404161e-06,
+          "authored_material_adaptation_m": 6.005499479404161e-06
+        },
+        "right": {
+          "contact": false,
+          "forward_m": -0.23528849687734824,
+          "height_m": 0.014290405279554,
+          "toe_flex_degrees": 0.6706449814809753,
+          "foot_pitch_degrees": 80.14736670684024,
+          "swing_phase": 0.06318379138988896,
+          "touchdown_time_s": -1.2696774193548386,
+          "pad_pitch_degrees": 0.9389029740733653,
+          "authored_material_clearance_m": 0.013190801928834829,
+          "target_offset_m": [
+            -1.4155343563970745e-16,
+            0.00012038048120269108,
+            -7.549516567451064e-16
+          ],
+          "authored_material_achieved_clearance_m": 0.01324727650368639,
+          "authored_material_adaptation_m": 5.647457485156125e-05
+        }
+      }
+    },
+    {
+      "time_s": 0.2238918918918919,
+      "status": "AVAILABLE",
+      "reason": null,
+      "pose_rotations_sha256": "d7a95a23dd8f334e1581739ee7b8cd718e981d0a376101b9cb880e13a8fad3b1",
+      "maximum_foot_target_residual_m": 6.127572412531497e-05,
+      "maximum_unreachable_extension_m": 6.136629698594298e-05,
+      "maximum_articulation_envelope_violation_degrees": 0.0,
+      "branch_witness": {
+        "classification": "existing row-solver witnesses; no optimizer branch or slack authority is exposed",
+        "feet": {
+          "left": {
+            "contact": true,
+            "swing_phase": 0.0,
+            "solved_foot_pitch_degrees": 1.231748390392986,
+            "foot_target_residual_m": 1.635675882340588e-07,
+            "articulation_envelope_violation_degrees": 0.0,
+            "optimizer_tie_margin": "UNAVAILABLE_FROM_EXISTING_ROW_SOLVER",
+            "active_toe_reach_correction": "UNAVAILABLE_FROM_EXISTING_ROW_SOLVER"
+          },
+          "right": {
+            "contact": false,
+            "swing_phase": 0.06318476074573634,
+            "solved_foot_pitch_degrees": 56.63284420967102,
+            "foot_target_residual_m": 6.127572412531497e-05,
+            "articulation_envelope_violation_degrees": 0.0,
+            "optimizer_tie_margin": "UNAVAILABLE_FROM_EXISTING_ROW_SOLVER",
+            "active_toe_reach_correction": "UNAVAILABLE_FROM_EXISTING_ROW_SOLVER"
+          }
+        },
+        "maximum_unreachable_extension_m": 6.136629698594298e-05,
+        "maximum_articulation_envelope_violation_degrees": 0.0
+      },
+      "feet": {
+        "left": {
+          "contact": true,
+          "forward_m": 0.5799745716805035,
+          "height_m": 2.1061820731614063e-05,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 1.231748390392986,
+          "swing_phase": 0.0,
+          "touchdown_time_s": 0.0,
+          "pad_pitch_degrees": 0.0,
+          "authored_material_clearance_m": 0.0,
+          "target_offset_m": [
+            1.887379141862766e-16,
+            8.495449939674257e-05,
+            -1.1324274851176596e-15
+          ],
+          "authored_material_achieved_clearance_m": 6.00549928811623e-06,
+          "authored_material_adaptation_m": 6.00549928811623e-06
+        },
+        "right": {
+          "contact": false,
+          "forward_m": -0.23528663252327256,
+          "height_m": 0.014290152360902891,
+          "toe_flex_degrees": 0.6706732565739971,
+          "foot_pitch_degrees": 80.1473305441918,
+          "swing_phase": 0.06318476074573634,
+          "touchdown_time_s": -1.2696774193548386,
+          "pad_pitch_degrees": 0.938942559203596,
+          "authored_material_clearance_m": 0.013191004300055362,
+          "target_offset_m": [
+            -1.4155343563970745e-16,
+            0.00012038048120269108,
+            -7.549516567451064e-16
+          ],
+          "authored_material_achieved_clearance_m": 0.013246940292120587,
+          "authored_material_adaptation_m": 5.593599206522512e-05
+        }
+      }
+    },
+    {
+      "time_s": 0.2238928918918919,
+      "status": "AVAILABLE",
+      "reason": null,
+      "pose_rotations_sha256": "2fedacd07c450eb09c900602ecc3296ad2e7d97a488e1441d79c98954258ffd5",
+      "maximum_foot_target_residual_m": 6.127880236295324e-05,
+      "maximum_unreachable_extension_m": 6.136937565459633e-05,
+      "maximum_articulation_envelope_violation_degrees": 0.0,
+      "branch_witness": {
+        "classification": "existing row-solver witnesses; no optimizer branch or slack authority is exposed",
+        "feet": {
+          "left": {
+            "contact": true,
+            "swing_phase": 0.0,
+            "solved_foot_pitch_degrees": 1.2317504695345574,
+            "foot_target_residual_m": 1.635677825029023e-07,
+            "articulation_envelope_violation_degrees": 0.0,
+            "optimizer_tie_margin": "UNAVAILABLE_FROM_EXISTING_ROW_SOLVER",
+            "active_toe_reach_correction": "UNAVAILABLE_FROM_EXISTING_ROW_SOLVER"
+          },
+          "right": {
+            "contact": false,
+            "swing_phase": 0.0631857301015838,
+            "solved_foot_pitch_degrees": 56.6329288482666,
+            "foot_target_residual_m": 6.127880236295324e-05,
+            "articulation_envelope_violation_degrees": 0.0,
+            "optimizer_tie_margin": "UNAVAILABLE_FROM_EXISTING_ROW_SOLVER",
+            "active_toe_reach_correction": "UNAVAILABLE_FROM_EXISTING_ROW_SOLVER"
+          }
+        },
+        "maximum_unreachable_extension_m": 6.136937565459633e-05,
+        "maximum_articulation_envelope_violation_degrees": 0.0
+      },
+      "feet": {
+        "left": {
+          "contact": true,
+          "forward_m": 0.5799745716805035,
+          "height_m": 2.1061820731614063e-05,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 1.2317504695345574,
+          "swing_phase": 0.0,
+          "touchdown_time_s": 0.0,
+          "pad_pitch_degrees": 0.0,
+          "authored_material_clearance_m": 0.0,
+          "target_offset_m": [
+            1.887379141862766e-16,
+            8.495449939674257e-05,
+            -1.1324274851176596e-15
+          ],
+          "authored_material_achieved_clearance_m": 6.0054990954164515e-06,
+          "authored_material_adaptation_m": 6.0054990954164515e-06
+        },
+        "right": {
+          "contact": false,
+          "forward_m": -0.23528476816919688,
+          "height_m": 0.014290438204277866,
+          "toe_flex_degrees": 0.6707015323809722,
+          "foot_pitch_degrees": 80.14729438154336,
+          "swing_phase": 0.0631857301015838,
+          "touchdown_time_s": -1.2696774193548386,
+          "pad_pitch_degrees": 0.938982145333361,
+          "authored_material_clearance_m": 0.013191206671275909,
+          "target_offset_m": [
+            -1.4155343563970745e-16,
+            0.00012038048120269108,
+            -7.549516567451064e-16
+          ],
+          "authored_material_achieved_clearance_m": 0.013247145365995179,
+          "authored_material_adaptation_m": 5.593869471927013e-05
+        }
+      }
+    },
+    {
+      "time_s": 0.22389189189189193,
+      "status": "AVAILABLE",
+      "reason": null,
+      "pose_rotations_sha256": "c6ba7be2dc9e0d6043bede053e4809507e1ec317c2128dfceb12fac5d82ad1b3",
+      "maximum_foot_target_residual_m": 6.127572412531497e-05,
+      "maximum_unreachable_extension_m": 6.136629698594298e-05,
+      "maximum_articulation_envelope_violation_degrees": 0.0,
+      "branch_witness": {
+        "classification": "existing row-solver witnesses; no optimizer branch or slack authority is exposed",
+        "feet": {
+          "left": {
+            "contact": true,
+            "swing_phase": 0.0,
+            "solved_foot_pitch_degrees": 1.2317483903929858,
+            "foot_target_residual_m": 1.635675882266247e-07,
+            "articulation_envelope_violation_degrees": 0.0,
+            "optimizer_tie_margin": "UNAVAILABLE_FROM_EXISTING_ROW_SOLVER",
+            "active_toe_reach_correction": "UNAVAILABLE_FROM_EXISTING_ROW_SOLVER"
+          },
+          "right": {
+            "contact": false,
+            "swing_phase": 0.06318476074573638,
+            "solved_foot_pitch_degrees": 56.63284420967102,
+            "foot_target_residual_m": 6.127572412531497e-05,
+            "articulation_envelope_violation_degrees": 0.0,
+            "optimizer_tie_margin": "UNAVAILABLE_FROM_EXISTING_ROW_SOLVER",
+            "active_toe_reach_correction": "UNAVAILABLE_FROM_EXISTING_ROW_SOLVER"
+          }
+        },
+        "maximum_unreachable_extension_m": 6.136629698594298e-05,
+        "maximum_articulation_envelope_violation_degrees": 0.0
+      },
+      "feet": {
+        "left": {
+          "contact": true,
+          "forward_m": 0.5799745716805035,
+          "height_m": 2.1061820731614063e-05,
+          "toe_flex_degrees": 0.0,
+          "foot_pitch_degrees": 1.2317483903929858,
+          "swing_phase": 0.0,
+          "touchdown_time_s": 0.0,
+          "pad_pitch_degrees": 0.0,
+          "authored_material_clearance_m": 0.0,
+          "target_offset_m": [
+            1.887379141862766e-16,
+            8.495449939674257e-05,
+            -1.1324274851176596e-15
+          ],
+          "authored_material_achieved_clearance_m": 6.005499288132466e-06,
+          "authored_material_adaptation_m": 6.005499288132466e-06
+        },
+        "right": {
+          "contact": false,
+          "forward_m": -0.2352866325232725,
+          "height_m": 0.014290152360902905,
+          "toe_flex_degrees": 0.6706732565739985,
+          "foot_pitch_degrees": 80.1473305441918,
+          "swing_phase": 0.06318476074573638,
+          "touchdown_time_s": -1.2696774193548386,
+          "pad_pitch_degrees": 0.9389425592035978,
+          "authored_material_clearance_m": 0.013191004300055369,
+          "target_offset_m": [
+            -1.4155343563970745e-16,
+            0.00012038048120269108,
+            -7.549516567451064e-16
+          ],
+          "authored_material_achieved_clearance_m": 0.013246940292120556,
+          "authored_material_adaptation_m": 5.593599206518696e-05
+        }
+      }
+    }
+  ],
+  "classification": "exact final-head public query capture; no package acceptance"
+}

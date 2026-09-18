@@ -1,0 +1,15 @@
+{
+  "checked_source_time_count": 2369,
+  "classification": "second-order one-sided numerical estimates of checked source-time values; no analytic derivative, branch, or global-C1 authority",
+  "convergence_stencil_s": 0.0005,
+  "key_count": 297,
+  "maximum_stencil_difference": {
+    "rotation_xyzw_per_s": 0.0006587708193366229,
+    "translation_m_per_s": 9.091945998911825e-07
+  },
+  "midpoint_count": 296,
+  "quaternion_tangent_units": "xyzw components per second before normalized glTF playback",
+  "stencil_s": 0.001,
+  "translation_tangent_units": "metres per second",
+  "unused_boundary_records": "zero first incoming and final outgoing records"
+}

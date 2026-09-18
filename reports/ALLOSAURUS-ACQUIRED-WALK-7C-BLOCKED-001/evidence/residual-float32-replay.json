@@ -1,0 +1,87 @@
+{
+  "implementation": "NOT_CHANGED",
+  "package": {
+    "manifest_sha256": "caff695d5e1084d619daf22d0cb74df4ac4724d125ba6e9b0e58ec8f36865071",
+    "root_motion_sha256": "894a7329cdba9cf1f364902b71f8d910445a4246abb659ce478f5b69b38c0e59",
+    "solver_receipt_sha256": "b4f50e4a1434ed2c293f7580d4baab47159be1ff0032c30db6cbbc5c026d0462"
+  },
+  "schema": "eonwild.audit.retained-package-residual-replay.v1",
+  "scope": "NON_EMITTING exact 7c source-query replay at one retained worst row",
+  "source": {
+    "head": "7c6272359f14d5f67a8b9de8b6079747e1a1cf13",
+    "tree": "fd7975cab4081315b79d128a690e4d110e340ff3"
+  },
+  "witness": {
+    "contact": false,
+    "emitted_limit_m": 0.001,
+    "float32_reopen_minus_source_at_plan_time_m": 4.5726515020987936e-07,
+    "float32_reopen_minus_source_at_serialized_time_m": 4.578129846777735e-07,
+    "plan_time_s": 1.097027027027027,
+    "reopened_float32": {
+      "actual_minus_target_m": [
+        0.0001269096090376065,
+        0.0009379833914714697,
+        -0.0003226244542826606
+      ],
+      "foot_world_m": [
+        0.2694362968644062,
+        0.23271693999828863,
+        2.5677288835983925
+      ],
+      "recomputed_norm_m": 0.0010000027150181058,
+      "residual_m": 0.0010000027150181058,
+      "target_foot_world_m": [
+        0.26930938725536857,
+        0.23177895660681716,
+        2.568051508052675
+      ],
+      "time_s": 1.097027063369751
+    },
+    "row_index_zero_based": 132,
+    "serialized_float32_time_s": 1.097027063369751,
+    "side": "right",
+    "source_query_at_plan_time": {
+      "actual_minus_target_m": [
+        0.00012688426371104677,
+        0.0009375975433342787,
+        -0.00032233885385979377
+      ],
+      "foot_world_m": [
+        0.2694362715190798,
+        0.23271703369248747,
+        2.567729169198816
+      ],
+      "maximum_unreachable_extension_m": 0.0009994558235100204,
+      "recomputed_norm_m": 0.0009995454498678959,
+      "residual_m": 0.0009995454498678959,
+      "target_foot_world_m": [
+        0.26930938725536874,
+        0.2317794361491532,
+        2.568051508052676
+      ],
+      "time_s": 1.097027027027027
+    },
+    "source_query_at_serialized_time": {
+      "actual_minus_target_m": [
+        0.00012688419582251864,
+        0.0009375970335787631,
+        -0.0003223386645374582
+      ],
+      "foot_world_m": [
+        0.26943627145119126,
+        0.23271701843152726,
+        2.5677291719695012
+      ],
+      "maximum_unreachable_extension_m": 0.000999455275686456,
+      "recomputed_norm_m": 0.0009995449020334282,
+      "residual_m": 0.000999544902033428,
+      "target_foot_world_m": [
+        0.26930938725536874,
+        0.2317794213979485,
+        2.5680515106340387
+      ],
+      "time_s": 1.097027063369751
+    },
+    "time_quantization_delta_s": 3.6342723941373833e-08
+  }
+}

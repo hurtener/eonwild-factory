@@ -1,0 +1,43 @@
+{
+  "coordinate": {
+    "forward": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "frame": "source_world",
+    "lateral": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "up": [
+      0.0,
+      1.0,
+      0.0
+    ]
+  },
+  "hindlimb_length_m": 1.985,
+  "id": "allosaurus-engineering-support.v3",
+  "limitations": [
+    "The preferred support knee is the provisional admitted engineering neutral, not an anatomical range or biological optimum.",
+    "The fitted hip center remains uncertain within the visible proximal muscle volume."
+  ],
+  "schema": "eonwild.motion.neutral-support-geometry.v1",
+  "sides": {
+    "left": {
+      "lower_length_m": 0.7383633012279879,
+      "posture_evidence": "admitted provisional engineering neutral support geometry; not a fossil-derived posture",
+      "preferred_support_knee_degrees": 162.40674193203094,
+      "upper_length_m": 0.837393421787036
+    },
+    "right": {
+      "lower_length_m": 0.7383633012279879,
+      "posture_evidence": "admitted provisional engineering neutral support geometry; not a fossil-derived posture",
+      "preferred_support_knee_degrees": 162.40674193203094,
+      "upper_length_m": 0.837393421787036
+    }
+  },
+  "source_geometry_sha256": "975a4bc626bc8d79537939ab3a0796473f54aa2c5fadc541f8561b13e442e6c6",
+  "version": 3
+}

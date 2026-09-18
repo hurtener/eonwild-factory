@@ -1,0 +1,63 @@
+{
+  "scope": "Incoming generic joint chains interpreted provisionally as hip/knee/ankle/metatarsal-head. This tests that interpretation; it does not prove skeletal landmarks. No source scale or mass selected.",
+  "source_sha256": "91d9816b6bbaeb1037f3e9cbf253261799d8a4121efd91e0e2185f76908a6bf7",
+  "original_chains": {
+    "left": {
+      "assumed_contact_chain": [
+        "Bone_023",
+        "Bone_022",
+        "Bone_021",
+        "Bone_020"
+      ],
+      "segment_lengths_source_units": [
+        0.329830948721139,
+        0.4488276379760711,
+        0.2340284852802444
+      ],
+      "fractions": [
+        0.3256987847954694,
+        0.4432046684467434,
+        0.23109654675778715
+      ],
+      "femur_tibia_ratio": 0.7348721888172218
+    },
+    "right": {
+      "assumed_contact_chain": [
+        "Bone_029",
+        "Bone_028",
+        "Bone_027",
+        "Bone_026"
+      ],
+      "segment_lengths_source_units": [
+        0.329830948721139,
+        0.4488276081737548,
+        0.2340285287675044
+      ],
+      "fractions": [
+        0.3256987803941399,
+        0.44320463302854984,
+        0.23109658657731025
+      ],
+      "femur_tibia_ratio": 0.7348722376130022
+    }
+  },
+  "reference": {
+    "taxon": "Allosaurus fragilis",
+    "specimen": "UUVP6000r",
+    "reported_lengths_m": [
+      0.88,
+      0.73,
+      0.375
+    ],
+    "fractions": [
+      0.44332493702770787,
+      0.3677581863979849,
+      0.1889168765743073
+    ],
+    "femur_tibia_ratio": 1.2054794520547945,
+    "citation": "White et al. 2013, PLOS ONE 8(7):e68649, Table 2",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3722220/",
+    "doi": "10.1371/journal.pone.0068649",
+    "qualification": "Specimen-specific osteological lengths as reported in this comparison; joint-center lengths include different geometry/cartilage conventions. Sanity check only, not an exact fit or mass estimate."
+  }
+}

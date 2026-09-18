@@ -1,0 +1,26 @@
+{
+  "claims": {
+    "biological": false,
+    "physical": false,
+    "scientific": false
+  },
+  "files": {
+    "animal.json": "53ffeba22e24a87504d3dcc310bedacf6db94d60a25ffe56ad028b03f41e849d",
+    "articulation-profile.json": "c1206143387ad4d1084a413ee031018f5a61a8e0539ef8256c6bba74a0f4bc6a",
+    "biomechanics.json": "bc5368ac1785e1d941e8b5c7cd7d045dc9f3f30b68bec2a8df084c68e7b241ec",
+    "in_place.glb": "51990803d3d35442d4a08cc9f28069f9afcfb979bcd58b952a7d1ceed66e32ff",
+    "inputs.lock.json": "5787a78e8c09d4870613327c7ed91f8a9fbe913251c5cb3de0d19f7f9f271212",
+    "plan.json": "3655729eaf863f67d60b9bbad18c1fb6d69d64c969490173875b983158f34406",
+    "recipe.json": "2748c3b6e9dd7ba798cad800027dc78706e46a21ed8e450ac61d36fd9109da44",
+    "root_motion.glb": "84c36a3e88129b5a2427167be80cbb85ad6efc5d733ab9c6a1cb6c5dad1fb08d",
+    "runtime.json": "5531cb91a969e975a3fdbfbbebaf2cfd99ca79007dab23e03bc7cef89a7f1176",
+    "solver-receipt.json": "600d380803811e72d65598da55ccc9cc5bfe87d1fd4fc547ef7cc32b94ba00b5",
+    "validation.json": "4341487eb6f88f180289647b9dfb3f26e1e02cb400595161f9df649abcdc3ecb"
+  },
+  "id": "diagnostic.heavy-biped.tarbosaurus-pin-552-1-adult-walk.v8-axial-clock.v1",
+  "production_approved": false,
+  "schema": "eonwild.motion.factory-package.v1",
+  "status": "CANDIDATE",
+  "technical_status": "BLOCKED",
+  "version": 1
+}

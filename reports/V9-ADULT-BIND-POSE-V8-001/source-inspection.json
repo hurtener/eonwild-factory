@@ -1,0 +1,154 @@
+{
+  "schema": "eonwild.motion.bind-source-inspection.v1",
+  "classification": "reopened animation-free source geometry; not motion, anatomy, COM, force, mass validation, or visual approval",
+  "source": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/worktrees/eonwild-bind-pose-admission-v8/assets/sha256/2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f.glb",
+  "sha256": "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f",
+  "animation_count": 0,
+  "declared_axes": {
+    "forward": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "up": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "lateral": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "evidence": {
+      "bilateral_hip_plane_normal": "X",
+      "head_minus_tail_forward_m": 10.303221266842321,
+      "head_minus_pelvis_forward_m": 3.5898099575519566,
+      "maximum_leg_joint_mirror_residual_m": 4.4505226107314095e-07
+    }
+  },
+  "legs": {
+    "left": {
+      "segments_m": [
+        0.965626903146444,
+        1.1552207870334077,
+        0.688744005187662
+      ],
+      "hip_sagittal_deg": 14.036261243555117,
+      "knee_interior_deg": 122.66442543536674,
+      "ankle_interior_deg": 128.72384960321622,
+      "joint_points_xyz_m": [
+        [
+          -0.6273915781705959,
+          2.663120223205159,
+          1.4196737452735149
+        ],
+        [
+          -0.7206333541629938,
+          1.7307021680148695,
+          1.6527785664272907
+        ],
+        [
+          -0.767254247412138,
+          0.8915257170201331,
+          0.860222925981387
+        ],
+        [
+          -0.8604960534105025,
+          0.21552258202738045,
+          0.9534647179851649
+        ]
+      ]
+    },
+    "right": {
+      "segments_m": [
+        0.965626987928024,
+        1.1552205691412778,
+        0.6887440612719545
+      ],
+      "hip_sagittal_deg": 14.036253117844113,
+      "knee_interior_deg": 122.66444200753276,
+      "ankle_interior_deg": 128.7238452419408,
+      "joint_points_xyz_m": [
+        [
+          0.6779936272428493,
+          2.663120119226723,
+          1.4196738178139523
+        ],
+        [
+          0.7712353565345454,
+          1.730701943945701,
+          1.6527785284897596
+        ],
+        [
+          0.8178562606998253,
+          0.8915255357219642,
+          0.8602231609963471
+        ],
+        [
+          0.9110981154927491,
+          0.21552237199306845,
+          0.953465110143096
+        ]
+      ]
+    }
+  },
+  "bilateral_joint_residuals": {
+    "hip": {
+      "error_f_u_l_m": [
+        7.254043743465388e-08,
+        -1.039784360834517e-07,
+        0.0
+      ],
+      "norm_m": 1.2678182138450048e-07
+    },
+    "knee": {
+      "error_f_u_l_m": [
+        -3.7937531116583045e-08,
+        -2.2406916855288728e-07,
+        -4.6700701750168605e-08
+      ],
+      "norm_m": 2.3200690530060116e-07
+    },
+    "ankle": {
+      "error_f_u_l_m": [
+        2.3501496004829647e-07,
+        -1.812981688109616e-07,
+        -3.5784566088103986e-08
+      ],
+      "norm_m": 2.9896754444391485e-07
+    },
+    "foot": {
+      "error_f_u_l_m": [
+        3.921579311283452e-07,
+        -2.1003431199817513e-07,
+        1.3009993193868752e-08
+      ],
+      "norm_m": 4.4505226107314095e-07
+    }
+  },
+  "skin": {
+    "vertex_count": 59169,
+    "maximum_reopened_skin_vs_mesh_world_position_m": 8.388401297746436e-07,
+    "forward_length_m": 11.934951987657179,
+    "floor_m": 8.663434924195463e-08,
+    "pelvis_to_floor_m": 2.7563616065364025,
+    "contact_patch_floor_m": {
+      "left:sole": 0.20444310749567185,
+      "left:toe": 0.0008541274066432647,
+      "right:sole": 0.2115514237296355,
+      "right:toe": 0.0016954080182708942
+    }
+  },
+  "jaw": {
+    "semantic_node": "Bone_074",
+    "bind_vs_old_snapshot_world_rotation_degrees": 51.665966549520476,
+    "existing_grounded_recipe_jaw_delta_degrees": 0.0,
+    "status": "STATIC_BIND_APPEARANCE_REQUIRES_VISUAL_REVIEW",
+    "note": "Existing V7 gait construction leaves the recovered bind jaw unchanged; any closure is a separate behavior-owned calibration, not geometry recovery."
+  },
+  "limitations": [
+    "The +Z axis is explicit for this recovered source from the bilateral X plane and rostral head-tail geometry; the generic recovery API never infers it.",
+    "Current source mesh is a single connected closed manifold, but this receipt does not assess anatomical correctness or self-intersection."
+  ]
+}

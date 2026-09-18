@@ -1,0 +1,11 @@
+{
+  "schema": "eonwild.motion.motion-intent.v1",
+  "id": "heavy-biped.allosaurus-adult-walk-diagnostic.motion-set.v1",
+  "version": 1,
+  "program": "grounded_gait",
+  "program_profile": {
+    "path": "catalog/programs/heavy-biped.allosaurus-adult-walk-diagnostic.v1.json",
+    "sha256": "271ccb833a8913d3dc6bd8281e798e54b9c7bebad2080136245cb7b5e5afa725"
+  },
+  "description": "Non-promoted source-bound Allosaurus transfer walk using the shared grounded behavior."
+}

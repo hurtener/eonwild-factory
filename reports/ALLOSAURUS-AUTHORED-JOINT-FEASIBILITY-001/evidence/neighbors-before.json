@@ -1,0 +1,44 @@
+{
+  "head": "ee8e0e5354736bd5afde29e3988b7c5fb03f3417",
+  "tree": "100fb65bcaf611d606f2e70fcfd308febaf2ef1f",
+  "target_offsets": {
+    "left": [
+      1.887379141862766e-16,
+      8.495449939674257e-05,
+      -1.1324274851176596e-15
+    ],
+    "right": [
+      -1.4155343563970745e-16,
+      0.00012038048120269108,
+      -7.549516567451064e-16
+    ]
+  },
+  "rows": [
+    {
+      "time_s": 0.22389189189189188,
+      "status": "AUTHORED_MATERIAL_CLEARANCE_UNAVAILABLE",
+      "reason": "right authored material clearance material gap is nonmonotone"
+    },
+    {
+      "time_s": 0.2238908918918919,
+      "status": "AUTHORED_MATERIAL_CLEARANCE_UNAVAILABLE",
+      "reason": "right authored material clearance material gap is nonmonotone"
+    },
+    {
+      "time_s": 0.2238918918918919,
+      "status": "AUTHORED_MATERIAL_CLEARANCE_UNAVAILABLE",
+      "reason": "right authored material clearance material gap is nonmonotone"
+    },
+    {
+      "time_s": 0.2238928918918919,
+      "status": "AUTHORED_MATERIAL_CLEARANCE_UNAVAILABLE",
+      "reason": "right authored material clearance material gap is nonmonotone"
+    },
+    {
+      "time_s": 0.22389189189189193,
+      "status": "AUTHORED_MATERIAL_CLEARANCE_UNAVAILABLE",
+      "reason": "right authored material clearance material gap is nonmonotone"
+    }
+  ],
+  "classification": "pre-fix exact public query capture; no package acceptance"
+}

@@ -1,0 +1,27 @@
+{
+  "claims": {
+    "biological": false,
+    "physical": false,
+    "scientific": false
+  },
+  "files": {
+    "animal.json": "53ffeba22e24a87504d3dcc310bedacf6db94d60a25ffe56ad028b03f41e849d",
+    "articulation-profile.json": "c1206143387ad4d1084a413ee031018f5a61a8e0539ef8256c6bba74a0f4bc6a",
+    "biomechanics.json": "bc5368ac1785e1d941e8b5c7cd7d045dc9f3f30b68bec2a8df084c68e7b241ec",
+    "cubic-midpoint-plan.json": "7ecf81b752d1a52fc0c90ff6456ed72b9b48fde5abea255d617e396666774d7a",
+    "in_place.glb": "ced935c771749922cbfa3209ec76ba9a2699ec7c928797753fb94c967c31cd97",
+    "inputs.lock.json": "a20a434116e2005a231235a046dcdffb26b70f5f6f6e2b79790db12bc76bd102",
+    "plan.json": "07332c1245a11ffb254a163571b3bba01dcfdfc1367eae96ca8d8c0fbddeb753",
+    "recipe.json": "1f5d4dee6bdf224db2082878112c777e5d01c7605d512e0e9006198eff7244be",
+    "root_motion.glb": "85f19b01805153269988865752737e368be292f8fc49d5e527dfcf5f3ec4b2a4",
+    "runtime.json": "23dbe69ebf66ecde4ee62ee147b55178798b6e44460db310e85f9c74a3d34171",
+    "solver-receipt.json": "da27da42d8c9557eb77c49dd4085b936d7d902ea452d17064d5e41b75cf9b592",
+    "validation.json": "4597b546cc95b85c5955ff273d37e91f473eaf85f38bc604d5114370d3f895a2"
+  },
+  "id": "heavy-biped.tarbosaurus-pin-552-1-adult-walk.v10",
+  "production_approved": false,
+  "schema": "eonwild.motion.factory-package.v1",
+  "status": "CANDIDATE",
+  "technical_status": "PASS",
+  "version": 10
+}

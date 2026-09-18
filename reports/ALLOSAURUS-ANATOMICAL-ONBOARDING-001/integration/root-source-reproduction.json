@@ -1,0 +1,341 @@
+{
+  "head": "729ff70e741341e051275d81528d1516d5b41d19",
+  "prepared_sha256": "c611bb493813006d8b6a549124a021ff2c91930371f558f2f11434106b866c8b",
+  "admitted_sha256": "a403679deb968ec88f7b8b89e3e399cc0881e9cc602e765a6e55934c28ad3826",
+  "checked_in_bytes_equal": true,
+  "vertex_count": 40105,
+  "all_weights": true,
+  "maximum_original_to_admitted_neutral_world_skin_delta_m": 5.24674049826565e-07,
+  "maximum_delta_vertex": 39667,
+  "p99_delta_m": 4.7357655001682484e-07,
+  "rig_preparation_receipt": {
+    "schema": "eonwild.motion.rig-preparation-receipt.v1",
+    "status": "NON_PROMOTED_CANDIDATE",
+    "input_source_sha256": "91d9816b6bbaeb1037f3e9cbf253261799d8a4121efd91e0e2185f76908a6bf7",
+    "output_source_sha256": "c611bb493813006d8b6a549124a021ff2c91930371f558f2f11434106b866c8b",
+    "config_sha256": "1e408afe35a8e7bb70aaa626fa27696b8c378c3b42e06c36b851d3822e6bd927",
+    "coordinate": {
+      "frame": "source_world",
+      "lateral": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "up": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "forward": [
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    "skin_index": 0,
+    "joint_count": 48,
+    "vertex_count": 40105,
+    "animations": 0,
+    "reparented_nodes": [
+      "Bone_023",
+      "Bone_029"
+    ],
+    "relocated_pivots": [
+      "Bone_018",
+      "Bone_019",
+      "Bone_020",
+      "Bone_021",
+      "Bone_022",
+      "Bone_023",
+      "Bone_024",
+      "Bone_025",
+      "Bone_026",
+      "Bone_027",
+      "Bone_028",
+      "Bone_029"
+    ],
+    "added_endpoints": [
+      {
+        "name": "AllosaurusToeEndpoint.L",
+        "parent": "Bone_018",
+        "world_origin_m": [
+          -0.20488882467653494,
+          0.012162650266269972,
+          0.7705469886923582
+        ],
+        "skin_influence": false
+      },
+      {
+        "name": "AllosaurusToeEndpoint.R",
+        "parent": "Bone_024",
+        "world_origin_m": [
+          0.22157407767653495,
+          0.012162650266269972,
+          0.7705469886923582
+        ],
+        "skin_influence": false
+      }
+    ],
+    "near_uniform_scale_normalization": {
+      "policy": {
+        "maximum_axis_spread": 1e-05,
+        "maximum_unit_deviation": 1e-05,
+        "target": "unit"
+      },
+      "nodes": [
+        {
+          "node": "Bone_014",
+          "input_scale": [
+            1.0,
+            0.9999999403953553,
+            1.0000022649765015
+          ],
+          "output_scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "node": "Bone_013",
+          "input_scale": [
+            1.0,
+            0.9999998888065343,
+            1.0000022569606994
+          ],
+          "output_scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "node": "Bone_012",
+          "input_scale": [
+            1.0,
+            0.9999997706273255,
+            1.0000020771162967
+          ],
+          "output_scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "node": "Bone_011",
+          "input_scale": [
+            1.0,
+            0.9999997019504169,
+            1.0000020265837846
+          ],
+          "output_scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "node": "Bone_010",
+          "input_scale": [
+            1.0,
+            0.99999965266045,
+            1.0000020162691476
+          ],
+          "output_scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "node": "Bone_009",
+          "input_scale": [
+            1.0,
+            0.9999996426095243,
+            1.000001966715284
+          ],
+          "output_scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "node": "Bone_008",
+          "input_scale": [
+            1.0,
+            0.9999996426095241,
+            1.0000019667152837
+          ],
+          "output_scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "node": "Bone_007",
+          "input_scale": [
+            1.0,
+            0.9999996426095241,
+            1.0000019667152837
+          ],
+          "output_scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "node": "Bone_006",
+          "input_scale": [
+            1.0,
+            0.9999995937848218,
+            1.0000019559353868
+          ],
+          "output_scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "node": "Bone_005",
+          "input_scale": [
+            1.0,
+            0.9999997024778751,
+            1.0000069732515553
+          ],
+          "output_scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "node": "Bone_004",
+          "input_scale": [
+            1.0,
+            0.9999997024778748,
+            1.0000069732515553
+          ],
+          "output_scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ]
+    },
+    "touched_local_transforms": [
+      "Bone_023",
+      "Bone_029",
+      "Bone_014",
+      "Bone_022",
+      "Bone_028",
+      "Bone_013",
+      "Bone_021",
+      "Bone_027",
+      "Bone_012",
+      "Bone_020",
+      "Bone_026",
+      "Bone_011",
+      "Bone_019",
+      "Bone_025",
+      "Bone_010",
+      "Bone_018",
+      "Bone_024",
+      "Bone_009",
+      "Bone_008",
+      "AllosaurusToeEndpoint.L",
+      "AllosaurusToeEndpoint.R",
+      "Bone_007",
+      "Bone_006",
+      "Bone_005",
+      "Bone_004"
+    ],
+    "articulations": [
+      {
+        "role": "jaw_lower",
+        "node": "Bone_044",
+        "parent": "Bone_045",
+        "descendants": [
+          "Bone_043",
+          "Bone_042"
+        ],
+        "axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "axis_frame": "joint_parent_local"
+      }
+    ],
+    "weight_transfers": [
+      {
+        "role": "upper_skull",
+        "from_articulation": "jaw_lower",
+        "to_node": "Bone_045",
+        "selector": {
+          "frame": "source_world",
+          "halfspaces": [
+            {
+              "normal": [
+                0.0,
+                0.9889363528682975,
+                0.14834045293024462
+              ],
+              "minimum_dot_m": 1.672917706490115
+            },
+            {
+              "normal": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "minimum_dot_m": 1.95
+            }
+          ]
+        },
+        "selected_vertex_count": 6672,
+        "changed_vertex_count": 6132,
+        "maximum_transferred_weight": 1.0000000074505806
+      }
+    ],
+    "measurements": {
+      "maximum_input_neutral_skin_error_m": 7.774061190383236e-07,
+      "maximum_local_trs_projection_error": 1.5761053133445113e-07,
+      "maximum_reopened_world_matrix_error": 6.973255614717289e-06,
+      "maximum_reopened_neutral_skin_error_m": 3.749428662070317e-07
+    },
+    "limits": {
+      "reopened_world_matrix": 1e-05,
+      "neutral_skin_m": 3e-06
+    },
+    "limitations": [
+      "The source's straight parallel legs and original pivots are deliberate drift-control placeholders, not anatomical measurements.",
+      "The fitted surface-slab centers use authored windows and are provisional engineering pivots, not fossil-derived joint centers.",
+      "White et al. 2013 UUVP 6000r proportions are a post-fit sanity check only; this artist mesh is not established as that specimen.",
+      "The toe chain describes one pedal contact family; its added non-skinned terminal is an effector endpoint, not evidence of a new digit.",
+      "The jaw hinge and upper-skull ownership remain the earlier bounded engineering preparation; inner cheek and mouth-corner polish remains unresolved.",
+      "Hand and independent pedal digit anatomy remains unresolved.",
+      "The candidate is not admitted to a baseline, motion catalog, Unity project or production asset set."
+    ]
+  },
+  "geometry_admission_receipt": {
+    "schema": "eonwild.motion.geometry.v1",
+    "reference_clip": null,
+    "forward_axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "up_axis": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "claim": "calibrated geometry; no behavioral or biological validation"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "source_head": "534ff53eb6cf7133864e713fb33968828d944774",
+  "rotation_radians": 0.06,
+  "duration_s": 0.008333333333333333,
+  "sample_interval_s": 8.333333333333334e-08,
+  "sampler_near_endpoint_angular_velocity_rad_s": 7.198920080991454,
+  "exact_gltf_slerp_rad_s": 7.2,
+  "one_meter_offset_endpoint_velocity_error_mm_s": 1.079919008546426,
+  "derivative_helper_rad_s": 7.2,
+  "midpoint_test_note": "The new test samples t=1 in [0,2], where SLERP and NLERP agree; it is not a non-midpoint regression."
+}

@@ -1,0 +1,233 @@
+{
+  "classification": "STATIC_ISOLATED_ARTICULATION_ONLY",
+  "corrected_candidate": {
+    "regions": {
+      "declared_upper_skull": {
+        "jaw_branch_weight": {
+          "maximum": 0.0,
+          "median": 0.0,
+          "minimum": 0.0,
+          "p90": 0.0,
+          "p99": 0.0
+        },
+        "poses": [
+          {
+            "degrees": 8.0,
+            "displacement_mm": {
+              "maximum": 0.0,
+              "median": 0.0,
+              "minimum": 0.0,
+              "p90": 0.0,
+              "p99": 0.0
+            },
+            "vertices_over_1mm": 0
+          },
+          {
+            "degrees": -8.0,
+            "displacement_mm": {
+              "maximum": 0.0,
+              "median": 0.0,
+              "minimum": 0.0,
+              "p90": 0.0,
+              "p99": 0.0
+            },
+            "vertices_over_1mm": 0
+          }
+        ],
+        "vertex_count": 6672
+      },
+      "lower_jaw_side": {
+        "jaw_branch_weight": {
+          "maximum": 1.0000000596046448,
+          "median": 0.9999999953433871,
+          "minimum": 0.26333051919937134,
+          "p90": 1.0000000223517418,
+          "p99": 1.0000000447034836
+        },
+        "poses": [
+          {
+            "degrees": 8.0,
+            "displacement_mm": {
+              "maximum": 47.13967888569806,
+              "median": 33.79903002312057,
+              "minimum": 2.3588254248306897,
+              "p90": 45.36696254584641,
+              "p99": 46.98152625280019
+            },
+            "vertices_over_1mm": 1387
+          },
+          {
+            "degrees": -8.0,
+            "displacement_mm": {
+              "maximum": 47.13967888569785,
+              "median": 33.79903002312138,
+              "minimum": 2.3588254248306444,
+              "p90": 45.36696254584671,
+              "p99": 46.981526252800926
+            },
+            "vertices_over_1mm": 1387
+          }
+        ],
+        "vertex_count": 1387
+      },
+      "mouth_boundary_band": {
+        "jaw_branch_weight": {
+          "maximum": 1.0000000596046448,
+          "median": 0.0,
+          "minimum": 0.0,
+          "p90": 0.9999999739229679,
+          "p99": 1.0000000298023224
+        },
+        "poses": [
+          {
+            "degrees": 8.0,
+            "displacement_mm": {
+              "maximum": 27.857042092199354,
+              "median": 0.0,
+              "minimum": 0.0,
+              "p90": 20.837906912598847,
+              "p99": 26.768193413341038
+            },
+            "vertices_over_1mm": 476
+          },
+          {
+            "degrees": -8.0,
+            "displacement_mm": {
+              "maximum": 27.857042092199897,
+              "median": 0.0,
+              "minimum": 0.0,
+              "p90": 20.837906912599617,
+              "p99": 26.768193413341848
+            },
+            "vertices_over_1mm": 476
+          }
+        ],
+        "vertex_count": 1357
+      }
+    },
+    "sha256": "c56772d63045d3410b8efe81eb45f7ee06ad97307fa076a32033553dab372c41"
+  },
+  "limits": [
+    "The halfspace is an engineering ownership boundary, not fossil anatomy.",
+    "Displacement is not a collision or tooth-contact measurement."
+  ],
+  "schema": "eonwild.allosaurus.jaw-weight-ownership-probe.v1",
+  "selector": {
+    "description": "Upper skull halfspace and adjacent boundary/lower-side controls; independent of source skin weights.",
+    "frame": "source_world",
+    "minimum_dot_m": 1.672917706490115,
+    "minimum_forward_m": 1.95,
+    "normal": [
+      0.0,
+      0.9889363528682975,
+      0.14834045293024462
+    ]
+  },
+  "superseded_candidate": {
+    "regions": {
+      "declared_upper_skull": {
+        "jaw_branch_weight": {
+          "maximum": 1.0000000074505806,
+          "median": 0.3304942846298218,
+          "minimum": 0.0,
+          "p90": 0.6341531097888947,
+          "p99": 0.8950840644538403
+        },
+        "poses": [
+          {
+            "degrees": 8.0,
+            "displacement_mm": {
+              "maximum": 33.18676601408485,
+              "median": 5.4700156787489345,
+              "minimum": 0.0,
+              "p90": 26.294579290301442,
+              "p99": 32.47675582778949
+            },
+            "vertices_over_1mm": 5732
+          },
+          {
+            "degrees": -8.0,
+            "displacement_mm": {
+              "maximum": 33.18676601408486,
+              "median": 5.470015678748288,
+              "minimum": 0.0,
+              "p90": 26.294579290301847,
+              "p99": 32.47675582778976
+            },
+            "vertices_over_1mm": 5732
+          }
+        ],
+        "vertex_count": 6672
+      },
+      "lower_jaw_side": {
+        "jaw_branch_weight": {
+          "maximum": 1.0000000596046448,
+          "median": 0.9999999953433871,
+          "minimum": 0.26333051919937134,
+          "p90": 1.0000000223517418,
+          "p99": 1.0000000447034836
+        },
+        "poses": [
+          {
+            "degrees": 8.0,
+            "displacement_mm": {
+              "maximum": 47.13967888569806,
+              "median": 33.79903002312057,
+              "minimum": 2.3588254248306897,
+              "p90": 45.36696254584641,
+              "p99": 46.98152625280019
+            },
+            "vertices_over_1mm": 1387
+          },
+          {
+            "degrees": -8.0,
+            "displacement_mm": {
+              "maximum": 47.13967888569785,
+              "median": 33.79903002312138,
+              "minimum": 2.3588254248306444,
+              "p90": 45.36696254584671,
+              "p99": 46.981526252800926
+            },
+            "vertices_over_1mm": 1387
+          }
+        ],
+        "vertex_count": 1387
+      },
+      "mouth_boundary_band": {
+        "jaw_branch_weight": {
+          "maximum": 1.0000000596046448,
+          "median": 0.7087136097252369,
+          "minimum": 0.006629882380366325,
+          "p90": 1.0,
+          "p99": 1.0000000298023224
+        },
+        "poses": [
+          {
+            "degrees": 8.0,
+            "displacement_mm": {
+              "maximum": 27.857042092199354,
+              "median": 13.286802364269315,
+              "minimum": 0.14016356645461753,
+              "p90": 22.009830124328666,
+              "p99": 26.768193413341038
+            },
+            "vertices_over_1mm": 1252
+          },
+          {
+            "degrees": -8.0,
+            "displacement_mm": {
+              "maximum": 27.857042092199897,
+              "median": 13.286802364269745,
+              "minimum": 0.14016356645437975,
+              "p90": 22.00983012432892,
+              "p99": 26.768193413341848
+            },
+            "vertices_over_1mm": 1252
+          }
+        ],
+        "vertex_count": 1357
+      }
+    },
+    "sha256": "0fe715fe38aeca125d3ecda873d4575eb151690c4b759cbfdfbaa0f0ef8ec04f"
+  }
+}

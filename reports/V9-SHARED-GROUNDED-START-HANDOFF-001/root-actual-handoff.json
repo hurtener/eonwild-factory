@@ -1,0 +1,347 @@
+{
+  "schema": "eonwild.motion.handoff-validation.v1",
+  "kind": "start",
+  "steady_phase_s": 0.3075,
+  "status": "PASS",
+  "individual_technical_status": [
+    "PASS",
+    "PASS"
+  ],
+  "packages": [
+    {
+      "id": "heavy-biped.tarbosaurus-pin-552-1-adult-walk-start.motion-set.v1",
+      "manifest_sha256": "8dea3f8bc07f42528bb5bf36c390aa03475c5bb0f716c70daf0798655aaf0193",
+      "root_motion_sha256": "09b641edf3fed8eb4363e5cb51dd5e46581ec247df1aa149cd1d57efe3be264f",
+      "in_place_sha256": "10f0c66520cffa12565a29d8e2972cef8b1ce581550bd568e58ba204c402d69d"
+    },
+    {
+      "id": "heavy-biped.tarbosaurus-pin-552-1-adult-walk.motion-set.v1",
+      "manifest_sha256": "a8bcf3dd5c6c9a29e25fab41313f2830c215f3fa2f85b657d72002e0d00ef48f",
+      "root_motion_sha256": "8fa52c26dc9148f488f568d004659995f13f35eb7cca6f730cce78635769b5af",
+      "in_place_sha256": "cf9766c8bad2ccb4c13c1217746c3791297ff3913eb4d491babd192784d62fcd"
+    }
+  ],
+  "modes": {
+    "root_motion": {
+      "status": "PASS",
+      "checks": {
+        "position_m": true,
+        "skin_position_m": true,
+        "rotation_degrees": true,
+        "linear_velocity_mps": true,
+        "skin_velocity_mps": true,
+        "angular_velocity_degrees_per_s": true,
+        "contact_state": true
+      },
+      "values": {
+        "position_m": 9.951357426984941e-08,
+        "skin_position_m": 9.951357604620625e-08,
+        "rotation_degrees": 2.9575586669421963e-06,
+        "linear_velocity_mps": 2.9946757436508074e-05,
+        "skin_velocity_mps": 1.791571028431756e-05,
+        "angular_velocity_degrees_per_s": 0.0039830438275831465
+      },
+      "limits": {
+        "position_m": 0.001,
+        "skin_position_m": 0.0005,
+        "rotation_degrees": 0.5,
+        "linear_velocity_mps": 0.001,
+        "skin_velocity_mps": 0.001,
+        "angular_velocity_degrees_per_s": 10.0
+      },
+      "witness_indices": {
+        "position_m": 41,
+        "skin_position_m": 285,
+        "rotation_degrees": 42,
+        "linear_velocity_mps": 61,
+        "skin_velocity_mps": 1937,
+        "angular_velocity_degrees_per_s": 61
+      },
+      "before_times_s": [
+        7.983333110809326,
+        7.985416889190674,
+        7.987500190734863
+      ],
+      "after_times_s": [
+        0.3075000047683716,
+        0.31581079959869385,
+        0.3241216242313385
+      ],
+      "classification": "exact serialized TRS endpoint FK/LBS tangents",
+      "source_interpolation": {
+        "before": [
+          "CUBICSPLINE"
+        ],
+        "after": [
+          "CUBICSPLINE"
+        ]
+      },
+      "diagnostics": {
+        "quadratic_three_sample_estimate": {
+          "values": {
+            "linear_velocity_mps": 0.031621339876168816,
+            "skin_velocity_mps": 0.025944947593845885,
+            "angular_velocity_degrees_per_s": 4.941169368231863
+          },
+          "witness_indices": {
+            "linear_velocity_mps": 62,
+            "skin_velocity_mps": 2545,
+            "angular_velocity_degrees_per_s": 62
+          }
+        }
+      },
+      "motion_owned_nodes": [
+        "Bone_060",
+        "Bone_061",
+        "Bone_062",
+        "Bone_063",
+        "Bone_025",
+        "Bone_026",
+        "Bone_027",
+        "Bone_028",
+        "Bone_029",
+        "Bone_064",
+        "Bone_065",
+        "Bone_066",
+        "Bone_067",
+        "Bone_030",
+        "Bone_031",
+        "Bone_032",
+        "Bone_033",
+        "Bone_034",
+        "Bone_068",
+        "Bone_069",
+        "Bone_070",
+        "Bone_071",
+        "Bone_072",
+        "Bone_073",
+        "Bone_074",
+        "Bone_035",
+        "Bone_036",
+        "Bone_037",
+        "Bone_038",
+        "Bone_039",
+        "Bone_040",
+        "Bone_041",
+        "Bone_002",
+        "Bone_003",
+        "Bone_004",
+        "Bone_005",
+        "Bone_006",
+        "Bone_007",
+        "Bone_042",
+        "Bone_043",
+        "Bone_044",
+        "Bone_045",
+        "Bone_046",
+        "Bone_047",
+        "Bone_048",
+        "Bone_049",
+        "Bone_050",
+        "Bone_008",
+        "Bone_009",
+        "Bone_010",
+        "Bone_011",
+        "Bone_051",
+        "Bone_052",
+        "Bone_053",
+        "Bone_054",
+        "Bone_055",
+        "Bone_056",
+        "Bone_057",
+        "Bone_058",
+        "Bone_059",
+        "Bone_012",
+        "Bone_013",
+        "Bone_014",
+        "Bone_015",
+        "Bone_016",
+        "Bone_017",
+        "Bone_018",
+        "Bone_019",
+        "Bone_020",
+        "Bone_021",
+        "Bone_022",
+        "Bone_023",
+        "Bone_024",
+        "Bone_001",
+        "Bone_000"
+      ],
+      "serialized_motor_velocity_mps": {
+        "before": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "after": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "in_place": {
+      "status": "PASS",
+      "checks": {
+        "position_m": true,
+        "skin_position_m": true,
+        "rotation_degrees": true,
+        "linear_velocity_mps": true,
+        "skin_velocity_mps": true,
+        "angular_velocity_degrees_per_s": true,
+        "contact_state": true
+      },
+      "values": {
+        "position_m": 8.881784197001252e-16,
+        "skin_position_m": 8.881784197001252e-16,
+        "rotation_degrees": 2.9575586669421963e-06,
+        "linear_velocity_mps": 2.9946757436427033e-05,
+        "skin_velocity_mps": 1.7915710284430034e-05,
+        "angular_velocity_degrees_per_s": 0.0039830438275831465
+      },
+      "limits": {
+        "position_m": 0.001,
+        "skin_position_m": 0.0005,
+        "rotation_degrees": 0.5,
+        "linear_velocity_mps": 0.001,
+        "skin_velocity_mps": 0.001,
+        "angular_velocity_degrees_per_s": 10.0
+      },
+      "witness_indices": {
+        "position_m": 0,
+        "skin_position_m": 169,
+        "rotation_degrees": 42,
+        "linear_velocity_mps": 61,
+        "skin_velocity_mps": 1937,
+        "angular_velocity_degrees_per_s": 61
+      },
+      "before_times_s": [
+        7.983333110809326,
+        7.985416889190674,
+        7.987500190734863
+      ],
+      "after_times_s": [
+        0.3075000047683716,
+        0.31581079959869385,
+        0.3241216242313385
+      ],
+      "classification": "exact serialized TRS endpoint FK/LBS tangents",
+      "source_interpolation": {
+        "before": [
+          "CUBICSPLINE"
+        ],
+        "after": [
+          "CUBICSPLINE"
+        ]
+      },
+      "diagnostics": {
+        "quadratic_three_sample_estimate": {
+          "values": {
+            "linear_velocity_mps": 0.03201637256044149,
+            "skin_velocity_mps": 0.025999905109231076,
+            "angular_velocity_degrees_per_s": 4.941169368231863
+          },
+          "witness_indices": {
+            "linear_velocity_mps": 62,
+            "skin_velocity_mps": 2545,
+            "angular_velocity_degrees_per_s": 62
+          }
+        }
+      },
+      "motion_owned_nodes": [
+        "Bone_060",
+        "Bone_061",
+        "Bone_062",
+        "Bone_063",
+        "Bone_025",
+        "Bone_026",
+        "Bone_027",
+        "Bone_028",
+        "Bone_029",
+        "Bone_064",
+        "Bone_065",
+        "Bone_066",
+        "Bone_067",
+        "Bone_030",
+        "Bone_031",
+        "Bone_032",
+        "Bone_033",
+        "Bone_034",
+        "Bone_068",
+        "Bone_069",
+        "Bone_070",
+        "Bone_071",
+        "Bone_072",
+        "Bone_073",
+        "Bone_074",
+        "Bone_035",
+        "Bone_036",
+        "Bone_037",
+        "Bone_038",
+        "Bone_039",
+        "Bone_040",
+        "Bone_041",
+        "Bone_002",
+        "Bone_003",
+        "Bone_004",
+        "Bone_005",
+        "Bone_006",
+        "Bone_007",
+        "Bone_042",
+        "Bone_043",
+        "Bone_044",
+        "Bone_045",
+        "Bone_046",
+        "Bone_047",
+        "Bone_048",
+        "Bone_049",
+        "Bone_050",
+        "Bone_008",
+        "Bone_009",
+        "Bone_010",
+        "Bone_011",
+        "Bone_051",
+        "Bone_052",
+        "Bone_053",
+        "Bone_054",
+        "Bone_055",
+        "Bone_056",
+        "Bone_057",
+        "Bone_058",
+        "Bone_059",
+        "Bone_012",
+        "Bone_013",
+        "Bone_014",
+        "Bone_015",
+        "Bone_016",
+        "Bone_017",
+        "Bone_018",
+        "Bone_019",
+        "Bone_020",
+        "Bone_021",
+        "Bone_022",
+        "Bone_023",
+        "Bone_024",
+        "Bone_001",
+        "Bone_000"
+      ],
+      "serialized_motor_velocity_mps": {
+        "before": [
+          -2.995148253962817e-15,
+          1.9168948825362028e-13,
+          1.1142320003665425
+        ],
+        "after": [
+          2.995148253962817e-15,
+          -1.9168948825362028e-13,
+          1.1142320003665425
+        ]
+      }
+    }
+  },
+  "visual_review": "PENDING",
+  "unity_validation": "NOT_RUN",
+  "production_approved": false,
+  "classification": "independent native-time emitted pose, velocity, contact and material join; no crossfade or runtime claim",
+  "independent_reader_head": "1f783f87d3604b7a2fe6ae5acb1998569ed6582f"
+}

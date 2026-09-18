@@ -1,0 +1,154 @@
+{
+  "schema": "eonwild.motion.host-visual-review.v1",
+  "source_sha": "f53782e060d38554879cbd25a65d0d62c72d44f4",
+  "test_only_followup_sha": "0955fc867fcf70383613d67f984baf4a92c4d6e0",
+  "package_manifest_sha256": "4d3eca7ef8933661baed623ffef59119d9348c740cb8906bd31e6efb3784b900",
+  "glb_sha256": {
+    "root_motion": "4416c91ea3629f638949139c5c7a9c1d1e0ed062b518822d024dbd313670e2a7",
+    "in_place": "0215d73f22f45e1897afa8d6336caea8bd2072a57679e63e05ce735fe32717cf"
+  },
+  "reviewed_at_utc": "2026-09-08T06:28:05.960572+00:00",
+  "current_package_verification": {
+    "integrity": "PASS",
+    "technical_status": "PASS",
+    "visual_review": "PENDING",
+    "unity_parity": "NOT_RUN",
+    "production_approved": false
+  },
+  "views": {
+    "side-body": {
+      "view": "side-body",
+      "mode": "in_place",
+      "source_sha256": "0215d73f22f45e1897afa8d6336caea8bd2072a57679e63e05ce735fe32717cf",
+      "render_receipt_sha256": "5e85c1db86bcf2f6907c6aa6a2bab75462a4265a51c55fcea088d27aabafda08",
+      "film_sha256": "0d5865dbe8f5bef48711a9e7b84459c157303b1e7f4a85da558b8ed38e1f3f97",
+      "frames": 48,
+      "native_fps": 30,
+      "encoded_duration_s": 1.6,
+      "camera_matches_retained_v3": true,
+      "full_ffmpeg_decode": "PASS",
+      "contact_sheets": [
+        {
+          "name": "000-015.png",
+          "sha256": "aa9e02e76daa85d6adb385bc7b0ebd79e1b65e3cd6db18e927f15b9cfd6645d7"
+        },
+        {
+          "name": "016-031.png",
+          "sha256": "1b05be8d2cfd66186c1e6cafb3b76520e2090899bb1f3aff73e8a40c5e450232"
+        },
+        {
+          "name": "032-047.png",
+          "sha256": "44b20a13a799effc179ea9bfb01d25ed5c497933e51d43cd9ee8c9d66e9c26ce"
+        }
+      ],
+      "visual_inspection": "ALL_48_FRAMES_INSPECTED",
+      "native_1x_browser_playback": "COMPLETED_1.600_SECONDS"
+    },
+    "side-feet": {
+      "view": "side-feet",
+      "mode": "in_place",
+      "source_sha256": "0215d73f22f45e1897afa8d6336caea8bd2072a57679e63e05ce735fe32717cf",
+      "render_receipt_sha256": "66edfe1e3b2a6e8b9224ee274ede2e8599dd74de4dc69a1e0a5b92190977b0ac",
+      "film_sha256": "95bed3a520c4cd3902cbc72fcd2fbdc96ef1efaaf0d6513fb1e560a1cf4eba67",
+      "frames": 48,
+      "native_fps": 30,
+      "encoded_duration_s": 1.6,
+      "camera_matches_retained_v3": true,
+      "full_ffmpeg_decode": "PASS",
+      "contact_sheets": [
+        {
+          "name": "000-015.png",
+          "sha256": "9e746cab184ef0a01ddc951a82c6980c3470527137f3d3e09e7366e85b554b9a"
+        },
+        {
+          "name": "016-031.png",
+          "sha256": "40bbdd6642118b46bd6b8f8b68e6679289f7ff947623cabd435423e99f96c30f"
+        },
+        {
+          "name": "032-047.png",
+          "sha256": "d251f71b1748023554b828ade9356501e4b57846c806720391ef957e3c9f42bf"
+        }
+      ],
+      "visual_inspection": "ALL_48_FRAMES_INSPECTED",
+      "native_1x_browser_playback": "COMPLETED_1.600_SECONDS"
+    },
+    "three-quarter-body": {
+      "view": "three-quarter-body",
+      "mode": "in_place",
+      "source_sha256": "0215d73f22f45e1897afa8d6336caea8bd2072a57679e63e05ce735fe32717cf",
+      "render_receipt_sha256": "697df235bb3052ad6b12a45819574d8f0b47b1d2456cd094657b97ee2a2e45b4",
+      "film_sha256": "c9611a05cebeadc3025e7f0aa32dc1dbc462bbf79fa83f92c38d05a98f8faea5",
+      "frames": 48,
+      "native_fps": 30,
+      "encoded_duration_s": 1.6,
+      "camera_matches_retained_v3": true,
+      "full_ffmpeg_decode": "PASS",
+      "contact_sheets": [
+        {
+          "name": "000-015.png",
+          "sha256": "b47a83f245343f2db6e849eb7f48e82ceafa7ee2979b6b0b432e519b08d43b76"
+        },
+        {
+          "name": "016-031.png",
+          "sha256": "61062809f5657a2f2ae482e8658f74d2a532feddc424f4a0594d41d7e6859f0e"
+        },
+        {
+          "name": "032-047.png",
+          "sha256": "0f630695d15ba951720b73347d1c7a3ee179e04e539ebff757ce49f8f721e565"
+        }
+      ],
+      "visual_inspection": "ALL_48_FRAMES_INSPECTED",
+      "native_1x_browser_playback": "COMPLETED_1.600_SECONDS"
+    },
+    "root-motion-side": {
+      "view": "root-motion-side",
+      "mode": "root_motion",
+      "source_sha256": "4416c91ea3629f638949139c5c7a9c1d1e0ed062b518822d024dbd313670e2a7",
+      "render_receipt_sha256": "f919aaa15a70f91f57fe0aae4e646fb01fe23297defa4fb164199f3b8c69b2e5",
+      "film_sha256": "f216e1ebcbe2d9d125765748549c6196f804c3af2e1ddec8c93d75dd75fc1d6a",
+      "frames": 48,
+      "native_fps": 30,
+      "encoded_duration_s": 1.6,
+      "camera_matches_retained_v3": true,
+      "full_ffmpeg_decode": "PASS",
+      "contact_sheets": [
+        {
+          "name": "000-015.png",
+          "sha256": "c8b441761c9bb67ef72df8db7dfdc1ea55e409f3ec43ad889691ebc78d13c4ae"
+        },
+        {
+          "name": "016-031.png",
+          "sha256": "b472a9e7fc1ba8fb1c0f2d87f6a2d2253128fce2580aff4efa7b7c52abc15241"
+        },
+        {
+          "name": "032-047.png",
+          "sha256": "25e5c08755076e4d33919b4c28f8c7235ce80a67d35ee6fb516c9a3eeba49a18"
+        }
+      ],
+      "visual_inspection": "ALL_48_FRAMES_INSPECTED",
+      "native_1x_browser_playback": "COMPLETED_1.600_SECONDS"
+    }
+  },
+  "inspected_frames": 192,
+  "decision": "RECOVERY_IMPROVED; WHOLE_BODY_POLISH_REQUIRED",
+  "observations": [
+    "Recovery preserves the intended extended distal direction with coordinated pad/toe motion, without the earlier pinched ankle posture.",
+    "All 48 frames in each of four views were inspected; no visible recurrence of the rejected mid-recovery floor-skimming or lateral leg crossing.",
+    "Both in-place and root-motion films retain the authored 1.6-second timing, source floor and v3 comparison cameras.",
+    "The torso remains relatively level and even; this fast candidate retains the older body profile and does not include the separate v6 walk body work."
+  ],
+  "reference": {
+    "path": "assets/examples/tarbosaurus/tarbosaurus_walk.mp4",
+    "sha256": "b0401fc76a202d6ed5dc9a5515f1054eab8bed8075c04f6167ff426fd603f5ae",
+    "native_frames": 241,
+    "native_fps": 24,
+    "reinspection": "All 241 reference frames and one complete native-speed playback in this stage."
+  },
+  "limitations": [
+    "Current seam PASS is the existing quadratic estimator, not proof of exact exported tangent continuity. A separate P1 evaluator correction is underway.",
+    "Kinematic visual assessment does not establish biological joint limits, contact force or mass dynamics.",
+    "800x450 four-sample diagnostic renders limit fine surface-deformation judgment."
+  ],
+  "unity_parity": "NOT_RUN",
+  "production_approved": false
+}

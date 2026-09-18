@@ -1,0 +1,27 @@
+{
+  "classification": "Root independent comparison at all 74 native render sample times, all source body skin vertices, both modes. Numerical extent permits using original visual review for unchanged visible behavior; not a new render or motion approval.",
+  "modes": {
+    "root_motion": {
+      "render_sample_count": 74,
+      "maximum_all_skin_delta_m": 9.636090556088037e-08,
+      "witness": {
+        "frame": 66,
+        "time_s": 2.2,
+        "vertex": 50289
+      },
+      "old_sha256": "9d823831c2f6bf6b3eb1482784fb75ef3532838385bf111a683ee2c7d0986e0c",
+      "new_sha256": "03da1a7ed5d8d38fc190307ae2e41efa23156158b837c27445ec5809e14878e9"
+    },
+    "in_place": {
+      "render_sample_count": 74,
+      "maximum_all_skin_delta_m": 9.636090539363552e-08,
+      "witness": {
+        "frame": 66,
+        "time_s": 2.2,
+        "vertex": 50289
+      },
+      "old_sha256": "1110f89eed7a4de38245a4620d0c10f92e589fb4c703e9360011b3be03e12ce0",
+      "new_sha256": "3d984b535ae22ea776d9111e9bdd52f55cfb05bf7a2cd1741c3354df75d9bdcc"
+    }
+  }
+}

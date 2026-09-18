@@ -1,0 +1,8 @@
+{
+  "classification": "source_backed_engineering_candidate",
+  "id": "heavy-biped-authored-material-clearance.v1",
+  "maximum_clearance_body_heights": 0.125,
+  "model": "body_height_fraction.v1",
+  "schema": "eonwild.motion.authored-material-clearance-policy.v1",
+  "version": 1
+}

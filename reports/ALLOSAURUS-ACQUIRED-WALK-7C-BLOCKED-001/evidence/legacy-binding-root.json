@@ -1,0 +1,23 @@
+{
+  "schema": "eonwild.audit.narrow-p1-closure.v1",
+  "head": "655bd1d6048147cf1e1aa00d03512b44c2f42461",
+  "tree": "a16bd8fd3c3f7c5d82905f9c0373d665d2afe282",
+  "scope": "exceptional narrow diff-only P1 re-review after integration rejected archived7c adapter replay",
+  "findings": {
+    "P0": 0,
+    "P1": 0
+  },
+  "change": "Grounded adapter binding preserves exact old v1 field set; mode and steady digests occur only in transition binding",
+  "focused_tests": "3PASS23deselected7.92s,legacy fields andtransition substitution/contact ownership",
+  "retained7c_verify": {
+    "integrity": "PASS",
+    "technical_status": "BLOCKED",
+    "visual_review": "PENDING",
+    "unity_parity": "NOT_RUN",
+    "production_approved": false,
+    "cli_exit": 2
+  },
+  "diff_check": "PASS",
+  "worker_clean": true,
+  "historical_package_changed": false
+}

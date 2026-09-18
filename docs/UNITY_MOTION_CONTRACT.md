@@ -11,6 +11,13 @@ recipe, motion plan, final receipts, and `runtime.json`. Blender can generate
 an FBX transport candidate through tools/render_candidate.py. Generic rigs
 are the intended Unity path; semantic family/rig adaptation remains ours.
 
+Packages produced from a shared motion set also bind `motion-set.json`,
+`motion-baseline.json`, and `motion-intent.json`. Connected clips must carry the
+same baseline identity and snapshot hash even when their gait-derived effective
+response values differ. Unity may select a motion by its resolved recipe id,
+but it must not replace the package's animal, frame, contact, articulation,
+neutral-pose, body-response, or solve-policy bindings per clip.
+
 Keep the master source and full rig. Do not enforce an arbitrary bone cap or
 reduce articulation before profiling. Export transport separately from the
 source motion; bind its hash to the source package, renderer/exporter version

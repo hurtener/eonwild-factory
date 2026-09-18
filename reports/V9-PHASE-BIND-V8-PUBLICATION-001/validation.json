@@ -1,0 +1,84 @@
+{
+  "schema": "eonwild.motion.phase-bind-v8-publication.v1",
+  "publication_base": "424644e1b3ac184a03c64fc661786a1e2ab1a68b",
+  "test_head": "f267c9671f4eedadc91888b21685b0f74eb0e08d",
+  "test_tree": "a3c3d9667209077a1019ee206cd32744856b2ab3",
+  "phase_local": {
+    "preserved_implementation_heads": [
+      "e6c0b6f6daefba490305a79722ebb1644ffd1a41",
+      "79bc9f9cab6e3aebbae9e1aeb6e90324de4371e5"
+    ],
+    "publication_head": "b3b0b4201bb14e66dfa379de2e4b76353ded0526",
+    "residual_p2": "caller-owned ArticulationProfile.support and .swing maps remain shallow-mutable; snapshot before future retained external source-motion queries"
+  },
+  "bind_pose": {
+    "preserved_head": "74ba50caed1170ce126ee022bb8db361859be8b7",
+    "reviewed_source_head": "4fc8c9cb9e6f48a266c516f1c4328ad91a19b1a5",
+    "integrated_commits": [
+      "0a6ca91af6e03d10f86c5124b5366ceef8f7581b",
+      "7d3945b7083c1e04dbf360e852d401e29d3e98fa",
+      "16aab6232698c6f641c34624c0ea246c67f1684e",
+      "1b5a13e9c703a67470288901291aff65aa9faa4a",
+      "2d6b5e6506c14231f2a87b593bd8897ae0143519",
+      "ef1c3055e83d4d2ec84a9c31de902c8ccf662a78",
+      "4fc8c9cb9e6f48a266c516f1c4328ad91a19b1a5",
+      "74ba50caed1170ce126ee022bb8db361859be8b7"
+    ]
+  },
+  "v8_rebuild": {
+    "recipe": "recipes/heavy-biped/tarbosaurus-pin-552-1-adult-walk.v8.json",
+    "frozen_package": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/continuation-adult-v8-bind-pose-001",
+    "regenerated_package": "out/phase-bind-v8-regenerate-788e213",
+    "frozen_manifest_sha256": "a8b5b1d82b98d6e3579e4aec2e2ac15eec3f0baa9c0cb42ea4ff734dc15b88d3",
+    "regenerated_manifest_sha256": "b3deead5d8c6b663cb17f7ff6f9e51e5cd44a770b377f805a0f0e5f7fdaca1fe",
+    "root_motion_sha256": "d0ca24b7738517804f525c7261d5dcbc0790b94479915ba1251250cd76433d37",
+    "in_place_sha256": "b9f8f18f2508132bf3a78c900d6f4c8addc380f4d65c0c81751fd5a3016a3579",
+    "all_non_provenance_payloads_byte_identical": true,
+    "manifest_difference": {
+      "only_file_entry_changed": "inputs.lock.json",
+      "source_provenance_differences": [
+        "factory/source.py",
+        "glb/cubic_bounds.py",
+        "solve/airborne_gait.py"
+      ]
+    },
+    "fresh_verify": {
+      "integrity": "PASS",
+      "technical_status": "BLOCKED",
+      "visual_review": "PENDING",
+      "unity_parity": "NOT_RUN",
+      "production_approved": false,
+      "exit_code": 2
+    }
+  },
+  "local_full_suite": {
+    "result": "PASS",
+    "console": "844 passed, 21 subtests passed in 218.63s",
+    "junit_testcase_elements": 844,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "blender": "5.2.0 LTS",
+    "khronos_validator": "2.0.0-dev.3.10",
+    "external_receipt": "out/phase-bind-v8-ci-f267c96",
+    "artifacts_sha256": {
+      "setup_attempt1_nonexecutable_log": "c213bbf1e736681aa390a193b559495a96dd21ab15a9d8ee11a83e7b83c5534c",
+      "khronos_install_log": "e57c0a738fa49686a21fd2515ea1374a897e5396a56986ca13263976099b866e",
+      "toolchain_attempt2_log": "8ece9d29b59255adc27942b30ab8a12239dbdf47b3c6be20cce279cb6ad8ac81",
+      "toolchain_final_log": "4b5f27f70fe5044151653c84adfa563c6932771cd1e7fd2b49f815be52c6b438",
+      "junit": "4c461cb14f00a44a960ec844f27c4409213e8e0955aa3dd44721558328ccfcc6",
+      "full_log": "da58815318082e9e6f25e12bb63fb16e7ef62771a5ab95271296490bb0593a87"
+    }
+  },
+  "hosted_ci_observation": {
+    "status": "NOT_GREEN; TWO_COMPLETED_JOBS_ONLY",
+    "receipt": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/ci-424644e-completed-job-evidence.json",
+    "receipt_sha256": "da3e61d10caa8e2f93eb9ffcee9f02c4e782c91effd36fb848c5abe4071dbf83",
+    "adult_v7_exact_linear_loop_m_per_s": 0.0032116449766123154,
+    "adult_v7_limit_m_per_s": 0.001,
+    "native_v6_render_status": "PASS",
+    "native_v6_exit_code": 2,
+    "native_v6_candidate_technical_status": "BLOCKED"
+  },
+  "production_approved": false
+}

@@ -1,0 +1,54 @@
+{
+  "schema": "eonwild.motion.source-query-v9-final-suite.v1",
+  "source_head": "ae25a5106b378773e991a168c8883e33e2c44ab7",
+  "parents": [
+    "9f6e93f0ac1a06e3a3d6c121c99ef84ae4cd7830",
+    "b31bcf655d72883d98e899e70f86213d3cec9730"
+  ],
+  "command": "<worktree>/.venv/bin/python -m pytest -q tests --junitxml=<final-junit.xml>",
+  "result": "PASS",
+  "tests": 907,
+  "subtests": 21,
+  "elapsed_s": 292.68,
+  "junit_attributes": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "tests": "928",
+    "time": "292.634",
+    "timestamp": "2026-09-08T08:59:12.637621-03:00",
+    "hostname": "192.168.1.26"
+  },
+  "pytest_log": {
+    "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/source-query-v9-final-suite-ae25a510/final-pytest.log",
+    "sha256": "efd427b8ec47acab34ae98a52761371c86838d749b6b02481020d5cbcacf111a"
+  },
+  "junit": {
+    "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/source-query-v9-final-suite-ae25a510/final-junit.xml",
+    "sha256": "381785c9d887dd68d21ea3c3cf2da7d8ee757618ab00d7a043f83606eb68a2db"
+  },
+  "python": {
+    "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/worktrees/eonwild-source-query-v9-publication/.venv/bin/python",
+    "version": "3.12.10"
+  },
+  "pytest_version": "pytest 9.1.1",
+  "blender": {
+    "path": "/opt/homebrew/bin/blender",
+    "version": "5.2.0 LTS",
+    "exercised_by_full_suite": true
+  },
+  "gltf_validator": {
+    "path": "/opt/homebrew/bin/gltf_validator",
+    "version": "2.0.0-dev.3.10"
+  },
+  "zero_test_setup_attempt": {
+    "result": "ENVIRONMENT_SETUP_FAILURE",
+    "tests_executed": 0,
+    "reason": "new compile-created virtualenv lacked pytest; wrapper then used zsh reserved status variable",
+    "log_path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/source-query-v9-final-suite-ae25a510/pytest.log",
+    "log_sha256": "e2aee78d8bd35e1621d859acb318c8384d07602d8b47bc418f85471f2f30eb6f",
+    "classification": "interrupted setup attempt; not a test or code failure"
+  },
+  "scope_note": "The final suite began and ended at clean exact union HEAD ae25a510; no runtime source, tests, recipes, catalog inputs, tracked reports, or primary checkout were mutated during the run."
+}

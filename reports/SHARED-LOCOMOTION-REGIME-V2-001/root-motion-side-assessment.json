@@ -1,0 +1,19 @@
+{
+  "scope": "Side/root_motion only: all572 native frames reviewed as12 full-body contact sheets; 8 exact join stills, full-size439/469/509 and terminal inspected. Not native-speed playback or multi-view acceptance.",
+  "film_sha256": "bd8780b8815dd3a9f1f3d37fb2a43eb53a704a1a706ad1b744c076d06337975a",
+  "source_files_rehashed": 59,
+  "source_immutable": true,
+  "observations": [
+    "Initial short steps grow into established walk without a visible frame discontinuity.",
+    "All4 source/loop joins have matching visible silhouettes and planted-foot poses.",
+    "Stop shortens successive steps and reaches bilateral planted terminal pose; head remains forward and tail stays clear of ground.",
+    "No new gross limb inversion or torso jump seen at the inspected scale."
+  ],
+  "open": [
+    "Known proximal thigh skin folding/intersection remains unresolved.",
+    "Other3 mode/view films pending rendering and review.",
+    "Native-speed playback and Unity import not performed.",
+    "Thumbnail full-body review cannot establish fine skin-contact or biological validity."
+  ],
+  "verdict": "SIDE_FRAME_REVIEW_COMPLETE_WITH_KNOWN_LIMITATIONS"
+}

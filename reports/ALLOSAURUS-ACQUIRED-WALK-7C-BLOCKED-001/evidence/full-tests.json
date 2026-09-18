@@ -1,0 +1,16 @@
+{
+  "source_commit": "7c6272359f14d5f67a8b9de8b6079747e1a1cf13",
+  "source_tree": "fd7975cab4081315b79d128a690e4d110e340ff3",
+  "git_status": "",
+  "exit_code": 0,
+  "tests_passed": 1202,
+  "subtests_passed": 21,
+  "duration_seconds": 411.06,
+  "recorded_utc": "2026-09-09T10:04:14.856560+00:00",
+  "files": {
+    "full-tests.log": "1c7a5373c19453fc9a97a7b56a8ab42aab6c2dcde36dbc7976bcdbe98191aa4e",
+    "full-tests.xml": "4cb35a16e574ed9ed0525327ce2131e75dfe3343965722968c32efb8aec85ac2"
+  },
+  "prior_attempt": "../contracts-7c62723-root/receipt.json records unscoped legacy-test collection error; this invocation matches hosted factory scope.",
+  "limits": "Local current factory full suite only; actual public compile is running/unaccepted. No visual, biological or Unity approval."
+}

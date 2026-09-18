@@ -1,0 +1,414 @@
+{
+  "schema": "eonwild.allosaurus.stance-stride-envelope.v1",
+  "status": "READ_ONLY_SOURCE_BOUND_DIAGNOSTIC",
+  "code_head": "729ff70e741341e051275d81528d1516d5b41d19",
+  "cases": {
+    "allosaurus": {
+      "source_sha256": "a403679deb968ec88f7b8b89e3e399cc0881e9cc602e765a6e55934c28ad3826",
+      "body_height_m": 2.106182073161406,
+      "ground_m": 0.024153685443853573,
+      "step_period_s": 1.23,
+      "step_length_body_heights": 0.6,
+      "step_length_m": 1.2637092438968434,
+      "sides": {
+        "left": {
+          "neutral_joint_world_m": {
+            "hip": [
+              -0.448012476246087,
+              2.1194253256597717,
+              1.1190833087131196
+            ],
+            "knee": [
+              -0.3023988997967829,
+              1.2951094172286601,
+              1.0961113189596212
+            ],
+            "ankle": [
+              -0.29166220313581187,
+              0.5879211457770579,
+              0.8840975536838787
+            ],
+            "mtp": [
+              -0.30647157150295395,
+              0.19529126656637766,
+              0.9985638095846687
+            ]
+          },
+          "neutral_segments_m": [
+            0.837393421787036,
+            0.7383633012279879,
+            0.40924328116704894
+          ],
+          "neutral_total_hindlimb_m": 1.9850000041820728,
+          "neutral_angles": {
+            "knee_interior_degrees": 162.40674193203094,
+            "ankle_interior_degrees": 146.93549207436365
+          },
+          "neutral_hip_height_above_ground_m": 2.095271640215918,
+          "neutral_pelvis_height_above_ground_m": 2.106182073161406,
+          "touchdown": {
+            "time_s": 0.0,
+            "row_forward_m": 0.783499731216043,
+            "solved_joint_world_m": {
+              "hip": [
+                -0.4318727543614686,
+                2.075940637954479,
+                1.114027290052678
+              ],
+              "knee": [
+                -0.32299261109353145,
+                1.3014991751992544,
+                1.413381830406875
+              ],
+              "ankle": [
+                -0.22720890239918806,
+                0.6184440458109615,
+                1.6768993473560196
+              ],
+              "mtp": [
+                -0.24201828267590142,
+                0.23690814402669763,
+                1.8241782987813555
+              ]
+            },
+            "target_foot_world_m": [
+              -0.2361743103033686,
+              0.19529126656637774,
+              1.8402505241589058
+            ],
+            "target_ankle_world_m": [
+              -0.22136494193622652,
+              0.5768271808435073,
+              1.6929715646784238
+            ],
+            "hip_to_target_ankle_components_m": {
+              "lateral": 0.21050781242524208,
+              "up": -1.4991134571109719,
+              "forward": 0.5789442746257458
+            },
+            "hip_to_target_ankle_distance_m": 1.620750187260579,
+            "upper_plus_lower_m": 1.575756723015024,
+            "distance_excess_m": 0.04499346424555495,
+            "allowable_vertical_at_same_fore_aft_m": 1.4503514187647955,
+            "hip_lowering_required_at_same_fore_aft_m": 0.04876203834617643,
+            "solved_foot_world_m": [
+              -0.24201828267590142,
+              0.23690814402669763,
+              1.8241782987813555
+            ],
+            "foot_target_residual_m": 0.04499369879466434,
+            "maximum_unreachable_extension_m": 0.0449935658309486,
+            "angles_degrees": {
+              "hip_sagittal_degrees": 21.133649716124037,
+              "knee_interior_degrees": 179.9590944352075,
+              "ankle_interior_degrees": 171.41397783601988
+            },
+            "articulation_violation_degrees": 0.0
+          }
+        },
+        "right": {
+          "neutral_joint_world_m": {
+            "hip": [
+              0.4811475531980871,
+              2.1194253256597717,
+              1.1190833087131196
+            ],
+            "knee": [
+              0.33553397674878305,
+              1.2951094172286601,
+              1.0961113189596212
+            ],
+            "ankle": [
+              0.324797280087812,
+              0.5879211457770579,
+              0.8840975536838787
+            ],
+            "mtp": [
+              0.3396066484549541,
+              0.1952912665663777,
+              0.9985638095846686
+            ]
+          },
+          "neutral_segments_m": [
+            0.837393421787036,
+            0.7383633012279879,
+            0.4092432811670488
+          ],
+          "neutral_total_hindlimb_m": 1.9850000041820728,
+          "neutral_angles": {
+            "knee_interior_degrees": 162.40674193203094,
+            "ankle_interior_degrees": 146.93549207436365
+          },
+          "neutral_hip_height_above_ground_m": 2.095271640215918,
+          "neutral_pelvis_height_above_ground_m": 2.106182073161406,
+          "touchdown": {
+            "time_s": 1.23,
+            "row_forward_m": 2.047208975112886,
+            "solved_joint_world_m": {
+              "hip": [
+                0.4650078313155988,
+                2.075940637920519,
+                2.3777365338283643
+              ],
+              "knee": [
+                0.3561276880480799,
+                1.3014991767735946,
+                2.67709107834344
+              ],
+              "ankle": [
+                0.2603439793529428,
+                0.61844404880131,
+                2.9406085989626796
+              ],
+              "mtp": [
+                0.2751533561052612,
+                0.23690814527727427,
+                3.087887542947433
+              ]
+            },
+            "target_foot_world_m": [
+              0.26930938725536874,
+              0.19529126656637774,
+              3.1039597680557485
+            ],
+            "target_ankle_world_m": [
+              0.25450001888822665,
+              0.5768271839077852,
+              2.956680816513482
+            ],
+            "hip_to_target_ankle_components_m": {
+              "lateral": -0.21050781242737215,
+              "up": -1.499113454012734,
+              "forward": 0.5789442826851179
+            },
+            "hip_to_target_ankle_distance_m": 1.6207501872740082,
+            "upper_plus_lower_m": 1.575756723015024,
+            "distance_excess_m": 0.044993464258984206,
+            "allowable_vertical_at_same_fore_aft_m": 1.4503514155473851,
+            "hip_lowering_required_at_same_fore_aft_m": 0.04876203846534888,
+            "solved_foot_world_m": [
+              0.2751533561052612,
+              0.23690814527727427,
+              3.087887542947433
+            ],
+            "foot_target_residual_m": 0.04499369939767512,
+            "maximum_unreachable_extension_m": 0.04499356584437786,
+            "angles_degrees": {
+              "hip_sagittal_degrees": 21.13365002395858,
+              "knee_interior_degrees": 179.95909443526094,
+              "ankle_interior_degrees": 171.4139778380945
+            },
+            "articulation_violation_degrees": 0.0
+          }
+        }
+      },
+      "hindlimb_to_body_height_ratio": 0.9424636309825593
+    },
+    "tarbosaurus_v10": {
+      "source_sha256": "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f",
+      "body_height_m": 2.2841755838983118,
+      "ground_m": 0.0850703073213752,
+      "step_period_s": 1.23,
+      "step_length_body_heights": 0.6,
+      "step_length_m": 1.370505350338987,
+      "sides": {
+        "left": {
+          "neutral_joint_world_m": {
+            "hip": [
+              -0.539277890288993,
+              2.289099671601774,
+              1.2202883954581838
+            ],
+            "knee": [
+              -0.6194243729539332,
+              1.4876345911545856,
+              1.4206549297597002
+            ],
+            "ankle": [
+              -0.6594976188016014,
+              0.7663158457034123,
+              0.7394093590706865
+            ],
+            "mtp": [
+              -0.7396441272583356,
+              0.18525362371657192,
+              0.8195558554982967
+            ]
+          },
+          "neutral_segments_m": [
+            0.8300099288127706,
+            0.9929763970787131,
+            0.5920137072126881
+          ],
+          "neutral_total_hindlimb_m": 2.415000033104172,
+          "neutral_angles": {
+            "knee_interior_degrees": 122.66442543536674,
+            "ankle_interior_degrees": 128.72384960321622
+          },
+          "neutral_hip_height_above_ground_m": 2.204029364280399,
+          "neutral_pelvis_height_above_ground_m": 2.2841755838983118,
+          "touchdown": {
+            "time_s": 0.0,
+            "row_forward_m": 0.849713317210172,
+            "solved_joint_world_m": {
+              "hip": [
+                -0.5220615811901818,
+                2.241179978366425,
+                1.2116995554099539
+              ],
+              "knee": [
+                -0.3638687872916577,
+                1.738987328313738,
+                1.8533334131661454
+              ],
+              "ankle": [
+                -0.17220696100538285,
+                0.7663160028025683,
+                1.90970871691197
+              ],
+              "mtp": [
+                -0.25235347207592357,
+                0.1852537727799478,
+                1.9898551644649047
+              ]
+            },
+            "target_foot_world_m": [
+              -0.2523534349245625,
+              0.18525362371657206,
+              1.9898552256802606
+            ],
+            "target_ankle_world_m": [
+              -0.17220692646782831,
+              0.7663158457034124,
+              1.9097087292526504
+            ],
+            "hip_to_target_ankle_components_m": {
+              "lateral": 0.34985465472235344,
+              "up": -1.4748641326630128,
+              "forward": 0.6980091738426966
+            },
+            "hip_to_target_ankle_distance_m": 1.6687837774904457,
+            "upper_plus_lower_m": 1.8229863258914838,
+            "distance_excess_m": -0.1542025484010381,
+            "allowable_vertical_at_same_fore_aft_m": 1.6473202658220016,
+            "hip_lowering_required_at_same_fore_aft_m": 0.0,
+            "solved_foot_world_m": [
+              -0.25235347207592357,
+              0.1852537727799478,
+              1.9898551644649047
+            ],
+            "foot_target_residual_m": 1.6537059416932804e-07,
+            "maximum_unreachable_extension_m": 0.0,
+            "angles_degrees": {
+              "hip_sagittal_degrees": 51.95049390766945,
+              "knee_interior_degrees": 132.3260135579381,
+              "ankle_interior_degrees": 160.55928845675444
+            },
+            "articulation_violation_degrees": 0.0
+          }
+        },
+        "right": {
+          "neutral_joint_world_m": {
+            "hip": [
+              0.5827731605754627,
+              2.2890995822265365,
+              1.220288457810717
+            ],
+            "knee": [
+              0.6629196030985575,
+              1.487634398554697,
+              1.4206548971502864
+            ],
+            "ankle": [
+              0.7029928583292503,
+              0.7663156898675724,
+              0.7394095610790916
+            ],
+            "mtp": [
+              0.7831394087276172,
+              0.1852534431804216,
+              0.819556192579809
+            ]
+          },
+          "neutral_segments_m": [
+            0.8300100016872451,
+            0.9929762097883313,
+            0.5920137554202513
+          ],
+          "neutral_total_hindlimb_m": 2.4149999668958277,
+          "neutral_angles": {
+            "knee_interior_degrees": 122.66444200753276,
+            "ankle_interior_degrees": 128.7238452419408
+          },
+          "neutral_hip_height_above_ground_m": 2.2040292749051615,
+          "neutral_pelvis_height_above_ground_m": 2.2841755838983118,
+          "touchdown": {
+            "time_s": 1.23,
+            "row_forward_m": 2.220218667549159,
+            "solved_joint_world_m": {
+              "hip": [
+                0.5654190700308841,
+                2.2433764847437945,
+                2.590041579095904
+              ],
+              "knee": [
+                0.4074902914623182,
+                1.7393136428604048,
+                3.230272579263916
+              ],
+              "ankle": [
+                0.21570218886815765,
+                0.7663158038194027,
+                3.280213938617762
+              ],
+              "mtp": [
+                0.2958487493453781,
+                0.18525356423816985,
+                3.3603605248461665
+              ]
+            },
+            "target_foot_world_m": [
+              0.29584870521103224,
+              0.18525344318042158,
+              3.360360576019248
+            ],
+            "target_ankle_world_m": [
+              0.2157021548126653,
+              0.7663156898675724,
+              3.2802139445185303
+            ],
+            "hip_to_target_ankle_components_m": {
+              "lateral": -0.3497169152182188,
+              "up": -1.477060794876222,
+              "forward": 0.6901723654226264
+            },
+            "hip_to_target_ankle_distance_m": 1.667437676959228,
+            "upper_plus_lower_m": 1.8229862114755764,
+            "distance_excess_m": -0.1555485345163483,
+            "allowable_vertical_at_same_fore_aft_m": 1.6506480280324043,
+            "hip_lowering_required_at_same_fore_aft_m": 0.0,
+            "solved_foot_world_m": [
+              0.2958487493453781,
+              0.18525356423816985,
+              3.3603605248461665
+            ],
+            "foot_target_residual_m": 1.3864163570868995e-07,
+            "maximum_unreachable_extension_m": 0.0,
+            "angles_degrees": {
+              "hip_sagittal_degrees": 51.78614204771914,
+              "knee_interior_degrees": 132.11524488799193,
+              "ankle_interior_degrees": 160.46113653482462
+            },
+            "articulation_violation_degrees": 0.0
+          }
+        }
+      },
+      "hindlimb_to_body_height_ratio": 1.0572742525259757
+    }
+  },
+  "interpretation": {
+    "proven": "At canonical touchdown the Allosaurus hip-to-target-ankle distance exceeds the fitted upper+lower reach on both sides while V10 Tarbosaurus retains positive reach margin. The source solve reports the same excess as unreachable extension and places the Allosaurus knee effectively at straight extension.",
+    "engineering_inference": "The copied 0.6-body-height intent is not morphology-neutral: Allosaurus has a smaller admitted hindlimb/body-height ratio and a much straighter neutral stance. A shared resolver needs an animal-declared neutral stance plus a morphology-bound stride/reach budget.",
+    "unresolved": "The fitted hip center and source body-height normalization remain engineering assumptions; this probe does not choose a biological crouch or prove a fossil ROM."
+  }
+}

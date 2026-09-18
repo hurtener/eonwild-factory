@@ -1,0 +1,268 @@
+{
+  "schema": "eonwild.motion.host-example-reference-audit.v1",
+  "date": "2026-09-07",
+  "purpose": "visual direction, not generation inputs or biomechanical ground truth",
+  "source_integrity": "full original-file SHA-256 and complete ffmpeg decode; primary video stream only",
+  "files": [
+    {
+      "path": "assets/examples/tarbosaurus/Tarbosaurus#walk_3q_v02.mp4",
+      "sha256": "5bb1da609effa0307bbaacc65a13b3af593c3b6ad785990e41634f5a78bd8e4c",
+      "width": 736,
+      "height": 400,
+      "fps": "24/1",
+      "frames": 193,
+      "duration_s": 8.041667,
+      "full_decode_exit_code": 0,
+      "visual_coverage": "24 evenly spaced native-frame overview including first and last"
+    },
+    {
+      "path": "assets/examples/tarbosaurus/Tarbosaurus#walk_side_v02.mp4",
+      "sha256": "7f981e34a38955b44df799069693c57a5b5c881083ae4cbd62419e5cdc7d3ea5",
+      "width": 736,
+      "height": 400,
+      "fps": "24/1",
+      "frames": 193,
+      "duration_s": 8.041667,
+      "full_decode_exit_code": 0,
+      "visual_coverage": "every native primary-stream frame inspected in consecutive sheets plus last frame; native-speed browser playback completed"
+    },
+    {
+      "path": "assets/examples/tarbosaurus/attack-eat.mp4",
+      "sha256": "4103fb155c44d880494c7a3cfb7c113238a45b107ed93e44189db9348ea58781",
+      "width": 736,
+      "height": 400,
+      "fps": "24/1",
+      "frames": 289,
+      "duration_s": 12.041667,
+      "full_decode_exit_code": 0,
+      "visual_coverage": "24 evenly spaced native-frame overview including first and last"
+    },
+    {
+      "path": "assets/examples/tarbosaurus/tarbosaurus-stops-stands.mp4",
+      "sha256": "156fe45e18bfa68dce2dacc724eeb276bb0ca07cc20aea696088b64106f423d4",
+      "width": 736,
+      "height": 400,
+      "fps": "24/1",
+      "frames": 145,
+      "duration_s": 6.041667,
+      "full_decode_exit_code": 0,
+      "visual_coverage": "24 evenly spaced native-frame overview including first and last"
+    },
+    {
+      "path": "assets/examples/tarbosaurus/tarbosaurus-walking-looking.mp4",
+      "sha256": "80a4d5c0c7ed9da43b2c06f5381ef95c309904ca302031c945a6c28bde29fa8a",
+      "width": 736,
+      "height": 400,
+      "fps": "24/1",
+      "frames": 217,
+      "duration_s": 9.041667,
+      "full_decode_exit_code": 0,
+      "visual_coverage": "24 evenly spaced native-frame overview including first and last"
+    },
+    {
+      "path": "assets/examples/tarbosaurus/tarbosaurus_walk copy.mp4",
+      "sha256": "b0401fc76a202d6ed5dc9a5515f1054eab8bed8075c04f6167ff426fd603f5ae",
+      "width": 672,
+      "height": 448,
+      "fps": "24/1",
+      "frames": 241,
+      "duration_s": 10.041667,
+      "full_decode_exit_code": 0,
+      "visual_coverage": "exact SHA-256 duplicate of tarbosaurus_walk.mp4; no independent motion"
+    },
+    {
+      "path": "assets/examples/tarbosaurus/tarbosaurus_walk.mp4",
+      "sha256": "b0401fc76a202d6ed5dc9a5515f1054eab8bed8075c04f6167ff426fd603f5ae",
+      "width": 672,
+      "height": 448,
+      "fps": "24/1",
+      "frames": 241,
+      "duration_s": 10.041667,
+      "full_decode_exit_code": 0,
+      "visual_coverage": "every native primary-stream frame inspected in six consecutive sheets (241 total); recovery frames 101, 108 and 116 additionally inspected at full native resolution; exact user-selected recovery pose confirmed in live browser; subsequent full original-speed browser playback verified from opening playing state to 10.041667 s terminal paused state"
+    },
+    {
+      "path": "assets/examples/tarbosaurus/v9_evidence/BITE MISS + RECOVERY \u2014 front three-quarter.mp4",
+      "sha256": "9fe404e4075c206a251c853d026dcf648b2fe16aa020233b67a0f95486db5629",
+      "width": 1280,
+      "height": 704,
+      "fps": "24/1",
+      "frames": 193,
+      "duration_s": 8.041667,
+      "full_decode_exit_code": 0,
+      "visual_coverage": "24 evenly spaced native-frame overview including first and last"
+    },
+    {
+      "path": "assets/examples/tarbosaurus/v9_evidence/BODY SHOVE \u2192 SMALL STUMBLE \u2192 RECOVERY.mp4",
+      "sha256": "9bc5d7925617daf9af23a48b5206ea6f2fcb2e123c665b356d0b601ece38a143",
+      "width": 736,
+      "height": 400,
+      "fps": "24/1",
+      "frames": 193,
+      "duration_s": 8.041667,
+      "full_decode_exit_code": 0,
+      "visual_coverage": "24 evenly spaced native-frame overview including first and last"
+    },
+    {
+      "path": "assets/examples/tarbosaurus/v9_evidence/FEEDING + TEAR:PULL \u2014 fixed side.mp4",
+      "sha256": "e56f2dc9ecc22716892b36d7559bf5cb348dee3459ca725dc7ae4205d98c7e43",
+      "width": 736,
+      "height": 400,
+      "fps": "24/1",
+      "frames": 145,
+      "duration_s": 6.041667,
+      "full_decode_exit_code": 0,
+      "visual_coverage": "24 evenly spaced native-frame overview including first and last"
+    },
+    {
+      "path": "assets/examples/tarbosaurus/v9_evidence/GROUNDED COMMITTED BITE \u2014 fixed side.mp4",
+      "sha256": "fcc0076f06b2b4c1f59afdb0b28e1d2d1067d6ceeb5c55f06f1866e12e9688e8",
+      "width": 736,
+      "height": 400,
+      "fps": "24/1",
+      "frames": 193,
+      "duration_s": 8.041667,
+      "full_decode_exit_code": 0,
+      "visual_coverage": "24 evenly spaced native-frame overview including first and last"
+    },
+    {
+      "path": "assets/examples/tarbosaurus/v9_evidence/LISTEN REACTION \u2014 front three-quarter.mp4",
+      "sha256": "4c93b18c8482e440ce3d13be57a4986cbb929652031561acb68f0863415bce27",
+      "width": 736,
+      "height": 400,
+      "fps": "24/1",
+      "frames": 193,
+      "duration_s": 8.041667,
+      "full_decode_exit_code": 0,
+      "visual_coverage": "24 evenly spaced native-frame overview including first and last"
+    },
+    {
+      "path": "assets/examples/tarbosaurus/v9_evidence/RUN START-RUN-RUN STOP.mp4",
+      "sha256": "2abe624212986285f22d2ee4b3f3e579e2ad7637ca2cba635af92b211c58a478",
+      "width": 736,
+      "height": 400,
+      "fps": "24/1",
+      "frames": 193,
+      "duration_s": 8.041667,
+      "full_decode_exit_code": 0,
+      "visual_coverage": "every native primary-stream frame inspected in consecutive sheets plus last frame; native-speed browser playback completed"
+    },
+    {
+      "path": "assets/examples/tarbosaurus/v9_evidence/running-sustained-left.mp4",
+      "sha256": "d1ba1e31e0cbf9ee8a4c0a24c877f2797b22ecb376124d529193eee975d6c9eb",
+      "width": 736,
+      "height": 400,
+      "fps": "24/1",
+      "frames": 145,
+      "duration_s": 6.041667,
+      "full_decode_exit_code": 0,
+      "visual_coverage": "24 evenly spaced native-frame overview including first and last"
+    },
+    {
+      "path": "assets/examples/tarbosaurus/v9_evidence/sprint-left.mp4",
+      "sha256": "6f32bc7ac3a51db67b08a8904f732e168513fa11b0ae94da4b336cce09e518b1",
+      "width": 736,
+      "height": 400,
+      "fps": "24/1",
+      "frames": 145,
+      "duration_s": 6.041667,
+      "full_decode_exit_code": 0,
+      "visual_coverage": "every native primary-stream frame inspected in consecutive sheets plus last frame; native-speed browser playback completed"
+    },
+    {
+      "path": "assets/examples/tarbosaurus/v9_evidence/walking-back-gauge.mp4",
+      "sha256": "318e9bbd5e9e0d0c9872e9a0f76e067ef94e5bc28a1329adc7f84ce9af22a65a",
+      "width": 736,
+      "height": 400,
+      "fps": "24/1",
+      "frames": 145,
+      "duration_s": 6.041667,
+      "full_decode_exit_code": 0,
+      "visual_coverage": "every native primary-stream frame inspected in consecutive sheets plus last frame; native-speed browser playback completed"
+    },
+    {
+      "path": "assets/examples/tarbosaurus/v9_evidence/walking-front-gauge.mp4",
+      "sha256": "2f6ad8626eebf01cd92b58f6cc75e342cff784130f265ccc0d2cee099b9af22e",
+      "width": 736,
+      "height": 400,
+      "fps": "24/1",
+      "frames": 145,
+      "duration_s": 6.041667,
+      "full_decode_exit_code": 0,
+      "visual_coverage": "every native primary-stream frame inspected in consecutive sheets plus last frame; native-speed browser playback completed"
+    }
+  ],
+  "adult_recovery_correction": {
+    "status": "VISUALLY_REJECTED_PENDING_CORRECTION",
+    "candidate_source_commit": "2e718a37dbe3e43094b1c75dc31e86d5021c96f7",
+    "candidate_time_s": 0.6,
+    "reference_path": "assets/examples/tarbosaurus/tarbosaurus_walk.mp4",
+    "reference_time_s_approximately": 4.233,
+    "reference_confirmed_in_live_browser": true,
+    "finding": "Candidate distal foot tucks upward/forward under a flexed knee; reference distal foot hangs down with trailing toes. Prior positive host assessment of the stronger recovery is withdrawn.",
+    "user_screenshot_sha256": {
+      "candidate-rejected.png": "46c8f82e74b921798f7767e70d0a51e354c8efb4244f30f07abad30c57249ffd",
+      "reference-user-frame.png": "e22006fed28584a3a539e16ae62d0dc8d180120e7c37af84b1495e4a16183b76"
+    },
+    "signed_pad20_probe": {
+      "source_root_motion_sha256": "af00f83f90ce9af91f08572267a3031e20d0a5c2179f05c619f53767c54b5c2e",
+      "technical_status": "PASS",
+      "host_visual_status": "REJECTED",
+      "finding": "Actual skin at t=0.600 s points toes forward/down with low clearance, not downward/trailing as in reference. Downward vector alone is insufficient.",
+      "inspected_review_frames": {
+        "side-feet": [
+          10,
+          18
+        ],
+        "three-quarter-body": [
+          15,
+          18
+        ]
+      },
+      "review_fps": 30,
+      "remaining_render": "STOPPED_AFTER_CONTRARY_EVIDENCE",
+      "full_cycle_review": "NOT_RUN"
+    },
+    "pad60_toe60_clearance25_probe": {
+      "source_root_motion_sha256": "c4f337e5bbc78ad7188435c00a831014c93828a2205e4902cde2b74aa591ef6",
+      "technical_status": "PASS",
+      "host_visual_status": "REJECTED",
+      "finding": "Downward/trailing direction and visible material clearance improved, but the user identified a pinched lower-foot bend and rigid dead-weight recovery. Host agrees and withdraws whole-pose acceptance. Scalar world direction is not adequate visual or biomechanical acceptance.",
+      "user_screenshot_sha256": "ca948791487ef0012c2ae1713b7bd292d98d97f087896959e6e0306350a98829",
+      "inspected_stills_per_view": 6,
+      "views": [
+        "side-feet",
+        "three-quarter-body"
+      ],
+      "full_cycle_review": "NOT_RUN"
+    },
+    "coordinated_meta45_pad50_toe35_clearance20_probe": {
+      "source_root_motion_sha256": "afa8790c8ab3f19b3b4f925e49493f99f2502bf02db4301461bef48b8baf7049",
+      "source_in_place_sha256": "80d1c0464224e1580c94047faff8726a2fc47098c01233557434b7931da147d1",
+      "technical_status": "PASS",
+      "host_visual_status": "REJECTED",
+      "finding": "Ankle coordination is visibly improved, but both recovering feet dip to the floor through middle swing then rise before placement. Nonpenetration alone is not adequate visible recovery clearance.",
+      "middle_recovery_material_clearance_m": {
+        "right": 6.59e-05,
+        "left": 6.36e-05
+      },
+      "native_review_frames_per_view": 74,
+      "review_fps": 30,
+      "native_duration_s": 2.46,
+      "encoded_duration_s": 2.466667,
+      "views": [
+        "side-body",
+        "side-feet",
+        "three-quarter-body"
+      ],
+      "full_cycle_review": "ALL222_REVIEW_FRAMES_INSPECTED_AND_EACH_VIEW_PLAYED_1X_TO_END",
+      "full_decode": "PASS",
+      "media_hash_verification": "PASS",
+      "media": {
+        "side-body": "7d6754df365b94da1b889166e483906c90689e66ffb4011fcf12e454428cb05a",
+        "side-feet": "9c364df0af2d3f1c5a4cf01dfa6bacf0951a9689c50d9fc54d964e517568cfad",
+        "three-quarter-body": "01a6564468343d411dd75ac5622fb3d18e2c3203ea6d4f4bdd640131e930536a"
+      }
+    }
+  }
+}

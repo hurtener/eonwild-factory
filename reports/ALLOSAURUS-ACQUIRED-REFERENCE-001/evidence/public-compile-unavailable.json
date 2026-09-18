@@ -1,0 +1,31 @@
+{
+  "status": "FAIL",
+  "error": {
+    "type": "ContractError",
+    "message": "constant skin target source value is unavailable"
+  },
+  "head": "c51b3aa86bfac51df0d30785303f698fc1f6c3a3",
+  "tree": "87331ea7435bff8b93df443442f5f498873c6ee6",
+  "unavailable_calls": [
+    {
+      "time_s": 0.2238918918918919,
+      "reason": "right authored material clearance material gap is nonmonotone",
+      "arguments": {
+        "side": "value",
+        "target_offsets": {
+          "left": [
+            1.887379141862766e-16,
+            8.495449939674257e-05,
+            -1.1324274851176596e-15
+          ],
+          "right": [
+            -1.4155343563970745e-16,
+            0.00012038048120269108,
+            -7.549516567451064e-16
+          ]
+        }
+      }
+    }
+  ],
+  "classification": "diagnostic replay of the public compile; no package acceptance"
+}

@@ -1,0 +1,104 @@
+{
+  "checks": {
+    "all_exact_cubic_adapter": true,
+    "all_exit_zero": true,
+    "all_source_bound": true,
+    "each_30fps": true,
+    "each_48_frames": true,
+    "each_960x540": true
+  },
+  "generator_head": "62e4b60a399672fc68f9817aeabc6bff8c300912",
+  "schema": "eonwild.motion.shared-fast-native-review-evidence.v1",
+  "scope": "native visual evidence only; host visual review PENDING, Unity NOT_RUN, production approval false",
+  "verifier_renderer_head": "1cc88b0b1669764421da1ef11cd48aa6ca9bbd08",
+  "views": {
+    "side-body": {
+      "camera_sha256": "28d3d6045e34896398ef07a030acee4978b95662f410a8b52aba16ec7db32910",
+      "cover_sha256": "7494767f043a75e75f64e097224eab3a70c3251884fcd396a0dd14f04b56a508",
+      "duration_s": 1.6000000000000003,
+      "encoded_duration_s": 1.6,
+      "fps": 30,
+      "frame_count": 48,
+      "frames_receipt": 48,
+      "manifest_matches": true,
+      "manifest_sha256": "8ac753a379e468349f23d9612a6f73fd46cd49eb48ac5ea40ad0c4d8ce6431e9",
+      "movie_sha256": "209d07173727c27cac789e47799e84db493dd9f8b7f822f6ee203349526b4568",
+      "native_playback": {
+        "adapter_sha256": "34fc046babb83dbdee960751119bb7767bd312325adea894a31249a19bd9e647",
+        "cubic_track_count": 156,
+        "detached_action_owner_count": 3,
+        "mode": "TASK_OWNED_EXACT_SOURCE_TIME_SAMPLING",
+        "scope": "native Blender render evaluation only; not native curve or FBX support",
+        "source_sha256": "edcb0f755a3dea83c739006c9bcd2b321e8edffedd654119c0c7e7cb502ec2ed",
+        "timeline_end_s": 1.600000023841858,
+        "timeline_start_s": 0.0,
+        "track_count": 156
+      },
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/shared-set-fast-walk-cubic-001/side-body",
+      "probe": {
+        "duration": "1.600000",
+        "height": 540,
+        "nb_read_frames": "48",
+        "r_frame_rate": "30/1",
+        "width": 960
+      },
+      "receipt_sha256": "b7a1ebd23bd6cb525748da01ea3629be55160e6bb99d9d4a6548e778450ba52e",
+      "resolution": [
+        960,
+        540
+      ],
+      "source_matches": true,
+      "source_sha256": "edcb0f755a3dea83c739006c9bcd2b321e8edffedd654119c0c7e7cb502ec2ed",
+      "technical_status": "PASS",
+      "timeline_rows": 48,
+      "timeline_sha256": "f0556dc2db18079c52a7ed79cbf7cc711d8bdf5a65dbd1fdcb479ce8513ca21d",
+      "unity_import_validation": "NOT_RUN",
+      "verified_encoded_frames": 48,
+      "visual_approval": "PENDING"
+    },
+    "true-front": {
+      "camera_sha256": "b8eac2214afab09d2e5d1a0be01224bd7c641cbe2e5e8522bfcb7842b824f859",
+      "cover_sha256": "7544cd171516c394eb21562cf32db872e8238c1890e591b63d93e81d60c8732e",
+      "duration_s": 1.6000000000000003,
+      "encoded_duration_s": 1.6,
+      "fps": 30,
+      "frame_count": 48,
+      "frames_receipt": 48,
+      "manifest_matches": true,
+      "manifest_sha256": "8ac753a379e468349f23d9612a6f73fd46cd49eb48ac5ea40ad0c4d8ce6431e9",
+      "movie_sha256": "66854bbe8d20c862228339dda921a6c633cb6ac5492c9d29cbe85488f9e577b7",
+      "native_playback": {
+        "adapter_sha256": "34fc046babb83dbdee960751119bb7767bd312325adea894a31249a19bd9e647",
+        "cubic_track_count": 156,
+        "detached_action_owner_count": 3,
+        "mode": "TASK_OWNED_EXACT_SOURCE_TIME_SAMPLING",
+        "scope": "native Blender render evaluation only; not native curve or FBX support",
+        "source_sha256": "edcb0f755a3dea83c739006c9bcd2b321e8edffedd654119c0c7e7cb502ec2ed",
+        "timeline_end_s": 1.600000023841858,
+        "timeline_start_s": 0.0,
+        "track_count": 156
+      },
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/shared-set-fast-walk-cubic-001/true-front",
+      "probe": {
+        "duration": "1.600000",
+        "height": 540,
+        "nb_read_frames": "48",
+        "r_frame_rate": "30/1",
+        "width": 960
+      },
+      "receipt_sha256": "b8252be51953fda32357997e8909c1b82c48d6a3cbb665078b6db55cc670c637",
+      "resolution": [
+        960,
+        540
+      ],
+      "source_matches": true,
+      "source_sha256": "edcb0f755a3dea83c739006c9bcd2b321e8edffedd654119c0c7e7cb502ec2ed",
+      "technical_status": "PASS",
+      "timeline_rows": 48,
+      "timeline_sha256": "f0556dc2db18079c52a7ed79cbf7cc711d8bdf5a65dbd1fdcb479ce8513ca21d",
+      "unity_import_validation": "NOT_RUN",
+      "verified_encoded_frames": 48,
+      "visual_approval": "PENDING"
+    }
+  }
+}

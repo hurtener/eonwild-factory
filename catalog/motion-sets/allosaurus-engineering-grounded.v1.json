@@ -1,0 +1,18 @@
+{
+  "schema": "eonwild.motion.motion-set.v1",
+  "id": "allosaurus-engineering-grounded-motion-set.v1",
+  "version": 1,
+  "baseline": {
+    "path": "catalog/motion-baselines/allosaurus-engineering-grounded.v1.json",
+    "sha256": "4f22dab1990e451217f76e0a47b019a1e3cb7d1309f626e1ac592215764a991e"
+  },
+  "motions": [
+    {
+      "name": "walk-diagnostic",
+      "intent": {
+        "path": "catalog/motion-intents/heavy-biped.allosaurus-adult-walk-diagnostic.motion-set.v1.json",
+        "sha256": "6a3bc316fd018e3669cb05a3c1df23e1a9137ee0235b49315762f73a0d730f40"
+      }
+    }
+  ]
+}

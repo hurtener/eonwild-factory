@@ -1,0 +1,10 @@
+{
+  "source_head": "50aa941b016566945455e7dccd229e35570ba44f",
+  "exact_rational_vector_control_derivative_and_norm_hull_cases": 3000,
+  "exact_rational_quaternion_sampled_norm_rate_cases": 300,
+  "samples_per_quaternion": 17,
+  "exact_rational_subdivision_paths": 50,
+  "levels_per_path_including_root": 41,
+  "deep_nonzero_subdivision_depth": 30,
+  "classification": "Root independent exact-rational checks; finite probes corroborate directed-operation enclosure argument, not runtime motion admission."
+}

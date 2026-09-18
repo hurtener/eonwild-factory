@@ -1,0 +1,327 @@
+{
+  "schema": "eonwild.allosaurus.provisional-pivot-flex-probe.v1",
+  "status": "NON_PROMOTED_ENGINEERING_DIAGNOSTIC",
+  "source": {
+    "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/worktrees/eonwild-shared-motion-set-release-validation/assets/sha256/a403679deb968ec88f7b8b89e3e399cc0881e9cc602e765a6e55934c28ad3826.glb",
+    "sha256": "a403679deb968ec88f7b8b89e3e399cc0881e9cc602e765a6e55934c28ad3826"
+  },
+  "method": "Each named joint subtree is rotated independently by +/-8 degrees about the declared source-world lateral axis; all eight skin influences are evaluated. Area and orientation checks cover triangles touching vertices with at least 0.01 subtree weight.",
+  "neutral": {
+    "vertex_count": 40105,
+    "triangle_count": 40538,
+    "minimum_skin_up_m": 3.8181638056252425e-09,
+    "declared_ground_m": 2.0985933110215404e-05
+  },
+  "probes": [
+    {
+      "side": "left",
+      "joint_role": "hip",
+      "joint_node": "Bone_023",
+      "angle_degrees_about_declared_source_lateral": -8.0,
+      "influenced_vertex_count_at_least_0_01": 7323,
+      "affected_triangle_count": 8278,
+      "maximum_vertex_displacement_m": 0.15058281805681428,
+      "triangle_area_ratio": {
+        "minimum": 0.7647170587674408,
+        "q01": 0.897105196783335,
+        "median": 1.0000000000000013,
+        "q99": 1.0897379522617037,
+        "maximum": 1.1456392665890265
+      },
+      "orientation_reversal_count": 0,
+      "same_side_contact_minimum_up_m": -0.009398196556406144,
+      "same_side_contact_floor_delta_m": -0.00941918248951636
+    },
+    {
+      "side": "left",
+      "joint_role": "hip",
+      "joint_node": "Bone_023",
+      "angle_degrees_about_declared_source_lateral": 8.0,
+      "influenced_vertex_count_at_least_0_01": 7323,
+      "affected_triangle_count": 8278,
+      "maximum_vertex_displacement_m": 0.15058281805681445,
+      "triangle_area_ratio": {
+        "minimum": 0.8542062853101743,
+        "q01": 0.9115692101073825,
+        "median": 0.9999999999999988,
+        "q99": 1.1040952620997866,
+        "maximum": 1.2398647746706768
+      },
+      "orientation_reversal_count": 0,
+      "same_side_contact_minimum_up_m": -0.010621831818892652,
+      "same_side_contact_floor_delta_m": -0.010642817752002867
+    },
+    {
+      "side": "left",
+      "joint_role": "knee",
+      "joint_node": "Bone_022",
+      "angle_degrees_about_declared_source_lateral": -8.0,
+      "influenced_vertex_count_at_least_0_01": 4568,
+      "affected_triangle_count": 5192,
+      "maximum_vertex_displacement_m": 0.09489083859105428,
+      "triangle_area_ratio": {
+        "minimum": 0.83895894149641,
+        "q01": 0.9196602703584195,
+        "median": 1.0000000000000004,
+        "q99": 1.064473138650334,
+        "maximum": 1.1644084938555315
+      },
+      "orientation_reversal_count": 0,
+      "same_side_contact_minimum_up_m": -0.011827889402197339,
+      "same_side_contact_floor_delta_m": -0.011848875335307554
+    },
+    {
+      "side": "left",
+      "joint_role": "knee",
+      "joint_node": "Bone_022",
+      "angle_degrees_about_declared_source_lateral": 8.0,
+      "influenced_vertex_count_at_least_0_01": 4568,
+      "affected_triangle_count": 5192,
+      "maximum_vertex_displacement_m": 0.09489083859105443,
+      "triangle_area_ratio": {
+        "minimum": 0.8672960466272783,
+        "q01": 0.937305305324859,
+        "median": 0.9999999999999999,
+        "q99": 1.082598685183751,
+        "maximum": 1.1743111894401077
+      },
+      "orientation_reversal_count": 0,
+      "same_side_contact_minimum_up_m": -0.016271323406390488,
+      "same_side_contact_floor_delta_m": -0.016292309339500703
+    },
+    {
+      "side": "left",
+      "joint_role": "ankle",
+      "joint_node": "Bone_021",
+      "angle_degrees_about_declared_source_lateral": -8.0,
+      "influenced_vertex_count_at_least_0_01": 2471,
+      "affected_triangle_count": 2572,
+      "maximum_vertex_displacement_m": 0.06064263368098295,
+      "triangle_area_ratio": {
+        "minimum": 0.8372822976576334,
+        "q01": 0.9108891777717248,
+        "median": 1.0000000000000002,
+        "q99": 1.0799355519060332,
+        "maximum": 1.247361635128739
+      },
+      "orientation_reversal_count": 0,
+      "same_side_contact_minimum_up_m": -0.00043536232233740146,
+      "same_side_contact_floor_delta_m": -0.00045634825544761686
+    },
+    {
+      "side": "left",
+      "joint_role": "ankle",
+      "joint_node": "Bone_021",
+      "angle_degrees_about_declared_source_lateral": 8.0,
+      "influenced_vertex_count_at_least_0_01": 2471,
+      "affected_triangle_count": 2572,
+      "maximum_vertex_displacement_m": 0.060642633680982896,
+      "triangle_area_ratio": {
+        "minimum": 0.7742290297897324,
+        "q01": 0.9156876751357004,
+        "median": 1.0,
+        "q99": 1.088546483932314,
+        "maximum": 1.1894599574688283
+      },
+      "orientation_reversal_count": 0,
+      "same_side_contact_minimum_up_m": -0.03459505782518281,
+      "same_side_contact_floor_delta_m": -0.034616043758293025
+    },
+    {
+      "side": "left",
+      "joint_role": "mtp",
+      "joint_node": "Bone_020",
+      "angle_degrees_about_declared_source_lateral": -8.0,
+      "influenced_vertex_count_at_least_0_01": 1895,
+      "affected_triangle_count": 1933,
+      "maximum_vertex_displacement_m": 0.03968084256595831,
+      "triangle_area_ratio": {
+        "minimum": 0.8845668824005661,
+        "q01": 0.9253426204106783,
+        "median": 0.9999999999999915,
+        "q99": 1.0714548117659086,
+        "maximum": 1.144297651121592
+      },
+      "orientation_reversal_count": 0,
+      "same_side_contact_minimum_up_m": -0.004905422883804079,
+      "same_side_contact_floor_delta_m": -0.004926408816914294
+    },
+    {
+      "side": "left",
+      "joint_role": "mtp",
+      "joint_node": "Bone_020",
+      "angle_degrees_about_declared_source_lateral": 8.0,
+      "influenced_vertex_count_at_least_0_01": 1895,
+      "affected_triangle_count": 1933,
+      "maximum_vertex_displacement_m": 0.039680842565958274,
+      "triangle_area_ratio": {
+        "minimum": 0.8609667477395457,
+        "q01": 0.9245327019453008,
+        "median": 0.9995469452498982,
+        "q99": 1.0721049378766507,
+        "maximum": 1.1123200033695557
+      },
+      "orientation_reversal_count": 0,
+      "same_side_contact_minimum_up_m": -0.028497249365822715,
+      "same_side_contact_floor_delta_m": -0.02851823529893293
+    },
+    {
+      "side": "right",
+      "joint_role": "hip",
+      "joint_node": "Bone_029",
+      "angle_degrees_about_declared_source_lateral": -8.0,
+      "influenced_vertex_count_at_least_0_01": 6844,
+      "affected_triangle_count": 7842,
+      "maximum_vertex_displacement_m": 0.15052060821407526,
+      "triangle_area_ratio": {
+        "minimum": 0.3939664109226629,
+        "q01": 0.8852921274850252,
+        "median": 1.0000000000000009,
+        "q99": 1.085232057367972,
+        "maximum": 1.166468071631332
+      },
+      "orientation_reversal_count": 0,
+      "same_side_contact_minimum_up_m": -0.009222186379067847,
+      "same_side_contact_floor_delta_m": -0.009243172312178062
+    },
+    {
+      "side": "right",
+      "joint_role": "hip",
+      "joint_node": "Bone_029",
+      "angle_degrees_about_declared_source_lateral": 8.0,
+      "influenced_vertex_count_at_least_0_01": 6844,
+      "affected_triangle_count": 7842,
+      "maximum_vertex_displacement_m": 0.15052060821407545,
+      "triangle_area_ratio": {
+        "minimum": 0.8441488816580114,
+        "q01": 0.9114132353327173,
+        "median": 0.9999999999999992,
+        "q99": 1.1140845368805063,
+        "maximum": 1.6542791758576472
+      },
+      "orientation_reversal_count": 0,
+      "same_side_contact_minimum_up_m": -0.01028028810430643,
+      "same_side_contact_floor_delta_m": -0.010301274037416645
+    },
+    {
+      "side": "right",
+      "joint_role": "knee",
+      "joint_node": "Bone_028",
+      "angle_degrees_about_declared_source_lateral": -8.0,
+      "influenced_vertex_count_at_least_0_01": 4435,
+      "affected_triangle_count": 5159,
+      "maximum_vertex_displacement_m": 0.09486081621108497,
+      "triangle_area_ratio": {
+        "minimum": 0.7586781612870696,
+        "q01": 0.9177927645680133,
+        "median": 1.0000000000000007,
+        "q99": 1.0723360857651711,
+        "maximum": 1.1182018354039005
+      },
+      "orientation_reversal_count": 0,
+      "same_side_contact_minimum_up_m": -0.011651879224859042,
+      "same_side_contact_floor_delta_m": -0.011672865157969257
+    },
+    {
+      "side": "right",
+      "joint_role": "knee",
+      "joint_node": "Bone_028",
+      "angle_degrees_about_declared_source_lateral": 8.0,
+      "influenced_vertex_count_at_least_0_01": 4435,
+      "affected_triangle_count": 5159,
+      "maximum_vertex_displacement_m": 0.09486081621108498,
+      "triangle_area_ratio": {
+        "minimum": 0.8659442571983291,
+        "q01": 0.9286715419844523,
+        "median": 0.9999999999999998,
+        "q99": 1.0857273361622666,
+        "maximum": 1.2840989017900597
+      },
+      "orientation_reversal_count": 0,
+      "same_side_contact_minimum_up_m": -0.015929779691804258,
+      "same_side_contact_floor_delta_m": -0.015950765624914473
+    },
+    {
+      "side": "right",
+      "joint_role": "ankle",
+      "joint_node": "Bone_027",
+      "angle_degrees_about_declared_source_lateral": -8.0,
+      "influenced_vertex_count_at_least_0_01": 2367,
+      "affected_triangle_count": 2565,
+      "maximum_vertex_displacement_m": 0.06068083888992548,
+      "triangle_area_ratio": {
+        "minimum": 0.8502223273114383,
+        "q01": 0.914219199293609,
+        "median": 0.9999999999999998,
+        "q99": 1.065920024515015,
+        "maximum": 1.1277382900547428
+      },
+      "orientation_reversal_count": 0,
+      "same_side_contact_minimum_up_m": -0.0002593521449991004,
+      "same_side_contact_floor_delta_m": -0.0002803380781093158
+    },
+    {
+      "side": "right",
+      "joint_role": "ankle",
+      "joint_node": "Bone_027",
+      "angle_degrees_about_declared_source_lateral": 8.0,
+      "influenced_vertex_count_at_least_0_01": 2367,
+      "affected_triangle_count": 2565,
+      "maximum_vertex_displacement_m": 0.06068083888992541,
+      "triangle_area_ratio": {
+        "minimum": 0.8858960507282618,
+        "q01": 0.9303176052691623,
+        "median": 0.9999999999999999,
+        "q99": 1.0843374648294677,
+        "maximum": 1.1582286599540594
+      },
+      "orientation_reversal_count": 0,
+      "same_side_contact_minimum_up_m": -0.03425351411059657,
+      "same_side_contact_floor_delta_m": -0.03427450004370679
+    },
+    {
+      "side": "right",
+      "joint_role": "mtp",
+      "joint_node": "Bone_026",
+      "angle_degrees_about_declared_source_lateral": -8.0,
+      "influenced_vertex_count_at_least_0_01": 1905,
+      "affected_triangle_count": 1969,
+      "maximum_vertex_displacement_m": 0.03969819148622644,
+      "triangle_area_ratio": {
+        "minimum": 0.877277372653475,
+        "q01": 0.925591121590237,
+        "median": 0.9999999999999906,
+        "q99": 1.0726983697537131,
+        "maximum": 1.115964116808653
+      },
+      "orientation_reversal_count": 0,
+      "same_side_contact_minimum_up_m": -0.004599052709275391,
+      "same_side_contact_floor_delta_m": -0.0046200386423856064
+    },
+    {
+      "side": "right",
+      "joint_role": "mtp",
+      "joint_node": "Bone_026",
+      "angle_degrees_about_declared_source_lateral": 8.0,
+      "influenced_vertex_count_at_least_0_01": 1905,
+      "affected_triangle_count": 1969,
+      "maximum_vertex_displacement_m": 0.03969819148622635,
+      "triangle_area_ratio": {
+        "minimum": 0.8834712129378437,
+        "q01": 0.9239821088865465,
+        "median": 0.9992908275843286,
+        "q99": 1.0712616927933525,
+        "maximum": 1.2078272036394955
+      },
+      "orientation_reversal_count": 0,
+      "same_side_contact_minimum_up_m": -0.02815570565123649,
+      "same_side_contact_floor_delta_m": -0.028176691584346707
+    }
+  ],
+  "limitations": [
+    "Independent +/-8-degree bends are deformation stress probes, not a proposed gait pose or anatomical range.",
+    "A triangle orientation dot product is a local fold warning, not a complete self-intersection test.",
+    "Contact-floor deltas show why gait must be solved after articulation; they are not acceptance gates for these isolated bends.",
+    "The fitted pivots remain provisional engineering landmarks and the original weights remain placeholder deformation ownership."
+  ]
+}

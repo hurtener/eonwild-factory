@@ -1,0 +1,10 @@
+{
+  "schema": "eonwild.motion.gait-transition.v1",
+  "parameters": {
+    "kind": "stop",
+    "support_placement": "integrated_support",
+    "handoff_phase_fraction": 0.125,
+    "handoff_sample_hz": 480
+  },
+  "classification": "Prospective integrated support placement and a declared loaded-phase join; no force or runtime-acceptance claim."
+}

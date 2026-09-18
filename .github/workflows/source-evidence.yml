@@ -1,0 +1,29 @@
+name: Motion source evidence
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: motion-source-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  source-evidence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with: {fetch-depth: 1, persist-credentials: false, show-progress: false}
+      - name: Archive exact source and input definitions, not generated approval
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out/source-evidence
+          git rev-parse HEAD > out/source-evidence/source.txt
+          git ls-tree -r HEAD > out/source-evidence/tree.txt
+          git archive --format=tar HEAD -- AGENTS.md README.md .gitignore pyproject.toml uv.lock src tests tools schemas profiles catalog recipes docs .github/workflows | gzip -n > out/source-evidence/motion-source.tar.gz
+          sha256sum out/source-evidence/motion-source.tar.gz > out/source-evidence/archive.sha256
+          printf '%s\n' 'Source and input definitions only. Geometry and approved historical assets are identified by the included Git tree and recipe locks, not bundled here. This archive is not a generated-motion acceptance receipt or a Unity result.' > out/source-evidence/README.txt
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with: {name: motion-source-evidence, path: out/source-evidence, if-no-files-found: error, retention-days: 14}

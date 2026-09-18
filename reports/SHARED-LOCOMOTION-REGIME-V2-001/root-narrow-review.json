@@ -1,0 +1,27 @@
+{
+  "head": "58c4f763d3bb1cabd333c4e27ee7a0aabc39d3f3",
+  "tree": "344736c0ef6d4d5cdeb585546b886b4e8b99368b",
+  "scope": "Narrow post-fix closure of prior root R1 P1 findings only; not a new whole-branch audit or emission/visual acceptance.",
+  "verdict": "CLEAN",
+  "findings": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 0
+  },
+  "focused_tests": {
+    "command": "pytest -q tests/test_motion_set_v2.py tests/test_locomotion_regime_response.py tests/test_grounded_intent_resolution.py",
+    "passed": 42,
+    "seconds": 3.56
+  },
+  "closures": [
+    "Source-bound touchdown observation replay rejects self-consistent derived geometry substitution; source/rig/contact/animal/articulation bytes checked against baseline recipe bindings.",
+    "Generic v2 airborne capability and airborne-backed transitions fail closed until a source-bound recovery provider is available.",
+    "Actual shared-style body application bypasses grounded axial clock and uses semantic hip lateral sign; independent Tarbo witness applies and moves 41.1151605mm toward left support."
+  ],
+  "probe_sha256": "b10c34a1734c50a1cacf0a051aa82f2a556b39a1fe23bcb1595d38801b51c6a8",
+  "remaining_gates": [
+    "exact-head full suite",
+    "source-bound emission and visual validation",
+    "hosted CI after integration"
+  ]
+}

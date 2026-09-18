@@ -1,0 +1,41 @@
+{
+  "status": "REJECTED_BEFORE_BOUNDARY_COMPARISON",
+  "reader_head": "215588c75c5e64f5ce9f9dbbe3fa5fcfdfca03a4",
+  "error": "ContractError: handoff runtime ground differs from the locked floor",
+  "packages": [
+    {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/shared-grounded-transition-clearance-f6e3e19-001/walk-start",
+      "manifest_sha256": "8dea3f8bc07f42528bb5bf36c390aa03475c5bb0f716c70daf0798655aaf0193",
+      "runtime_ground": {
+        "level_m": 7.44670325699803e-08,
+        "up_axis": "Y"
+      },
+      "source_profile_ground": {
+        "level_m": 8.663434924195463e-08,
+        "up_axis": "Y"
+      },
+      "profile_binding": {
+        "path": "catalog/contacts/heavy-biped.v10.json",
+        "sha256": "61e0351fe9f7170ddce7f0b83a8f0379d119349d3c392ffec43e544adb115db5"
+      },
+      "recorded_technical": "PASS"
+    },
+    {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/shared-grounded-steady-clearance-f6e3e19-001/walk",
+      "manifest_sha256": "a8bcf3dd5c6c9a29e25fab41313f2830c215f3fa2f85b657d72002e0d00ef48f",
+      "runtime_ground": {
+        "level_m": 7.44670325699803e-08,
+        "up_axis": "Y"
+      },
+      "source_profile_ground": {
+        "level_m": 8.663434924195463e-08,
+        "up_axis": "Y"
+      },
+      "profile_binding": {
+        "path": "catalog/contacts/heavy-biped.v10.json",
+        "sha256": "61e0351fe9f7170ddce7f0b83a8f0379d119349d3c392ffec43e544adb115db5"
+      },
+      "recorded_technical": "PASS"
+    }
+  ]
+}

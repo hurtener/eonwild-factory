@@ -1,0 +1,7 @@
+{
+  "release_head": "c6abde3020d198657d203f45254d366d5105ca26",
+  "reviewed_v2_delta_byte_identical": true,
+  "published_existing_delta_byte_identical": true,
+  "v2_diff_sha256": "56ecf573c9af6d3c6ba12604bf5cfc46d54552314565163cbd733eb8c45a79f6",
+  "existing_delta_sha256": "9cbe478f546b71debf4bdee0c95e4325828819e08470b5add0b1f1a4d021c711"
+}

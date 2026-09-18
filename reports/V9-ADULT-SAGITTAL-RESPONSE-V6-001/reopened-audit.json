@@ -1,0 +1,3286 @@
+{
+  "authored_invariants": {
+    "all_297_samples_equal_excluding_skin_refinement_target_offsets": true,
+    "body_height_exactly_equal": true,
+    "duration_exactly_equal": true,
+    "events_exactly_equal": true,
+    "program_parameters_exactly_equal": true,
+    "v5_performance": {
+      "center_lanes_on_bilateral_hip_midpoint": true,
+      "center_tail": true,
+      "gaze_elevation_degrees": 3.0,
+      "lane_width_body_heights": 0.24,
+      "pelvis_roll_degrees": 1.5,
+      "pelvis_sway_body_heights": 0.018,
+      "pelvis_yaw_degrees": 2.0,
+      "skin_refinement": true,
+      "support_directed_pelvis_carrier": true,
+      "tail_lag_fraction": 0.16,
+      "tail_yaw_degrees": 16.0,
+      "upper_trunk_counterroll_degrees": 0.9
+    },
+    "v6_performance": {
+      "center_lanes_on_bilateral_hip_midpoint": true,
+      "center_tail": true,
+      "gaze_elevation_degrees": 3.0,
+      "lane_width_body_heights": 0.24,
+      "neck_counterpitch_degrees": 0.45,
+      "pelvis_roll_degrees": 1.5,
+      "pelvis_support_pitch_degrees": 1.2,
+      "pelvis_sway_body_heights": 0.018,
+      "pelvis_yaw_degrees": 2.0,
+      "skin_refinement": true,
+      "support_directed_pelvis_carrier": true,
+      "support_timed_sagittal_carrier": true,
+      "tail_counterpitch_degrees": 1.5,
+      "tail_lag_fraction": 0.16,
+      "tail_yaw_degrees": 16.0,
+      "upper_trunk_counterpitch_degrees": 0.75,
+      "upper_trunk_counterroll_degrees": 0.9
+    }
+  },
+  "axes": {
+    "forward": [
+      0.038931620556417676,
+      0.0,
+      0.9992418770852487
+    ],
+    "lateral": [
+      0.9992418770852487,
+      0.0,
+      -0.038931620556417676
+    ],
+    "up": [
+      0.0,
+      1.0,
+      0.0
+    ]
+  },
+  "classification": "reopened final GLB kinematic and skinned-geometry audit; body response is art-directed and does not establish COM, force, mass response, biological validity, visual approval, Unity parity, or exact runtime C1 continuity",
+  "modes": {
+    "in_place": {
+      "file": "in_place.glb",
+      "full_patch_interior_swing_clearance": {
+        "v5": {
+          "left": {
+            "index": 237,
+            "minimum_m": 0.0352138912234021,
+            "sample_count": 56,
+            "swing_phase": 0.4754623044096728,
+            "time_s": 1.9696621894836426
+          },
+          "right": {
+            "index": 89,
+            "minimum_m": 0.040602828004710746,
+            "sample_count": 56,
+            "swing_phase": 0.4754623044096728,
+            "time_s": 0.7396621704101562
+          }
+        },
+        "v6": {
+          "left": {
+            "index": 237,
+            "minimum_m": 0.035213918142751884,
+            "sample_count": 56,
+            "swing_phase": 0.4754623044096728,
+            "time_s": 1.9696621894836426
+          },
+          "right": {
+            "index": 89,
+            "minimum_m": 0.04060277186506809,
+            "sample_count": 56,
+            "swing_phase": 0.4754623044096728,
+            "time_s": 0.7396621704101562
+          }
+        }
+      },
+      "hashes": {
+        "v5": "8dff0f9d4c92e73cda477e05ad554e536967b2c46a3df89748538fe0bfe4d086",
+        "v6": "2878670fbeacfd7e99014e8a75537d5711deea5ceafc96362b5fbc545a63aa0b"
+      },
+      "head_attention_v6_minus_v5": {
+        "elevation_degrees": {
+          "maximum_absolute_degrees": 9.929278505182992e-06,
+          "maximum_degrees": 8.13945106870051e-06,
+          "minimum_degrees": -9.929278505182992e-06
+        },
+        "yaw_degrees": {
+          "maximum_absolute_degrees": 8.610291986365894e-06,
+          "maximum_degrees": 8.610291986365894e-06,
+          "minimum_degrees": -6.582335566748609e-06
+        }
+      },
+      "incremental_world_orientation_ranges": {
+        "Bone_001": {
+          "maximum_local_rotation_difference_degrees": 1.1999390753507877,
+          "pitch_lateral_degrees": [
+            -1.1999390617013426,
+            1.1999385090867882
+          ],
+          "roll_forward_degrees": [
+            -3.194018824152073e-06,
+            4.666167313760461e-06
+          ],
+          "total_degrees": [
+            0.012224545430902775,
+            1.199939061702214
+          ],
+          "yaw_up_degrees": [
+            -3.0513107761225577e-06,
+            4.122889820000248e-06
+          ]
+        },
+        "Bone_002": {
+          "maximum_local_rotation_difference_degrees": 0.1771838943596515,
+          "pitch_lateral_degrees": [
+            -0.4495643993242548,
+            0.44993519002894405
+          ],
+          "roll_forward_degrees": [
+            -0.02557801287501952,
+            0.02557562175933685
+          ],
+          "total_degrees": [
+            0.004585755413741039,
+            0.45066754688760385
+          ],
+          "yaw_up_degrees": [
+            -0.019004953122441024,
+            0.019010427458332747
+          ]
+        },
+        "Bone_003": {
+          "maximum_local_rotation_difference_degrees": 0.15507992165800377,
+          "pitch_lateral_degrees": [
+            -0.624883789249614,
+            0.6249690621499973
+          ],
+          "roll_forward_degrees": [
+            -7.879554747683773e-05,
+            7.541224013698014e-05
+          ],
+          "total_degrees": [
+            0.006364335442688344,
+            0.6250508777542212
+          ],
+          "yaw_up_degrees": [
+            -0.01444719920427777,
+            0.014451459107537291
+          ]
+        },
+        "Bone_004": {
+          "maximum_local_rotation_difference_degrees": 0.13506074007414007,
+          "pitch_lateral_degrees": [
+            -0.7799147488816945,
+            0.7799619663435107
+          ],
+          "roll_forward_degrees": [
+            -4.508432422294442e-05,
+            4.246560909486677e-05
+          ],
+          "total_degrees": [
+            0.007941410299563939,
+            0.7799861631663113
+          ],
+          "yaw_up_degrees": [
+            -0.010554665362596439,
+            0.010554518994390973
+          ]
+        },
+        "Bone_005": {
+          "maximum_local_rotation_difference_degrees": 0.11504408039237961,
+          "pitch_lateral_degrees": [
+            -0.9149328757579459,
+            0.9149549544861157
+          ],
+          "roll_forward_degrees": [
+            -2.4791027250670172e-05,
+            2.1731215603261467e-05
+          ],
+          "total_degrees": [
+            0.009316780355372242,
+            0.9149609073698374
+          ],
+          "yaw_up_degrees": [
+            -0.007162170746304994,
+            0.007162026655780454
+          ]
+        },
+        "Bone_006": {
+          "maximum_local_rotation_difference_degrees": 0.09503178727756638,
+          "pitch_lateral_degrees": [
+            -1.0299406521859444,
+            1.0299490467698365
+          ],
+          "roll_forward_degrees": [
+            -1.3614532681109626e-05,
+            1.0345398885974744e-05
+          ],
+          "total_degrees": [
+            0.010488401501307792,
+            1.0299495120318694
+          ],
+          "yaw_up_degrees": [
+            -0.004272215211012952,
+            0.004272035953614253
+          ]
+        },
+        "Bone_007": {
+          "maximum_local_rotation_difference_degrees": 0.07502166143794013,
+          "pitch_lateral_degrees": [
+            -1.124941742396006,
+            1.1249441540801863
+          ],
+          "roll_forward_degrees": [
+            -8.7432797735848e-06,
+            6.7837984415201e-06
+          ],
+          "total_degrees": [
+            0.011456953772212229,
+            1.124944154114912
+          ],
+          "yaw_up_degrees": [
+            -0.001886910820079167,
+            0.0018852354172090111
+          ]
+        },
+        "Bone_016": {
+          "maximum_local_rotation_difference_degrees": 0.25225780229482186,
+          "pitch_lateral_degrees": [
+            -0.3178034786525219,
+            0.3949955311890636
+          ],
+          "roll_forward_degrees": [
+            -0.24251749829367047,
+            0.469718816572735
+          ],
+          "total_degrees": [
+            0.0032252762550791314,
+            0.6232225613856589
+          ],
+          "yaw_up_degrees": [
+            -0.10779118497302333,
+            0.10947610661111741
+          ]
+        },
+        "Bone_017": {
+          "maximum_local_rotation_difference_degrees": 0.2335409267628928,
+          "pitch_lateral_degrees": [
+            -0.08153899845759431,
+            0.14586034100158535
+          ],
+          "roll_forward_degrees": [
+            -0.20827598495571853,
+            0.4299704053632309
+          ],
+          "total_degrees": [
+            0.001170183463474169,
+            0.4673333346137532
+          ],
+          "yaw_up_degrees": [
+            -0.1078946206582465,
+            0.11085529157576014
+          ]
+        },
+        "Bone_018": {
+          "maximum_local_rotation_difference_degrees": 0.21497909759362127,
+          "pitch_lateral_degrees": [
+            -0.14568292831925794,
+            0.14170908989786904
+          ],
+          "roll_forward_degrees": [
+            -0.18730361255803787,
+            0.39755111334151355
+          ],
+          "total_degrees": [
+            0.001638365882787847,
+            0.41267642144322636
+          ],
+          "yaw_up_degrees": [
+            -0.06926756478841331,
+            0.07395344634913477
+          ]
+        },
+        "Bone_019": {
+          "maximum_local_rotation_difference_degrees": 0.19945811630538549,
+          "pitch_lateral_degrees": [
+            -0.34836419393477625,
+            0.34271864052441076
+          ],
+          "roll_forward_degrees": [
+            -0.195931712354107,
+            0.36386062187835955
+          ],
+          "total_degrees": [
+            0.0035819688346233843,
+            0.4703668418265339
+          ],
+          "yaw_up_degrees": [
+            -0.04751960055772914,
+            0.052487072394915006
+          ]
+        },
+        "Bone_020": {
+          "maximum_local_rotation_difference_degrees": 0.18156280330691418,
+          "pitch_lateral_degrees": [
+            -0.5329267617970495,
+            0.5273114753704135
+          ],
+          "roll_forward_degrees": [
+            -0.19654666590156641,
+            0.3275483010907889
+          ],
+          "total_degrees": [
+            0.005433184162958896,
+            0.5879671921649875
+          ],
+          "yaw_up_degrees": [
+            -0.02157665200467305,
+            0.025527293009839233
+          ]
+        },
+        "Bone_021": {
+          "maximum_local_rotation_difference_degrees": 0.16603184162008267,
+          "pitch_lateral_degrees": [
+            -0.6999643094942676,
+            0.6948659689230204
+          ],
+          "roll_forward_degrees": [
+            -0.1905457460925401,
+            0.28824822185453014
+          ],
+          "total_degrees": [
+            0.007130883649133542,
+            0.7247825815303169
+          ],
+          "yaw_up_degrees": [
+            -0.014253094768118597,
+            0.01830497655645638
+          ]
+        },
+        "Bone_022": {
+          "maximum_local_rotation_difference_degrees": 0.1517287426264427,
+          "pitch_lateral_degrees": [
+            -0.8497895445842966,
+            0.8459371914600271
+          ],
+          "roll_forward_degrees": [
+            -0.17414716228412477,
+            0.2445085662620741
+          ],
+          "total_degrees": [
+            0.00865905053715396,
+            0.8602737030114164
+          ],
+          "yaw_up_degrees": [
+            -0.006674614685166051,
+            0.010369953198346191
+          ]
+        },
+        "Bone_023": {
+          "maximum_local_rotation_difference_degrees": 0.13520126885308906,
+          "pitch_lateral_degrees": [
+            -0.9830687844541527,
+            0.9807212853808581
+          ],
+          "roll_forward_degrees": [
+            -0.14467800320774477,
+            0.19485671897882062
+          ],
+          "total_degrees": [
+            0.010016542998703996,
+            0.9867738419914409
+          ],
+          "yaw_up_degrees": [
+            -0.005090694406379669,
+            0.006713504363048091
+          ]
+        },
+        "Bone_024": {
+          "maximum_local_rotation_difference_degrees": 0.17802699483551263,
+          "pitch_lateral_degrees": [
+            -1.0997920353365689,
+            1.0986260540531485
+          ],
+          "roll_forward_degrees": [
+            -0.10769530840932592,
+            0.14138303097952828
+          ],
+          "total_degrees": [
+            0.011204690670892727,
+            1.1007053536094424
+          ],
+          "yaw_up_degrees": [
+            -0.004230664835569633,
+            0.005487467743716709
+          ]
+        },
+        "Bone_036": {
+          "maximum_local_rotation_difference_degrees": 0.0035278035307831817,
+          "pitch_lateral_degrees": [
+            -8.139439738358883e-06,
+            9.929249292960806e-06
+          ],
+          "roll_forward_degrees": [
+            -0.026092578900577125,
+            0.026009095685673646
+          ],
+          "total_degrees": [
+            3.983698566683448e-05,
+            0.0281916405490994
+          ],
+          "yaw_up_degrees": [
+            -0.010640164626132778,
+            0.010674544732760721
+          ]
+        },
+        "Bone_037": {
+          "maximum_local_rotation_difference_degrees": 0.1259888514929217,
+          "pitch_lateral_degrees": [
+            -5.270994687390292e-05,
+            0.00017592228495464843
+          ],
+          "roll_forward_degrees": [
+            -0.025952025805249856,
+            0.025910991319017602
+          ],
+          "total_degrees": [
+            0.00013625038791813008,
+            0.029456949628454406
+          ],
+          "yaw_up_degrees": [
+            -0.013979475577944461,
+            0.013993003152905768
+          ]
+        },
+        "Bone_038": {
+          "maximum_local_rotation_difference_degrees": 0.1079946410332358,
+          "pitch_lateral_degrees": [
+            -0.12576881292791664,
+            0.12595014597940749
+          ],
+          "roll_forward_degrees": [
+            -0.024285599008179587,
+            0.029481016733050498
+          ],
+          "total_degrees": [
+            0.0012912218695001366,
+            0.12989095695563613
+          ],
+          "yaw_up_degrees": [
+            -0.014876453375689703,
+            0.015022635867745432
+          ]
+        },
+        "Bone_039": {
+          "maximum_local_rotation_difference_degrees": 0.09000519399736867,
+          "pitch_lateral_degrees": [
+            -0.23371332217286622,
+            0.23393820491727987
+          ],
+          "roll_forward_degrees": [
+            -0.023587625137202563,
+            0.030853352721230947
+          ],
+          "total_degrees": [
+            0.0023883289490513617,
+            0.2361736413764381
+          ],
+          "yaw_up_degrees": [
+            -0.01587317173206318,
+            0.016023750508381333
+          ]
+        },
+        "Bone_040": {
+          "maximum_local_rotation_difference_degrees": 0.07202305222039838,
+          "pitch_lateral_degrees": [
+            -0.32366345779293515,
+            0.32393723977820865
+          ],
+          "roll_forward_degrees": [
+            -0.023685657348005672,
+            0.03039951199570083
+          ],
+          "total_degrees": [
+            0.0033047047227256357,
+            0.3254588749701651
+          ],
+          "yaw_up_degrees": [
+            -0.016915473796297358,
+            0.01701038953017979
+          ]
+        },
+        "Bone_041": {
+          "maximum_local_rotation_difference_degrees": 0.054050931410601855,
+          "pitch_lateral_degrees": [
+            -0.395614870484648,
+            0.39593848289723244
+          ],
+          "roll_forward_degrees": [
+            -0.02440768680029099,
+            0.02851004488167394
+          ],
+          "total_degrees": [
+            0.004038062351633512,
+            0.39700627685447326
+          ],
+          "yaw_up_degrees": [
+            -0.017965615729537445,
+            0.017998781499980035
+          ]
+        }
+      },
+      "landmarks": {
+        "double_support_1_midpoint": {
+          "authored_sagittal_pulse": 0.9999480933423057,
+          "contacts": [
+            "left",
+            "right"
+          ],
+          "incremental_world_rotation_v5_to_v6": {
+            "Bone_001": {
+              "pitch_lateral_degrees": 1.1999385090867882,
+              "roll_forward_degrees": 1.2751662587309753e-06,
+              "total_degrees": 1.1999385090874661,
+              "yaw_up_degrees": -3.417387311033327e-08
+            },
+            "Bone_002": {
+              "pitch_lateral_degrees": 0.44993391733824484,
+              "roll_forward_degrees": 0.010147883674560529,
+              "total_degrees": 0.4500483420299326,
+              "yaw_up_degrees": -2.548490397695156e-05
+            },
+            "Bone_003": {
+              "pitch_lateral_degrees": 0.6249654073647525,
+              "roll_forward_degrees": -7.758569541788801e-06,
+              "total_degrees": 0.6249654113919901,
+              "yaw_up_degrees": -7.052356413796966e-05
+            },
+            "Bone_004": {
+              "pitch_lateral_degrees": 0.7799587788799895,
+              "roll_forward_degrees": -3.655878294001741e-06,
+              "total_degrees": 0.7799587806577832,
+              "yaw_up_degrees": -5.253423782709205e-05
+            },
+            "Bone_005": {
+              "pitch_lateral_degrees": 0.9149518156701423,
+              "roll_forward_degrees": -3.744917905681988e-06,
+              "total_degrees": 0.9149518163576479,
+              "yaw_up_degrees": -3.5271016256673154e-05
+            },
+            "Bone_006": {
+              "pitch_lateral_degrees": 1.0299458475794847,
+              "roll_forward_degrees": -3.774590634747499e-06,
+              "total_degrees": 1.0299458477920294,
+              "yaw_up_degrees": -2.0580861821727077e-05
+            },
+            "Bone_007": {
+              "pitch_lateral_degrees": 1.1249411636381805,
+              "roll_forward_degrees": -3.880591754649998e-06,
+              "total_degrees": 1.124941163677567,
+              "yaw_up_degrees": -8.57648216863135e-06
+            },
+            "Bone_016": {
+              "pitch_lateral_degrees": -0.3163011665369395,
+              "roll_forward_degrees": -0.19607731000465858,
+              "total_degrees": 0.3826257669693723,
+              "yaw_up_degrees": -0.08893670838078423
+            },
+            "Bone_017": {
+              "pitch_lateral_degrees": -0.07836106279921219,
+              "roll_forward_degrees": -0.16619080171680248,
+              "total_degrees": 0.20381340722306024,
+              "yaw_up_degrees": -0.08820468369410639
+            },
+            "Bone_018": {
+              "pitch_lateral_degrees": 0.1410893607453232,
+              "roll_forward_degrees": -0.14539898154242437,
+              "total_degrees": 0.2102903626893894,
+              "yaw_up_degrees": -0.05634682857922655
+            },
+            "Bone_019": {
+              "pitch_lateral_degrees": 0.34268540521252694,
+              "roll_forward_degrees": -0.1318579624254293,
+              "total_degrees": 0.36919373964343094,
+              "yaw_up_degrees": -0.038525422661429075
+            },
+            "Bone_020": {
+              "pitch_lateral_degrees": 0.5273114753704135,
+              "roll_forward_degrees": -0.11970314701947536,
+              "total_degrees": 0.5410021772088287,
+              "yaw_up_degrees": -0.01723717729225482
+            },
+            "Bone_021": {
+              "pitch_lateral_degrees": 0.6948659689230204,
+              "roll_forward_degrees": -0.11045512606996886,
+              "total_degrees": 0.7036798205569794,
+              "yaw_up_degrees": -0.011235667164980864
+            },
+            "Bone_022": {
+              "pitch_lateral_degrees": 0.8459371914600271,
+              "roll_forward_degrees": -0.09812365818521776,
+              "total_degrees": 0.8516242227854736,
+              "yaw_up_degrees": -0.005082582417824162
+            },
+            "Bone_023": {
+              "pitch_lateral_degrees": 0.9807212853808581,
+              "roll_forward_degrees": -0.0783835388147914,
+              "total_degrees": 0.983861668566809,
+              "yaw_up_degrees": 0.005056097195792992
+            },
+            "Bone_024": {
+              "pitch_lateral_degrees": 1.0986260540531485,
+              "roll_forward_degrees": -0.05623009000363197,
+              "total_degrees": 1.1000702172932333,
+              "yaw_up_degrees": 0.0036678753215045085
+            },
+            "Bone_036": {
+              "pitch_lateral_degrees": 1.6490631833055358e-06,
+              "roll_forward_degrees": 0.010375946658519333,
+              "total_degrees": 0.011212085993421727,
+              "yaw_up_degrees": -0.004248599833361077
+            },
+            "Bone_037": {
+              "pitch_lateral_degrees": -1.5030133838812236e-05,
+              "roll_forward_degrees": 0.01022973490169113,
+              "total_degrees": 0.010541925890379516,
+              "yaw_up_degrees": -0.002546468027376958
+            },
+            "Bone_038": {
+              "pitch_lateral_degrees": 0.12595014597940749,
+              "roll_forward_degrees": 0.007827562982134259,
+              "total_degrees": 0.12621071147336602,
+              "yaw_up_degrees": -0.002105629630279869
+            },
+            "Bone_039": {
+              "pitch_lateral_degrees": 0.23393820491727987,
+              "roll_forward_degrees": 0.0068723878045172234,
+              "total_degrees": 0.234044639976933,
+              "yaw_up_degrees": -0.001606258969557813
+            },
+            "Bone_040": {
+              "pitch_lateral_degrees": 0.32393723977820865,
+              "roll_forward_degrees": 0.007110001644164767,
+              "total_degrees": 0.32401705311848267,
+              "yaw_up_degrees": -0.0010785513807717692
+            },
+            "Bone_041": {
+              "pitch_lateral_degrees": 0.39593848289723244,
+              "roll_forward_degrees": 0.008285151166463852,
+              "total_degrees": 0.39602553539855445,
+              "yaw_up_degrees": -0.0005465518260004268
+            }
+          },
+          "index": 18,
+          "stage": "DOUBLE_SUPPORT",
+          "time_s": 0.14959459006786346
+        },
+        "double_support_2_midpoint": {
+          "authored_sagittal_pulse": 0.9999480946762614,
+          "contacts": [
+            "left",
+            "right"
+          ],
+          "incremental_world_rotation_v5_to_v6": {
+            "Bone_001": {
+              "pitch_lateral_degrees": 1.1999384829154902,
+              "roll_forward_degrees": 1.2836367037707963e-06,
+              "total_degrees": 1.1999384829161772,
+              "yaw_up_degrees": 3.557574218664711e-08
+            },
+            "Bone_002": {
+              "pitch_lateral_degrees": 0.44993519002894405,
+              "roll_forward_degrees": -0.010150241736741679,
+              "total_degrees": 0.45004966796184515,
+              "yaw_up_degrees": 3.160491667002377e-05
+            },
+            "Bone_003": {
+              "pitch_lateral_degrees": 0.6249690621499973,
+              "roll_forward_degrees": -3.273797617078106e-06,
+              "total_degrees": 0.6249690666680477,
+              "yaw_up_degrees": 7.50770664075233e-05
+            },
+            "Bone_004": {
+              "pitch_lateral_degrees": 0.7799619663435107,
+              "roll_forward_degrees": 1.358389260863041e-06,
+              "total_degrees": 0.7799619681524267,
+              "yaw_up_degrees": 5.310297752084147e-05
+            },
+            "Bone_005": {
+              "pitch_lateral_degrees": 0.9149549544861157,
+              "roll_forward_degrees": 1.487487246334962e-06,
+              "total_degrees": 0.914954955188164,
+              "yaw_up_degrees": 3.581162593567278e-05
+            },
+            "Bone_006": {
+              "pitch_lateral_degrees": 1.0299490467698365,
+              "roll_forward_degrees": 1.579431335725634e-06,
+              "total_degrees": 1.0299490469864234,
+              "yaw_up_degrees": 2.1063064479040886e-05
+            },
+            "Bone_007": {
+              "pitch_lateral_degrees": 1.1249441540801863,
+              "roll_forward_degrees": 1.5159280763316074e-06,
+              "total_degrees": 1.124944154114912,
+              "yaw_up_degrees": 8.70809183350053e-06
+            },
+            "Bone_016": {
+              "pitch_lateral_degrees": -0.3040236916257228,
+              "roll_forward_degrees": -0.09697935409528105,
+              "total_degrees": 0.33675791302930896,
+              "yaw_up_degrees": -0.1075662205219887
+            },
+            "Bone_017": {
+              "pitch_lateral_degrees": -0.07358072901827993,
+              "roll_forward_degrees": -0.1274812481539605,
+              "total_degrees": 0.18238851650204801,
+              "yaw_up_degrees": -0.1077031969723492
+            },
+            "Bone_018": {
+              "pitch_lateral_degrees": 0.14014417960935777,
+              "roll_forward_degrees": -0.15279110815469452,
+              "total_degrees": 0.2185140951381741,
+              "yaw_up_degrees": -0.06901373750591636
+            },
+            "Bone_019": {
+              "pitch_lateral_degrees": 0.3375994300788647,
+              "roll_forward_degrees": -0.17159192437848167,
+              "total_degrees": 0.38164643555799793,
+              "yaw_up_degrees": -0.047295222513909496
+            },
+            "Bone_020": {
+              "pitch_lateral_degrees": 0.5198019382734251,
+              "roll_forward_degrees": -0.17938916627408838,
+              "total_degrees": 0.5503022862566578,
+              "yaw_up_degrees": -0.021402762671733095
+            },
+            "Bone_021": {
+              "pitch_lateral_degrees": 0.6865137911459548,
+              "roll_forward_degrees": -0.17909538238276387,
+              "total_degrees": 0.7096306137621939,
+              "yaw_up_degrees": -0.014116180931402562
+            },
+            "Bone_022": {
+              "pitch_lateral_degrees": 0.8383391148571719,
+              "roll_forward_degrees": -0.16654319496185843,
+              "total_degrees": 0.854746889721217,
+              "yaw_up_degrees": -0.0065679677590872515
+            },
+            "Bone_023": {
+              "pitch_lateral_degrees": 0.9751733602705761,
+              "roll_forward_degrees": -0.139276881734324,
+              "total_degrees": 0.9850917065567234,
+              "yaw_up_degrees": 0.006673676632402106
+            },
+            "Bone_024": {
+              "pitch_lateral_degrees": 1.095423224523643,
+              "roll_forward_degrees": -0.10405189048918417,
+              "total_degrees": 1.100367312464774,
+              "yaw_up_degrees": 0.005420848715910997
+            },
+            "Bone_036": {
+              "pitch_lateral_degrees": 2.9547820329719077e-06,
+              "roll_forward_degrees": -0.010366919462372616,
+              "total_degrees": 0.011201455668312184,
+              "yaw_up_degrees": 0.004242591333030579
+            },
+            "Bone_037": {
+              "pitch_lateral_degrees": -1.5066668682927871e-05,
+              "roll_forward_degrees": -0.010225215440995148,
+              "total_degrees": 0.010537056342829948,
+              "yaw_up_degrees": 0.002544464295819861
+            },
+            "Bone_038": {
+              "pitch_lateral_degrees": 0.12593831626833746,
+              "roll_forward_degrees": -0.01312847407689614,
+              "total_degrees": 0.12663611473537814,
+              "yaw_up_degrees": 0.0019721103367534585
+            },
+            "Bone_039": {
+              "pitch_lateral_degrees": 0.23392586966891174,
+              "roll_forward_degrees": -0.014258304695413435,
+              "total_degrees": 0.23436460196828687,
+              "yaw_up_degrees": 0.001467958653918828
+            },
+            "Bone_040": {
+              "pitch_lateral_degrees": 0.32392921612853914,
+              "roll_forward_degrees": -0.01392859741323669,
+              "total_degrees": 0.3242300612098533,
+              "yaw_up_degrees": 0.0009948389796366303
+            },
+            "Bone_041": {
+              "pitch_lateral_degrees": 0.3959356348894643,
+              "roll_forward_degrees": -0.012454396159033099,
+              "total_degrees": 0.3961318122782477,
+              "yaw_up_degrees": 0.0005232015286348567
+            }
+          },
+          "index": 166,
+          "stage": "DOUBLE_SUPPORT",
+          "time_s": 1.3795945644378662
+        },
+        "left_declared_stance_midpoint": {
+          "authored_sagittal_pulse": -0.9999480920703784,
+          "contacts": [
+            "left"
+          ],
+          "incremental_world_rotation_v5_to_v6": {
+            "Bone_001": {
+              "pitch_lateral_degrees": -1.199938869138524,
+              "roll_forward_degrees": 1.2380580964588273e-07,
+              "total_degrees": 1.1999388691391384,
+              "yaw_up_degrees": 1.2080019745477937e-06
+            },
+            "Bone_002": {
+              "pitch_lateral_degrees": -0.4495643993242548,
+              "roll_forward_degrees": -0.02513349012302348,
+              "total_degrees": 0.45066754688760385,
+              "yaw_up_degrees": 0.019010427458332747
+            },
+            "Bone_003": {
+              "pitch_lateral_degrees": -0.624883789249614,
+              "roll_forward_degrees": 7.102133227521873e-05,
+              "total_degrees": 0.6250508777542212,
+              "yaw_up_degrees": 0.014451459107537291
+            },
+            "Bone_004": {
+              "pitch_lateral_degrees": -0.7799147488816945,
+              "roll_forward_degrees": 3.6558229217050625e-05,
+              "total_degrees": 0.7799861631663113,
+              "yaw_up_degrees": 0.010554518994390973
+            },
+            "Bone_005": {
+              "pitch_lateral_degrees": -0.9149328757579459,
+              "roll_forward_degrees": 1.5700744280644496e-05,
+              "total_degrees": 0.9149609073698374,
+              "yaw_up_degrees": 0.007162026655780454
+            },
+            "Bone_006": {
+              "pitch_lateral_degrees": -1.0299406521859444,
+              "roll_forward_degrees": 4.276523953565536e-06,
+              "total_degrees": 1.0299495120318694,
+              "yaw_up_degrees": 0.004272035953614253
+            },
+            "Bone_007": {
+              "pitch_lateral_degrees": -1.124941742396006,
+              "roll_forward_degrees": -9.330200034102232e-07,
+              "total_degrees": 1.1249433208123596,
+              "yaw_up_degrees": 0.0018844772505595534
+            },
+            "Bone_016": {
+              "pitch_lateral_degrees": 0.3134560800333174,
+              "roll_forward_degrees": -0.17813034028506686,
+              "total_degrees": 0.3720067120189829,
+              "yaw_up_degrees": 0.09167257794590088
+            },
+            "Bone_017": {
+              "pitch_lateral_degrees": 0.07454979215671655,
+              "roll_forward_degrees": -0.13636706023834044,
+              "total_degrees": 0.1800183357609763,
+              "yaw_up_degrees": 0.09084577360281988
+            },
+            "Bone_018": {
+              "pitch_lateral_degrees": -0.14568292831925794,
+              "roll_forward_degrees": -0.10111682085731132,
+              "total_degrees": 0.1856566230852591,
+              "yaw_up_degrees": 0.054956843354202256
+            },
+            "Bone_019": {
+              "pitch_lateral_degrees": -0.34836419393477625,
+              "roll_forward_degrees": -0.06203535335892561,
+              "total_degrees": 0.3557444690810294,
+              "yaw_up_degrees": 0.036716898011001815
+            },
+            "Bone_020": {
+              "pitch_lateral_degrees": -0.5329267617970495,
+              "roll_forward_degrees": -0.03009683792186541,
+              "total_degrees": 0.5340332489985657,
+              "yaw_up_degrees": 0.016575824069412222
+            },
+            "Bone_021": {
+              "pitch_lateral_degrees": -0.6999643094942676,
+              "roll_forward_degrees": 0.0005865291463960573,
+              "total_degrees": 0.7000529926007183,
+              "yaw_up_degrees": 0.011127167968318571
+            },
+            "Bone_022": {
+              "pitch_lateral_degrees": -0.8497895445842966,
+              "roll_forward_degrees": 0.020051761055092578,
+              "total_degrees": 0.8500448100872192,
+              "yaw_up_degrees": 0.005642335511110563
+            },
+            "Bone_023": {
+              "pitch_lateral_degrees": -0.9830687844541527,
+              "roll_forward_degrees": 0.02266063239238779,
+              "total_degrees": 0.9833331925209267,
+              "yaw_up_degrees": -0.0025354062415325093
+            },
+            "Bone_024": {
+              "pitch_lateral_degrees": -1.0997920353365689,
+              "roll_forward_degrees": 0.01906111612976208,
+              "total_degrees": 1.0999582355345536,
+              "yaw_up_degrees": -0.0015075750142635215
+            },
+            "Bone_036": {
+              "pitch_lateral_degrees": 7.252838544371653e-07,
+              "roll_forward_degrees": -0.025639988679409455,
+              "total_degrees": 0.02770190421425417,
+              "yaw_up_degrees": 0.010487443782420542
+            },
+            "Bone_037": {
+              "pitch_lateral_degrees": 0.00016487118251033175,
+              "roll_forward_degrees": -0.025509673663002958,
+              "total_degrees": 0.029069158003538202,
+              "yaw_up_degrees": 0.013937191759279923
+            },
+            "Bone_038": {
+              "pitch_lateral_degrees": -0.12576881292791664,
+              "roll_forward_degrees": -0.023804858639589047,
+              "total_degrees": 0.1288759596296345,
+              "yaw_up_degrees": 0.014984904748148089
+            },
+            "Bone_039": {
+              "pitch_lateral_degrees": -0.23371332217286622,
+              "roll_forward_degrees": -0.0230922130851222,
+              "total_degrees": 0.2353955792152973,
+              "yaw_up_degrees": 0.015997232506238898
+            },
+            "Bone_040": {
+              "pitch_lateral_degrees": -0.32366345779293515,
+              "roll_forward_degrees": -0.02319498836917323,
+              "total_degrees": 0.32493825830368617,
+              "yaw_up_degrees": 0.016995008488019818
+            },
+            "Bone_041": {
+              "pitch_lateral_degrees": -0.395614870484648,
+              "roll_forward_degrees": -0.023936836707559417,
+              "total_degrees": 0.39674664460583353,
+              "yaw_up_degrees": 0.017994502100319765
+            }
+          },
+          "index": 92,
+          "stage": "SINGLE_SUPPORT",
+          "time_s": 0.7645946145057678
+        },
+        "right_declared_stance_midpoint": {
+          "authored_sagittal_pulse": -0.9999480941799078,
+          "contacts": [
+            "right"
+          ],
+          "incremental_world_rotation_v5_to_v6": {
+            "Bone_001": {
+              "pitch_lateral_degrees": -1.1999390617013426,
+              "roll_forward_degrees": -3.608365439500272e-07,
+              "total_degrees": 1.199939061702214,
+              "yaw_up_degrees": 1.4003551678354532e-06
+            },
+            "Bone_002": {
+              "pitch_lateral_degrees": -0.4495614054483541,
+              "roll_forward_degrees": 0.02513803761441507,
+              "total_degrees": 0.4506645830847919,
+              "yaw_up_degrees": -0.019004953122441024
+            },
+            "Bone_003": {
+              "pitch_lateral_degrees": -0.6248830128229478,
+              "roll_forward_degrees": -7.504177764658393e-05,
+              "total_degrees": 0.6250500035283583,
+              "yaw_up_degrees": -0.01444719920427777
+            },
+            "Bone_004": {
+              "pitch_lateral_degrees": -0.7799136198682585,
+              "roll_forward_degrees": -3.991637268606352e-05,
+              "total_degrees": 0.7799850364014963,
+              "yaw_up_degrees": -0.010554665362596439
+            },
+            "Bone_005": {
+              "pitch_lateral_degrees": -0.9149316104628943,
+              "roll_forward_degrees": -1.9023343730932563e-05,
+              "total_degrees": 0.9149596433045077,
+              "yaw_up_degrees": -0.007162170746304994
+            },
+            "Bone_006": {
+              "pitch_lateral_degrees": -1.0299393347524373,
+              "roll_forward_degrees": -7.517233638967835e-06,
+              "total_degrees": 1.029948195371792,
+              "yaw_up_degrees": -0.004272215211012952
+            },
+            "Bone_007": {
+              "pitch_lateral_degrees": -1.1249411325030871,
+              "roll_forward_degrees": -2.5267096046971416e-06,
+              "total_degrees": 1.1249427116630597,
+              "yaw_up_degrees": -0.0018849191298037666
+            },
+            "Bone_016": {
+              "pitch_lateral_degrees": 0.3949955311890636,
+              "roll_forward_degrees": 0.46944819808072286,
+              "total_degrees": 0.6231757961544229,
+              "yaw_up_degrees": 0.10929314970358751
+            },
+            "Bone_017": {
+              "pitch_lateral_degrees": 0.14586034100158535,
+              "roll_forward_degrees": 0.4299704053632309,
+              "total_degrees": 0.4673333346137532,
+              "yaw_up_degrees": 0.11068268643238846
+            },
+            "Bone_018": {
+              "pitch_lateral_degrees": -0.08246834706641305,
+              "roll_forward_degrees": 0.39755111334151355,
+              "total_degrees": 0.41267642144322636,
+              "yaw_up_degrees": 0.07385061156310153
+            },
+            "Bone_019": {
+              "pitch_lateral_degrees": -0.2936759769836595,
+              "roll_forward_degrees": 0.36366378934328936,
+              "total_degrees": 0.4703668418265339,
+              "yaw_up_degrees": 0.05242170116507426
+            },
+            "Bone_020": {
+              "pitch_lateral_degrees": -0.48790129298657536,
+              "roll_forward_degrees": 0.3271200339342904,
+              "total_degrees": 0.5879671921649875,
+              "yaw_up_degrees": 0.025499622805759938
+            },
+            "Bone_021": {
+              "pitch_lateral_degrees": -0.6649858776793197,
+              "roll_forward_degrees": 0.287696301452697,
+              "total_degrees": 0.7247825815303169,
+              "yaw_up_degrees": 0.018286910817694554
+            },
+            "Bone_022": {
+              "pitch_lateral_degrees": -0.8249262523098397,
+              "roll_forward_degrees": 0.24384456154734918,
+              "total_degrees": 0.8602737030114164,
+              "yaw_up_degrees": 0.010361088108800227
+            },
+            "Bone_023": {
+              "pitch_lateral_degrees": -0.9674653241625406,
+              "roll_forward_degrees": 0.1941847199821434,
+              "total_degrees": 0.9867738419914409,
+              "yaw_up_degrees": -0.0050750671991880575
+            },
+            "Bone_024": {
+              "pitch_lateral_degrees": -1.0916530334391321,
+              "roll_forward_degrees": 0.14081258639303595,
+              "total_degrees": 1.1007053536094424,
+              "yaw_up_degrees": -0.004212548033274378
+            },
+            "Bone_036": {
+              "pitch_lateral_degrees": 1.3447713994459674e-06,
+              "roll_forward_degrees": 0.025561238258483967,
+              "total_degrees": 0.027618092585002373,
+              "yaw_up_degrees": -0.010458591440455483
+            },
+            "Bone_037": {
+              "pitch_lateral_degrees": 0.00016769436112369206,
+              "roll_forward_degrees": 0.025471997351558376,
+              "total_degrees": 0.029026878570733057,
+              "yaw_up_degrees": -0.013917934799514345
+            },
+            "Bone_038": {
+              "pitch_lateral_degrees": -0.1257233340789367,
+              "roll_forward_degrees": 0.02907042954055344,
+              "total_degrees": 0.12989095695563613,
+              "yaw_up_degrees": -0.01483961230136112
+            },
+            "Bone_039": {
+              "pitch_lateral_degrees": -0.23366566183588955,
+              "roll_forward_degrees": 0.03044886662119526,
+              "total_degrees": 0.2361736413764381,
+              "yaw_up_degrees": -0.015849728113970007
+            },
+            "Bone_040": {
+              "pitch_lateral_degrees": -0.3236326666469395,
+              "roll_forward_degrees": 0.029994348508029615,
+              "total_degrees": 0.3254588749701651,
+              "yaw_up_degrees": -0.016903119043991423
+            },
+            "Bone_041": {
+              "pitch_lateral_degrees": -0.3956033040084412,
+              "roll_forward_degrees": 0.028094341339859663,
+              "total_degrees": 0.39700627685447326,
+              "yaw_up_degrees": -0.0179643453578198
+            }
+          },
+          "index": 240,
+          "stage": "SINGLE_SUPPORT",
+          "time_s": 1.9945945739746094
+        }
+      },
+      "maximum_local_scale_delta": 0.0,
+      "maximum_local_translation_delta_m": 0.0,
+      "sample_count": 297,
+      "times_exactly_equal": true
+    },
+    "root_motion": {
+      "file": "root_motion.glb",
+      "full_patch_interior_swing_clearance": {
+        "v5": {
+          "left": {
+            "index": 237,
+            "minimum_m": 0.0352138912234021,
+            "sample_count": 56,
+            "swing_phase": 0.4754623044096728,
+            "time_s": 1.9696621894836426
+          },
+          "right": {
+            "index": 89,
+            "minimum_m": 0.040602828004710746,
+            "sample_count": 56,
+            "swing_phase": 0.4754623044096728,
+            "time_s": 0.7396621704101562
+          }
+        },
+        "v6": {
+          "left": {
+            "index": 237,
+            "minimum_m": 0.035213918142751884,
+            "sample_count": 56,
+            "swing_phase": 0.4754623044096728,
+            "time_s": 1.9696621894836426
+          },
+          "right": {
+            "index": 89,
+            "minimum_m": 0.04060277186506809,
+            "sample_count": 56,
+            "swing_phase": 0.4754623044096728,
+            "time_s": 0.7396621704101562
+          }
+        }
+      },
+      "hashes": {
+        "v5": "6f7c6fb7ee79055c66f0f76be150a5c72cbe919fa9514c11ffb64915ee8fecf4",
+        "v6": "4a2c3587d932a8c8bab002b9e536f1ed22a28388e928cbe18fe8845b553e7e7b"
+      },
+      "head_attention_v6_minus_v5": {
+        "elevation_degrees": {
+          "maximum_absolute_degrees": 9.929278505182992e-06,
+          "maximum_degrees": 8.13945106870051e-06,
+          "minimum_degrees": -9.929278505182992e-06
+        },
+        "yaw_degrees": {
+          "maximum_absolute_degrees": 8.610291986365894e-06,
+          "maximum_degrees": 8.610291986365894e-06,
+          "minimum_degrees": -6.582335566748609e-06
+        }
+      },
+      "incremental_world_orientation_ranges": {
+        "Bone_001": {
+          "maximum_local_rotation_difference_degrees": 1.1999390753507877,
+          "pitch_lateral_degrees": [
+            -1.1999390617013426,
+            1.1999385090867882
+          ],
+          "roll_forward_degrees": [
+            -3.194018824152073e-06,
+            4.666167313760461e-06
+          ],
+          "total_degrees": [
+            0.012224545430902775,
+            1.199939061702214
+          ],
+          "yaw_up_degrees": [
+            -3.0513107761225577e-06,
+            4.122889820000248e-06
+          ]
+        },
+        "Bone_002": {
+          "maximum_local_rotation_difference_degrees": 0.1771838943596515,
+          "pitch_lateral_degrees": [
+            -0.4495643993242548,
+            0.44993519002894405
+          ],
+          "roll_forward_degrees": [
+            -0.02557801287501952,
+            0.02557562175933685
+          ],
+          "total_degrees": [
+            0.004585755413741039,
+            0.45066754688760385
+          ],
+          "yaw_up_degrees": [
+            -0.019004953122441024,
+            0.019010427458332747
+          ]
+        },
+        "Bone_003": {
+          "maximum_local_rotation_difference_degrees": 0.15507992165800377,
+          "pitch_lateral_degrees": [
+            -0.624883789249614,
+            0.6249690621499973
+          ],
+          "roll_forward_degrees": [
+            -7.879554747683773e-05,
+            7.541224013698014e-05
+          ],
+          "total_degrees": [
+            0.006364335442688344,
+            0.6250508777542212
+          ],
+          "yaw_up_degrees": [
+            -0.01444719920427777,
+            0.014451459107537291
+          ]
+        },
+        "Bone_004": {
+          "maximum_local_rotation_difference_degrees": 0.13506074007414007,
+          "pitch_lateral_degrees": [
+            -0.7799147488816945,
+            0.7799619663435107
+          ],
+          "roll_forward_degrees": [
+            -4.508432422294442e-05,
+            4.246560909486677e-05
+          ],
+          "total_degrees": [
+            0.007941410299563939,
+            0.7799861631663113
+          ],
+          "yaw_up_degrees": [
+            -0.010554665362596439,
+            0.010554518994390973
+          ]
+        },
+        "Bone_005": {
+          "maximum_local_rotation_difference_degrees": 0.11504408039237961,
+          "pitch_lateral_degrees": [
+            -0.9149328757579459,
+            0.9149549544861157
+          ],
+          "roll_forward_degrees": [
+            -2.4791027250670172e-05,
+            2.1731215603261467e-05
+          ],
+          "total_degrees": [
+            0.009316780355372242,
+            0.9149609073698374
+          ],
+          "yaw_up_degrees": [
+            -0.007162170746304994,
+            0.007162026655780454
+          ]
+        },
+        "Bone_006": {
+          "maximum_local_rotation_difference_degrees": 0.09503178727756638,
+          "pitch_lateral_degrees": [
+            -1.0299406521859444,
+            1.0299490467698365
+          ],
+          "roll_forward_degrees": [
+            -1.3614532681109626e-05,
+            1.0345398885974744e-05
+          ],
+          "total_degrees": [
+            0.010488401501307792,
+            1.0299495120318694
+          ],
+          "yaw_up_degrees": [
+            -0.004272215211012952,
+            0.004272035953614253
+          ]
+        },
+        "Bone_007": {
+          "maximum_local_rotation_difference_degrees": 0.07502166143794013,
+          "pitch_lateral_degrees": [
+            -1.124941742396006,
+            1.1249441540801863
+          ],
+          "roll_forward_degrees": [
+            -8.7432797735848e-06,
+            6.7837984415201e-06
+          ],
+          "total_degrees": [
+            0.011456953772212229,
+            1.124944154114912
+          ],
+          "yaw_up_degrees": [
+            -0.001886910820079167,
+            0.0018852354172090111
+          ]
+        },
+        "Bone_016": {
+          "maximum_local_rotation_difference_degrees": 0.25225780229482186,
+          "pitch_lateral_degrees": [
+            -0.3178034786525219,
+            0.3949955311890636
+          ],
+          "roll_forward_degrees": [
+            -0.24251749829367047,
+            0.469718816572735
+          ],
+          "total_degrees": [
+            0.0032252762550791314,
+            0.6232225613856589
+          ],
+          "yaw_up_degrees": [
+            -0.10779118497302333,
+            0.10947610661111741
+          ]
+        },
+        "Bone_017": {
+          "maximum_local_rotation_difference_degrees": 0.2335409267628928,
+          "pitch_lateral_degrees": [
+            -0.08153899845759431,
+            0.14586034100158535
+          ],
+          "roll_forward_degrees": [
+            -0.20827598495571853,
+            0.4299704053632309
+          ],
+          "total_degrees": [
+            0.001170183463474169,
+            0.4673333346137532
+          ],
+          "yaw_up_degrees": [
+            -0.1078946206582465,
+            0.11085529157576014
+          ]
+        },
+        "Bone_018": {
+          "maximum_local_rotation_difference_degrees": 0.21497909759362127,
+          "pitch_lateral_degrees": [
+            -0.14568292831925794,
+            0.14170908989786904
+          ],
+          "roll_forward_degrees": [
+            -0.18730361255803787,
+            0.39755111334151355
+          ],
+          "total_degrees": [
+            0.001638365882787847,
+            0.41267642144322636
+          ],
+          "yaw_up_degrees": [
+            -0.06926756478841331,
+            0.07395344634913477
+          ]
+        },
+        "Bone_019": {
+          "maximum_local_rotation_difference_degrees": 0.19945811630538549,
+          "pitch_lateral_degrees": [
+            -0.34836419393477625,
+            0.34271864052441076
+          ],
+          "roll_forward_degrees": [
+            -0.195931712354107,
+            0.36386062187835955
+          ],
+          "total_degrees": [
+            0.0035819688346233843,
+            0.4703668418265339
+          ],
+          "yaw_up_degrees": [
+            -0.04751960055772914,
+            0.052487072394915006
+          ]
+        },
+        "Bone_020": {
+          "maximum_local_rotation_difference_degrees": 0.18156280330691418,
+          "pitch_lateral_degrees": [
+            -0.5329267617970495,
+            0.5273114753704135
+          ],
+          "roll_forward_degrees": [
+            -0.19654666590156641,
+            0.3275483010907889
+          ],
+          "total_degrees": [
+            0.005433184162958896,
+            0.5879671921649875
+          ],
+          "yaw_up_degrees": [
+            -0.02157665200467305,
+            0.025527293009839233
+          ]
+        },
+        "Bone_021": {
+          "maximum_local_rotation_difference_degrees": 0.16603184162008267,
+          "pitch_lateral_degrees": [
+            -0.6999643094942676,
+            0.6948659689230204
+          ],
+          "roll_forward_degrees": [
+            -0.1905457460925401,
+            0.28824822185453014
+          ],
+          "total_degrees": [
+            0.007130883649133542,
+            0.7247825815303169
+          ],
+          "yaw_up_degrees": [
+            -0.014253094768118597,
+            0.01830497655645638
+          ]
+        },
+        "Bone_022": {
+          "maximum_local_rotation_difference_degrees": 0.1517287426264427,
+          "pitch_lateral_degrees": [
+            -0.8497895445842966,
+            0.8459371914600271
+          ],
+          "roll_forward_degrees": [
+            -0.17414716228412477,
+            0.2445085662620741
+          ],
+          "total_degrees": [
+            0.00865905053715396,
+            0.8602737030114164
+          ],
+          "yaw_up_degrees": [
+            -0.006674614685166051,
+            0.010369953198346191
+          ]
+        },
+        "Bone_023": {
+          "maximum_local_rotation_difference_degrees": 0.13520126885308906,
+          "pitch_lateral_degrees": [
+            -0.9830687844541527,
+            0.9807212853808581
+          ],
+          "roll_forward_degrees": [
+            -0.14467800320774477,
+            0.19485671897882062
+          ],
+          "total_degrees": [
+            0.010016542998703996,
+            0.9867738419914409
+          ],
+          "yaw_up_degrees": [
+            -0.005090694406379669,
+            0.006713504363048091
+          ]
+        },
+        "Bone_024": {
+          "maximum_local_rotation_difference_degrees": 0.17802699483551263,
+          "pitch_lateral_degrees": [
+            -1.0997920353365689,
+            1.0986260540531485
+          ],
+          "roll_forward_degrees": [
+            -0.10769530840932592,
+            0.14138303097952828
+          ],
+          "total_degrees": [
+            0.011204690670892727,
+            1.1007053536094424
+          ],
+          "yaw_up_degrees": [
+            -0.004230664835569633,
+            0.005487467743716709
+          ]
+        },
+        "Bone_036": {
+          "maximum_local_rotation_difference_degrees": 0.0035278035307831817,
+          "pitch_lateral_degrees": [
+            -8.139439738358883e-06,
+            9.929249292960806e-06
+          ],
+          "roll_forward_degrees": [
+            -0.026092578900577125,
+            0.026009095685673646
+          ],
+          "total_degrees": [
+            3.983698566683448e-05,
+            0.0281916405490994
+          ],
+          "yaw_up_degrees": [
+            -0.010640164626132778,
+            0.010674544732760721
+          ]
+        },
+        "Bone_037": {
+          "maximum_local_rotation_difference_degrees": 0.1259888514929217,
+          "pitch_lateral_degrees": [
+            -5.270994687390292e-05,
+            0.00017592228495464843
+          ],
+          "roll_forward_degrees": [
+            -0.025952025805249856,
+            0.025910991319017602
+          ],
+          "total_degrees": [
+            0.00013625038791813008,
+            0.029456949628454406
+          ],
+          "yaw_up_degrees": [
+            -0.013979475577944461,
+            0.013993003152905768
+          ]
+        },
+        "Bone_038": {
+          "maximum_local_rotation_difference_degrees": 0.1079946410332358,
+          "pitch_lateral_degrees": [
+            -0.12576881292791664,
+            0.12595014597940749
+          ],
+          "roll_forward_degrees": [
+            -0.024285599008179587,
+            0.029481016733050498
+          ],
+          "total_degrees": [
+            0.0012912218695001366,
+            0.12989095695563613
+          ],
+          "yaw_up_degrees": [
+            -0.014876453375689703,
+            0.015022635867745432
+          ]
+        },
+        "Bone_039": {
+          "maximum_local_rotation_difference_degrees": 0.09000519399736867,
+          "pitch_lateral_degrees": [
+            -0.23371332217286622,
+            0.23393820491727987
+          ],
+          "roll_forward_degrees": [
+            -0.023587625137202563,
+            0.030853352721230947
+          ],
+          "total_degrees": [
+            0.0023883289490513617,
+            0.2361736413764381
+          ],
+          "yaw_up_degrees": [
+            -0.01587317173206318,
+            0.016023750508381333
+          ]
+        },
+        "Bone_040": {
+          "maximum_local_rotation_difference_degrees": 0.07202305222039838,
+          "pitch_lateral_degrees": [
+            -0.32366345779293515,
+            0.32393723977820865
+          ],
+          "roll_forward_degrees": [
+            -0.023685657348005672,
+            0.03039951199570083
+          ],
+          "total_degrees": [
+            0.0033047047227256357,
+            0.3254588749701651
+          ],
+          "yaw_up_degrees": [
+            -0.016915473796297358,
+            0.01701038953017979
+          ]
+        },
+        "Bone_041": {
+          "maximum_local_rotation_difference_degrees": 0.054050931410601855,
+          "pitch_lateral_degrees": [
+            -0.395614870484648,
+            0.39593848289723244
+          ],
+          "roll_forward_degrees": [
+            -0.02440768680029099,
+            0.02851004488167394
+          ],
+          "total_degrees": [
+            0.004038062351633512,
+            0.39700627685447326
+          ],
+          "yaw_up_degrees": [
+            -0.017965615729537445,
+            0.017998781499980035
+          ]
+        }
+      },
+      "landmarks": {
+        "double_support_1_midpoint": {
+          "authored_sagittal_pulse": 0.9999480933423057,
+          "contacts": [
+            "left",
+            "right"
+          ],
+          "incremental_world_rotation_v5_to_v6": {
+            "Bone_001": {
+              "pitch_lateral_degrees": 1.1999385090867882,
+              "roll_forward_degrees": 1.2751662587309753e-06,
+              "total_degrees": 1.1999385090874661,
+              "yaw_up_degrees": -3.417387311033327e-08
+            },
+            "Bone_002": {
+              "pitch_lateral_degrees": 0.44993391733824484,
+              "roll_forward_degrees": 0.010147883674560529,
+              "total_degrees": 0.4500483420299326,
+              "yaw_up_degrees": -2.548490397695156e-05
+            },
+            "Bone_003": {
+              "pitch_lateral_degrees": 0.6249654073647525,
+              "roll_forward_degrees": -7.758569541788801e-06,
+              "total_degrees": 0.6249654113919901,
+              "yaw_up_degrees": -7.052356413796966e-05
+            },
+            "Bone_004": {
+              "pitch_lateral_degrees": 0.7799587788799895,
+              "roll_forward_degrees": -3.655878294001741e-06,
+              "total_degrees": 0.7799587806577832,
+              "yaw_up_degrees": -5.253423782709205e-05
+            },
+            "Bone_005": {
+              "pitch_lateral_degrees": 0.9149518156701423,
+              "roll_forward_degrees": -3.744917905681988e-06,
+              "total_degrees": 0.9149518163576479,
+              "yaw_up_degrees": -3.5271016256673154e-05
+            },
+            "Bone_006": {
+              "pitch_lateral_degrees": 1.0299458475794847,
+              "roll_forward_degrees": -3.774590634747499e-06,
+              "total_degrees": 1.0299458477920294,
+              "yaw_up_degrees": -2.0580861821727077e-05
+            },
+            "Bone_007": {
+              "pitch_lateral_degrees": 1.1249411636381805,
+              "roll_forward_degrees": -3.880591754649998e-06,
+              "total_degrees": 1.124941163677567,
+              "yaw_up_degrees": -8.57648216863135e-06
+            },
+            "Bone_016": {
+              "pitch_lateral_degrees": -0.3163011665369395,
+              "roll_forward_degrees": -0.19607731000465858,
+              "total_degrees": 0.3826257669693723,
+              "yaw_up_degrees": -0.08893670838078423
+            },
+            "Bone_017": {
+              "pitch_lateral_degrees": -0.07836106279921219,
+              "roll_forward_degrees": -0.16619080171680248,
+              "total_degrees": 0.20381340722306024,
+              "yaw_up_degrees": -0.08820468369410639
+            },
+            "Bone_018": {
+              "pitch_lateral_degrees": 0.1410893607453232,
+              "roll_forward_degrees": -0.14539898154242437,
+              "total_degrees": 0.2102903626893894,
+              "yaw_up_degrees": -0.05634682857922655
+            },
+            "Bone_019": {
+              "pitch_lateral_degrees": 0.34268540521252694,
+              "roll_forward_degrees": -0.1318579624254293,
+              "total_degrees": 0.36919373964343094,
+              "yaw_up_degrees": -0.038525422661429075
+            },
+            "Bone_020": {
+              "pitch_lateral_degrees": 0.5273114753704135,
+              "roll_forward_degrees": -0.11970314701947536,
+              "total_degrees": 0.5410021772088287,
+              "yaw_up_degrees": -0.01723717729225482
+            },
+            "Bone_021": {
+              "pitch_lateral_degrees": 0.6948659689230204,
+              "roll_forward_degrees": -0.11045512606996886,
+              "total_degrees": 0.7036798205569794,
+              "yaw_up_degrees": -0.011235667164980864
+            },
+            "Bone_022": {
+              "pitch_lateral_degrees": 0.8459371914600271,
+              "roll_forward_degrees": -0.09812365818521776,
+              "total_degrees": 0.8516242227854736,
+              "yaw_up_degrees": -0.005082582417824162
+            },
+            "Bone_023": {
+              "pitch_lateral_degrees": 0.9807212853808581,
+              "roll_forward_degrees": -0.0783835388147914,
+              "total_degrees": 0.983861668566809,
+              "yaw_up_degrees": 0.005056097195792992
+            },
+            "Bone_024": {
+              "pitch_lateral_degrees": 1.0986260540531485,
+              "roll_forward_degrees": -0.05623009000363197,
+              "total_degrees": 1.1000702172932333,
+              "yaw_up_degrees": 0.0036678753215045085
+            },
+            "Bone_036": {
+              "pitch_lateral_degrees": 1.6490631833055358e-06,
+              "roll_forward_degrees": 0.010375946658519333,
+              "total_degrees": 0.011212085993421727,
+              "yaw_up_degrees": -0.004248599833361077
+            },
+            "Bone_037": {
+              "pitch_lateral_degrees": -1.5030133838812236e-05,
+              "roll_forward_degrees": 0.01022973490169113,
+              "total_degrees": 0.010541925890379516,
+              "yaw_up_degrees": -0.002546468027376958
+            },
+            "Bone_038": {
+              "pitch_lateral_degrees": 0.12595014597940749,
+              "roll_forward_degrees": 0.007827562982134259,
+              "total_degrees": 0.12621071147336602,
+              "yaw_up_degrees": -0.002105629630279869
+            },
+            "Bone_039": {
+              "pitch_lateral_degrees": 0.23393820491727987,
+              "roll_forward_degrees": 0.0068723878045172234,
+              "total_degrees": 0.234044639976933,
+              "yaw_up_degrees": -0.001606258969557813
+            },
+            "Bone_040": {
+              "pitch_lateral_degrees": 0.32393723977820865,
+              "roll_forward_degrees": 0.007110001644164767,
+              "total_degrees": 0.32401705311848267,
+              "yaw_up_degrees": -0.0010785513807717692
+            },
+            "Bone_041": {
+              "pitch_lateral_degrees": 0.39593848289723244,
+              "roll_forward_degrees": 0.008285151166463852,
+              "total_degrees": 0.39602553539855445,
+              "yaw_up_degrees": -0.0005465518260004268
+            }
+          },
+          "index": 18,
+          "stage": "DOUBLE_SUPPORT",
+          "time_s": 0.14959459006786346
+        },
+        "double_support_2_midpoint": {
+          "authored_sagittal_pulse": 0.9999480946762614,
+          "contacts": [
+            "left",
+            "right"
+          ],
+          "incremental_world_rotation_v5_to_v6": {
+            "Bone_001": {
+              "pitch_lateral_degrees": 1.1999384829154902,
+              "roll_forward_degrees": 1.2836367037707963e-06,
+              "total_degrees": 1.1999384829161772,
+              "yaw_up_degrees": 3.557574218664711e-08
+            },
+            "Bone_002": {
+              "pitch_lateral_degrees": 0.44993519002894405,
+              "roll_forward_degrees": -0.010150241736741679,
+              "total_degrees": 0.45004966796184515,
+              "yaw_up_degrees": 3.160491667002377e-05
+            },
+            "Bone_003": {
+              "pitch_lateral_degrees": 0.6249690621499973,
+              "roll_forward_degrees": -3.273797617078106e-06,
+              "total_degrees": 0.6249690666680477,
+              "yaw_up_degrees": 7.50770664075233e-05
+            },
+            "Bone_004": {
+              "pitch_lateral_degrees": 0.7799619663435107,
+              "roll_forward_degrees": 1.358389260863041e-06,
+              "total_degrees": 0.7799619681524267,
+              "yaw_up_degrees": 5.310297752084147e-05
+            },
+            "Bone_005": {
+              "pitch_lateral_degrees": 0.9149549544861157,
+              "roll_forward_degrees": 1.487487246334962e-06,
+              "total_degrees": 0.914954955188164,
+              "yaw_up_degrees": 3.581162593567278e-05
+            },
+            "Bone_006": {
+              "pitch_lateral_degrees": 1.0299490467698365,
+              "roll_forward_degrees": 1.579431335725634e-06,
+              "total_degrees": 1.0299490469864234,
+              "yaw_up_degrees": 2.1063064479040886e-05
+            },
+            "Bone_007": {
+              "pitch_lateral_degrees": 1.1249441540801863,
+              "roll_forward_degrees": 1.5159280763316074e-06,
+              "total_degrees": 1.124944154114912,
+              "yaw_up_degrees": 8.70809183350053e-06
+            },
+            "Bone_016": {
+              "pitch_lateral_degrees": -0.3040236916257228,
+              "roll_forward_degrees": -0.09697935409528105,
+              "total_degrees": 0.33675791302930896,
+              "yaw_up_degrees": -0.1075662205219887
+            },
+            "Bone_017": {
+              "pitch_lateral_degrees": -0.07358072901827993,
+              "roll_forward_degrees": -0.1274812481539605,
+              "total_degrees": 0.18238851650204801,
+              "yaw_up_degrees": -0.1077031969723492
+            },
+            "Bone_018": {
+              "pitch_lateral_degrees": 0.14014417960935777,
+              "roll_forward_degrees": -0.15279110815469452,
+              "total_degrees": 0.2185140951381741,
+              "yaw_up_degrees": -0.06901373750591636
+            },
+            "Bone_019": {
+              "pitch_lateral_degrees": 0.3375994300788647,
+              "roll_forward_degrees": -0.17159192437848167,
+              "total_degrees": 0.38164643555799793,
+              "yaw_up_degrees": -0.047295222513909496
+            },
+            "Bone_020": {
+              "pitch_lateral_degrees": 0.5198019382734251,
+              "roll_forward_degrees": -0.17938916627408838,
+              "total_degrees": 0.5503022862566578,
+              "yaw_up_degrees": -0.021402762671733095
+            },
+            "Bone_021": {
+              "pitch_lateral_degrees": 0.6865137911459548,
+              "roll_forward_degrees": -0.17909538238276387,
+              "total_degrees": 0.7096306137621939,
+              "yaw_up_degrees": -0.014116180931402562
+            },
+            "Bone_022": {
+              "pitch_lateral_degrees": 0.8383391148571719,
+              "roll_forward_degrees": -0.16654319496185843,
+              "total_degrees": 0.854746889721217,
+              "yaw_up_degrees": -0.0065679677590872515
+            },
+            "Bone_023": {
+              "pitch_lateral_degrees": 0.9751733602705761,
+              "roll_forward_degrees": -0.139276881734324,
+              "total_degrees": 0.9850917065567234,
+              "yaw_up_degrees": 0.006673676632402106
+            },
+            "Bone_024": {
+              "pitch_lateral_degrees": 1.095423224523643,
+              "roll_forward_degrees": -0.10405189048918417,
+              "total_degrees": 1.100367312464774,
+              "yaw_up_degrees": 0.005420848715910997
+            },
+            "Bone_036": {
+              "pitch_lateral_degrees": 2.9547820329719077e-06,
+              "roll_forward_degrees": -0.010366919462372616,
+              "total_degrees": 0.011201455668312184,
+              "yaw_up_degrees": 0.004242591333030579
+            },
+            "Bone_037": {
+              "pitch_lateral_degrees": -1.5066668682927871e-05,
+              "roll_forward_degrees": -0.010225215440995148,
+              "total_degrees": 0.010537056342829948,
+              "yaw_up_degrees": 0.002544464295819861
+            },
+            "Bone_038": {
+              "pitch_lateral_degrees": 0.12593831626833746,
+              "roll_forward_degrees": -0.01312847407689614,
+              "total_degrees": 0.12663611473537814,
+              "yaw_up_degrees": 0.0019721103367534585
+            },
+            "Bone_039": {
+              "pitch_lateral_degrees": 0.23392586966891174,
+              "roll_forward_degrees": -0.014258304695413435,
+              "total_degrees": 0.23436460196828687,
+              "yaw_up_degrees": 0.001467958653918828
+            },
+            "Bone_040": {
+              "pitch_lateral_degrees": 0.32392921612853914,
+              "roll_forward_degrees": -0.01392859741323669,
+              "total_degrees": 0.3242300612098533,
+              "yaw_up_degrees": 0.0009948389796366303
+            },
+            "Bone_041": {
+              "pitch_lateral_degrees": 0.3959356348894643,
+              "roll_forward_degrees": -0.012454396159033099,
+              "total_degrees": 0.3961318122782477,
+              "yaw_up_degrees": 0.0005232015286348567
+            }
+          },
+          "index": 166,
+          "stage": "DOUBLE_SUPPORT",
+          "time_s": 1.3795945644378662
+        },
+        "left_declared_stance_midpoint": {
+          "authored_sagittal_pulse": -0.9999480920703784,
+          "contacts": [
+            "left"
+          ],
+          "incremental_world_rotation_v5_to_v6": {
+            "Bone_001": {
+              "pitch_lateral_degrees": -1.199938869138524,
+              "roll_forward_degrees": 1.2380580964588273e-07,
+              "total_degrees": 1.1999388691391384,
+              "yaw_up_degrees": 1.2080019745477937e-06
+            },
+            "Bone_002": {
+              "pitch_lateral_degrees": -0.4495643993242548,
+              "roll_forward_degrees": -0.02513349012302348,
+              "total_degrees": 0.45066754688760385,
+              "yaw_up_degrees": 0.019010427458332747
+            },
+            "Bone_003": {
+              "pitch_lateral_degrees": -0.624883789249614,
+              "roll_forward_degrees": 7.102133227521873e-05,
+              "total_degrees": 0.6250508777542212,
+              "yaw_up_degrees": 0.014451459107537291
+            },
+            "Bone_004": {
+              "pitch_lateral_degrees": -0.7799147488816945,
+              "roll_forward_degrees": 3.6558229217050625e-05,
+              "total_degrees": 0.7799861631663113,
+              "yaw_up_degrees": 0.010554518994390973
+            },
+            "Bone_005": {
+              "pitch_lateral_degrees": -0.9149328757579459,
+              "roll_forward_degrees": 1.5700744280644496e-05,
+              "total_degrees": 0.9149609073698374,
+              "yaw_up_degrees": 0.007162026655780454
+            },
+            "Bone_006": {
+              "pitch_lateral_degrees": -1.0299406521859444,
+              "roll_forward_degrees": 4.276523953565536e-06,
+              "total_degrees": 1.0299495120318694,
+              "yaw_up_degrees": 0.004272035953614253
+            },
+            "Bone_007": {
+              "pitch_lateral_degrees": -1.124941742396006,
+              "roll_forward_degrees": -9.330200034102232e-07,
+              "total_degrees": 1.1249433208123596,
+              "yaw_up_degrees": 0.0018844772505595534
+            },
+            "Bone_016": {
+              "pitch_lateral_degrees": 0.3134560800333174,
+              "roll_forward_degrees": -0.17813034028506686,
+              "total_degrees": 0.3720067120189829,
+              "yaw_up_degrees": 0.09167257794590088
+            },
+            "Bone_017": {
+              "pitch_lateral_degrees": 0.07454979215671655,
+              "roll_forward_degrees": -0.13636706023834044,
+              "total_degrees": 0.1800183357609763,
+              "yaw_up_degrees": 0.09084577360281988
+            },
+            "Bone_018": {
+              "pitch_lateral_degrees": -0.14568292831925794,
+              "roll_forward_degrees": -0.10111682085731132,
+              "total_degrees": 0.1856566230852591,
+              "yaw_up_degrees": 0.054956843354202256
+            },
+            "Bone_019": {
+              "pitch_lateral_degrees": -0.34836419393477625,
+              "roll_forward_degrees": -0.06203535335892561,
+              "total_degrees": 0.3557444690810294,
+              "yaw_up_degrees": 0.036716898011001815
+            },
+            "Bone_020": {
+              "pitch_lateral_degrees": -0.5329267617970495,
+              "roll_forward_degrees": -0.03009683792186541,
+              "total_degrees": 0.5340332489985657,
+              "yaw_up_degrees": 0.016575824069412222
+            },
+            "Bone_021": {
+              "pitch_lateral_degrees": -0.6999643094942676,
+              "roll_forward_degrees": 0.0005865291463960573,
+              "total_degrees": 0.7000529926007183,
+              "yaw_up_degrees": 0.011127167968318571
+            },
+            "Bone_022": {
+              "pitch_lateral_degrees": -0.8497895445842966,
+              "roll_forward_degrees": 0.020051761055092578,
+              "total_degrees": 0.8500448100872192,
+              "yaw_up_degrees": 0.005642335511110563
+            },
+            "Bone_023": {
+              "pitch_lateral_degrees": -0.9830687844541527,
+              "roll_forward_degrees": 0.02266063239238779,
+              "total_degrees": 0.9833331925209267,
+              "yaw_up_degrees": -0.0025354062415325093
+            },
+            "Bone_024": {
+              "pitch_lateral_degrees": -1.0997920353365689,
+              "roll_forward_degrees": 0.01906111612976208,
+              "total_degrees": 1.0999582355345536,
+              "yaw_up_degrees": -0.0015075750142635215
+            },
+            "Bone_036": {
+              "pitch_lateral_degrees": 7.252838544371653e-07,
+              "roll_forward_degrees": -0.025639988679409455,
+              "total_degrees": 0.02770190421425417,
+              "yaw_up_degrees": 0.010487443782420542
+            },
+            "Bone_037": {
+              "pitch_lateral_degrees": 0.00016487118251033175,
+              "roll_forward_degrees": -0.025509673663002958,
+              "total_degrees": 0.029069158003538202,
+              "yaw_up_degrees": 0.013937191759279923
+            },
+            "Bone_038": {
+              "pitch_lateral_degrees": -0.12576881292791664,
+              "roll_forward_degrees": -0.023804858639589047,
+              "total_degrees": 0.1288759596296345,
+              "yaw_up_degrees": 0.014984904748148089
+            },
+            "Bone_039": {
+              "pitch_lateral_degrees": -0.23371332217286622,
+              "roll_forward_degrees": -0.0230922130851222,
+              "total_degrees": 0.2353955792152973,
+              "yaw_up_degrees": 0.015997232506238898
+            },
+            "Bone_040": {
+              "pitch_lateral_degrees": -0.32366345779293515,
+              "roll_forward_degrees": -0.02319498836917323,
+              "total_degrees": 0.32493825830368617,
+              "yaw_up_degrees": 0.016995008488019818
+            },
+            "Bone_041": {
+              "pitch_lateral_degrees": -0.395614870484648,
+              "roll_forward_degrees": -0.023936836707559417,
+              "total_degrees": 0.39674664460583353,
+              "yaw_up_degrees": 0.017994502100319765
+            }
+          },
+          "index": 92,
+          "stage": "SINGLE_SUPPORT",
+          "time_s": 0.7645946145057678
+        },
+        "right_declared_stance_midpoint": {
+          "authored_sagittal_pulse": -0.9999480941799078,
+          "contacts": [
+            "right"
+          ],
+          "incremental_world_rotation_v5_to_v6": {
+            "Bone_001": {
+              "pitch_lateral_degrees": -1.1999390617013426,
+              "roll_forward_degrees": -3.608365439500272e-07,
+              "total_degrees": 1.199939061702214,
+              "yaw_up_degrees": 1.4003551678354532e-06
+            },
+            "Bone_002": {
+              "pitch_lateral_degrees": -0.4495614054483541,
+              "roll_forward_degrees": 0.02513803761441507,
+              "total_degrees": 0.4506645830847919,
+              "yaw_up_degrees": -0.019004953122441024
+            },
+            "Bone_003": {
+              "pitch_lateral_degrees": -0.6248830128229478,
+              "roll_forward_degrees": -7.504177764658393e-05,
+              "total_degrees": 0.6250500035283583,
+              "yaw_up_degrees": -0.01444719920427777
+            },
+            "Bone_004": {
+              "pitch_lateral_degrees": -0.7799136198682585,
+              "roll_forward_degrees": -3.991637268606352e-05,
+              "total_degrees": 0.7799850364014963,
+              "yaw_up_degrees": -0.010554665362596439
+            },
+            "Bone_005": {
+              "pitch_lateral_degrees": -0.9149316104628943,
+              "roll_forward_degrees": -1.9023343730932563e-05,
+              "total_degrees": 0.9149596433045077,
+              "yaw_up_degrees": -0.007162170746304994
+            },
+            "Bone_006": {
+              "pitch_lateral_degrees": -1.0299393347524373,
+              "roll_forward_degrees": -7.517233638967835e-06,
+              "total_degrees": 1.029948195371792,
+              "yaw_up_degrees": -0.004272215211012952
+            },
+            "Bone_007": {
+              "pitch_lateral_degrees": -1.1249411325030871,
+              "roll_forward_degrees": -2.5267096046971416e-06,
+              "total_degrees": 1.1249427116630597,
+              "yaw_up_degrees": -0.0018849191298037666
+            },
+            "Bone_016": {
+              "pitch_lateral_degrees": 0.3949955311890636,
+              "roll_forward_degrees": 0.46944819808072286,
+              "total_degrees": 0.6231757961544229,
+              "yaw_up_degrees": 0.10929314970358751
+            },
+            "Bone_017": {
+              "pitch_lateral_degrees": 0.14586034100158535,
+              "roll_forward_degrees": 0.4299704053632309,
+              "total_degrees": 0.4673333346137532,
+              "yaw_up_degrees": 0.11068268643238846
+            },
+            "Bone_018": {
+              "pitch_lateral_degrees": -0.08246834706641305,
+              "roll_forward_degrees": 0.39755111334151355,
+              "total_degrees": 0.41267642144322636,
+              "yaw_up_degrees": 0.07385061156310153
+            },
+            "Bone_019": {
+              "pitch_lateral_degrees": -0.2936759769836595,
+              "roll_forward_degrees": 0.36366378934328936,
+              "total_degrees": 0.4703668418265339,
+              "yaw_up_degrees": 0.05242170116507426
+            },
+            "Bone_020": {
+              "pitch_lateral_degrees": -0.48790129298657536,
+              "roll_forward_degrees": 0.3271200339342904,
+              "total_degrees": 0.5879671921649875,
+              "yaw_up_degrees": 0.025499622805759938
+            },
+            "Bone_021": {
+              "pitch_lateral_degrees": -0.6649858776793197,
+              "roll_forward_degrees": 0.287696301452697,
+              "total_degrees": 0.7247825815303169,
+              "yaw_up_degrees": 0.018286910817694554
+            },
+            "Bone_022": {
+              "pitch_lateral_degrees": -0.8249262523098397,
+              "roll_forward_degrees": 0.24384456154734918,
+              "total_degrees": 0.8602737030114164,
+              "yaw_up_degrees": 0.010361088108800227
+            },
+            "Bone_023": {
+              "pitch_lateral_degrees": -0.9674653241625406,
+              "roll_forward_degrees": 0.1941847199821434,
+              "total_degrees": 0.9867738419914409,
+              "yaw_up_degrees": -0.0050750671991880575
+            },
+            "Bone_024": {
+              "pitch_lateral_degrees": -1.0916530334391321,
+              "roll_forward_degrees": 0.14081258639303595,
+              "total_degrees": 1.1007053536094424,
+              "yaw_up_degrees": -0.004212548033274378
+            },
+            "Bone_036": {
+              "pitch_lateral_degrees": 1.3447713994459674e-06,
+              "roll_forward_degrees": 0.025561238258483967,
+              "total_degrees": 0.027618092585002373,
+              "yaw_up_degrees": -0.010458591440455483
+            },
+            "Bone_037": {
+              "pitch_lateral_degrees": 0.00016769436112369206,
+              "roll_forward_degrees": 0.025471997351558376,
+              "total_degrees": 0.029026878570733057,
+              "yaw_up_degrees": -0.013917934799514345
+            },
+            "Bone_038": {
+              "pitch_lateral_degrees": -0.1257233340789367,
+              "roll_forward_degrees": 0.02907042954055344,
+              "total_degrees": 0.12989095695563613,
+              "yaw_up_degrees": -0.01483961230136112
+            },
+            "Bone_039": {
+              "pitch_lateral_degrees": -0.23366566183588955,
+              "roll_forward_degrees": 0.03044886662119526,
+              "total_degrees": 0.2361736413764381,
+              "yaw_up_degrees": -0.015849728113970007
+            },
+            "Bone_040": {
+              "pitch_lateral_degrees": -0.3236326666469395,
+              "roll_forward_degrees": 0.029994348508029615,
+              "total_degrees": 0.3254588749701651,
+              "yaw_up_degrees": -0.016903119043991423
+            },
+            "Bone_041": {
+              "pitch_lateral_degrees": -0.3956033040084412,
+              "roll_forward_degrees": 0.028094341339859663,
+              "total_degrees": 0.39700627685447326,
+              "yaw_up_degrees": -0.0179643453578198
+            }
+          },
+          "index": 240,
+          "stage": "SINGLE_SUPPORT",
+          "time_s": 1.9945945739746094
+        }
+      },
+      "maximum_local_scale_delta": 0.0,
+      "maximum_local_translation_delta_m": 0.0,
+      "sample_count": 297,
+      "times_exactly_equal": true
+    }
+  },
+  "packages": {
+    "v5": {
+      "manifest_sha256": "8408608975c8499a1676f91228c18650557ae71c0c46961bff72d0eb30332229",
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-factory-candidate-claims-fix/out/continuation-adult-v5-body-counterroll-postfix-001/package",
+      "plan_sha256": "76a92ae16caf5c5d03f2b1772aaf6f3d3878fd2bb84ec7b9b681a0ae83e30540"
+    },
+    "v6": {
+      "manifest_sha256": "5c745c9b15fb43ae2a12d18e37957a6fd6fe50ea73cd8dcfaf2b768ff77d3041",
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-factory-candidate-claims-fix/out/continuation-adult-v6-sagittal-body-postfix-001",
+      "plan_sha256": "564f28d2aa1f9246581df500c55a7e5d00582a8d15b07b46b607b73364cd9c9b"
+    }
+  },
+  "schema": "eonwild.motion.adult-sagittal-response-v6-reopened-audit.v1",
+  "source_head": "4ea2ad2a9e2e73fdb7bfc2b0cd34445c044c1ae4",
+  "validation": {
+    "v5": {
+      "articulation_envelopes": {
+        "in_place": {
+          "classification": "reopened scalar engineering guardrails; not biological ROM or 6DoF joint validation",
+          "maximum_preferred_departure_degrees": 3.1418053739076015,
+          "maximum_violation_degrees": 0.0,
+          "observed_degrees": {
+            "support": {
+              "ankle_interior_degrees": [
+                103.38897199770082,
+                146.17634477131259
+              ],
+              "hip_sagittal_degrees": [
+                -33.78773196447616,
+                43.902737300798876
+              ],
+              "knee_interior_degrees": [
+                120.46209147217613,
+                178.0208095661357
+              ]
+            },
+            "swing": {
+              "ankle_interior_degrees": [
+                97.41596071356848,
+                148.98236635058984
+              ],
+              "hip_sagittal_degrees": [
+                -34.02392429814133,
+                72.09976299589334
+              ],
+              "knee_interior_degrees": [
+                70.9532455740485,
+                178.1418053739076
+              ]
+            }
+          },
+          "phase_sample_counts": {
+            "support": 370,
+            "swing": 224
+          },
+          "profile": {
+            "angle_conventions": {
+              "ankle_interior_degrees": "0 fully folded; 180 straight",
+              "hip_sagittal_degrees": "world sagittal thigh inclination from down: negative rearward; positive forward",
+              "knee_interior_degrees": "0 fully folded; 180 straight"
+            },
+            "classification": "engineering_guardrails_not_biological_rom",
+            "evidence": {
+              "limitations": [
+                "No measured Tarbosaurus joint range of motion or in-vivo loading evidence is available.",
+                "Hip hard [-45,80] retains the existing factory engineering interval; preferred [-35,75] is an authored 10/5 degree operating margin, not anatomical certification.",
+                "Knee hard [65,180] retains the existing 65 degree engineering floor and uses the scalar metric's straight endpoint; preferred [68,175] is an authored 3/5 degree operating margin.",
+                "Ankle hard [90,180] uses a comparative-model-informed lower engineering guardrail and the scalar metric's straight endpoint; preferred [95,172] is an authored 5/8 degree operating margin.",
+                "A prior unbound diagnostic used a 178 degree knee and ankle ceiling without independent anatomical support and put loaded stance at that boundary; this profile uses the defined 180 degree straight endpoint instead.",
+                "Support and swing ranges are identical because phase-specific Tarbosaurus evidence is unresolved.",
+                "The profile is a scalar sagittal guardrail; it does not model 6DoF joints, force, muscle capacity, or translated bones."
+              ],
+              "sources": [
+                {
+                  "citation": "Gatesy, Baeker and Hutchinson (2009), Constraint-based exclusion of limb poses for reconstructing theropod dinosaur locomotion",
+                  "locator": "https://www.rvc.ac.uk/Media/Default/Structure%20and%20Motion/Documents/23_000.pdf",
+                  "scope": "Comparative Tyrannosaurus rex MOR 555 model used geometric knee 30..180 and ankle 90..180 degree search intervals. This supports scalar coordinate sanity and the 180 degree straight endpoint; it is not measured Tarbosaurus ROM."
+                },
+                {
+                  "citation": "Eonwild Factory pre-existing gait engineering guardrails",
+                  "locator": "src/eonwild_motion/planning/airborne_gait.py",
+                  "scope": "Retains the existing global hip interval -45..80 degrees and knee minimum 65 degrees. Hip is a world thigh inclination, not a pelvis-relative anatomical joint coordinate."
+                },
+                {
+                  "citation": "Eonwild whole-cycle constrained and skinned candidate diagnostics",
+                  "locator": "tests/test_world_metatarsus_recovery.py",
+                  "scope": "Tests feasible-first scalar enforcement, phase-pure recovery and final-GLB verification mechanics. Synthetic and authored evidence do not establish biological ROM."
+                }
+              ],
+              "status": "comparative_anatomy_informed"
+            },
+            "evidence_status": "comparative_anatomy_informed",
+            "id": "heavy-biped.tarbosaurus-adult-walk.v1",
+            "limitations": [
+              "No measured Tarbosaurus joint range of motion or in-vivo loading evidence is available.",
+              "Hip hard [-45,80] retains the existing factory engineering interval; preferred [-35,75] is an authored 10/5 degree operating margin, not anatomical certification.",
+              "Knee hard [65,180] retains the existing 65 degree engineering floor and uses the scalar metric's straight endpoint; preferred [68,175] is an authored 3/5 degree operating margin.",
+              "Ankle hard [90,180] uses a comparative-model-informed lower engineering guardrail and the scalar metric's straight endpoint; preferred [95,172] is an authored 5/8 degree operating margin.",
+              "A prior unbound diagnostic used a 178 degree knee and ankle ceiling without independent anatomical support and put loaded stance at that boundary; this profile uses the defined 180 degree straight endpoint instead.",
+              "Support and swing ranges are identical because phase-specific Tarbosaurus evidence is unresolved.",
+              "The profile is a scalar sagittal guardrail; it does not model 6DoF joints, force, muscle capacity, or translated bones."
+            ],
+            "phase_transfer": "support guardrails blend C2 to swing guardrails over the existing 0.18 release and approach partition",
+            "schema": "eonwild.motion.v9.articulation-profile.v1",
+            "solver_scope": "scalar sagittal engineering guardrails; not a pelvis-relative hip JCS or 6DoF joint model; load/speed conditioning is not implemented",
+            "version": 1
+          },
+          "status": "PASS",
+          "tolerance_degrees": 0.01,
+          "witness": null
+        },
+        "root_motion": {
+          "classification": "reopened scalar engineering guardrails; not biological ROM or 6DoF joint validation",
+          "maximum_preferred_departure_degrees": 3.1418053739076015,
+          "maximum_violation_degrees": 0.0,
+          "observed_degrees": {
+            "support": {
+              "ankle_interior_degrees": [
+                103.38897199770082,
+                146.17634477131259
+              ],
+              "hip_sagittal_degrees": [
+                -33.78773196447615,
+                43.902737300798876
+              ],
+              "knee_interior_degrees": [
+                120.46209147217613,
+                178.02080956613554
+              ]
+            },
+            "swing": {
+              "ankle_interior_degrees": [
+                97.41596071356848,
+                148.98236635058984
+              ],
+              "hip_sagittal_degrees": [
+                -34.023924298141324,
+                72.09976299589334
+              ],
+              "knee_interior_degrees": [
+                70.9532455740485,
+                178.1418053739076
+              ]
+            }
+          },
+          "phase_sample_counts": {
+            "support": 370,
+            "swing": 224
+          },
+          "profile": {
+            "angle_conventions": {
+              "ankle_interior_degrees": "0 fully folded; 180 straight",
+              "hip_sagittal_degrees": "world sagittal thigh inclination from down: negative rearward; positive forward",
+              "knee_interior_degrees": "0 fully folded; 180 straight"
+            },
+            "classification": "engineering_guardrails_not_biological_rom",
+            "evidence": {
+              "limitations": [
+                "No measured Tarbosaurus joint range of motion or in-vivo loading evidence is available.",
+                "Hip hard [-45,80] retains the existing factory engineering interval; preferred [-35,75] is an authored 10/5 degree operating margin, not anatomical certification.",
+                "Knee hard [65,180] retains the existing 65 degree engineering floor and uses the scalar metric's straight endpoint; preferred [68,175] is an authored 3/5 degree operating margin.",
+                "Ankle hard [90,180] uses a comparative-model-informed lower engineering guardrail and the scalar metric's straight endpoint; preferred [95,172] is an authored 5/8 degree operating margin.",
+                "A prior unbound diagnostic used a 178 degree knee and ankle ceiling without independent anatomical support and put loaded stance at that boundary; this profile uses the defined 180 degree straight endpoint instead.",
+                "Support and swing ranges are identical because phase-specific Tarbosaurus evidence is unresolved.",
+                "The profile is a scalar sagittal guardrail; it does not model 6DoF joints, force, muscle capacity, or translated bones."
+              ],
+              "sources": [
+                {
+                  "citation": "Gatesy, Baeker and Hutchinson (2009), Constraint-based exclusion of limb poses for reconstructing theropod dinosaur locomotion",
+                  "locator": "https://www.rvc.ac.uk/Media/Default/Structure%20and%20Motion/Documents/23_000.pdf",
+                  "scope": "Comparative Tyrannosaurus rex MOR 555 model used geometric knee 30..180 and ankle 90..180 degree search intervals. This supports scalar coordinate sanity and the 180 degree straight endpoint; it is not measured Tarbosaurus ROM."
+                },
+                {
+                  "citation": "Eonwild Factory pre-existing gait engineering guardrails",
+                  "locator": "src/eonwild_motion/planning/airborne_gait.py",
+                  "scope": "Retains the existing global hip interval -45..80 degrees and knee minimum 65 degrees. Hip is a world thigh inclination, not a pelvis-relative anatomical joint coordinate."
+                },
+                {
+                  "citation": "Eonwild whole-cycle constrained and skinned candidate diagnostics",
+                  "locator": "tests/test_world_metatarsus_recovery.py",
+                  "scope": "Tests feasible-first scalar enforcement, phase-pure recovery and final-GLB verification mechanics. Synthetic and authored evidence do not establish biological ROM."
+                }
+              ],
+              "status": "comparative_anatomy_informed"
+            },
+            "evidence_status": "comparative_anatomy_informed",
+            "id": "heavy-biped.tarbosaurus-adult-walk.v1",
+            "limitations": [
+              "No measured Tarbosaurus joint range of motion or in-vivo loading evidence is available.",
+              "Hip hard [-45,80] retains the existing factory engineering interval; preferred [-35,75] is an authored 10/5 degree operating margin, not anatomical certification.",
+              "Knee hard [65,180] retains the existing 65 degree engineering floor and uses the scalar metric's straight endpoint; preferred [68,175] is an authored 3/5 degree operating margin.",
+              "Ankle hard [90,180] uses a comparative-model-informed lower engineering guardrail and the scalar metric's straight endpoint; preferred [95,172] is an authored 5/8 degree operating margin.",
+              "A prior unbound diagnostic used a 178 degree knee and ankle ceiling without independent anatomical support and put loaded stance at that boundary; this profile uses the defined 180 degree straight endpoint instead.",
+              "Support and swing ranges are identical because phase-specific Tarbosaurus evidence is unresolved.",
+              "The profile is a scalar sagittal guardrail; it does not model 6DoF joints, force, muscle capacity, or translated bones."
+            ],
+            "phase_transfer": "support guardrails blend C2 to swing guardrails over the existing 0.18 release and approach partition",
+            "schema": "eonwild.motion.v9.articulation-profile.v1",
+            "solver_scope": "scalar sagittal engineering guardrails; not a pelvis-relative hip JCS or 6DoF joint model; load/speed conditioning is not implemented",
+            "version": 1
+          },
+          "status": "PASS",
+          "tolerance_degrees": 0.01,
+          "witness": null
+        }
+      },
+      "cyclic_continuity_current_estimator_only": {
+        "in_place": {
+          "checks": {
+            "angular_velocity": true,
+            "linear_velocity": true
+          },
+          "classification": "second-order native-time derivatives of final serialized channels; endpoint closure alone is insufficient",
+          "limits": {
+            "angular_degrees_per_s": 10.0,
+            "linear_m_per_s": 0.001
+          },
+          "maximum_angular_velocity_seam_degrees_per_s": 2.261217032183016,
+          "maximum_linear_velocity_seam_m_per_s": 1.2392918987603488e-06,
+          "peak_witnesses": {
+            "angular": {
+              "bone": "Bone_010",
+              "incoming": [
+                0.9832189421733895,
+                -2.0114913324743365e-07,
+                -0.21209021927037922
+              ],
+              "node": 49,
+              "outgoing": [
+                0.9446406406712003,
+                4.2434966138298716e-07,
+                -0.20376827638988415
+              ]
+            },
+            "linear": {
+              "bone": "Bone_001",
+              "incoming": [
+                -0.04649533464341041,
+                0.021960077313672617,
+                -0.04327075653365081
+              ],
+              "node": 73,
+              "outgoing": [
+                -0.04649490988287884,
+                0.02196048372501657,
+                -0.04326966554661117
+              ]
+            }
+          },
+          "status": "PASS"
+        },
+        "root_motion": {
+          "checks": {
+            "angular_velocity": true,
+            "linear_velocity": true
+          },
+          "classification": "second-order native-time derivatives of final serialized channels; endpoint closure alone is insufficient",
+          "limits": {
+            "angular_degrees_per_s": 10.0,
+            "linear_m_per_s": 0.001
+          },
+          "maximum_angular_velocity_seam_degrees_per_s": 2.261217032183016,
+          "maximum_linear_velocity_seam_m_per_s": 2.0295017618752294e-05,
+          "peak_witnesses": {
+            "angular": {
+              "bone": "Bone_010",
+              "incoming": [
+                0.9832189421733895,
+                -2.0114913324743365e-07,
+                -0.21209021927037922
+              ],
+              "node": 49,
+              "outgoing": [
+                0.9446406406712003,
+                4.2434966138298716e-07,
+                -0.20376827638988415
+              ]
+            },
+            "linear": {
+              "bone": "Bone_000",
+              "incoming": [
+                0.02497543605485111,
+                -0.0,
+                0.6410149750415973
+              ],
+              "node": 74,
+              "outgoing": [
+                0.024975556567845163,
+                0.0,
+                0.6410352697014063
+              ]
+            }
+          },
+          "status": "PASS"
+        }
+      },
+      "in_place_skinned_contact": {
+        "authority": {
+          "per_foot": {
+            "left": {
+              "cyclic_context": "loaded phases intersecting middle of three root-unwrapped cycles",
+              "maximum_skin_seam_error_m": 4.443059973708341e-16,
+              "phases": [
+                {
+                  "contact_centroid_m": [
+                    -0.2703099353338719,
+                    0.09857889337517538,
+                    2.2838311887846
+                  ],
+                  "drift_m": 2.8710911544047934e-05,
+                  "end_frame": 183,
+                  "end_time_s": 1.5208784341812134,
+                  "max_penetration_m": 0.0,
+                  "max_persistent_velocity_mps": 5.964498464913133e-05,
+                  "minimum_gap_m": 0.00013714956716266366,
+                  "persistent_point_total": 549,
+                  "print_depth_m": 0.0,
+                  "reasons": [],
+                  "start_frame": 0,
+                  "start_time_s": 0.0,
+                  "substrate": "hard",
+                  "unknown_pairs": 0,
+                  "verdict": "PASS",
+                  "yaw_deg": 7.3444386094852035e-06
+                }
+              ],
+              "reasons": [],
+              "verdict": "PASS"
+            },
+            "right": {
+              "cyclic_context": "loaded phases intersecting middle of three root-unwrapped cycles",
+              "maximum_skin_seam_error_m": 4.460365043975677e-16,
+              "phases": [
+                {
+                  "contact_centroid_m": [
+                    0.3796498679948489,
+                    0.07440824770307322,
+                    0.9289421127448292
+                  ],
+                  "drift_m": 3.1930166003879514e-05,
+                  "end_frame": 183,
+                  "end_time_s": 0.29087838530540466,
+                  "max_penetration_m": 0.0,
+                  "max_persistent_velocity_mps": 7.0102778774245e-05,
+                  "minimum_gap_m": 0.00013948406577586787,
+                  "persistent_point_total": 1098,
+                  "print_depth_m": 0.0,
+                  "reasons": [],
+                  "start_frame": 0,
+                  "start_time_s": -1.2300000190734863,
+                  "substrate": "hard",
+                  "unknown_pairs": 0,
+                  "verdict": "PASS",
+                  "yaw_deg": 8.748576518413899e-06
+                },
+                {
+                  "contact_centroid_m": [
+                    0.48573058954175746,
+                    0.07440824770307322,
+                    3.6516723203785224
+                  ],
+                  "drift_m": 3.193016600362971e-05,
+                  "end_frame": 183,
+                  "end_time_s": 2.7508784234523773,
+                  "max_penetration_m": 0.0,
+                  "max_persistent_velocity_mps": 7.0102778774245e-05,
+                  "minimum_gap_m": 0.00013948406577586787,
+                  "persistent_point_total": 1098,
+                  "print_depth_m": 0.0,
+                  "reasons": [],
+                  "start_frame": 0,
+                  "start_time_s": 1.2300000190734863,
+                  "substrate": "hard",
+                  "unknown_pairs": 0,
+                  "verdict": "PASS",
+                  "yaw_deg": 8.79013768592829e-06
+                }
+              ],
+              "reasons": [],
+              "verdict": "PASS"
+            }
+          }
+        },
+        "classification": "final serialized skin, fixed floor, full multi-influence weights, unchanged engineering thresholds",
+        "ground_level_m": -0.010315558674016406,
+        "maximum_penetration_m": 0.0,
+        "maximum_stance_gap_m": 0.0001396277433658808,
+        "sample_count": 297,
+        "verdict": "PASS"
+      },
+      "rotation_rates": {
+        "in_place": {
+          "classification": "serialized per-channel rotation rate; not joint torque or muscle capacity",
+          "limit_degrees_per_s": 1200.0,
+          "maximum_degrees_per_s": 630.4553428951767,
+          "peak_witness": {
+            "bone": "Bone_010",
+            "node": 49,
+            "quaternions_xyzw": [
+              [
+                0.5174492589698436,
+                0.036097079460475946,
+                -0.13498888889255933,
+                0.8442282067791482
+              ],
+              [
+                0.5542809784065899,
+                0.03501517957518106,
+                -0.14459731707490978,
+                0.8189249966087794
+              ]
+            ],
+            "times_s": [
+              1.6870945692062378,
+              1.69540536403656
+            ]
+          },
+          "status": "PASS"
+        },
+        "root_motion": {
+          "classification": "serialized per-channel rotation rate; not joint torque or muscle capacity",
+          "limit_degrees_per_s": 1200.0,
+          "maximum_degrees_per_s": 630.4553428951767,
+          "peak_witness": {
+            "bone": "Bone_010",
+            "node": 49,
+            "quaternions_xyzw": [
+              [
+                0.5174492589698436,
+                0.036097079460475946,
+                -0.13498888889255933,
+                0.8442282067791482
+              ],
+              [
+                0.5542809784065899,
+                0.03501517957518106,
+                -0.14459731707490978,
+                0.8189249966087794
+              ]
+            ],
+            "times_s": [
+              1.6870945692062378,
+              1.69540536403656
+            ]
+          },
+          "status": "PASS"
+        }
+      },
+      "skinned_contact": {
+        "authority": {
+          "per_foot": {
+            "left": {
+              "cyclic_context": "loaded phases intersecting middle of three root-unwrapped cycles",
+              "maximum_skin_seam_error_m": 1.7829041963075672e-15,
+              "phases": [
+                {
+                  "contact_centroid_m": [
+                    -0.27030993420697635,
+                    0.09857889337517538,
+                    2.2838311118550108
+                  ],
+                  "drift_m": 2.281120040300554e-05,
+                  "end_frame": 183,
+                  "end_time_s": 1.5208784341812134,
+                  "max_penetration_m": 0.0,
+                  "max_persistent_velocity_mps": 5.2018199377341645e-05,
+                  "minimum_gap_m": 0.00013714956716266366,
+                  "persistent_point_total": 549,
+                  "print_depth_m": 0.0,
+                  "reasons": [],
+                  "start_frame": 0,
+                  "start_time_s": 0.0,
+                  "substrate": "hard",
+                  "unknown_pairs": 0,
+                  "verdict": "PASS",
+                  "yaw_deg": 7.244509618354405e-06
+                }
+              ],
+              "reasons": [],
+              "verdict": "PASS"
+            },
+            "right": {
+              "cyclic_context": "loaded phases intersecting middle of three root-unwrapped cycles",
+              "maximum_skin_seam_error_m": 1.777711575522029e-15,
+              "phases": [
+                {
+                  "contact_centroid_m": [
+                    0.3796498651862101,
+                    0.07440824770307322,
+                    0.9289420308772196
+                  ],
+                  "drift_m": 2.63273702547309e-05,
+                  "end_frame": 183,
+                  "end_time_s": 0.29087838530540466,
+                  "max_penetration_m": 0.0,
+                  "max_persistent_velocity_mps": 5.241015888552553e-05,
+                  "minimum_gap_m": 0.00013948406577586787,
+                  "persistent_point_total": 1098,
+                  "print_depth_m": 0.0,
+                  "reasons": [],
+                  "start_frame": 0,
+                  "start_time_s": -1.2300000190734863,
+                  "substrate": "hard",
+                  "unknown_pairs": 0,
+                  "verdict": "PASS",
+                  "yaw_deg": 8.664856156940838e-06
+                },
+                {
+                  "contact_centroid_m": [
+                    0.48573058656414936,
+                    0.07440824770307322,
+                    3.6516723512994673
+                  ],
+                  "drift_m": 2.6327370253954514e-05,
+                  "end_frame": 183,
+                  "end_time_s": 2.7508784234523773,
+                  "max_penetration_m": 0.0,
+                  "max_persistent_velocity_mps": 5.2410158906478404e-05,
+                  "minimum_gap_m": 0.00013948406577586787,
+                  "persistent_point_total": 1098,
+                  "print_depth_m": 0.0,
+                  "reasons": [],
+                  "start_frame": 0,
+                  "start_time_s": 1.2300000190734863,
+                  "substrate": "hard",
+                  "unknown_pairs": 0,
+                  "verdict": "PASS",
+                  "yaw_deg": 8.748576518413899e-06
+                }
+              ],
+              "reasons": [],
+              "verdict": "PASS"
+            }
+          }
+        },
+        "classification": "final serialized skin, fixed floor, full multi-influence weights, unchanged engineering thresholds",
+        "ground_level_m": -0.010315558674016406,
+        "maximum_penetration_m": 0.0,
+        "maximum_stance_gap_m": 0.0001396277433658808,
+        "sample_count": 297,
+        "verdict": "PASS"
+      },
+      "solver_feasibility": {
+        "checks": {
+          "max_foot_target_residual_m": true,
+          "max_unreachable_extension_m": true,
+          "maximum_articulation_envelope_violation_degrees": true,
+          "maximum_solved_foot_pitch_velocity_degrees_per_s": true
+        },
+        "classification": "engineering feasibility only; missing evidence is a failure",
+        "limits": {
+          "max_foot_target_residual_m": 0.001,
+          "max_unreachable_extension_m": 0.001,
+          "maximum_articulation_envelope_violation_degrees": 0.01,
+          "maximum_solved_foot_pitch_velocity_degrees_per_s": 600.0
+        },
+        "status": "PASS",
+        "values": {
+          "max_foot_target_residual_m": 3.967105200729192e-07,
+          "max_unreachable_extension_m": 0.0,
+          "maximum_articulation_envelope_violation_degrees": 0.0,
+          "maximum_solved_foot_pitch_velocity_degrees_per_s": 470.6606804750703
+        }
+      },
+      "technical_status": "PASS"
+    },
+    "v6": {
+      "articulation_envelopes": {
+        "in_place": {
+          "classification": "reopened scalar engineering guardrails; not biological ROM or 6DoF joint validation",
+          "maximum_preferred_departure_degrees": 3.1094734147436895,
+          "maximum_violation_degrees": 0.0,
+          "observed_degrees": {
+            "support": {
+              "ankle_interior_degrees": [
+                103.5711642742179,
+                146.12720149678077
+              ],
+              "hip_sagittal_degrees": [
+                -33.785097655213946,
+                44.059015537873954
+              ],
+              "knee_interior_degrees": [
+                120.28998249186128,
+                177.9814060477164
+              ]
+            },
+            "swing": {
+              "ankle_interior_degrees": [
+                97.41143173416344,
+                148.93714462505952
+              ],
+              "hip_sagittal_degrees": [
+                -34.01973233246317,
+                71.98555257124345
+              ],
+              "knee_interior_degrees": [
+                71.0283677805291,
+                178.1094734147437
+              ]
+            }
+          },
+          "phase_sample_counts": {
+            "support": 370,
+            "swing": 224
+          },
+          "profile": {
+            "angle_conventions": {
+              "ankle_interior_degrees": "0 fully folded; 180 straight",
+              "hip_sagittal_degrees": "world sagittal thigh inclination from down: negative rearward; positive forward",
+              "knee_interior_degrees": "0 fully folded; 180 straight"
+            },
+            "classification": "engineering_guardrails_not_biological_rom",
+            "evidence": {
+              "limitations": [
+                "No measured Tarbosaurus joint range of motion or in-vivo loading evidence is available.",
+                "Hip hard [-45,80] retains the existing factory engineering interval; preferred [-35,75] is an authored 10/5 degree operating margin, not anatomical certification.",
+                "Knee hard [65,180] retains the existing 65 degree engineering floor and uses the scalar metric's straight endpoint; preferred [68,175] is an authored 3/5 degree operating margin.",
+                "Ankle hard [90,180] uses a comparative-model-informed lower engineering guardrail and the scalar metric's straight endpoint; preferred [95,172] is an authored 5/8 degree operating margin.",
+                "A prior unbound diagnostic used a 178 degree knee and ankle ceiling without independent anatomical support and put loaded stance at that boundary; this profile uses the defined 180 degree straight endpoint instead.",
+                "Support and swing ranges are identical because phase-specific Tarbosaurus evidence is unresolved.",
+                "The profile is a scalar sagittal guardrail; it does not model 6DoF joints, force, muscle capacity, or translated bones."
+              ],
+              "sources": [
+                {
+                  "citation": "Gatesy, Baeker and Hutchinson (2009), Constraint-based exclusion of limb poses for reconstructing theropod dinosaur locomotion",
+                  "locator": "https://www.rvc.ac.uk/Media/Default/Structure%20and%20Motion/Documents/23_000.pdf",
+                  "scope": "Comparative Tyrannosaurus rex MOR 555 model used geometric knee 30..180 and ankle 90..180 degree search intervals. This supports scalar coordinate sanity and the 180 degree straight endpoint; it is not measured Tarbosaurus ROM."
+                },
+                {
+                  "citation": "Eonwild Factory pre-existing gait engineering guardrails",
+                  "locator": "src/eonwild_motion/planning/airborne_gait.py",
+                  "scope": "Retains the existing global hip interval -45..80 degrees and knee minimum 65 degrees. Hip is a world thigh inclination, not a pelvis-relative anatomical joint coordinate."
+                },
+                {
+                  "citation": "Eonwild whole-cycle constrained and skinned candidate diagnostics",
+                  "locator": "tests/test_world_metatarsus_recovery.py",
+                  "scope": "Tests feasible-first scalar enforcement, phase-pure recovery and final-GLB verification mechanics. Synthetic and authored evidence do not establish biological ROM."
+                }
+              ],
+              "status": "comparative_anatomy_informed"
+            },
+            "evidence_status": "comparative_anatomy_informed",
+            "id": "heavy-biped.tarbosaurus-adult-walk.v1",
+            "limitations": [
+              "No measured Tarbosaurus joint range of motion or in-vivo loading evidence is available.",
+              "Hip hard [-45,80] retains the existing factory engineering interval; preferred [-35,75] is an authored 10/5 degree operating margin, not anatomical certification.",
+              "Knee hard [65,180] retains the existing 65 degree engineering floor and uses the scalar metric's straight endpoint; preferred [68,175] is an authored 3/5 degree operating margin.",
+              "Ankle hard [90,180] uses a comparative-model-informed lower engineering guardrail and the scalar metric's straight endpoint; preferred [95,172] is an authored 5/8 degree operating margin.",
+              "A prior unbound diagnostic used a 178 degree knee and ankle ceiling without independent anatomical support and put loaded stance at that boundary; this profile uses the defined 180 degree straight endpoint instead.",
+              "Support and swing ranges are identical because phase-specific Tarbosaurus evidence is unresolved.",
+              "The profile is a scalar sagittal guardrail; it does not model 6DoF joints, force, muscle capacity, or translated bones."
+            ],
+            "phase_transfer": "support guardrails blend C2 to swing guardrails over the existing 0.18 release and approach partition",
+            "schema": "eonwild.motion.v9.articulation-profile.v1",
+            "solver_scope": "scalar sagittal engineering guardrails; not a pelvis-relative hip JCS or 6DoF joint model; load/speed conditioning is not implemented",
+            "version": 1
+          },
+          "status": "PASS",
+          "tolerance_degrees": 0.01,
+          "witness": null
+        },
+        "root_motion": {
+          "classification": "reopened scalar engineering guardrails; not biological ROM or 6DoF joint validation",
+          "maximum_preferred_departure_degrees": 3.1094734147436895,
+          "maximum_violation_degrees": 0.0,
+          "observed_degrees": {
+            "support": {
+              "ankle_interior_degrees": [
+                103.5711642742179,
+                146.12720149678074
+              ],
+              "hip_sagittal_degrees": [
+                -33.78509765521396,
+                44.05901553787397
+              ],
+              "knee_interior_degrees": [
+                120.28998249186125,
+                177.9814060477164
+              ]
+            },
+            "swing": {
+              "ankle_interior_degrees": [
+                97.41143173416347,
+                148.9371446250595
+              ],
+              "hip_sagittal_degrees": [
+                -34.019732332463185,
+                71.98555257124345
+              ],
+              "knee_interior_degrees": [
+                71.02836778052912,
+                178.1094734147437
+              ]
+            }
+          },
+          "phase_sample_counts": {
+            "support": 370,
+            "swing": 224
+          },
+          "profile": {
+            "angle_conventions": {
+              "ankle_interior_degrees": "0 fully folded; 180 straight",
+              "hip_sagittal_degrees": "world sagittal thigh inclination from down: negative rearward; positive forward",
+              "knee_interior_degrees": "0 fully folded; 180 straight"
+            },
+            "classification": "engineering_guardrails_not_biological_rom",
+            "evidence": {
+              "limitations": [
+                "No measured Tarbosaurus joint range of motion or in-vivo loading evidence is available.",
+                "Hip hard [-45,80] retains the existing factory engineering interval; preferred [-35,75] is an authored 10/5 degree operating margin, not anatomical certification.",
+                "Knee hard [65,180] retains the existing 65 degree engineering floor and uses the scalar metric's straight endpoint; preferred [68,175] is an authored 3/5 degree operating margin.",
+                "Ankle hard [90,180] uses a comparative-model-informed lower engineering guardrail and the scalar metric's straight endpoint; preferred [95,172] is an authored 5/8 degree operating margin.",
+                "A prior unbound diagnostic used a 178 degree knee and ankle ceiling without independent anatomical support and put loaded stance at that boundary; this profile uses the defined 180 degree straight endpoint instead.",
+                "Support and swing ranges are identical because phase-specific Tarbosaurus evidence is unresolved.",
+                "The profile is a scalar sagittal guardrail; it does not model 6DoF joints, force, muscle capacity, or translated bones."
+              ],
+              "sources": [
+                {
+                  "citation": "Gatesy, Baeker and Hutchinson (2009), Constraint-based exclusion of limb poses for reconstructing theropod dinosaur locomotion",
+                  "locator": "https://www.rvc.ac.uk/Media/Default/Structure%20and%20Motion/Documents/23_000.pdf",
+                  "scope": "Comparative Tyrannosaurus rex MOR 555 model used geometric knee 30..180 and ankle 90..180 degree search intervals. This supports scalar coordinate sanity and the 180 degree straight endpoint; it is not measured Tarbosaurus ROM."
+                },
+                {
+                  "citation": "Eonwild Factory pre-existing gait engineering guardrails",
+                  "locator": "src/eonwild_motion/planning/airborne_gait.py",
+                  "scope": "Retains the existing global hip interval -45..80 degrees and knee minimum 65 degrees. Hip is a world thigh inclination, not a pelvis-relative anatomical joint coordinate."
+                },
+                {
+                  "citation": "Eonwild whole-cycle constrained and skinned candidate diagnostics",
+                  "locator": "tests/test_world_metatarsus_recovery.py",
+                  "scope": "Tests feasible-first scalar enforcement, phase-pure recovery and final-GLB verification mechanics. Synthetic and authored evidence do not establish biological ROM."
+                }
+              ],
+              "status": "comparative_anatomy_informed"
+            },
+            "evidence_status": "comparative_anatomy_informed",
+            "id": "heavy-biped.tarbosaurus-adult-walk.v1",
+            "limitations": [
+              "No measured Tarbosaurus joint range of motion or in-vivo loading evidence is available.",
+              "Hip hard [-45,80] retains the existing factory engineering interval; preferred [-35,75] is an authored 10/5 degree operating margin, not anatomical certification.",
+              "Knee hard [65,180] retains the existing 65 degree engineering floor and uses the scalar metric's straight endpoint; preferred [68,175] is an authored 3/5 degree operating margin.",
+              "Ankle hard [90,180] uses a comparative-model-informed lower engineering guardrail and the scalar metric's straight endpoint; preferred [95,172] is an authored 5/8 degree operating margin.",
+              "A prior unbound diagnostic used a 178 degree knee and ankle ceiling without independent anatomical support and put loaded stance at that boundary; this profile uses the defined 180 degree straight endpoint instead.",
+              "Support and swing ranges are identical because phase-specific Tarbosaurus evidence is unresolved.",
+              "The profile is a scalar sagittal guardrail; it does not model 6DoF joints, force, muscle capacity, or translated bones."
+            ],
+            "phase_transfer": "support guardrails blend C2 to swing guardrails over the existing 0.18 release and approach partition",
+            "schema": "eonwild.motion.v9.articulation-profile.v1",
+            "solver_scope": "scalar sagittal engineering guardrails; not a pelvis-relative hip JCS or 6DoF joint model; load/speed conditioning is not implemented",
+            "version": 1
+          },
+          "status": "PASS",
+          "tolerance_degrees": 0.01,
+          "witness": null
+        }
+      },
+      "cyclic_continuity_current_estimator_only": {
+        "in_place": {
+          "checks": {
+            "angular_velocity": true,
+            "linear_velocity": true
+          },
+          "classification": "second-order native-time derivatives of final serialized channels; endpoint closure alone is insufficient",
+          "limits": {
+            "angular_degrees_per_s": 10.0,
+            "linear_m_per_s": 0.001
+          },
+          "maximum_angular_velocity_seam_degrees_per_s": 2.2593102841713217,
+          "maximum_linear_velocity_seam_m_per_s": 1.2392918987603488e-06,
+          "peak_witnesses": {
+            "angular": {
+              "bone": "Bone_010",
+              "incoming": [
+                0.9937786317611368,
+                -2.586349577712544e-07,
+                -0.2143662862128286
+              ],
+              "node": 49,
+              "outgoing": [
+                0.9552322183866351,
+                7.551050437875896e-08,
+                -0.20605434032030487
+              ]
+            },
+            "linear": {
+              "bone": "Bone_001",
+              "incoming": [
+                -0.04649533464341041,
+                0.021960077313672617,
+                -0.04327075653365081
+              ],
+              "node": 73,
+              "outgoing": [
+                -0.04649490988287884,
+                0.02196048372501657,
+                -0.04326966554661117
+              ]
+            }
+          },
+          "status": "PASS"
+        },
+        "root_motion": {
+          "checks": {
+            "angular_velocity": true,
+            "linear_velocity": true
+          },
+          "classification": "second-order native-time derivatives of final serialized channels; endpoint closure alone is insufficient",
+          "limits": {
+            "angular_degrees_per_s": 10.0,
+            "linear_m_per_s": 0.001
+          },
+          "maximum_angular_velocity_seam_degrees_per_s": 2.2593102841713217,
+          "maximum_linear_velocity_seam_m_per_s": 2.0295017618752294e-05,
+          "peak_witnesses": {
+            "angular": {
+              "bone": "Bone_010",
+              "incoming": [
+                0.9937786317611368,
+                -2.586349577712544e-07,
+                -0.2143662862128286
+              ],
+              "node": 49,
+              "outgoing": [
+                0.9552322183866351,
+                7.551050437875896e-08,
+                -0.20605434032030487
+              ]
+            },
+            "linear": {
+              "bone": "Bone_000",
+              "incoming": [
+                0.02497543605485111,
+                -0.0,
+                0.6410149750415973
+              ],
+              "node": 74,
+              "outgoing": [
+                0.024975556567845163,
+                0.0,
+                0.6410352697014063
+              ]
+            }
+          },
+          "status": "PASS"
+        }
+      },
+      "in_place_skinned_contact": {
+        "authority": {
+          "per_foot": {
+            "left": {
+              "cyclic_context": "loaded phases intersecting middle of three root-unwrapped cycles",
+              "maximum_skin_seam_error_m": 4.443059973708341e-16,
+              "phases": [
+                {
+                  "contact_centroid_m": [
+                    -0.2703098618851778,
+                    0.09857886775602233,
+                    2.283830934716232
+                  ],
+                  "drift_m": 2.4440044884013284e-05,
+                  "end_frame": 183,
+                  "end_time_s": 1.5208784341812134,
+                  "max_penetration_m": 0.0,
+                  "max_persistent_velocity_mps": 4.321209941386338e-05,
+                  "minimum_gap_m": 0.000137175669169029,
+                  "persistent_point_total": 549,
+                  "print_depth_m": 0.0,
+                  "reasons": [],
+                  "start_frame": 0,
+                  "start_time_s": 0.0,
+                  "substrate": "hard",
+                  "unknown_pairs": 0,
+                  "verdict": "PASS",
+                  "yaw_deg": 1.0833173112455685e-05
+                }
+              ],
+              "reasons": [],
+              "verdict": "PASS"
+            },
+            "right": {
+              "cyclic_context": "loaded phases intersecting middle of three root-unwrapped cycles",
+              "maximum_skin_seam_error_m": 4.460365043975677e-16,
+              "phases": [
+                {
+                  "contact_centroid_m": [
+                    0.37965013587423596,
+                    0.07440824272129523,
+                    0.9289421835516751
+                  ],
+                  "drift_m": 3.551969560752651e-05,
+                  "end_frame": 183,
+                  "end_time_s": 0.29087838530540466,
+                  "max_penetration_m": 0.0,
+                  "max_persistent_velocity_mps": 8.714932708000539e-05,
+                  "minimum_gap_m": 0.00013946001377362384,
+                  "persistent_point_total": 1098,
+                  "print_depth_m": 0.0,
+                  "reasons": [],
+                  "start_frame": 0,
+                  "start_time_s": -1.2300000190734863,
+                  "substrate": "hard",
+                  "unknown_pairs": 0,
+                  "verdict": "PASS",
+                  "yaw_deg": 6.502146373618258e-06
+                },
+                {
+                  "contact_centroid_m": [
+                    0.48573085742114513,
+                    0.07440824272129523,
+                    3.6516723911853606
+                  ],
+                  "drift_m": 3.551969560947751e-05,
+                  "end_frame": 183,
+                  "end_time_s": 2.7508784234523773,
+                  "max_penetration_m": 0.0,
+                  "max_persistent_velocity_mps": 8.714932708000539e-05,
+                  "minimum_gap_m": 0.00013946001377362384,
+                  "persistent_point_total": 1098,
+                  "print_depth_m": 0.0,
+                  "reasons": [],
+                  "start_frame": 0,
+                  "start_time_s": 1.2300000190734863,
+                  "substrate": "hard",
+                  "unknown_pairs": 0,
+                  "verdict": "PASS",
+                  "yaw_deg": 6.502146373618258e-06
+                }
+              ],
+              "reasons": [],
+              "verdict": "PASS"
+            }
+          }
+        },
+        "classification": "final serialized skin, fixed floor, full multi-influence weights, unchanged engineering thresholds",
+        "ground_level_m": -0.010315558674016406,
+        "maximum_penetration_m": 0.0,
+        "maximum_stance_gap_m": 0.0001396357947536543,
+        "sample_count": 297,
+        "verdict": "PASS"
+      },
+      "rotation_rates": {
+        "in_place": {
+          "classification": "serialized per-channel rotation rate; not joint torque or muscle capacity",
+          "limit_degrees_per_s": 1200.0,
+          "maximum_degrees_per_s": 629.0447242234051,
+          "peak_witness": {
+            "bone": "Bone_010",
+            "node": 49,
+            "quaternions_xyzw": [
+              [
+                0.5174215384007638,
+                0.036097854013242434,
+                -0.1349816606791206,
+                0.844246319396734
+              ],
+              [
+                0.5541729435587253,
+                0.0350185117772931,
+                -0.14456913147972933,
+                0.8190029418039708
+              ]
+            ],
+            "times_s": [
+              1.6870945692062378,
+              1.69540536403656
+            ]
+          },
+          "status": "PASS"
+        },
+        "root_motion": {
+          "classification": "serialized per-channel rotation rate; not joint torque or muscle capacity",
+          "limit_degrees_per_s": 1200.0,
+          "maximum_degrees_per_s": 629.0447242234051,
+          "peak_witness": {
+            "bone": "Bone_010",
+            "node": 49,
+            "quaternions_xyzw": [
+              [
+                0.5174215384007638,
+                0.036097854013242434,
+                -0.1349816606791206,
+                0.844246319396734
+              ],
+              [
+                0.5541729435587253,
+                0.0350185117772931,
+                -0.14456913147972933,
+                0.8190029418039708
+              ]
+            ],
+            "times_s": [
+              1.6870945692062378,
+              1.69540536403656
+            ]
+          },
+          "status": "PASS"
+        }
+      },
+      "skinned_contact": {
+        "authority": {
+          "per_foot": {
+            "left": {
+              "cyclic_context": "loaded phases intersecting middle of three root-unwrapped cycles",
+              "maximum_skin_seam_error_m": 2.6654386077811047e-15,
+              "phases": [
+                {
+                  "contact_centroid_m": [
+                    -0.27030986075828095,
+                    0.09857886775602233,
+                    2.2838308577866457
+                  ],
+                  "drift_m": 2.0795034216373607e-05,
+                  "end_frame": 183,
+                  "end_time_s": 1.5208784341812134,
+                  "max_penetration_m": 0.0,
+                  "max_persistent_velocity_mps": 4.274282656690425e-05,
+                  "minimum_gap_m": 0.000137175669169029,
+                  "persistent_point_total": 549,
+                  "print_depth_m": 0.0,
+                  "reasons": [],
+                  "start_frame": 0,
+                  "start_time_s": 0.0,
+                  "substrate": "hard",
+                  "unknown_pairs": 0,
+                  "verdict": "PASS",
+                  "yaw_deg": 1.079947731352768e-05
+                }
+              ],
+              "reasons": [],
+              "verdict": "PASS"
+            },
+            "right": {
+              "cyclic_context": "loaded phases intersecting middle of three root-unwrapped cycles",
+              "maximum_skin_seam_error_m": 1.3329179921125024e-15,
+              "phases": [
+                {
+                  "contact_centroid_m": [
+                    0.379650133065598,
+                    0.07440824272129523,
+                    0.9289421016840644
+                  ],
+                  "drift_m": 2.9255313904480317e-05,
+                  "end_frame": 183,
+                  "end_time_s": 0.29087838530540466,
+                  "max_penetration_m": 0.0,
+                  "max_persistent_velocity_mps": 5.157038449698856e-05,
+                  "minimum_gap_m": 0.00013946001377362384,
+                  "persistent_point_total": 1098,
+                  "print_depth_m": 0.0,
+                  "reasons": [],
+                  "start_frame": 0,
+                  "start_time_s": -1.2300000190734863,
+                  "substrate": "hard",
+                  "unknown_pairs": 0,
+                  "verdict": "PASS",
+                  "yaw_deg": 6.445849674396954e-06
+                },
+                {
+                  "contact_centroid_m": [
+                    0.4857308544435376,
+                    0.07440824272129523,
+                    3.651672422106318
+                  ],
+                  "drift_m": 2.9255313903031268e-05,
+                  "end_frame": 183,
+                  "end_time_s": 2.7508784234523773,
+                  "max_penetration_m": 0.0,
+                  "max_persistent_velocity_mps": 5.157038449698856e-05,
+                  "minimum_gap_m": 0.00013946001377362384,
+                  "persistent_point_total": 1098,
+                  "print_depth_m": 0.0,
+                  "reasons": [],
+                  "start_frame": 0,
+                  "start_time_s": 1.2300000190734863,
+                  "substrate": "hard",
+                  "unknown_pairs": 0,
+                  "verdict": "PASS",
+                  "yaw_deg": 6.3890569402604e-06
+                }
+              ],
+              "reasons": [],
+              "verdict": "PASS"
+            }
+          }
+        },
+        "classification": "final serialized skin, fixed floor, full multi-influence weights, unchanged engineering thresholds",
+        "ground_level_m": -0.010315558674016406,
+        "maximum_penetration_m": 0.0,
+        "maximum_stance_gap_m": 0.0001396357947536543,
+        "sample_count": 297,
+        "verdict": "PASS"
+      },
+      "solver_feasibility": {
+        "checks": {
+          "max_foot_target_residual_m": true,
+          "max_unreachable_extension_m": true,
+          "maximum_articulation_envelope_violation_degrees": true,
+          "maximum_solved_foot_pitch_velocity_degrees_per_s": true
+        },
+        "classification": "engineering feasibility only; missing evidence is a failure",
+        "limits": {
+          "max_foot_target_residual_m": 0.001,
+          "max_unreachable_extension_m": 0.001,
+          "maximum_articulation_envelope_violation_degrees": 0.01,
+          "maximum_solved_foot_pitch_velocity_degrees_per_s": 600.0
+        },
+        "status": "PASS",
+        "values": {
+          "max_foot_target_residual_m": 3.269648559757655e-07,
+          "max_unreachable_extension_m": 0.0,
+          "maximum_articulation_envelope_violation_degrees": 0.0,
+          "maximum_solved_foot_pitch_velocity_degrees_per_s": 470.54263009925984
+        }
+      },
+      "technical_status": "PASS"
+    }
+  }
+}

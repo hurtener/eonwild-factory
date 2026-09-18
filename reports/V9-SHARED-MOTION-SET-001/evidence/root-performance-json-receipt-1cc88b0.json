@@ -1,0 +1,22 @@
+{
+  "P0": 0,
+  "P1": 0,
+  "actual_package_verification": "Independent public verification owned by join_feasibility; not duplicated in this root narrow test result",
+  "diff_sha256": "cfc5c2812698348100415a3f74d0de5ce48057b8c7ceb36fd125f8af498ed2ee",
+  "focused_tests": {
+    "command": "PYTHONPATH=src /Volumes/m2-extended-disk/Repos/eonwild-factory/.venv/bin/python -m pytest -q tests/test_motion_set.py -k 'package_local_snapshots_rebuild_effective_performance or transition_plan_is_bound_to_packaged_program_snapshot'",
+    "exit_code": 0,
+    "result": "3 passed, 26 deselected in 2.70s"
+  },
+  "full_suite": "Not repeated; prior complete suite remains bound to 0330d8a",
+  "head": "1cc88b0b1669764421da1ef11cd48aa6ca9bbd08",
+  "initial_invocation": {
+    "exit_code": 2,
+    "reason": "Runner omitted PYTHONPATH=src and resolved editable PRIMARY checkout; collection failed with missing motion_set module. Corrected invocation explicitly selected reviewed source."
+  },
+  "parent": "62e4b60a399672fc68f9817aeabc6bff8c300912",
+  "schema": "eonwild.motion.root-narrow-review.v1",
+  "scope": "Diff-only saved-JSON performance provenance closure; no new whole-branch review",
+  "source_clean": true,
+  "tree": "a33800102d942652841d4863477f2e8d8f8866a7"
+}

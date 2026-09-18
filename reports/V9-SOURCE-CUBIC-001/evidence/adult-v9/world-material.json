@@ -1,0 +1,191 @@
+{
+  "schema": "eonwild.motion.source-cubic-world-material-checkpoint.v1",
+  "classification": "Independent exact serialized adult endpoint validation; not interval, visual, biological, Unity, or production acceptance.",
+  "reader": {
+    "head": "170617beda89b1836aabebd983b7891549e03d65",
+    "emitted_tangent_sha256": "6b4efcf24d47211835a25d1b0397cc6fdd8257249af272b7438101960e9dd17c"
+  },
+  "checkpoint": {
+    "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/source-cubic-adult-v9-67a6756-emission-checkpoint",
+    "generator_source_observation": {
+      "commit": "67a675686475e18c28e3900e519272fbb6f65320",
+      "classification": "Pinned committed generator; all checkpoint engine file hashes checked against exact committed blobs.",
+      "replay_dependency": false
+    },
+    "manifest_sha256": "bf2d245c4e6aff13597c39727322327f3c3bb804627a7e4e16574dad9d0db010",
+    "files": {
+      "cubic-midpoint-plan.json": "d10fa79685455b52e8447ee51b1bca175a5f73dd39bbcf362d1d313fc219d977",
+      "in_place.glb": "a38a0ae1bddcd6cc81987ca655ef09b55030801d3ba1872f645d26eafe63c5e5",
+      "plan.json": "d5758ebd313b93b8de1467a9ea103354a47bc60df317fb29fef4cecffdf9f758",
+      "root_motion.glb": "5a3d7689ac2ed07ff88eaefe5333faf737da487a0be834bbeafebf895b7411dd",
+      "tangent-estimate.json": "8ed5b9ea301e303bbc76dacb6da2830d32033d6bfdb8072893ae946e4f7eaaf5"
+    },
+    "recipe_sha256": "f55da91847dc63489f9655cfc3641bee665bf8ce6122755a61748d98fabf3ccd",
+    "inputs": {
+      "animal": "53ffeba22e24a87504d3dcc310bedacf6db94d60a25ffe56ad028b03f41e849d",
+      "articulation_profile": "c1206143387ad4d1084a413ee031018f5a61a8e0539ef8256c6bba74a0f4bc6a",
+      "contact_profile": "61e0351fe9f7170ddce7f0b83a8f0379d119349d3c392ffec43e544adb115db5",
+      "performance_profile": "e133819dddf19bd224ddec7419687208e01abf8f3906fa147837813710dc2dfc",
+      "program_profile": "271ccb833a8913d3dc6bd8281e798e54b9c7bebad2080136245cb7b5e5afa725",
+      "rig": "c3de770bf7dcc68219a28fb9851e9b75f3d3eebe2c2c0c7deb0078850100fd7e",
+      "source": "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f"
+    },
+    "all_manifest_file_engine_and_input_hashes_verified": true
+  },
+  "root_motor": {
+    "authority": "Exact difference between serialized root-motion and in-place root-node world tangents at each endpoint; plan average is diagnostic only.",
+    "declared_forward_axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "plan_cycle_distance_m": 2.741010700677974,
+    "plan_average_forward_speed_m_per_s": 1.114231992145518,
+    "endpoints": {
+      "incoming": {
+        "velocity_m_per_s": [
+          -2.995148253962817e-15,
+          1.9168948825362028e-13,
+          1.1142320003665425
+        ],
+        "forward_projection_m_per_s": 1.1142320003665425,
+        "off_axis_m_per_s": 1.9171288642133068e-13,
+        "difference_from_plan_average_forward_speed_m_per_s": 8.221024527799159e-09
+      },
+      "outgoing": {
+        "velocity_m_per_s": [
+          2.995148253962817e-15,
+          -1.9168948825362028e-13,
+          1.1142320003665425
+        ],
+        "forward_projection_m_per_s": 1.1142320003665425,
+        "off_axis_m_per_s": 1.9171288642133068e-13,
+        "difference_from_plan_average_forward_speed_m_per_s": 8.221024527799159e-09
+      }
+    }
+  },
+  "modes": {
+    "root_motion": {
+      "frame_treatment": "serialized root-motion world velocity; no added motor",
+      "timeline": {
+        "keys": 297,
+        "start_s": 0.0,
+        "end_s": 2.4600000381469727,
+        "incoming_neighbor_s": 2.4516892433166504,
+        "outgoing_neighbor_s": 0.008310810662806034
+      },
+      "world_joints": {
+        "count": 75,
+        "ordered_labels_sha256": "61553a247d4328db636ce63e0b00f9eb48148ac8fe7c92978ef02e9fbd76b775",
+        "incoming_float64_sha256": "f02cf001fa11408224f12c17656cfbfb2d5e39536f58ff2a5f5f6eaa4e2af88b",
+        "outgoing_float64_sha256": "e00d6c1d6b0dafca062a4a20e1a078ce66af99071e860ec4951e6b1bc9891043",
+        "maximum_velocity_difference_m_per_s": 0.00027704295087015493,
+        "witness": {
+          "index": 49,
+          "label": "Bone_010",
+          "incoming_m_per_s": [
+            -0.08146125401613417,
+            0.08937860288271876,
+            1.3954295382900168
+          ],
+          "outgoing_m_per_s": [
+            -0.08145925804923626,
+            0.08916643371387784,
+            1.395251400544055
+          ],
+          "difference_m_per_s": 0.00027704295087015493
+        },
+        "status_against_1mm_per_s": "PASS"
+      },
+      "ordered_full_foot_material": {
+        "count": 2981,
+        "ordered_labels_sha256": "1a533419f5412b131e44a99a1c1e86a707cd3a581951f0057075ab9f177e6f89",
+        "incoming_float64_sha256": "7debc7a5cd8314c1c586af5046b7c8f2a3e4eda1ff60e7c5c7e2b77608d087b1",
+        "outgoing_float64_sha256": "91faab924c15a490f1d7deba56dadd9587e79626c80498ef204d1127ea3d4314",
+        "maximum_velocity_difference_m_per_s": 0.0002048590037319076,
+        "witness": {
+          "index": 9,
+          "label": "left:sole:vertex-48940",
+          "incoming_m_per_s": [
+            9.049888215771219e-07,
+            0.00019081847480934656,
+            -6.397779748898949e-05
+          ],
+          "outgoing_m_per_s": [
+            1.0263272424627239e-06,
+            -3.2128192461351607e-06,
+            1.7417096163785616e-06
+          ],
+          "difference_m_per_s": 0.0002048590037319076
+        },
+        "status_against_1mm_per_s": "PASS"
+      }
+    },
+    "in_place": {
+      "frame_treatment": "serialized in-place world velocity plus exact root-motion minus in-place root velocity at each endpoint",
+      "timeline": {
+        "keys": 297,
+        "start_s": 0.0,
+        "end_s": 2.4600000381469727,
+        "incoming_neighbor_s": 2.4516892433166504,
+        "outgoing_neighbor_s": 0.008310810662806034
+      },
+      "world_joints": {
+        "count": 75,
+        "ordered_labels_sha256": "61553a247d4328db636ce63e0b00f9eb48148ac8fe7c92978ef02e9fbd76b775",
+        "incoming_float64_sha256": "75a1d8ffb759c0182286d6bd0396ff64cb7c2deee7ea23bdbbdcf4164bb96a6e",
+        "outgoing_float64_sha256": "f85a7b31b2e1480172dc0c84e6a3450705e637d4d51b786908ba66968a5abe3d",
+        "maximum_velocity_difference_m_per_s": 0.00027704295087030835,
+        "witness": {
+          "index": 49,
+          "label": "Bone_010",
+          "incoming_m_per_s": [
+            -0.08146125401613417,
+            0.08937860288271877,
+            1.395429538290017
+          ],
+          "outgoing_m_per_s": [
+            -0.08145925804923626,
+            0.08916643371387784,
+            1.395251400544055
+          ],
+          "difference_m_per_s": 0.00027704295087030835
+        },
+        "status_against_1mm_per_s": "PASS"
+      },
+      "ordered_full_foot_material": {
+        "count": 2981,
+        "ordered_labels_sha256": "1a533419f5412b131e44a99a1c1e86a707cd3a581951f0057075ab9f177e6f89",
+        "incoming_float64_sha256": "8ce3e8f0147ff72f3cc4f9f7061e8cd546053abb3788c519a600874b186a46f4",
+        "outgoing_float64_sha256": "d51e8acae50580ad19319b5ef7780417c3affb115cacb30766598f3a6bc26939",
+        "maximum_velocity_difference_m_per_s": 0.00020485900373186193,
+        "witness": {
+          "index": 9,
+          "label": "left:sole:vertex-48940",
+          "incoming_m_per_s": [
+            9.049888215795757e-07,
+            0.00019081847480935605,
+            -6.397779748867904e-05
+          ],
+          "outgoing_m_per_s": [
+            1.0263272424602698e-06,
+            -3.2128192461307663e-06,
+            1.7417096165317503e-06
+          ],
+          "difference_m_per_s": 0.00020485900373186193
+        },
+        "status_against_1mm_per_s": "PASS"
+      }
+    }
+  },
+  "cross_mode_after_exact_motor_reconstruction_maximum_m_per_s": {
+    "world_incoming": 1.1105699151271772e-15,
+    "world_outgoing": 6.661338147750939e-16,
+    "skin_incoming": 9.374618737733808e-16,
+    "skin_outgoing": 7.234287533999057e-16
+  },
+  "limits": {
+    "linear_velocity_m_per_s": 0.001,
+    "scope": "World node origins under exact FK and ordered sole-plus-toe LBS material points selected by the hash-bound contact profile. Does not validate arbitrary skin vertices, intervals, contact, ROM, visual quality, or whole-package gates."
+  }
+}

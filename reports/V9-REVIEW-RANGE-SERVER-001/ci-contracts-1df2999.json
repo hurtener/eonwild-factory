@@ -1,0 +1,23 @@
+{
+  "classification": "Hosted full contract-suite evidence; candidate, native review and Unity acceptance remain separate",
+  "repository": "hurtener/eonwild-factory",
+  "pull_request": 2,
+  "run_id": 34224694775,
+  "job_id": 102055937352,
+  "job_url": "https://github.com/hurtener/eonwild-factory/actions/runs/34224694775/job/102055937352",
+  "pull_request_head": "1df29998502299e17e45d52fa315918d4a402826",
+  "tested_pull_merge_head": "7527742939a11d2d3f0c1fb213de2c5d5f250ed7",
+  "tested_tree": "e97a02ece5bec84edbcfc8609b78b56b2204a3b6",
+  "tested_tree_equals_pull_request_head_tree": true,
+  "conclusion": "success",
+  "passed_tests": 907,
+  "passed_subtests": 21,
+  "duration_seconds": 437.40,
+  "python_version": "3.13.15",
+  "runner_architecture": "macOS arm64",
+  "khronos_cli_smoke": "PASS 2.0.0-dev.3.10",
+  "job_completed_at": "2026-09-08T12:20:44Z",
+  "log_file": "ci-contracts-1df2999.log",
+  "log_sha256": "9c34bf378e9d3211521dc35a4db3bbd6fc88def51fbe0a7828b433ffd08fd435",
+  "retrieval_note": "gh run view refused logs while the overall workflow was running; the completed job log was then retrieved through the GitHub jobs logs API. The initial empty file was replaced by the complete log."
+}

@@ -1,0 +1,131 @@
+{
+  "captured_at": "2026-09-08T20:06:00Z",
+  "classification": "Read-only point-in-time triage. Candidate exit 2 means governed technical BLOCKED, not infrastructure failure. Cancellation is not a join verdict.",
+  "jobs": {
+    "contracts": {
+      "conclusion": "SUCCESS",
+      "job_id": 102201858594
+    },
+    "fast_recovery": {
+      "cause": {
+        "cyclic_angular_limit_deg_s": 10.0,
+        "cyclic_angular_velocity_deg_s": 6.683921667445959,
+        "cyclic_linear_limit_m_s": 0.001,
+        "cyclic_linear_velocity_m_s": 0.005406218835601299,
+        "failure_paths": [
+          "cyclic_continuity.in_place",
+          "cyclic_continuity.root_motion"
+        ],
+        "feasibility_status": "PASS",
+        "integrity": "PASS",
+        "solved_max_foot_pitch_rate_deg_s": 575.5990272512696,
+        "solved_max_foot_pitch_rate_limit_deg_s": 600.0,
+        "technical_status": "BLOCKED"
+      },
+      "conclusion": "FAILURE",
+      "job_id": 102201859202,
+      "name": "candidate-acceptance (tarbosaurus-pin-552-1-adult-fast-walk-recovery.v3)"
+    },
+    "native_first": {
+      "cause": {
+        "candidate_integrity": "PASS",
+        "candidate_technical_status": "BLOCKED",
+        "classification": "technical BLOCKED propagated after successful render; not a Blender/render failure",
+        "compile_step": "SUCCESS",
+        "render_status": "PASS",
+        "review_exit_code": 2
+      },
+      "conclusion": "FAILURE",
+      "job_id": 102209969265,
+      "name": "native-review (tarbosaurus-pin-552-1-adult-walk.v3)"
+    },
+    "sprint": {
+      "cause": {
+        "cyclic_angular_limit_deg_s": 10.0,
+        "cyclic_angular_velocity_deg_s": 5.440881631630531,
+        "cyclic_linear_limit_m_s": 0.001,
+        "cyclic_linear_velocity_m_s": 0.0703895060257232,
+        "failure_paths": [
+          "cyclic_continuity.in_place",
+          "cyclic_continuity.root_motion"
+        ],
+        "feasibility_status": "PASS",
+        "integrity": "PASS",
+        "solved_max_foot_pitch_rate_deg_s": 501.14825074514727,
+        "solved_max_foot_pitch_rate_limit_deg_s": 600.0,
+        "technical_status": "BLOCKED"
+      },
+      "conclusion": "FAILURE",
+      "job_id": 102201859340,
+      "name": "candidate-acceptance (sprint.v4)"
+    },
+    "walk": {
+      "cause": {
+        "cyclic_angular_limit_deg_s": 10.0,
+        "cyclic_angular_velocity_deg_s": 3.1776931285712147,
+        "cyclic_linear_limit_m_s": 0.001,
+        "cyclic_linear_velocity_m_s": 0.002281508590440414,
+        "failure_paths": [
+          "cyclic_continuity.in_place",
+          "cyclic_continuity.root_motion"
+        ],
+        "feasibility_status": "PASS",
+        "integrity": "PASS",
+        "solved_max_foot_pitch_rate_deg_s": 184.44517757760056,
+        "solved_max_foot_pitch_rate_limit_deg_s": 600.0,
+        "technical_status": "BLOCKED"
+      },
+      "conclusion": "FAILURE",
+      "job_id": 102201859278,
+      "name": "candidate-acceptance (walk.v3)"
+    },
+    "walk_pair": {
+      "cause": {
+        "artifact_id": 10074306535,
+        "artifact_uploaded_bytes": 255493685,
+        "join_result": "NOT_REACHED",
+        "start_package": {
+          "integrity": "PASS",
+          "technical_status": "PASS"
+        },
+        "steady_package": {
+          "integrity": "PASS",
+          "technical_status": "BLOCKED"
+        },
+        "stop_package": {
+          "integrity": "PASS",
+          "technical_status": "PASS"
+        },
+        "workflow_timeout_minutes": 45
+      },
+      "conclusion": "CANCELLED",
+      "job_id": 102201858850,
+      "name": "transition-pairs (walk, walk.v3)"
+    }
+  },
+  "pr": {
+    "number": 2,
+    "url": "https://github.com/hurtener/eonwild-factory/pull/2"
+  },
+  "published_head": "945b189340f9d461373a1309bd06a7a7c3bcea8d",
+  "raw_log_sha256": {
+    "fast_recovery": "d7b6c954b720748566ec449c581484fc3d32b1dd88c659e02af0ae6c1ba4ef2e",
+    "native_first": "2fc9f6022a33b9d40afdd3ac4e28a746d0f46943416957c3d358643f77e97bf2",
+    "sprint": "e58052114a50040ef088d3573b50e2dc21babfa21bd2dc6b8467f1a7fa87f3ea",
+    "walk": "d1c9884233f28810205c237e11ef6e7e47acbaaed49895acc8345f150cbe92a3",
+    "walk_pair": "4a2e74bc22f043908ddd067d96b733f7107767df5ed22f457f2932474b688261"
+  },
+  "runs": {
+    "factory": {
+      "run_id": 34267874113,
+      "status_at_capture": "queued (matrix jobs still active)",
+      "url": "https://github.com/hurtener/eonwild-factory/actions/runs/34267874113"
+    },
+    "source_evidence": {
+      "conclusion": "SUCCESS",
+      "job_id": 102201724087,
+      "run_id": 34267874117
+    }
+  },
+  "schema": "eonwild.motion.ci-triage.v1"
+}

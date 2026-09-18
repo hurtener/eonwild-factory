@@ -1,0 +1,128 @@
+{
+  "schema": "eonwild.motion.host-axial-four-phase-stills.v1",
+  "captured_utc": "2026-09-08T11:09:34.444568+00:00",
+  "source_code": "21dc78042a4580104784ff28a6b23c7b7cf0c92f",
+  "package_manifest_sha256": "364abd8b1bc510fb8c0f9f7037f06882eb7b7b25ca4d5cb483cf6ae8e516ebea",
+  "views": {
+    "front-body": {
+      "render_receipt_sha256": "3aa53b15750b7304bbee0c2519cb51b23544f770ee40e20c9e942534a7a28ce4",
+      "camera_matches_retained_v8": true,
+      "actually_inspected_frames": [
+        {
+          "index": 0,
+          "source_time_s": 0.1476,
+          "blender_frame": 17.712,
+          "camera_translation_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "file": "frames/00000.png",
+          "sha256": "953702595a27e0c0cb43dfd4f961f151998b9f394d4bd03a3135a920e097649a"
+        },
+        {
+          "index": 1,
+          "source_time_s": 0.7626,
+          "blender_frame": 91.512,
+          "camera_translation_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "file": "frames/00001.png",
+          "sha256": "11d0fb950954dd95e07492bcfaa733d3a0e64cca21f8b4c260b86ac5194f2e37"
+        },
+        {
+          "index": 2,
+          "source_time_s": 1.3776,
+          "blender_frame": 165.31199999999998,
+          "camera_translation_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "file": "frames/00002.png",
+          "sha256": "3521f93467a2080fd789a5ad1ba44c4c2081ea8c5dd3c345632b131e826d7406"
+        },
+        {
+          "index": 3,
+          "source_time_s": 1.9926,
+          "blender_frame": 239.112,
+          "camera_translation_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "file": "frames/00003.png",
+          "sha256": "7f6d19009c6915f4d2c6d1d97ec8ef1feb89c5954fa6fe1987124ee24225807a"
+        }
+      ]
+    },
+    "three-quarter-body": {
+      "render_receipt_sha256": "5bc0f408568b0800314c3e39690626afbdfdbdf74bc0be7c9e3f8d8adbe97f90",
+      "camera_matches_retained_v8": true,
+      "actually_inspected_frames": [
+        {
+          "index": 0,
+          "source_time_s": 0.1476,
+          "blender_frame": 17.712,
+          "camera_translation_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "file": "frames/00000.png",
+          "sha256": "0c44e10c2654dd3c83b91357501803c49770c0cdff9037162f8ef0e340955505"
+        },
+        {
+          "index": 1,
+          "source_time_s": 0.7626,
+          "blender_frame": 91.512,
+          "camera_translation_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "file": "frames/00001.png",
+          "sha256": "59c78be7fde3f5c1886be259d6c6045ec479bd97dc6027692752deee4ad669e8"
+        },
+        {
+          "index": 2,
+          "source_time_s": 1.3776,
+          "blender_frame": 165.31199999999998,
+          "camera_translation_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "file": "frames/00002.png",
+          "sha256": "f0e1d2a40f1dd8b34e066eaec557d663b7af24bdd6ea01ad06f0bc4019b3cdb9"
+        },
+        {
+          "index": 3,
+          "source_time_s": 1.9926,
+          "blender_frame": 239.112,
+          "camera_translation_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "file": "frames/00003.png",
+          "sha256": "8298c8e745b7854522c021d8cc507d5f5ff59bb276c3e2a98cc0a46f7db6dc35"
+        }
+      ]
+    }
+  },
+  "observations": [
+    "At both single-support midpoint poses the chest and head shift toward the planted foot in front view.",
+    "Three-quarter silhouettes retain both open recovery ankles with no visible gross leg inversion or mesh rupture in these eight inspected poses.",
+    "The tail changes phase substantially; four isolated poses cannot establish whether its native-time sweep is appropriate.",
+    "The uncorrected modeling jaw remains visibly open in this body-only diagnostic. The separately closed neutral-jaw stage must be combined for final films."
+  ],
+  "decision": "BODY_TIMING_DIRECTION_SUPPORTED_BY_POSES; COMBINED_NATIVE_SEQUENCE_REVIEW_PENDING",
+  "native_speed_playback": "NOT_RUN",
+  "full_cycle_frame_review": "NOT_RUN",
+  "visual_approval": false,
+  "biological_validation": false,
+  "unity": "NOT_RUN"
+}

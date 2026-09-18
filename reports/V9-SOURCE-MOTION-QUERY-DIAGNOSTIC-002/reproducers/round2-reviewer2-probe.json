@@ -1,0 +1,81 @@
+{
+  "directional_event_room": {
+    "0.352": {
+      "left_limit": {
+        "result": "SourceMotionUnavailable",
+        "status": "BRANCH_OR_CONVERGENCE_UNAVAILABLE",
+        "step_sizes_s": null
+      },
+      "right_limit": {
+        "result": "SourceMotionRawProbe",
+        "status": "RAW_NUMERICAL_PROBE_ONLY",
+        "step_sizes_s": [
+          1.00000015212931e-10,
+          5.00000076064655e-11,
+          2.500000380323275e-11
+        ]
+      }
+    },
+    "0.8": {
+      "left_limit": {
+        "result": "SourceMotionUnavailable",
+        "status": "BRANCH_OR_CONVERGENCE_UNAVAILABLE",
+        "step_sizes_s": null
+      },
+      "right_limit": {
+        "result": "SourceMotionUnavailable",
+        "status": "BRANCH_OR_CONVERGENCE_UNAVAILABLE",
+        "step_sizes_s": null
+      }
+    }
+  },
+  "overflow_inputs": {
+    "derivative.initial_h_s": {
+      "exception": "OverflowError",
+      "message": "int too large to convert to float"
+    },
+    "plan.body_height_m": {
+      "exception": "OverflowError",
+      "message": "int too large to convert to float"
+    },
+    "plan.duration_s": {
+      "exception": "OverflowError",
+      "message": "int too large to convert to float"
+    },
+    "plan.same_foot_cycle_s": {
+      "exception": "OverflowError",
+      "message": "int too large to convert to float"
+    },
+    "raw_probe.initial_h_s": {
+      "exception": "OverflowError",
+      "message": "int too large to convert to float"
+    },
+    "target_offset_m.evaluate": {
+      "exception": "OverflowError",
+      "message": "int too large to convert to float"
+    }
+  },
+  "reviewed_head": "270d4b2c9bdc13998cec2a3e816cfca5b4c2e362",
+  "transition_contract_mutations": {
+    "entry_speed_mps": {
+      "result": "SourceMotionQuery",
+      "status": null,
+      "step_sizes_s": null
+    },
+    "interface_schema": {
+      "result": "SourceMotionQuery",
+      "status": null,
+      "step_sizes_s": null
+    },
+    "root_distance_m": {
+      "result": "SourceMotionQuery",
+      "status": null,
+      "step_sizes_s": null
+    },
+    "steady_phase_s": {
+      "result": "SourceMotionQuery",
+      "status": null,
+      "step_sizes_s": null
+    }
+  }
+}

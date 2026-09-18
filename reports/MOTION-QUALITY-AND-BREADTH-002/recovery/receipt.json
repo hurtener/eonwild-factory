@@ -1,0 +1,54 @@
+{
+  "source_commit": "a1d1ee789a7ebfbe490797a16c76211ae1b1f287",
+  "compressed_part_sha256": "1b2c4beeede55a85322ba3dc5bb7812cd0b1abfe5724830fdd4442a88052e07d",
+  "prefix_sha256": "dc6efdedb6a74e0029bd8be9c03b792f1516b2955a495653870dc411b8499e02",
+  "prefix_bytes": 37078,
+  "complete_compressed_stream": false,
+  "available_parts": [
+    0
+  ],
+  "missing_parts": [
+    1,
+    2,
+    3
+  ],
+  "materialized": [
+    {
+      "path": "catalog/programs/heavy-biped.run.v3.json",
+      "git_blob": "181898777aa17c62f4887ffc8a095363766aed5f",
+      "sha256": "9fa53be6ae295a93286ccf06685c30a01f5c613bca3f344b19bd1f528c741830"
+    },
+    {
+      "path": "catalog/programs/heavy-biped.sprint.v3.json",
+      "git_blob": "73258949bf84cf36c9c4119ae65ea061b4400c2f",
+      "sha256": "8d090c8c1e954772f2baf12ccd86fe7130bae97f2c4e757e1a7c9e44cd32d382"
+    },
+    {
+      "path": "recipes/heavy-biped/run.v3.json",
+      "git_blob": "25ad4f200fe1b61f538542d5f5a38826cea015ce",
+      "sha256": "a5841db6b66ff5f79d54164333efcdb8418085dcd3910d22bb8621f6a43df7d8"
+    },
+    {
+      "path": "recipes/heavy-biped/sprint.v3.json",
+      "git_blob": "ffdfee7c7c94573f69e66ad8d1e0aec7f98bd000",
+      "sha256": "19f8dedc8f13d134010d7f28cb92975f8d848adffa3d4e634bfa9df1e0ad572e"
+    },
+    {
+      "path": "src/eonwild_motion/blender/render.py",
+      "git_blob": "f6d8904c3230053dd8fdf00d95b429bebf501285",
+      "sha256": "09d2b6407f82da529c535f3a10060b960722e5539d8018694a5113a759cf8860"
+    },
+    {
+      "path": "src/eonwild_motion/factory/quality.py",
+      "git_blob": "e020035eb2e652cd75ca07696de1b0fd753b14df",
+      "sha256": "2c81361bdc5cecfe9e0265c1fef470f20d4dcf3ff11fade0dc2c00e8bbc86fe5"
+    },
+    {
+      "path": "src/eonwild_motion/planning/airborne_gait.py",
+      "git_blob": "cf7fa7733f4f46ba7993199f464d2aa96fcd8e70",
+      "sha256": "a66c1ce4e55e362358c4688afebca0e7716c0ad82c6aa84c2021c74483bfaa1f"
+    }
+  ],
+  "remaining": "Other complete sections and the final truncated supported-action section are preserved as text, not executed or silently discarded.",
+  "validation": "Recovery integrity only. Motion, regression, visual and Unity acceptance are separate."
+}

@@ -1,0 +1,13 @@
+{
+  "schema": "eonwild.motion.handoff-exact-motor-receipt.v1",
+  "head": "60426de40279e81291b3e0affbf9bb465066b267",
+  "tree": "3c843b439bbd604e4055f0e597ef6330bc8b4621",
+  "base": "f9ca924bcc79943d2d2b7eeab28bef8763c18ec4",
+  "focused": {
+    "command": "PYTHONPATH=src:tests .venv/bin/python -m pytest -q tests/test_emitted_handoff.py tests/test_exact_emitted_tangent.py",
+    "result": "72 passed in 4.67s",
+    "log_sha256": "ba2f6da43c8a154cdf7dca13d59a70daadf3d2c9f654ac9f67bb1e64494a39c4"
+  },
+  "ruff": "PASS",
+  "diff_check": "PASS"
+}

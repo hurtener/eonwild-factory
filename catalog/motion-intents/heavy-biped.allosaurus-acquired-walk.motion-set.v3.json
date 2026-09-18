@@ -1,0 +1,15 @@
+{
+  "authored_material_reference": {
+    "path": "catalog/acquired-reference/ferocious-industries.raptor-walk-material.v1.json",
+    "sha256": "70b93b063d8738bbf9c89102930771a25dac139a4073d9d5abfa5d60987f9633"
+  },
+  "description": "Non-promoted Allosaurus steady walk using a bound licensed raw authored reference and the shared grounded target baseline.",
+  "id": "heavy-biped.allosaurus-acquired-walk.motion-set.v3",
+  "program": "grounded_gait",
+  "program_profile": {
+    "path": "catalog/programs/heavy-biped.allosaurus-adult-walk-diagnostic.v1.json",
+    "sha256": "271ccb833a8913d3dc6bd8281e798e54b9c7bebad2080136245cb7b5e5afa725"
+  },
+  "schema": "eonwild.motion.motion-intent.v2",
+  "version": 3
+}

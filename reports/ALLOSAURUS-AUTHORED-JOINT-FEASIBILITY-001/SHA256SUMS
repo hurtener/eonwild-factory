@@ -1,0 +1,7 @@
+86f966bfb3b62513d86d0e108c791d3f408f91b32b1cde1a4fbab6b08e9831c2  ./README.md
+99f562467a4d832d8e7c778c69101fae13a96d44ec8a293cd0f51a424d301dfb  ./evidence/focused-tests.log
+8167226caba68189d30ad6e609bcabc2ff0b1a2f1c7c4361c796503358b6e2cd  ./evidence/initial-failure-review.md
+76f60bb123a0d49119353adf83c194fc177fc69aa4c379e2b60437926abeab60  ./evidence/neighbors-after.json
+09aa4191fb075f24c69ed774ee7122261c119d1c8dda1ee15a86db8eb25c8d55  ./evidence/neighbors-before.json
+be1f9afbc2df201c38f6c4ff9ffd5c63cbce09296e26db9fa25e8f533b3f94bf  ./evidence/old-source-public-compile.log
+8d7e8682e77725d7b105d096e1f9e148b999b5bb6aac5db6abbb9f5dce8fb72a  ./evidence/reviewer2-closure.md

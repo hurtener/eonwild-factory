@@ -1,0 +1,27 @@
+{
+  "published_head": "83aa5e5391848493c902af0c6bd4ecab6228afe6",
+  "run_id": 34231518184,
+  "job_id": 102082683857,
+  "job_conclusion": "failure",
+  "log_sha256": "757685cbbe824e98844b8ac5bd3cc7076cfd10244ad706ad1fb777156265af4f",
+  "compiled_review": {
+    "schema": "eonwild.motion.compiled-review.v1",
+    "candidate_manifest_sha256": "f55c9f61f65b53ab9940a00d08393b7ee0cc9c8302cb6875dfcbb6cfa06a9e1a",
+    "source_sha": "62a9e10ee2cd677ea4c5bd551746fe4c37ea6536",
+    "candidate_status": {
+      "integrity": "PASS",
+      "technical_status": "BLOCKED",
+      "visual_review": "PENDING",
+      "unity_parity": "NOT_RUN",
+      "production_approved": false
+    },
+    "visual_review": "PENDING",
+    "unity_parity": "NOT_RUN",
+    "production_approved": false,
+    "render_status": "PASS",
+    "exit_code": 2
+  },
+  "artifact_id": 10060954930,
+  "artifact_size_bytes": 3525268,
+  "classification": "Cloud render passed; job exit2 preserves technical BLOCKED. No frame-by-frame, perceptual, Unity, biological or production acceptance."
+}

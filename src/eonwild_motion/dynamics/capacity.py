@@ -267,12 +267,14 @@ def decide_attack_variant(
 
 @dataclass(frozen=True)
 class JointEnvelope:
-    """Hard vs preferred limits for one articulation axis.
+    """Exclusion vs preferred guardrails for one articulation axis.
 
-    * ``hard_min/max`` — bony/articular non-interpenetration boundary; the
-      final safety projection. Never exceeded.
-    * ``preferred_min/max`` — soft-tissue normal-performance range used by
-      ordinary motion.
+    * ``hard_min/max`` — final exclusion boundary. Its provenance decides
+      whether it represents anatomy, an engineering guardrail, or both.
+      The label ``hard`` means the solver may not exceed it; it does not by
+      itself make a biological range-of-motion claim.
+    * ``preferred_min/max`` — provenance-dependent preferred operating range
+      used by ordinary motion; it does not imply biological certification.
     * ``contraction_per_load`` — degrees the preferred envelope contracts
       per bodyweight of joint load; ``contraction_per_speed`` per rad/s.
     """
@@ -286,6 +288,16 @@ class JointEnvelope:
     contraction_per_speed: float = 1.5  # degrees per rad/s
 
     def __post_init__(self) -> None:
+        if not isinstance(self.joint, str) or not self.joint:
+            raise ContractError("joint envelope needs a non-empty joint name")
+        for field in ("hard_min_deg", "hard_max_deg", "preferred_min_deg",
+                      "preferred_max_deg", "contraction_per_load_bw",
+                      "contraction_per_speed"):
+            value = getattr(self, field)
+            if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+                raise ContractError(f"joint {self.joint}: {field} must be finite numeric")
+        if self.contraction_per_load_bw < 0 or self.contraction_per_speed < 0:
+            raise ContractError(f"joint {self.joint}: envelope contraction must be non-negative")
         if not self.hard_min_deg < self.hard_max_deg:
             raise ContractError(f"joint {self.joint}: hard envelope must be ordered")
         if not self.hard_min_deg <= self.preferred_min_deg <= self.preferred_max_deg <= self.hard_max_deg:

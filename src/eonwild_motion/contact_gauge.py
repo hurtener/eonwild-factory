@@ -14,7 +14,6 @@ All source-specific names live in a data profile, never in this module.
 
 from __future__ import annotations
 
-import bisect
 from dataclasses import dataclass
 import json
 import math
@@ -24,6 +23,7 @@ from typing import Any, Mapping, Sequence
 
 from .contracts.v9_models import CANONICAL_COORDINATE_SYSTEM, canonical_hash, ensure_finite
 from .errors import ContractError, ValidationFailure
+from .glb.animation import TrsTrack, read_animation_tracks
 from .glb.container import Glb
 from .hashing import sha256_file, write_json
 
@@ -720,10 +720,15 @@ def load_contact_gauge_source(path: Path) -> dict[str, Any]:
         value = geometry[key]
         if (
             not isinstance(value, list)
-            or len(value) != 3
+            or not 1 <= len(value) <= 3
             or any(not isinstance(item, int) or isinstance(item, bool) or item < 0 for item in value)
+            or len(value) != len(set(value))
         ):
-            raise ContractError(f"source geometry {key} must contain three accessor indices")
+            raise ContractError(
+                f"source geometry {key} must contain one to three unique accessor indices"
+            )
+    if len(geometry["joint_accessors"]) != len(geometry["weight_accessors"]):
+        raise ContractError("source joint and weight accessor counts differ")
 
     landmarks = geometry["landmarks"]
     if not isinstance(landmarks, Mapping):
@@ -804,6 +809,66 @@ def load_contact_gauge_source(path: Path) -> dict[str, Any]:
     if not isinstance(thresholds["minimum_active_points"], int) or thresholds["minimum_active_points"] < 1:
         raise ContractError("source thresholds.minimum_active_points must be a positive integer")
     return source
+
+
+def _validate_contact_skin_binding(glb: Glb, geometry: Mapping[str, Any]) -> None:
+    """Bind profile influence arrays to one complete skinned mesh primitive."""
+    try:
+        node = glb.name_to_node[geometry["mesh_node"]]
+        source_node = glb.nodes[node]
+        skin_index = geometry["skin_index"]
+        mesh_index = source_node["mesh"]
+        primitives = glb.document["meshes"][mesh_index]["primitives"]
+    except (KeyError, TypeError, IndexError) as exc:
+        raise ContractError("source geometry does not identify a skinned mesh") from exc
+    if (
+        source_node.get("skin") != skin_index
+        or type(mesh_index) is not int
+        or not isinstance(primitives, list)
+        or len(primitives) != 1
+        or not isinstance(primitives[0], Mapping)
+        or not isinstance(primitives[0].get("attributes"), Mapping)
+    ):
+        raise ContractError("source geometry must bind one primitive and its selected skin")
+    attributes = primitives[0]["attributes"]
+    accessor_count = len(glb.document.get("accessors", []))
+    declared = (
+        ("position", [geometry["position_accessor"]]),
+        ("joint", geometry["joint_accessors"]),
+        ("weight", geometry["weight_accessors"]),
+    )
+    for label, indices in declared:
+        for row, index in enumerate(indices):
+            suffix = "" if label == "position" else f"[{row}]"
+            if type(index) is not int or not 0 <= index < accessor_count:
+                raise ContractError(
+                    f"source geometry {label}{suffix} accessor index {index!r} out of range"
+                )
+    suffixes = [
+        key.removeprefix("JOINTS_")
+        for key in attributes
+        if key.startswith("JOINTS_")
+    ]
+    if any(not suffix.isdecimal() for suffix in suffixes):
+        raise ContractError("source geometry skin influence suffix is malformed")
+    suffixes.sort(key=int)
+    if (
+        not suffixes
+        or any(f"WEIGHTS_{suffix}" not in attributes for suffix in suffixes)
+        or any(
+            key.startswith("WEIGHTS_")
+            and key.removeprefix("WEIGHTS_") not in suffixes
+            for key in attributes
+        )
+        or geometry["position_accessor"] != attributes.get("POSITION")
+        or geometry["joint_accessors"]
+        != [attributes[f"JOINTS_{suffix}"] for suffix in suffixes]
+        or geometry["weight_accessors"]
+        != [attributes[f"WEIGHTS_{suffix}"] for suffix in suffixes]
+    ):
+        raise ContractError(
+            "source geometry skin accessors differ from the complete primitive attributes"
+        )
 
 
 def _coerce_frames(frames: Sequence[Mapping[str, Any]]) -> tuple[_Frame, ...]:
@@ -1894,21 +1959,10 @@ def _column_major_matrix(values: Sequence[float]) -> Mat4:
 
 @dataclass(frozen=True)
 class _Channel:
-    times: tuple[float, ...]
-    values: tuple[tuple[float, ...], ...]
-    path: str
+    track: TrsTrack
 
     def sample(self, time_s: float) -> tuple[float, ...]:
-        if time_s <= self.times[0]:
-            return self.values[0]
-        if time_s >= self.times[-1]:
-            return self.values[-1]
-        right = bisect.bisect_right(self.times, time_s)
-        left = right - 1
-        amount = (time_s - self.times[left]) / (self.times[right] - self.times[left])
-        if self.path == "rotation":
-            return _qslerp(self.values[left], self.values[right], amount)
-        return tuple(a + (b - a) * amount for a, b in zip(self.values[left], self.values[right]))
+        return tuple(float(value) for value in self.track.sample(time_s))
 
 
 def _validate_glb_document_tables(glb: Glb) -> Mapping[str, Any]:
@@ -1964,76 +2018,23 @@ def _read_glb_accessor(glb: Glb, index: Any, *, label: str) -> list[tuple[float 
 
 
 def _animation_channels(glb: Glb, animation_name: str) -> tuple[dict[tuple[int, str], _Channel], tuple[float, ...]]:
-    try:
-        animation = glb.animation(animation_name)
-    except ContractError:
-        raise
-    except _GLB_CONTAINER_ERRORS as exc:
-        raise ContractError("GLB animation container is malformed") from exc
-    if not isinstance(animation, Mapping):
-        raise ContractError("GLB animation must be an object")
-    animation_channels = animation.get("channels")
-    samplers = animation.get("samplers")
-    if not isinstance(animation_channels, list) or not isinstance(samplers, list):
-        raise ContractError("GLB animation channels and samplers must be arrays")
+    parsed, _ = read_animation_tracks(
+        glb, animation_name, require_common_timeline=False
+    )
     channels: dict[tuple[int, str], _Channel] = {}
     common_times: tuple[float, ...] | None = None
-    for channel in animation_channels:
-        if not isinstance(channel, Mapping):
-            raise ContractError("GLB animation channel must be an object")
-        target = channel.get("target", {})
-        if not isinstance(target, Mapping):
-            raise ContractError("GLB animation channel target must be an object")
-        node_index = target.get("node")
-        path = target.get("path")
-        if not isinstance(node_index, int) or path not in {"rotation", "translation"}:
+    for key, track in parsed.items():
+        if track.path not in {"rotation", "translation", "scale"}:
             raise ContractError("animation contains an unsupported target")
-        _validate_glb_node_index(glb, node_index, label="animation target")
-        sampler_index = channel.get("sampler")
-        if not isinstance(sampler_index, int) or sampler_index < 0 or sampler_index >= len(samplers):
-            raise ContractError("animation sampler index is invalid")
-        sampler = samplers[sampler_index]
-        if not isinstance(sampler, Mapping):
-            raise ContractError("GLB animation sampler must be an object")
-        if sampler.get("interpolation", "LINEAR") != "LINEAR":
-            raise ContractError("contact/gauge adapter admits LINEAR animation channels only")
-        input_index = sampler.get("input")
-        output_index = sampler.get("output")
-        if not isinstance(input_index, int) or not isinstance(output_index, int):
-            raise ContractError("animation sampler accessors are invalid")
-        raw_times = _read_glb_accessor(glb, input_index, label="animation input")
-        raw_values = _read_glb_accessor(glb, output_index, label="animation output")
-        try:
-            times = tuple(float(item[0]) for item in raw_times)
-            values = tuple(tuple(float(item) for item in row) for row in raw_values)
-        except _GLB_CONTAINER_ERRORS as exc:
-            raise ContractError("animation sampler accessor rows are malformed") from exc
-        if len(times) != len(values) or len(times) < 2 or any(not math.isfinite(item) for item in times):
-            raise ContractError("animation channel timeline is invalid")
-        if any(current <= previous for previous, current in zip(times, times[1:])):
-            raise ContractError("animation channel timeline is not strictly increasing")
-        expected_width = 4 if path == "rotation" else 3
-        if any(len(row) != expected_width for row in values):
-            raise ContractError("animation channel value width is invalid")
+        times = tuple(float(value) for value in track.times)
         if common_times is None:
             common_times = times
         elif common_times != times:
-            # A V9 candidate may add dense contact-control channels while the
-            # immutable source channels retain their original key timeline.
-            # Admission still requires one exact clip domain; each channel's
-            # own strictly increasing samples are interpolated at the
-            # analyzer's requested times.  Different start/end domains would
-            # be ambiguous and remain fail-closed.
-            if (
-                len(times) < 2
-                or abs(times[0] - common_times[0]) > 1.0e-6
-                or abs(times[-1] - common_times[-1]) > 1.0e-6
-            ):
+            # Contact sampling admits denser channels only when their temporal
+            # domain remains exactly the clip domain.
+            if abs(times[0] - common_times[0]) > 1.0e-6 or abs(times[-1] - common_times[-1]) > 1.0e-6:
                 raise ContractError("animation channels do not share a common timeline domain")
-        key = (node_index, path)
-        if key in channels:
-            raise ContractError("animation contains duplicate node/property channels")
-        channels[key] = _Channel(times=times, values=values, path=path)
+        channels[key] = _Channel(track=track)
     if common_times is None:
         raise ContractError("animation has no channels")
     return channels, common_times
@@ -2057,10 +2058,11 @@ def _pose_matrices(glb: Glb, channels: Mapping[tuple[int, str], _Channel], time_
         static_scale = tuple(node.get("scale", [1.0, 1.0, 1.0]))
         translation = channels.get((index, "translation"))
         rotation = channels.get((index, "rotation"))
+        scale = channels.get((index, "scale"))
         local = _qmatrix(
             rotation.sample(time_s) if rotation else static_rotation,
             translation.sample(time_s) if translation else static_translation,
-            static_scale,
+            scale.sample(time_s) if scale else static_scale,
         )
         parent = glb.parents[index]
         matrices[index] = local if parent is None else _mat_mul(resolve(parent), local)
@@ -2082,6 +2084,7 @@ def _source_frames(
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     geometry = source["geometry"]
     _validate_glb_document_tables(glb)
+    _validate_contact_skin_binding(glb, geometry)
     profile_accessor_indices = {
         "source geometry position": geometry["position_accessor"],
         **{

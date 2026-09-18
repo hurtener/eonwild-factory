@@ -1,0 +1,182 @@
+{
+  "schema": "eonwild.allosaurus.rig-preparation-probes.v1",
+  "source_sha256": "91d9816b6bbaeb1037f3e9cbf253261799d8a4121efd91e0e2185f76908a6bf7",
+  "candidate_sha256": "c56772d63045d3410b8efe81eb45f7ee06ad97307fa076a32033553dab372c41",
+  "scope": "Transient isolated joint rotations only; no animation is written to the candidate. Area ratios are deformation diagnostics, not anatomy validation.",
+  "neutral_surface_difference_m": {
+    "maximum": 5.690630346975663e-07,
+    "rms": 3.017146102566026e-07
+  },
+  "probes": [
+    {
+      "node": "Bone_023",
+      "degrees": 10,
+      "axis_frame": "joint_parent_local",
+      "owned_vertex_count_ge_050": 4131,
+      "owned_triangle_count": 4554,
+      "owned_displacement_m": {
+        "median": 0.14580857801034053,
+        "maximum": 0.19216340781282437
+      },
+      "owned_triangle_area_ratio": {
+        "minimum": 0.8025420567216812,
+        "p01": 0.8672580390233895,
+        "median": 1.0000000000000009,
+        "p99": 1.1465798468976511,
+        "maximum": 1.270353305221914
+      },
+      "all_positions_finite": true
+    },
+    {
+      "node": "Bone_029",
+      "degrees": -10,
+      "axis_frame": "joint_parent_local",
+      "owned_vertex_count_ge_050": 4057,
+      "owned_triangle_count": 4523,
+      "owned_displacement_m": {
+        "median": 0.14700932778626857,
+        "maximum": 0.1921210754909649
+      },
+      "owned_triangle_area_ratio": {
+        "minimum": 0.3055579696498554,
+        "p01": 0.8413759698222906,
+        "median": 0.9999999999999964,
+        "p99": 1.1212912093558842,
+        "maximum": 1.223414724489483
+      },
+      "all_positions_finite": true
+    },
+    {
+      "node": "Bone_022",
+      "degrees": 20,
+      "axis_frame": "joint_parent_local",
+      "owned_vertex_count_ge_050": 3243,
+      "owned_triangle_count": 3456,
+      "owned_displacement_m": {
+        "median": 0.1810539513476399,
+        "maximum": 0.2351782293149054
+      },
+      "owned_triangle_area_ratio": {
+        "minimum": 0.7137018029943747,
+        "p01": 0.8331001721762192,
+        "median": 1.0000000000000004,
+        "p99": 1.1536974432276486,
+        "maximum": 1.2917303352071594
+      },
+      "all_positions_finite": true
+    },
+    {
+      "node": "Bone_028",
+      "degrees": -20,
+      "axis_frame": "joint_parent_local",
+      "owned_vertex_count_ge_050": 3178,
+      "owned_triangle_count": 3505,
+      "owned_displacement_m": {
+        "median": 0.18091893307515197,
+        "maximum": 0.23510175373312678
+      },
+      "owned_triangle_area_ratio": {
+        "minimum": 0.6998588130518429,
+        "p01": 0.8070863839051976,
+        "median": 0.9999999999999993,
+        "p99": 1.174695886609669,
+        "maximum": 1.3089652289008054
+      },
+      "all_positions_finite": true
+    },
+    {
+      "node": "Bone_021",
+      "degrees": 15,
+      "axis_frame": "joint_parent_local",
+      "owned_vertex_count_ge_050": 2289,
+      "owned_triangle_count": 2314,
+      "owned_displacement_m": {
+        "median": 0.06516099327634702,
+        "maximum": 0.11098743600446923
+      },
+      "owned_triangle_area_ratio": {
+        "minimum": 0.6026284581790669,
+        "p01": 0.869119271362225,
+        "median": 0.9999999999999989,
+        "p99": 1.060347599131663,
+        "maximum": 1.1978134283449897
+      },
+      "all_positions_finite": true
+    },
+    {
+      "node": "Bone_027",
+      "degrees": -15,
+      "axis_frame": "joint_parent_local",
+      "owned_vertex_count_ge_050": 2226,
+      "owned_triangle_count": 2351,
+      "owned_displacement_m": {
+        "median": 0.0644373658128281,
+        "maximum": 0.11094898165585373
+      },
+      "owned_triangle_area_ratio": {
+        "minimum": 0.8531947825941152,
+        "p01": 0.9380340052073594,
+        "median": 1.0000000000000069,
+        "p99": 1.099509027762243,
+        "maximum": 1.1677342840924818
+      },
+      "all_positions_finite": true
+    },
+    {
+      "node": "Bone_044",
+      "degrees": 8,
+      "axis_frame": "joint_parent_local",
+      "owned_vertex_count_ge_050": 1826,
+      "owned_triangle_count": 1283,
+      "owned_displacement_m": {
+        "median": 0.028561371980187045,
+        "maximum": 0.04713967888569806
+      },
+      "owned_triangle_area_ratio": {
+        "minimum": 0.8310804747843098,
+        "p01": 0.9235689894606041,
+        "median": 0.9999999999999826,
+        "p99": 1.02112448332325,
+        "maximum": 1.0329441666374441
+      },
+      "all_positions_finite": true
+    },
+    {
+      "node": "Bone_044",
+      "degrees": -8,
+      "axis_frame": "joint_parent_local",
+      "owned_vertex_count_ge_050": 1826,
+      "owned_triangle_count": 1283,
+      "owned_displacement_m": {
+        "median": 0.028561371980187687,
+        "maximum": 0.047139678885697846
+      },
+      "owned_triangle_area_ratio": {
+        "minimum": 0.9592158852710397,
+        "p01": 0.9798406934667069,
+        "median": 1.000000000000033,
+        "p99": 1.0716476732699223,
+        "maximum": 1.1658814595510034
+      },
+      "all_positions_finite": true
+    }
+  ],
+  "jaw_separation": [
+    {
+      "degrees": 8,
+      "jaw_vertices": 1777,
+      "stable_cranium_vertices": 6344,
+      "jaw_displacement_median": 0.029057097092029072,
+      "jaw_displacement_maximum": 0.04713967888569806,
+      "stable_cranium_displacement_maximum": 0.0005997682287181832
+    },
+    {
+      "degrees": -8,
+      "jaw_vertices": 1777,
+      "stable_cranium_vertices": 6344,
+      "jaw_displacement_median": 0.029057097092029527,
+      "jaw_displacement_maximum": 0.047139678885697846,
+      "stable_cranium_displacement_maximum": 0.0005997682287182393
+    }
+  ]
+}

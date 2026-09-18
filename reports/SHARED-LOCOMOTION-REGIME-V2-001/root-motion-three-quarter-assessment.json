@@ -1,0 +1,19 @@
+{
+  "scope": "Three-quarter/root_motion: all572 native frames inspected as12 full-body contact sheets; 8exact join stills plus full-resolution frames46/225/413 and terminal. No native-speed playback claim.",
+  "film_sha256": "4505ee9abe76c915d7afe6ff9fdba4e1dba401157a7372fc2babe6ccd053b86b",
+  "source_files_rehashed": 59,
+  "source_immutable": true,
+  "observations": [
+    "Short initial alternating steps grow into the established walk; foot recovery remains continuous at the inspected scale.",
+    "All4 exact joins retain the same visible pose without a silhouette jump.",
+    "Stop reduces step size and settles with both feet planted; no gross body inversion or ground-crossing tail seen.",
+    "Upper-thigh crease remains visible in early recovery and is not resolved by this rendering validation."
+  ],
+  "open": [
+    "Known proximal thigh skin intersection unresolved.",
+    "In-place films still rendering/reviewpending.",
+    "Native-speed playback and Unity notrun.",
+    "Full-body thumbnails do not establish fine contact or biological accuracy."
+  ],
+  "verdict": "THREE_QUARTER_FRAME_REVIEW_COMPLETE_WITH_KNOWN_LIMITATIONS"
+}

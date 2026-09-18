@@ -1,0 +1,13 @@
+# Root constant skin-target law round 2
+
+Final reviewed head `990aef08c18d2cb8cc5dbaaf5c268f1b290a7cdc`; implementation head `a6253053b2592ad0dffeb37ca41c2a2f5b3ab783`, relative to reviewed canonical provider `f847630b901d86b4aeb895fe50fd9523b13d79e6`.
+
+Decision: PASS for the bounded pointwise source diagnostic. P0/P1=0. Independent final R2 remains required before integration. No emitted, derivative, C1, physical, visual or production approval follows.
+
+Root read the complete new law, source-query/contact retention and canonical dataclass handling changes, all new regressions, exact-cycle driver and final report. The actual retained query now validates against the provider request, including source/current scale, gait, performance/gaze, transition, contact and articulation inputs; the law checks owned calibration and query identities before value evaluation. Returned corrections/poses are detached. Pointwise failures return typed UNAVAILABLE with measured observations, both feet are checked together, and start consumers calibrate from sustained canonical source touchdowns. Direct construction cannot omit validated calibration.
+
+The final solver thresholds match the existing quality.solver_checks criteria: 1 mm target/extension and 0.01 degree articulation. The distinct constant-target refinement residual remains 0.2 mm. Root ran the law and canonical-provider tests at the stable implementation source: 22 passed in 116.26 s. Final-head source/tests are byte-identical to that tested code.
+
+The original R1 evidence failure is closed. Root inspected the exact recipe builder against the real compiler, including source geometry, actual animal uniform scale, scaled contacts, performance, gaze calibration, articulation and neutral-jaw inputs; canonical anchors are the only diagnostic override. Root independently rehashed the complete final manifest and both per-row outputs, checked source/input heads and all retained code hashes, then byte-verified every tracked evidence copy. Walk v3 is 305/305 AVAILABLE; adult V9 is 297/297 AVAILABLE. Both cover 0 to 2.46 seconds, exactly one same-foot cycle. Maximum loaded residual is 6.9114 micrometers for walk and 30.5415 micrometers for adult V9; minimum swing gaps exceed the 0.1 mm target. These native-row values do not certify unsampled motion or exported interpolation.
+
+Manifest SHA-256 `9f57d178aa0fc3f3115257b798030a0be43aaa4ecc53821004bf9b03d0fae1ab`; tracked README SHA-256 `f1fd39a5d3d236edd2de79c83402df379f8e64d2edbf74b2cca6b10b3824bd4a`. The report retains the exact executed driver and documents its absolute-path reproduction boundary. No further full-cycle rerun is needed for the docs-only freeze.

@@ -1,0 +1,22 @@
+{
+  "child": {
+    "head": "f125e97ec857ac006ab84126f1b052232cd66693",
+    "receipt_sha256": "75a7b4c9868c100aff6e30ee3da2ec267d7e9ff4537c2305aa1db69d6bd8ac4c",
+    "row_solve_count": 8,
+    "seconds": 2.9049801669898443
+  },
+  "classification": "separate-process actual default-path representative runtime; not a full compile forecast",
+  "driver_sha256": "4d8e1faffe9d8ad37c6707ab400438ff25499bf7aac9b9830343ffc9ccd00d68",
+  "parent": {
+    "head": "6e3080196182688cad49a4b441753e27064824fc",
+    "receipt_sha256": "e4c853e6319c1ebc0656d3d6f42519ec9f65467fd5753b9560d3e34cf1ac7191",
+    "row_solve_count": 16,
+    "seconds": 5.249131457996555
+  },
+  "sample_count": 8,
+  "samples_exactly_equal": true,
+  "schema": "eonwild.motion.source-query-offset-parent-comparison.v1",
+  "speedup": 1.8069422702585032,
+  "superseded_reason": "prior benchmark forced per-side observer fallback and measured four solves per time instead of the published parent default two-solve path",
+  "supersedes_receipt_sha256": "10e4ce4931064e39b363ab59049007e57408512a0415f9eaa780deb79525eca4"
+}

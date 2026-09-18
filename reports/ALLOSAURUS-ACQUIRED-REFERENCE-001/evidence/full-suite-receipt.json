@@ -1,0 +1,13 @@
+{
+  "head": "c51b3aa86bfac51df0d30785303f698fc1f6c3a3",
+  "tree": "87331ea7435bff8b93df443442f5f498873c6ee6",
+  "status": "",
+  "result": "1184 passed, 21 subtests passed in 373.32s",
+  "exit_code": 0,
+  "recorded_utc": "2026-09-09T08:43:23.741560+00:00",
+  "sha256": {
+    "full-tests.log": "c2af2ad12c075fe143db90766aa8a5a3609d5a76f13455f41651cf290cb6358c",
+    "full-tests.xml": "82253bdf93286c094617197dc7863cd39583ff3f2204cf0ff6dbe3105ab47301"
+  },
+  "boundary": "Local contracts only. Allosaurus public export failed; visual and Unity acceptance remain pending."
+}

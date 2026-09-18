@@ -10,9 +10,6 @@ import unittest
 from unittest.mock import patch
 
 from eonwild_motion.contact_gauge import (
-    _animation_channels,
-    _Channel,
-    _finite_difference,
     _normalize_skin_weights,
     _source_frames,
     _uniform_times,
@@ -24,6 +21,7 @@ from eonwild_motion.contact_gauge import (
 from eonwild_motion.errors import ContractError
 from eonwild_motion.glb.container import Glb as ContainerGlb
 from eonwild_motion.hashing import sha256_file
+from eonwild_motion.solve.skin_rig import SkinRig
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -183,6 +181,56 @@ class ContactGaugeTests(unittest.TestCase):
         self._assert_profile_variant_rejected(
             lambda profile: profile["geometry"]["weight_accessors"].__setitem__(0, 10**9),
             r"source geometry weight\[0\] accessor index .* out of range",
+        )
+
+    def test_profile_accepts_two_matching_skin_influence_accessors(self):
+        profile = copy.deepcopy(SOURCE)
+        profile["geometry"]["joint_accessors"] = [3, 4]
+        profile["geometry"]["weight_accessors"] = [6, 7]
+        with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
+            path = Path(temporary) / "two-influence-sets.json"
+            path.write_text(json.dumps(profile), encoding="utf-8")
+            loaded = load_contact_gauge_source(path)
+        self.assertEqual(loaded["geometry"]["joint_accessors"], [3, 4])
+        self.assertEqual(loaded["geometry"]["weight_accessors"], [6, 7])
+
+    def test_genuine_two_set_allosaurus_skin_is_extracted_completely(self):
+        source_path = ROOT / (
+            "assets/sha256/"
+            "a403679deb968ec88f7b8b89e3e399cc0881e9cc602e765a6e55934c28ad3826.glb"
+        )
+        profile = json.loads((
+            ROOT / "catalog/contacts/allosaurus-engineering.v1.json"
+        ).read_text(encoding="utf-8"))
+        roles = json.loads((
+            ROOT / "catalog/rigs/allosaurus-engineering.v1.json"
+        ).read_text(encoding="utf-8"))["roles"]
+        rig = SkinRig(
+            ContainerGlb(source_path), roles, [0, 0, 1], [0, 1, 0], profile,
+        )
+        self.assertEqual(rig.weights.shape[1], 8)
+        self.assertEqual(len(rig.positions), 40105)
+        self.assertTrue(rig.foot_masks["left"].size)
+        self.assertTrue(rig.foot_masks["right"].size)
+
+    def test_profile_rejects_mismatched_skin_influence_accessor_counts(self):
+        profile = copy.deepcopy(SOURCE)
+        profile["geometry"]["joint_accessors"] = [3, 4]
+        with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
+            path = Path(temporary) / "mismatched-influence-sets.json"
+            path.write_text(json.dumps(profile), encoding="utf-8")
+            with self.assertRaisesRegex(ContractError, "counts differ"):
+                load_contact_gauge_source(path)
+
+    def test_profile_cannot_omit_a_complete_skin_influence_set(self):
+        self._assert_profile_variant_rejected(
+            lambda profile: (
+                profile["geometry"].update({
+                    "joint_accessors": profile["geometry"]["joint_accessors"][:-1],
+                    "weight_accessors": profile["geometry"]["weight_accessors"][:-1],
+                })
+            ),
+            "complete primitive attributes",
         )
 
     def test_policy_requires_step_width_metric(self):

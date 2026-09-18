@@ -1,0 +1,200 @@
+{
+  "schema": "eonwild.motion.adult-v9-media-audit.v1",
+  "package": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/continuation-adult-v9-axial-jaw-001",
+  "package_manifest_sha256": "1b89ef55a89be040e12eb714ee391f31c5fca8f4b896bbe722e1eb26d5872b83",
+  "package_glbs": {
+    "root_motion": "db5b2123e156fa218cc426cf8774972a8c02f9cfce7eea9c80fcf91a8c129ebe",
+    "in_place": "5a16382521ebf06e73662b37d53151048df5c7f430b776fb7950d2c480abec51"
+  },
+  "views": {
+    "side-body": {
+      "mode": "in_place",
+      "source_sha256": "5a16382521ebf06e73662b37d53151048df5c7f430b776fb7950d2c480abec51",
+      "render_receipt_sha256": "db7998f2154a9fe5f0662887541490b39702bc996ec53e30a69dd7f5fe0c1e61",
+      "renderer_sha256": "23ad3ba04b3cd9d6a68a3fa6a24a9dc27773454569d4211afe2927100d2b285e",
+      "camera_sha256": "28d3d6045e34896398ef07a030acee4978b95662f410a8b52aba16ec7db32910",
+      "camera_matches_retained_v8": true,
+      "film_sha256": "bc5cb77ce0da2425fa0c5dfbbd17623c116649b32378cf2e4bbef416f0e70139",
+      "frames": 74,
+      "native_fps": 30,
+      "encoded_duration_s": 2.466667,
+      "rendered_at_utc": "2026-09-08T11:25:04.876390+00:00",
+      "full_ffmpeg_decode": "PASS",
+      "contact_sheets": [
+        {
+          "name": "000-015.png",
+          "sha256": "90ab470f857583fcba9c0099eb90a7bfba1ef2f218a49e9d679b87c43816f021"
+        },
+        {
+          "name": "016-031.png",
+          "sha256": "69d53f1a98256011ed7199890dd79e514e1da25add997bc46c3c7319fd4ea589"
+        },
+        {
+          "name": "032-047.png",
+          "sha256": "b2954c2dd5e19e5e0bd99f98fe45515a2be69e2aed50e79a9efde8589ea4a3c0"
+        },
+        {
+          "name": "048-063.png",
+          "sha256": "00af45556a36ff35ddbcfab0e9a66a8bafbc16763c8fece13853e63f53ad019b"
+        },
+        {
+          "name": "064-073.png",
+          "sha256": "3a1db8a57d29c3ee2e94d987c57b325ac0a85502388c7015b8eb116d4aba5720"
+        }
+      ],
+      "visual_inspection": "PENDING"
+    },
+    "front-body": {
+      "mode": "in_place",
+      "source_sha256": "5a16382521ebf06e73662b37d53151048df5c7f430b776fb7950d2c480abec51",
+      "render_receipt_sha256": "840b194c3822dbf3b9bb7d7a6e66184bb891ac13511e86aed18e4dfb263e96a7",
+      "renderer_sha256": "23ad3ba04b3cd9d6a68a3fa6a24a9dc27773454569d4211afe2927100d2b285e",
+      "camera_sha256": "a22c30074f40c40c485236306da5dd57acd562bc8e41fad906fcee1798e9d111",
+      "camera_matches_retained_v8": true,
+      "film_sha256": "98e0ab92066b6ddfecf5b5e6cbc872bef4debf481aa456505d7ae60c0e866d44",
+      "frames": 74,
+      "native_fps": 30,
+      "encoded_duration_s": 2.466667,
+      "rendered_at_utc": "2026-09-08T11:24:56.250040+00:00",
+      "full_ffmpeg_decode": "PASS",
+      "contact_sheets": [
+        {
+          "name": "000-015.png",
+          "sha256": "a239e82c98a11b2179623746029609e9f80d2ea9c0c04067747ebb5916fd7f69"
+        },
+        {
+          "name": "016-031.png",
+          "sha256": "334106e0942736a3bb8843574daff32084ce5785520b6126193d29d80594e8c2"
+        },
+        {
+          "name": "032-047.png",
+          "sha256": "2757960db218ad4fa7591bf28d2165d4c27d9faa44cc6f1d11694234b96abcd5"
+        },
+        {
+          "name": "048-063.png",
+          "sha256": "ac54c56065f098af1e35e487cd7ec66abceb2fbd25a6480271dd3669ef08ae7d"
+        },
+        {
+          "name": "064-073.png",
+          "sha256": "c95fb095bf6ddabd387b30f72dd1b5a6c961ed97af9d31b4de8aad9b05f7e9f5"
+        }
+      ],
+      "visual_inspection": "PENDING"
+    },
+    "rear-body": {
+      "mode": "in_place",
+      "source_sha256": "5a16382521ebf06e73662b37d53151048df5c7f430b776fb7950d2c480abec51",
+      "render_receipt_sha256": "6c1d337018b4cc2c376a679aae7190c4573554ece3536ea0760a648ea1c4a602",
+      "renderer_sha256": "23ad3ba04b3cd9d6a68a3fa6a24a9dc27773454569d4211afe2927100d2b285e",
+      "camera_sha256": "22a28338857a20a62f39d2ac28bf28c9e9ab1860e29c6f85d9b08149bc8d5c61",
+      "camera_matches_retained_v8": true,
+      "film_sha256": "047944a7222b8c3580218b1b6a2826b2e56505a1f06152f7933e0d9545bf3c37",
+      "frames": 74,
+      "native_fps": 30,
+      "encoded_duration_s": 2.466667,
+      "rendered_at_utc": "2026-09-08T11:24:57.085197+00:00",
+      "full_ffmpeg_decode": "PASS",
+      "contact_sheets": [
+        {
+          "name": "000-015.png",
+          "sha256": "4ac13c98776cab140d2da9dd9120e38e5491138d86fef8d0aa762d408ef3b735"
+        },
+        {
+          "name": "016-031.png",
+          "sha256": "c94a6cf6f6a3436df626e76026fa806adab0946594c8140e767c8a9549330c84"
+        },
+        {
+          "name": "032-047.png",
+          "sha256": "f952c1179987f38e88e04a0426323976830ad1e73a73f6ab88041539ee37542a"
+        },
+        {
+          "name": "048-063.png",
+          "sha256": "7f1c10f38fe70865c8510d7b1c6c534833e12134a8159cbfb26764464b936eda"
+        },
+        {
+          "name": "064-073.png",
+          "sha256": "a2f81b119731c2f351a80293223b51f1c59be560cb6b44c289d810ada5ae1f4a"
+        }
+      ],
+      "visual_inspection": "PENDING"
+    },
+    "three-quarter-body": {
+      "mode": "in_place",
+      "source_sha256": "5a16382521ebf06e73662b37d53151048df5c7f430b776fb7950d2c480abec51",
+      "render_receipt_sha256": "2585d105af058c3dadc6f976c92d08086a62952da2184727fcea946393b7eaff",
+      "renderer_sha256": "23ad3ba04b3cd9d6a68a3fa6a24a9dc27773454569d4211afe2927100d2b285e",
+      "camera_sha256": "c08642f3ae6f028f73f1f050dd397f97ab59e505ffe328d7e00d53f695891f59",
+      "camera_matches_retained_v8": true,
+      "film_sha256": "14eb1cf01b55088f169eea417794723d08c7075b73073fbd2ae43bd2cb981e12",
+      "frames": 74,
+      "native_fps": 30,
+      "encoded_duration_s": 2.466667,
+      "rendered_at_utc": "2026-09-08T11:25:05.241550+00:00",
+      "full_ffmpeg_decode": "PASS",
+      "contact_sheets": [
+        {
+          "name": "000-015.png",
+          "sha256": "83c9127155d770bc9707b2b443df048516d5a604b7be127a042c5775c18efab1"
+        },
+        {
+          "name": "016-031.png",
+          "sha256": "d43955ec3781cfbd1cb76f3f8875361379b560dd085fd408575e5d9fd111125f"
+        },
+        {
+          "name": "032-047.png",
+          "sha256": "ffd6b80b38e3a2905d0f2bfd498f88129aff7895a74ba19a4af7d2c273c70ef7"
+        },
+        {
+          "name": "048-063.png",
+          "sha256": "db65ecbda23fafa9241e0ead6ff7314a71905695feb8d6b8be30489c5a96fe40"
+        },
+        {
+          "name": "064-073.png",
+          "sha256": "f7169c696639ed4ab52a0d329f0b997f7685fcadec89065e80a5ab213b583d6b"
+        }
+      ],
+      "visual_inspection": "PENDING"
+    },
+    "root-motion-side": {
+      "mode": "root_motion",
+      "source_sha256": "db5b2123e156fa218cc426cf8774972a8c02f9cfce7eea9c80fcf91a8c129ebe",
+      "render_receipt_sha256": "870ee4aa896feb238c10410e0de39700b15403fe2f6c9d3501439cb7bef9c5f5",
+      "renderer_sha256": "23ad3ba04b3cd9d6a68a3fa6a24a9dc27773454569d4211afe2927100d2b285e",
+      "camera_sha256": "fae769d9ae648172c588a82eef9d153d6173e1ddfeea20905b8e57151a1a5373",
+      "camera_matches_retained_v8": true,
+      "film_sha256": "941772987a181fc8b5b058dc332e43fff41d515bc0183ba82b886a81c90a286c",
+      "frames": 74,
+      "native_fps": 30,
+      "encoded_duration_s": 2.466667,
+      "rendered_at_utc": "2026-09-08T11:25:03.888818+00:00",
+      "full_ffmpeg_decode": "PASS",
+      "contact_sheets": [
+        {
+          "name": "000-015.png",
+          "sha256": "0d032965f5bb0b3c5c13b6a0d42745571a6965872dfcb0e187700fb978bb223c"
+        },
+        {
+          "name": "016-031.png",
+          "sha256": "dbd62e6296f28d7570acf2ec572eb670580fc3bc92b89e10f08273f67ac4b097"
+        },
+        {
+          "name": "032-047.png",
+          "sha256": "a49e4eb189696f5554f116890d7f9c4c4fdadbe1083d7695f40a94e8af202d0f"
+        },
+        {
+          "name": "048-063.png",
+          "sha256": "da103182f98df9a05760c170f504bbc885fccb2a923396113b96d9fb1640c1c9"
+        },
+        {
+          "name": "064-073.png",
+          "sha256": "1a3a4efb90077bf0570e7a66e160af5615f070805d8e66d7df6d674ffec5dd18"
+        }
+      ],
+      "visual_inspection": "PENDING"
+    }
+  },
+  "visual_inspection": "PENDING",
+  "native_speed_playback": "PENDING",
+  "unity_import_validation": "NOT_RUN",
+  "technical_status": "BLOCKED"
+}

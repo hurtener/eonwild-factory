@@ -1,0 +1,238 @@
+{
+  "schema": "eonwild.motion.host-visual-review.v1",
+  "captured_utc": "2026-09-08T07:44:33.550268+00:00",
+  "source_head": "98ab0af6610267a27373d8f6f91b8ce850028394",
+  "report_only_postfix_head": "06316bfb82a4e53343d276f93c8032f2734b5bee",
+  "package": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/worktrees/eonwild-adult-support-speed-carrier/out/continuation-adult-v7-support-speed-001",
+  "manifest_sha256": "7c01449f874c740b7700daae5f2ada531263df23060901b9252d0d582c2861e0",
+  "source_glbs": {
+    "root_motion": "9d823831c2f6bf6b3eb1482784fb75ef3532838385bf111a683ee2c7d0986e0c",
+    "in_place": "1110f89eed7a4de38245a4620d0c10f92e589fb4c703e9360011b3be03e12ce0"
+  },
+  "coverage": {
+    "views": 5,
+    "frames": 370,
+    "native_rate_hz": 30,
+    "all_frames_inspected": true,
+    "all_five_native_paired_playbacks_completed": true,
+    "full_media_decode": "PASS"
+  },
+  "decision": "MODEST_TRAVEL_RHYTHM_IMPROVEMENT; WHOLE_BODY_POLISH_REQUIRED",
+  "scope": "Visual kinematic diagnostic of one new support-timed forward carrier with unchanged V6 gait inputs, cadence and cameras. Not approval of mass, force, COM, biological motion, game runtime or production.",
+  "exact_local_loop_status": "BLOCKED",
+  "exact_local_loop_receipt_sha256": "1e2e7bc13746b0af232a764c00cd905c90aa09791ff71ae9ea270e3b663483be",
+  "reopened_metrics_sha256": "d7953448f0bad15464a43fdf92430c84a85c1c9dedd9281d306a6faa5631a4cd",
+  "views": [
+    {
+      "view": "side-body",
+      "source_sha256": "1110f89eed7a4de38245a4620d0c10f92e589fb4c703e9360011b3be03e12ce0",
+      "render_receipt_sha256": "bf077379b2e5460002a6a1c15b2c6ff1f6132c0deb50dc59030821e381eeef4f",
+      "media_verification_sha256": "68d1ce403c0c82ad86a1629a7026ab401a190610bb7d3c73a638edfdd6239614",
+      "film_sha256": "0817165019a5e8a0f16aebc93ac02d393ab7245e2a5bd7f07b0042062c0f22c0",
+      "film_finished_argentina": "2026-09-08T04:30:46.313245-03:00",
+      "camera_sha256": "28d3d6045e34896398ef07a030acee4978b95662f410a8b52aba16ec7db32910",
+      "camera_equals_retained_v3": true,
+      "all_frames_inspected": 74,
+      "contact_sheets_inspected": [
+        {
+          "name": "000-015.png",
+          "sha256": "ba59b89c666a5139a0bd4375a57ba0e91fcebeba303ca57e4a1a0cd2a06c845c"
+        },
+        {
+          "name": "016-031.png",
+          "sha256": "38ff2564a7c9bebac1c0b38bab7b1fc33c2ed8c52f42d60e0aaa35522a31cff3"
+        },
+        {
+          "name": "032-047.png",
+          "sha256": "b4c72ac7f1f002c7007db30d8ea88cdcd9c6e20bdf5df4227b98b077cbb2e31d"
+        },
+        {
+          "name": "048-063.png",
+          "sha256": "92c00f95c3fe995c8cd5779a9f9cd424f5b63be62edd50c265c6e27a492c97f4"
+        },
+        {
+          "name": "064-073.png",
+          "sha256": "a8ad65b88257efd27c0226f8ca1380afed3c0b24ae0f019c27a7e8007b79de9c"
+        }
+      ],
+      "native_paired_playback": {
+        "comparison": "retained V6 same view",
+        "status": "COMPLETED",
+        "both_ended": true,
+        "playback_rate": 1,
+        "duration_s": 2.466667
+      },
+      "observation": "The small fore-aft displacement is smooth through loading and recovery. Extended foot recovery and forward gaze remain readable. The body change is subtle at this framing and does not establish convincing several-ton effort by itself."
+    },
+    {
+      "view": "front-body",
+      "source_sha256": "1110f89eed7a4de38245a4620d0c10f92e589fb4c703e9360011b3be03e12ce0",
+      "render_receipt_sha256": "8f0c7dcf4cac283062684bc68f1fa8d629f899694dc16eb375506d84afaf4894",
+      "media_verification_sha256": "5cef7f4b90a04ccb97e3925adedc494e373bb65b6aa93d127ae3e9b8040fe2ab",
+      "film_sha256": "c6e44759d550d54fcd447f368c18e800bb2d4c74656972d987392004c219243b",
+      "film_finished_argentina": "2026-09-08T04:35:20.809766-03:00",
+      "camera_sha256": "a22c30074f40c40c485236306da5dd57acd562bc8e41fad906fcee1798e9d111",
+      "camera_equals_retained_v3": true,
+      "all_frames_inspected": 74,
+      "contact_sheets_inspected": [
+        {
+          "name": "000-015.png",
+          "sha256": "a2a3f27ccc1c1667b1f05fc51a190782ea00bf1186f04afcd129719fc664f270"
+        },
+        {
+          "name": "016-031.png",
+          "sha256": "deb3f4ec858e3330bdc26264d93ecfd8a0d65312aa028868af89fa28e6e47b8a"
+        },
+        {
+          "name": "032-047.png",
+          "sha256": "c353cc473bd12be9c03ca878223bd96f37c38886e3977552dfcd83f86dd848ef"
+        },
+        {
+          "name": "048-063.png",
+          "sha256": "902d82cdb57f7518e85f7e2688d35da5d60f0b0393f3cc9e3d65e8fed7d13409"
+        },
+        {
+          "name": "064-073.png",
+          "sha256": "7acf387215a3ea306c4aeb45c5769bab3ad2aa99fc9a79fc5eb8b7ec5c927a60"
+        }
+      ],
+      "native_paired_playback": {
+        "comparison": "retained V6 same view",
+        "status": "COMPLETED",
+        "both_ended": true,
+        "playback_rate": 1,
+        "duration_s": 2.466667
+      },
+      "observation": "Existing lateral pelvis and trunk coordination remains readable, with no new visible leg crossing or lateral jump. The new forward carrier has little direct projection in this view."
+    },
+    {
+      "view": "rear-body",
+      "source_sha256": "1110f89eed7a4de38245a4620d0c10f92e589fb4c703e9360011b3be03e12ce0",
+      "render_receipt_sha256": "ce4c3198ef78199ab5163b791bb4d53ed88ecb538ae466bc1c48f7260172200d",
+      "media_verification_sha256": "8f53e20830b20c246e58eac6715d097e17267595b1690b5258d170e9a29876f0",
+      "film_sha256": "25c3b0749afa622a2abcc461778ef22d8b2f2c5ac1ffb0c5be205308da38e9cc",
+      "film_finished_argentina": "2026-09-08T04:35:20.428352-03:00",
+      "camera_sha256": "22a28338857a20a62f39d2ac28bf28c9e9ab1860e29c6f85d9b08149bc8d5c61",
+      "camera_equals_retained_v3": true,
+      "all_frames_inspected": 74,
+      "contact_sheets_inspected": [
+        {
+          "name": "000-015.png",
+          "sha256": "397ad8e1b0bf3bda55be6ab546a588921654172a50b7c98bb5569ef493482590"
+        },
+        {
+          "name": "016-031.png",
+          "sha256": "9265f25ea829ae569c1ce00571dd7ca93f244c9bae307186a0de97f773bf257a"
+        },
+        {
+          "name": "032-047.png",
+          "sha256": "0ebf05ee30c8d165e4abee5815c6203bfec43402cab241e029f8565b7d5206a9"
+        },
+        {
+          "name": "048-063.png",
+          "sha256": "52c358886d43b76b07634ce4dab52a8db904c125174866306a611768ea0b55ac"
+        },
+        {
+          "name": "064-073.png",
+          "sha256": "b7e3c4ac19a17a1f61d69405d4228e5c3ff478c761cde04f579c364662913fc6"
+        }
+      ],
+      "native_paired_playback": {
+        "comparison": "retained V6 same view",
+        "status": "COMPLETED",
+        "both_ended": true,
+        "playback_rate": 1,
+        "duration_s": 2.466667
+      },
+      "observation": "Alternating support and foot placement remain stable in the retained lanes. No new visible sideways jolt or tail snap was identified."
+    },
+    {
+      "view": "three-quarter-body",
+      "source_sha256": "1110f89eed7a4de38245a4620d0c10f92e589fb4c703e9360011b3be03e12ce0",
+      "render_receipt_sha256": "43f92f26c033a213f7232c8658b32270110be929e540a7ddb89fd19b8e453ff5",
+      "media_verification_sha256": "06656f37826cb846f73e30f138e99b488c47b7f0c76004a4f36a568051954005",
+      "film_sha256": "816b68f07c3e7ff3d7f75bcb7173481c13c3db5a651fa2f8311296456106e4b9",
+      "film_finished_argentina": "2026-09-08T04:35:25.669449-03:00",
+      "camera_sha256": "c08642f3ae6f028f73f1f050dd397f97ab59e505ffe328d7e00d53f695891f59",
+      "camera_equals_retained_v3": true,
+      "all_frames_inspected": 74,
+      "contact_sheets_inspected": [
+        {
+          "name": "000-015.png",
+          "sha256": "b45a3ba68b170121ab89dea91c9195f253a9191b7b17777e5b03c272a7d5f832"
+        },
+        {
+          "name": "016-031.png",
+          "sha256": "c170128fb507bfe51710ecd661a752bf80d0b36093861d63d086ab7eb37188a1"
+        },
+        {
+          "name": "032-047.png",
+          "sha256": "cdc127661c5ef1f78346dbb4d7ad4dc2718833f332d5b496999b99cc6033d9ef"
+        },
+        {
+          "name": "048-063.png",
+          "sha256": "cdc5c7a637657507b7efbd16ec0199910990b51764868fb25fb23c07361ee6cc"
+        },
+        {
+          "name": "064-073.png",
+          "sha256": "814fc1ab8eb8c443ec05794ba2da490b0dc97f62a275a9e6eca5519e3d88586a"
+        }
+      ],
+      "native_paired_playback": {
+        "comparison": "retained V6 same view",
+        "status": "COMPLETED",
+        "both_ended": true,
+        "playback_rate": 1,
+        "duration_s": 2.466667
+      },
+      "observation": "The body advances and eases through each support phase without an obvious new ankle collapse. Load acceptance through the trunk remains understated."
+    },
+    {
+      "view": "root-motion-side",
+      "source_sha256": "9d823831c2f6bf6b3eb1482784fb75ef3532838385bf111a683ee2c7d0986e0c",
+      "render_receipt_sha256": "9f3b23476257fe2ed35b24e925dc690aff6923f98ee16726e3987cec8c6426fd",
+      "media_verification_sha256": "fab6722e6d7599503ea803d5782483a0844eb38adea7937884f5028b34cc5ac1",
+      "film_sha256": "91da9e6de5fb0245898f179416a9874cbfb2e0e2d19d44f1eccdcb7fa7b2d109",
+      "film_finished_argentina": "2026-09-08T04:35:24.513686-03:00",
+      "camera_sha256": "fae769d9ae648172c588a82eef9d153d6173e1ddfeea20905b8e57151a1a5373",
+      "camera_equals_retained_v3": true,
+      "all_frames_inspected": 74,
+      "contact_sheets_inspected": [
+        {
+          "name": "000-015.png",
+          "sha256": "47839a8fe9b47b3ceb209a616161fd7c32f18ed40271fd13705522a4b3329d90"
+        },
+        {
+          "name": "016-031.png",
+          "sha256": "fd44c18e9747cdcb7705c94d3c3d8926e1c54e21708e6491f222082b439d364d"
+        },
+        {
+          "name": "032-047.png",
+          "sha256": "52d54c4a4cf9ba74163605c957253b71aac6c54325f3cf7a210ea5c95822bb56"
+        },
+        {
+          "name": "048-063.png",
+          "sha256": "8913d10d542a89bf74d63505621a4fbcd534e0bbdcd51ae345007096e9e2b471"
+        },
+        {
+          "name": "064-073.png",
+          "sha256": "c739a5f799a18ec173fb6e769a1ee44eb21c5d35d4f3b9698826a6ffbafac7dd"
+        }
+      ],
+      "native_paired_playback": {
+        "comparison": "retained V6 same view",
+        "status": "COMPLETED",
+        "both_ended": true,
+        "playback_rate": 1,
+        "duration_s": 2.466667
+      },
+      "observation": "The ground and camera follow the original root motor. The pelvis has a modest variation in forward travel, with planted feet remaining visibly anchored. This improves travel rhythm slightly but remains whole-body polish required."
+    }
+  ],
+  "remaining": [
+    "Body loading and effort still require polish.",
+    "Exact local loop has 3.211645 mm/s mismatch against 1 mm/s.",
+    "No claim of measured Tarbosaurus kinetics or calibrated COM.",
+    "Unity/runtime parity NOT_RUN; production approval false."
+  ]
+}

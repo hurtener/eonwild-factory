@@ -1,0 +1,80 @@
+{
+  "review_head": "c02a17769d86841d9c9dddb66b4e0ed8e9365deb",
+  "body_height_mismatch": {
+    "context": 1.6,
+    "plan": 2.0,
+    "time_s": 0.041025641025641026,
+    "exact_root_forward_m": 0.020512820512820513,
+    "nextafter_root_forward_m": 0.016410256410256417,
+    "max_local_translation_jump_m": 0.010041170846442293
+  },
+  "gait_parameter_mismatch": {
+    "plan_step_length_body_heights": 0.2,
+    "query_step_length_body_heights": 0.4,
+    "time_s": 0.41025641025641024,
+    "exact_root_forward_m": 0.16410256410256413,
+    "nextafter_root_forward_m": 0.3282051282051283,
+    "max_local_translation_jump_m": 0.16410256410256419
+  },
+  "event_side": {
+    "true_right_liftoff_s": 0.352,
+    "registered_boundary": false,
+    "registered_boundaries_s": [
+      0.0,
+      0.36923076923076925,
+      0.8205128205128205,
+      1.18974358974359,
+      1.6
+    ],
+    "contacts": {
+      "left_limit": [
+        true,
+        false
+      ],
+      "value": [
+        true,
+        false
+      ],
+      "right_limit": [
+        true,
+        false
+      ]
+    },
+    "derivatives": {
+      "left_limit": {
+        "type": "SourceMotionUnavailable",
+        "status": "BRANCH_OR_CONVERGENCE_UNAVAILABLE",
+        "reason": "discrete row-solver branch changes across derivative probes"
+      },
+      "value": {
+        "type": "SourceMotionUnavailable",
+        "status": "BRANCH_OR_CONVERGENCE_UNAVAILABLE",
+        "reason": "discrete row-solver branch changes across derivative probes"
+      },
+      "right_limit": {
+        "type": "SourceMotionUnavailable",
+        "status": "BRANCH_OR_CONVERGENCE_UNAVAILABLE",
+        "reason": "discrete row-solver branch changes across derivative probes"
+      }
+    }
+  },
+  "contact_source_binding": {
+    "actual_source_sha256": "044a8be907eb650fa71c613f19655eb10a0dd23c1d6bce86dfef93cd8d9575f6",
+    "declared_contact_source_sha256": "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f",
+    "accepted_material_point_counts": {
+      "left": 1564,
+      "right": 1417
+    }
+  },
+  "malformed_plan_errors": {
+    "missing_time": {
+      "type": "KeyError",
+      "message": "'time_s'"
+    },
+    "nonnumeric_time": {
+      "type": "ValueError",
+      "message": "could not convert string to float: 'x'"
+    }
+  },
+  "truthy_non_boolean_legacy_overlay_accepted_as": true
+}

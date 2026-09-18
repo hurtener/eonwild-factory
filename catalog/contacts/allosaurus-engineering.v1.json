@@ -1,0 +1,81 @@
+{
+  "coordinate_system": {
+    "forward_axis": "+Z",
+    "handedness": "right",
+    "mass_units": "kg",
+    "time_units": "s",
+    "units": "m",
+    "up_axis": "Y"
+  },
+  "geometry": {
+    "feet": {
+      "left": {
+        "side": "left",
+        "sole_joints": [
+          "Bone_020"
+        ],
+        "toe_joints": [
+          "Bone_019",
+          "Bone_018"
+        ],
+        "weight_threshold": 0.25
+      },
+      "right": {
+        "side": "right",
+        "sole_joints": [
+          "Bone_026"
+        ],
+        "toe_joints": [
+          "Bone_025",
+          "Bone_024"
+        ],
+        "weight_threshold": 0.25
+      }
+    },
+    "ground": {
+      "up_axis": "Y",
+      "level_m": 2.0985933110215404e-05
+    },
+    "joint_accessors": [
+      3,
+      4
+    ],
+    "landmarks": {
+      "root_node": "Bone_000",
+      "hip_left_node": "Bone_023",
+      "hip_right_node": "Bone_029",
+      "foot_roots": {
+        "left": "Bone_020",
+        "right": "Bone_026"
+      }
+    },
+    "mesh_node": "output_unwrapped",
+    "position_accessor": 0,
+    "skin_index": 0,
+    "weight_accessors": [
+      5,
+      6
+    ]
+  },
+  "sampling": {
+    "count": 120,
+    "mode": "uniform_time"
+  },
+  "schema": "eonwild.motion.v9.contact-gauge-source.v1",
+  "source": {
+    "path": "assets/sha256/a403679deb968ec88f7b8b89e3e399cc0881e9cc602e765a6e55934c28ad3826.glb",
+    "sha256": "a403679deb968ec88f7b8b89e3e399cc0881e9cc602e765a6e55934c28ad3826",
+    "clips": {
+      "root_motion": "factory-defined",
+      "in_place": "factory-defined"
+    }
+  },
+  "thresholds": {
+    "contact_relative_velocity_mps": 1.0,
+    "crossover_epsilon_m": 1e-06,
+    "floor_gap_tolerance_m": 0.03,
+    "minimum_active_points": 3,
+    "toe_off_gap_m": 0.04,
+    "travel_epsilon_mps": 1e-06
+  }
+}

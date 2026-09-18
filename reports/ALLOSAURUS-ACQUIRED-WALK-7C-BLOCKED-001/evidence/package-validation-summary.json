@@ -1,0 +1,70 @@
+{
+  "classification": "compact exact-field copy; source validation remains authoritative",
+  "schema": "eonwild.audit.package-validation-summary.v1",
+  "selected_fields": {
+    "production_approved": false,
+    "rotation_rates": {
+      "in_place": {
+        "classification": "serialized per-channel rotation rate; CUBICSPLINE uses a conservative normalized-Hermite interval bound; not joint torque or muscle capacity",
+        "limit_degrees_per_s": 1200.0,
+        "maximum_degrees_per_s": 7620.683907817504,
+        "peak_witness": {
+          "bone": "Bone_028",
+          "conservative_interval_bound": true,
+          "maximum_subdivision_depth": 0,
+          "node": 31,
+          "raw_quaternion_norm_lower": 0.9871148467063904,
+          "times_s": [
+            1.0305405855178833,
+            1.0388513803482056
+          ]
+        },
+        "status": "FAIL"
+      },
+      "root_motion": {
+        "classification": "serialized per-channel rotation rate; CUBICSPLINE uses a conservative normalized-Hermite interval bound; not joint torque or muscle capacity",
+        "limit_degrees_per_s": 1200.0,
+        "maximum_degrees_per_s": 7620.683907817504,
+        "peak_witness": {
+          "bone": "Bone_028",
+          "conservative_interval_bound": true,
+          "maximum_subdivision_depth": 0,
+          "node": 31,
+          "raw_quaternion_norm_lower": 0.9871148467063904,
+          "times_s": [
+            1.0305405855178833,
+            1.0388513803482056
+          ]
+        },
+        "status": "FAIL"
+      }
+    },
+    "solver_feasibility": {
+      "checks": {
+        "max_foot_target_residual_m": false,
+        "max_unreachable_extension_m": true,
+        "maximum_articulation_envelope_violation_degrees": true,
+        "maximum_solved_foot_pitch_velocity_degrees_per_s": false
+      },
+      "classification": "engineering feasibility only; missing evidence is a failure",
+      "limits": {
+        "max_foot_target_residual_m": 0.001,
+        "max_unreachable_extension_m": 0.001,
+        "maximum_articulation_envelope_violation_degrees": 0.01,
+        "maximum_solved_foot_pitch_velocity_degrees_per_s": 600.0
+      },
+      "status": "FAIL",
+      "values": {
+        "max_foot_target_residual_m": 0.0010000027150181058,
+        "max_unreachable_extension_m": 0.0009999111963139296,
+        "maximum_articulation_envelope_violation_degrees": 0.0,
+        "maximum_solved_foot_pitch_velocity_degrees_per_s": 750.1430087784727
+      }
+    },
+    "technical_status": "BLOCKED",
+    "unity_parity": "NOT_RUN",
+    "visual_review": "PENDING"
+  },
+  "source_path": "ARC/out/allosaurus-acquired-reference-walk-007-release-7c62723/walk/validation.json",
+  "source_sha256": "fb4ca7be0e790049060e27e09b7a4e38155d4c9e11227ed9531cb94275c5044c"
+}

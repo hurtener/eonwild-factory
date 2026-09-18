@@ -1,0 +1,11 @@
+{
+  "description": "Portable fast-walk timing intent resolved through the shared adult grounded baseline.",
+  "id": "heavy-biped.tarbosaurus-pin-552-1-adult-fast-walk.motion-set.v2",
+  "program": "grounded_gait",
+  "program_profile": {
+    "path": "catalog/programs/heavy-biped.tarbosaurus-adult-fast-walk-motion-set.v1.json",
+    "sha256": "d77f8426702df529f19cc32e577ff0fdbb0c91ec76b310b2a24123065165f89d"
+  },
+  "schema": "eonwild.motion.motion-intent.v2",
+  "version": 2
+}

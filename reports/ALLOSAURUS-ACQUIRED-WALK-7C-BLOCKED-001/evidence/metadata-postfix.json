@@ -1,0 +1,16 @@
+{
+  "schema": "eonwild.audit.acquired-package-metadata-postfix.v1",
+  "head": "20229be12b78825ef8474079f746581a0444161b",
+  "tree": "15c5cdfeb1052b6b393a95e6523776d8a7f08c8f",
+  "parent": "1d4d54967204c20c256adfafff63859d65f7a863",
+  "focused_test": {"name": "test_unbound_authored_material_reference_rejects_legacy_package", "status": "PASS", "count": 1, "seconds": 0.57},
+  "retained_real_package": {
+    "path": "out/allosaurus-acquired-reference-walk-007-release-7c62723/walk",
+    "integrity": "PASS",
+    "technical_status": "BLOCKED",
+    "visual_review": "PENDING",
+    "unity_parity": "NOT_RUN",
+    "production_approved": false
+  },
+  "classification": "metadata inventory and fail-closed compile-set provenance closure; no gate waiver or package rebinding"
+}

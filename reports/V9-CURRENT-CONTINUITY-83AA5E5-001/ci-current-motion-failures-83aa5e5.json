@@ -1,0 +1,669 @@
+{
+  "source_head": "83aa5e5391848493c902af0c6bd4ecab6228afe6",
+  "run_id": 34231518184,
+  "classification": "Completed candidate/pair logs; native review jobs may remain running; no full CI pass",
+  "adult-v9": {
+    "log_sha256": "77e5af5c19dbc4ebd6446b0c8e3acb68124cb2fb4c1c181a55a439850ccbb8de",
+    "results": [
+      {
+        "recipe": "tarbosaurus-pin-552-1-adult-walk.v9",
+        "integrity": "PASS",
+        "technical_status": "BLOCKED",
+        "visual_review": "PENDING",
+        "unity_parity": "NOT_RUN",
+        "production_approved": false,
+        "failures": [
+          {
+            "path": "cyclic_continuity.in_place",
+            "reason": null,
+            "reasons": null,
+            "checks": {
+              "angular_velocity": true,
+              "linear_velocity": false
+            },
+            "values": null,
+            "limits": {
+              "angular_degrees_per_s": 10.0,
+              "linear_m_per_s": 0.001
+            }
+          },
+          {
+            "path": "cyclic_continuity.root_motion",
+            "reason": null,
+            "reasons": null,
+            "checks": {
+              "angular_velocity": true,
+              "linear_velocity": false
+            },
+            "values": null,
+            "limits": {
+              "angular_degrees_per_s": 10.0,
+              "linear_m_per_s": 0.001
+            }
+          }
+        ],
+        "rates": {
+          "in_place": {
+            "classification": "serialized per-channel rotation rate; not joint torque or muscle capacity",
+            "limit_degrees_per_s": 1200.0,
+            "maximum_degrees_per_s": 375.9124397804565,
+            "peak_witness": {
+              "bone": "Bone_009",
+              "node": 48,
+              "quaternions_xyzw": [
+                [
+                  -0.2154205382850616,
+                  0.012944200655223398,
+                  0.24445385565691666,
+                  0.9453405480612999
+                ],
+                [
+                  -0.18992031063642126,
+                  0.011125352493192868,
+                  0.23815599639497187,
+                  0.9524117930395368
+                ]
+              ],
+              "times_s": [
+                2.2356081008911133,
+                2.2439188957214355
+              ]
+            },
+            "status": "PASS"
+          },
+          "root_motion": {
+            "classification": "serialized per-channel rotation rate; not joint torque or muscle capacity",
+            "limit_degrees_per_s": 1200.0,
+            "maximum_degrees_per_s": 375.9124397804565,
+            "peak_witness": {
+              "bone": "Bone_009",
+              "node": 48,
+              "quaternions_xyzw": [
+                [
+                  -0.2154205382850616,
+                  0.012944200655223398,
+                  0.24445385565691666,
+                  0.9453405480612999
+                ],
+                [
+                  -0.18992031063642126,
+                  0.011125352493192868,
+                  0.23815599639497187,
+                  0.9524117930395368
+                ]
+              ],
+              "times_s": [
+                2.2356081008911133,
+                2.2439188957214355
+              ]
+            },
+            "status": "PASS"
+          }
+        },
+        "continuity": {
+          "in_place": {
+            "checks": {
+              "angular_velocity": true,
+              "linear_velocity": false
+            },
+            "classification": "exact serialized local-channel tangents: adjacent LINEAR translation and shortest-SLERP, or glTF CUBICSPLINE one-sided tangents with normalized quaternion derivatives; constant scale is admitted and nonconstant animated scale rejects; not a world or skinned-loop claim",
+            "diagnostics": {
+              "quadratic_three_sample_estimate": {
+                "classification": "diagnostic quadratic fit through three native samples; not an emitted LINEAR pass claim",
+                "maximum_angular_velocity_seam_degrees_per_s": 2.1933631614562237,
+                "maximum_linear_velocity_seam_m_per_s": 3.396728912763751e-06,
+                "peak_witnesses": {
+                  "angular": {
+                    "bone": "Bone_010",
+                    "incoming": [
+                      1.7160952364620428,
+                      2.415146943256649e-07,
+                      -0.18331968278631064
+                    ],
+                    "node": 49,
+                    "outgoing": [
+                      1.678030298578455,
+                      -3.2716349309456106e-07,
+                      -0.1792543700243043
+                    ]
+                  },
+                  "linear": {
+                    "bone": "Bone_001",
+                    "incoming": [
+                      -0.09492664883240576,
+                      -0.009963638189224855,
+                      -0.011454172105399047
+                    ],
+                    "node": 73,
+                    "outgoing": [
+                      -0.09492814891639254,
+                      -0.009963619208027194,
+                      -0.011451124622002283
+                    ]
+                  }
+                }
+              }
+            },
+            "limits": {
+              "angular_degrees_per_s": 10.0,
+              "linear_m_per_s": 0.001
+            },
+            "maximum_angular_velocity_seam_degrees_per_s": 2.2502600720859265,
+            "maximum_linear_velocity_seam_m_per_s": 0.00323101227406632,
+            "peak_witnesses": {
+              "angular": {
+                "bone": "Bone_014",
+                "incoming": [
+                  -0.3381298432305925,
+                  -1.1453711337788144e-07,
+                  -0.036120335100879516
+                ],
+                "incoming_key": {
+                  "neighbor_time_s": 2.4516892433166504,
+                  "time_s": 2.4600000381469727
+                },
+                "node": 62,
+                "outgoing": [
+                  -0.3771820782752954,
+                  -6.874698903717254e-09,
+                  -0.04029228278396929
+                ],
+                "outgoing_key": {
+                  "neighbor_time_s": 0.008310810662806034,
+                  "time_s": 0.0
+                },
+                "unit": "rad/s"
+              },
+              "linear": {
+                "bone": "Bone_001",
+                "incoming": [
+                  -0.0939219027913248,
+                  -0.009845300935222904,
+                  -0.012759355815020941
+                ],
+                "incoming_key": {
+                  "neighbor_time_s": 2.4516892433166504,
+                  "time_s": 2.4600000381469727
+                },
+                "node": 73,
+                "outgoing": [
+                  -0.09581119416741889,
+                  -0.01000844384005899,
+                  -0.01014336598247469
+                ],
+                "outgoing_key": {
+                  "neighbor_time_s": 0.008310810662806034,
+                  "time_s": 0.0
+                },
+                "unit": "m/s"
+              }
+            },
+            "status": "FAIL"
+          },
+          "root_motion": {
+            "checks": {
+              "angular_velocity": true,
+              "linear_velocity": false
+            },
+            "classification": "exact serialized local-channel tangents: adjacent LINEAR translation and shortest-SLERP, or glTF CUBICSPLINE one-sided tangents with normalized quaternion derivatives; constant scale is admitted and nonconstant animated scale rejects; not a world or skinned-loop claim",
+            "diagnostics": {
+              "quadratic_three_sample_estimate": {
+                "classification": "diagnostic quadratic fit through three native samples; not an emitted LINEAR pass claim",
+                "maximum_angular_velocity_seam_degrees_per_s": 2.1933631614562237,
+                "maximum_linear_velocity_seam_m_per_s": 5.9425524869816115e-06,
+                "peak_witnesses": {
+                  "angular": {
+                    "bone": "Bone_010",
+                    "incoming": [
+                      1.7160952364620428,
+                      2.415146943256649e-07,
+                      -0.18331968278631064
+                    ],
+                    "node": 49,
+                    "outgoing": [
+                      1.678030298578455,
+                      -3.2716349309456106e-07,
+                      -0.1792543700243043
+                    ]
+                  },
+                  "linear": {
+                    "bone": "Bone_000",
+                    "incoming": [
+                      -0.0,
+                      -0.0,
+                      0.6453324918239716
+                    ],
+                    "node": 74,
+                    "outgoing": [
+                      0.0,
+                      0.0,
+                      0.6453384343764585
+                    ]
+                  }
+                }
+              }
+            },
+            "limits": {
+              "angular_degrees_per_s": 10.0,
+              "linear_m_per_s": 0.001
+            },
+            "maximum_angular_velocity_seam_degrees_per_s": 2.2502600720859265,
+            "maximum_linear_velocity_seam_m_per_s": 0.00323101227406632,
+            "peak_witnesses": {
+              "angular": {
+                "bone": "Bone_014",
+                "incoming": [
+                  -0.3381298432305925,
+                  -1.1453711337788144e-07,
+                  -0.036120335100879516
+                ],
+                "incoming_key": {
+                  "neighbor_time_s": 2.4516892433166504,
+                  "time_s": 2.4600000381469727
+                },
+                "node": 62,
+                "outgoing": [
+                  -0.3771820782752954,
+                  -6.874698903717254e-09,
+                  -0.04029228278396929
+                ],
+                "outgoing_key": {
+                  "neighbor_time_s": 0.008310810662806034,
+                  "time_s": 0.0
+                },
+                "unit": "rad/s"
+              },
+              "linear": {
+                "bone": "Bone_001",
+                "incoming": [
+                  -0.0939219027913248,
+                  -0.009845300935222904,
+                  -0.012759355815020941
+                ],
+                "incoming_key": {
+                  "neighbor_time_s": 2.4516892433166504,
+                  "time_s": 2.4600000381469727
+                },
+                "node": 73,
+                "outgoing": [
+                  -0.09581119416741889,
+                  -0.01000844384005899,
+                  -0.01014336598247469
+                ],
+                "outgoing_key": {
+                  "neighbor_time_s": 0.008310810662806034,
+                  "time_s": 0.0
+                },
+                "unit": "m/s"
+              }
+            },
+            "status": "FAIL"
+          }
+        },
+        "feasibility": {
+          "checks": {
+            "max_foot_target_residual_m": true,
+            "max_unreachable_extension_m": true,
+            "maximum_articulation_envelope_violation_degrees": true,
+            "maximum_solved_foot_pitch_velocity_degrees_per_s": true
+          },
+          "classification": "engineering feasibility only; missing evidence is a failure",
+          "limits": {
+            "max_foot_target_residual_m": 0.001,
+            "max_unreachable_extension_m": 0.001,
+            "maximum_articulation_envelope_violation_degrees": 0.01,
+            "maximum_solved_foot_pitch_velocity_degrees_per_s": 600.0
+          },
+          "status": "PASS",
+          "values": {
+            "max_foot_target_residual_m": 4.429072004041383e-07,
+            "max_unreachable_extension_m": 0.0,
+            "maximum_articulation_envelope_violation_degrees": 0.0,
+            "maximum_solved_foot_pitch_velocity_degrees_per_s": 284.76605083481553
+          }
+        },
+        "oral": null,
+        "surface_gap_m": 0.00013062454401512866,
+        "penetration_m": 0.0,
+        "refinement": {
+          "classification": "material-witness correction before repeated constrained IK, not post-export projection",
+          "converged": true,
+          "convergence_components": {
+            "loaded_targets": true,
+            "swing_clearance": true
+          },
+          "ground_level_m": 7.44670325699803e-08,
+          "maximum_offset_m": 0.00132695837385567,
+          "target_gap_m": 0.0001,
+          "tolerance_m": 0.0002,
+          "trace": [
+            {
+              "iteration": 0,
+              "maximum_loaded_target_error_m": 0.0013574902587307292,
+              "maximum_swing_clearance_error_m": 0.0
+            },
+            {
+              "iteration": 1,
+              "maximum_loaded_target_error_m": 0.000203690987013528,
+              "maximum_swing_clearance_error_m": 0.0
+            },
+            {
+              "iteration": 2,
+              "maximum_loaded_target_error_m": 3.062609841091247e-05,
+              "maximum_swing_clearance_error_m": 0.0
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "walk-pairs": {
+    "log_sha256": "ab8e0a22e206c07acce2af68b1547c48eedf99840610fe6b79d4208e03e1e720",
+    "results": [
+      {
+        "schema": "eonwild.motion.handoff-validation.v1",
+        "kind": "start",
+        "steady_phase_s": 0.3075,
+        "status": "BLOCKED",
+        "individual_technical_status": [
+          "PASS",
+          "BLOCKED"
+        ],
+        "packages": [
+          {
+            "id": "heavy-biped.walk-start.v3",
+            "manifest_sha256": "1aab622f500629de3939f2c4cdb2e4e4eefbbe730784c8da082e79a5e3a29a6f",
+            "root_motion_sha256": "1b9ffe4138ed38281a35b1a3eb58d881fb453f869db34d4429935d139eca067e",
+            "in_place_sha256": "1a603fc0e89a68f20e065552e4b219b96f26509d2515cd48d64c975688b9440f"
+          },
+          {
+            "id": "heavy-biped.walk.v3",
+            "manifest_sha256": "4afff7db1f5295df2cc21878f75bad0f381b8395ef358635f5cba9b558dc1b8a",
+            "root_motion_sha256": "632d41dbb0e5e09d2c72e8c659bf74dcf5c684a33cba8dc8b661baaed6d579e4",
+            "in_place_sha256": "91d4109466ef754cf2dc42b0de25b6dd82c38681e1a6642f1410a3b9dfe39e15"
+          }
+        ],
+        "visual_review": "PENDING",
+        "unity_validation": "NOT_RUN",
+        "production_approved": false,
+        "classification": "independent native-time emitted pose, velocity, contact and material join; no crossfade or runtime claim",
+        "modes": {
+          "root_motion": {
+            "status": "FAIL",
+            "checks": {
+              "position_m": true,
+              "skin_position_m": true,
+              "rotation_degrees": true,
+              "linear_velocity_mps": false,
+              "skin_velocity_mps": false,
+              "angular_velocity_degrees_per_s": true,
+              "contact_state": true
+            },
+            "values": {
+              "position_m": 5.290474605582258e-07,
+              "skin_position_m": 5.058830014408636e-07,
+              "rotation_degrees": 5.415913646534471e-05,
+              "linear_velocity_mps": 0.048454208200126796,
+              "skin_velocity_mps": 0.026647237453355215,
+              "angular_velocity_degrees_per_s": 5.652509319335617
+            },
+            "limits": {
+              "position_m": 0.001,
+              "skin_position_m": 0.0005,
+              "rotation_degrees": 0.5,
+              "linear_velocity_mps": 0.001,
+              "skin_velocity_mps": 0.001,
+              "angular_velocity_degrees_per_s": 10.0
+            },
+            "witness_indices": {
+              "position_m": 62,
+              "skin_position_m": 1624,
+              "rotation_degrees": 62,
+              "linear_velocity_mps": 62,
+              "skin_velocity_mps": 2473,
+              "angular_velocity_degrees_per_s": 62
+            },
+            "before_times_s": [
+              7.983333110809326,
+              7.985416889190674,
+              7.987500190734863
+            ],
+            "after_times_s": [
+              0.3075000047683716,
+              0.3095833361148834,
+              0.31166666746139526
+            ],
+            "classification": "exact adjacent LINEAR translation/scale and shortest-SLERP FK/LBS tangents",
+            "diagnostics": {
+              "quadratic_three_sample_estimate": {
+                "values": {
+                  "linear_velocity_mps": 0.0006087372875804918,
+                  "skin_velocity_mps": 0.00036928836566089745,
+                  "angular_velocity_degrees_per_s": 0.0260727640451435
+                },
+                "witness_indices": {
+                  "linear_velocity_mps": 64,
+                  "skin_velocity_mps": 2276,
+                  "angular_velocity_degrees_per_s": 62
+                }
+              }
+            }
+          },
+          "in_place": {
+            "status": "FAIL",
+            "checks": {
+              "position_m": true,
+              "skin_position_m": true,
+              "rotation_degrees": true,
+              "linear_velocity_mps": false,
+              "skin_velocity_mps": false,
+              "angular_velocity_degrees_per_s": true,
+              "contact_state": true
+            },
+            "values": {
+              "position_m": 7.542873681675756e-07,
+              "skin_position_m": 7.349668541508406e-07,
+              "rotation_degrees": 5.415913646534471e-05,
+              "linear_velocity_mps": 0.04856118123756398,
+              "skin_velocity_mps": 0.026662772084173864,
+              "angular_velocity_degrees_per_s": 5.652509319335617
+            },
+            "limits": {
+              "position_m": 0.001,
+              "skin_position_m": 0.0005,
+              "rotation_degrees": 0.5,
+              "linear_velocity_mps": 0.001,
+              "skin_velocity_mps": 0.001,
+              "angular_velocity_degrees_per_s": 10.0
+            },
+            "witness_indices": {
+              "position_m": 62,
+              "skin_position_m": 1613,
+              "rotation_degrees": 62,
+              "linear_velocity_mps": 62,
+              "skin_velocity_mps": 2473,
+              "angular_velocity_degrees_per_s": 62
+            },
+            "before_times_s": [
+              7.983333110809326,
+              7.985416889190674,
+              7.987500190734863
+            ],
+            "after_times_s": [
+              0.3075000047683716,
+              0.3095833361148834,
+              0.31166666746139526
+            ],
+            "classification": "exact adjacent LINEAR translation/scale and shortest-SLERP FK/LBS tangents",
+            "diagnostics": {
+              "quadratic_three_sample_estimate": {
+                "values": {
+                  "linear_velocity_mps": 0.0005549386467807114,
+                  "skin_velocity_mps": 0.000350776777063439,
+                  "angular_velocity_degrees_per_s": 0.0260727640451435
+                },
+                "witness_indices": {
+                  "linear_velocity_mps": 64,
+                  "skin_velocity_mps": 2295,
+                  "angular_velocity_degrees_per_s": 62
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "schema": "eonwild.motion.handoff-validation.v1",
+        "kind": "stop",
+        "steady_phase_s": 0.3075,
+        "status": "BLOCKED",
+        "individual_technical_status": [
+          "PASS",
+          "BLOCKED"
+        ],
+        "packages": [
+          {
+            "id": "heavy-biped.walk-stop.v3",
+            "manifest_sha256": "70414ee7c653119f6f30128a6a2863a91c325dbf545174bcdf9ba95ea4b399e1",
+            "root_motion_sha256": "d600e37b15fbcf7a525ba14ceeeb90582902c7340dcd3f7c503de62427ce87cd",
+            "in_place_sha256": "b7de8f1f43747110472b18523d86bb857e3328bd950f16592b13c214efdff4ff"
+          },
+          {
+            "id": "heavy-biped.walk.v3",
+            "manifest_sha256": "4afff7db1f5295df2cc21878f75bad0f381b8395ef358635f5cba9b558dc1b8a",
+            "root_motion_sha256": "632d41dbb0e5e09d2c72e8c659bf74dcf5c684a33cba8dc8b661baaed6d579e4",
+            "in_place_sha256": "91d4109466ef754cf2dc42b0de25b6dd82c38681e1a6642f1410a3b9dfe39e15"
+          }
+        ],
+        "visual_review": "PENDING",
+        "unity_validation": "NOT_RUN",
+        "production_approved": false,
+        "classification": "independent native-time emitted pose, velocity, contact and material join; no crossfade or runtime claim",
+        "modes": {
+          "root_motion": {
+            "status": "FAIL",
+            "checks": {
+              "position_m": true,
+              "skin_position_m": true,
+              "rotation_degrees": true,
+              "linear_velocity_mps": false,
+              "skin_velocity_mps": false,
+              "angular_velocity_degrees_per_s": true,
+              "contact_state": true
+            },
+            "values": {
+              "position_m": 2.69849106533929e-07,
+              "skin_position_m": 2.79225250764097e-07,
+              "rotation_degrees": 9.659346157805868e-06,
+              "linear_velocity_mps": 0.04852446418586802,
+              "skin_velocity_mps": 0.026649223630873797,
+              "angular_velocity_degrees_per_s": 5.650971465072435
+            },
+            "limits": {
+              "position_m": 0.001,
+              "skin_position_m": 0.0005,
+              "rotation_degrees": 0.5,
+              "linear_velocity_mps": 0.001,
+              "skin_velocity_mps": 0.001,
+              "angular_velocity_degrees_per_s": 10.0
+            },
+            "witness_indices": {
+              "position_m": 53,
+              "skin_position_m": 1579,
+              "rotation_degrees": 48,
+              "linear_velocity_mps": 62,
+              "skin_velocity_mps": 2473,
+              "angular_velocity_degrees_per_s": 62
+            },
+            "before_times_s": [
+              0.3033333420753479,
+              0.30541667342185974,
+              0.3075000047683716
+            ],
+            "after_times_s": [
+              0.0,
+              0.0020833334419876337,
+              0.004166666883975267
+            ],
+            "classification": "exact adjacent LINEAR translation/scale and shortest-SLERP FK/LBS tangents",
+            "diagnostics": {
+              "quadratic_three_sample_estimate": {
+                "values": {
+                  "linear_velocity_mps": 0.0004731365322070586,
+                  "skin_velocity_mps": 0.00032334479340580827,
+                  "angular_velocity_degrees_per_s": 0.01288232434913175
+                },
+                "witness_indices": {
+                  "linear_velocity_mps": 21,
+                  "skin_velocity_mps": 2524,
+                  "angular_velocity_degrees_per_s": 49
+                }
+              }
+            }
+          },
+          "in_place": {
+            "status": "FAIL",
+            "checks": {
+              "position_m": true,
+              "skin_position_m": true,
+              "rotation_degrees": true,
+              "linear_velocity_mps": false,
+              "skin_velocity_mps": false,
+              "angular_velocity_degrees_per_s": true,
+              "contact_state": true
+            },
+            "values": {
+              "position_m": 2.8099847352397395e-07,
+              "skin_position_m": 2.89968185585291e-07,
+              "rotation_degrees": 9.659346157805868e-06,
+              "linear_velocity_mps": 0.04852436164776679,
+              "skin_velocity_mps": 0.026649244374355792,
+              "angular_velocity_degrees_per_s": 5.650971465072435
+            },
+            "limits": {
+              "position_m": 0.001,
+              "skin_position_m": 0.0005,
+              "rotation_degrees": 0.5,
+              "linear_velocity_mps": 0.001,
+              "skin_velocity_mps": 0.001,
+              "angular_velocity_degrees_per_s": 10.0
+            },
+            "witness_indices": {
+              "position_m": 53,
+              "skin_position_m": 1579,
+              "rotation_degrees": 48,
+              "linear_velocity_mps": 62,
+              "skin_velocity_mps": 2473,
+              "angular_velocity_degrees_per_s": 62
+            },
+            "before_times_s": [
+              0.3033333420753479,
+              0.30541667342185974,
+              0.3075000047683716
+            ],
+            "after_times_s": [
+              0.0,
+              0.0020833334419876337,
+              0.004166666883975267
+            ],
+            "classification": "exact adjacent LINEAR translation/scale and shortest-SLERP FK/LBS tangents",
+            "diagnostics": {
+              "quadratic_three_sample_estimate": {
+                "values": {
+                  "linear_velocity_mps": 0.0004724746328277402,
+                  "skin_velocity_mps": 0.0003070121499527338,
+                  "angular_velocity_degrees_per_s": 0.01288232434913175
+                },
+                "witness_indices": {
+                  "linear_velocity_mps": 21,
+                  "skin_velocity_mps": 2525,
+                  "angular_velocity_degrees_per_s": 49
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

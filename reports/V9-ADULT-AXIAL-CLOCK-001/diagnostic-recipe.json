@@ -1,0 +1,47 @@
+{
+  "animal": {
+    "path": "catalog/animals/tarbosaurus-bataar-pin-552-1.adult.v2.json",
+    "sha256": "53ffeba22e24a87504d3dcc310bedacf6db94d60a25ffe56ad028b03f41e849d"
+  },
+  "articulation_profile": {
+    "path": "catalog/articulation/heavy-biped.tarbosaurus-adult-walk.v1.json",
+    "sha256": "c1206143387ad4d1084a413ee031018f5a61a8e0539ef8256c6bba74a0f4bc6a"
+  },
+  "contact_profile": {
+    "path": "catalog/contacts/heavy-biped.v10.json",
+    "sha256": "61e0351fe9f7170ddce7f0b83a8f0379d119349d3c392ffec43e544adb115db5"
+  },
+  "description": "One-cycle adult V8 bind-pose body-only axial-clock diagnostic; preserves V8 source, gait, legs, contacts, articulation, body amplitudes, root travel and thresholds while phase-locking existing pelvis/chest/tail yaw to leading-hemipelvis advancement at double support; kinematic art direction only, no COM, force, work, mass-response, biological or production claim",
+  "family": "heavy-predatory-biped",
+  "forward_axis": [
+    0.0,
+    0.0,
+    1.0
+  ],
+  "id": "diagnostic.heavy-biped.tarbosaurus-pin-552-1-adult-walk.v8-axial-clock.v1",
+  "performance_profile": {
+    "path": "out/continuation-adult-v8-axial-clock-001/inputs/performance.axial-clock.v1.json",
+    "sha256": "580d45ec09e62fc0226be580ff095fa168dee0c5b500cda0bead8767787506cd"
+  },
+  "program": "grounded_gait",
+  "program_profile": {
+    "path": "catalog/programs/heavy-biped.tarbosaurus-adult-walk.v4.json",
+    "sha256": "271ccb833a8913d3dc6bd8281e798e54b9c7bebad2080136245cb7b5e5afa725"
+  },
+  "rig": {
+    "path": "catalog/rigs/heavy-biped.v9.json",
+    "sha256": "c3de770bf7dcc68219a28fb9851e9b75f3d3eebe2c2c0c7deb0078850100fd7e"
+  },
+  "schema": "eonwild.motion.factory-recipe.v1",
+  "source": {
+    "path": "assets/sha256/2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f.glb",
+    "sha256": "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f"
+  },
+  "supersedes": "heavy-biped.tarbosaurus-pin-552-1-adult-walk.v8",
+  "up_axis": [
+    0.0,
+    1.0,
+    0.0
+  ],
+  "version": 1
+}

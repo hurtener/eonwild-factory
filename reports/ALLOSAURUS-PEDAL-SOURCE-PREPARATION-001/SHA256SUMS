@@ -1,0 +1,12 @@
+edb41dc29578e79752995cb8f5b07bee199d88bbf55747fc2b7b00f5e1981a39  ./README.md
+42d226f32ae07c91826f7d7dfbfd91d97062cf2c07bb15debaebfcea43ddff83  ./evidence/base-ci-contracts.json
+ae68622a2cf6576dcde4092c1c89c30da199dfbc8781816a1cbb697d04dabe0b  ./evidence/focused-tests.log
+d5e2e1e731ab20edff6889dadb15994ffc8d28e4f4edfff8a9d5764c858d85c9  ./evidence/initial-shared-preflight.json
+acfd7eabe27cb26c52385ebd6f76db145427d71941f19da2c407c84a75a6e0ca  ./evidence/native-pedal-closeups.json
+a037ebd0d92629864940d8040dd036627bb9dfc456579739d5ee139f40614aa1  ./evidence/postfix-receipt.json
+c77473115f408584aed6cb130682aea30713002640ea2fc63328efb13e05fa08  ./evidence/reviewer2-narrow-closure.md
+c2f7c1e7fa199259814a25ddbae1af0f86a29b47823057e73c799c3b203d8fc4  ./evidence/reviewer2-round1.md
+bd05b12e1b7eb6e5b8da37e8e7d7bc9f67816e1804541a4ccd5ec261f382d00a  ./evidence/root-narrow-closure.json
+771de2f660ec196f3de93a44a7663ac55cd423a692eda661efe73993d3dfd6e7  ./evidence/root-round1.json
+82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18  ./evidence/ruff-changed.log
+14b57e410d1d27d39a655c1ec96fc4a0eee5bcb9171fddacefbbf480cccd32f8  ./evidence/unity-sample-verification.json

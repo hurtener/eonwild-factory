@@ -1,0 +1,28 @@
+{
+  "commit": "f0a08c8c481bb27e5f00080d5b46dba39e3a20f3",
+  "tree": "bd96e277560f8490d8ac38936e0702d8ff17db5a",
+  "status": "NARROW_ORIGINAL_FINDINGS_CLOSED",
+  "p0": 0,
+  "p1": 0,
+  "scope": "Two original Allosaurus pedal branch P1s: physical skin row double mutation, and raw-versus-admitted public source bindings. Final diff db0adb6..f0a08c8.",
+  "physical_alias_probe": {
+    "affected_vertices": 0,
+    "maximum_weight_difference": 0,
+    "raw_prepared_identity_unchanged": true
+  },
+  "public_admission": {
+    "admitted_source_sha256": "6b588e9ffa1ebdb167f1619593d8107779b1dfd943fe9dc0c02830572a953d8c",
+    "extras_eonwildGeometry_present": true,
+    "animal_contact_neutral_bindings": "PASS"
+  },
+  "tests": "2 narrow regressions passed in5.98s; db0 full focused28 previously passed in30.55s. Author final28 passed in22.58s.",
+  "limitations": [
+    "No mechanical gait, digit anatomy, hand/jaw deformation, Unity Allosaurus or production acceptance.",
+    "Original skin preparation and admitted assets remain distinct."
+  ],
+  "artifacts": {
+    "physical-alias-probe.py": "4c54554a8b9b3be4a5430dfda5da570ee5624bedd69a077a0071ca6ae33e7292",
+    "physical-alias-probe.json": "ad893e025b0f6dde71643d570185efda94dc57df5e6b049f7b6d71b0c18f4d85",
+    "pytest-narrow.log": "cb9481a1c1946943b12513f8cbb8939b8afa82338073ffcf3dfb3ebd8fb36e52"
+  }
+}

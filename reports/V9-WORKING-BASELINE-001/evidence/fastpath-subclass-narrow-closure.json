@@ -1,0 +1,18 @@
+{
+  "schema": "eonwild.motion.source-query-offset-fastpath-reviewer2-narrow-closure.v1",
+  "reviewed_head": "ff85ddd59da5da8d62f769b447f8accb87800124",
+  "parent": "f125e97ec857ac006ab84126f1b052232cd66693",
+  "original_reproducer": "reviewer2_subclass_repro.py",
+  "fastpath_status": "AVAILABLE",
+  "forced_fallback_status": "AVAILABLE",
+  "override_received_non_null_offsets": 0,
+  "override_call_flags": [
+    false,
+    false,
+    false,
+    false
+  ],
+  "focused": "4 passed in 47.29s",
+  "diff_check": "PASS",
+  "finding_status": "CLOSED"
+}

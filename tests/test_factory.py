@@ -1,7 +1,7 @@
 """Factory contracts and adversarial regressions; not visual acceptance."""
 from __future__ import annotations
 
-from dataclasses import replace
+from copy import deepcopy
 from pathlib import Path
 import json
 import math
@@ -11,11 +11,37 @@ import pytest
 
 from eonwild_motion.errors import ContractError
 from eonwild_motion.factory.compiler import compile_recipe, verify_package, validate_plan, event_track
-from eonwild_motion.factory.io import bind, confined, frame_axes, locked_file, signed_heading_degrees, write_json
+from eonwild_motion.factory.io import bind, confined, digest, frame_axes, locked_file, signed_heading_degrees, write_json
 from eonwild_motion.factory.source import admit_geometry
 from eonwild_motion.glb.container import Glb
-from eonwild_motion.planning.grounded_gait import GroundedGait, build_grounded_plan, sample_grounded_gait
+from eonwild_motion.planning.grounded_gait import (
+    GroundedGait,
+    build_grounded_plan,
+    require_grounded_phase_coverage,
+    sample_grounded_gait,
+)
+from eonwild_motion.solve.whole_body_gait_transition import _append_accessor, _encode
 from test_v9_airborne_gait import fixture
+
+
+def _midpoint_contact_result(verdict: str, sample_count: int) -> dict:
+    return {
+        "verdict": verdict,
+        "authority": {
+            "per_foot": {
+                side: {"verdict": verdict, "phases": [], "reasons": []}
+                for side in ("left", "right")
+            }
+        },
+        "maximum_penetration_m": 1.0 if verdict == "FAIL" else 0.0,
+        "maximum_stance_gap_m": 0.0001,
+        "ground_level_m": 0.0,
+        "sample_count": sample_count,
+        "classification": (
+            "final serialized skin, fixed floor, full multi-influence weights, "
+            "unchanged engineering thresholds"
+        ),
+    }
 
 
 def make_recipe(root: Path, *, prefix="fixture", scale=1.0, program="grounded_gait") -> Path:
@@ -61,7 +87,30 @@ def test_grounded_contact_boundaries_are_continuous():
             assert abs((v[1]-v[0])/h - (v[2]-v[1])/h) < .001
 
 
-@pytest.mark.parametrize("change", [{"duty_factor": .475}, {"cycles": True}, {"step_period_s": 0}, {"step_length_body_heights": 0}, {"sample_hz": 23}, {"pelvis_crouch_body_heights": math.nan}])
+def test_grounded_plan_rejects_clock_that_never_observes_swing():
+    gait = GroundedGait(
+        step_period_s=.06,
+        duty_factor=.999,
+        cycles=1,
+        sample_hz=24,
+    )
+    raw_samples = [
+        sample_grounded_gait(gait, time_s, 1.)
+        for time_s in (0., .04, .08, .12)
+    ]
+    assert all(row["support_count"] == 2 for row in raw_samples)
+    with pytest.raises(ContractError, match="left:swing, right:swing"):
+        require_grounded_phase_coverage(raw_samples)
+    with pytest.raises(ContractError, match="observe support and swing"):
+        build_grounded_plan(gait, 1.)
+
+
+@pytest.mark.parametrize("change", [{"duty_factor": .475}, {"cycles": True}, {"step_period_s": 0}, {"step_length_body_heights": 0}, {"sample_hz": 23}, {"pelvis_crouch_body_heights": math.nan},
+    {"handoff_phase_fraction": -.01, "handoff_sample_hz": 960},
+    {"handoff_phase_fraction": .26, "handoff_sample_hz": 960},
+    {"handoff_phase_fraction": .125, "handoff_sample_hz": 23},
+    {"handoff_phase_fraction": .125, "handoff_sample_hz": None},
+    {"handoff_phase_fraction": None, "handoff_sample_hz": 960}])
 def test_grounded_invalid_parameters_fail_closed(change):
     with pytest.raises(ContractError):
         GroundedGait(**change)
@@ -119,6 +168,117 @@ def test_repeat_compile_is_exact_and_reopened_receipts_are_bound(tmp_path, progr
     with pytest.raises(ContractError): compile_recipe(recipe, root=tmp_path, output=a)
     (a / "root_motion.glb").write_bytes((a / "root_motion.glb").read_bytes() + b"tamper")
     with pytest.raises(ContractError): verify_package(a)
+
+
+def test_profile_free_cubic_metadata_and_midpoint_verdict_are_bound(
+    tmp_path, monkeypatch
+):
+    recipe = make_recipe(tmp_path)
+    output = tmp_path / "candidate"
+    compile_recipe(recipe, root=tmp_path, output=output)
+    runtime = json.loads((output / "runtime.json").read_text())
+    runtime["interpolation"] = "CUBICSPLINE"
+    write_json(output / "runtime.json", runtime)
+    lock = json.loads((output / "inputs.lock.json").read_text())
+    lock["emission"] = {
+        "interpolation": "CUBICSPLINE",
+        "source_tangent_stencil_s": 0.001,
+        "convergence_stencil_s": 0.0005,
+    }
+    write_json(output / "inputs.lock.json", lock)
+    manifest = json.loads((output / "manifest.json").read_text())
+    for filename in ("runtime.json", "inputs.lock.json"):
+        manifest["files"][filename] = digest((output / filename).read_bytes())
+    write_json(output / "manifest.json", manifest)
+    monkeypatch.setattr(
+        "eonwild_motion.factory.compiler._serialized_interpolation",
+        lambda glb: "CUBICSPLINE",
+    )
+    with pytest.raises(ContractError, match="lacks midpoint plan evidence"):
+        verify_package(output)
+
+    plan = json.loads((output / "plan.json").read_text())
+    midpoint = deepcopy(plan)
+    midpoint["samples"] = [
+        item
+        for left, right in zip(plan["samples"][:-1], plan["samples"][1:])
+        for item in (
+            deepcopy(left),
+            {**deepcopy(left), "time_s": (left["time_s"] + right["time_s"]) / 2},
+        )
+    ] + [deepcopy(plan["samples"][-1])]
+    write_json(output / "cubic-midpoint-plan.json", midpoint)
+    validation = json.loads((output / "validation.json").read_text())
+    validation["technical_status"] = "PASS"
+    validation["cubic_midpoint_skinned_contact"] = {
+        "root_motion": _midpoint_contact_result("FAIL", len(midpoint["samples"])),
+        "in_place": _midpoint_contact_result("PASS", len(midpoint["samples"])),
+    }
+    write_json(output / "validation.json", validation)
+    manifest["technical_status"] = "PASS"
+    for filename in ("cubic-midpoint-plan.json", "validation.json"):
+        manifest["files"][filename] = digest((output / filename).read_bytes())
+    write_json(output / "manifest.json", manifest)
+    bare = deepcopy(validation)
+    bare["cubic_midpoint_skinned_contact"] = {
+        "root_motion": {"verdict": "PASS"},
+        "in_place": {"verdict": "PASS"},
+    }
+    write_json(output / "validation.json", bare)
+    manifest["files"]["validation.json"] = digest(
+        (output / "validation.json").read_bytes()
+    )
+    write_json(output / "manifest.json", manifest)
+    with pytest.raises(ContractError, match="result shape is invalid"):
+        verify_package(output)
+    write_json(output / "validation.json", validation)
+    manifest["files"]["validation.json"] = digest(
+        (output / "validation.json").read_bytes()
+    )
+    write_json(output / "manifest.json", manifest)
+    with pytest.raises(ContractError, match="ignores midpoint contact failure"):
+        verify_package(output)
+    validation["technical_status"] = "BLOCKED"
+    write_json(output / "validation.json", validation)
+    manifest["technical_status"] = "BLOCKED"
+    manifest["files"]["validation.json"] = digest(
+        (output / "validation.json").read_bytes()
+    )
+    write_json(output / "manifest.json", manifest)
+    assert verify_package(output)["technical_status"] == "BLOCKED"
+
+
+def test_serialized_cubic_exports_cannot_be_declared_linear(tmp_path):
+    recipe = make_recipe(tmp_path)
+    output = tmp_path / "candidate"
+    compile_recipe(recipe, root=tmp_path, output=output)
+    for mode in ("root_motion", "in_place"):
+        path = output / f"{mode}.glb"
+        glb = Glb.from_bytes(path.read_bytes())
+        binary = bytearray(glb.binary)
+        animation = glb.document["animations"][0]
+        for channel in animation["channels"]:
+            sampler = animation["samplers"][channel["sampler"]]
+            values = np.asarray(glb.accessor_values(sampler["output"]), dtype=float)
+            records = np.stack(
+                (np.zeros_like(values), values, np.zeros_like(values)), axis=1
+            )
+            sampler["output"] = _append_accessor(
+                glb.document,
+                binary,
+                records.reshape((-1, values.shape[1])),
+                {3: "VEC3", 4: "VEC4"}[values.shape[1]],
+            )
+            sampler["interpolation"] = "CUBICSPLINE"
+        glb.document["buffers"][0]["byteLength"] = len(binary)
+        path.write_bytes(_encode(glb.document, binary))
+    manifest = json.loads((output / "manifest.json").read_text())
+    for mode in ("root_motion", "in_place"):
+        filename = f"{mode}.glb"
+        manifest["files"][filename] = digest((output / filename).read_bytes())
+    write_json(output / "manifest.json", manifest)
+    with pytest.raises(ContractError, match="declaration differs from serialized"):
+        verify_package(output)
 
 
 @pytest.mark.parametrize("prefix,scale", [("renamed_", 1.), ("another_rig_", 1.6)])

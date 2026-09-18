@@ -1,0 +1,121 @@
+{
+  "classification": "source-bound rig-preparation and deformation evidence; not whole-cycle, visual, biological, Unity, or production acceptance",
+  "contact_masks": {
+    "left": {
+      "sole": {
+        "added": [],
+        "after_count": 913,
+        "before_count": 913,
+        "removed": []
+      },
+      "toe": {
+        "added": [],
+        "after_count": 834,
+        "before_count": 834,
+        "removed": []
+      }
+    },
+    "right": {
+      "sole": {
+        "added": [],
+        "after_count": 947,
+        "before_count": 947,
+        "removed": []
+      },
+      "toe": {
+        "added": [],
+        "after_count": 752,
+        "before_count": 752,
+        "removed": []
+      }
+    }
+  },
+  "execution": {
+    "head": "f9337f7a6d084de2ed42f1d2a88c09dbc512f826",
+    "tree": "49cedaac877f645b59e5c6130cc8910438a5c3f5",
+    "working_tree_status": []
+  },
+  "files": {
+    "admission_receipt": {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/allosaurus-pedal-attachment-transfer-005-admitted/receipt.json",
+      "sha256": "00d1355dbe9706ad0c7f0026140a48dbd657009ee4d7680a7bdee401a71b901f"
+    },
+    "admitted": {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/allosaurus-pedal-attachment-transfer-005-admitted/geometry.glb",
+      "sha256": "975a4bc626bc8d79537939ab3a0796473f54aa2c5fadc541f8561b13e442e6c6"
+    },
+    "baseline": {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/worktrees/eonwild-pedal-attachment-transfer/assets/sha256/3613b67c9513c4ed5b88665c7606e0c15791bb922b01a72e7223aa112546ec89.glb",
+      "sha256": "3613b67c9513c4ed5b88665c7606e0c15791bb922b01a72e7223aa112546ec89"
+    },
+    "config": {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/worktrees/eonwild-pedal-attachment-transfer/catalog/rig-preparation/allosaurus-incoming.v4.json",
+      "sha256": "5dbf9022283404cea1a3467e7a8be70d6050f005c20f2993af6cf2bef3a3ed92"
+    },
+    "contact": {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/worktrees/eonwild-pedal-attachment-transfer/catalog/contacts/allosaurus-engineering.v2.json",
+      "sha256": "e9d31d33399db1798cdda8d0c107bff7470ee0ecc3738dac75e4101eb478d15b"
+    },
+    "generation_receipt": {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/allosaurus-pedal-attachment-transfer-005/receipt.json",
+      "sha256": "2abdda9fb46e99e0e00761fc8e867f9f3cebf5873878e49505b2761f7c7c4e32"
+    },
+    "hard": {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/allosaurus-pedal-ankle-influence-counterfactual-001/prepared-bilateral-counterfactual.glb",
+      "sha256": "61adfba6ef0345adad6c9889eceedfbc0341a316bfdb4e825cd625a72e369660"
+    },
+    "taper": {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/allosaurus-pedal-attachment-transfer-005/geometry.glb",
+      "sha256": "06f44c2f2f0702bb6db93faa3315ce5ef27d37b911bcd7af5f64c9191634790a"
+    }
+  },
+  "full_gain_core_equals_prior_hard_counterfactual": true,
+  "schema": "eonwild.audit.allosaurus-pedal-attachment-transfer.v1",
+  "selector_boundary": {
+    "c2_taper": {
+      "boundary_edges": 309,
+      "boundary_triangles": 234,
+      "changed_vertices": 1482,
+      "maximum_weight_delta_jump": 0.21624170243740082,
+      "mean_weight_delta_jump": 0.04791269918496255,
+      "rotation_15deg_area_ratio_maximum": 1.0709271783378522,
+      "rotation_15deg_area_ratio_minimum": 0.9107886836361121,
+      "rotation_15deg_max_vertex_difference_m": 0.005078800677581853
+    },
+    "prior_hard": {
+      "boundary_edges": 268,
+      "boundary_triangles": 198,
+      "changed_vertices": 1279,
+      "maximum_weight_delta_jump": 0.23938258737325668,
+      "mean_weight_delta_jump": 0.08623355498655574,
+      "rotation_15deg_area_ratio_maximum": 1.5671969927965301,
+      "rotation_15deg_area_ratio_minimum": 0.7698629171146012,
+      "rotation_15deg_max_vertex_difference_m": 0.005078800677581853
+    },
+    "same_prior_boundary_edges": {
+      "c2_taper": {
+        "maximum_weight_delta_jump": 0.21624170243740082,
+        "mean_weight_delta_jump": 0.04386765491074978,
+        "p95_weight_delta_jump": 0.1490928903222084
+      },
+      "prior_hard": {
+        "maximum_weight_delta_jump": 0.23938258737325668,
+        "mean_weight_delta_jump": 0.08623355498655574,
+        "p95_weight_delta_jump": 0.2077399492263794
+      }
+    }
+  },
+  "structure": {
+    "inverse_binds_equal": true,
+    "maximum_neutral_skin_difference_m": 3.851797923279665e-09,
+    "maximum_weight_sum_change": 4.470348358154297e-08,
+    "nodes_equal": true,
+    "positions_equal": true,
+    "prepared_admitted_inverse_binds_equal": true,
+    "prepared_admitted_joint_rows_equal": true,
+    "prepared_admitted_positions_equal": true,
+    "prepared_admitted_weights_equal": true,
+    "skin_joints_equal": true,
+    "triangles_equal": true
+  }
+}

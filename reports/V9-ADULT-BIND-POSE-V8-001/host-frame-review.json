@@ -1,0 +1,196 @@
+{
+  "schema": "eonwild.motion.host-v8-frame-review.v1",
+  "captured_utc": "2026-09-08T09:07:07.832047+00:00",
+  "package_manifest_sha256": "a8b5b1d82b98d6e3579e4aec2e2ac15eec3f0baa9c0cb42ea4ff734dc15b88d3",
+  "render_audit_sha256": "6fbd8780a5328c6b3c7bc0f5b4033e965bacbe6feffc1dc9d6fa82bd23e76efd",
+  "source_glbs": {
+    "root_motion": "d0ca24b7738517804f525c7261d5dcbc0790b94479915ba1251250cd76433d37",
+    "in_place": "b9f8f18f2508132bf3a78c900d6f4c8addc380f4d65c0c81751fd5a3016a3579"
+  },
+  "coverage": {
+    "views": 5,
+    "frames_per_view": 74,
+    "total_frames_actually_inspected": 370,
+    "additional_full_resolution_frames": [
+      "side-body/frames/00018.png",
+      "side-body/frames/00023.png",
+      "side-body/frames/00030.png",
+      "front-body/frames/00023.png",
+      "three-quarter-body/frames/00060.png"
+    ]
+  },
+  "views": {
+    "side-body": {
+      "all_frames_actually_inspected": true,
+      "frame_count": 74,
+      "inspection_method": "all five ordered contact sheets at original resolution",
+      "film_sha256": "b23467bff4f91b9d646e0cb6e68606cbed8ec453851dadd3bd5e72ed36757447",
+      "contact_sheets": [
+        {
+          "name": "000-015.png",
+          "sha256": "34d17121c56a1100a40f16702e22d4d1b79d67184bd1f66ba13085a6c8edffe7"
+        },
+        {
+          "name": "016-031.png",
+          "sha256": "ed23539270476d20abb917d0c841923eb89aa837e464155a8ae77f173637e73c"
+        },
+        {
+          "name": "032-047.png",
+          "sha256": "dcb5db4ccca66bf4f4c4b793dd9a9c969c16cce2945e4788e7ca9d08d381d796"
+        },
+        {
+          "name": "048-063.png",
+          "sha256": "ab43434b1e7d69320b0e75015aff0ad8f298df5a6700ae25dd16166d62a436cf"
+        },
+        {
+          "name": "064-073.png",
+          "sha256": "25ca8c837db3c6ecd495d6e64a6ebd07afa3c47387b067d9769ade15e741b587"
+        }
+      ],
+      "observations": [
+        "Both recovery halves show open metatarsal recovery and a later forward extension, without the earlier deeply folded ankle silhouette.",
+        "The broad trunk and head remain nearly fixed in outline while most action is in the legs. Body-effort polish is still required.",
+        "The lower jaw stays conspicuously open throughout the walk."
+      ]
+    },
+    "front-body": {
+      "all_frames_actually_inspected": true,
+      "frame_count": 74,
+      "inspection_method": "all five ordered contact sheets at original resolution",
+      "film_sha256": "ea3b6c8c35c9ea560973f35e9d43b86f16548030541572fa82f0a41ebad54683",
+      "contact_sheets": [
+        {
+          "name": "000-015.png",
+          "sha256": "61730f6413f4b034824dd0380606f503e337c94618cae73a00c71f0405b9a42a"
+        },
+        {
+          "name": "016-031.png",
+          "sha256": "78ed4c25d1a4fe83d5694a76885177c87c6c4b8504111836963b8fbae6dcf186"
+        },
+        {
+          "name": "032-047.png",
+          "sha256": "b2edd8020384021e49696a2de8da706e4b6b56ebdfc37523479a7762d02da5ff"
+        },
+        {
+          "name": "048-063.png",
+          "sha256": "ad33feabb77081f034bfe7ea9356d844195bd66a92c715ea0056e424273caaec"
+        },
+        {
+          "name": "064-073.png",
+          "sha256": "a4c2f4f3306b8227a8894589d6e0181f603d6d9416c535f5958ec6c19f47c93b"
+        }
+      ],
+      "observations": [
+        "Alternating leg geometry appears substantially more even. Both recovery feet clear the ground in the reviewed frames.",
+        "The chest stays near the center corridor and gives only a restrained lateral response. Frame inspection does not establish dynamic balance."
+      ]
+    },
+    "rear-body": {
+      "all_frames_actually_inspected": true,
+      "frame_count": 74,
+      "inspection_method": "all five ordered contact sheets at original resolution",
+      "film_sha256": "e3da9943814d3475edaba77ef62c787ebc256c4174ee04f2e0d3dc5972375077",
+      "contact_sheets": [
+        {
+          "name": "000-015.png",
+          "sha256": "68adfa0a7dce4f24500dc7267c9eec9d00a42d9a3e3de924c9bd4e477a3ebd9a"
+        },
+        {
+          "name": "016-031.png",
+          "sha256": "c735026b58aa525801c16109269425b0d175e16c6e84b796b119202aaa5c6f61"
+        },
+        {
+          "name": "032-047.png",
+          "sha256": "f460c019b62ba908d878d69df0e84a6561b484fa18c69a2728e8d59a6d35e76a"
+        },
+        {
+          "name": "048-063.png",
+          "sha256": "28e2a5548f6a3244ab44915324a05802baa66358502b36ee7debbbcea6a86256"
+        },
+        {
+          "name": "064-073.png",
+          "sha256": "cd00763bc38d8f451bccdac3e3a18517e47bc4f6ac8d0ee00c698ac3e21d063c"
+        }
+      ],
+      "observations": [
+        "The two support/recovery halves look more consistent; no obvious gross mesh rupture or inverted leg is seen.",
+        "The tail sweeps laterally more visibly than the trunk shifts. Tail amplitude and phase should be reconsidered with whole-body effort."
+      ]
+    },
+    "three-quarter-body": {
+      "all_frames_actually_inspected": true,
+      "frame_count": 74,
+      "inspection_method": "all five ordered contact sheets at original resolution",
+      "film_sha256": "e63eb4ce0da45451c9ab4adbd4c1f7ebc2007d133432d54440172ca324f7f643",
+      "contact_sheets": [
+        {
+          "name": "000-015.png",
+          "sha256": "3112613a781e54bae3d55059d993504ab8b9a872ce8635b4b80b6e0bc82b448e"
+        },
+        {
+          "name": "016-031.png",
+          "sha256": "66451f19c69598bb32b93a0d8fe337e5d8cdf8a02462f8940092712f7a5dde91"
+        },
+        {
+          "name": "032-047.png",
+          "sha256": "5d3badce2abcf206ed9a82c3f9066d368d12c1fe8e1b50627b98d104622aba19"
+        },
+        {
+          "name": "048-063.png",
+          "sha256": "db544e26fa1b2aa5dbc8ad0623fa5ac8bf22fb9be9a6327a7b4b5d6ec1ddc20e"
+        },
+        {
+          "name": "064-073.png",
+          "sha256": "4fe4d430eef0ca47c20b66ba9a761684822d2be429518aeeee8cab1b3654999f"
+        }
+      ],
+      "observations": [
+        "Recovery direction and foot clearance remain readable through both halves of the step.",
+        "The body is visually restrained relative to the active legs, and the open jaw dominates the face."
+      ]
+    },
+    "root-motion-side": {
+      "all_frames_actually_inspected": true,
+      "frame_count": 74,
+      "inspection_method": "all five ordered contact sheets at original resolution",
+      "film_sha256": "d80bad0bf3301b63ccc35450b87c8c4d93e55d9036c65ec7e1e66384bb8ffdc4",
+      "contact_sheets": [
+        {
+          "name": "000-015.png",
+          "sha256": "1e8b98b16fbd2c3a3856c935170e9cd8875f4f5f07e9ea24b1c88bfcdd8807fc"
+        },
+        {
+          "name": "016-031.png",
+          "sha256": "fff72f1037140604ab8bb8b3255735ce317fe20e28b1ae2ef332b1b484cb239b"
+        },
+        {
+          "name": "032-047.png",
+          "sha256": "411f79f86cff76767fde46ba31a2b7bff1c838a69f9e4b41be11b9bced6d3392"
+        },
+        {
+          "name": "048-063.png",
+          "sha256": "31871d002852e71a9f4c4d52d8a190d10e55b55d10af44a07d512ae1bbaca079"
+        },
+        {
+          "name": "064-073.png",
+          "sha256": "bbf616c9ad5203dd142145add4e2f199be58406bbe54a06226fbcc7579a76995"
+        }
+      ],
+      "observations": [
+        "All frames inspected with the existing camera-only root tracking and fixed world floor.",
+        "The same leg and body observations persist in the traveling authority. No native-speed timing judgment is claimed from these sheets."
+      ]
+    }
+  },
+  "native_speed_playback": {
+    "status": "PENDING",
+    "reason": "CUA reports Mac locked; user unlock requested, no native-speed completion claimed"
+  },
+  "decision": "BILATERAL_GEOMETRY_IMPROVED; WHOLE_BODY_POLISH_AND_JAW_CALIBRATION_REQUIRED",
+  "visual_approval": false,
+  "biological_validation": false,
+  "unity": "NOT_RUN",
+  "source_support_comparison_sha256": "00c698d7b043ccc4778b5be1dc083e783bbca4ea17505a821670cb0acaf1215a",
+  "technical_status": "BLOCKED",
+  "technical_reason": "Unchanged exact serialized local linear tangent limit exceeded; frame review does not override it."
+}

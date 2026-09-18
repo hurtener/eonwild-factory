@@ -1,0 +1,79 @@
+{
+  "schema": "eonwild.motion.source-motion-query-diagnostic-closure.v1",
+  "publication": {
+    "implementation_base": "26ec06837cd03d59bd03d6bf948ae6e7d8cf4212",
+    "initial_evidence_commit": "c02a17769d86841d9c9dddb66b4e0ed8e9365deb",
+    "source_law_postfix": "270d4b2c9bdc13998cec2a3e816cfca5b4c2e362",
+    "shared_identity_cache_postfix": "2046c146eaa9fccf5d88513a4d0c0841b104d818",
+    "final_code_head": "811571866f71614927996026ff1c43b61c64d548",
+    "final_code_tree": "9c6f453eb148cf8d9dc63178f29d4bb09a7597b0"
+  },
+  "authority": {
+    "emits_animation": false,
+    "reads_completed_animated_glb": false,
+    "cubic_emitter_or_admission": false,
+    "continuous_skin_target_authority": false,
+    "refined_off_grid_status": "CONTINUOUS_SKIN_TARGET_UNAVAILABLE",
+    "formal_derivative_status": "BRANCH_OR_CONVERGENCE_UNAVAILABLE",
+    "raw_probe_status": "RAW_NUMERICAL_PROBE_ONLY",
+    "technical_approval": false,
+    "visual_review": "NOT_RUN",
+    "unity_parity": "NOT_RUN",
+    "production_approved": false
+  },
+  "source_and_test_identities": {
+    "src/eonwild_motion/solve/source_motion_query.py": {
+      "git_blob": "1adbf9d61455fe4e6c00af01f289c9579846319b",
+      "sha256": "c2c490830b6591b3dd1651de26c60a19d60db9a7dad6250e513b5cd01fe0ecd6"
+    },
+    "src/eonwild_motion/factory/source_identity.py": {
+      "git_blob": "3c1120eb424bbc61f3651f136f61d0030153b25e",
+      "sha256": "1a5a3f94489212080735e8838cb718cdf3906d3c5ad2601a06e4e366fb3b3728"
+    },
+    "tests/test_source_motion_query.py": {
+      "git_blob": "834febe3a4d5955f536a2efe505dd01241e134b5",
+      "sha256": "621753f3543ddf1b0b20c3e4808ac074ef1f96733e7097356aa2516f199848a1"
+    },
+    "tests/test_source_identity.py": {
+      "git_blob": "c5435aefc2d43107747f8ac6a55edf84c13b7541",
+      "sha256": "e6b37bee715381f471fc30b828db5a0f052bcdaaf2278400899c05dda116e98e"
+    },
+    "tests/test_phase_local_solved_pose.py": {
+      "git_blob": "bb671096e175a30328e0b0e7a9d40e18208d8a01",
+      "sha256": "1703abb697129d7989c22a9d9885c32b82d509f212414479dbab44dc1a438f83"
+    }
+  },
+  "reviews": [
+    {"round": 1, "reviewer": "root", "path": "reviews/root-round1.md", "sha256": "915fc02a49e950fa25d6102067ac7e228c04f566abe85a294eec4517695a82ce"},
+    {"round": 1, "reviewer": "independent", "path": "reviews/independent-round1.md", "sha256": "78cadbc036e5c0869df6879b9de22afc268241b5395225cd76e829957578b0c8"},
+    {"round": 2, "reviewer": "root", "path": "reviews/root-round2.md", "sha256": "f33232fb9921cfab5951b2c610db3a72b421ba7d8347209c34522bc9433504b7"},
+    {"round": 2, "reviewer": "independent", "path": "reviews/independent-round2.md", "sha256": "844fa3659da7a0ff1d6853850a8215c8d42d131ec1c4199ae24df331d65b0b38"},
+    {"round": "narrow", "reviewer": "root", "path": "reviews/root-narrow-closure.md", "sha256": "37e91fc102457155cfb352a99eb6ee5b55df3e99e20670eb0cc2c46db826d936"}
+  ],
+  "reproducers": [
+    {"path": "reproducers/round1-reviewer2-probe.py", "sha256": "9b26e457a2b7613ad4414f2d6ee84aeeb840b6d51f1477877320143c28c807de"},
+    {"path": "reproducers/round1-reviewer2-probe.json", "sha256": "6cfff4f46f910e569b68aae6adf99129deae6fe45b083e2ff67c24c711e8abf8"},
+    {"path": "reproducers/round2-reviewer2-probe.py", "sha256": "b99d67e5531f3c27b3ef47c31fc0e41f8f0134e9ebfb648500099c03f96914f0"},
+    {"path": "reproducers/round2-reviewer2-probe.json", "sha256": "714f0acbee8199ad31df22c56946a61fa575cd60551c51c62aa4d03308b15bfa"}
+  ],
+  "focused_validation": [
+    {
+      "head": "811571866f71614927996026ff1c43b61c64d548",
+      "command": "uv run --frozen pytest -q tests/test_source_motion_query.py tests/test_source_identity.py tests/test_phase_local_solved_pose.py",
+      "result": "27 passed in 3.96s",
+      "ruff": "PASS",
+      "diff_check": "PASS"
+    },
+    {
+      "head": "811571866f71614927996026ff1c43b61c64d548",
+      "command": "uv run --frozen pytest -q tests/test_source_motion_query.py",
+      "result": "10 passed in 1.77s",
+      "reviewer": "root"
+    }
+  ],
+  "remaining_p2_debt": {
+    "huge_integer_numeric_conversion": "10**10000 can raise OverflowError before typed ContractError conversion; deferred without changing source-law, solver, emitter, or thresholds.",
+    "source_query_jaw_integration": "NOT_IN_SCOPE: retain authoritative original raw source with detached admitted state; do not canonical-reencode raw and silently alter its SHA."
+  },
+  "full_suite": "NOT_RUN_IN_THIS_DIAGNOSTIC_CLOSURE"
+}

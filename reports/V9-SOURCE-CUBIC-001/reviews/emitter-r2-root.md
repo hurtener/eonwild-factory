@@ -1,0 +1,3 @@
+# Consolidated emitter round two disposition
+
+CHANGES REQUIRED for one remaining narrow P1 from independent reviewer two: verdict-only midpoint mappings erase the required gate payload while retaining technical PASS. Root reproduced closure of the original declaration and explicit FAIL contradiction issues; that report remains bounded evidence for those checks. See source-cubic-round2-reviewer2-36f311e.md for the remaining shape finding. The author is making one local correction and regression, followed by narrow diff-only closure under the two-round cap. No third full review is authorized or needed.

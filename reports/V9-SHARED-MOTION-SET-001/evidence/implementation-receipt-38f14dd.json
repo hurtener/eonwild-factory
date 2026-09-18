@@ -1,0 +1,17 @@
+{
+  "focused_tests": {
+    "elapsed_s": 258.69,
+    "log_sha256": "2a67bc93622e0b0d6881eff7c3b01617604559e78d058b07e009a1b9681a1457",
+    "result": "132 passed"
+  },
+  "head": "38f14dd4142c161f2838d80210ee3a83be836a91",
+  "published_ancestor": "945b189",
+  "ruff": {
+    "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+    "result": "PASS"
+  },
+  "schema": "eonwild.motion.shared-motion-set-implementation.v1",
+  "set_sha256": "53a00e395172a27424e49030d9a08348bf515cf958194093677e4b14485fd7ea",
+  "tree": "3d0a3bb3aa7f7552b7667f877ee0f4a1e076c8e0",
+  "worktree_clean": true
+}

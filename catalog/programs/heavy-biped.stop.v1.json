@@ -1,0 +1,7 @@
+{
+  "schema": "eonwild.motion.gait-transition.v1",
+  "parameters": {
+    "kind": "stop"
+  },
+  "classification": "contact-owned kinematic transition; emitted handoff and visual validation required"
+}

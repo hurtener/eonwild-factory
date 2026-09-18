@@ -1,0 +1,15 @@
+{
+  "classification": "art-directed coordination; no force or biological claim",
+  "parameters": {
+    "center_tail": true,
+    "gaze_elevation_degrees": 5.0,
+    "lane_width_body_heights": 0.24,
+    "pelvis_roll_degrees": 0.6,
+    "pelvis_sway_body_heights": 0.006,
+    "pelvis_yaw_degrees": 2.0,
+    "skin_refinement": true,
+    "tail_lag_fraction": 0.12,
+    "tail_yaw_degrees": 12.0
+  },
+  "schema": "eonwild.motion.performance.v1"
+}

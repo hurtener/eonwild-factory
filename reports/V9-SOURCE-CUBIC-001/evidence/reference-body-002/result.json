@@ -1,0 +1,2442 @@
+{
+  "schema": "eonwild.motion.reference-body-phase-diagnostic.v2",
+  "supersedes": {
+    "result": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/adult-v10-reference-body-001/result.json",
+    "reason": "The v1 distal-tail color threshold used uint8 additions that could wrap, and its prose described a selected-landmark maximum as the full-interval maximum."
+  },
+  "source_head": "94c81e7e3bb00e2e6057fd1babb183adb70ff9e3",
+  "reference": {
+    "path": "assets/examples/tarbosaurus/Tarbosaurus#walk_side_v02.mp4",
+    "sha256": "7f981e34a38955b44df799069693c57a5b5c881083ae4cbd62419e5cdc7d3ea5",
+    "stream": {
+      "width": 736,
+      "height": 400,
+      "fps": 24,
+      "frames": 193
+    },
+    "audited_interval": {
+      "first_frame": 60,
+      "last_frame": 114,
+      "basis": "Previously audited apparent cycle: contact 60-64, load acceptance 65-71, midstance 72-87, terminal stance 88-97, toe-off 98-102, swing 103-113."
+    },
+    "method": "Manual surface seeds propagated by consecutive normalized cross-correlation; distal tail from a deterministic fixed-background silhouette mask evaluated in signed int16 color arithmetic.",
+    "validation": {
+      "chest_surface": {
+        "seed_pixels": [
+          [
+            285,
+            150
+          ],
+          [
+            300,
+            145
+          ],
+          [
+            315,
+            150
+          ],
+          [
+            330,
+            150
+          ],
+          [
+            340,
+            160
+          ]
+        ],
+        "minimum_consecutive_ncc": 0.5300266517941269,
+        "median_consecutive_ncc": 0.7786519584091486,
+        "maximum_forward_backward_closure_pixels": 6.0
+      },
+      "pelvis_surface": {
+        "seed_pixels": [
+          [
+            360,
+            150
+          ],
+          [
+            375,
+            150
+          ],
+          [
+            390,
+            155
+          ],
+          [
+            405,
+            160
+          ]
+        ],
+        "minimum_consecutive_ncc": 0.38156073732838136,
+        "median_consecutive_ncc": 0.7592127069675979,
+        "maximum_forward_backward_closure_pixels": 4.0
+      },
+      "proximal_tail_surface": {
+        "seed_pixels": [
+          [
+            435,
+            160
+          ],
+          [
+            450,
+            165
+          ],
+          [
+            465,
+            170
+          ]
+        ],
+        "minimum_consecutive_ncc": 0.6473915900229028,
+        "median_consecutive_ncc": 0.8350121396458654,
+        "maximum_forward_backward_closure_pixels": 2.23606797749979
+      }
+    },
+    "correction_from_v1": {
+      "legacy_uint8_difference_frames": [
+        68,
+        75,
+        88,
+        93,
+        96,
+        98,
+        105,
+        106
+      ],
+      "selected_landmarks_unchanged": true
+    },
+    "full_interval_traces": [
+      {
+        "frame": 60,
+        "time_s": 2.5,
+        "event_label": "contact",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            315.0,
+            150.0
+          ],
+          "pelvis_surface": [
+            382.5,
+            152.5
+          ],
+          "proximal_tail_surface": [
+            450.0,
+            165.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          681.0,
+          216.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 0.0,
+          "pelvis_surface": 0.0,
+          "proximal_tail_surface": 0.0,
+          "distal_tail_silhouette": 0.0
+        }
+      },
+      {
+        "frame": 61,
+        "time_s": 2.5416666666666665,
+        "event_label": "contact",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            315.0,
+            150.0
+          ],
+          "pelvis_surface": [
+            382.5,
+            152.5
+          ],
+          "proximal_tail_surface": [
+            449.0,
+            165.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          683.0,
+          214.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 0.0,
+          "pelvis_surface": 0.0,
+          "proximal_tail_surface": 0.0,
+          "distal_tail_silhouette": -2.0
+        }
+      },
+      {
+        "frame": 62,
+        "time_s": 2.5833333333333335,
+        "event_label": "contact",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            315.0,
+            151.0
+          ],
+          "pelvis_surface": [
+            382.5,
+            153.0
+          ],
+          "proximal_tail_surface": [
+            449.0,
+            166.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          681.0,
+          209.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 1.0,
+          "pelvis_surface": 0.5,
+          "proximal_tail_surface": 1.0,
+          "distal_tail_silhouette": -7.0
+        }
+      },
+      {
+        "frame": 63,
+        "time_s": 2.625,
+        "event_label": "contact",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            315.0,
+            152.0
+          ],
+          "pelvis_surface": [
+            382.5,
+            154.0
+          ],
+          "proximal_tail_surface": [
+            448.0,
+            167.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          679.0,
+          205.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 2.0,
+          "pelvis_surface": 1.5,
+          "proximal_tail_surface": 2.0,
+          "distal_tail_silhouette": -11.0
+        }
+      },
+      {
+        "frame": 64,
+        "time_s": 2.6666666666666665,
+        "event_label": "contact",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            315.0,
+            154.0
+          ],
+          "pelvis_surface": [
+            382.5,
+            156.0
+          ],
+          "proximal_tail_surface": [
+            448.0,
+            169.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          675.0,
+          201.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 4.0,
+          "pelvis_surface": 3.5,
+          "proximal_tail_surface": 4.0,
+          "distal_tail_silhouette": -15.0
+        }
+      },
+      {
+        "frame": 65,
+        "time_s": 2.7083333333333335,
+        "event_label": "load_acceptance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            315.0,
+            156.0
+          ],
+          "pelvis_surface": [
+            382.0,
+            158.0
+          ],
+          "proximal_tail_surface": [
+            447.0,
+            172.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          673.0,
+          198.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 6.0,
+          "pelvis_surface": 5.5,
+          "proximal_tail_surface": 7.0,
+          "distal_tail_silhouette": -18.0
+        }
+      },
+      {
+        "frame": 66,
+        "time_s": 2.75,
+        "event_label": "load_acceptance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            315.0,
+            158.0
+          ],
+          "pelvis_surface": [
+            381.5,
+            161.0
+          ],
+          "proximal_tail_surface": [
+            446.0,
+            175.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          667.0,
+          196.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 8.0,
+          "pelvis_surface": 8.5,
+          "proximal_tail_surface": 10.0,
+          "distal_tail_silhouette": -20.0
+        }
+      },
+      {
+        "frame": 67,
+        "time_s": 2.7916666666666665,
+        "event_label": "load_acceptance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            315.0,
+            160.0
+          ],
+          "pelvis_surface": [
+            381.0,
+            163.0
+          ],
+          "proximal_tail_surface": [
+            445.0,
+            177.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          663.0,
+          198.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 10.0,
+          "pelvis_surface": 10.5,
+          "proximal_tail_surface": 12.0,
+          "distal_tail_silhouette": -18.0
+        }
+      },
+      {
+        "frame": 68,
+        "time_s": 2.8333333333333335,
+        "event_label": "load_acceptance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            314.0,
+            162.0
+          ],
+          "pelvis_surface": [
+            380.0,
+            164.0
+          ],
+          "proximal_tail_surface": [
+            444.0,
+            178.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          659.0,
+          202.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 12.0,
+          "pelvis_surface": 11.5,
+          "proximal_tail_surface": 13.0,
+          "distal_tail_silhouette": -14.0
+        }
+      },
+      {
+        "frame": 69,
+        "time_s": 2.875,
+        "event_label": "load_acceptance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            313.0,
+            163.0
+          ],
+          "pelvis_surface": [
+            379.0,
+            164.0
+          ],
+          "proximal_tail_surface": [
+            443.0,
+            179.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          659.0,
+          209.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 13.0,
+          "pelvis_surface": 11.5,
+          "proximal_tail_surface": 14.0,
+          "distal_tail_silhouette": -7.0
+        }
+      },
+      {
+        "frame": 70,
+        "time_s": 2.9166666666666665,
+        "event_label": "load_acceptance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            312.0,
+            163.0
+          ],
+          "pelvis_surface": [
+            378.0,
+            164.0
+          ],
+          "proximal_tail_surface": [
+            442.0,
+            179.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          659.0,
+          218.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 13.0,
+          "pelvis_surface": 11.5,
+          "proximal_tail_surface": 14.0,
+          "distal_tail_silhouette": 2.0
+        }
+      },
+      {
+        "frame": 71,
+        "time_s": 2.9583333333333335,
+        "event_label": "load_acceptance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            311.0,
+            163.0
+          ],
+          "pelvis_surface": [
+            377.5,
+            163.5
+          ],
+          "proximal_tail_surface": [
+            441.0,
+            179.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          655.0,
+          226.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 13.0,
+          "pelvis_surface": 11.0,
+          "proximal_tail_surface": 14.0,
+          "distal_tail_silhouette": 10.0
+        }
+      },
+      {
+        "frame": 72,
+        "time_s": 3.0,
+        "event_label": "midstance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            311.0,
+            163.0
+          ],
+          "pelvis_surface": [
+            377.5,
+            162.5
+          ],
+          "proximal_tail_surface": [
+            440.0,
+            178.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          655.0,
+          236.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 13.0,
+          "pelvis_surface": 10.0,
+          "proximal_tail_surface": 13.0,
+          "distal_tail_silhouette": 20.0
+        }
+      },
+      {
+        "frame": 73,
+        "time_s": 3.0416666666666665,
+        "event_label": "midstance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            311.0,
+            163.0
+          ],
+          "pelvis_surface": [
+            377.5,
+            161.5
+          ],
+          "proximal_tail_surface": [
+            440.0,
+            177.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          651.0,
+          243.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 13.0,
+          "pelvis_surface": 9.0,
+          "proximal_tail_surface": 12.0,
+          "distal_tail_silhouette": 27.0
+        }
+      },
+      {
+        "frame": 74,
+        "time_s": 3.0833333333333335,
+        "event_label": "midstance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            311.0,
+            162.0
+          ],
+          "pelvis_surface": [
+            377.5,
+            160.5
+          ],
+          "proximal_tail_surface": [
+            440.0,
+            176.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          647.0,
+          248.5
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 12.0,
+          "pelvis_surface": 8.0,
+          "proximal_tail_surface": 11.0,
+          "distal_tail_silhouette": 32.5
+        }
+      },
+      {
+        "frame": 75,
+        "time_s": 3.125,
+        "event_label": "midstance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            311.0,
+            161.0
+          ],
+          "pelvis_surface": [
+            377.5,
+            159.5
+          ],
+          "proximal_tail_surface": [
+            440.0,
+            174.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          643.0,
+          252.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 11.0,
+          "pelvis_surface": 7.0,
+          "proximal_tail_surface": 9.0,
+          "distal_tail_silhouette": 36.0
+        }
+      },
+      {
+        "frame": 76,
+        "time_s": 3.1666666666666665,
+        "event_label": "midstance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            311.0,
+            159.0
+          ],
+          "pelvis_surface": [
+            377.5,
+            158.5
+          ],
+          "proximal_tail_surface": [
+            440.0,
+            172.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          641.0,
+          255.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 9.0,
+          "pelvis_surface": 6.0,
+          "proximal_tail_surface": 7.0,
+          "distal_tail_silhouette": 39.0
+        }
+      },
+      {
+        "frame": 77,
+        "time_s": 3.2083333333333335,
+        "event_label": "midstance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            311.0,
+            158.0
+          ],
+          "pelvis_surface": [
+            377.5,
+            158.0
+          ],
+          "proximal_tail_surface": [
+            440.0,
+            170.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          637.0,
+          254.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 8.0,
+          "pelvis_surface": 5.5,
+          "proximal_tail_surface": 5.0,
+          "distal_tail_silhouette": 38.0
+        }
+      },
+      {
+        "frame": 78,
+        "time_s": 3.25,
+        "event_label": "midstance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            311.0,
+            156.0
+          ],
+          "pelvis_surface": [
+            377.5,
+            157.5
+          ],
+          "proximal_tail_surface": [
+            440.0,
+            168.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          633.0,
+          251.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 6.0,
+          "pelvis_surface": 5.0,
+          "proximal_tail_surface": 3.0,
+          "distal_tail_silhouette": 35.0
+        }
+      },
+      {
+        "frame": 79,
+        "time_s": 3.2916666666666665,
+        "event_label": "midstance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            311.0,
+            155.0
+          ],
+          "pelvis_surface": [
+            377.5,
+            157.5
+          ],
+          "proximal_tail_surface": [
+            440.0,
+            167.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          629.0,
+          247.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 5.0,
+          "pelvis_surface": 5.0,
+          "proximal_tail_surface": 2.0,
+          "distal_tail_silhouette": 31.0
+        }
+      },
+      {
+        "frame": 80,
+        "time_s": 3.3333333333333335,
+        "event_label": "midstance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            311.0,
+            154.0
+          ],
+          "pelvis_surface": [
+            377.0,
+            157.5
+          ],
+          "proximal_tail_surface": [
+            440.0,
+            166.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          625.0,
+          241.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 4.0,
+          "pelvis_surface": 5.0,
+          "proximal_tail_surface": 1.0,
+          "distal_tail_silhouette": 25.0
+        }
+      },
+      {
+        "frame": 81,
+        "time_s": 3.375,
+        "event_label": "midstance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            311.0,
+            153.0
+          ],
+          "pelvis_surface": [
+            376.0,
+            157.5
+          ],
+          "proximal_tail_surface": [
+            440.0,
+            165.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          621.0,
+          235.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 3.0,
+          "pelvis_surface": 5.0,
+          "proximal_tail_surface": 0.0,
+          "distal_tail_silhouette": 19.0
+        }
+      },
+      {
+        "frame": 82,
+        "time_s": 3.4166666666666665,
+        "event_label": "midstance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            312.0,
+            152.0
+          ],
+          "pelvis_surface": [
+            376.0,
+            158.0
+          ],
+          "proximal_tail_surface": [
+            441.0,
+            165.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          617.0,
+          229.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 2.0,
+          "pelvis_surface": 5.5,
+          "proximal_tail_surface": 0.0,
+          "distal_tail_silhouette": 13.0
+        }
+      },
+      {
+        "frame": 83,
+        "time_s": 3.4583333333333335,
+        "event_label": "midstance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            313.0,
+            152.0
+          ],
+          "pelvis_surface": [
+            376.5,
+            158.5
+          ],
+          "proximal_tail_surface": [
+            442.0,
+            165.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          613.0,
+          223.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 2.0,
+          "pelvis_surface": 6.0,
+          "proximal_tail_surface": 0.0,
+          "distal_tail_silhouette": 7.0
+        }
+      },
+      {
+        "frame": 84,
+        "time_s": 3.5,
+        "event_label": "midstance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            314.0,
+            152.0
+          ],
+          "pelvis_surface": [
+            377.5,
+            158.5
+          ],
+          "proximal_tail_surface": [
+            443.0,
+            165.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          607.0,
+          215.5
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 2.0,
+          "pelvis_surface": 6.0,
+          "proximal_tail_surface": 0.0,
+          "distal_tail_silhouette": -0.5
+        }
+      },
+      {
+        "frame": 85,
+        "time_s": 3.5416666666666665,
+        "event_label": "midstance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            315.0,
+            152.0
+          ],
+          "pelvis_surface": [
+            378.5,
+            159.5
+          ],
+          "proximal_tail_surface": [
+            444.0,
+            165.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          603.0,
+          211.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 2.0,
+          "pelvis_surface": 7.0,
+          "proximal_tail_surface": 0.0,
+          "distal_tail_silhouette": -5.0
+        }
+      },
+      {
+        "frame": 86,
+        "time_s": 3.5833333333333335,
+        "event_label": "midstance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            316.0,
+            153.0
+          ],
+          "pelvis_surface": [
+            379.5,
+            160.5
+          ],
+          "proximal_tail_surface": [
+            445.0,
+            166.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          597.0,
+          205.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 3.0,
+          "pelvis_surface": 8.0,
+          "proximal_tail_surface": 1.0,
+          "distal_tail_silhouette": -11.0
+        }
+      },
+      {
+        "frame": 87,
+        "time_s": 3.625,
+        "event_label": "midstance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            317.0,
+            155.0
+          ],
+          "pelvis_surface": [
+            380.5,
+            161.5
+          ],
+          "proximal_tail_surface": [
+            446.0,
+            167.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          589.0,
+          202.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 5.0,
+          "pelvis_surface": 9.0,
+          "proximal_tail_surface": 2.0,
+          "distal_tail_silhouette": -14.0
+        }
+      },
+      {
+        "frame": 88,
+        "time_s": 3.6666666666666665,
+        "event_label": "terminal_stance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            318.0,
+            157.0
+          ],
+          "pelvis_surface": [
+            381.5,
+            163.5
+          ],
+          "proximal_tail_surface": [
+            447.0,
+            169.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          581.0,
+          199.5
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 7.0,
+          "pelvis_surface": 11.0,
+          "proximal_tail_surface": 4.0,
+          "distal_tail_silhouette": -16.5
+        }
+      },
+      {
+        "frame": 89,
+        "time_s": 3.7083333333333335,
+        "event_label": "terminal_stance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            319.0,
+            158.0
+          ],
+          "pelvis_surface": [
+            381.5,
+            164.5
+          ],
+          "proximal_tail_surface": [
+            448.0,
+            171.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          575.0,
+          200.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 8.0,
+          "pelvis_surface": 12.0,
+          "proximal_tail_surface": 6.0,
+          "distal_tail_silhouette": -16.0
+        }
+      },
+      {
+        "frame": 90,
+        "time_s": 3.75,
+        "event_label": "terminal_stance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            320.0,
+            158.0
+          ],
+          "pelvis_surface": [
+            382.5,
+            164.5
+          ],
+          "proximal_tail_surface": [
+            449.0,
+            172.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          565.0,
+          201.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 8.0,
+          "pelvis_surface": 12.0,
+          "proximal_tail_surface": 7.0,
+          "distal_tail_silhouette": -15.0
+        }
+      },
+      {
+        "frame": 91,
+        "time_s": 3.7916666666666665,
+        "event_label": "terminal_stance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            320.0,
+            158.0
+          ],
+          "pelvis_surface": [
+            382.5,
+            164.5
+          ],
+          "proximal_tail_surface": [
+            450.0,
+            172.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          560.0,
+          203.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 8.0,
+          "pelvis_surface": 12.0,
+          "proximal_tail_surface": 7.0,
+          "distal_tail_silhouette": -13.0
+        }
+      },
+      {
+        "frame": 92,
+        "time_s": 3.8333333333333335,
+        "event_label": "terminal_stance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            321.0,
+            157.0
+          ],
+          "pelvis_surface": [
+            383.0,
+            163.0
+          ],
+          "proximal_tail_surface": [
+            451.0,
+            172.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          555.0,
+          205.5
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 7.0,
+          "pelvis_surface": 10.5,
+          "proximal_tail_surface": 7.0,
+          "distal_tail_silhouette": -10.5
+        }
+      },
+      {
+        "frame": 93,
+        "time_s": 3.875,
+        "event_label": "terminal_stance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            321.0,
+            157.0
+          ],
+          "pelvis_surface": [
+            383.0,
+            162.0
+          ],
+          "proximal_tail_surface": [
+            451.0,
+            171.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          553.0,
+          208.5
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 7.0,
+          "pelvis_surface": 9.5,
+          "proximal_tail_surface": 6.0,
+          "distal_tail_silhouette": -7.5
+        }
+      },
+      {
+        "frame": 94,
+        "time_s": 3.9166666666666665,
+        "event_label": "terminal_stance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            321.0,
+            156.0
+          ],
+          "pelvis_surface": [
+            383.5,
+            160.5
+          ],
+          "proximal_tail_surface": [
+            452.0,
+            170.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          553.0,
+          210.5
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 6.0,
+          "pelvis_surface": 8.0,
+          "proximal_tail_surface": 5.0,
+          "distal_tail_silhouette": -5.5
+        }
+      },
+      {
+        "frame": 95,
+        "time_s": 3.9583333333333335,
+        "event_label": "terminal_stance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            322.0,
+            155.0
+          ],
+          "pelvis_surface": [
+            384.5,
+            158.5
+          ],
+          "proximal_tail_surface": [
+            453.0,
+            169.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          555.0,
+          215.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 5.0,
+          "pelvis_surface": 6.0,
+          "proximal_tail_surface": 4.0,
+          "distal_tail_silhouette": -1.0
+        }
+      },
+      {
+        "frame": 96,
+        "time_s": 4.0,
+        "event_label": "terminal_stance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            323.0,
+            154.0
+          ],
+          "pelvis_surface": [
+            385.5,
+            156.5
+          ],
+          "proximal_tail_surface": [
+            454.0,
+            168.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          557.0,
+          218.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 4.0,
+          "pelvis_surface": 4.0,
+          "proximal_tail_surface": 3.0,
+          "distal_tail_silhouette": 2.0
+        }
+      },
+      {
+        "frame": 97,
+        "time_s": 4.041666666666667,
+        "event_label": "terminal_stance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            323.0,
+            153.0
+          ],
+          "pelvis_surface": [
+            385.5,
+            154.5
+          ],
+          "proximal_tail_surface": [
+            454.0,
+            167.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          559.0,
+          221.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 3.0,
+          "pelvis_surface": 2.0,
+          "proximal_tail_surface": 2.0,
+          "distal_tail_silhouette": 5.0
+        }
+      },
+      {
+        "frame": 98,
+        "time_s": 4.083333333333333,
+        "event_label": "toe_off",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            324.0,
+            152.0
+          ],
+          "pelvis_surface": [
+            385.5,
+            153.5
+          ],
+          "proximal_tail_surface": [
+            454.0,
+            166.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          563.0,
+          225.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 2.0,
+          "pelvis_surface": 1.0,
+          "proximal_tail_surface": 1.0,
+          "distal_tail_silhouette": 9.0
+        }
+      },
+      {
+        "frame": 99,
+        "time_s": 4.125,
+        "event_label": "toe_off",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            325.0,
+            151.0
+          ],
+          "pelvis_surface": [
+            386.5,
+            152.5
+          ],
+          "proximal_tail_surface": [
+            454.0,
+            165.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          567.0,
+          229.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 1.0,
+          "pelvis_surface": 0.0,
+          "proximal_tail_surface": 0.0,
+          "distal_tail_silhouette": 13.0
+        }
+      },
+      {
+        "frame": 100,
+        "time_s": 4.166666666666667,
+        "event_label": "toe_off",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            325.0,
+            151.0
+          ],
+          "pelvis_surface": [
+            386.5,
+            151.5
+          ],
+          "proximal_tail_surface": [
+            454.0,
+            164.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          571.0,
+          230.5
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 1.0,
+          "pelvis_surface": -1.0,
+          "proximal_tail_surface": -1.0,
+          "distal_tail_silhouette": 14.5
+        }
+      },
+      {
+        "frame": 101,
+        "time_s": 4.208333333333333,
+        "event_label": "toe_off",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            325.0,
+            151.0
+          ],
+          "pelvis_surface": [
+            386.5,
+            151.0
+          ],
+          "proximal_tail_surface": [
+            454.0,
+            163.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          575.0,
+          232.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 1.0,
+          "pelvis_surface": -1.5,
+          "proximal_tail_surface": -2.0,
+          "distal_tail_silhouette": 16.0
+        }
+      },
+      {
+        "frame": 102,
+        "time_s": 4.25,
+        "event_label": "toe_off",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            326.0,
+            151.0
+          ],
+          "pelvis_surface": [
+            387.5,
+            150.5
+          ],
+          "proximal_tail_surface": [
+            454.0,
+            162.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          579.0,
+          229.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 1.0,
+          "pelvis_surface": -2.0,
+          "proximal_tail_surface": -3.0,
+          "distal_tail_silhouette": 13.0
+        }
+      },
+      {
+        "frame": 103,
+        "time_s": 4.291666666666667,
+        "event_label": "swing",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            327.0,
+            151.0
+          ],
+          "pelvis_surface": [
+            388.5,
+            150.0
+          ],
+          "proximal_tail_surface": [
+            454.0,
+            161.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          585.0,
+          231.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 1.0,
+          "pelvis_surface": -2.5,
+          "proximal_tail_surface": -4.0,
+          "distal_tail_silhouette": 15.0
+        }
+      },
+      {
+        "frame": 104,
+        "time_s": 4.333333333333333,
+        "event_label": "swing",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            328.0,
+            151.0
+          ],
+          "pelvis_surface": [
+            389.5,
+            150.0
+          ],
+          "proximal_tail_surface": [
+            454.0,
+            161.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          591.0,
+          231.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 1.0,
+          "pelvis_surface": -2.5,
+          "proximal_tail_surface": -4.0,
+          "distal_tail_silhouette": 15.0
+        }
+      },
+      {
+        "frame": 105,
+        "time_s": 4.375,
+        "event_label": "swing",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            328.0,
+            151.0
+          ],
+          "pelvis_surface": [
+            389.5,
+            150.0
+          ],
+          "proximal_tail_surface": [
+            454.0,
+            161.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          599.0,
+          234.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 1.0,
+          "pelvis_surface": -2.5,
+          "proximal_tail_surface": -4.0,
+          "distal_tail_silhouette": 18.0
+        }
+      },
+      {
+        "frame": 106,
+        "time_s": 4.416666666666667,
+        "event_label": "swing",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            329.0,
+            151.0
+          ],
+          "pelvis_surface": [
+            390.5,
+            150.0
+          ],
+          "proximal_tail_surface": [
+            454.0,
+            161.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          607.0,
+          235.5
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 1.0,
+          "pelvis_surface": -2.5,
+          "proximal_tail_surface": -4.0,
+          "distal_tail_silhouette": 19.5
+        }
+      },
+      {
+        "frame": 107,
+        "time_s": 4.458333333333333,
+        "event_label": "swing",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            330.0,
+            151.0
+          ],
+          "pelvis_surface": [
+            391.5,
+            150.0
+          ],
+          "proximal_tail_surface": [
+            454.0,
+            161.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          613.0,
+          234.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 1.0,
+          "pelvis_surface": -2.5,
+          "proximal_tail_surface": -4.0,
+          "distal_tail_silhouette": 18.0
+        }
+      },
+      {
+        "frame": 108,
+        "time_s": 4.5,
+        "event_label": "swing",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            331.0,
+            151.0
+          ],
+          "pelvis_surface": [
+            392.5,
+            150.0
+          ],
+          "proximal_tail_surface": [
+            454.0,
+            161.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          621.0,
+          233.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 1.0,
+          "pelvis_surface": -2.5,
+          "proximal_tail_surface": -4.0,
+          "distal_tail_silhouette": 17.0
+        }
+      },
+      {
+        "frame": 109,
+        "time_s": 4.541666666666667,
+        "event_label": "swing",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            331.0,
+            151.0
+          ],
+          "pelvis_surface": [
+            392.5,
+            150.0
+          ],
+          "proximal_tail_surface": [
+            454.0,
+            161.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          629.0,
+          232.5
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 1.0,
+          "pelvis_surface": -2.5,
+          "proximal_tail_surface": -4.0,
+          "distal_tail_silhouette": 16.5
+        }
+      },
+      {
+        "frame": 110,
+        "time_s": 4.583333333333333,
+        "event_label": "swing",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            332.0,
+            151.0
+          ],
+          "pelvis_surface": [
+            393.0,
+            150.0
+          ],
+          "proximal_tail_surface": [
+            454.0,
+            161.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          637.0,
+          233.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 1.0,
+          "pelvis_surface": -2.5,
+          "proximal_tail_surface": -4.0,
+          "distal_tail_silhouette": 17.0
+        }
+      },
+      {
+        "frame": 111,
+        "time_s": 4.625,
+        "event_label": "swing",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            333.0,
+            151.0
+          ],
+          "pelvis_surface": [
+            393.0,
+            150.0
+          ],
+          "proximal_tail_surface": [
+            454.0,
+            161.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          643.0,
+          230.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 1.0,
+          "pelvis_surface": -2.5,
+          "proximal_tail_surface": -4.0,
+          "distal_tail_silhouette": 14.0
+        }
+      },
+      {
+        "frame": 112,
+        "time_s": 4.666666666666667,
+        "event_label": "swing",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            333.0,
+            151.0
+          ],
+          "pelvis_surface": [
+            393.0,
+            150.0
+          ],
+          "proximal_tail_surface": [
+            454.0,
+            161.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          648.0,
+          228.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 1.0,
+          "pelvis_surface": -2.5,
+          "proximal_tail_surface": -4.0,
+          "distal_tail_silhouette": 12.0
+        }
+      },
+      {
+        "frame": 113,
+        "time_s": 4.708333333333333,
+        "event_label": "swing",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            333.0,
+            151.0
+          ],
+          "pelvis_surface": [
+            393.0,
+            150.0
+          ],
+          "proximal_tail_surface": [
+            454.0,
+            162.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          653.0,
+          228.5
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 1.0,
+          "pelvis_surface": -2.5,
+          "proximal_tail_surface": -3.0,
+          "distal_tail_silhouette": 12.5
+        }
+      },
+      {
+        "frame": 114,
+        "time_s": 4.75,
+        "event_label": "next_apparent_contact",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            333.0,
+            151.0
+          ],
+          "pelvis_surface": [
+            393.0,
+            150.5
+          ],
+          "proximal_tail_surface": [
+            454.0,
+            163.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          657.0,
+          226.0
+        ],
+        "vertical_pixel_delta_from_frame_60": {
+          "chest_surface": 1.0,
+          "pelvis_surface": -2.0,
+          "proximal_tail_surface": -2.0,
+          "distal_tail_silhouette": 10.0
+        }
+      }
+    ],
+    "vertical_extrema_from_frame_60": {
+      "chest_surface": {
+        "maximum_image_down": {
+          "frame": 69,
+          "time_s": 2.875,
+          "delta_pixels": 13.0,
+          "plateau_frames": [
+            69,
+            70,
+            71,
+            72,
+            73
+          ],
+          "plateau_time_span_s": [
+            2.875,
+            3.0416666666666665
+          ]
+        },
+        "minimum_image_down": {
+          "frame": 60,
+          "time_s": 2.5,
+          "delta_pixels": 0.0,
+          "plateau_frames": [
+            60,
+            61
+          ],
+          "plateau_time_span_s": [
+            2.5,
+            2.5416666666666665
+          ]
+        }
+      },
+      "pelvis_surface": {
+        "maximum_image_down": {
+          "frame": 89,
+          "time_s": 3.7083333333333335,
+          "delta_pixels": 12.0,
+          "plateau_frames": [
+            89,
+            90,
+            91
+          ],
+          "plateau_time_span_s": [
+            3.7083333333333335,
+            3.7916666666666665
+          ]
+        },
+        "minimum_image_down": {
+          "frame": 103,
+          "time_s": 4.291666666666667,
+          "delta_pixels": -2.5,
+          "plateau_frames": [
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113
+          ],
+          "plateau_time_span_s": [
+            4.291666666666667,
+            4.708333333333333
+          ]
+        }
+      },
+      "proximal_tail_surface": {
+        "maximum_image_down": {
+          "frame": 69,
+          "time_s": 2.875,
+          "delta_pixels": 14.0,
+          "plateau_frames": [
+            69,
+            70,
+            71
+          ],
+          "plateau_time_span_s": [
+            2.875,
+            2.9583333333333335
+          ]
+        },
+        "minimum_image_down": {
+          "frame": 103,
+          "time_s": 4.291666666666667,
+          "delta_pixels": -4.0,
+          "plateau_frames": [
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112
+          ],
+          "plateau_time_span_s": [
+            4.291666666666667,
+            4.666666666666667
+          ]
+        }
+      },
+      "distal_tail_silhouette": {
+        "maximum_image_down": {
+          "frame": 76,
+          "time_s": 3.1666666666666665,
+          "delta_pixels": 39.0,
+          "plateau_frames": [
+            76
+          ],
+          "plateau_time_span_s": [
+            3.1666666666666665,
+            3.1666666666666665
+          ]
+        },
+        "minimum_image_down": {
+          "frame": 66,
+          "time_s": 2.75,
+          "delta_pixels": -20.0,
+          "plateau_frames": [
+            66
+          ],
+          "plateau_time_span_s": [
+            2.75,
+            2.75
+          ]
+        }
+      }
+    },
+    "landmarks": [
+      {
+        "frame": 60,
+        "time_s": 2.5,
+        "event_label": "contact",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            315.0,
+            150.0
+          ],
+          "pelvis_surface": [
+            382.5,
+            152.5
+          ],
+          "proximal_tail_surface": [
+            450.0,
+            165.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          681.0,
+          216.0
+        ],
+        "vertical_pixel_delta_from_contact": {
+          "chest_surface": 0.0,
+          "pelvis_surface": 0.0,
+          "proximal_tail_surface": 0.0,
+          "distal_tail_silhouette": 0.0
+        }
+      },
+      {
+        "frame": 65,
+        "time_s": 2.7083333333333335,
+        "event_label": "load_acceptance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            315.0,
+            156.0
+          ],
+          "pelvis_surface": [
+            382.0,
+            158.0
+          ],
+          "proximal_tail_surface": [
+            447.0,
+            172.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          673.0,
+          198.0
+        ],
+        "vertical_pixel_delta_from_contact": {
+          "chest_surface": 6.0,
+          "pelvis_surface": 5.5,
+          "proximal_tail_surface": 7.0,
+          "distal_tail_silhouette": -18.0
+        }
+      },
+      {
+        "frame": 71,
+        "time_s": 2.9583333333333335,
+        "event_label": "load_acceptance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            311.0,
+            163.0
+          ],
+          "pelvis_surface": [
+            377.5,
+            163.5
+          ],
+          "proximal_tail_surface": [
+            441.0,
+            179.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          655.0,
+          226.0
+        ],
+        "vertical_pixel_delta_from_contact": {
+          "chest_surface": 13.0,
+          "pelvis_surface": 11.0,
+          "proximal_tail_surface": 14.0,
+          "distal_tail_silhouette": 10.0
+        }
+      },
+      {
+        "frame": 80,
+        "time_s": 3.3333333333333335,
+        "event_label": "midstance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            311.0,
+            154.0
+          ],
+          "pelvis_surface": [
+            377.0,
+            157.5
+          ],
+          "proximal_tail_surface": [
+            440.0,
+            166.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          625.0,
+          241.0
+        ],
+        "vertical_pixel_delta_from_contact": {
+          "chest_surface": 4.0,
+          "pelvis_surface": 5.0,
+          "proximal_tail_surface": 1.0,
+          "distal_tail_silhouette": 25.0
+        }
+      },
+      {
+        "frame": 87,
+        "time_s": 3.625,
+        "event_label": "midstance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            317.0,
+            155.0
+          ],
+          "pelvis_surface": [
+            380.5,
+            161.5
+          ],
+          "proximal_tail_surface": [
+            446.0,
+            167.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          589.0,
+          202.0
+        ],
+        "vertical_pixel_delta_from_contact": {
+          "chest_surface": 5.0,
+          "pelvis_surface": 9.0,
+          "proximal_tail_surface": 2.0,
+          "distal_tail_silhouette": -14.0
+        }
+      },
+      {
+        "frame": 94,
+        "time_s": 3.9166666666666665,
+        "event_label": "terminal_stance",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            321.0,
+            156.0
+          ],
+          "pelvis_surface": [
+            383.5,
+            160.5
+          ],
+          "proximal_tail_surface": [
+            452.0,
+            170.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          553.0,
+          210.5
+        ],
+        "vertical_pixel_delta_from_contact": {
+          "chest_surface": 6.0,
+          "pelvis_surface": 8.0,
+          "proximal_tail_surface": 5.0,
+          "distal_tail_silhouette": -5.5
+        }
+      },
+      {
+        "frame": 100,
+        "time_s": 4.166666666666667,
+        "event_label": "toe_off",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            325.0,
+            151.0
+          ],
+          "pelvis_surface": [
+            386.5,
+            151.5
+          ],
+          "proximal_tail_surface": [
+            454.0,
+            164.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          571.0,
+          230.5
+        ],
+        "vertical_pixel_delta_from_contact": {
+          "chest_surface": 1.0,
+          "pelvis_surface": -1.0,
+          "proximal_tail_surface": -1.0,
+          "distal_tail_silhouette": 14.5
+        }
+      },
+      {
+        "frame": 108,
+        "time_s": 4.5,
+        "event_label": "swing",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            331.0,
+            151.0
+          ],
+          "pelvis_surface": [
+            392.5,
+            150.0
+          ],
+          "proximal_tail_surface": [
+            454.0,
+            161.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          621.0,
+          233.0
+        ],
+        "vertical_pixel_delta_from_contact": {
+          "chest_surface": 1.0,
+          "pelvis_surface": -2.5,
+          "proximal_tail_surface": -4.0,
+          "distal_tail_silhouette": 17.0
+        }
+      },
+      {
+        "frame": 114,
+        "time_s": 4.75,
+        "event_label": "next_apparent_contact",
+        "image_y_positive": "down",
+        "landmark_pixels": {
+          "chest_surface": [
+            333.0,
+            151.0
+          ],
+          "pelvis_surface": [
+            393.0,
+            150.5
+          ],
+          "proximal_tail_surface": [
+            454.0,
+            163.0
+          ]
+        },
+        "distal_tail_silhouette_pixel": [
+          657.0,
+          226.0
+        ],
+        "vertical_pixel_delta_from_contact": {
+          "chest_surface": 1.0,
+          "pelvis_surface": -2.0,
+          "proximal_tail_surface": -2.0,
+          "distal_tail_silhouette": 10.0
+        }
+      }
+    ],
+    "limits": "Pixels are fixed-camera qualitative timing evidence, not 3-D distance, anatomical joints, COM, force, or a calibrated motion target. Surface NCC and silhouette projection do not establish exact event alignment."
+  },
+  "emitted": {
+    "v9": {
+      "package": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/continuation-adult-v9-axial-jaw-001",
+      "manifest_sha256": "1b89ef55a89be040e12eb714ee391f31c5fca8f4b896bbe722e1eb26d5872b83",
+      "root_motion_glb_sha256": "db5b2123e156fa218cc426cf8774972a8c02f9cfce7eea9c80fcf91a8c129ebe",
+      "plan_sha256": "48e68639efd930c4209fd38fb484f4712461b5945cfbc90dd35fa047d1a7c513",
+      "clip": "heavy-biped.tarbosaurus-pin-552-1-adult-walk.v9.root_motion",
+      "samples": 297,
+      "duration_s": 2.4600000381469727,
+      "landmarks": [
+        {
+          "name": "double_support_left_leads",
+          "index": 18,
+          "requested_time_s": 0.14759999999999998,
+          "emitted_time_s": 0.14959459006786346,
+          "plan_stage": "DOUBLE_SUPPORT",
+          "support_count": 2,
+          "root_relative_vertical_m": {
+            "pelvis": 0.043600670576207534,
+            "chest": -0.2985805452028554,
+            "head": 0.08574217270549633,
+            "tail_base": 0.09047693375685206,
+            "tail_tip": -0.6891340067985308
+          },
+          "spatial_line_pitch_degrees": {
+            "pelvis_to_chest": -14.1919108601944,
+            "chest_to_head": 12.590224140389543,
+            "pelvis_to_tail_tip": -7.269782451623997
+          }
+        },
+        {
+          "name": "single_support_left",
+          "index": 92,
+          "requested_time_s": 0.7626,
+          "emitted_time_s": 0.7645946145057678,
+          "plan_stage": "SINGLE_SUPPORT",
+          "support_count": 1,
+          "root_relative_vertical_m": {
+            "pelvis": 0.0801455852972861,
+            "chest": -0.21598562965743762,
+            "head": 0.18266906531770788,
+            "tail_base": 0.11663100433424978,
+            "tail_tip": -0.7861965256523613
+          },
+          "spatial_line_pitch_degrees": {
+            "pelvis_to_chest": -12.215513372225312,
+            "chest_to_head": 13.072991013846291,
+            "pelvis_to_tail_tip": -8.549297951156019
+          }
+        },
+        {
+          "name": "double_support_right_leads",
+          "index": 166,
+          "requested_time_s": 1.3776000000000002,
+          "emitted_time_s": 1.3795945644378662,
+          "plan_stage": "DOUBLE_SUPPORT",
+          "support_count": 2,
+          "root_relative_vertical_m": {
+            "pelvis": 0.04360067254212385,
+            "chest": -0.2987519849321325,
+            "head": 0.08550321482672674,
+            "tail_base": 0.0902691636543782,
+            "tail_tip": -0.6893419947815953
+          },
+          "spatial_line_pitch_degrees": {
+            "pelvis_to_chest": -14.142645849771576,
+            "chest_to_head": 12.579000622913258,
+            "pelvis_to_tail_tip": -7.282345440073554
+          }
+        },
+        {
+          "name": "single_support_right",
+          "index": 240,
+          "requested_time_s": 1.9926000000000001,
+          "emitted_time_s": 1.9945945739746094,
+          "plan_stage": "SINGLE_SUPPORT",
+          "support_count": 1,
+          "root_relative_vertical_m": {
+            "pelvis": 0.08014558050868059,
+            "chest": -0.22114604921888104,
+            "head": 0.17619634894591973,
+            "tail_base": 0.11033760894746303,
+            "tail_tip": -0.7924897403942497
+          },
+          "spatial_line_pitch_degrees": {
+            "pelvis_to_chest": -12.421205909097132,
+            "chest_to_head": 13.031976837847242,
+            "pelvis_to_tail_tip": -8.610604535537437
+          }
+        }
+      ],
+      "vertical_extrema": {
+        "pelvis": {
+          "minimum_time_s": 0.14959459006786346,
+          "minimum_m": 0.043600670576207534,
+          "maximum_time_s": 0.7645946145057678,
+          "maximum_m": 0.0801455852972861,
+          "peak_to_peak_m": 0.03654491472107857
+        },
+        "chest": {
+          "minimum_time_s": 1.3795945644378662,
+          "minimum_m": -0.2987519849321325,
+          "maximum_time_s": 0.7645946145057678,
+          "maximum_m": -0.21598562965743762,
+          "peak_to_peak_m": 0.08276635527469489
+        },
+        "head": {
+          "minimum_time_s": 1.3795945644378662,
+          "minimum_m": 0.08550321482672674,
+          "maximum_time_s": 0.7562837600708008,
+          "maximum_m": 0.1826819521885259,
+          "peak_to_peak_m": 0.09717873736179916
+        },
+        "tail_base": {
+          "minimum_time_s": 1.4045270681381226,
+          "minimum_m": 0.09016028662229125,
+          "maximum_time_s": 0.7645946145057678,
+          "maximum_m": 0.11663100433424978,
+          "peak_to_peak_m": 0.026470717711958525
+        },
+        "tail_tip": {
+          "minimum_time_s": 1.9779729843139648,
+          "minimum_m": -0.7925882168822316,
+          "maximum_time_s": 0.14128378033638,
+          "maximum_m": -0.6891208943150897,
+          "peak_to_peak_m": 0.10346732256714186
+        },
+        "tail_tip_relative_pelvis": {
+          "minimum_time_s": 1.986283779144287,
+          "minimum_m": -0.872721372390564,
+          "maximum_time_s": 0.14128378033638,
+          "maximum_m": -0.7327301306405734,
+          "peak_to_peak_m": 0.13999124174999067
+        }
+      },
+      "limits": "Serialized node-origin geometry only; it is not COM, load, force, or skin-mass evidence."
+    },
+    "v10": {
+      "package": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/tarbosaurus-adult-walk-load-acceptance-v10-94c81e7",
+      "manifest_sha256": "e3e9923526ced4e2fd08b5f4ffaa455edb78ce66020c3c3f369e6336d5f0aff7",
+      "root_motion_glb_sha256": "32048baac7ab944cf954bf80aba51c9582c465d6c965a24cf3fb006a3f0a6212",
+      "plan_sha256": "b8ab09aa9b3adcb0bf60b494d16aa6a8fe4e96e4b7d148dc91855afe1320f22e",
+      "clip": "heavy-biped.tarbosaurus-pin-552-1-adult-walk.v10.root_motion",
+      "samples": 297,
+      "duration_s": 2.4600000381469727,
+      "landmarks": [
+        {
+          "name": "double_support_left_leads",
+          "index": 18,
+          "requested_time_s": 0.14759999999999998,
+          "emitted_time_s": 0.14959459006786346,
+          "plan_stage": "DOUBLE_SUPPORT",
+          "support_count": 2,
+          "root_relative_vertical_m": {
+            "pelvis": 0.0207596377728958,
+            "chest": -0.32458348348531096,
+            "head": 0.052801793304748657,
+            "tail_base": 0.06763590095354033,
+            "tail_tip": -0.7119750396018425
+          },
+          "spatial_line_pitch_degrees": {
+            "pelvis_to_chest": -14.323485187139191,
+            "chest_to_head": 12.35714698361212,
+            "pelvis_to_tail_tip": -7.269782451623997
+          }
+        },
+        {
+          "name": "single_support_left",
+          "index": 92,
+          "requested_time_s": 0.7626,
+          "emitted_time_s": 0.7645946145057678,
+          "plan_stage": "SINGLE_SUPPORT",
+          "support_count": 1,
+          "root_relative_vertical_m": {
+            "pelvis": 0.08014558085541923,
+            "chest": -0.21598558890755148,
+            "head": 0.18266920070955805,
+            "tail_base": 0.1166309998923829,
+            "tail_tip": -0.7861965300942282
+          },
+          "spatial_line_pitch_degrees": {
+            "pelvis_to_chest": -12.21551148834495,
+            "chest_to_head": 13.072994191433061,
+            "pelvis_to_tail_tip": -8.549297951156019
+          }
+        },
+        {
+          "name": "double_support_right_leads",
+          "index": 166,
+          "requested_time_s": 1.3776000000000002,
+          "emitted_time_s": 1.3795945644378662,
+          "plan_stage": "DOUBLE_SUPPORT",
+          "support_count": 2,
+          "root_relative_vertical_m": {
+            "pelvis": 0.02075963639638223,
+            "chest": -0.3247418532910771,
+            "head": 0.05256717600276195,
+            "tail_base": 0.06742812750863658,
+            "tail_tip": -0.7121830309273369
+          },
+          "spatial_line_pitch_degrees": {
+            "pelvis_to_chest": -14.273195194182996,
+            "chest_to_head": 12.345810956179744,
+            "pelvis_to_tail_tip": -7.282345440073554
+          }
+        },
+        {
+          "name": "single_support_right",
+          "index": 240,
+          "requested_time_s": 1.9926000000000001,
+          "emitted_time_s": 1.9945945739746094,
+          "plan_stage": "SINGLE_SUPPORT",
+          "support_count": 1,
+          "root_relative_vertical_m": {
+            "pelvis": 0.08014557539019584,
+            "chest": -0.22114600748683877,
+            "head": 0.17619651835267192,
+            "tail_base": 0.11033760382897828,
+            "tail_tip": -0.7924897455127344
+          },
+          "spatial_line_pitch_degrees": {
+            "pelvis_to_chest": -12.421203957931581,
+            "chest_to_head": 13.031981097410776,
+            "pelvis_to_tail_tip": -8.610604535537437
+          }
+        }
+      ],
+      "vertical_extrema": {
+        "pelvis": {
+          "minimum_time_s": 1.3795945644378662,
+          "minimum_m": 0.02075963639638223,
+          "maximum_time_s": 0.7645946145057678,
+          "maximum_m": 0.08014558085541923,
+          "peak_to_peak_m": 0.059385944459037
+        },
+        "chest": {
+          "minimum_time_s": 1.3795945644378662,
+          "minimum_m": -0.3247418532910771,
+          "maximum_time_s": 0.7645946145057678,
+          "maximum_m": -0.21598558890755148,
+          "peak_to_peak_m": 0.10875626438352559
+        },
+        "head": {
+          "minimum_time_s": 1.3795945644378662,
+          "minimum_m": 0.05256717600276195,
+          "maximum_time_s": 0.7562837600708008,
+          "maximum_m": 0.18268169591299,
+          "peak_to_peak_m": 0.13011451991022804
+        },
+        "tail_base": {
+          "minimum_time_s": 1.3879053592681885,
+          "minimum_m": 0.0673892654120758,
+          "maximum_time_s": 0.7645946145057678,
+          "maximum_m": 0.1166309998923829,
+          "peak_to_peak_m": 0.04924173448030711
+        },
+        "tail_tip": {
+          "minimum_time_s": 1.9779729843139648,
+          "minimum_m": -0.7925905860387079,
+          "maximum_time_s": 1.3546621799468994,
+          "maximum_m": -0.7119207888906747,
+          "peak_to_peak_m": 0.08066979714803324
+        },
+        "tail_tip_relative_pelvis": {
+          "minimum_time_s": 1.986283779144287,
+          "minimum_m": -0.872721372390564,
+          "maximum_time_s": 0.14128378033638,
+          "maximum_m": -0.7327301306405734,
+          "peak_to_peak_m": 0.13999124174999067
+        }
+      },
+      "limits": "Serialized node-origin geometry only; it is not COM, load, force, or skin-mass evidence."
+    }
+  },
+  "comparison_boundary": "Reference and factory cameras, clocks, models, and geometry differ. Compare phase direction only; do not compare pixels to metres or infer Tarbosaurus mechanics."
+}

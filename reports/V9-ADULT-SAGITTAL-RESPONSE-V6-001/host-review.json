@@ -1,0 +1,225 @@
+{
+  "schema": "eonwild.motion.host-visual-review.v1",
+  "source_sha": "4ea2ad2a9e2e73fdb7bfc2b0cd34445c044c1ae4",
+  "rendered_package_source_sha": "7e90292c4bd92c35bd40906537371d072a4c2899",
+  "reviewed_at_utc": "2026-09-08T06:53:31.761457+00:00",
+  "package_manifest_sha256": "5c745c9b15fb43ae2a12d18e37957a6fd6fe50ea73cd8dcfaf2b768ff77d3041",
+  "rendered_manifest_sha256": "1ec5cf25b456f258bb50c120f323c972b1ce6f58aeb9aee4ddad3d96ee6e09ad",
+  "source_equivalence_receipt_sha256": "d8690e9cac15eb8f39477ab017a1a2170160a8fa9cdd3ad699d1d60c94f3f2d8",
+  "glb_sha256": {
+    "root_motion": "4a2c3587d932a8c8bab002b9e536f1ed22a28388e928cbe18fe8845b553e7e7b",
+    "in_place": "2878670fbeacfd7e99014e8a75537d5711deea5ceafc96362b5fbc545a63aa0b"
+  },
+  "independent_reopened_audit_sha256": "4d57a160c1749f9a0ec20fdb1b9bca130a5dafb2765695b406cbe6ce3ad2b9eb",
+  "views": {
+    "side-body": {
+      "view": "side-body",
+      "mode": "in_place",
+      "source_sha256": "2878670fbeacfd7e99014e8a75537d5711deea5ceafc96362b5fbc545a63aa0b",
+      "render_receipt_sha256": "01331f4064a0d97435895fb59ad1ac3138864adedc26de0390b46dd465727772",
+      "film_sha256": "1b22c7e62cc87ee537731dbee8ad544189150b48e83247bfc42e2d3f3726796c",
+      "frames": 74,
+      "native_fps": 30,
+      "encoded_duration_s": 2.466667,
+      "camera_matches_retained_v3": true,
+      "full_ffmpeg_decode": "PASS",
+      "contact_sheets": [
+        {
+          "name": "000-015.png",
+          "sha256": "748dfa166a32242442e5325c39b7a389298fe2f947f477e0a790f11211388762"
+        },
+        {
+          "name": "016-031.png",
+          "sha256": "0207d53470f2785770c95b5410a7914f2bc934c9636be2e5c759c0bdf8e2deb5"
+        },
+        {
+          "name": "032-047.png",
+          "sha256": "a2c4fa6671e3aa11094ab3eedcc3f4a8e2d802b9fc8193a3e0d71fe76f0ee6d0"
+        },
+        {
+          "name": "048-063.png",
+          "sha256": "c4c088c2d32053889d51198b7db2a32f92b1c16c52c969e5582bd10c73dffdaa"
+        },
+        {
+          "name": "064-073.png",
+          "sha256": "b5a5075649ff0dc7b82154a59623eaf44b538ddd0be95e07f27c426597099897"
+        }
+      ],
+      "visual_inspection": "ALL_74_FRAMES_INSPECTED",
+      "native_1x_browser_playback": "PAIRED_V5_V6_COMPLETED_2.467_SECONDS"
+    },
+    "front-body": {
+      "view": "front-body",
+      "mode": "in_place",
+      "source_sha256": "2878670fbeacfd7e99014e8a75537d5711deea5ceafc96362b5fbc545a63aa0b",
+      "render_receipt_sha256": "9f6906c23f460cb70d7b48bd69bf6deb635a35b832465d75910da12a1e571dde",
+      "film_sha256": "8412398105a22f43edc4214e6ebbc2c669d55376d965394d070917ba0319ae0d",
+      "frames": 74,
+      "native_fps": 30,
+      "encoded_duration_s": 2.466667,
+      "camera_matches_retained_v3": true,
+      "full_ffmpeg_decode": "PASS",
+      "contact_sheets": [
+        {
+          "name": "000-015.png",
+          "sha256": "69bcd08f42fc13e1c15f793012d5a03e7af16f5e31864b6487deef11cd95ccb4"
+        },
+        {
+          "name": "016-031.png",
+          "sha256": "3eb0c7e37a5285a0903870584c1d6231e2012b66c0ce2d8a6b4f7aef790603ec"
+        },
+        {
+          "name": "032-047.png",
+          "sha256": "9bbc5e7366a9a62d58f3f5afe6775a040d5d4b11931a4c2d5616546bf19150c5"
+        },
+        {
+          "name": "048-063.png",
+          "sha256": "166c8b919b30c8b1d9f27b7937f0b87c5097ef55a833884fdeab102eae2ed63e"
+        },
+        {
+          "name": "064-073.png",
+          "sha256": "a18340e925c49dc30873cb8399a62a2f0bdc276f213811dafaae0fde12243d0e"
+        }
+      ],
+      "visual_inspection": "ALL_74_FRAMES_INSPECTED",
+      "native_1x_browser_playback": "PAIRED_V5_V6_COMPLETED_2.467_SECONDS"
+    },
+    "three-quarter-body": {
+      "view": "three-quarter-body",
+      "mode": "in_place",
+      "source_sha256": "2878670fbeacfd7e99014e8a75537d5711deea5ceafc96362b5fbc545a63aa0b",
+      "render_receipt_sha256": "16a72c42d3adba55c9ab87a1b952ac1989a3a6fcc46af95c7ab52ab6d517e110",
+      "film_sha256": "e507fe2254f994c0f987ee87a36e9e6db6d4d22355a25c0a25c5ea77933d2790",
+      "frames": 74,
+      "native_fps": 30,
+      "encoded_duration_s": 2.466667,
+      "camera_matches_retained_v3": true,
+      "full_ffmpeg_decode": "PASS",
+      "contact_sheets": [
+        {
+          "name": "000-015.png",
+          "sha256": "3b49ff30204c532021144f1722c3638580dcc7502011410f84edca65ee0195f2"
+        },
+        {
+          "name": "016-031.png",
+          "sha256": "9346b792861d093277928f3ab54dc811db5e4a85c5dab2827fa076fc82b4f822"
+        },
+        {
+          "name": "032-047.png",
+          "sha256": "b30fbf8179b287b33f2866609a5a81855281fcbd5be3ab0faf81f42d9ea64d39"
+        },
+        {
+          "name": "048-063.png",
+          "sha256": "b08c2fee2af98a8428684916e8f18d1052abe55177874a721c47c8da54985b2f"
+        },
+        {
+          "name": "064-073.png",
+          "sha256": "885c545be436c17669d3af3eccca6fac3c7eb4bb230fbd42c74bc15a5dd63631"
+        }
+      ],
+      "visual_inspection": "ALL_74_FRAMES_INSPECTED",
+      "native_1x_browser_playback": "PAIRED_V5_V6_COMPLETED_2.467_SECONDS"
+    },
+    "rear-body": {
+      "view": "rear-body",
+      "mode": "in_place",
+      "source_sha256": "2878670fbeacfd7e99014e8a75537d5711deea5ceafc96362b5fbc545a63aa0b",
+      "render_receipt_sha256": "07130877163d45449bc4c293671bcaf98b6f60942453e77c434a1d3074d03980",
+      "film_sha256": "9d4c9bd9560e0e00fb51b1ae145b142a9571afd897ed6f63b557bbbe127a3df7",
+      "frames": 74,
+      "native_fps": 30,
+      "encoded_duration_s": 2.466667,
+      "camera_matches_retained_v3": true,
+      "full_ffmpeg_decode": "PASS",
+      "contact_sheets": [
+        {
+          "name": "000-015.png",
+          "sha256": "26bb12f1803f0a21541debed78d52ee3c494394fa4a78a98296c614a77027876"
+        },
+        {
+          "name": "016-031.png",
+          "sha256": "e0aec8b5d1ff1d9d9cfee904e709bb7976cc1ff9f7d81e8742ab4a066a10d189"
+        },
+        {
+          "name": "032-047.png",
+          "sha256": "5b1b704bd3bc679af89782b69670146357d1609af61345ab2b4621a70e7b6e20"
+        },
+        {
+          "name": "048-063.png",
+          "sha256": "7ed5b60ac208fc8bcb0cad3c4c9c453d0966fc5f71b07346deeb3e7acb3e29b6"
+        },
+        {
+          "name": "064-073.png",
+          "sha256": "b93085d48d01cec199504bd77c1ffb9db0f9289d04a28189e7adfd13c17a6bb7"
+        }
+      ],
+      "visual_inspection": "ALL_74_FRAMES_INSPECTED",
+      "native_1x_browser_playback": "PAIRED_V5_V6_COMPLETED_2.467_SECONDS"
+    },
+    "root-motion-side": {
+      "view": "root-motion-side",
+      "mode": "root_motion",
+      "source_sha256": "4a2c3587d932a8c8bab002b9e536f1ed22a28388e928cbe18fe8845b553e7e7b",
+      "render_receipt_sha256": "e77b2afbaa979c5f0bbb9efd7b8a31a8b93ddb307d7ee97ab61df4d111e44abf",
+      "film_sha256": "be3b2c6406307d9163fcffd94d36f876f4759713cfa5c4b8b1125dcf6f0ba703",
+      "frames": 74,
+      "native_fps": 30,
+      "encoded_duration_s": 2.466667,
+      "camera_matches_retained_v3": true,
+      "full_ffmpeg_decode": "PASS",
+      "contact_sheets": [
+        {
+          "name": "000-015.png",
+          "sha256": "1f9f47b3816385c89e8c47bf3e9fcc32eef8f290f7c47de675e00499914329bb"
+        },
+        {
+          "name": "016-031.png",
+          "sha256": "fc4aeb8c9e80b1e3da969541aa016e048d70ca3aa30c39c1944fe314e2e1e895"
+        },
+        {
+          "name": "032-047.png",
+          "sha256": "e0d5b2e6934229e348900ad600e3fa115527e0b937d037d0fc134189d5ec4d72"
+        },
+        {
+          "name": "048-063.png",
+          "sha256": "3f4f9764f122fd3a73b10157291ebb31a52f2f08e51186b10ed4c2c53cf0ee9b"
+        },
+        {
+          "name": "064-073.png",
+          "sha256": "b7c7618f42d39518a42893a3cf8cf80cbf35320159370c553a381c10c9f511bf"
+        }
+      ],
+      "visual_inspection": "ALL_74_FRAMES_INSPECTED",
+      "native_1x_browser_playback": "PAIRED_V5_V6_COMPLETED_2.467_SECONDS"
+    }
+  },
+  "inspected_frames": 370,
+  "decision": "IMPROVED_OVER_V5; WHOLE_BODY_POLISH_REQUIRED",
+  "observations": [
+    "Modest coordinated pelvis, trunk, neck and tail pitch makes the body less rigid in side and three-quarter views.",
+    "The improved extended recovery direction remains visible; no obvious return of the pinched ankle, mid-swing floor skimming, lateral leg crossing, or upward head posture in these views.",
+    "Front and rear views retain restrained lateral transfer without an obvious added wobble.",
+    "Forward travel still reads too even and the body effort remains understated; this candidate is progress, not completed weight presentation."
+  ],
+  "quantitative_controls": {
+    "all_297_authored_samples_equal_excluding_skin_refinement_offsets": true,
+    "local_translation_and_scale_unchanged": true,
+    "left_interior_swing_clearance_m": 0.035213918142751884,
+    "right_interior_swing_clearance_m": 0.04060277186506809,
+    "head_attention_delta_under_degrees": 1e-05
+  },
+  "reference": {
+    "path": "assets/examples/tarbosaurus/tarbosaurus_walk.mp4",
+    "sha256": "b0401fc76a202d6ed5dc9a5515f1054eab8bed8075c04f6167ff426fd603f5ae",
+    "native_frames": 241,
+    "native_fps": 24,
+    "reinspection": "All 241 frames and one complete native-speed playback this stage; qualitative reference only."
+  },
+  "limitations": [
+    "Authored kinematic response does not demonstrate COM, force balance, inertia or a mass-driven simulation.",
+    "Existing package continuity PASS uses the quadratic estimator; independently audited exact exported tangents require a separate correction.",
+    "800x450 four-sample diagnostic renders limit fine surface-deformation judgment."
+  ],
+  "unity_parity": "NOT_RUN",
+  "production_approved": false
+}

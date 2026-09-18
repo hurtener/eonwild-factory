@@ -1,0 +1,63 @@
+{
+  "base": "a80150e6a378b6d35055718f62cd58a22fc4cc1c",
+  "changed_paths": [
+    "src/eonwild_motion/solve/authored_material_contact.py",
+    "src/eonwild_motion/solve/constant_skin_targets.py",
+    "src/eonwild_motion/solve/grounded_transition_clearance.py",
+    "src/eonwild_motion/solve/source_motion_query.py",
+    "tests/test_authored_material_contact.py"
+  ],
+  "evidence_hygiene": {
+    "author_706_dense_result_sha256": "f7c54a7445e1fcb6f84794125936cb5e3a9128d7c39fdde4418f2c4856046a71",
+    "author_706_retention": "UNRETAINED after generic path overwrite",
+    "head_specific_8d_retention": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/free-dinosaur-pack-investigation-001/actual-package/allosaurus-raptor-material-contact-preflight-975a-8d789469-001/retention.json",
+    "preserved_failure_authority": "root independent 706 dense witness"
+  },
+  "fixture_preflight": {
+    "closure": "materialized recipes/schemas and hardlinked only exact tracked fixture GLBs; source tree remained clean",
+    "first_attempt": "INVALID_ENVIRONMENT",
+    "reason": "sparse checkout omitted tracked recipes and two exact referenced GLBs"
+  },
+  "focused_gate": {
+    "result": "62 passed in 59.97s",
+    "tests": [
+      "tests/test_authored_material_contact.py",
+      "tests/test_constant_skin_targets.py",
+      "tests/test_grounded_transition_clearance.py",
+      "tests/test_source_motion_query.py",
+      "tests/test_source_cubic_emission.py"
+    ]
+  },
+  "head": "b7f3938cee3c59e36bef108b883f66dab0291dc9",
+  "limitations": [
+    "non-emitting adapter evaluation only",
+    "acquired Raptor axial/body animation not yet injected",
+    "no emitted package, native playback, visual, or Unity acceptance",
+    "factory declaration/input path remains a later stage"
+  ],
+  "range_diff": "three commits exactly equivalent under git range-diff",
+  "reviewed_source_head": "8d789469435e44277b19e06f35b57e35de8f3bad",
+  "reviewed_source_tree": "6cb8a11b671a3991e06da0dce5a8b6b474a0bd80",
+  "reviews": {
+    "author_dense": {
+      "checked": "71 unique key/midpoint/event-neighborhood samples available; rates are sampled secants, not serialized or continuous authority",
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/free-dinosaur-pack-investigation-001/actual-package/allosaurus-raptor-material-contact-preflight-975a-8d789469-001/receipt.json",
+      "sha256": "a6feae20b0191f84c70fa56a1d2f787a60442b2983b876b763388b819c889e8d"
+    },
+    "reviewer2_narrow": {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/authored-material-adapter-reviewer2-706c/narrow-closure-8d78946.md",
+      "sha256": "a9462da7295521337b668c1f8345a0c53d9cd5b9c959af7040070b5c4d911a45"
+    },
+    "root_dense": {
+      "checked": "133/133 available",
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/authored-material-adapter-root-r1/dense-8d78946.json",
+      "sha256": "a3871434619154bff20edb11ce18f4e61c3e2523ce6aa0af8e0ba3d43bd9203a"
+    },
+    "root_narrow": {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/authored-material-adapter-root-r1/narrow-closure-8d78946.json",
+      "sha256": "eb2b4d62afa8734e9cb253fe85665053007f80874cf29d24306c7044b0580b6c"
+    }
+  },
+  "schema": "eonwild.audit.authored-material-adapter-integration.v1",
+  "tree": "1c357d019e1e792bc9b238b20793a71231910fe9"
+}

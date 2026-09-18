@@ -1,0 +1,30 @@
+{
+  "diff_check": "PASS",
+  "focused_tests": {
+    "elapsed_s": 3.09,
+    "result": "29 passed",
+    "sha256": "bd5eb40e6794d73978404b968a014dbaca5a03adbabf979f46a34c5cd93fdd99"
+  },
+  "git_status": "clean",
+  "head": "1cc88b0b1669764421da1ef11cd48aa6ca9bbd08",
+  "negative_regressions": [
+    "changed pelvis yaw rejected",
+    "changed nested neutral jaw joint accessor rejected"
+  ],
+  "parent": "62e4b60a399672fc68f9817aeabc6bff8c300912",
+  "retained_real_package": {
+    "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/adult-fast-shared-baseline-cubic-001/fast-walk",
+    "result": {
+      "integrity": "PASS",
+      "production_approved": false,
+      "technical_status": "PASS",
+      "unity_parity": "NOT_RUN",
+      "visual_review": "PENDING"
+    },
+    "verify_log_sha256": "5143eda8e25834a8e70183eae913921ab83b99ab49ef6184e12090e3a95b3722"
+  },
+  "ruff": "PASS",
+  "schema": "eonwild.motion.performance-json-normalization-receipt.v1",
+  "tree": "a33800102d942652841d4863477f2e8d8f8866a7",
+  "worktree": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/worktrees/eonwild-shared-motion-set-baseline-fix"
+}

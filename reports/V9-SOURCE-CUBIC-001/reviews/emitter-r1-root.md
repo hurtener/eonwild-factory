@@ -1,0 +1,21 @@
+# Source-derived CUBICSPLINE emitter: root round-one review
+
+Reviewed exact `67a675686475e18c28e3900e519272fbb6f65320` against `c48e746166b1accc81f71a7ab0bbce834f2122c5`. The tracked worktree remained clean during the review; its local `.venv` symlink is untracked. Scope is the eleven changed exporter, compiler, quality, batch-law and test files. Previously closed exact tangent, quaternion bound, source query and constant-law stages were not reopened wholesale.
+
+## Findings
+
+**P1 — Bind declared interpolation to both serialized exports.** `src/eonwild_motion/factory/compiler.py:616` derives interpolation solely from runtime metadata and never compares it with the actual samplers. On the real successful walk stage2 package, leaving both cubic GLBs unchanged while removing `runtime.interpolation`, `lock.emission` and midpoint inventory makes verification infer LINEAR and skip all new cubic requirements. After rehashing the edited metadata, verification returns integrity PASS and technical PASS. A downstream consumer relying on this declaration can choose an incompatible playback path; the stock Blender discrepancy is independently measured. Read the actual serialized channel interpolation in both exports and require agreement with the supported package emission declaration. Retain default LINEAR compatibility for genuine LINEAR packages. Probe: `root-source-cubic-round1-interpolation-binding-probe.json`, SHA-256 `8c0eac4197f54bb5b43b033f44698a4e8725c85e386df74e6d293f0e8193ed3d`.
+
+**P1 — Reject a technical PASS that contradicts the new midpoint contact gate.** `src/eonwild_motion/factory/compiler.py:654` only checks the outer keys of midpoint contact evidence. Changing the actual package's root-motion midpoint verdict to FAIL and penetration to 1 m, retaining technical PASS and rehashing the metadata, still returns integrity PASS and technical PASS. The compiler itself includes both midpoint contact results in its technical conjunction, so the verifier must enforce that new relationship and validate the supported per-mode verdict shape. A correctly formed midpoint failure must remain a truthful BLOCKED package. This request is limited to newly added cubic evidence, not a redesign of legacy package verification. Probe: `root-source-cubic-round1-midpoint-verdict-probe.json`, SHA-256 `357f23489c2c5a94febfb9ec2f3dab053ee90bf92f93460df7e8178834611a96`.
+
+## Executed checks and acceptance boundaries
+
+Root independently ran `tests/test_source_cubic_emission.py`, `tests/test_exact_emitted_tangent.py`, `tests/test_factory.py`, `tests/test_articulation_profile.py` and `tests/test_constant_skin_targets.py`: **86 passed in 99.16 s**. Test data used the external SSD. Log SHA-256: `a7c604948d7e4306ae78fefa5a9ccffd8a559822c0ad137ce321ffc24e266966`; JUnit SHA-256: `67962258a2259cf598da525480664cfefc5295aa5dfc41664ec80b8760498856`.
+
+The actual exploratory walk package (`source-cubic-walk-v3-c48-stage2`, manifest `03c0edb00b53abe5d68094480f2558d657f076e4099c85650ac293bb901a277c`) passes its compiler technical gates. Its executed generator is the dirty descendant identified by the emission checkpoint's engine hashes, not the committed c48 base or the later 67a6756 head. The pinned adult compile at 67a6756 remains independent and running.
+
+The exact local loop velocities were independently reproduced using the published consumer. A separate reviewed endpoint audit establishes world-joint maximum `0.4837465658 mm/s` and ordered foot-material maximum `0.1633629553 mm/s`, both below the unchanged 1 mm/s limit. Genuine Khronos 2.0.0-dev.3.10 reports zero errors and four warnings per GLB.
+
+Stock Blender 5.2.0 LTS import loses serialized cubic tangents and fails the sampled native skin parity check by up to 2.539 mm. The task-owned Blender adapter is a separately assigned correction; this is not a request to modify the exported motion to match Blender's approximation. Native render/visual, scientific, biological, Unity and production acceptance remain open.
+
+Round-one disposition: **changes requested for the two local verifier findings**. Consolidate with reviewer two before one post-fix exact-head review. Preserve the active pinned adult run by making fixes in a separate worker or after that run finishes.

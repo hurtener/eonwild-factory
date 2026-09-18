@@ -1,0 +1,27 @@
+{
+  "schema": "eonwild.motion.source-query-offset-fastpath-reviewer2-repro.v1",
+  "reviewed_head": "f125e97ec857ac006ab84126f1b052232cd66693",
+  "parent": "6e3080196182688cad49a4b441753e27064824fc",
+  "override": "SourceMotionQuery._evaluate_owned discards target_offsets",
+  "public_methods_inherited": true,
+  "fastpath_status": "UNAVAILABLE",
+  "fastpath_reason": "left loaded residual exceeds refinement tolerance; right loaded residual exceeds refinement tolerance",
+  "fallback_status": "AVAILABLE",
+  "override_received_offsets": [
+    true,
+    false,
+    false
+  ],
+  "fallback_row_offsets": {
+    "left": [
+      7.738206943275205e-10,
+      -0.012855410625621094,
+      -8.978904286749412e-11
+    ],
+    "right": [
+      -1.817357039510248e-09,
+      -0.013645160572923313,
+      1.1800396437777748e-09
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "adapter": {
+    "model": "authored_material_contact.v1",
+    "retime_policy": "phase_preserving.v1",
+    "version": 1
+  },
+  "capsule": {
+    "path": "local/acquired/pbr-animated-dinosaurs/raptor-walk-authored-material-path.v1.json",
+    "sha256": "21363f7f7dc5787d2f0a6a20aa08bbcdc5d3e76e4d36004ded032b44d8296051"
+  },
+  "id": "ferocious-industries.raptor-walk-material.v1",
+  "schema": "eonwild.motion.authored-material-reference.v1",
+  "source": {
+    "path": "local/acquired/pbr-animated-dinosaurs/Raptor_Animated_FBX.fbx",
+    "sha256": "c052e81297737f2f2a3b9e7ce3c8a79e4f0950ef1b4a9b16558f8e4f0ca649cb"
+  },
+  "version": 1
+}

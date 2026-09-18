@@ -1,0 +1,40 @@
+{
+  "schema": "eonwild.audit.allosaurus-pedal-public-preflight.v1",
+  "status": "BLOCKED",
+  "composition_head": "6ee3b4a3b2ed066dbe5b1bd9708b7cf7c93a5fc2bd3f43692195eaff88aa7c97",
+  "shared_compiler_head": "c6abde3020d198657d203f45254d366d5105ca26",
+  "pedal_source_head": "4eee1ba4d35d2a5fd767e7d14e9adf20a57b96cd",
+  "prepared_geometry_sha256": "3613b67c9513c4ed5b88665c7606e0c15791bb922b01a72e7223aa112546ec89",
+  "admitted_geometry_sha256": "6b588e9ffa1ebdb167f1619593d8107779b1dfd943fe9dc0c02830572a953d8c",
+  "motion_set": "catalog/motion-sets/allosaurus-engineering-pedal-locomotion.v2.json",
+  "error": "constant skin target calibration failed: right loaded residual exceeds refinement tolerance",
+  "failure_checks": [
+    {
+      "side": "left",
+      "observation": {
+        "loaded": true,
+        "residual_m": 1.499289225242019e-05,
+        "minimum_gap_m": 8.50071077526503e-05,
+        "clearance_ok": false,
+        "ik_target_residual_m": 3.084655058632811e-08,
+        "unreachable_extension_m": 0.0,
+        "articulation_violation_degrees": 0.0
+      },
+      "reason": null
+    },
+    {
+      "side": "right",
+      "observation": {
+        "loaded": true,
+        "residual_m": 0.004630359098880665,
+        "minimum_gap_m": -0.0026082523501384336,
+        "clearance_ok": false,
+        "ik_target_residual_m": 1.6403072747997634e-07,
+        "unreachable_extension_m": 0.0,
+        "articulation_violation_degrees": 0.0
+      },
+      "reason": "right loaded residual exceeds refinement tolerance"
+    }
+  ],
+  "classification": "real public motion-set entry with unchanged push-off/contact/ROM; engineering pedal source diagnostic, not release approval"
+}

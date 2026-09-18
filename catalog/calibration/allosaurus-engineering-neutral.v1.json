@@ -1,0 +1,93 @@
+{
+  "schema": "eonwild.motion.neutral-pose-profile.v1",
+  "id": "allosaurus-engineering-neutral.v1",
+  "version": 1,
+  "classification": "disabled neutral-jaw offset with source-bound open-mouth sample; no closure, tooth-contact, biological, or production claim",
+  "neutral_jaw_calibration": {
+    "source_geometry_sha256": "a403679deb968ec88f7b8b89e3e399cc0881e9cc602e765a6e55934c28ad3826",
+    "close_degrees": 0.0,
+    "clearance_body_heights": 0.0030596051279205764,
+    "measured_body_height_m": 1.0605733866739109,
+    "measured_minimum_gap_m": 0.00324493577240359,
+    "method": "semantic_weighted_binned_surface_clearance.v1",
+    "axis_frame": "admitted_jaw_local_from_declared_lateral.v1",
+    "skin_index": 0,
+    "position_accessor": 0,
+    "joint_accessors": [
+      3,
+      4
+    ],
+    "weight_accessors": [
+      5,
+      6
+    ],
+    "surface_bins": [
+      {
+        "lower_vertex_indices": [
+          4303,
+          3870,
+          4312,
+          4364,
+          4389,
+          7174,
+          7175,
+          7176
+        ],
+        "upper_vertex_indices": [
+          6870,
+          3953,
+          4001,
+          6799,
+          7033,
+          7041,
+          4277,
+          4284
+        ]
+      },
+      {
+        "lower_vertex_indices": [
+          3994,
+          3988,
+          3963,
+          3861,
+          6616,
+          4348,
+          4353,
+          4366
+        ],
+        "upper_vertex_indices": [
+          3869,
+          4394,
+          6771,
+          3952,
+          3936,
+          4372,
+          4371,
+          4253
+        ]
+      },
+      {
+        "lower_vertex_indices": [
+          4126,
+          2686,
+          2689,
+          3273,
+          3840,
+          4203,
+          2690,
+          2664
+        ],
+        "upper_vertex_indices": [
+          3248,
+          3246,
+          4074,
+          4053,
+          3191,
+          3181,
+          2798,
+          2842
+        ]
+      }
+    ]
+  }
+}

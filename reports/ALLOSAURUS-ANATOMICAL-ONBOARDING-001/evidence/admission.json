@@ -1,0 +1,29 @@
+{
+  "biological_validation": false,
+  "files": {
+    "geometry.glb": "a403679deb968ec88f7b8b89e3e399cc0881e9cc602e765a6e55934c28ad3826",
+    "rig.json": "403f768b968925cd27091d54e9a248acd9790d960eda85a91d6a46c8e2123249"
+  },
+  "geometry": {
+    "claim": "calibrated geometry; no behavioral or biological validation",
+    "forward_axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "reference_clip": null,
+    "schema": "eonwild.motion.geometry.v1",
+    "up_axis": [
+      0.0,
+      1.0,
+      0.0
+    ]
+  },
+  "input": {
+    "rig_sha256": "403f768b968925cd27091d54e9a248acd9790d960eda85a91d6a46c8e2123249",
+    "source_sha256": "c611bb493813006d8b6a549124a021ff2c91930371f558f2f11434106b866c8b"
+  },
+  "schema": "eonwild.motion.admission.v1",
+  "status": "ADMITTED_GEOMETRY",
+  "visual_approval": "PENDING"
+}

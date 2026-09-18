@@ -1,0 +1,277 @@
+{
+  "schema": "eonwild.motion.transition-pair-verification.v1",
+  "source_sha": "65276b6f27f6ab1a0eba0d81d9ca147dcbb9307b",
+  "packages": {
+    "steady": {
+      "integrity": "PASS",
+      "technical_status": "PASS",
+      "visual_review": "PENDING",
+      "unity_parity": "NOT_RUN",
+      "production_approved": false
+    },
+    "start": {
+      "integrity": "PASS",
+      "technical_status": "PASS",
+      "visual_review": "PENDING",
+      "unity_parity": "NOT_RUN",
+      "production_approved": false
+    },
+    "stop": {
+      "integrity": "PASS",
+      "technical_status": "PASS",
+      "visual_review": "PENDING",
+      "unity_parity": "NOT_RUN",
+      "production_approved": false
+    }
+  },
+  "handoffs": {
+    "start": {
+      "schema": "eonwild.motion.handoff-validation.v1",
+      "kind": "start",
+      "steady_phase_s": 0.11666666666666667,
+      "status": "BLOCKED",
+      "individual_technical_status": [
+        "PASS",
+        "PASS"
+      ],
+      "packages": [
+        {
+          "id": "heavy-biped.sprint-start.v3",
+          "manifest_sha256": "4d22243a7fc27433c21a122b43859e6e316fccde6a33d59a6f58735af4dc0755",
+          "root_motion_sha256": "ab6839f91c3b96989f7832ca767d91a2298eb84163c57067a3fab193d1e2040b",
+          "in_place_sha256": "36ba3f164abdbaed5a052a70f2810d7f0400dbe5766df7b0d1572ddabaf2895d"
+        },
+        {
+          "id": "heavy-biped.sprint.v4",
+          "manifest_sha256": "f9d02d73f3ad193b3940423dffd81a3318450acb5a370e1ec37581d75f812708",
+          "root_motion_sha256": "3d8e2697affb56251004232a12a341f74067318981368320b299bbe579122d8e",
+          "in_place_sha256": "106fe0e5a33d185385061f835f2368c76dd809d371639e61ba9f1269f9ddd1a4"
+        }
+      ],
+      "visual_review": "PENDING",
+      "unity_validation": "NOT_RUN",
+      "production_approved": false,
+      "classification": "independent native-time emitted pose, velocity, contact and material join; no crossfade or runtime claim",
+      "modes": {
+        "root_motion": {
+          "status": "FAIL",
+          "checks": {
+            "position_m": true,
+            "skin_position_m": true,
+            "rotation_degrees": true,
+            "linear_velocity_mps": false,
+            "skin_velocity_mps": true,
+            "angular_velocity_degrees_per_s": true,
+            "contact_state": true
+          },
+          "values": {
+            "position_m": 8.936561126624864e-07,
+            "skin_position_m": 5.168815409487297e-07,
+            "rotation_degrees": 4.981240619033471e-05,
+            "linear_velocity_mps": 0.0017593694999780292,
+            "skin_velocity_mps": 0.0005223159911292601,
+            "angular_velocity_degrees_per_s": 0.017569627136587412
+          },
+          "limits": {
+            "position_m": 0.001,
+            "skin_position_m": 0.0005,
+            "rotation_degrees": 0.5,
+            "linear_velocity_mps": 0.001,
+            "skin_velocity_mps": 0.001,
+            "angular_velocity_degrees_per_s": 10.0
+          },
+          "witness_indices": {
+            "position_m": 49,
+            "skin_position_m": 1568,
+            "rotation_degrees": 48,
+            "linear_velocity_mps": 64,
+            "skin_velocity_mps": 1624,
+            "angular_velocity_degrees_per_s": 61
+          },
+          "before_times_s": [
+            3.289583444595337,
+            3.2906250953674316,
+            3.2916667461395264
+          ],
+          "after_times_s": [
+            0.11666666716337204,
+            0.11770833283662796,
+            0.11874999850988388
+          ]
+        },
+        "in_place": {
+          "status": "FAIL",
+          "checks": {
+            "position_m": true,
+            "skin_position_m": true,
+            "rotation_degrees": true,
+            "linear_velocity_mps": false,
+            "skin_velocity_mps": true,
+            "angular_velocity_degrees_per_s": true,
+            "contact_state": true
+          },
+          "values": {
+            "position_m": 9.65572288908161e-07,
+            "skin_position_m": 9.517545453323506e-07,
+            "rotation_degrees": 4.981240619033471e-05,
+            "linear_velocity_mps": 0.0017572588415907678,
+            "skin_velocity_mps": 0.0004381181819599254,
+            "angular_velocity_degrees_per_s": 0.017569627136587412
+          },
+          "limits": {
+            "position_m": 0.001,
+            "skin_position_m": 0.0005,
+            "rotation_degrees": 0.5,
+            "linear_velocity_mps": 0.001,
+            "skin_velocity_mps": 0.001,
+            "angular_velocity_degrees_per_s": 10.0
+          },
+          "witness_indices": {
+            "position_m": 48,
+            "skin_position_m": 1180,
+            "rotation_degrees": 48,
+            "linear_velocity_mps": 64,
+            "skin_velocity_mps": 1624,
+            "angular_velocity_degrees_per_s": 61
+          },
+          "before_times_s": [
+            3.289583444595337,
+            3.2906250953674316,
+            3.2916667461395264
+          ],
+          "after_times_s": [
+            0.11666666716337204,
+            0.11770833283662796,
+            0.11874999850988388
+          ]
+        }
+      }
+    },
+    "stop": {
+      "schema": "eonwild.motion.handoff-validation.v1",
+      "kind": "stop",
+      "steady_phase_s": 0.11666666666666667,
+      "status": "BLOCKED",
+      "individual_technical_status": [
+        "PASS",
+        "PASS"
+      ],
+      "packages": [
+        {
+          "id": "heavy-biped.sprint-stop.v3",
+          "manifest_sha256": "76115a8166304e0963011cc7f14a52b49630889e43d6e32de174ddfd0a4b85f8",
+          "root_motion_sha256": "9d77e988696bf6dc7becd367a055e177aac65cd10cbdf774d8847ca6d26be3ea",
+          "in_place_sha256": "5a461641f11cdf4297e293062b2d8fbe1e96cd58d0d8dc15737c8f69ac919985"
+        },
+        {
+          "id": "heavy-biped.sprint.v4",
+          "manifest_sha256": "f9d02d73f3ad193b3940423dffd81a3318450acb5a370e1ec37581d75f812708",
+          "root_motion_sha256": "3d8e2697affb56251004232a12a341f74067318981368320b299bbe579122d8e",
+          "in_place_sha256": "106fe0e5a33d185385061f835f2368c76dd809d371639e61ba9f1269f9ddd1a4"
+        }
+      ],
+      "visual_review": "PENDING",
+      "unity_validation": "NOT_RUN",
+      "production_approved": false,
+      "classification": "independent native-time emitted pose, velocity, contact and material join; no crossfade or runtime claim",
+      "modes": {
+        "root_motion": {
+          "status": "FAIL",
+          "checks": {
+            "position_m": true,
+            "skin_position_m": true,
+            "rotation_degrees": true,
+            "linear_velocity_mps": false,
+            "skin_velocity_mps": true,
+            "angular_velocity_degrees_per_s": true,
+            "contact_state": true
+          },
+          "values": {
+            "position_m": 4.910703734411496e-07,
+            "skin_position_m": 5.057254638968848e-07,
+            "rotation_degrees": 2.0203972031729216e-05,
+            "linear_velocity_mps": 0.0017680685185054083,
+            "skin_velocity_mps": 0.00041516362015144156,
+            "angular_velocity_degrees_per_s": 0.04135788986701961
+          },
+          "limits": {
+            "position_m": 0.001,
+            "skin_position_m": 0.0005,
+            "rotation_degrees": 0.5,
+            "linear_velocity_mps": 0.001,
+            "skin_velocity_mps": 0.001,
+            "angular_velocity_degrees_per_s": 10.0
+          },
+          "witness_indices": {
+            "position_m": 54,
+            "skin_position_m": 2454,
+            "rotation_degrees": 60,
+            "linear_velocity_mps": 64,
+            "skin_velocity_mps": 1939,
+            "angular_velocity_degrees_per_s": 50
+          },
+          "before_times_s": [
+            0.1145833358168602,
+            0.11562500149011612,
+            0.11666666716337204
+          ],
+          "after_times_s": [
+            0.0,
+            0.0010416667209938169,
+            0.0020833334419876337
+          ]
+        },
+        "in_place": {
+          "status": "FAIL",
+          "checks": {
+            "position_m": true,
+            "skin_position_m": true,
+            "rotation_degrees": true,
+            "linear_velocity_mps": false,
+            "skin_velocity_mps": true,
+            "angular_velocity_degrees_per_s": true,
+            "contact_state": true
+          },
+          "values": {
+            "position_m": 5.052863158189654e-07,
+            "skin_position_m": 5.200485829127583e-07,
+            "rotation_degrees": 2.0203972031729216e-05,
+            "linear_velocity_mps": 0.0017679645394887936,
+            "skin_velocity_mps": 0.0004147260413619874,
+            "angular_velocity_degrees_per_s": 0.04135788986701961
+          },
+          "limits": {
+            "position_m": 0.001,
+            "skin_position_m": 0.0005,
+            "rotation_degrees": 0.5,
+            "linear_velocity_mps": 0.001,
+            "skin_velocity_mps": 0.001,
+            "angular_velocity_degrees_per_s": 10.0
+          },
+          "witness_indices": {
+            "position_m": 54,
+            "skin_position_m": 2454,
+            "rotation_degrees": 60,
+            "linear_velocity_mps": 64,
+            "skin_velocity_mps": 1939,
+            "angular_velocity_degrees_per_s": 50
+          },
+          "before_times_s": [
+            0.1145833358168602,
+            0.11562500149011612,
+            0.11666666716337204
+          ],
+          "after_times_s": [
+            0.0,
+            0.0010416667209938169,
+            0.0020833334419876337
+          ]
+        }
+      }
+    }
+  },
+  "visual_review": "PENDING",
+  "unity_validation": "NOT_RUN",
+  "production_approved": false,
+  "status": "BLOCKED"
+}

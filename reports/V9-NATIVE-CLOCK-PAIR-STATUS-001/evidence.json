@@ -1,0 +1,184 @@
+{
+  "schema": "eonwild.motion.native-clock-pair-status.v1",
+  "status": "BLOCKED",
+  "source_commit": "7920c59dd354027b8784483bb208fd0e6229cd91",
+  "source_identity": {
+    "package_count": 12,
+    "engine_files_entries_per_package": 88,
+    "all_engine_file_maps_identical": true,
+    "all_engine_files_match_source_commit": true,
+    "engine_files_canonical_json_sha256": "7a7b6517d43faa06d8a0216625e510d6f3f83c2b8fe624ff8724fd622b9a9b44",
+    "host_verification_path": "out/continuation-native-clock-7920c59-pairs/host-verification.json",
+    "host_verification_sha256": "2a740d9b6318b4609f2d1608d05a3a33147f2e4866aa991022b3a7c907a09198",
+    "all_emitted_payload_hashes_match": true
+  },
+  "focused_validation": {
+    "status": "PASS",
+    "count": 136,
+    "duration_s": 10.34,
+    "command": "uv run --frozen pytest -q tests/test_articulation_profile.py tests/test_emitted_handoff.py tests/test_transition_support_coordination.py tests/test_handoff_catalog_bindings.py tests/test_pad_recovery.py tests/test_articulated_contact_partition.py",
+    "receipt_path": "out/continuation-articulation-integration-7920c59/host-validation.json",
+    "receipt_sha256": "65be477495e6e2f7fe4cc4cc279bcf406d7b30d4b69a7397582df404b339c746",
+    "log_path": "out/continuation-articulation-integration-7920c59/focused-tests.log",
+    "log_sha256": "20bfc1e30dc363d88f17761a98eb11e518f1aa859fc1c5e18900b5f5a5f17800",
+    "full_suite_for_source": "NOT_RUN",
+    "remote_ci_for_source": "NOT_RUN"
+  },
+  "pairs": {
+    "walk": {
+      "status": "PASS",
+      "results_path": "out/continuation-native-clock-7920c59-pairs/walk/results.json",
+      "results_sha256": "aa47ec91014e7a4cbd55bd5f8a501287444e7cda5945a52c476da558a4cc804e",
+      "packages": {
+        "start": {
+          "id": "heavy-biped.walk-start.v3",
+          "manifest_sha256": "d5acfab03ffd3b1b674436abf41d2cfd666bd683e412b4703b12eb580fe76ff3"
+        },
+        "steady": {
+          "id": "heavy-biped.walk.v3",
+          "manifest_sha256": "2eca77528fabbd3f136d8bdbd88141aac1b92fd5f85855ecf1019030379f77aa"
+        },
+        "stop": {
+          "id": "heavy-biped.walk-stop.v3",
+          "manifest_sha256": "d0f36c9daba7488543264ca10c96214a357c54252ad92149b83ad7b8dc1a223a"
+        }
+      },
+      "joins": {
+        "start": {
+          "status": "PASS",
+          "handoff_sha256": "6ea75047fb2dbece4bde9dd585d98c579b7a056e9dc0157586d0a808c2b79405",
+          "root_motion_world_velocity_mps": 0.0006087372875804918,
+          "root_motion_skin_velocity_mps": 0.00036928836625011667,
+          "in_place_world_velocity_mps": 0.0005549386467807114,
+          "in_place_skin_velocity_mps": 0.0003507767774035604
+        },
+        "stop": {
+          "status": "PASS",
+          "handoff_sha256": "10f5041c695af6c3ba877b9c4308c5591089cf8eb62ae67112e711d9c11074d0",
+          "root_motion_world_velocity_mps": 0.0004731365322070586,
+          "root_motion_skin_velocity_mps": 0.0003233447932057172,
+          "in_place_world_velocity_mps": 0.0004724746328277402,
+          "in_place_skin_velocity_mps": 0.0003070121497417164
+        }
+      }
+    },
+    "reverse-walk": {
+      "status": "PASS",
+      "results_path": "out/continuation-native-clock-7920c59-pairs/reverse-walk/results.json",
+      "results_sha256": "216bb1d526460a7a912682e40be901b8b2d4faf1fb136284f4a3cf928627d81e",
+      "packages": {
+        "start": {
+          "id": "heavy-biped.reverse-walk-start.v3",
+          "manifest_sha256": "b43435d2bb33e2cf182f2f6347422f525deb88e57981e1b3013f9f5286d22533"
+        },
+        "steady": {
+          "id": "heavy-biped.reverse-walk.v4",
+          "manifest_sha256": "e242ff3a17a06a619b83571860598349ab3c407fdfd1eba24f3530221e730030"
+        },
+        "stop": {
+          "id": "heavy-biped.reverse-walk-stop.v3",
+          "manifest_sha256": "ad52922c59ce8f4d5ac8fb91cb299397fc76c81a64b89d82e9ea2b560a4b3c68"
+        }
+      },
+      "joins": {
+        "start": {
+          "status": "PASS",
+          "handoff_sha256": "51998fd3b87a4b07496c58e9e62ab7a002c8f0ee46f08ed20c8f1fe96e552545",
+          "root_motion_world_velocity_mps": 0.00025126655691044413,
+          "root_motion_skin_velocity_mps": 0.00022569212210287888,
+          "in_place_world_velocity_mps": 0.00023353905478626873,
+          "in_place_skin_velocity_mps": 0.0002500862310523568
+        },
+        "stop": {
+          "status": "PASS",
+          "handoff_sha256": "77842e9c2e425fa19426a8d81f286a90f20c7c171a9f4f2cad0921fe1af9a503",
+          "root_motion_world_velocity_mps": 0.00034356993975897225,
+          "root_motion_skin_velocity_mps": 0.0002706621607660217,
+          "in_place_world_velocity_mps": 0.0003437867502033253,
+          "in_place_skin_velocity_mps": 0.000270814962968364
+        }
+      }
+    },
+    "run": {
+      "status": "PASS",
+      "results_path": "out/continuation-native-clock-7920c59-pairs/run/results.json",
+      "results_sha256": "b050af04e15e4bcd8678bed4eca53b1fd3b50375c3bfacb9a00877afa04a1a95",
+      "packages": {
+        "start": {
+          "id": "heavy-biped.run-start.v3",
+          "manifest_sha256": "edba13304c9f5b33e978e24e5a79ca38ac2a9e778d35c25f0026c9ff908a8f98"
+        },
+        "steady": {
+          "id": "heavy-biped.run.v4",
+          "manifest_sha256": "41c0376233ac08d7d68f4fba8e21c48de6578759f8a086700bc4833b0803d54d"
+        },
+        "stop": {
+          "id": "heavy-biped.run-stop.v3",
+          "manifest_sha256": "f454641afabb2476f25fed839f305c705c9d0b0bf12c96b411fd49f817fed24f"
+        }
+      },
+      "joins": {
+        "start": {
+          "status": "PASS",
+          "handoff_sha256": "e636ca8689c9a8796489d5b186fee55f0dae4dac8ef0868a8cac91725ab00d8c",
+          "root_motion_world_velocity_mps": 0.0008277708061265746,
+          "root_motion_skin_velocity_mps": 0.00033640186496678375,
+          "in_place_world_velocity_mps": 0.0007755861500195976,
+          "in_place_skin_velocity_mps": 0.0002997456377364574
+        },
+        "stop": {
+          "status": "PASS",
+          "handoff_sha256": "d2c0c73b619962db346cf43e70eb7f1ff96aac8ef07eb4cdd7e835e376ea300c",
+          "root_motion_world_velocity_mps": 0.0008311397907272085,
+          "root_motion_skin_velocity_mps": 0.00019581220580714174,
+          "in_place_world_velocity_mps": 0.000826006086094188,
+          "in_place_skin_velocity_mps": 0.00019440527010780435
+        }
+      }
+    },
+    "sprint": {
+      "status": "BLOCKED",
+      "results_path": "out/continuation-native-clock-7920c59-pairs/sprint/results.json",
+      "results_sha256": "0c0afdca9b712b9cd51451a75f3a1752084db60de0fe72a0b47a58b277193bd6",
+      "packages": {
+        "start": {
+          "id": "heavy-biped.sprint-start.v3",
+          "manifest_sha256": "b73045c4f0fec239b358fa1dd84cebf32eb428b67201ee11a8ffac44dabd08bb"
+        },
+        "steady": {
+          "id": "heavy-biped.sprint.v4",
+          "manifest_sha256": "72fde739f85cce3355d5d78c0b7a1c9bd4476f2f6a9d9f94ecbc87e4f78ebe9b"
+        },
+        "stop": {
+          "id": "heavy-biped.sprint-stop.v3",
+          "manifest_sha256": "e25e5da0b43b0529543fb9fc6dffb3f26dcc0d6cb4c5f266bc773a5b7fc7663e"
+        }
+      },
+      "joins": {
+        "start": {
+          "status": "BLOCKED",
+          "handoff_sha256": "a221a9eb390bd51a0b54d7d5436fb378575a7fda421c06d6e769961650d7851d",
+          "root_motion_world_velocity_mps": 0.001412795423835449,
+          "root_motion_skin_velocity_mps": 0.0009012148425972775,
+          "in_place_world_velocity_mps": 0.0014937008574257393,
+          "in_place_skin_velocity_mps": 0.0011868597926251135
+        },
+        "stop": {
+          "status": "BLOCKED",
+          "handoff_sha256": "76d69fedf69c05063253b287e66f1dd5a0f4c1a81d6c8c36f48a24ec82317e1d",
+          "root_motion_world_velocity_mps": 0.0012021339623317963,
+          "root_motion_skin_velocity_mps": 0.00019195711957614315,
+          "in_place_world_velocity_mps": 0.0011997154483533727,
+          "in_place_skin_velocity_mps": 0.000201646197245435
+        }
+      }
+    }
+  },
+  "acceptance": {
+    "native_visual_review": "PENDING",
+    "adult_recovery_visual_acceptance": "NOT_ACCEPTED",
+    "biological_validation": "NOT_VALIDATED",
+    "unity_validation": "NOT_RUN",
+    "production_approved": false
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "source": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/allosaurus-anatomical-onboarding-v3-admitted/geometry.glb",
+  "source_sha256": "a403679deb968ec88f7b8b89e3e399cc0881e9cc602e765a6e55934c28ad3826",
+  "landmarks_sha256": "f865eac56288c6b38fc8198b3dae6f6c7d6ffa4ff0f9779ded33acaddbf7125c",
+  "scope": "Native neutral geometry, opaque clay material, side/front leg closeups. Orange left and blue right landmark chains are projected over skin via orthographic camera-depth offset; apparent marker depth is not anatomical evidence. No mesh/rig/animation changes. NON_PROMOTED_ENGINEERING_FIT.",
+  "outputs": [
+    {
+      "view": "side",
+      "projected_landmarks": false,
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/allosaurus-opaque-landmark-review-root-001/side-skin.png",
+      "sha256": "23ed054487a2e1dccf46d25c113573bc5656516d4f59aa5edf6801df5093693b"
+    },
+    {
+      "view": "side",
+      "projected_landmarks": true,
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/allosaurus-opaque-landmark-review-root-001/side-landmarks.png",
+      "sha256": "09d43b954c1a077aa0063143b77e3c3c884669340c283b63bdbc5185f17f6754"
+    },
+    {
+      "view": "front",
+      "projected_landmarks": false,
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/allosaurus-opaque-landmark-review-root-001/front-skin.png",
+      "sha256": "21bb904082d122d14e1b117db6d0627f52b49b84a753351ce293476cf30ce27a"
+    },
+    {
+      "view": "front",
+      "projected_landmarks": true,
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/allosaurus-opaque-landmark-review-root-001/front-landmarks.png",
+      "sha256": "694add6e0630d948bdbf859090409287d80620bdc4d7e3128057a21328267b58"
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "classification": "reopened candidate engineering diagnostics; no visual, biological, force, COM, mass-model, Unity, or production approval",
+  "floor_provenance": {
+    "policy": "locked source calibration before solving; not a post-solve floor adjustment",
+    "v8_scaled_compile_floor_m": 7.44670325699803e-08,
+    "v8_unscaled_source_skin_floor_m": 8.663434924195463e-08
+  },
+  "packages": {
+    "v7": {
+      "body_height_m": 2.270663281560174,
+      "final_in_place_skinned_contact": "PASS",
+      "final_root_skinned_contact": "PASS",
+      "gaze_target_elevation_degrees": 3.0,
+      "ground_level_m": -0.010315558674016406,
+      "manifest_sha256": "7c01449f874c740b7700daae5f2ada531263df23060901b9252d0d582c2861e0",
+      "maximum_articulation_violation_degrees": 0.0,
+      "maximum_foot_target_residual_m": 3.4595563000106396e-07,
+      "maximum_penetration_m": 0.0,
+      "maximum_planted_distal_contact_velocity_mps": 5.784473240695144e-05,
+      "maximum_solved_foot_pitch_velocity_degrees_per_s": 479.86918354466695,
+      "maximum_stance_gap_m": 0.00013964919873219947,
+      "maximum_swing_clearance_refinement_error_m": 0.0,
+      "maximum_unreachable_extension_m": 0.0,
+      "mean_root_speed_mps": 1.1076406251513045,
+      "neutral_rostral_elevation_degrees": -25.25239071792525,
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/worktrees/eonwild-adult-support-speed-carrier/out/continuation-adult-v7-support-speed-001",
+      "pelvis_vertical_velocity_range_mps": [
+        -0.09276079715022689,
+        0.09276079715022689
+      ],
+      "planned_pelvis_height_range_m": [
+        2.234333611959825,
+        2.2706623386555607
+      ],
+      "planned_swing_clearance_m": 0.4995459219432383,
+      "same_foot_cycle_root_travel_m": 2.724795937872209,
+      "skin_refinement_converged": true,
+      "step_length_m": 1.3623979689361045,
+      "technical_status_at_historical_compile": "PASS",
+      "uniform_geometry_scale": 0.8595555358917822
+    },
+    "v8": {
+      "body_height_m": 2.2841755838983118,
+      "exact_local_angular_tangent_seam_degrees_per_s": 2.2401554785326914,
+      "exact_local_linear_tangent_seam_mps": 0.00323101227406632,
+      "final_in_place_skinned_contact": "PASS",
+      "final_root_skinned_contact": "PASS",
+      "gaze_target_elevation_degrees": 3.0,
+      "ground_level_m": 7.44670325699803e-08,
+      "manifest_sha256": "a8b5b1d82b98d6e3579e4aec2e2ac15eec3f0baa9c0cb42ea4ff734dc15b88d3",
+      "maximum_articulation_violation_degrees": 0.0,
+      "maximum_foot_target_residual_m": 4.813331006446575e-07,
+      "maximum_penetration_m": 0.0,
+      "maximum_planted_distal_contact_velocity_mps": 5.430263121738213e-05,
+      "maximum_solved_foot_pitch_velocity_degrees_per_s": 284.90633427046873,
+      "maximum_stance_gap_m": 0.00013062910390720651,
+      "maximum_swing_clearance_refinement_error_m": 0.0,
+      "maximum_unreachable_extension_m": 0.0,
+      "mean_root_speed_mps": 1.114231992145518,
+      "neutral_rostral_elevation_degrees": -30.766081280564464,
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/continuation-adult-v8-bind-pose-001",
+      "pelvis_vertical_velocity_range_mps": [
+        -0.09331279970666007,
+        0.09331279970666029
+      ],
+      "planned_pelvis_height_range_m": [
+        2.247629723071605,
+        2.2841746353826453
+      ],
+      "planned_swing_clearance_m": 0.5025186284576286,
+      "same_foot_cycle_root_travel_m": 2.741010700677974,
+      "skin_refinement_converged": true,
+      "step_length_m": 1.370505350338987,
+      "technical_status_current_exact": "BLOCKED",
+      "uniform_geometry_scale": 0.8595555137374769
+    }
+  },
+  "schema": "eonwild.motion.adult-bind-pose-v8-comparison.v1",
+  "v7_current_exact_companion": {
+    "angular_tangent_seam_degrees_per_s": 3.652031815499178,
+    "linear_tangent_seam_mps": 0.0032116449766123154,
+    "path": "reports/V9-ADULT-BIND-POSE-V8-001/v7-host-exact-continuity-status.json",
+    "status": "BLOCKED"
+  }
+}

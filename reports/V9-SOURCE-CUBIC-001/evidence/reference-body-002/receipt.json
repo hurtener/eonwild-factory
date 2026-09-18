@@ -1,0 +1,34 @@
+{
+  "schema": "eonwild.motion.reference-body-phase-audit-receipt.v1",
+  "status": "CORRECTED_BOUNDED_EVIDENCE",
+  "source_head": "94c81e7e3bb00e2e6057fd1babb183adb70ff9e3",
+  "files": {
+    "README.md": "24fb3f04f480cf010b404ee669c4097602774d8085c847551826d87f2600d6f8",
+    "analyze.py": "3252e2e79fcb1ff66482ac7c413dfa064ebdf0708e9bb1fd858eb31ad405775e",
+    "result.json": "31d72d012d09147fbb631e0ba7ce2c61d37ea4baf2a3b49fbcce40f845c720a3",
+    "run.log": "31d72d012d09147fbb631e0ba7ce2c61d37ea4baf2a3b49fbcce40f845c720a3"
+  },
+  "supersedes": {
+    "driver_sha256": "86cf31837146dee901670f72ee02cfae50fd50bab68dcc43180c4852bf8b45f5",
+    "result_sha256": "628f2bdf1f197e6b4b5f7ffb7a2de93f5afce76cc6d6d122e10e790fd609ce0d"
+  },
+  "corrected_distal_tail_frames": [
+    68,
+    75,
+    88,
+    93,
+    96,
+    98,
+    105,
+    106
+  ],
+  "selected_landmarks_unchanged": true,
+  "full_interval_frame_count": 55,
+  "motion_or_camera_changed": false,
+  "claims": {
+    "exact_reference_phase_alignment": false,
+    "biological_accuracy": false,
+    "center_of_mass_or_force_mechanics": false,
+    "new_motion_change_justified": false
+  }
+}

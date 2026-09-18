@@ -1,77 +1,203 @@
 # Eonwild Motion Factory
 
-A reproducible motion-authoring factory for Eonwild, the dinosaur-life game.
-**Python builds the motion; Unity will consume the motion package.**
+**Python authors reusable motion; Unity is the intended consumer.** This work
+continues V9 and the merged factory baseline, not another numbered toolkit.
 
-This baseline continues V9 from `feat/spark-muse` at
-`8c1f5c2bfea481a56916ee6e0bfa74961ca0d141`. It does not restart the project or
-claim the entire biomechanical/runtime architecture is finished.
+PR #2 is still a draft: **quality-01 is rejected** and new candidates do not
+inherit the approval of the preserved V9 takes. The current reviewed checkpoint
+adds one shared, versioned animal motion-set baseline for grounded locomotion
+and grounded transitions; airborne admission remains closed. Read the
+[shared-regime checkpoint](reports/SHARED-LOCOMOTION-REGIME-V2-001/README.md)
+and [current motion/evidence status](docs/MOTION_QUALITY_STATUS.md) for the
+verified behavior and remaining gates.
 
-## The active path
+## One active generation path
 
-```text
+```
 admitted geometry + semantic rig + versioned behavior recipe
-    → contact plan → shared limb/body emission
-    → reopen final GLBs → measure → immutable candidate package
-    → review → Unity parity → explicit future production promotion
+    → behavior-owned placement, attention and contact plans
+    → shared articulated limb/body/skin constraints
+    → reopen final GLBs and measure
+    → immutable candidate + source identity + runtime metadata
+    → native-time review → Unity parity → explicit future promotion
 ```
 
-New code lives in `src/eonwild_motion/`. New inputs live in `catalog/` and
-`recipes/`. Generated outputs belong in `out/`, not inside source modules.
-No new factory code may import `build/`, `reports/`, or a retired toolkit.
+Generation never imports historical `build/`, `reports/` or retired toolkits.
+Read-only review may inspect a specifically hash-bound historical asset; its
+animation is not an input to new choreography. Species differences belong in
+geometry, semantic bindings and profile data rather than literal bone names.
 
 ## Install and generate
 
-Use Python 3.12 or newer. The existing lock file and dependency pins remain.
+Use Python 3.12 or newer and the existing pinned dependencies:
 
 ```sh
 uv sync --frozen --group test
 uv run python -m eonwild_motion.factory compile \
-  --recipe recipes/heavy-biped/run.v2.json --output out/run-v2
-uv run python -m eonwild_motion.factory verify out/run-v2
+  --recipe recipes/heavy-biped/walk.v3.json --output out/walk-v3
+uv run python -m eonwild_motion.factory verify out/walk-v3
+
+# Resolve several grounded motions through one animal/body baseline.
+uv run python -m eonwild_motion.factory compile-set \
+  --motion-set catalog/motion-sets/tarbosaurus-pin-552-1-adult-locomotion.v2.json \
+  --motions walk fast-walk walk-start walk-stop \
+  --output out/tarbosaurus-adult-grounded
 ```
 
-Compilation creates a candidate, not an approval. `verify` returns nonzero
-when technical acceptance remains blocked. Read `validation.json`: skeleton
-proxies, final skinned contact, visual approval, and Unity parity are separate.
-Do not weaken a gate just to turn a candidate green.
+An output directory must be new; earlier takes cannot be overwritten.
+Compilation is not approval. Verification exits nonzero for blocked technical
+acceptance. Missing evidence is not a zero-error pass.
 
-Available initial recipes are Run v1/v2, Sprint v1/v2 and a grounded reverse
-walk. v1 recovers the earlier engineering parameters; v2 is an **unapproved**
-restrained head/breathing-response alternative. Reverse walking owns a real
-72%-duty support plan instead of reversing a solved forward animation.
+Adult Tarbosaurus v3 introduced specimen-specific mass evidence and measured
+geometry calibration to the grounded walk. See
+[animal configuration](docs/ANIMAL_CONFIGURATION.md) for the reusable data
+contract and its current biomechanical limits.
+
+The current technically checked working baseline is the adult V10 walk recorded
+in [V9-WORKING-BASELINE-001](reports/V9-WORKING-BASELINE-001/README.md).
+Its source-derived CUBICSPLINE package, native playback, contact, ROM, rate, and
+loop checks passed. The user selected V10 as the working baseline while keeping
+body-weight presentation and proximal-thigh deformation open for further work.
+This is not production approval. Body timing is authored kinematics;
+mass-response physics is unavailable.
+The final SourceMotionQuery union passed 907 tests plus 21 subtests; see the
+[integration report](reports/V9-SOURCE-MOTION-QUERY-V9-INTEGRATION-001/README.md).
+The closed shared animal motion-set configuration and first source-bound fast
+package are recorded in [V9-SHARED-MOTION-SET-001](reports/V9-SHARED-MOTION-SET-001/README.md);
+the fast package is ready for user review, with visual approval and Unity parity
+still open.
+
+Current explicit review candidates are `walk.v3`, `reverse-walk.v4`, `run.v4`,
+`sprint.v4`, `fast-walk.v2`, `tarbosaurus-pin-552-1-adult-walk.v9`,
+`tarbosaurus-pin-552-1-adult-fast-walk-recovery.v3`, `feeding.v2`, and
+`bite-miss.v2`, alongside `idle.v1`, `alert.v1`, and `call.v1`. Historical
+adult v3 and body diagnostics v5/v6/v7/v8 remain in CI as regression witnesses.
+The eight start/stop recipes are now `.v3`, bound to those exact sustained gait/performance
+inputs. All remain candidates, not automatically accepted animations. Passing
+the individual start, steady-gait and stop clips is insufficient: the permanent
+transition-pair jobs independently check both actual
+serialized joins. See [the transition interface](docs/TRANSITION_INTEGRATION.md).
 
 ```sh
-uv run python tools/build_showcase.py --output out/showcase --render
+uv run python tools/verify_catalog.py \
+  --recipes walk.v3 reverse-walk.v4 feeding.v2 bite-miss.v2 \
+  --output out/review-candidates
 ```
 
-Rendering needs Blender and ffmpeg. On macOS use `--blender
-/Applications/Blender.app/Contents/MacOS/Blender` when Blender is not on PATH.
-Actual generated clips, native-speed MP4s, and FBX transport candidates are
-produced. FBX export is **not** Unity import validation.
+The compiler supports grounded gait, airborne gait, gait transitions and
+persistent-support actions. Metatarsal articulation is separate from pad
+contact and digit recovery. Forward attention is calibrated from the admitted
+rostrum. Feeding coordinates a feasible initial brace and bounded common pelvis
+accommodation before oral constraints; the mouth anchor and floor do not move
+to conceal failed reach. These are geometric/art-directed controls, not claims
+of simulated muscles or reconstructed dinosaur optic axes.
 
-## What is preserved, and what is retired
+## Review actual motion
 
-Run010, Sprint006, Feeding003, and the accepted walk remain historical quality
-references. A new recipe never inherits their visual approval automatically.
-See `catalog/baselines/approved-takes.json` and the original review reports.
+With Blender and ffmpeg installed:
 
-V8 and V8.1 toolkits are retired from the active tree, recoverable from the
-source commit above. The byte-identical V8.2 capsule is under
-`legacy/capsules/v8.2/`, only for compatibility and provenance. The old
-`eonwild-motion build/validate/promote` CLI remains the compatibility path;
-it is not the new candidate compiler. V5/V5.5 stay as breadth-recovery sources.
+```sh
+uv run python tools/review_compiled_candidate.py \
+  --package out/review-candidates/walk.v3 --output out/walk-review \
+  --views side front rear three-quarter --fps 30 --compare-v9-walk
+```
 
-Historical `build/` and `reports/` contain useful but unstandardized experiments.
-They are **not** the public factory API. In particular, Feeding004 and the old
-reverse-walk builders have not been admitted into the production catalog.
+On macOS pass
+`--blender /Applications/Blender.app/Contents/MacOS/Blender` when needed.
+The command renders an existing immutable package without regenerating or
+repairing it. To serve retained review pages and seekable media locally with
+single-range HTTP support, run:
 
-## Current boundary
+```sh
+uv run python tools/serve_review.py --root . --bind 127.0.0.1 --port 8877
+```
 
-This baseline proves recipe-driven locomotion generation and final-artifact
-accounting. It does not yet prove a real second skinned species, complete
-feeding extraction, runtime terrain/target adaptation, or Unity/device budgets.
-See [the implementation roadmap](docs/FACTORY_ROADMAP.md) and
-[the Unity boundary](docs/UNITY_MOTION_CONTRACT.md).
+The review server uses the explicit document root and loopback binding; it is a
+local evidence viewer, not a production or multiplayer server. The renderer uses the explicit floor, keeps native timing, locks each camera
+from the preserved V9 reference before drawing the candidate, and checks the
+candidate again after rendering. Review outputs contain actual MP4s, timing,
+camera and render receipts; FBX transport is **not** Unity validation.
 
-One convincing, reproducible animal comes before a larger clip count.
+The older `tools/build_showcase.py` is also available; pass explicit `--recipes`
+for the current candidates rather than relying on its initial-catalog defaults.
+Both tools retain mechanical rejection even when diagnostic rendering succeeds.
+
+## Verification and toolchain
+
+```sh
+uv run python -m pytest tests -q --tb=short
+```
+
+The shared-regime integration head
+`c6abde3020d198657d203f45254d366d5105ca26` completed 1,122 tests plus
+21 subtests with one sparse-checkout fixture failure. After the missing tracked
+reference media was materialized, its full fixture module passed 13 tests. The
+original run remains `FAILED_FIXTURE`. The later published `f24297d` hosted
+contracts passed 1,123 tests plus 21 subtests in 648.92 seconds and its
+source-evidence job passed; the wider candidate catalog is not green. See the
+[shared-regime checkpoint](reports/SHARED-LOCOMOTION-REGIME-V2-001/README.md)
+for the exact boundary; this does not approve motion or authorize merging draft
+PR #2.
+
+The earlier 2026-09-08 final continuation head
+`4ae0fe92ec3ffd49dfeca14085756cc7cbe7d852` passed 683 tests plus 21
+subtests in 212.65 seconds. Its receipts and final review closure remain tracked
+in [V9-CONTINUATION-FINAL-4AE0FE9-001](reports/V9-CONTINUATION-FINAL-4AE0FE9-001/README.md).
+
+The complete mandatory suite includes historical integration, exact duplicate
+builds, promotion rejection and real rendering. Its canonical CI is macOS
+arm64 + Blender 5.2.0 + genuine Khronos glTF validator 2.0.0-dev.3.10. The
+preserved release reproduces exactly there. Linux differs by two float32
+rounding values; the approved hash is not changed to hide that portability
+boundary. Current V9 candidate mechanics run independently on Linux.
+
+CI is read-only, runs one job per recipe, retains failed receipts, and generates
+native multi-view reviews. There are no self-committing recovery workflows,
+production imports of staging scripts, or omitted integration tests. A green
+test suite is not itself a green motion catalog or a visual approval.
+
+The compiler keeps LINEAR as the legacy recipe default and provides an opt-in
+source-derived CUBICSPLINE emitter for checked grounded locomotion and grounded
+transitions. It evaluates serialized Hermite curves through the existing
+TRS/FK/LBS consumers and applies the unchanged contact, articulation, rate,
+loop, and handoff gates. Numerical source tangents remain estimates; packages
+do not claim analytic derivatives or global C1 authority.
+
+The motion-set entry point is initially limited to grounded gait and grounded
+transitions and requires its baseline-owned CUBICSPLINE solve policy. Airborne
+and persistent-support intents are rejected before solving. Legacy v1 recipes
+and their default output remain unchanged.
+
+## Preserve what worked
+
+Approved Run010, Sprint006, Feeding003 and V9 walking references remain
+unchanged. See `catalog/baselines/approved-takes.json` and the exact walk identity
+in `docs/MOTION_QUALITY_STATUS.md`. The inherited V8_1 name inside the V9 walk
+GLB is not a reason to select a different asset.
+
+V8 and V8.1 are retired from the active tree but recoverable through Git
+history. `legacy/capsules/v8.2` is immutable compatibility/provenance material.
+V5/V5.5 remain breadth-recovery references, never the active generation path.
+Prior partial-recovery records remain honest about missing source fragments.
+
+## Runtime boundary
+
+One runtime motor owns final movement. Animation contacts are cues, not
+unconditional gameplay damage, grip, yield or feeding facts. The Python factory
+emits the planned motion and versioned metadata; the Unity adapter must still
+prove continuous imported/compressed trace parity, Animator behavior, terrain
+and target adaptation, event handoff and device cost. Root independently
+verified four Tarbosaurus walk source samples, their actual rendered poses and
+all skin influences in Unity; this does not establish continuous runtime or
+Allosaurus parity. The provisional second-animal source preparation is recorded
+in [ALLOSAURUS-PEDAL-SOURCE-PREPARATION-001](reports/ALLOSAURUS-PEDAL-SOURCE-PREPARATION-001/README.md);
+its shared walk remains blocked and its engineering pivots are not anatomical
+approval.
+
+See [the factory roadmap](docs/FACTORY_ROADMAP.md),
+[the Unity contract](docs/UNITY_MOTION_CONTRACT.md), and
+[the current status](docs/MOTION_QUALITY_STATUS.md).
+
+**Unity sample verification: PASS for four Tarbosaurus walk poses. Continuous
+Unity/Animator and Allosaurus parity: PENDING. Human native-speed acceptance:
+PENDING. Production promotion: NOT_GRANTED.**

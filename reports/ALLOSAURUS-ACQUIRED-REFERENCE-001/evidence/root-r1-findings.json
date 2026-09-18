@@ -1,0 +1,54 @@
+{
+  "head": "9d21c07ad487c8da28a958a09937d1fa66ceddd6",
+  "tree": "5c5cbf1b497e101883f74d44e358d352d96bca8f",
+  "scope": "first root review of acquired-reference factory input/plumbing; excludes pre-reviewed adapter and separately reopened reach plateau fix",
+  "status": "CHANGES_REQUIRED",
+  "findings": [
+    {
+      "priority": "P1",
+      "id": "private-measured-capsule",
+      "file": "catalog/acquired-reference/raptor-walk-authored-material-path.v1.json",
+      "issue": "vendor-derived measured motion data newly tracked contrary to private acquiredinput boundary",
+      "fix": "keep hashdescriptor tracked and provision capsule as ignored private input"
+    },
+    {
+      "priority": "P1",
+      "id": "silent-direct-recipe-drop",
+      "file": "src/eonwild_motion/factory/compiler.py",
+      "issue": "direct recipe accepts authored reference but only motion-set CUBICbranch applies it",
+      "fix": "reject unsupported direct or interpolation modes before solve"
+    },
+    {
+      "priority": "P1",
+      "id": "baseline-policy-with-procedural-intent",
+      "file": "src/eonwild_motion/factory/compiler.py",
+      "issue": "resolution includes baselinepolicy forordinaryintent but verifier expectedpayloads discardsit whenintenthasnoreference",
+      "fix": "policy payload inclusion and hashverification owned bybaseline independentofintent"
+    },
+    {
+      "priority": "P1",
+      "id": "nested-mapping-serialization",
+      "file": "src/eonwild_motion/factory/compiler.py",
+      "issue": "dict(adapter.binding()) retains nestedpolicy mappingproxy, json_bytes raises TypeError before validpackage can bewritten",
+      "reproduction": "actual9d testfixture: json_bytes({adapter:dict(_build(_inputs()).binding())}) -> TypeError Object of type mappingproxy is not JSON serializable",
+      "fix": "thaw complete binding at serializationboundary and test roundtrip"
+    },
+    {
+      "priority": "P1",
+      "id": "original-versus-emitted-plan-replay",
+      "file": "src/eonwild_motion/factory/compiler.py",
+      "issue": "adapter queryidentity binds full originalplan, verifier rebuildsqueryusing emittedplan with adaptedrows/refinementkeys",
+      "fix": "share deterministic reconstruction of original queryplan from boundinputs; do not weakenplanbinding"
+    },
+    {
+      "priority": "P2",
+      "id": "captured-payload-hash-check",
+      "file": "src/eonwild_motion/factory/acquired_reference.py",
+      "issue": "source/capsule reread after locked_file hashcheck withoutcaptured-byte recheck; laterpackagecheck wouldcatchonlyaftercostlysolve",
+      "fix": "local captured-source/capsule hashverification atresolution"
+    }
+  ],
+  "implementation_requested_from": "storage_sol",
+  "independent_reviewer": "join_feasibility",
+  "round": 1
+}

@@ -1,0 +1,53 @@
+{
+  "coordinate_system": {
+    "forward_axis": "+Z",
+    "handedness": "right",
+    "mass_units": "kg",
+    "time_units": "s",
+    "units": "m",
+    "up_axis": "Y"
+  },
+  "geometry": {
+    "feet": {
+      "left": {
+        "side": "left",
+        "sole_joints": ["Bone_008"],
+        "toe_joints": ["Bone_044", "Bone_043", "Bone_042", "Bone_047", "Bone_046", "Bone_045", "Bone_050", "Bone_049", "Bone_048"],
+        "weight_threshold": 0.75
+      },
+      "right": {
+        "side": "right",
+        "sole_joints": ["Bone_012"],
+        "toe_joints": ["Bone_053", "Bone_052", "Bone_051", "Bone_056", "Bone_055", "Bone_054", "Bone_059", "Bone_058", "Bone_057"],
+        "weight_threshold": 0.75
+      }
+    },
+    "ground": {"level_m": 8.663434924195463e-08, "up_axis": "Y"},
+    "joint_accessors": [3, 4, 5],
+    "landmarks": {
+      "foot_roots": {"left": "Bone_008", "right": "Bone_012"},
+      "hip_left_node": "Bone_011",
+      "hip_right_node": "Bone_015",
+      "root_node": "Bone_000"
+    },
+    "mesh_node": "Mesh_0",
+    "position_accessor": 0,
+    "skin_index": 0,
+    "weight_accessors": [6, 7, 8]
+  },
+  "sampling": {"count": 120, "mode": "uniform_time"},
+  "schema": "eonwild.motion.v9.contact-gauge-source.v1",
+  "source": {
+    "clips": {"in_place": "factory-defined", "root_motion": "factory-defined"},
+    "path": "assets/sha256/2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f.glb",
+    "sha256": "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f"
+  },
+  "thresholds": {
+    "contact_relative_velocity_mps": 1.0,
+    "crossover_epsilon_m": 1e-06,
+    "floor_gap_tolerance_m": 0.03,
+    "minimum_active_points": 3,
+    "toe_off_gap_m": 0.04,
+    "travel_epsilon_mps": 1e-06
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "schema": "eonwild.motion.adult-support-speed-audit.v1",
+  "status": "CURRENT_EXACT_LOOP_BLOCKED_VISUAL_PENDING",
+  "base_sha": "30f434ce914b6392f1438f0ff234718c82d2e985",
+  "source_test_sha": "50e909e02100aa448716b0ce41fd34b02b922ec7",
+  "input_sha": "98ab0af6610267a27373d8f6f91b8ce850028394",
+  "coefficient": {
+    "value": 0.14519967609352594,
+    "mean_forward_velocity_mps": 1.1076406251513045,
+    "pelvis_excursion_m": 0.036330612504962785,
+    "analytic_velocity_amplitude_mps": 0.16082906,
+    "analytic_displacement_amplitude_m": 0.031483990066942316,
+    "classification": "first-order energy analogy used as a kinematic pelvis proxy; not fitted kinetics, COM, force, work, mass response or biology"
+  },
+  "package": {
+    "path": "out/continuation-adult-v7-support-speed-001",
+    "manifest_sha256": "7c01449f874c740b7700daae5f2ada531263df23060901b9252d0d582c2861e0",
+    "root_motion_sha256": "9d823831c2f6bf6b3eb1482784fb75ef3532838385bf111a683ee2c7d0986e0c",
+    "in_place_sha256": "1110f89eed7a4de38245a4620d0c10f92e589fb4c703e9360011b3be03e12ce0",
+    "plan_sha256": "7873aeb5984bb9a0b4ecd146bad79fc08eea5133a9699da871d008df309df731",
+    "validation_sha256": "8f58b292f8819cf565c28dc772915dfc7d7bd9ce182ab956e803ba2a0a42e469",
+    "historical_quadratic_estimator_technical_status": "PASS",
+    "visual_review": "PENDING",
+    "unity_parity": "NOT_RUN",
+    "production_approved": false
+  },
+  "current_exact_local_loop": {
+    "status": "BLOCKED",
+    "scope": "exact adjacent LINEAR translation and shortest-SLERP local-channel tangents; separate from direct transition continuity",
+    "evaluator_source": "61c7ffc99ac2c5166345c5b690328c55bce2aefd",
+    "companion_receipt": "host-exact-continuity-status.json",
+    "companion_receipt_sha256": "1e2e7bc13746b0af232a764c00cd905c90aa09791ff71ae9ea270e3b663483be",
+    "root_motion": {
+      "maximum_linear_velocity_seam_mps": 0.0032116449766123154,
+      "linear_limit_mps": 0.001,
+      "linear_witness": "Bone_001",
+      "maximum_angular_velocity_seam_degrees_per_s": 3.652031815499178,
+      "angular_limit_degrees_per_s": 10.0
+    },
+    "in_place": {
+      "maximum_linear_velocity_seam_mps": 0.0032116449766123154,
+      "linear_limit_mps": 0.001,
+      "linear_witness": "Bone_001",
+      "maximum_angular_velocity_seam_degrees_per_s": 3.652031815499178,
+      "angular_limit_degrees_per_s": 10.0
+    }
+  },
+  "reopened": {
+    "root_travel_m": 2.724796050568688,
+    "root_mean_speed_mps": 1.1076406538073416,
+    "pelvis_speed_mps": [0.9468246562779612, 1.2684492595075758],
+    "pelvis_mean_speed_mps": 1.1076406517006152,
+    "pelvis_forward_difference_from_v6_m": [-0.03148235505268208, 0.03148235765751241],
+    "pelvis_height_span_m": 0.03632872760046002,
+    "gaze_elevation_degrees": [-22.252384112648727, -22.25237261127986],
+    "gaze_yaw_degrees": [-0.000014971384873713228, -0.000002995638943218619],
+    "maximum_skin_penetration_m": 0.0,
+    "maximum_stance_gap_m": 0.00013964919873219947,
+    "maximum_root_motion_skin_velocity_mps": 0.00005884771187169972,
+    "maximum_in_place_skin_velocity_mps": 0.00006633664752764891,
+    "maximum_planted_distal_target_velocity_mps": 0.00005784473240695144,
+    "maximum_planted_distal_step_drift_m": 4.807365650027487e-7,
+    "maximum_articulation_violation_degrees": 0.0,
+    "maximum_solved_foot_pitch_velocity_degrees_per_s": 479.86918354466695
+  },
+  "claims": {
+    "physical": false,
+    "scientific": false,
+    "biological": false
+  },
+  "reviews": {
+    "root_round1": {
+      "path": "review-root-round1.md",
+      "sha256": "88a34e4cfe645b4e3928f7a332527212e6fd02cce9a36c152c8a390dcf36bbc7",
+      "source_verdict": "NO_P0_P1"
+    },
+    "independent_round1": {
+      "path": "review-independent-round1.md",
+      "sha256": "cd8168a8a842f9ac798ca5e3444d6afd29fa9557879234d01e0c0bbd9a39105f",
+      "source_verdict": "NO_P0_P1"
+    }
+  }
+}

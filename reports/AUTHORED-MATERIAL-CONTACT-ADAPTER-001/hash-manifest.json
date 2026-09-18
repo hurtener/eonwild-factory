@@ -1,0 +1,52 @@
+{
+  "base": "a80150e6a378b6d35055718f62cd58a22fc4cc1c",
+  "exclusions": [
+    "vendor FBX and package bytes",
+    "authored material capsule bytes",
+    "target GLB assets",
+    "full 133-sample pose evidence"
+  ],
+  "files": {
+    "integration-receipt.json": {
+      "sha256": "eee17cf927ad21e9052c832d8db144c6fd1c086e663efb1f9179877ab7414f5d",
+      "source_path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/authored-material-adapter-integration-b7f3938/receipt.json",
+      "source_sha256": "eee17cf927ad21e9052c832d8db144c6fd1c086e663efb1f9179877ab7414f5d"
+    },
+    "reviewer2-narrow-closure.md": {
+      "sha256": "a9462da7295521337b668c1f8345a0c53d9cd5b9c959af7040070b5c4d911a45",
+      "source_path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/authored-material-adapter-reviewer2-706c/narrow-closure-8d78946.md",
+      "source_sha256": "a9462da7295521337b668c1f8345a0c53d9cd5b9c959af7040070b5c4d911a45"
+    },
+    "root-narrow-closure.json": {
+      "sha256": "eb2b4d62afa8734e9cb253fe85665053007f80874cf29d24306c7044b0580b6c",
+      "source_path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/authored-material-adapter-root-r1/narrow-closure-8d78946.json",
+      "source_sha256": "eb2b4d62afa8734e9cb253fe85665053007f80874cf29d24306c7044b0580b6c"
+    },
+    "source-binding-receipt.json": {
+      "sha256": "a6feae20b0191f84c70fa56a1d2f787a60442b2983b876b763388b819c889e8d",
+      "source_path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/free-dinosaur-pack-investigation-001/actual-package/allosaurus-raptor-material-contact-preflight-975a-8d789469-001/receipt.json",
+      "source_sha256": "a6feae20b0191f84c70fa56a1d2f787a60442b2983b876b763388b819c889e8d"
+    }
+  },
+  "integration_head_before_report": "b7f3938cee3c59e36bef108b883f66dab0291dc9",
+  "integration_tree_before_report": "1c357d019e1e792bc9b238b20793a71231910fe9",
+  "noncopied_evidence": {
+    "author_706_dense": {
+      "retention": "UNRETAINED after a generic diagnostic path was overwritten; root independent failure witness is authoritative",
+      "sha256": "f7c54a7445e1fcb6f84794125936cb5e3a9128d7c39fdde4418f2c4856046a71"
+    },
+    "root_706_failure_witness": {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/authored-material-adapter-root-r1/dense-706c226.json",
+      "retention": "retained externally; omitted because it contains full pose rows",
+      "sha256": "bc1ced022b2347caacc108866c7da8b465dc345aa5e89a8407f04f6d46689b0a"
+    },
+    "root_8d_dense": {
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/authored-material-adapter-root-r1/dense-8d78946.json",
+      "retention": "retained externally; omitted because it contains full pose rows",
+      "sha256": "a3871434619154bff20edb11ce18f4e61c3e2523ce6aa0af8e0ba3d43bd9203a"
+    }
+  },
+  "reviewed_adapter_head": "8d789469435e44277b19e06f35b57e35de8f3bad",
+  "reviewed_adapter_tree": "6cb8a11b671a3991e06da0dce5a8b6b474a0bd80",
+  "schema": "eonwild.report.authored-material-contact-adapter-manifest.v1"
+}

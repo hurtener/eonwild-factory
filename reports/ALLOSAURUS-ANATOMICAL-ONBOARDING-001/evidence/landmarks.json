@@ -1,0 +1,180 @@
+{
+  "schema": "eonwild.allosaurus.engineering-landmark-fit.v1",
+  "status": "NON_PROMOTED_ENGINEERING_FIT",
+  "source": {
+    "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/allosaurus-anatomical-onboarding-v3-admitted/geometry.glb",
+    "sha256": "a403679deb968ec88f7b8b89e3e399cc0881e9cc602e765a6e55934c28ad3826"
+  },
+  "coordinate": {
+    "lateral": "+X",
+    "up": "+Y",
+    "forward": "+Z",
+    "midline_x_m": 0.0083426265
+  },
+  "method": {
+    "joint_landmarks": "midpoint of coordinate-wise 10th/90th percentiles in declared up-axis surface slabs, restricted to >=0.20 normalized full-skin weight for that side's four-node leg chain; paired by reflection about declared midline",
+    "toe_landmarks": "10%, 65%, and 98% forward quantiles of >=0.25 normalized full-skin weight for the side's existing two distal nodes, with an 8 mm quantile band median and bilateral reflection",
+    "authored_slice_windows_m": {
+      "hip": {
+        "y": 1.07,
+        "half_width": 0.035
+      },
+      "knee": {
+        "y": 0.65,
+        "half_width": 0.035
+      },
+      "ankle": {
+        "y": 0.3,
+        "half_width": 0.03
+      },
+      "mtp": {
+        "y": 0.1,
+        "half_width": 0.025
+      }
+    },
+    "surface_rationale": {
+      "hip": "The slab crosses the visible proximal-thigh/ventral-torso junction. Its center is ambiguous because the surface includes muscle bulk rather than an exposed acetabular landmark.",
+      "knee": "The slab crosses the visible narrowing and change of contour between the broad proximal thigh and the slimmer shank.",
+      "ankle": "The slab crosses the distal-shank constriction immediately above the expanded pedal surface.",
+      "mtp": "The slab crosses the low foot base where the distal shank transitions into the forward pedal surface.",
+      "weight_use_boundary": "Existing skin weights localize the intended side and limb region only; they are placeholder deformation ownership and are not independent anatomical evidence for a pivot."
+    },
+    "sample_counts": {
+      "left": {
+        "hip": 142,
+        "knee": 275,
+        "ankle": 157,
+        "mtp": 306,
+        "toe_root": 28,
+        "toe_mid": 62,
+        "toe_endpoint": 24
+      },
+      "right": {
+        "hip": 147,
+        "knee": 219,
+        "ankle": 115,
+        "mtp": 346,
+        "toe_root": 23,
+        "toe_mid": 54,
+        "toe_endpoint": 34
+      }
+    }
+  },
+  "landmarks_source_world_m": {
+    "left": {
+      "hip": [
+        -0.2255978307502099,
+        1.0672420067197352,
+        0.5635172783788966
+      ],
+      "knee": [
+        -0.15227374401840765,
+        0.6521556597833118,
+        0.5519496568795134
+      ],
+      "ankle": [
+        -0.146867255730045,
+        0.29604919855185907,
+        0.445189589497863
+      ],
+      "mtp": [
+        -0.1543245521572324,
+        0.09833942199401782,
+        0.5028293639284214
+      ],
+      "toe_root": [
+        -0.19640956854180552,
+        0.02350638725189924,
+        0.6517820090336908
+      ],
+      "toe_mid": [
+        -0.1966314157694795,
+        0.018839705699171722,
+        0.7224648162816892
+      ],
+      "toe_endpoint": [
+        -0.2048888233737616,
+        0.012162653235452583,
+        0.7705469726511049
+      ]
+    },
+    "right": {
+      "hip": [
+        0.2422830837502099,
+        1.0672420067197352,
+        0.5635172783788966
+      ],
+      "knee": [
+        0.16895899701840766,
+        0.6521556597833118,
+        0.5519496568795134
+      ],
+      "ankle": [
+        0.163552508730045,
+        0.29604919855185907,
+        0.445189589497863
+      ],
+      "mtp": [
+        0.1710098051572324,
+        0.09833942199401782,
+        0.5028293639284214
+      ],
+      "toe_root": [
+        0.21309482154180553,
+        0.02350638725189924,
+        0.6517820090336908
+      ],
+      "toe_mid": [
+        0.21331666876947952,
+        0.018839705699171722,
+        0.7224648162816892
+      ],
+      "toe_endpoint": [
+        0.2215740763737616,
+        0.012162653235452583,
+        0.7705469726511049
+      ]
+    }
+  },
+  "derived_segments": {
+    "left": {
+      "femur_tibia_metatarsus_m": [
+        0.4216715629198046,
+        0.3718047254053327,
+        0.2060754973619137
+      ],
+      "fractions": [
+        0.421860646899815,
+        0.3719714483324837,
+        0.20616790476770128
+      ]
+    },
+    "right": {
+      "femur_tibia_metatarsus_m": [
+        0.4216715629198046,
+        0.3718047254053327,
+        0.2060754973619137
+      ],
+      "fractions": [
+        0.421860646899815,
+        0.3719714483324837,
+        0.20616790476770128
+      ]
+    }
+  },
+  "comparative_only": {
+    "white_2013_uuvp6000r_fractions": [
+      0.4433,
+      0.3677,
+      0.189
+    ],
+    "policy": "specimen-specific proportion sanity check after fitting; not an optimization target or evidence that this artist mesh is UUVP 6000r",
+    "foster_chure_2006_caveat": "ontogenetic distal proportions vary; reported metatarsal identity and one MOR 693 femur value differ between table and figures"
+  },
+  "limitations": [
+    "The source's straight parallel legs and original pivots are deliberate drift-control placeholders, not anatomical measurements.",
+    "Surface-slab and toe-quantile centers are reproducible engineering landmarks with authored windows, not fossil joint-center measurements.",
+    "The toe endpoint is non-skinned and satisfies the existing solver's effector topology; it is not a newly evidenced digit.",
+    "No walking feasibility, digit anatomy, contact stability, or production suitability follows from this fit."
+  ]
+}

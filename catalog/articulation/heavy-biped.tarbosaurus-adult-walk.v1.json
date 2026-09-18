@@ -1,0 +1,106 @@
+{
+  "schema": "eonwild.motion.v9.articulation-profile.v1",
+  "id": "heavy-biped.tarbosaurus-adult-walk.v1",
+  "version": 1,
+  "classification": "engineering_guardrails_not_biological_rom",
+  "angle_conventions": {
+    "hip_sagittal_degrees": "world sagittal thigh inclination from down: negative rearward; positive forward",
+    "knee_interior_degrees": "0 fully folded; 180 straight",
+    "ankle_interior_degrees": "0 fully folded; 180 straight"
+  },
+  "evidence": {
+    "status": "comparative_anatomy_informed",
+    "sources": [
+      {
+        "citation": "Gatesy, Baeker and Hutchinson (2009), Constraint-based exclusion of limb poses for reconstructing theropod dinosaur locomotion",
+        "locator": "https://www.rvc.ac.uk/Media/Default/Structure%20and%20Motion/Documents/23_000.pdf",
+        "scope": "Comparative Tyrannosaurus rex MOR 555 model used geometric knee 30..180 and ankle 90..180 degree search intervals. This supports scalar coordinate sanity and the 180 degree straight endpoint; it is not measured Tarbosaurus ROM."
+      },
+      {
+        "citation": "Eonwild Factory pre-existing gait engineering guardrails",
+        "locator": "src/eonwild_motion/planning/airborne_gait.py",
+        "scope": "Retains the existing global hip interval -45..80 degrees and knee minimum 65 degrees. Hip is a world thigh inclination, not a pelvis-relative anatomical joint coordinate."
+      },
+      {
+        "citation": "Eonwild whole-cycle constrained and skinned candidate diagnostics",
+        "locator": "tests/test_world_metatarsus_recovery.py",
+        "scope": "Tests feasible-first scalar enforcement, phase-pure recovery and final-GLB verification mechanics. Synthetic and authored evidence do not establish biological ROM."
+      }
+    ],
+    "limitations": [
+      "No measured Tarbosaurus joint range of motion or in-vivo loading evidence is available.",
+      "Hip hard [-45,80] retains the existing factory engineering interval; preferred [-35,75] is an authored 10/5 degree operating margin, not anatomical certification.",
+      "Knee hard [65,180] retains the existing 65 degree engineering floor and uses the scalar metric's straight endpoint; preferred [68,175] is an authored 3/5 degree operating margin.",
+      "Ankle hard [90,180] uses a comparative-model-informed lower engineering guardrail and the scalar metric's straight endpoint; preferred [95,172] is an authored 5/8 degree operating margin.",
+      "A prior unbound diagnostic used a 178 degree knee and ankle ceiling without independent anatomical support and put loaded stance at that boundary; this profile uses the defined 180 degree straight endpoint instead.",
+      "Support and swing ranges are identical because phase-specific Tarbosaurus evidence is unresolved.",
+      "The profile is a scalar sagittal guardrail; it does not model 6DoF joints, force, muscle capacity, or translated bones."
+    ]
+  },
+  "envelopes": {
+    "support": {
+      "hip_sagittal_degrees": {
+        "hard_degrees": [
+          -45,
+          80
+        ],
+        "preferred_degrees": [
+          -35,
+          75
+        ]
+      },
+      "knee_interior_degrees": {
+        "hard_degrees": [
+          65,
+          180
+        ],
+        "preferred_degrees": [
+          68,
+          175
+        ]
+      },
+      "ankle_interior_degrees": {
+        "hard_degrees": [
+          90,
+          180
+        ],
+        "preferred_degrees": [
+          95,
+          172
+        ]
+      }
+    },
+    "swing": {
+      "hip_sagittal_degrees": {
+        "hard_degrees": [
+          -45,
+          80
+        ],
+        "preferred_degrees": [
+          -35,
+          75
+        ]
+      },
+      "knee_interior_degrees": {
+        "hard_degrees": [
+          65,
+          180
+        ],
+        "preferred_degrees": [
+          68,
+          175
+        ]
+      },
+      "ankle_interior_degrees": {
+        "hard_degrees": [
+          90,
+          180
+        ],
+        "preferred_degrees": [
+          95,
+          172
+        ]
+      }
+    }
+  }
+}

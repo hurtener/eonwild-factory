@@ -1,0 +1,82 @@
+{
+  "schema": "eonwild.motion.verification-run.v1",
+  "tested_source_sha": "807b4f2b92eb4251094d1219eb9d791562331f73",
+  "run_id": "34046652734",
+  "jobs": [
+    {
+      "id": 101522781529,
+      "name": "verify (three-quarter)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 101522781575,
+      "name": "verify (tests)",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 101522781629,
+      "name": "verify (side)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 101522781633,
+      "name": "verify (front)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 101522781661,
+      "name": "verify (rear)",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "unity_validation": "NOT_RUN",
+  "visual_approval": "PENDING_ACTUAL_REVIEW",
+  "files": {
+    "motion-native-three-quarter/out/review/three-quarter/reference/preview.mp4": "5f1b037605940f8f1dbf9785205f34cb0c95dc9ae8caff515664dd335725bbf5",
+    "motion-native-three-quarter/out/review/three-quarter/reference/render-receipt.json": "3bd0ab85c79b6cfeb1910bf1f37bf92fdab76fb5610b4046f22e108d70498d26",
+    "motion-native-three-quarter/out/review/three-quarter/reference/camera.json": "c1e1ddf560f4d7d6acc8cd2cee1d56aaa4345f327dbb6b4fcd96e956e022aad7",
+    "motion-native-three-quarter/out/review/three-quarter/reference/timeline.json": "d74c7cf37d2a91fb2d46b10159c506a89469cf1b102a1f1dbd7c523a9e1c6ef2",
+    "motion-native-three-quarter/out/review/three-quarter/reference/native-frames.jpg": "c019a7f2498b57523430a622d8bac2093111690ae10b0e586daec42f3d054e4c",
+    "motion-native-three-quarter/out/review/three-quarter/candidate/preview.mp4": "e2d556b4c44a761f25cebb17a3f8ac431a597affce0f55cd4355acdd33efe185",
+    "motion-native-three-quarter/out/review/three-quarter/candidate/render-receipt.json": "ab4f015c86ad4330838759baf85748f431720fcb7ccb9866d3343159f5385f3c",
+    "motion-native-three-quarter/out/review/three-quarter/candidate/camera.json": "c1e1ddf560f4d7d6acc8cd2cee1d56aaa4345f327dbb6b4fcd96e956e022aad7",
+    "motion-native-three-quarter/out/review/three-quarter/candidate/timeline.json": "860a8afbf1cecd1c093a5656fe21954446464701de46f4bdb9fc279f7eb1bb23",
+    "motion-native-three-quarter/out/review/three-quarter/candidate/native-frames.jpg": "0fcfc8731cf8369bf5bd32caaa2c7cae05b2056d565db1c40b5086ab163e8b12",
+    "motion-native-rear/out/review/rear/reference/preview.mp4": "7545fcee62a817c122387e0ba9d5f5cae0d26d34f735b859ed43398110ce3527",
+    "motion-native-rear/out/review/rear/reference/render-receipt.json": "b6f16884fc7aa6e6cf73c28d638484196b7b9383dd456c037041a994f1aa3161",
+    "motion-native-rear/out/review/rear/reference/camera.json": "ac9198b45e7690674de0a48d5d46a4b94d66e90b76b8a50d226d6fb353580d41",
+    "motion-native-rear/out/review/rear/reference/timeline.json": "d74c7cf37d2a91fb2d46b10159c506a89469cf1b102a1f1dbd7c523a9e1c6ef2",
+    "motion-native-rear/out/review/rear/reference/native-frames.jpg": "5b8c1728e2f0d3906d2c0713cc974e4a9f585812fff123b9994a6b981d5258c1",
+    "motion-native-rear/out/review/rear/candidate/preview.mp4": "884fcd215e38acd51fc118e9f7235cdc0cf5c369699cb73b16a2bd54bfb9c652",
+    "motion-native-rear/out/review/rear/candidate/render-receipt.json": "5410286551b60bd7a09c4ef617143433838f5a86a1af6ab95fc77d77660b8d55",
+    "motion-native-rear/out/review/rear/candidate/camera.json": "ac9198b45e7690674de0a48d5d46a4b94d66e90b76b8a50d226d6fb353580d41",
+    "motion-native-rear/out/review/rear/candidate/timeline.json": "860a8afbf1cecd1c093a5656fe21954446464701de46f4bdb9fc279f7eb1bb23",
+    "motion-native-rear/out/review/rear/candidate/native-frames.jpg": "af57766f90aadb99c333d3d5f8e9235eb8896014fb3e762353fbc85efc3385cf",
+    "motion-native-side/out/review/side/reference/preview.mp4": "265632cef2dd999458db01c54163e55f7c5c86f77f5da448e517cd1215ae2a67",
+    "motion-native-side/out/review/side/reference/render-receipt.json": "4ff0f8c26f5c4abf287ab2c23e42feab40860d9bbe18fe70f364d03f9b4f419d",
+    "motion-native-side/out/review/side/reference/camera.json": "9f1b0c5097ff255fc5e1cdf8629d15c4eaf031415291b4d8fb1b057df28a1c24",
+    "motion-native-side/out/review/side/reference/timeline.json": "d74c7cf37d2a91fb2d46b10159c506a89469cf1b102a1f1dbd7c523a9e1c6ef2",
+    "motion-native-side/out/review/side/reference/native-frames.jpg": "ffe6e27a68945a8205669b05e2e38e2369de8e046b9868ee4c2e95d9245836e1",
+    "motion-native-side/out/review/side/candidate/preview.mp4": "bdbde6301b57958e42b2a774dfff0cfcb05bedcbdce71b01475d7a85262a4a7c",
+    "motion-native-side/out/review/side/candidate/render-receipt.json": "5b7e1c5a7b405888a36c4b88b564508c90ba4ed760960c60795c9738bb38994e",
+    "motion-native-side/out/review/side/candidate/camera.json": "9f1b0c5097ff255fc5e1cdf8629d15c4eaf031415291b4d8fb1b057df28a1c24",
+    "motion-native-side/out/review/side/candidate/timeline.json": "860a8afbf1cecd1c093a5656fe21954446464701de46f4bdb9fc279f7eb1bb23",
+    "motion-native-side/out/review/side/candidate/native-frames.jpg": "5d631f4643b631dbeeebb639ebd04985dddf444815aba746ae59cdc0d2873148",
+    "motion-native-front/out/review/front/reference/preview.mp4": "55f749233ae5ee99acaaba807ae0aada531d8a6e02e694273a6cceb5a5586160",
+    "motion-native-front/out/review/front/reference/render-receipt.json": "cf5715934790f7c9fcf3eeb9e7e76db251f4b3eea9fb11d5edba05087b8cf1e9",
+    "motion-native-front/out/review/front/reference/camera.json": "48b9567e73e84c90be7c58d00e80b96910e505f56d1ebd8176e5c55c22a776ee",
+    "motion-native-front/out/review/front/reference/timeline.json": "d74c7cf37d2a91fb2d46b10159c506a89469cf1b102a1f1dbd7c523a9e1c6ef2",
+    "motion-native-front/out/review/front/reference/native-frames.jpg": "5884592122fb924dd8f57d4090b2140e122a446b7e5e4c3126720b560b3ef8e8",
+    "motion-native-front/out/review/front/candidate/preview.mp4": "e3ad1ac3a14269165288c4d530185e4707645cccb2a3d403906416aa4cefdc50",
+    "motion-native-front/out/review/front/candidate/render-receipt.json": "29812235d8365d89313a78b2897867d9f08684a6febfe32accf9706341eefb86",
+    "motion-native-front/out/review/front/candidate/camera.json": "48b9567e73e84c90be7c58d00e80b96910e505f56d1ebd8176e5c55c22a776ee",
+    "motion-native-front/out/review/front/candidate/timeline.json": "860a8afbf1cecd1c093a5656fe21954446464701de46f4bdb9fc279f7eb1bb23",
+    "motion-native-front/out/review/front/candidate/native-frames.jpg": "15242c4b555c50a3a170a7bbfc5bd4df32544dc6f0206bc1acfc4c84f6a2c5ed",
+    "motion-native-tests/out/full-tests.xml": "304cfcbb553c6cd6cf00d43b894e7c4d45b03a2fafdf0aca06481e8757996c79"
+  }
+}

@@ -1,0 +1,537 @@
+{
+  "classification": "candidate A is a support-timed kinematic coordination hypothesis; the comparison does not establish COM, force, mass response, biological validity or visual acceptance",
+  "comparison_audit": {
+    "authored_foot_field_maximum_absolute_differences": {
+      "contact": 0,
+      "foot_pitch_degrees": 0,
+      "forward_m": 0,
+      "height_m": 0,
+      "metatarsal_recovery_gain": 0,
+      "metatarsal_recovery_world_degrees_from_down": 0,
+      "swing_phase": 0,
+      "toe_flex_degrees": 0,
+      "touchdown_time_s": 0
+    },
+    "full_result_sha256": "bfb765ada2fa74d895ffd367941458224e37a0800bfa15a6d150d9e427b4463f",
+    "initial_v3_audit_sha256": "f9c257f98287b9c4d6d8b77b07112f3ad59dd0d7e6c234c1a6901585a1ea0b47",
+    "maximum_skin_refinement_target_offset_delta_m": 4.2669251017518877e-07
+  },
+  "implementation": {
+    "base_commit": "63b87b3e140314c051c92ffa901eb407b79a986a",
+    "candidate_inputs_commit": "9d5ae0fe873507e6088714727943dfd8b293b2c2",
+    "controls_commit": "73fd34f44efd6a917831565be9451556ffc3989e",
+    "performance_profile_sha256": "8cb82806e4c6c389c339081bdd3c8d083b7f40742873236185fece9fa6c8dc88",
+    "program_profile_sha256": "271ccb833a8913d3dc6bd8281e798e54b9c7bebad2080136245cb7b5e5afa725",
+    "recipe_sha256": "f59e15add9e03401d896273ea53bdfa0a2aa6ec07c50a58a1bf8a92e0d801429"
+  },
+  "packages": {
+    "adult_v3": {
+      "full_patch_interior_swing_clearance": {
+        "left": {
+          "minimum_m": 0.03521389000017,
+          "sample_count": 56,
+          "swing_phase": 0.4754623044096728,
+          "time_s": 1.9696621621621622
+        },
+        "right": {
+          "minimum_m": 0.040602712991236085,
+          "sample_count": 56,
+          "swing_phase": 0.4754623044096728,
+          "time_s": 0.7396621621621622
+        }
+      },
+      "landmarks_nearest_emitted_samples": {
+        "double_support_1_midpoint": {
+          "contacts": [
+            "left",
+            "right"
+          ],
+          "hip_midpoint_lateral_from_neutral_m": 0.006489851215648565,
+          "hip_midpoint_vertical_from_neutral_m": -0.004582161663654105,
+          "index": 18,
+          "pelvis_lateral_from_neutral_m": 0.005079789800153003,
+          "pelvis_roll_degrees": 0.22371209593408567,
+          "pelvis_top_lateral_component": -0.0022614465167150963,
+          "pelvis_vertical_from_neutral_m": -0.0050507528460670414,
+          "pelvis_yaw_degrees": 0.7457130002023813,
+          "planned_pelvis_height_offset_m": -0.005050752704952226,
+          "same_foot_phase": 0.060810810810810814,
+          "stage": "DOUBLE_SUPPORT",
+          "target_time_s": 0.14759999999999998,
+          "time_s": 0.1495945945945946,
+          "torso_surface_centroid_lateral_from_neutral_m": 0.015582454818047313,
+          "torso_surface_centroid_vertical_from_neutral_m": -0.012589967413809688
+        },
+        "double_support_2_midpoint": {
+          "contacts": [
+            "left",
+            "right"
+          ],
+          "hip_midpoint_lateral_from_neutral_m": -0.006511765766328148,
+          "hip_midpoint_vertical_from_neutral_m": -0.005509393893951664,
+          "index": 166,
+          "pelvis_lateral_from_neutral_m": -0.0050797858785631474,
+          "pelvis_roll_degrees": -0.2237090804473994,
+          "pelvis_top_lateral_component": 0.0022613900598024723,
+          "pelvis_vertical_from_neutral_m": -0.005050753096280225,
+          "pelvis_yaw_degrees": -0.7457112314907256,
+          "planned_pelvis_height_offset_m": -0.005050752704952232,
+          "same_foot_phase": 0.5608108108108109,
+          "stage": "DOUBLE_SUPPORT",
+          "target_time_s": 1.3776000000000002,
+          "time_s": 1.3795945945945947,
+          "torso_surface_centroid_lateral_from_neutral_m": -0.008783099267948728,
+          "torso_surface_centroid_vertical_from_neutral_m": -0.014970542262673359
+        },
+        "left_declared_stance_midpoint": {
+          "contacts": [
+            "left"
+          ],
+          "hip_midpoint_lateral_from_neutral_m": 0.016109471889129475,
+          "hip_midpoint_vertical_from_neutral_m": -0.030095836960711164,
+          "index": 92,
+          "pelvis_lateral_from_neutral_m": 0.012641539494414608,
+          "pelvis_roll_degrees": 0.556686747558472,
+          "pelvis_top_lateral_component": -0.005627718166457564,
+          "pelvis_vertical_from_neutral_m": -0.03127985874063688,
+          "pelvis_yaw_degrees": 1.8557637124673865,
+          "planned_pelvis_height_offset_m": -0.031279859800010565,
+          "same_foot_phase": 0.3108108108108108,
+          "stage": "SINGLE_SUPPORT",
+          "target_time_s": 0.7626,
+          "time_s": 0.7645945945945946,
+          "torso_surface_centroid_lateral_from_neutral_m": 0.0436018885267492,
+          "torso_surface_centroid_vertical_from_neutral_m": -0.021915214525430216
+        },
+        "right_declared_stance_midpoint": {
+          "contacts": [
+            "right"
+          ],
+          "hip_midpoint_lateral_from_neutral_m": -0.01624523540185116,
+          "hip_midpoint_vertical_from_neutral_m": -0.032402297742557096,
+          "index": 240,
+          "pelvis_lateral_from_neutral_m": -0.012641538863096716,
+          "pelvis_roll_degrees": -0.5566819486732519,
+          "pelvis_top_lateral_component": 0.0056276435914845765,
+          "pelvis_vertical_from_neutral_m": -0.03127985921448895,
+          "pelvis_yaw_degrees": -1.8557636870640408,
+          "planned_pelvis_height_offset_m": -0.031279859800010565,
+          "same_foot_phase": 0.8108108108108107,
+          "stage": "SINGLE_SUPPORT",
+          "target_time_s": 1.9926000000000001,
+          "time_s": 1.9945945945945944,
+          "torso_surface_centroid_lateral_from_neutral_m": -0.03617759510169852,
+          "torso_surface_centroid_vertical_from_neutral_m": -0.020681422340435685
+        }
+      },
+      "ranges": {
+        "hip_midpoint_lateral_from_neutral_m": [
+          -0.0175133076868736,
+          0.017355629771236437
+        ],
+        "hip_midpoint_vertical_from_neutral_m": [
+          -0.03753759633995646,
+          1.004742800780889e-05
+        ],
+        "pelvis_lateral_from_neutral_m": [
+          -0.013623975557537214,
+          0.013623981146601072
+        ],
+        "pelvis_roll_degrees": [
+          -0.599938533295347,
+          0.5999388483597511
+        ],
+        "pelvis_top_lateral_component": [
+          -0.006065036791666349,
+          0.0060650075089167515
+        ],
+        "pelvis_vertical_from_neutral_m": [
+          -0.036330614762196234,
+          0.0
+        ],
+        "pelvis_yaw_degrees": [
+          -1.9999799440855683,
+          1.9999841021540332
+        ],
+        "torso_surface_centroid_lateral_from_neutral_m": [
+          -0.038102704560853885,
+          0.04536632927240684
+        ],
+        "torso_surface_centroid_vertical_from_neutral_m": [
+          -0.037878817964976275,
+          -0.005805645622286804
+        ]
+      },
+      "source": {
+        "duration_s": 2.4600000381469727,
+        "manifest_sha256": "8a6fb8ad6ae06acc2f2150804e3c7658ffea6813bc52c9e18b6b141f10ed1ff3",
+        "plan_sha256": "cbe58ce3ca4180d7b8f7f335a77f04c63dbf08391e6fe451e1c764e5bd6b8a61",
+        "root_motion_glb_sha256": "c079dbef986f0d59ab263d84403759e50fd2113212294e22d594a41b40e8602a",
+        "sample_count": 297,
+        "torso_surface_proxy_vertex_count": 2529
+      },
+      "technical": {
+        "articulation_maximum_violation_degrees": 0.0,
+        "articulation_observed_degrees_root_motion": {
+          "support": {
+            "ankle_interior_degrees": [
+              100.33497637780157,
+              147.50333791584217
+            ],
+            "hip_sagittal_degrees": [
+              -33.27015322867097,
+              41.41655159228041
+            ],
+            "knee_interior_degrees": [
+              119.21496578090552,
+              178.36501340349957
+            ]
+          },
+          "swing": {
+            "ankle_interior_degrees": [
+              97.0291374800518,
+              149.07066051506493
+            ],
+            "hip_sagittal_degrees": [
+              -33.787056405091334,
+              73.28220659555303
+            ],
+            "knee_interior_degrees": [
+              69.0126023800573,
+              178.42921053356153
+            ]
+          }
+        },
+        "cyclic_continuity_root_motion": {
+          "checks": {
+            "angular_velocity": true,
+            "linear_velocity": true
+          },
+          "classification": "second-order native-time derivatives of final serialized channels; endpoint closure alone is insufficient",
+          "limits": {
+            "angular_degrees_per_s": 10.0,
+            "linear_m_per_s": 0.001
+          },
+          "maximum_angular_velocity_seam_degrees_per_s": 2.5556755360366052,
+          "maximum_linear_velocity_seam_m_per_s": 2.0295017618752294e-05,
+          "peak_witnesses": {
+            "angular": {
+              "bone": "Bone_010",
+              "incoming": [
+                0.9143631360922816,
+                6.6299036099151e-07,
+                -0.19723756745809906
+              ],
+              "node": 49,
+              "outgoing": [
+                0.8707604667733296,
+                -1.0281831870317663e-06,
+                -0.18783495972172462
+              ]
+            },
+            "linear": {
+              "bone": "Bone_000",
+              "incoming": [
+                0.02497543605485111,
+                -0.0,
+                0.6410149750415973
+              ],
+              "node": 74,
+              "outgoing": [
+                0.024975556567845163,
+                0.0,
+                0.6410352697014063
+              ]
+            }
+          },
+          "status": "PASS"
+        },
+        "maximum_skin_penetration_m": 0.0,
+        "maximum_stance_gap_m": 0.00013961912529710484,
+        "peak_root_motion_rotation_rate_degrees_per_s": 642.3824073951233,
+        "solver_feasibility": {
+          "checks": {
+            "max_foot_target_residual_m": true,
+            "max_unreachable_extension_m": true,
+            "maximum_articulation_envelope_violation_degrees": true,
+            "maximum_solved_foot_pitch_velocity_degrees_per_s": true
+          },
+          "classification": "engineering feasibility only; missing evidence is a failure",
+          "limits": {
+            "max_foot_target_residual_m": 0.001,
+            "max_unreachable_extension_m": 0.001,
+            "maximum_articulation_envelope_violation_degrees": 0.01,
+            "maximum_solved_foot_pitch_velocity_degrees_per_s": 600.0
+          },
+          "status": "PASS",
+          "values": {
+            "max_foot_target_residual_m": 3.342699278036176e-07,
+            "max_unreachable_extension_m": 0.0,
+            "maximum_articulation_envelope_violation_degrees": 0.0,
+            "maximum_solved_foot_pitch_velocity_degrees_per_s": 470.62496414022604
+          }
+        },
+        "technical_status": "PASS"
+      }
+    },
+    "candidate_a_v4": {
+      "full_patch_interior_swing_clearance": {
+        "left": {
+          "minimum_m": 0.035213900310627516,
+          "sample_count": 56,
+          "swing_phase": 0.4754623044096728,
+          "time_s": 1.9696621621621622
+        },
+        "right": {
+          "minimum_m": 0.04060274212975205,
+          "sample_count": 56,
+          "swing_phase": 0.4754623044096728,
+          "time_s": 0.7396621621621622
+        }
+      },
+      "landmarks_nearest_emitted_samples": {
+        "double_support_1_midpoint": {
+          "contacts": [
+            "left",
+            "right"
+          ],
+          "hip_midpoint_lateral_from_neutral_m": 0.001050415071308347,
+          "hip_midpoint_vertical_from_neutral_m": -0.03632327473065544,
+          "index": 18,
+          "pelvis_lateral_from_neutral_m": -6.940407324995516e-05,
+          "pelvis_roll_degrees": 0.003058093309488001,
+          "pelvis_top_lateral_component": -3.0926530837457394e-05,
+          "pelvis_vertical_from_neutral_m": -0.03632967240935914,
+          "pelvis_yaw_degrees": 0.7457138793891419,
+          "planned_pelvis_height_offset_m": -0.036329669600349425,
+          "same_foot_phase": 0.060810810810810814,
+          "stage": "DOUBLE_SUPPORT",
+          "target_time_s": 0.14759999999999998,
+          "time_s": 0.1495945945945946,
+          "torso_surface_centroid_lateral_from_neutral_m": 0.01206048485376476,
+          "torso_surface_centroid_vertical_from_neutral_m": -0.041193537197911745
+        },
+        "double_support_2_midpoint": {
+          "contacts": [
+            "left",
+            "right"
+          ],
+          "hip_midpoint_lateral_from_neutral_m": -0.0010705227415711185,
+          "hip_midpoint_vertical_from_neutral_m": -0.0363359397284686,
+          "index": 166,
+          "pelvis_lateral_from_neutral_m": 6.940482386299957e-05,
+          "pelvis_roll_degrees": -0.0030553399453935887,
+          "pelvis_top_lateral_component": 3.0872763176682805e-05,
+          "pelvis_vertical_from_neutral_m": -0.03632966847567731,
+          "pelvis_yaw_degrees": -0.74571176799235,
+          "planned_pelvis_height_offset_m": -0.036329669600349425,
+          "same_foot_phase": 0.5608108108108109,
+          "stage": "DOUBLE_SUPPORT",
+          "target_time_s": 1.3776000000000002,
+          "time_s": 1.3795945945945947,
+          "torso_surface_centroid_lateral_from_neutral_m": -0.005242401234735613,
+          "torso_surface_centroid_vertical_from_neutral_m": -0.04195349356515221
+        },
+        "left_declared_stance_midpoint": {
+          "contacts": [
+            "left"
+          ],
+          "hip_midpoint_lateral_from_neutral_m": -0.010099718644894647,
+          "hip_midpoint_vertical_from_neutral_m": 0.0012753736629722567,
+          "index": 92,
+          "pelvis_lateral_from_neutral_m": -0.013623802535041323,
+          "pelvis_roll_degrees": 0.5999406935183316,
+          "pelvis_top_lateral_component": -0.00606496952805019,
+          "pelvis_vertical_from_neutral_m": -9.438612424972348e-07,
+          "pelvis_yaw_degrees": 1.8557625909259223,
+          "planned_pelvis_height_offset_m": -9.429046133616173e-07,
+          "same_foot_phase": 0.3108108108108108,
+          "stage": "SINGLE_SUPPORT",
+          "target_time_s": 0.7626,
+          "time_s": 0.7645945945945946,
+          "torso_surface_centroid_lateral_from_neutral_m": 0.016610543238520237,
+          "torso_surface_centroid_vertical_from_neutral_m": 0.006962427290870377
+        },
+        "right_declared_stance_midpoint": {
+          "contacts": [
+            "right"
+          ],
+          "hip_midpoint_lateral_from_neutral_m": 0.009962148464898323,
+          "hip_midpoint_vertical_from_neutral_m": -0.0012102924410415383,
+          "index": 240,
+          "pelvis_lateral_from_neutral_m": 0.013623804885894262,
+          "pelvis_roll_degrees": -0.5999392923595367,
+          "pelvis_top_lateral_component": 0.00606492951863982,
+          "pelvis_vertical_from_neutral_m": -9.412010126830239e-07,
+          "pelvis_yaw_degrees": -1.8557591680750398,
+          "planned_pelvis_height_offset_m": -9.429046133616173e-07,
+          "same_foot_phase": 0.8108108108108107,
+          "stage": "SINGLE_SUPPORT",
+          "target_time_s": 1.9926000000000001,
+          "time_s": 1.9945945945945944,
+          "torso_surface_centroid_lateral_from_neutral_m": -0.009252561163639277,
+          "torso_surface_centroid_vertical_from_neutral_m": 0.008538074496299952
+        }
+      },
+      "ranges": {
+        "hip_midpoint_lateral_from_neutral_m": [
+          -0.01014960770458852,
+          0.01002392303473236
+        ],
+        "hip_midpoint_vertical_from_neutral_m": [
+          -0.03634138903749484,
+          0.0012753736629722567
+        ],
+        "pelvis_lateral_from_neutral_m": [
+          -0.013623802535041323,
+          0.013623804885894262
+        ],
+        "pelvis_roll_degrees": [
+          -0.5999392923595367,
+          0.5999406935183316
+        ],
+        "pelvis_top_lateral_component": [
+          -0.00606496952805019,
+          0.00606492951863982
+        ],
+        "pelvis_vertical_from_neutral_m": [
+          -0.03632967240935914,
+          -9.412010126830239e-07
+        ],
+        "pelvis_yaw_degrees": [
+          -1.9999842633854445,
+          1.999986370890088
+        ],
+        "torso_surface_centroid_lateral_from_neutral_m": [
+          -0.011480652570730629,
+          0.01852908012913226
+        ],
+        "torso_surface_centroid_vertical_from_neutral_m": [
+          -0.04693099258192657,
+          0.008862543354439367
+        ]
+      },
+      "source": {
+        "duration_s": 2.4600000381469727,
+        "manifest_sha256": "3b26f33d3cc1f248775c861b84153d51bfb5db3c211822a37f15a8747ee4d7d9",
+        "plan_sha256": "b771a4f37ca29db67739215c37601438e8e5e59f20a59f0c191d233ce1bfe6f8",
+        "root_motion_glb_sha256": "fa6e3a11b9d1d017c3945758d976e97cfe4812960e087dad00eb37436a7840d6",
+        "sample_count": 297,
+        "torso_surface_proxy_vertex_count": 2529
+      },
+      "technical": {
+        "articulation_maximum_violation_degrees": 0.0,
+        "articulation_observed_degrees_root_motion": {
+          "support": {
+            "ankle_interior_degrees": [
+              103.74813332734102,
+              145.9206212796616
+            ],
+            "hip_sagittal_degrees": [
+              -33.84017035657009,
+              44.11452034605986
+            ],
+            "knee_interior_degrees": [
+              120.77186737391833,
+              178.00429349897834
+            ]
+          },
+          "swing": {
+            "ankle_interior_degrees": [
+              97.205044475789,
+              148.21410274746177
+            ],
+            "hip_sagittal_degrees": [
+              -34.08513201996619,
+              72.12689267662508
+            ],
+            "knee_interior_degrees": [
+              70.92608579844166,
+              178.12674279049745
+            ]
+          }
+        },
+        "cyclic_continuity_root_motion": {
+          "checks": {
+            "angular_velocity": true,
+            "linear_velocity": true
+          },
+          "classification": "second-order native-time derivatives of final serialized channels; endpoint closure alone is insufficient",
+          "limits": {
+            "angular_degrees_per_s": 10.0,
+            "linear_m_per_s": 0.001
+          },
+          "maximum_angular_velocity_seam_degrees_per_s": 2.2534153609156395,
+          "maximum_linear_velocity_seam_m_per_s": 2.0295017618752294e-05,
+          "peak_witnesses": {
+            "angular": {
+              "bone": "Bone_010",
+              "incoming": [
+                0.9617975884151071,
+                -2.8977610253692295e-07,
+                -0.20746942709941987
+              ],
+              "node": 49,
+              "outgoing": [
+                0.9233523660109624,
+                1.1346793228485548e-07,
+                -0.1991763083853767
+              ]
+            },
+            "linear": {
+              "bone": "Bone_000",
+              "incoming": [
+                0.02497543605485111,
+                -0.0,
+                0.6410149750415973
+              ],
+              "node": 74,
+              "outgoing": [
+                0.024975556567845163,
+                0.0,
+                0.6410352697014063
+              ]
+            }
+          },
+          "status": "PASS"
+        },
+        "maximum_skin_penetration_m": 0.0,
+        "maximum_stance_gap_m": 0.00013964224202903802,
+        "peak_root_motion_rotation_rate_degrees_per_s": 620.5081125198645,
+        "solver_feasibility": {
+          "checks": {
+            "max_foot_target_residual_m": true,
+            "max_unreachable_extension_m": true,
+            "maximum_articulation_envelope_violation_degrees": true,
+            "maximum_solved_foot_pitch_velocity_degrees_per_s": true
+          },
+          "classification": "engineering feasibility only; missing evidence is a failure",
+          "limits": {
+            "max_foot_target_residual_m": 0.001,
+            "max_unreachable_extension_m": 0.001,
+            "maximum_articulation_envelope_violation_degrees": 0.01,
+            "maximum_solved_foot_pitch_velocity_degrees_per_s": 600.0
+          },
+          "status": "PASS",
+          "values": {
+            "max_foot_target_residual_m": 3.777717115790366e-07,
+            "max_unreachable_extension_m": 0.0,
+            "maximum_articulation_envelope_violation_degrees": 0.0,
+            "maximum_solved_foot_pitch_velocity_degrees_per_s": 469.8238567904068
+          }
+        },
+        "technical_status": "PASS"
+      }
+    }
+  },
+  "review": {
+    "biological_validation": "NOT_VALIDATED",
+    "candidate_generation": "PASS",
+    "factory_verification": "PASS",
+    "production_approved": false,
+    "unity_parity": "NOT_RUN",
+    "visual_review": "POLISH_REQUIRED",
+    "visual_scope": "front and three-quarter native playback found a largely rigid torso; Candidate A retained as causal baseline, not accepted whole-body correction"
+  },
+  "schema": "eonwild.motion.adult-body-transfer-candidate-summary.v1"
+}

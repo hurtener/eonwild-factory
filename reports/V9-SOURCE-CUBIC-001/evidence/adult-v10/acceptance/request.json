@@ -1,0 +1,62 @@
+{
+  "basis_conversion": "glTF(X,Y,Z) to Blender(X,-Z,Y)",
+  "classification": "Sampled native Blender import parity, including decoded keys and interval interiors; not full-interval or visual acceptance",
+  "contact_sha256": "61e0351fe9f7170ddce7f0b83a8f0379d119349d3c392ffec43e544adb115db5",
+  "maximum_same_index_error_limit_m": 0.0005,
+  "modes": {
+    "in_place": {
+      "expected": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/root-source-cubic-adult-v10-f9ca924-001/in_place-expected.npy",
+      "expected_sha256": "c977b5a50e873767651fb06611a3237858089c4d597bd2a0212da67e8f8914c0",
+      "glb": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/source-cubic-adult-v10-f9ca924/in_place.glb",
+      "glb_sha256": "ced935c771749922cbfa3209ec76ba9a2699ec7c928797753fb94c967c31cd97",
+      "times_s": [
+        0.0,
+        0.004155405331403017,
+        0.28672297298908234,
+        0.29087838530540466,
+        0.5942229628562927,
+        0.5983783602714539,
+        0.9765202701091766,
+        0.9806756973266602,
+        1.2258446216583252,
+        1.2300000190734863,
+        1.5333446264266968,
+        1.537500023841858,
+        1.8408446311950684,
+        1.8450000286102295,
+        2.140033721923828,
+        2.1441891193389893,
+        2.4558446407318115,
+        2.4600000381469727
+      ]
+    },
+    "root_motion": {
+      "expected": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/root-source-cubic-adult-v10-f9ca924-001/root_motion-expected.npy",
+      "expected_sha256": "d509a0d4f9eb27da9ec203e502ca37fde402ba51ebe52384a3967ad64f6b1911",
+      "glb": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/out/source-cubic-adult-v10-f9ca924/root_motion.glb",
+      "glb_sha256": "85f19b01805153269988865752737e368be292f8fc49d5e527dfcf5f3ec4b2a4",
+      "times_s": [
+        0.0,
+        0.004155405331403017,
+        0.28672297298908234,
+        0.29087838530540466,
+        0.5942229628562927,
+        0.5983783602714539,
+        0.9765202701091766,
+        0.9806756973266602,
+        1.2258446216583252,
+        1.2300000190734863,
+        1.5333446264266968,
+        1.537500023841858,
+        1.8408446311950684,
+        1.8450000286102295,
+        2.140033721923828,
+        2.1441891193389893,
+        2.4558446407318115,
+        2.4600000381469727
+      ]
+    }
+  },
+  "package_manifest_sha256": "80b15c5d7dba7aa294335c46e55e8e8776aa7d177507c3c7fb3f96628252153d",
+  "reader_head": "f9ca924bcc79943d2d2b7eeab28bef8763c18ec4"
+}

@@ -1,0 +1,91 @@
+{
+  "classification": "Reviewed source/input/test blobs match their frozen heads; named candidate selection files match published 83aa. This is source identity, not motion or production approval.",
+  "frozen_groups": {
+    "adult_v10": {
+      "files": {
+        "catalog/performance/heavy-biped.tarbosaurus-adult-walk.v9.json": {
+          "blob": "20f8a9e5b4e962a2ced379f10983c75f215b7c71",
+          "matches_frozen": true
+        },
+        "recipes/heavy-biped/tarbosaurus-pin-552-1-adult-walk.v10.json": {
+          "blob": "66e5a43b6ff4ee24cbae60348ec758d7b7d3ce29",
+          "matches_frozen": true
+        },
+        "src/eonwild_motion/solve/performance.py": {
+          "blob": "23212cd801d790c27ddfef14da83ed8714a91a5a",
+          "matches_frozen": true
+        },
+        "tests/test_adult_load_acceptance_catalog.py": {
+          "blob": "f1870bd8fe6f83d1296e3a856cb733d5d6d57b61",
+          "matches_frozen": true
+        },
+        "tests/test_motion_performance.py": {
+          "blob": "722acac1e67f94c2d557b1b57de6675cbe159cbd",
+          "matches_frozen": true
+        }
+      },
+      "source_head": "94c81e7e3bb00e2e6057fd1babb183adb70ff9e3"
+    },
+    "constant_skin_law": {
+      "files": {
+        "src/eonwild_motion/solve/constant_skin_targets.py": {
+          "blob": "7d93757f583f081e136a0c00403b7949d0c236f3",
+          "matches_frozen": true
+        },
+        "src/eonwild_motion/solve/source_motion_query.py": {
+          "blob": "b20b09635c882797619f04ef192ba6bd886e35d3",
+          "matches_frozen": true
+        },
+        "src/eonwild_motion/solve/support_anchors.py": {
+          "blob": "5230075125b956bd72aed09a5c7c2b4eb7ecfb2d",
+          "matches_frozen": true
+        },
+        "tests/test_constant_skin_targets.py": {
+          "blob": "9ded854c1f70746d8f5d4012957351f64aa3f722",
+          "matches_frozen": true
+        }
+      },
+      "source_head": "990aef08c18d2cb8cc5dbaaf5c268f1b290a7cdc"
+    },
+    "support_resultant": {
+      "files": {
+        "profiles/v9/tarbosaurus-pin-552-1-support-resultant-engineering.v1.json": {
+          "blob": "c20497b8f2422bcc1d6acb1a3b6e2f11e36fb725",
+          "matches_frozen": true
+        },
+        "src/eonwild_motion/dynamics/support_resultant.py": {
+          "blob": "eb4cc32d5ca9098ad9e054fe6a1aa30eb9ab0c5a",
+          "matches_frozen": true
+        },
+        "tests/test_support_resultant.py": {
+          "blob": "16795d7f91f5b2485a0168f1bc1964003d0a6c23",
+          "matches_frozen": true
+        },
+        "tests/test_support_resultant_cli.py": {
+          "blob": "011efb31dbb86391a24f7b5a5f7737525b87468d",
+          "matches_frozen": true
+        },
+        "tools/diagnose_support_resultant.py": {
+          "blob": "3d27ffd467d06e3496595d26f5f67e93ae494c77",
+          "matches_frozen": true
+        }
+      },
+      "source_head": "b4e54d48d067307d6a8c5017f4eaeba303299eb7"
+    }
+  },
+  "published_base": "83aa5e5391848493c902af0c6bd4ecab6228afe6",
+  "schema": "eonwild.motion.closed-diagnostics-source-equivalence.v1",
+  "selection_files": {
+    ".github/workflows/factory-baseline.yml": {
+      "blob": "64559e57cfb361f201c045d090b13c2d134b5005",
+      "matches_published_83aa": true
+    },
+    "tools/verify_catalog.py": {
+      "blob": "ceb6aa836608515766461915207febcfddf91bd3",
+      "matches_published_83aa": true
+    }
+  },
+  "tested_integration_head": "4e41689671bb9787c743c72334bcd61334fd5aac",
+  "tested_integration_tree": "2811bf44288bfc45b5413742e9425b6ef887c82d",
+  "v10_recipe_selected": false
+}

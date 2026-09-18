@@ -1,0 +1,15 @@
+{
+  "implementation": "55cd2b64bcfd1e315277d025f78cecf6927274e1",
+  "results": [
+    {
+      "case": "noncanonical_all_inverse_binds",
+      "status": "REJECTED",
+      "reason": "rig preparation source neutral skin is not canonical POSITION geometry"
+    },
+    {
+      "case": "multiple_skins",
+      "status": "REJECTED",
+      "reason": "rig preparation supports exactly one skin"
+    }
+  ]
+}

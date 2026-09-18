@@ -1,0 +1,60 @@
+{
+  "source_sha256": "3613b67c9513c4ed5b88665c7606e0c15791bb922b01a72e7223aa112546ec89",
+  "scope": "Native opaque bilateral foot closeups. Red points are added engineering joint origins; blue rods are their admitted local-X hinge axes. Poses apply the existing generic toe-flex distribution to every branch. Three branches are deformation proxies, not fossil phalange reconstruction.",
+  "outputs": [
+    {
+      "degrees": 0,
+      "view": "side",
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/allosaurus-articulation-gap-001/pedal-candidate-+0-side.png",
+      "sha256": "fdb07f04efbd4d0247437eeff165269e67fe565d0c4f6f8e6dd7fbfb96158c97"
+    },
+    {
+      "degrees": 0,
+      "view": "front",
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/allosaurus-articulation-gap-001/pedal-candidate-+0-front.png",
+      "sha256": "8431d885cc9b136e2b9b5c365400673aed56329c428f0218e366ec9baf662ea8"
+    },
+    {
+      "degrees": 0,
+      "view": "sole",
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/allosaurus-articulation-gap-001/pedal-candidate-+0-sole.png",
+      "sha256": "0744b953f088202c8735bb2004efbc18d2beb900707306f087fd09062ef38c90"
+    },
+    {
+      "degrees": -8,
+      "view": "side",
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/allosaurus-articulation-gap-001/pedal-candidate--8-side.png",
+      "sha256": "385832a1adc15d4f78bc47539c4988037cce9bd2c2f0475f7cb653faebe3b0d9"
+    },
+    {
+      "degrees": -8,
+      "view": "front",
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/allosaurus-articulation-gap-001/pedal-candidate--8-front.png",
+      "sha256": "ac5b8f40e1ea5d940baf5613a3a98748dbdd1c15ca3c43950050a438db3074ca"
+    },
+    {
+      "degrees": -8,
+      "view": "sole",
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/allosaurus-articulation-gap-001/pedal-candidate--8-sole.png",
+      "sha256": "f7809cf8550b4393d3f8bb5a4444d5c39eb16befb611fe5fc14aeced063959c5"
+    },
+    {
+      "degrees": 8,
+      "view": "side",
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/allosaurus-articulation-gap-001/pedal-candidate-+8-side.png",
+      "sha256": "143e3c0718906031f33cb9a83379666acb6a3878b81003b77d317504c6721802"
+    },
+    {
+      "degrees": 8,
+      "view": "front",
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/allosaurus-articulation-gap-001/pedal-candidate-+8-front.png",
+      "sha256": "c7810691bf6375d3aad19ec63b74373a47324782dd507cd9dfd30595d76a63cc"
+    },
+    {
+      "degrees": 8,
+      "view": "sole",
+      "path": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a07d0e-00b8-7a51-9095-c2da82025521/audits/allosaurus-articulation-gap-001/pedal-candidate-+8-sole.png",
+      "sha256": "f08d2f2064759cd4a255fa969f096894053e0c07d49ef72385df30597c68e3a8"
+    }
+  ]
+}

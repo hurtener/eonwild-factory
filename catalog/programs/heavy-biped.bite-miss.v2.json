@@ -1,0 +1,49 @@
+{
+  "schema": "eonwild.motion.supported-action.v1",
+  "classification": "authored supported bite and recovery; a forward target, not feeding choreography",
+  "reference_basis": "User bite-miss reference informs anticipation/commit/recovery ordering; authored curves are not biological measurements",
+  "duration_seconds": 3.2,
+  "reference_duration_seconds": 6.0,
+  "sample_hz": 60,
+  "loop": false,
+  "anchor": null,
+  "gape_degrees": 58.0,
+  "max_joint_rate_degrees_per_second": 360.0,
+  "lane_width_body_heights": 0.24,
+  "translation_scale_body_heights": [1.8856539447880523, 1.0, 0.754261577915221],
+  "support_reach_body_heights": [0.0, 0.0],
+  "base_pitch_degrees": {
+    "pelvis": [4],
+    "spine": [0.7, 1, 1.3, 1.3, 0.7],
+    "chest": [1],
+    "neck": [0, -0.4, -0.4, -0.4, -0.4],
+    "head": [-3],
+    "tail": [-1.5, -1.5, -1.2, -0.9, -0.6, 0, 0.6, 0.9, 1.2]
+  },
+  "yaw_weights": {"pelvis": 0.1, "spine": 0.2, "chest": 0.15, "neck": 0.6, "head": 0.8, "tail": -0.7},
+  "channels": {
+    "body": [[0, 0], [1.3, 0.32], [2.1, 0.73], [2.45, 0.88], [3.3, 0.4], [4.8, 0.2], [6, 0]],
+    "drop": [[0, 0], [1.4, 0.02], [2.4, 0.08], [3.2, 0.025], [6, 0]],
+    "forward": [[0, 0], [1.3, -0.02], [2.25, 0.025], [2.6, 0.035], [3.6, -0.012], [6, 0]],
+    "lateral": [[0, 0], [6, 0]],
+    "tail": [[0, 0], [2.6, 1.2], [3.6, -0.25], [6, 0]],
+    "yaw": [[0, 0], [2.4, -2], [3.2, 4], [6, 0]],
+    "jaw": [[0, 0], [1.4, 0.08], [1.95, 0.7], [2.15, 0.65], [2.65, 0.02], [3.5, 0.08], [4.5, 0], [6, 0]]
+  },
+  "support_limits": {"hip_sagittal_degrees": [-15, 85], "knee_interior_degrees": [80, 155], "ankle_interior_degrees": [65, 155]},
+  "joint_pitch_limits_degrees": {
+    "pelvis": [[-12, 15]],
+    "spine": [[-5, 8], [-5, 8], [-5, 8], [-5, 8], [-5, 8]],
+    "chest": [[-6, 12]],
+    "neck": [[-4, 12], [-4, 12], [-4, 12], [-4, 12], [-4, 16]],
+    "head": [[-4, 32]]
+  },
+  "events": [
+    {"name": "ANTICIPATION_START", "reference_time_seconds": 0.0},
+    {"name": "BITE_COMMIT_START", "reference_time_seconds": 1.8},
+    {"name": "BITE_WINDOW_OPEN", "reference_time_seconds": 2.2},
+    {"name": "BITE_WINDOW_CLOSE", "reference_time_seconds": 2.65},
+    {"name": "RECOVERY_START", "reference_time_seconds": 3.0},
+    {"name": "ACTION_COMPLETE", "reference_time_seconds": 6.0}
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "source_sha": "4ae0fe92ec3ffd49dfeca14085756cc7cbe7d852",
+  "probes": {
+    "forged_manifest": {
+      "status": "REJECTED",
+      "reason": "package metadata: package status is not CANDIDATE"
+    },
+    "absent_swing": {
+      "status": "REJECTED",
+      "reason": "grounded locomotion sampling must observe support and swing for each leg; missing left:swing, right:swing"
+    }
+  },
+  "valid_packages": {
+    "out/continuation-adult-v3-world-recovery-001/package": {
+      "integrity": "PASS",
+      "technical_status": "PASS",
+      "visual_review": "PENDING",
+      "unity_parity": "NOT_RUN",
+      "production_approved": false
+    },
+    "out/continuation-fast-walk-3219d65/fast-walk.v2": {
+      "integrity": "PASS",
+      "technical_status": "PASS",
+      "visual_review": "PENDING",
+      "unity_parity": "NOT_RUN",
+      "production_approved": false
+    },
+    "out/continuation-final-9d6974d-pairs/reverse-walk/start": {
+      "integrity": "PASS",
+      "technical_status": "PASS",
+      "visual_review": "PENDING",
+      "unity_parity": "NOT_RUN",
+      "production_approved": false
+    },
+    "out/continuation-final-9d6974d-pairs/reverse-walk/steady": {
+      "integrity": "PASS",
+      "technical_status": "PASS",
+      "visual_review": "PENDING",
+      "unity_parity": "NOT_RUN",
+      "production_approved": false
+    },
+    "out/continuation-final-9d6974d-pairs/reverse-walk/stop": {
+      "integrity": "PASS",
+      "technical_status": "PASS",
+      "visual_review": "PENDING",
+      "unity_parity": "NOT_RUN",
+      "production_approved": false
+    },
+    "out/continuation-final-9d6974d-pairs/run/start": {
+      "integrity": "PASS",
+      "technical_status": "PASS",
+      "visual_review": "PENDING",
+      "unity_parity": "NOT_RUN",
+      "production_approved": false
+    },
+    "out/continuation-final-9d6974d-pairs/run/steady": {
+      "integrity": "PASS",
+      "technical_status": "PASS",
+      "visual_review": "PENDING",
+      "unity_parity": "NOT_RUN",
+      "production_approved": false
+    },
+    "out/continuation-final-9d6974d-pairs/run/stop": {
+      "integrity": "PASS",
+      "technical_status": "PASS",
+      "visual_review": "PENDING",
+      "unity_parity": "NOT_RUN",
+      "production_approved": false
+    },
+    "out/continuation-final-9d6974d-pairs/sprint/start": {
+      "integrity": "PASS",
+      "technical_status": "PASS",
+      "visual_review": "PENDING",
+      "unity_parity": "NOT_RUN",
+      "production_approved": false
+    },
+    "out/continuation-final-9d6974d-pairs/sprint/steady": {
+      "integrity": "PASS",
+      "technical_status": "PASS",
+      "visual_review": "PENDING",
+      "unity_parity": "NOT_RUN",
+      "production_approved": false
+    },
+    "out/continuation-final-9d6974d-pairs/sprint/stop": {
+      "integrity": "PASS",
+      "technical_status": "PASS",
+      "visual_review": "PENDING",
+      "unity_parity": "NOT_RUN",
+      "production_approved": false
+    },
+    "out/continuation-final-9d6974d-pairs/walk/start": {
+      "integrity": "PASS",
+      "technical_status": "PASS",
+      "visual_review": "PENDING",
+      "unity_parity": "NOT_RUN",
+      "production_approved": false
+    },
+    "out/continuation-final-9d6974d-pairs/walk/steady": {
+      "integrity": "PASS",
+      "technical_status": "PASS",
+      "visual_review": "PENDING",
+      "unity_parity": "NOT_RUN",
+      "production_approved": false
+    },
+    "out/continuation-final-9d6974d-pairs/walk/stop": {
+      "integrity": "PASS",
+      "technical_status": "PASS",
+      "visual_review": "PENDING",
+      "unity_parity": "NOT_RUN",
+      "production_approved": false
+    }
+  }
+}

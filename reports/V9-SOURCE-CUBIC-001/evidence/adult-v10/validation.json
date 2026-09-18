@@ -1,0 +1,1006 @@
+{
+  "articulation_envelopes": {
+    "in_place": {
+      "classification": "reopened scalar engineering guardrails; not biological ROM or 6DoF joint validation",
+      "maximum_preferred_departure_degrees": 0.0,
+      "maximum_violation_degrees": 0.0,
+      "observed_degrees": {
+        "support": {
+          "ankle_interior_degrees": [
+            126.58977134276618,
+            160.566370930007
+          ],
+          "hip_sagittal_degrees": [
+            -3.3118196010700953,
+            52.634706140153064
+          ],
+          "knee_interior_degrees": [
+            114.87075939996433,
+            139.292561235869
+          ]
+        },
+        "swing": {
+          "ankle_interior_degrees": [
+            113.33264791812545,
+            161.4508563985551
+          ],
+          "hip_sagittal_degrees": [
+            -6.83740942384389,
+            74.72825538780879
+          ],
+          "knee_interior_degrees": [
+            74.65967819123867,
+            142.30614502365145
+          ]
+        }
+      },
+      "phase_sample_counts": {
+        "support": 370,
+        "swing": 224
+      },
+      "profile": {
+        "angle_conventions": {
+          "ankle_interior_degrees": "0 fully folded; 180 straight",
+          "hip_sagittal_degrees": "world sagittal thigh inclination from down: negative rearward; positive forward",
+          "knee_interior_degrees": "0 fully folded; 180 straight"
+        },
+        "classification": "engineering_guardrails_not_biological_rom",
+        "evidence": {
+          "limitations": [
+            "No measured Tarbosaurus joint range of motion or in-vivo loading evidence is available.",
+            "Hip hard [-45,80] retains the existing factory engineering interval; preferred [-35,75] is an authored 10/5 degree operating margin, not anatomical certification.",
+            "Knee hard [65,180] retains the existing 65 degree engineering floor and uses the scalar metric's straight endpoint; preferred [68,175] is an authored 3/5 degree operating margin.",
+            "Ankle hard [90,180] uses a comparative-model-informed lower engineering guardrail and the scalar metric's straight endpoint; preferred [95,172] is an authored 5/8 degree operating margin.",
+            "A prior unbound diagnostic used a 178 degree knee and ankle ceiling without independent anatomical support and put loaded stance at that boundary; this profile uses the defined 180 degree straight endpoint instead.",
+            "Support and swing ranges are identical because phase-specific Tarbosaurus evidence is unresolved.",
+            "The profile is a scalar sagittal guardrail; it does not model 6DoF joints, force, muscle capacity, or translated bones."
+          ],
+          "sources": [
+            {
+              "citation": "Gatesy, Baeker and Hutchinson (2009), Constraint-based exclusion of limb poses for reconstructing theropod dinosaur locomotion",
+              "locator": "https://www.rvc.ac.uk/Media/Default/Structure%20and%20Motion/Documents/23_000.pdf",
+              "scope": "Comparative Tyrannosaurus rex MOR 555 model used geometric knee 30..180 and ankle 90..180 degree search intervals. This supports scalar coordinate sanity and the 180 degree straight endpoint; it is not measured Tarbosaurus ROM."
+            },
+            {
+              "citation": "Eonwild Factory pre-existing gait engineering guardrails",
+              "locator": "src/eonwild_motion/planning/airborne_gait.py",
+              "scope": "Retains the existing global hip interval -45..80 degrees and knee minimum 65 degrees. Hip is a world thigh inclination, not a pelvis-relative anatomical joint coordinate."
+            },
+            {
+              "citation": "Eonwild whole-cycle constrained and skinned candidate diagnostics",
+              "locator": "tests/test_world_metatarsus_recovery.py",
+              "scope": "Tests feasible-first scalar enforcement, phase-pure recovery and final-GLB verification mechanics. Synthetic and authored evidence do not establish biological ROM."
+            }
+          ],
+          "status": "comparative_anatomy_informed"
+        },
+        "evidence_status": "comparative_anatomy_informed",
+        "id": "heavy-biped.tarbosaurus-adult-walk.v1",
+        "limitations": [
+          "No measured Tarbosaurus joint range of motion or in-vivo loading evidence is available.",
+          "Hip hard [-45,80] retains the existing factory engineering interval; preferred [-35,75] is an authored 10/5 degree operating margin, not anatomical certification.",
+          "Knee hard [65,180] retains the existing 65 degree engineering floor and uses the scalar metric's straight endpoint; preferred [68,175] is an authored 3/5 degree operating margin.",
+          "Ankle hard [90,180] uses a comparative-model-informed lower engineering guardrail and the scalar metric's straight endpoint; preferred [95,172] is an authored 5/8 degree operating margin.",
+          "A prior unbound diagnostic used a 178 degree knee and ankle ceiling without independent anatomical support and put loaded stance at that boundary; this profile uses the defined 180 degree straight endpoint instead.",
+          "Support and swing ranges are identical because phase-specific Tarbosaurus evidence is unresolved.",
+          "The profile is a scalar sagittal guardrail; it does not model 6DoF joints, force, muscle capacity, or translated bones."
+        ],
+        "phase_transfer": "support guardrails blend C2 to swing guardrails over the existing 0.18 release and approach partition",
+        "schema": "eonwild.motion.v9.articulation-profile.v1",
+        "solver_scope": "scalar sagittal engineering guardrails; not a pelvis-relative hip JCS or 6DoF joint model; load/speed conditioning is not implemented",
+        "version": 1
+      },
+      "status": "PASS",
+      "tolerance_degrees": 0.01,
+      "witness": null
+    },
+    "root_motion": {
+      "classification": "reopened scalar engineering guardrails; not biological ROM or 6DoF joint validation",
+      "maximum_preferred_departure_degrees": 0.0,
+      "maximum_violation_degrees": 0.0,
+      "observed_degrees": {
+        "support": {
+          "ankle_interior_degrees": [
+            126.58977134276617,
+            160.566370930007
+          ],
+          "hip_sagittal_degrees": [
+            -3.3118196010700798,
+            52.634706140153064
+          ],
+          "knee_interior_degrees": [
+            114.87075939996433,
+            139.292561235869
+          ]
+        },
+        "swing": {
+          "ankle_interior_degrees": [
+            113.33264791812543,
+            161.45085639855506
+          ],
+          "hip_sagittal_degrees": [
+            -6.837409423843875,
+            74.72825538780879
+          ],
+          "knee_interior_degrees": [
+            74.6596781912387,
+            142.30614502365145
+          ]
+        }
+      },
+      "phase_sample_counts": {
+        "support": 370,
+        "swing": 224
+      },
+      "profile": {
+        "angle_conventions": {
+          "ankle_interior_degrees": "0 fully folded; 180 straight",
+          "hip_sagittal_degrees": "world sagittal thigh inclination from down: negative rearward; positive forward",
+          "knee_interior_degrees": "0 fully folded; 180 straight"
+        },
+        "classification": "engineering_guardrails_not_biological_rom",
+        "evidence": {
+          "limitations": [
+            "No measured Tarbosaurus joint range of motion or in-vivo loading evidence is available.",
+            "Hip hard [-45,80] retains the existing factory engineering interval; preferred [-35,75] is an authored 10/5 degree operating margin, not anatomical certification.",
+            "Knee hard [65,180] retains the existing 65 degree engineering floor and uses the scalar metric's straight endpoint; preferred [68,175] is an authored 3/5 degree operating margin.",
+            "Ankle hard [90,180] uses a comparative-model-informed lower engineering guardrail and the scalar metric's straight endpoint; preferred [95,172] is an authored 5/8 degree operating margin.",
+            "A prior unbound diagnostic used a 178 degree knee and ankle ceiling without independent anatomical support and put loaded stance at that boundary; this profile uses the defined 180 degree straight endpoint instead.",
+            "Support and swing ranges are identical because phase-specific Tarbosaurus evidence is unresolved.",
+            "The profile is a scalar sagittal guardrail; it does not model 6DoF joints, force, muscle capacity, or translated bones."
+          ],
+          "sources": [
+            {
+              "citation": "Gatesy, Baeker and Hutchinson (2009), Constraint-based exclusion of limb poses for reconstructing theropod dinosaur locomotion",
+              "locator": "https://www.rvc.ac.uk/Media/Default/Structure%20and%20Motion/Documents/23_000.pdf",
+              "scope": "Comparative Tyrannosaurus rex MOR 555 model used geometric knee 30..180 and ankle 90..180 degree search intervals. This supports scalar coordinate sanity and the 180 degree straight endpoint; it is not measured Tarbosaurus ROM."
+            },
+            {
+              "citation": "Eonwild Factory pre-existing gait engineering guardrails",
+              "locator": "src/eonwild_motion/planning/airborne_gait.py",
+              "scope": "Retains the existing global hip interval -45..80 degrees and knee minimum 65 degrees. Hip is a world thigh inclination, not a pelvis-relative anatomical joint coordinate."
+            },
+            {
+              "citation": "Eonwild whole-cycle constrained and skinned candidate diagnostics",
+              "locator": "tests/test_world_metatarsus_recovery.py",
+              "scope": "Tests feasible-first scalar enforcement, phase-pure recovery and final-GLB verification mechanics. Synthetic and authored evidence do not establish biological ROM."
+            }
+          ],
+          "status": "comparative_anatomy_informed"
+        },
+        "evidence_status": "comparative_anatomy_informed",
+        "id": "heavy-biped.tarbosaurus-adult-walk.v1",
+        "limitations": [
+          "No measured Tarbosaurus joint range of motion or in-vivo loading evidence is available.",
+          "Hip hard [-45,80] retains the existing factory engineering interval; preferred [-35,75] is an authored 10/5 degree operating margin, not anatomical certification.",
+          "Knee hard [65,180] retains the existing 65 degree engineering floor and uses the scalar metric's straight endpoint; preferred [68,175] is an authored 3/5 degree operating margin.",
+          "Ankle hard [90,180] uses a comparative-model-informed lower engineering guardrail and the scalar metric's straight endpoint; preferred [95,172] is an authored 5/8 degree operating margin.",
+          "A prior unbound diagnostic used a 178 degree knee and ankle ceiling without independent anatomical support and put loaded stance at that boundary; this profile uses the defined 180 degree straight endpoint instead.",
+          "Support and swing ranges are identical because phase-specific Tarbosaurus evidence is unresolved.",
+          "The profile is a scalar sagittal guardrail; it does not model 6DoF joints, force, muscle capacity, or translated bones."
+        ],
+        "phase_transfer": "support guardrails blend C2 to swing guardrails over the existing 0.18 release and approach partition",
+        "schema": "eonwild.motion.v9.articulation-profile.v1",
+        "solver_scope": "scalar sagittal engineering guardrails; not a pelvis-relative hip JCS or 6DoF joint model; load/speed conditioning is not implemented",
+        "version": 1
+      },
+      "status": "PASS",
+      "tolerance_degrees": 0.01,
+      "witness": null
+    }
+  },
+  "cubic_midpoint_articulation_envelopes": {
+    "in_place": {
+      "classification": "reopened scalar engineering guardrails; not biological ROM or 6DoF joint validation",
+      "maximum_preferred_departure_degrees": 0.0,
+      "maximum_violation_degrees": 0.0,
+      "observed_degrees": {
+        "support": {
+          "ankle_interior_degrees": [
+            126.58857276364232,
+            160.566370930007
+          ],
+          "hip_sagittal_degrees": [
+            -3.735880629699869,
+            52.63471643314621
+          ],
+          "knee_interior_degrees": [
+            114.87075939996433,
+            139.7816562604497
+          ]
+        },
+        "swing": {
+          "ankle_interior_degrees": [
+            113.33264791812545,
+            161.4508563985551
+          ],
+          "hip_sagittal_degrees": [
+            -6.83740942384389,
+            74.73308435169471
+          ],
+          "knee_interior_degrees": [
+            74.65967819123867,
+            142.3288097102446
+          ]
+        }
+      },
+      "phase_sample_counts": {
+        "support": 738,
+        "swing": 448
+      },
+      "profile": {
+        "angle_conventions": {
+          "ankle_interior_degrees": "0 fully folded; 180 straight",
+          "hip_sagittal_degrees": "world sagittal thigh inclination from down: negative rearward; positive forward",
+          "knee_interior_degrees": "0 fully folded; 180 straight"
+        },
+        "classification": "engineering_guardrails_not_biological_rom",
+        "evidence": {
+          "limitations": [
+            "No measured Tarbosaurus joint range of motion or in-vivo loading evidence is available.",
+            "Hip hard [-45,80] retains the existing factory engineering interval; preferred [-35,75] is an authored 10/5 degree operating margin, not anatomical certification.",
+            "Knee hard [65,180] retains the existing 65 degree engineering floor and uses the scalar metric's straight endpoint; preferred [68,175] is an authored 3/5 degree operating margin.",
+            "Ankle hard [90,180] uses a comparative-model-informed lower engineering guardrail and the scalar metric's straight endpoint; preferred [95,172] is an authored 5/8 degree operating margin.",
+            "A prior unbound diagnostic used a 178 degree knee and ankle ceiling without independent anatomical support and put loaded stance at that boundary; this profile uses the defined 180 degree straight endpoint instead.",
+            "Support and swing ranges are identical because phase-specific Tarbosaurus evidence is unresolved.",
+            "The profile is a scalar sagittal guardrail; it does not model 6DoF joints, force, muscle capacity, or translated bones."
+          ],
+          "sources": [
+            {
+              "citation": "Gatesy, Baeker and Hutchinson (2009), Constraint-based exclusion of limb poses for reconstructing theropod dinosaur locomotion",
+              "locator": "https://www.rvc.ac.uk/Media/Default/Structure%20and%20Motion/Documents/23_000.pdf",
+              "scope": "Comparative Tyrannosaurus rex MOR 555 model used geometric knee 30..180 and ankle 90..180 degree search intervals. This supports scalar coordinate sanity and the 180 degree straight endpoint; it is not measured Tarbosaurus ROM."
+            },
+            {
+              "citation": "Eonwild Factory pre-existing gait engineering guardrails",
+              "locator": "src/eonwild_motion/planning/airborne_gait.py",
+              "scope": "Retains the existing global hip interval -45..80 degrees and knee minimum 65 degrees. Hip is a world thigh inclination, not a pelvis-relative anatomical joint coordinate."
+            },
+            {
+              "citation": "Eonwild whole-cycle constrained and skinned candidate diagnostics",
+              "locator": "tests/test_world_metatarsus_recovery.py",
+              "scope": "Tests feasible-first scalar enforcement, phase-pure recovery and final-GLB verification mechanics. Synthetic and authored evidence do not establish biological ROM."
+            }
+          ],
+          "status": "comparative_anatomy_informed"
+        },
+        "evidence_status": "comparative_anatomy_informed",
+        "id": "heavy-biped.tarbosaurus-adult-walk.v1",
+        "limitations": [
+          "No measured Tarbosaurus joint range of motion or in-vivo loading evidence is available.",
+          "Hip hard [-45,80] retains the existing factory engineering interval; preferred [-35,75] is an authored 10/5 degree operating margin, not anatomical certification.",
+          "Knee hard [65,180] retains the existing 65 degree engineering floor and uses the scalar metric's straight endpoint; preferred [68,175] is an authored 3/5 degree operating margin.",
+          "Ankle hard [90,180] uses a comparative-model-informed lower engineering guardrail and the scalar metric's straight endpoint; preferred [95,172] is an authored 5/8 degree operating margin.",
+          "A prior unbound diagnostic used a 178 degree knee and ankle ceiling without independent anatomical support and put loaded stance at that boundary; this profile uses the defined 180 degree straight endpoint instead.",
+          "Support and swing ranges are identical because phase-specific Tarbosaurus evidence is unresolved.",
+          "The profile is a scalar sagittal guardrail; it does not model 6DoF joints, force, muscle capacity, or translated bones."
+        ],
+        "phase_transfer": "support guardrails blend C2 to swing guardrails over the existing 0.18 release and approach partition",
+        "schema": "eonwild.motion.v9.articulation-profile.v1",
+        "solver_scope": "scalar sagittal engineering guardrails; not a pelvis-relative hip JCS or 6DoF joint model; load/speed conditioning is not implemented",
+        "version": 1
+      },
+      "status": "PASS",
+      "tolerance_degrees": 0.01,
+      "witness": null
+    },
+    "root_motion": {
+      "classification": "reopened scalar engineering guardrails; not biological ROM or 6DoF joint validation",
+      "maximum_preferred_departure_degrees": 0.0,
+      "maximum_violation_degrees": 0.0,
+      "observed_degrees": {
+        "support": {
+          "ankle_interior_degrees": [
+            126.58857276364235,
+            160.566370930007
+          ],
+          "hip_sagittal_degrees": [
+            -3.735880629699853,
+            52.63471643314621
+          ],
+          "knee_interior_degrees": [
+            114.87075939996433,
+            139.78165626044967
+          ]
+        },
+        "swing": {
+          "ankle_interior_degrees": [
+            113.33264791812543,
+            161.45085639855506
+          ],
+          "hip_sagittal_degrees": [
+            -6.837409423843875,
+            74.73308435169471
+          ],
+          "knee_interior_degrees": [
+            74.6596781912387,
+            142.32880971024457
+          ]
+        }
+      },
+      "phase_sample_counts": {
+        "support": 738,
+        "swing": 448
+      },
+      "profile": {
+        "angle_conventions": {
+          "ankle_interior_degrees": "0 fully folded; 180 straight",
+          "hip_sagittal_degrees": "world sagittal thigh inclination from down: negative rearward; positive forward",
+          "knee_interior_degrees": "0 fully folded; 180 straight"
+        },
+        "classification": "engineering_guardrails_not_biological_rom",
+        "evidence": {
+          "limitations": [
+            "No measured Tarbosaurus joint range of motion or in-vivo loading evidence is available.",
+            "Hip hard [-45,80] retains the existing factory engineering interval; preferred [-35,75] is an authored 10/5 degree operating margin, not anatomical certification.",
+            "Knee hard [65,180] retains the existing 65 degree engineering floor and uses the scalar metric's straight endpoint; preferred [68,175] is an authored 3/5 degree operating margin.",
+            "Ankle hard [90,180] uses a comparative-model-informed lower engineering guardrail and the scalar metric's straight endpoint; preferred [95,172] is an authored 5/8 degree operating margin.",
+            "A prior unbound diagnostic used a 178 degree knee and ankle ceiling without independent anatomical support and put loaded stance at that boundary; this profile uses the defined 180 degree straight endpoint instead.",
+            "Support and swing ranges are identical because phase-specific Tarbosaurus evidence is unresolved.",
+            "The profile is a scalar sagittal guardrail; it does not model 6DoF joints, force, muscle capacity, or translated bones."
+          ],
+          "sources": [
+            {
+              "citation": "Gatesy, Baeker and Hutchinson (2009), Constraint-based exclusion of limb poses for reconstructing theropod dinosaur locomotion",
+              "locator": "https://www.rvc.ac.uk/Media/Default/Structure%20and%20Motion/Documents/23_000.pdf",
+              "scope": "Comparative Tyrannosaurus rex MOR 555 model used geometric knee 30..180 and ankle 90..180 degree search intervals. This supports scalar coordinate sanity and the 180 degree straight endpoint; it is not measured Tarbosaurus ROM."
+            },
+            {
+              "citation": "Eonwild Factory pre-existing gait engineering guardrails",
+              "locator": "src/eonwild_motion/planning/airborne_gait.py",
+              "scope": "Retains the existing global hip interval -45..80 degrees and knee minimum 65 degrees. Hip is a world thigh inclination, not a pelvis-relative anatomical joint coordinate."
+            },
+            {
+              "citation": "Eonwild whole-cycle constrained and skinned candidate diagnostics",
+              "locator": "tests/test_world_metatarsus_recovery.py",
+              "scope": "Tests feasible-first scalar enforcement, phase-pure recovery and final-GLB verification mechanics. Synthetic and authored evidence do not establish biological ROM."
+            }
+          ],
+          "status": "comparative_anatomy_informed"
+        },
+        "evidence_status": "comparative_anatomy_informed",
+        "id": "heavy-biped.tarbosaurus-adult-walk.v1",
+        "limitations": [
+          "No measured Tarbosaurus joint range of motion or in-vivo loading evidence is available.",
+          "Hip hard [-45,80] retains the existing factory engineering interval; preferred [-35,75] is an authored 10/5 degree operating margin, not anatomical certification.",
+          "Knee hard [65,180] retains the existing 65 degree engineering floor and uses the scalar metric's straight endpoint; preferred [68,175] is an authored 3/5 degree operating margin.",
+          "Ankle hard [90,180] uses a comparative-model-informed lower engineering guardrail and the scalar metric's straight endpoint; preferred [95,172] is an authored 5/8 degree operating margin.",
+          "A prior unbound diagnostic used a 178 degree knee and ankle ceiling without independent anatomical support and put loaded stance at that boundary; this profile uses the defined 180 degree straight endpoint instead.",
+          "Support and swing ranges are identical because phase-specific Tarbosaurus evidence is unresolved.",
+          "The profile is a scalar sagittal guardrail; it does not model 6DoF joints, force, muscle capacity, or translated bones."
+        ],
+        "phase_transfer": "support guardrails blend C2 to swing guardrails over the existing 0.18 release and approach partition",
+        "schema": "eonwild.motion.v9.articulation-profile.v1",
+        "solver_scope": "scalar sagittal engineering guardrails; not a pelvis-relative hip JCS or 6DoF joint model; load/speed conditioning is not implemented",
+        "version": 1
+      },
+      "status": "PASS",
+      "tolerance_degrees": 0.01,
+      "witness": null
+    }
+  },
+  "cubic_midpoint_skinned_contact": {
+    "in_place": {
+      "authority": {
+        "per_foot": {
+          "left": {
+            "cyclic_context": "loaded phases intersecting middle of three root-unwrapped cycles",
+            "maximum_skin_seam_error_m": 8.881784197001252e-16,
+            "phases": [
+              {
+                "contact_centroid_m": [
+                  -0.3915095425665205,
+                  0.10787630080026112,
+                  2.262923478934781
+                ],
+                "drift_m": 2.521602330376881e-05,
+                "end_frame": 367,
+                "end_time_s": 1.5250338315963745,
+                "max_penetration_m": 0.0,
+                "max_persistent_velocity_mps": 0.00012113472792111086,
+                "minimum_gap_m": 0.00010933876408384017,
+                "persistent_point_total": 1101,
+                "print_depth_m": 0.0,
+                "reasons": [],
+                "start_frame": 0,
+                "start_time_s": 0.0,
+                "substrate": "hard",
+                "unknown_pairs": 0,
+                "verdict": "PASS",
+                "yaw_deg": 4.353408482428142e-06
+              }
+            ],
+            "reasons": [],
+            "verdict": "PASS"
+          },
+          "right": {
+            "cyclic_context": "loaded phases intersecting middle of three root-unwrapped cycles",
+            "maximum_skin_seam_error_m": 8.881784197001252e-16,
+            "phases": [
+              {
+                "contact_centroid_m": [
+                  0.4321782384626468,
+                  0.08475273898923935,
+                  0.9223821770516104
+                ],
+                "drift_m": 2.5422923875827043e-05,
+                "end_frame": 367,
+                "end_time_s": 0.2950337827205658,
+                "max_penetration_m": 0.0,
+                "max_persistent_velocity_mps": 0.00012636624983322804,
+                "minimum_gap_m": 0.00012562431843854085,
+                "persistent_point_total": 2202,
+                "print_depth_m": 0.0,
+                "reasons": [],
+                "start_frame": 0,
+                "start_time_s": -1.2300000190734863,
+                "substrate": "hard",
+                "unknown_pairs": 0,
+                "verdict": "PASS",
+                "yaw_deg": 4.182619578303747e-06
+              },
+              {
+                "contact_centroid_m": [
+                  0.4321782384626468,
+                  0.08475273898923935,
+                  3.6633928777295854
+                ],
+                "drift_m": 2.542292387629841e-05,
+                "end_frame": 367,
+                "end_time_s": 2.7550338208675385,
+                "max_penetration_m": 0.0,
+                "max_persistent_velocity_mps": 0.00012636624980660126,
+                "minimum_gap_m": 0.00012562431843854085,
+                "persistent_point_total": 2202,
+                "print_depth_m": 0.0,
+                "reasons": [],
+                "start_frame": 0,
+                "start_time_s": 1.2300000190734863,
+                "substrate": "hard",
+                "unknown_pairs": 0,
+                "verdict": "PASS",
+                "yaw_deg": 4.26886823125797e-06
+              }
+            ],
+            "reasons": [],
+            "verdict": "PASS"
+          }
+        }
+      },
+      "classification": "final serialized skin, fixed floor, full multi-influence weights, unchanged engineering thresholds",
+      "ground_level_m": 7.44670325699803e-08,
+      "maximum_penetration_m": 0.0,
+      "maximum_stance_gap_m": 0.00013066197017352,
+      "sample_count": 593,
+      "verdict": "PASS"
+    },
+    "root_motion": {
+      "authority": {
+        "per_foot": {
+          "left": {
+            "cyclic_context": "loaded phases intersecting middle of three root-unwrapped cycles",
+            "maximum_skin_seam_error_m": 2.6645352591003757e-15,
+            "phases": [
+              {
+                "contact_centroid_m": [
+                  -0.3915095425665205,
+                  0.10787630080026066,
+                  2.2629234672914147
+                ],
+                "drift_m": 2.980424349230367e-05,
+                "end_frame": 367,
+                "end_time_s": 1.5250338315963745,
+                "max_penetration_m": 0.0,
+                "max_persistent_velocity_mps": 0.00010903506494397693,
+                "minimum_gap_m": 0.00010933876408339608,
+                "persistent_point_total": 1101,
+                "print_depth_m": 0.0,
+                "reasons": [],
+                "start_frame": 0,
+                "start_time_s": 0.0,
+                "substrate": "hard",
+                "unknown_pairs": 0,
+                "verdict": "PASS",
+                "yaw_deg": 4.597711793052988e-06
+              }
+            ],
+            "reasons": [],
+            "verdict": "PASS"
+          },
+          "right": {
+            "cyclic_context": "loaded phases intersecting middle of three root-unwrapped cycles",
+            "maximum_skin_seam_error_m": 1.7763568394002505e-15,
+            "phases": [
+              {
+                "contact_centroid_m": [
+                  0.4321782384626468,
+                  0.08475273898923888,
+                  0.9223823703835288
+                ],
+                "drift_m": 3.3529026891808506e-05,
+                "end_frame": 367,
+                "end_time_s": 0.2950337827205658,
+                "max_penetration_m": 0.0,
+                "max_persistent_velocity_mps": 0.00012644894594970722,
+                "minimum_gap_m": 0.00012562431843809676,
+                "persistent_point_total": 2202,
+                "print_depth_m": 0.0,
+                "reasons": [],
+                "start_frame": 0,
+                "start_time_s": -1.2300000190734863,
+                "substrate": "hard",
+                "unknown_pairs": 0,
+                "verdict": "PASS",
+                "yaw_deg": 4.182619578303747e-06
+              },
+              {
+                "contact_centroid_m": [
+                  0.4321782384626468,
+                  0.08475273898923888,
+                  3.663392866935951
+                ],
+                "drift_m": 3.3529026889901e-05,
+                "end_frame": 367,
+                "end_time_s": 2.7550338208675385,
+                "max_penetration_m": 0.0,
+                "max_persistent_velocity_mps": 0.000126448946002961,
+                "minimum_gap_m": 0.00012562431843809676,
+                "persistent_point_total": 2202,
+                "print_depth_m": 0.0,
+                "reasons": [],
+                "start_frame": 0,
+                "start_time_s": 1.2300000190734863,
+                "substrate": "hard",
+                "unknown_pairs": 0,
+                "verdict": "PASS",
+                "yaw_deg": 4.094554566467037e-06
+              }
+            ],
+            "reasons": [],
+            "verdict": "PASS"
+          }
+        }
+      },
+      "classification": "final serialized skin, fixed floor, full multi-influence weights, unchanged engineering thresholds",
+      "ground_level_m": 7.44670325699803e-08,
+      "maximum_penetration_m": 0.0,
+      "maximum_stance_gap_m": 0.00013066197017352,
+      "sample_count": 593,
+      "verdict": "PASS"
+    }
+  },
+  "cyclic_continuity": {
+    "in_place": {
+      "checks": {
+        "angular_velocity": true,
+        "linear_velocity": true
+      },
+      "classification": "exact serialized local-channel tangents: adjacent LINEAR translation and shortest-SLERP, or glTF CUBICSPLINE one-sided tangents with normalized quaternion derivatives; constant scale is admitted and nonconstant animated scale rejects; not a world or skinned-loop claim",
+      "diagnostics": {
+        "quadratic_three_sample_estimate": {
+          "classification": "not applicable to CUBICSPLINE; the exact serialized tangent is the acceptance value",
+          "maximum_angular_velocity_seam_degrees_per_s": 0.0,
+          "maximum_linear_velocity_seam_m_per_s": 0.0,
+          "peak_witnesses": {
+            "angular": null,
+            "linear": null
+          }
+        }
+      },
+      "limits": {
+        "angular_degrees_per_s": 10.0,
+        "linear_m_per_s": 0.001
+      },
+      "maximum_angular_velocity_seam_degrees_per_s": 0.030863674923355032,
+      "maximum_linear_velocity_seam_m_per_s": 1.0536712127723509e-08,
+      "peak_witnesses": {
+        "angular": {
+          "bone": "Bone_010",
+          "incoming": [
+            1.7154624784359196,
+            1.761095029528814e-08,
+            -0.18325235589627625
+          ],
+          "incoming_key": {
+            "neighbor_time_s": 2.4516892433166504,
+            "time_s": 2.4600000381469727
+          },
+          "node": 49,
+          "outgoing": [
+            1.7149268519632923,
+            1.2933269372128464e-08,
+            -0.18319514916754326
+          ],
+          "outgoing_key": {
+            "neighbor_time_s": 0.008310810662806034,
+            "time_s": 0.0
+          },
+          "unit": "rad/s"
+        },
+        "linear": {
+          "bone": "Bone_001",
+          "incoming": [
+            -0.10142558068037033,
+            -0.023284057155251503,
+            -0.03460382670164108
+          ],
+          "incoming_key": {
+            "neighbor_time_s": 2.4516892433166504,
+            "time_s": 2.4600000381469727
+          },
+          "node": 73,
+          "outgoing": [
+            -0.10142558813095093,
+            -0.023284057155251503,
+            -0.034603819251060486
+          ],
+          "outgoing_key": {
+            "neighbor_time_s": 0.008310810662806034,
+            "time_s": 0.0
+          },
+          "unit": "m/s"
+        }
+      },
+      "status": "PASS"
+    },
+    "root_motion": {
+      "checks": {
+        "angular_velocity": true,
+        "linear_velocity": true
+      },
+      "classification": "exact serialized local-channel tangents: adjacent LINEAR translation and shortest-SLERP, or glTF CUBICSPLINE one-sided tangents with normalized quaternion derivatives; constant scale is admitted and nonconstant animated scale rejects; not a world or skinned-loop claim",
+      "diagnostics": {
+        "quadratic_three_sample_estimate": {
+          "classification": "not applicable to CUBICSPLINE; the exact serialized tangent is the acceptance value",
+          "maximum_angular_velocity_seam_degrees_per_s": 0.0,
+          "maximum_linear_velocity_seam_m_per_s": 0.0,
+          "peak_witnesses": {
+            "angular": null,
+            "linear": null
+          }
+        }
+      },
+      "limits": {
+        "angular_degrees_per_s": 10.0,
+        "linear_m_per_s": 0.001
+      },
+      "maximum_angular_velocity_seam_degrees_per_s": 0.030863674923355032,
+      "maximum_linear_velocity_seam_m_per_s": 1.0536712127723509e-08,
+      "peak_witnesses": {
+        "angular": {
+          "bone": "Bone_010",
+          "incoming": [
+            1.7154624784359196,
+            1.761095029528814e-08,
+            -0.18325235589627625
+          ],
+          "incoming_key": {
+            "neighbor_time_s": 2.4516892433166504,
+            "time_s": 2.4600000381469727
+          },
+          "node": 49,
+          "outgoing": [
+            1.7149268519632923,
+            1.2933269372128464e-08,
+            -0.18319514916754326
+          ],
+          "outgoing_key": {
+            "neighbor_time_s": 0.008310810662806034,
+            "time_s": 0.0
+          },
+          "unit": "rad/s"
+        },
+        "linear": {
+          "bone": "Bone_001",
+          "incoming": [
+            -0.10142558068037033,
+            -0.023284057155251503,
+            -0.03460382670164108
+          ],
+          "incoming_key": {
+            "neighbor_time_s": 2.4516892433166504,
+            "time_s": 2.4600000381469727
+          },
+          "node": 73,
+          "outgoing": [
+            -0.10142558813095093,
+            -0.023284057155251503,
+            -0.034603819251060486
+          ],
+          "outgoing_key": {
+            "neighbor_time_s": 0.008310810662806034,
+            "time_s": 0.0
+          },
+          "unit": "m/s"
+        }
+      },
+      "status": "PASS"
+    }
+  },
+  "in_place_skinned_contact": {
+    "authority": {
+      "per_foot": {
+        "left": {
+          "cyclic_context": "loaded phases intersecting middle of three root-unwrapped cycles",
+          "maximum_skin_seam_error_m": 8.881784197001252e-16,
+          "phases": [
+            {
+              "contact_centroid_m": [
+                -0.39150956058396796,
+                0.10787628615030267,
+                2.262923450749085
+              ],
+              "drift_m": 2.4562323254984845e-05,
+              "end_frame": 183,
+              "end_time_s": 1.5208784341812134,
+              "max_penetration_m": 0.0,
+              "max_persistent_velocity_mps": 4.0756504970715295e-05,
+              "minimum_gap_m": 0.00011412439983625786,
+              "persistent_point_total": 549,
+              "print_depth_m": 0.0,
+              "reasons": [],
+              "start_frame": 0,
+              "start_time_s": 0.0,
+              "substrate": "hard",
+              "unknown_pairs": 0,
+              "verdict": "PASS",
+              "yaw_deg": 8.872676000826597e-06
+            }
+          ],
+          "reasons": [],
+          "verdict": "PASS"
+        },
+        "right": {
+          "cyclic_context": "loaded phases intersecting middle of three root-unwrapped cycles",
+          "maximum_skin_seam_error_m": 8.881784197001252e-16,
+          "phases": [
+            {
+              "contact_centroid_m": [
+                0.4321782675968433,
+                0.08475275775064851,
+                0.9223821602354285
+              ],
+              "drift_m": 2.4897385800515337e-05,
+              "end_frame": 183,
+              "end_time_s": 0.29087838530540466,
+              "max_penetration_m": 0.0,
+              "max_persistent_velocity_mps": 5.138026344514847e-05,
+              "minimum_gap_m": 0.0001304022411309825,
+              "persistent_point_total": 1098,
+              "print_depth_m": 0.0,
+              "reasons": [],
+              "start_frame": 0,
+              "start_time_s": -1.2300000190734863,
+              "substrate": "hard",
+              "unknown_pairs": 0,
+              "verdict": "PASS",
+              "yaw_deg": 8.365239156607497e-06
+            },
+            {
+              "contact_centroid_m": [
+                0.4321782675968433,
+                0.08475275775064851,
+                3.663392860913407
+              ],
+              "drift_m": 2.4897385801106582e-05,
+              "end_frame": 183,
+              "end_time_s": 2.7508784234523773,
+              "max_penetration_m": 0.0,
+              "max_persistent_velocity_mps": 5.138026344463491e-05,
+              "minimum_gap_m": 0.0001304022411309825,
+              "persistent_point_total": 1098,
+              "print_depth_m": 0.0,
+              "reasons": [],
+              "start_frame": 0,
+              "start_time_s": 1.2300000190734863,
+              "substrate": "hard",
+              "unknown_pairs": 0,
+              "verdict": "PASS",
+              "yaw_deg": 8.408695236852925e-06
+            }
+          ],
+          "reasons": [],
+          "verdict": "PASS"
+        }
+      }
+    },
+    "classification": "final serialized skin, fixed floor, full multi-influence weights, unchanged engineering thresholds",
+    "ground_level_m": 7.44670325699803e-08,
+    "maximum_penetration_m": 0.0,
+    "maximum_stance_gap_m": 0.00013066197017352,
+    "sample_count": 297,
+    "verdict": "PASS"
+  },
+  "oral_contact": null,
+  "outputs": {
+    "in_place": {
+      "checks": {
+        "attachments_unchanged": true,
+        "root_matches_plan": true,
+        "rotation_loop_closed": true,
+        "scales_unchanged": true,
+        "skeleton_contact_stationary": true
+      },
+      "classification": "reopened skeleton target-relative proxy; explicit pre-solve skin offsets accounted for, final material contact independently checked",
+      "maximum_attachment_error_m": 1.71867698961492e-08,
+      "maximum_planted_digit_step_drift_m": 4.2055746042482546e-07,
+      "maximum_root_error_m": 7.078325282748124e-08,
+      "maximum_rotation_seam_degrees": 2.9575586669421963e-06,
+      "maximum_scale_error": 0.0,
+      "status": "PASS"
+    },
+    "root_motion": {
+      "checks": {
+        "attachments_unchanged": true,
+        "root_matches_plan": true,
+        "rotation_loop_closed": true,
+        "scales_unchanged": true,
+        "skeleton_contact_stationary": true
+      },
+      "classification": "reopened skeleton target-relative proxy; explicit pre-solve skin offsets accounted for, final material contact independently checked",
+      "maximum_attachment_error_m": 1.71867698961492e-08,
+      "maximum_planted_digit_step_drift_m": 5.210255441803691e-07,
+      "maximum_root_error_m": 2.130395458292717e-07,
+      "maximum_rotation_seam_degrees": 2.9575586669421963e-06,
+      "maximum_scale_error": 0.0,
+      "status": "PASS"
+    }
+  },
+  "production_approved": false,
+  "rotation_rates": {
+    "in_place": {
+      "classification": "serialized per-channel rotation rate; CUBICSPLINE uses a conservative normalized-Hermite interval bound; not joint torque or muscle capacity",
+      "limit_degrees_per_s": 1200.0,
+      "maximum_degrees_per_s": 402.9716436828685,
+      "peak_witness": {
+        "bone": "Bone_009",
+        "conservative_interval_bound": true,
+        "maximum_subdivision_depth": 0,
+        "node": 48,
+        "raw_quaternion_norm_lower": 0.9368073344230652,
+        "times_s": [
+          2.227297306060791,
+          2.2356081008911133
+        ]
+      },
+      "status": "PASS"
+    },
+    "root_motion": {
+      "classification": "serialized per-channel rotation rate; CUBICSPLINE uses a conservative normalized-Hermite interval bound; not joint torque or muscle capacity",
+      "limit_degrees_per_s": 1200.0,
+      "maximum_degrees_per_s": 402.9716436828685,
+      "peak_witness": {
+        "bone": "Bone_009",
+        "conservative_interval_bound": true,
+        "maximum_subdivision_depth": 0,
+        "node": 48,
+        "raw_quaternion_norm_lower": 0.9368073344230652,
+        "times_s": [
+          2.227297306060791,
+          2.2356081008911133
+        ]
+      },
+      "status": "PASS"
+    }
+  },
+  "schema": "eonwild.motion.factory-validation.v1",
+  "skinned_contact": {
+    "authority": {
+      "per_foot": {
+        "left": {
+          "cyclic_context": "loaded phases intersecting middle of three root-unwrapped cycles",
+          "maximum_skin_seam_error_m": 2.6645352591003757e-15,
+          "phases": [
+            {
+              "contact_centroid_m": [
+                -0.39150956058396796,
+                0.10787628615030267,
+                2.2629234909067804
+              ],
+              "drift_m": 2.9257228050344052e-05,
+              "end_frame": 183,
+              "end_time_s": 1.5208784341812134,
+              "max_penetration_m": 0.0,
+              "max_persistent_velocity_mps": 5.077064979866566e-05,
+              "minimum_gap_m": 0.00011412439983625786,
+              "persistent_point_total": 549,
+              "print_depth_m": 0.0,
+              "reasons": [],
+              "start_frame": 0,
+              "start_time_s": 0.0,
+              "substrate": "hard",
+              "unknown_pairs": 0,
+              "verdict": "PASS",
+              "yaw_deg": 8.954453545231656e-06
+            }
+          ],
+          "reasons": [],
+          "verdict": "PASS"
+        },
+        "right": {
+          "cyclic_context": "loaded phases intersecting middle of three root-unwrapped cycles",
+          "maximum_skin_seam_error_m": 1.7763568394002505e-15,
+          "phases": [
+            {
+              "contact_centroid_m": [
+                0.4321782675968433,
+                0.08475275775064851,
+                0.9223823024559018
+              ],
+              "drift_m": 3.300310883170178e-05,
+              "end_frame": 183,
+              "end_time_s": 0.29087838530540466,
+              "max_penetration_m": 0.0,
+              "max_persistent_velocity_mps": 6.511909651648022e-05,
+              "minimum_gap_m": 0.0001304022411309825,
+              "persistent_point_total": 1098,
+              "print_depth_m": 0.0,
+              "reasons": [],
+              "start_frame": 0,
+              "start_time_s": -1.2300000190734863,
+              "substrate": "hard",
+              "unknown_pairs": 0,
+              "verdict": "PASS",
+              "yaw_deg": 8.365239156607497e-06
+            },
+            {
+              "contact_centroid_m": [
+                0.4321782675968433,
+                0.08475275775064851,
+                3.663392799008325
+              ],
+              "drift_m": 3.300310882958066e-05,
+              "end_frame": 183,
+              "end_time_s": 2.7508784234523773,
+              "max_penetration_m": 0.0,
+              "max_persistent_velocity_mps": 6.511909651648022e-05,
+              "minimum_gap_m": 0.0001304022411309825,
+              "persistent_point_total": 1098,
+              "print_depth_m": 0.0,
+              "reasons": [],
+              "start_frame": 0,
+              "start_time_s": 1.2300000190734863,
+              "substrate": "hard",
+              "unknown_pairs": 0,
+              "verdict": "PASS",
+              "yaw_deg": 8.365239156607497e-06
+            }
+          ],
+          "reasons": [],
+          "verdict": "PASS"
+        }
+      }
+    },
+    "classification": "final serialized skin, fixed floor, full multi-influence weights, unchanged engineering thresholds",
+    "ground_level_m": 7.44670325699803e-08,
+    "maximum_penetration_m": 0.0,
+    "maximum_stance_gap_m": 0.00013066197017352,
+    "sample_count": 297,
+    "verdict": "PASS"
+  },
+  "solver_feasibility": {
+    "checks": {
+      "max_foot_target_residual_m": true,
+      "max_unreachable_extension_m": true,
+      "maximum_articulation_envelope_violation_degrees": true,
+      "maximum_solved_foot_pitch_velocity_degrees_per_s": true
+    },
+    "classification": "engineering feasibility only; missing evidence is a failure",
+    "limits": {
+      "max_foot_target_residual_m": 0.001,
+      "max_unreachable_extension_m": 0.001,
+      "maximum_articulation_envelope_violation_degrees": 0.01,
+      "maximum_solved_foot_pitch_velocity_degrees_per_s": 600.0
+    },
+    "status": "PASS",
+    "values": {
+      "max_foot_target_residual_m": 5.120022007654443e-07,
+      "max_unreachable_extension_m": 0.0,
+      "maximum_articulation_envelope_violation_degrees": 0.0,
+      "maximum_solved_foot_pitch_velocity_degrees_per_s": 285.1537667106547
+    }
+  },
+  "technical_status": "PASS",
+  "unity_parity": "NOT_RUN",
+  "visual_review": "PENDING"
+}

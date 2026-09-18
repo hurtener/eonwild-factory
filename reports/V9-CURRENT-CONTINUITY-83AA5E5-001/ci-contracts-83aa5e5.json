@@ -1,0 +1,20 @@
+{
+  "schema": "eonwild.host.ci-contracts-receipt.v1",
+  "head": "83aa5e5391848493c902af0c6bd4ecab6228afe6",
+  "tree": "3db6c5bdc9e8e7cd6c550a0bc1141927e0f56f19",
+  "actual_ci_commit": "62a9e10ee2cd677ea4c5bd551746fe4c37ea6536",
+  "actual_ci_tree": "3db6c5bdc9e8e7cd6c550a0bc1141927e0f56f19",
+  "ci_parents": [
+    "712708652b1035526b38d06fa7d487fe3c919117",
+    "83aa5e5391848493c902af0c6bd4ecab6228afe6"
+  ],
+  "run_id": 34231518184,
+  "job_id": 102078791372,
+  "job_conclusion": "success",
+  "test_summary": "928 passed, 21 subtests passed in 571.06s (0:09:31)",
+  "runner": "macos-15-arm64",
+  "log_sha256": "41acbaf6f9612f5683feecb2bb3dc04c25bfb61e52040edf22ba4747652bce48",
+  "scope": "Complete suite, real tools, no exclusions; not all candidate/pair gates or visual/Unity acceptance",
+  "source_evidence_run": 34231518178,
+  "source_evidence_conclusion": "success"
+}

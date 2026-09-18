@@ -1,0 +1,97 @@
+{
+  "schema": "eonwild.motion.v9.articulation-profile.v1",
+  "id": "heavy-biped.allosaurus-engineering.v2",
+  "version": 2,
+  "classification": "engineering_guardrails_not_biological_rom",
+  "angle_conventions": {
+    "hip_sagittal_degrees": "world sagittal thigh inclination from down: negative rearward; positive forward",
+    "knee_interior_degrees": "0 fully folded; 180 straight",
+    "ankle_interior_degrees": "0 fully folded; 180 straight"
+  },
+  "evidence": {
+    "status": "unresolved",
+    "sources": [
+      {
+        "citation": "Eonwild Allosaurus source-bound engineering landmark fit",
+        "locator": "ARC/audits/allosaurus-anatomical-onboarding-001/landmarks.json",
+        "scope": "The scalar angles apply to the fitted semantic chain; the centers and limits remain engineering assumptions."
+      },
+      {
+        "citation": "White et al. 2013, PLOS ONE 8:e68649",
+        "locator": "Table 2, UUVP 6000r",
+        "scope": "Segment proportions are a comparative sanity check only and do not establish joint ROM."
+      }
+    ],
+    "limitations": [
+      "No measured Allosaurus joint range of motion or in-vivo loading evidence is available.",
+      "The source pivots are engineering surface fits and the scalar sagittal envelopes are retained factory guardrails, not anatomical certification.",
+      "The profile models shared sagittal flex across three engineering pedal branches; it does not validate axial rotation, abduction, muscle capacity, force, or fossil digit anatomy."
+    ]
+  },
+  "envelopes": {
+    "support": {
+      "hip_sagittal_degrees": {
+        "hard_degrees": [
+          -45,
+          80
+        ],
+        "preferred_degrees": [
+          -35,
+          75
+        ]
+      },
+      "knee_interior_degrees": {
+        "hard_degrees": [
+          65,
+          180
+        ],
+        "preferred_degrees": [
+          68,
+          175
+        ]
+      },
+      "ankle_interior_degrees": {
+        "hard_degrees": [
+          90,
+          180
+        ],
+        "preferred_degrees": [
+          95,
+          172
+        ]
+      }
+    },
+    "swing": {
+      "hip_sagittal_degrees": {
+        "hard_degrees": [
+          -45,
+          80
+        ],
+        "preferred_degrees": [
+          -35,
+          75
+        ]
+      },
+      "knee_interior_degrees": {
+        "hard_degrees": [
+          65,
+          180
+        ],
+        "preferred_degrees": [
+          68,
+          175
+        ]
+      },
+      "ankle_interior_degrees": {
+        "hard_degrees": [
+          90,
+          180
+        ],
+        "preferred_degrees": [
+          95,
+          172
+        ]
+      }
+    }
+  }
+}

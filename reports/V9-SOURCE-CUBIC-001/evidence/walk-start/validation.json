@@ -1,0 +1,943 @@
+{
+  "cubic_midpoint_articulation_envelopes": null,
+  "cubic_midpoint_skinned_contact": {
+    "in_place": {
+      "authority": {
+        "per_foot": {
+          "left": {
+            "classification": "skinned patch authority; band-relative speeds excluded from verdict",
+            "global_minimum_gap_m": 0.00010194380077962507,
+            "phase_count": 4,
+            "phases": [
+              {
+                "contact_centroid_m": [
+                  -0.49078013933860043,
+                  0.11463274259932868,
+                  1.6804122674718878
+                ],
+                "drift_m": 2.8417245655165178e-05,
+                "end_frame": 477,
+                "end_time_s": 1.824624240398407,
+                "max_penetration_m": 0.0,
+                "max_persistent_velocity_mps": 0.00038444918169388767,
+                "minimum_gap_m": 0.00010641134375270582,
+                "persistent_point_total": 1431,
+                "print_depth_m": 0.0,
+                "reasons": [],
+                "start_frame": 0,
+                "start_time_s": 0.0,
+                "substrate": "hard",
+                "unknown_pairs": 0,
+                "verdict": "PASS",
+                "yaw_deg": 3.818191820832846e-06
+              },
+              {
+                "contact_centroid_m": [
+                  -0.4425640681094373,
+                  0.11463270454207757,
+                  2.9179541143052075
+                ],
+                "drift_m": 2.921333543778278e-05,
+                "end_frame": 1107,
+                "end_time_s": 4.28415846824646,
+                "max_penetration_m": 0.0,
+                "max_persistent_velocity_mps": 0.0039719452571049686,
+                "minimum_gap_m": 0.00010638743995517591,
+                "persistent_point_total": 1185,
+                "print_depth_m": 0.0,
+                "reasons": [],
+                "start_frame": 712,
+                "start_time_s": 2.759999990463257,
+                "substrate": "hard",
+                "unknown_pairs": 0,
+                "verdict": "PASS",
+                "yaw_deg": 3.6222548091772e-06
+              },
+              {
+                "contact_centroid_m": [
+                  -0.32910840132592645,
+                  0.11463269789959933,
+                  5.829971410362109
+                ],
+                "drift_m": 4.017359403161784e-05,
+                "end_frame": 1737,
+                "end_time_s": 6.744158506393433,
+                "max_penetration_m": 0.0,
+                "max_persistent_velocity_mps": 0.0010163410681290812,
+                "minimum_gap_m": 0.00010194380077962507,
+                "persistent_point_total": 1185,
+                "print_depth_m": 0.0,
+                "reasons": [],
+                "start_frame": 1342,
+                "start_time_s": 5.21999979019165,
+                "substrate": "hard",
+                "unknown_pairs": 0,
+                "verdict": "PASS",
+                "yaw_deg": 1.6533255566816085e-05
+              },
+              {
+                "contact_centroid_m": [
+                  -0.20569485595142017,
+                  0.11463261602889613,
+                  8.99757371433408
+                ],
+                "drift_m": 7.984199693401817e-06,
+                "end_frame": 2066,
+                "end_time_s": 7.987500190734863,
+                "max_penetration_m": 0.0,
+                "max_persistent_velocity_mps": 0.000664591272936054,
+                "minimum_gap_m": 0.0001063762724374754,
+                "persistent_point_total": 276,
+                "print_depth_m": 0.0,
+                "reasons": [],
+                "start_frame": 1974,
+                "start_time_s": 7.679999828338623,
+                "substrate": "hard",
+                "unknown_pairs": 0,
+                "verdict": "PASS",
+                "yaw_deg": 3.1945284701301985e-06
+              }
+            ],
+            "reasons": [],
+            "schema": "eonwild.motion.v9.contact-authority.v1",
+            "verdict": "PASS"
+          },
+          "right": {
+            "classification": "skinned patch authority; band-relative speeds excluded from verdict",
+            "global_minimum_gap_m": 0.0001067222701388662,
+            "phase_count": 4,
+            "phases": [
+              {
+                "contact_centroid_m": [
+                  0.32708465118787594,
+                  0.08651042787867538,
+                  1.6879464861758937
+                ],
+                "drift_m": 6.950356738358692e-06,
+                "end_frame": 161,
+                "end_time_s": 0.5941583216190338,
+                "max_penetration_m": 0.0,
+                "max_persistent_velocity_mps": 0.0003777754606076299,
+                "minimum_gap_m": 0.00010682208501897744,
+                "persistent_point_total": 644,
+                "print_depth_m": 0.0,
+                "reasons": [],
+                "start_frame": 0,
+                "start_time_s": 0.0,
+                "substrate": "hard",
+                "unknown_pairs": 0,
+                "verdict": "PASS",
+                "yaw_deg": 4.353408482428142e-06
+              },
+              {
+                "contact_centroid_m": [
+                  0.34171707418536784,
+                  0.08651044829149152,
+                  2.063509881999062
+                ],
+                "drift_m": 3.308930145833504e-05,
+                "end_frame": 791,
+                "end_time_s": 3.054158329963684,
+                "max_penetration_m": 0.0,
+                "max_persistent_velocity_mps": 0.00022708108445047202,
+                "minimum_gap_m": 0.00010678951226254091,
+                "persistent_point_total": 1580,
+                "print_depth_m": 0.0,
+                "reasons": [],
+                "start_frame": 396,
+                "start_time_s": 1.5299999713897705,
+                "substrate": "hard",
+                "unknown_pairs": 0,
+                "verdict": "PASS",
+                "yaw_deg": 4.182619578303747e-06
+              },
+              {
+                "contact_centroid_m": [
+                  0.42792331740751305,
+                  0.08651042560124317,
+                  4.276131413788772
+                ],
+                "drift_m": 3.274194026123056e-05,
+                "end_frame": 1423,
+                "end_time_s": 5.514495372772217,
+                "max_penetration_m": 0.0,
+                "max_persistent_velocity_mps": 0.003301908977483106,
+                "minimum_gap_m": 0.00010673203978449688,
+                "persistent_point_total": 1580,
+                "print_depth_m": 0.0,
+                "reasons": [],
+                "start_frame": 1028,
+                "start_time_s": 3.990000009536743,
+                "substrate": "hard",
+                "unknown_pairs": 0,
+                "verdict": "PASS",
+                "yaw_deg": 3.91248236030638e-06
+              },
+              {
+                "contact_centroid_m": [
+                  0.5504630473548381,
+                  0.08651040166161003,
+                  7.421306934785738
+                ],
+                "drift_m": 3.455154797689823e-05,
+                "end_frame": 2053,
+                "end_time_s": 7.974158525466919,
+                "max_penetration_m": 0.0,
+                "max_persistent_velocity_mps": 0.0008315101925418996,
+                "minimum_gap_m": 0.0001067222701388662,
+                "persistent_point_total": 1580,
+                "print_depth_m": 0.0,
+                "reasons": [],
+                "start_frame": 1658,
+                "start_time_s": 6.449999809265137,
+                "substrate": "hard",
+                "unknown_pairs": 0,
+                "verdict": "PASS",
+                "yaw_deg": 4.829673078902934e-06
+              }
+            ],
+            "reasons": [],
+            "schema": "eonwild.motion.v9.contact-authority.v1",
+            "verdict": "PASS"
+          }
+        }
+      },
+      "classification": "final serialized skin, fixed floor, full multi-influence weights, unchanged engineering thresholds",
+      "ground_level_m": -0.01200103802869944,
+      "maximum_penetration_m": 0.0,
+      "maximum_stance_gap_m": 0.00010702160335226626,
+      "sample_count": 2067,
+      "verdict": "PASS"
+    },
+    "root_motion": {
+      "authority": {
+        "per_foot": {
+          "left": {
+            "classification": "skinned patch authority; band-relative speeds excluded from verdict",
+            "global_minimum_gap_m": 0.00010194380077962507,
+            "phase_count": 4,
+            "phases": [
+              {
+                "contact_centroid_m": [
+                  -0.4907801395260886,
+                  0.11463274259932868,
+                  1.6804122570025788
+                ],
+                "drift_m": 2.8689950008540594e-05,
+                "end_frame": 477,
+                "end_time_s": 1.824624240398407,
+                "max_penetration_m": 0.0,
+                "max_persistent_velocity_mps": 0.00039752066510504315,
+                "minimum_gap_m": 0.00010641134375270582,
+                "persistent_point_total": 1431,
+                "print_depth_m": 0.0,
+                "reasons": [],
+                "start_frame": 0,
+                "start_time_s": 0.0,
+                "substrate": "hard",
+                "unknown_pairs": 0,
+                "verdict": "PASS",
+                "yaw_deg": 3.7215130446689415e-06
+              },
+              {
+                "contact_centroid_m": [
+                  -0.44256407120853747,
+                  0.11463270454207757,
+                  2.91795409017309
+                ],
+                "drift_m": 3.3079988068604724e-05,
+                "end_frame": 1107,
+                "end_time_s": 4.28415846824646,
+                "max_penetration_m": 0.0,
+                "max_persistent_velocity_mps": 0.0031571415522914956,
+                "minimum_gap_m": 0.00010638743995517591,
+                "persistent_point_total": 1185,
+                "print_depth_m": 0.0,
+                "reasons": [],
+                "start_frame": 712,
+                "start_time_s": 2.759999990463257,
+                "substrate": "hard",
+                "unknown_pairs": 0,
+                "verdict": "PASS",
+                "yaw_deg": 3.7215130446689415e-06
+              },
+              {
+                "contact_centroid_m": [
+                  -0.32910840021710247,
+                  0.11463269789959933,
+                  5.829971588825482
+                ],
+                "drift_m": 4.823561222706229e-05,
+                "end_frame": 1737,
+                "end_time_s": 6.744158506393433,
+                "max_penetration_m": 0.0,
+                "max_persistent_velocity_mps": 0.0014349942496065596,
+                "minimum_gap_m": 0.00010194380077962507,
+                "persistent_point_total": 1185,
+                "print_depth_m": 0.0,
+                "reasons": [],
+                "start_frame": 1342,
+                "start_time_s": 5.21999979019165,
+                "substrate": "hard",
+                "unknown_pairs": 0,
+                "verdict": "PASS",
+                "yaw_deg": 1.651119651020547e-05
+              },
+              {
+                "contact_centroid_m": [
+                  -0.2056948573597619,
+                  0.11463261602889613,
+                  8.997573748274144
+                ],
+                "drift_m": 1.2138519676556802e-05,
+                "end_frame": 2066,
+                "end_time_s": 7.987500190734863,
+                "max_penetration_m": 0.0,
+                "max_persistent_velocity_mps": 0.0015692661056680673,
+                "minimum_gap_m": 0.0001063762724374754,
+                "persistent_point_total": 276,
+                "print_depth_m": 0.0,
+                "reasons": [],
+                "start_frame": 1974,
+                "start_time_s": 7.679999828338623,
+                "substrate": "hard",
+                "unknown_pairs": 0,
+                "verdict": "PASS",
+                "yaw_deg": 3.1945284701301985e-06
+              }
+            ],
+            "reasons": [],
+            "schema": "eonwild.motion.v9.contact-authority.v1",
+            "verdict": "PASS"
+          },
+          "right": {
+            "classification": "skinned patch authority; band-relative speeds excluded from verdict",
+            "global_minimum_gap_m": 0.0001067222701388662,
+            "phase_count": 4,
+            "phases": [
+              {
+                "contact_centroid_m": [
+                  0.32708465118787594,
+                  0.08651042787867538,
+                  1.6879464861758937
+                ],
+                "drift_m": 6.958613073943443e-06,
+                "end_frame": 161,
+                "end_time_s": 0.5941583216190338,
+                "max_penetration_m": 0.0,
+                "max_persistent_velocity_mps": 0.0004000054387088086,
+                "minimum_gap_m": 0.00010682208501897744,
+                "persistent_point_total": 644,
+                "print_depth_m": 0.0,
+                "reasons": [],
+                "start_frame": 0,
+                "start_time_s": 0.0,
+                "substrate": "hard",
+                "unknown_pairs": 0,
+                "verdict": "PASS",
+                "yaw_deg": 4.26886823125797e-06
+              },
+              {
+                "contact_centroid_m": [
+                  0.3417170741500927,
+                  0.08651044829149152,
+                  2.063509925541008
+                ],
+                "drift_m": 3.444652660714145e-05,
+                "end_frame": 791,
+                "end_time_s": 3.054158329963684,
+                "max_penetration_m": 0.0,
+                "max_persistent_velocity_mps": 0.00026280152299984407,
+                "minimum_gap_m": 0.00010678951226254091,
+                "persistent_point_total": 1580,
+                "print_depth_m": 0.0,
+                "reasons": [],
+                "start_frame": 396,
+                "start_time_s": 1.5299999713897705,
+                "substrate": "hard",
+                "unknown_pairs": 0,
+                "verdict": "PASS",
+                "yaw_deg": 4.182619578303747e-06
+              },
+              {
+                "contact_centroid_m": [
+                  0.4279233187188516,
+                  0.08651042560124317,
+                  4.27613146981098
+                ],
+                "drift_m": 4.1827662550841594e-05,
+                "end_frame": 1423,
+                "end_time_s": 5.514495372772217,
+                "max_penetration_m": 0.0,
+                "max_persistent_velocity_mps": 0.003517262779780666,
+                "minimum_gap_m": 0.00010673203978449688,
+                "persistent_point_total": 1580,
+                "print_depth_m": 0.0,
+                "reasons": [],
+                "start_frame": 1028,
+                "start_time_s": 3.990000009536743,
+                "substrate": "hard",
+                "unknown_pairs": 0,
+                "verdict": "PASS",
+                "yaw_deg": 3.91248236030638e-06
+              },
+              {
+                "contact_centroid_m": [
+                  0.5504630468115971,
+                  0.08651040166161003,
+                  7.421306808142327
+                ],
+                "drift_m": 4.122293644328915e-05,
+                "end_frame": 2053,
+                "end_time_s": 7.974158525466919,
+                "max_penetration_m": 0.0,
+                "max_persistent_velocity_mps": 0.001429985374492418,
+                "minimum_gap_m": 0.0001067222701388662,
+                "persistent_point_total": 1580,
+                "print_depth_m": 0.0,
+                "reasons": [],
+                "start_frame": 1658,
+                "start_time_s": 6.449999809265137,
+                "substrate": "hard",
+                "unknown_pairs": 0,
+                "verdict": "PASS",
+                "yaw_deg": 4.829673078902934e-06
+              }
+            ],
+            "reasons": [],
+            "schema": "eonwild.motion.v9.contact-authority.v1",
+            "verdict": "PASS"
+          }
+        }
+      },
+      "classification": "final serialized skin, fixed floor, full multi-influence weights, unchanged engineering thresholds",
+      "ground_level_m": -0.01200103802869944,
+      "maximum_penetration_m": 0.0,
+      "maximum_stance_gap_m": 0.00010702160335226626,
+      "sample_count": 2067,
+      "verdict": "PASS"
+    }
+  },
+  "cyclic_continuity": {
+    "in_place": {
+      "reason": "one-shot program; entry/exit contracts are separate",
+      "status": "NOT_APPLICABLE"
+    },
+    "root_motion": {
+      "reason": "one-shot program; entry/exit contracts are separate",
+      "status": "NOT_APPLICABLE"
+    }
+  },
+  "in_place_skinned_contact": {
+    "authority": {
+      "per_foot": {
+        "left": {
+          "classification": "skinned patch authority; band-relative speeds excluded from verdict",
+          "global_minimum_gap_m": 0.0001063762724374754,
+          "phase_count": 4,
+          "phases": [
+            {
+              "contact_centroid_m": [
+                -0.49078013933860043,
+                0.11463274259932868,
+                1.6804122674718878
+              ],
+              "drift_m": 2.8352973236159847e-05,
+              "end_frame": 238,
+              "end_time_s": 1.8240485191345215,
+              "max_penetration_m": 0.0,
+              "max_persistent_velocity_mps": 0.00038444915296860234,
+              "minimum_gap_m": 0.00010641134375270582,
+              "persistent_point_total": 714,
+              "print_depth_m": 0.0,
+              "reasons": [],
+              "start_frame": 0,
+              "start_time_s": 0.0,
+              "substrate": "hard",
+              "unknown_pairs": 0,
+              "verdict": "PASS",
+              "yaw_deg": 7.294645231227028e-06
+            },
+            {
+              "contact_centroid_m": [
+                -0.44256399693875603,
+                0.11463267914404668,
+                2.9179540184407906
+              ],
+              "drift_m": 2.9124159726168433e-05,
+              "end_frame": 553,
+              "end_time_s": 4.283116817474365,
+              "max_penetration_m": 0.0,
+              "max_persistent_velocity_mps": 0.003971937986929622,
+              "minimum_gap_m": 0.00010638743995517591,
+              "persistent_point_total": 591,
+              "print_depth_m": 0.0,
+              "reasons": [],
+              "start_frame": 356,
+              "start_time_s": 2.759999990463257,
+              "substrate": "hard",
+              "unknown_pairs": 0,
+              "verdict": "PASS",
+              "yaw_deg": 7.244509618354405e-06
+            },
+            {
+              "contact_centroid_m": [
+                -0.32910834729218585,
+                0.11463265919097262,
+                5.829971340211882
+              ],
+              "drift_m": 3.134028687602587e-05,
+              "end_frame": 868,
+              "end_time_s": 6.743116855621338,
+              "max_penetration_m": 0.0,
+              "max_persistent_velocity_mps": 0.0005354791291314656,
+              "minimum_gap_m": 0.00010639008020047087,
+              "persistent_point_total": 591,
+              "print_depth_m": 0.0,
+              "reasons": [],
+              "start_frame": 671,
+              "start_time_s": 5.21999979019165,
+              "substrate": "hard",
+              "unknown_pairs": 0,
+              "verdict": "PASS",
+              "yaw_deg": 8.18910913293408e-06
+            },
+            {
+              "contact_centroid_m": [
+                -0.20569485595142017,
+                0.11463261602889613,
+                8.99757371433408
+              ],
+              "drift_m": 7.984194590165934e-06,
+              "end_frame": 1033,
+              "end_time_s": 7.987500190734863,
+              "max_penetration_m": 0.0,
+              "max_persistent_velocity_mps": 0.0006645710139230984,
+              "minimum_gap_m": 0.0001063762724374754,
+              "persistent_point_total": 138,
+              "print_depth_m": 0.0,
+              "reasons": [],
+              "start_frame": 987,
+              "start_time_s": 7.679999828338623,
+              "substrate": "hard",
+              "unknown_pairs": 0,
+              "verdict": "PASS",
+              "yaw_deg": 6.097163388881822e-06
+            }
+          ],
+          "reasons": [],
+          "schema": "eonwild.motion.v9.contact-authority.v1",
+          "verdict": "PASS"
+        },
+        "right": {
+          "classification": "skinned patch authority; band-relative speeds excluded from verdict",
+          "global_minimum_gap_m": 0.0001067222701388662,
+          "phase_count": 4,
+          "phases": [
+            {
+              "contact_centroid_m": [
+                0.32708465118787594,
+                0.08651042787867538,
+                1.6879464861758937
+              ],
+              "drift_m": 6.7790813275017965e-06,
+              "end_frame": 80,
+              "end_time_s": 0.5931166410446167,
+              "max_penetration_m": 0.0,
+              "max_persistent_velocity_mps": 0.0003777752451572274,
+              "minimum_gap_m": 0.00010682208501897744,
+              "persistent_point_total": 320,
+              "print_depth_m": 0.0,
+              "reasons": [],
+              "start_frame": 0,
+              "start_time_s": 0.0,
+              "substrate": "hard",
+              "unknown_pairs": 0,
+              "verdict": "PASS",
+              "yaw_deg": 8.622691156561379e-06
+            },
+            {
+              "contact_centroid_m": [
+                0.341717034958268,
+                0.08651045632826282,
+                2.06350991899133
+              ],
+              "drift_m": 3.2971480060569876e-05,
+              "end_frame": 395,
+              "end_time_s": 3.0531165599823,
+              "max_penetration_m": 0.0,
+              "max_persistent_velocity_mps": 0.00022707581878380142,
+              "minimum_gap_m": 0.00010678951226254091,
+              "persistent_point_total": 788,
+              "print_depth_m": 0.0,
+              "reasons": [],
+              "start_frame": 198,
+              "start_time_s": 1.5299999713897705,
+              "substrate": "hard",
+              "unknown_pairs": 0,
+              "verdict": "PASS",
+              "yaw_deg": 8.2776426154535e-06
+            },
+            {
+              "contact_centroid_m": [
+                0.4279233077063606,
+                0.08651041443133088,
+                4.276131375622501
+              ],
+              "drift_m": 3.264602935852379e-05,
+              "end_frame": 711,
+              "end_time_s": 5.513790607452393,
+              "max_penetration_m": 0.0,
+              "max_persistent_velocity_mps": 0.003301887732758528,
+              "minimum_gap_m": 0.00010673203978449688,
+              "persistent_point_total": 788,
+              "print_depth_m": 0.0,
+              "reasons": [],
+              "start_frame": 514,
+              "start_time_s": 3.990000009536743,
+              "substrate": "hard",
+              "unknown_pairs": 0,
+              "verdict": "PASS",
+              "yaw_deg": 7.824964720612764e-06
+            },
+            {
+              "contact_centroid_m": [
+                0.550463117750794,
+                0.08651041673294438,
+                7.421306939058739
+              ],
+              "drift_m": 3.44762036331745e-05,
+              "end_frame": 1026,
+              "end_time_s": 7.973116874694824,
+              "max_penetration_m": 0.0,
+              "max_persistent_velocity_mps": 0.0008314812787339145,
+              "minimum_gap_m": 0.0001067222701388662,
+              "persistent_point_total": 788,
+              "print_depth_m": 0.0,
+              "reasons": [],
+              "start_frame": 829,
+              "start_time_s": 6.449999809265137,
+              "substrate": "hard",
+              "unknown_pairs": 0,
+              "verdict": "PASS",
+              "yaw_deg": 9.659346157805877e-06
+            }
+          ],
+          "reasons": [],
+          "schema": "eonwild.motion.v9.contact-authority.v1",
+          "verdict": "PASS"
+        }
+      }
+    },
+    "classification": "final serialized skin, fixed floor, full multi-influence weights, unchanged engineering thresholds",
+    "ground_level_m": -0.01200103802869944,
+    "maximum_penetration_m": 0.0,
+    "maximum_stance_gap_m": 0.00010702160335226626,
+    "sample_count": 1034,
+    "verdict": "PASS"
+  },
+  "oral_contact": null,
+  "outputs": {
+    "in_place": {
+      "checks": {
+        "attachments_unchanged": true,
+        "root_matches_plan": true,
+        "scales_unchanged": true,
+        "skeleton_contact_stationary": true
+      },
+      "classification": "reopened skeleton target-relative proxy; explicit pre-solve skin offsets accounted for, final material contact independently checked",
+      "maximum_attachment_error_m": 3.57510979154263e-09,
+      "maximum_planted_digit_step_drift_m": 5.433743882417287e-07,
+      "maximum_root_error_m": 0.0,
+      "maximum_rotation_seam_degrees": 35.75868786687224,
+      "maximum_scale_error": 0.0,
+      "status": "PASS"
+    },
+    "root_motion": {
+      "checks": {
+        "attachments_unchanged": true,
+        "root_matches_plan": true,
+        "scales_unchanged": true,
+        "skeleton_contact_stationary": true
+      },
+      "classification": "reopened skeleton target-relative proxy; explicit pre-solve skin offsets accounted for, final material contact independently checked",
+      "maximum_attachment_error_m": 3.57510979154263e-09,
+      "maximum_planted_digit_step_drift_m": 1.2073686472672422e-06,
+      "maximum_root_error_m": 4.707607419133851e-07,
+      "maximum_rotation_seam_degrees": 35.75868786687224,
+      "maximum_scale_error": 0.0,
+      "status": "PASS"
+    }
+  },
+  "production_approved": false,
+  "rotation_rates": {
+    "in_place": {
+      "classification": "serialized per-channel rotation rate; CUBICSPLINE uses a conservative normalized-Hermite interval bound; not joint torque or muscle capacity",
+      "limit_degrees_per_s": 1200.0,
+      "maximum_degrees_per_s": 358.4401452813253,
+      "peak_witness": {
+        "bone": "Bone_013",
+        "conservative_interval_bound": true,
+        "maximum_subdivision_depth": 0,
+        "node": 61,
+        "raw_quaternion_norm_lower": 0.7799974679946899,
+        "times_s": [
+          6.205096244812012,
+          6.213425636291504
+        ]
+      },
+      "status": "PASS"
+    },
+    "root_motion": {
+      "classification": "serialized per-channel rotation rate; CUBICSPLINE uses a conservative normalized-Hermite interval bound; not joint torque or muscle capacity",
+      "limit_degrees_per_s": 1200.0,
+      "maximum_degrees_per_s": 358.4401452813253,
+      "peak_witness": {
+        "bone": "Bone_013",
+        "conservative_interval_bound": true,
+        "maximum_subdivision_depth": 0,
+        "node": 61,
+        "raw_quaternion_norm_lower": 0.7799974679946899,
+        "times_s": [
+          6.205096244812012,
+          6.213425636291504
+        ]
+      },
+      "status": "PASS"
+    }
+  },
+  "schema": "eonwild.motion.factory-validation.v1",
+  "skinned_contact": {
+    "authority": {
+      "per_foot": {
+        "left": {
+          "classification": "skinned patch authority; band-relative speeds excluded from verdict",
+          "global_minimum_gap_m": 0.0001063762724374754,
+          "phase_count": 4,
+          "phases": [
+            {
+              "contact_centroid_m": [
+                -0.4907801395260886,
+                0.11463274259932868,
+                1.6804122570025788
+              ],
+              "drift_m": 2.8607061120934817e-05,
+              "end_frame": 238,
+              "end_time_s": 1.8240485191345215,
+              "max_penetration_m": 0.0,
+              "max_persistent_velocity_mps": 0.0003975206475741165,
+              "minimum_gap_m": 0.00010641134375270582,
+              "persistent_point_total": 714,
+              "print_depth_m": 0.0,
+              "reasons": [],
+              "start_frame": 0,
+              "start_time_s": 0.0,
+              "substrate": "hard",
+              "unknown_pairs": 0,
+              "verdict": "PASS",
+              "yaw_deg": 7.3444386094852035e-06
+            },
+            {
+              "contact_centroid_m": [
+                -0.4425639998667181,
+                0.11463267914404668,
+                2.9179540508993718
+              ],
+              "drift_m": 3.300095432527437e-05,
+              "end_frame": 553,
+              "end_time_s": 4.283116817474365,
+              "max_penetration_m": 0.0,
+              "max_persistent_velocity_mps": 0.003157137047018475,
+              "minimum_gap_m": 0.00010638743995517591,
+              "persistent_point_total": 591,
+              "print_depth_m": 0.0,
+              "reasons": [],
+              "start_frame": 356,
+              "start_time_s": 2.759999990463257,
+              "substrate": "hard",
+              "unknown_pairs": 0,
+              "verdict": "PASS",
+              "yaw_deg": 7.244509618354405e-06
+            },
+            {
+              "contact_centroid_m": [
+                -0.32910834617778,
+                0.11463265919097262,
+                5.829971542357181
+              ],
+              "drift_m": 3.947686775836637e-05,
+              "end_frame": 868,
+              "end_time_s": 6.743116855621338,
+              "max_penetration_m": 0.0,
+              "max_persistent_velocity_mps": 0.0014349670091773612,
+              "minimum_gap_m": 0.00010639008020047087,
+              "persistent_point_total": 591,
+              "print_depth_m": 0.0,
+              "reasons": [],
+              "start_frame": 671,
+              "start_time_s": 5.21999979019165,
+              "substrate": "hard",
+              "unknown_pairs": 0,
+              "verdict": "PASS",
+              "yaw_deg": 8.099607985145754e-06
+            },
+            {
+              "contact_centroid_m": [
+                -0.2056948573597619,
+                0.11463261602889613,
+                8.997573748274144
+              ],
+              "drift_m": 1.2138515219157017e-05,
+              "end_frame": 1033,
+              "end_time_s": 7.987500190734863,
+              "max_penetration_m": 0.0,
+              "max_persistent_velocity_mps": 0.0015692431172381499,
+              "minimum_gap_m": 0.0001063762724374754,
+              "persistent_point_total": 138,
+              "print_depth_m": 0.0,
+              "reasons": [],
+              "start_frame": 987,
+              "start_time_s": 7.679999828338623,
+              "substrate": "hard",
+              "unknown_pairs": 0,
+              "verdict": "PASS",
+              "yaw_deg": 6.2155659652833185e-06
+            }
+          ],
+          "reasons": [],
+          "schema": "eonwild.motion.v9.contact-authority.v1",
+          "verdict": "PASS"
+        },
+        "right": {
+          "classification": "skinned patch authority; band-relative speeds excluded from verdict",
+          "global_minimum_gap_m": 0.0001067222701388662,
+          "phase_count": 4,
+          "phases": [
+            {
+              "contact_centroid_m": [
+                0.32708465118787594,
+                0.08651042787867538,
+                1.6879464861758937
+              ],
+              "drift_m": 6.7458489159499554e-06,
+              "end_frame": 80,
+              "end_time_s": 0.5931166410446167,
+              "max_penetration_m": 0.0,
+              "max_persistent_velocity_mps": 0.00040000530994601193,
+              "minimum_gap_m": 0.00010682208501897744,
+              "persistent_point_total": 320,
+              "print_depth_m": 0.0,
+              "reasons": [],
+              "start_frame": 0,
+              "start_time_s": 0.0,
+              "substrate": "hard",
+              "unknown_pairs": 0,
+              "verdict": "PASS",
+              "yaw_deg": 8.580318953419392e-06
+            },
+            {
+              "contact_centroid_m": [
+                0.341717034978121,
+                0.08651045632826282,
+                2.0635099561306305
+              ],
+              "drift_m": 3.431944681964632e-05,
+              "end_frame": 395,
+              "end_time_s": 3.0531165599823,
+              "max_penetration_m": 0.0,
+              "max_persistent_velocity_mps": 0.0002627921665668394,
+              "minimum_gap_m": 0.00010678951226254091,
+              "persistent_point_total": 788,
+              "print_depth_m": 0.0,
+              "reasons": [],
+              "start_frame": 198,
+              "start_time_s": 1.5299999713897705,
+              "substrate": "hard",
+              "unknown_pairs": 0,
+              "verdict": "PASS",
+              "yaw_deg": 8.2776426154535e-06
+            },
+            {
+              "contact_centroid_m": [
+                0.4279233110615552,
+                0.08651041443133088,
+                4.276131428031704
+              ],
+              "drift_m": 4.173965626936862e-05,
+              "end_frame": 711,
+              "end_time_s": 5.513790607452393,
+              "max_penetration_m": 0.0,
+              "max_persistent_velocity_mps": 0.0035172548019775144,
+              "minimum_gap_m": 0.00010673203978449688,
+              "persistent_point_total": 788,
+              "print_depth_m": 0.0,
+              "reasons": [],
+              "start_frame": 514,
+              "start_time_s": 3.990000009536743,
+              "substrate": "hard",
+              "unknown_pairs": 0,
+              "verdict": "PASS",
+              "yaw_deg": 7.778248095798993e-06
+            },
+            {
+              "contact_centroid_m": [
+                0.5504631172131348,
+                0.08651041673294438,
+                7.421306836097235
+              ],
+              "drift_m": 4.088819761231506e-05,
+              "end_frame": 1026,
+              "end_time_s": 7.973116874694824,
+              "max_penetration_m": 0.0,
+              "max_persistent_velocity_mps": 0.00142991581508104,
+              "minimum_gap_m": 0.0001067222701388662,
+              "persistent_point_total": 788,
+              "print_depth_m": 0.0,
+              "reasons": [],
+              "start_frame": 829,
+              "start_time_s": 6.449999809265137,
+              "substrate": "hard",
+              "unknown_pairs": 0,
+              "verdict": "PASS",
+              "yaw_deg": 9.621540352629896e-06
+            }
+          ],
+          "reasons": [],
+          "schema": "eonwild.motion.v9.contact-authority.v1",
+          "verdict": "PASS"
+        }
+      }
+    },
+    "classification": "final serialized skin, fixed floor, full multi-influence weights, unchanged engineering thresholds",
+    "ground_level_m": -0.01200103802869944,
+    "maximum_penetration_m": 0.0,
+    "maximum_stance_gap_m": 0.00010702160335226626,
+    "sample_count": 1034,
+    "verdict": "PASS"
+  },
+  "solver_feasibility": {
+    "checks": {
+      "max_foot_target_residual_m": true,
+      "max_unreachable_extension_m": true,
+      "maximum_articulation_envelope_violation_degrees": true,
+      "maximum_solved_foot_pitch_velocity_degrees_per_s": true
+    },
+    "classification": "engineering feasibility only; missing evidence is a failure",
+    "limits": {
+      "max_foot_target_residual_m": 0.001,
+      "max_unreachable_extension_m": 0.001,
+      "maximum_articulation_envelope_violation_degrees": 0.01,
+      "maximum_solved_foot_pitch_velocity_degrees_per_s": 600.0
+    },
+    "status": "PASS",
+    "values": {
+      "max_foot_target_residual_m": 5.948854397022197e-07,
+      "max_unreachable_extension_m": 0.0,
+      "maximum_articulation_envelope_violation_degrees": 3.844984263423612e-06,
+      "maximum_solved_foot_pitch_velocity_degrees_per_s": 184.5697601190817
+    }
+  },
+  "technical_status": "PASS",
+  "unity_parity": "NOT_RUN",
+  "visual_review": "PENDING"
+}
