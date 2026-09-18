@@ -611,6 +611,7 @@ def build_airborne_solve_context(
 def _prepare_body_pose(
     context: AirborneSolveContext, row: Mapping[str, Any],
     body_response_sample: Mapping[str, Any] | None,
+    body_delta: Any = None,
 ) -> tuple[Mapping[str, Any], list[Any], list[Any]]:
     """Apply the shared pre-leg source/body law without solving either leg."""
     row = _require_plan_sample(row)
@@ -677,6 +678,33 @@ def _prepare_body_pose(
                 base_r[node],
                 _qrotvec(tuple(np.asarray(axis) * math.radians(0.8 * pulse))),
             )
+    if body_delta is not None:
+        translation = np.asarray(getattr(body_delta, "translation_m", None), dtype=float)
+        rotation = np.asarray(getattr(body_delta, "rotation_radians", None), dtype=float)
+        if (
+            translation.shape != (3,)
+            or rotation.shape != (3,)
+            or not np.isfinite(translation).all()
+            or not np.isfinite(rotation).all()
+        ):
+            raise ContractError("coordinator body delta must contain finite translation and rotation three-vectors")
+        world_translation = (
+            forward * translation[0] + up * translation[1] + lateral * translation[2]
+        )
+        tr[pelvis] = tuple(
+            float(value)
+            for value in np.asarray(tr[pelvis])
+            + _local_delta(source, base_w, pelvis, world_translation)
+        )
+        for angle, world_axis in zip(rotation, (lateral, forward, up)):
+            if angle:
+                local_axis = _qrotate(
+                    _qinv(_rotation_from_matrix(base_w[pelvis])), tuple(world_axis)
+                )
+                rot[pelvis] = _qmul(
+                    rot[pelvis],
+                    _qrotvec(tuple(np.asarray(local_axis) * float(angle))),
+                )
     for names, total in (
         (
             list(roles.get("spine", []))
@@ -726,11 +754,12 @@ def grounded_touchdown_target(
     *,
     side: str,
     body_response_sample: Mapping[str, Any] | None = None,
+    body_delta: Any = None,
 ) -> Mapping[str, Any]:
     """Return source/body-bound authored geometry before the leg solve."""
     if side not in ("left", "right"):
         raise ContractError("grounded touchdown target side must be left or right")
-    row, tr, rot = _prepare_body_pose(context, row, body_response_sample)
+    row, tr, rot = _prepare_body_pose(context, row, body_response_sample, body_delta)
     foot_plan = row["feet"][side]
     if "target_offset_m" in foot_plan:
         raise ContractError(
@@ -807,9 +836,10 @@ def grounded_touchdown_target(
 def solve_airborne_plan_sample(
     context: AirborneSolveContext, row: Mapping[str, Any], *,
     body_response_sample: Mapping[str, Any] | None = None,
+    body_delta: Any = None,
 ) -> SolvedAirbornePose:
     """Solve one existing plan row without reading or mutating sibling rows."""
-    row, tr, rot = _prepare_body_pose(context, row, body_response_sample)
+    row, tr, rot = _prepare_body_pose(context, row, body_response_sample, body_delta)
     source = context.source
     gait = context.gait
     plan = context.plan

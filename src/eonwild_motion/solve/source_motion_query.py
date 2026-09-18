@@ -991,12 +991,28 @@ class SourceMotionQuery:
         offsets = self._target_offsets(target_offsets)
         return self._evaluate_owned(time, side=side, target_offsets=offsets)
 
+    def evaluate_with_target_offsets_and_body_delta(
+        self,
+        time_s: Any,
+        target_offsets: Mapping[str, Any],
+        body_delta: Any,
+        *,
+        side: str = "value",
+    ) -> SourceMotionResult | SourceMotionUnavailable:
+        """Apply one coordinator body trial before the owned leg/contact solve."""
+        time = _finite_time(time_s)
+        offsets = self._target_offsets(target_offsets)
+        return self._evaluate_owned(
+            time, side=side, target_offsets=offsets, body_delta=body_delta
+        )
+
     def _evaluate_owned(
         self,
         time: float,
         *,
         side: str,
         target_offsets: Mapping[str, list[float]] | None,
+        body_delta: Any = None,
         transition_clearance_integrity_proved: bool = False,
         authored_material_integrity_proved: bool = False,
     ) -> SourceMotionResult | SourceMotionUnavailable:
@@ -1061,7 +1077,10 @@ class SourceMotionQuery:
             SolvedAirbornePose, np.ndarray, Mapping[str, np.ndarray] | None
         ]:
             pose = solve_airborne_plan_sample(
-                self._context, row, body_response_sample=body
+                self._context,
+                row,
+                body_response_sample=body,
+                body_delta=body_delta,
             )
             worlds = _readonly(
                 _world_matrices(

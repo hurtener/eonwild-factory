@@ -57,6 +57,12 @@ from ..solve.support_anchors import CanonicalSupportAnchorProvider
 from ..solve.constant_skin_targets import CanonicalConstantSkinTargetLaw
 from ..solve.source_motion_query import SourceMotionQuery, _thaw
 from ..solve.authored_material_contact import AuthoredMaterialContactAdapter
+from ..dynamics.body_support_bridge import (
+    FinalGeometrySample,
+    build_surface_mass_trial_evaluator,
+)
+from ..dynamics.body_support_coordinator import solve_body_support_trajectory
+from ..dynamics.surface_mass import COORDINATES, prepare_surface_mass_proxy
 from ..solve.grounded_transition_clearance import (
     GroundedTransitionClearanceResolver,
     POLICY as GROUNDED_TRANSITION_CLEARANCE_POLICY,
@@ -78,6 +84,117 @@ from .acquired_reference import packaged_reference, validate_clearance_policy
 
 SCHEMA = "eonwild.motion.factory-recipe.v1"
 PROGRAMS = ("airborne_gait", "grounded_gait", "supported_action", "gait_transition")
+
+
+def _coordinate_shared_walk_body(
+    *,
+    law: CanonicalConstantSkinTargetLaw,
+    provider: CanonicalSupportAnchorProvider,
+    source: Glb,
+    source_bytes: bytes,
+    rig_bytes: bytes,
+    animal_bytes: bytes,
+    recipe: dict[str, Any],
+    plan: dict[str, Any],
+    body_height_m: float,
+    forward_axis: np.ndarray,
+) -> tuple[CanonicalConstantSkinTargetLaw, dict[str, Any], dict[str, Any], dict[str, Any]]:
+    """Run the bounded mass/support solve through the already-frozen skin law."""
+    profile, proxy_audit = prepare_surface_mass_proxy(
+        source_bytes,
+        rig_bytes,
+        animal_bytes,
+        source_sha256=recipe["source"]["sha256"],
+        rig_sha256=recipe["rig"]["sha256"],
+        animal_sha256=recipe["animal"]["sha256"],
+        coordinate_system=COORDINATES,
+    )
+    anchor_payload = {
+        "provider": provider.receipt(),
+        "law_binding_sha256": law.receipt()["binding_sha256"],
+        "anchors": {
+            side: {
+                "material_origin_m": provider.anchor_for(side).material_origin_m.tolist(),
+                "material_vertex_indices": list(
+                    provider.anchor_for(side).material_vertex_indices
+                ),
+            }
+            for side in ("left", "right")
+        },
+    }
+    frozen_anchor_sha256 = digest(json_bytes(anchor_payload))
+    up_index = int(np.argmax(np.abs(law._query.context.up)))
+
+    def evaluate_final_geometry(body_delta: Any, time_s: float) -> FinalGeometrySample:
+        value = law.value_with_body_delta(time_s, body_delta)
+        if value.status != "AVAILABLE":
+            raise ContractError(
+                f"body-support trial failed final geometry at {time_s!r}: {value.reason}"
+            )
+        worlds = np.asarray(
+            _world_matrices(
+                source,
+                value.pose.translations,
+                value.pose.rotations,
+                law._query.context.base_s,
+            ),
+            dtype=float,
+        )
+        points = []
+        for side in ("left", "right"):
+            if not value.row["feet"][side]["contact"]:
+                continue
+            patch = law._patch(law._skin, worlds, side)
+            active = patch[:, up_index] <= patch[:, up_index].min() + 0.001
+            points.extend(tuple(float(component) for component in point) for point in patch[active])
+        return FinalGeometrySample(
+            time_s=float(time_s),
+            joint_world_matrices={
+                node["name"]: tuple(tuple(float(v) for v in row) for row in worlds[index])
+                for index, node in enumerate(source.nodes)
+                if isinstance(node.get("name"), str)
+            },
+            support_points_m=tuple(points),
+            frozen_anchor_sha256=frozen_anchor_sha256,
+            final_geometry_passed=True,
+        )
+
+    duration_s = float(plan["samples"][-1]["time_s"])
+    root_travel_m = float(
+        plan["samples"][-1]["root_forward_m"]
+        - plan["samples"][0]["root_forward_m"]
+    )
+    evaluator = build_surface_mass_trial_evaluator(
+        source_bytes=source_bytes,
+        surface_mass_profile=profile,
+        duration_s=duration_s,
+        body_height_m=body_height_m,
+        sample_count=8,
+        cycle_travel_m=forward_axis * root_travel_m,
+        frozen_anchor_sha256=frozen_anchor_sha256,
+        evaluate_final_geometry=evaluate_final_geometry,
+    )
+    solution = solve_body_support_trajectory(
+        evaluator, frozen_anchor_sha256=frozen_anchor_sha256
+    )
+    solution_receipt = {
+        **asdict(solution),
+        "schema": "eonwild.motion.body-support-integration.v1",
+        "frozen_anchor_sha256": frozen_anchor_sha256,
+        "sample_count": 8,
+        "classification": (
+            "source-shaped surface-mass engineering coordination proxy; "
+            "not anatomy, tissue capacity, or biological validation"
+        ),
+    }
+    if solution.status != "AVAILABLE":
+        raise ContractError(
+            f"shared body-support coordination unavailable: {solution.reason}"
+        )
+    final_law = law.with_body_support_solution(solution.coefficients, duration_s)
+    # Recheck the exact selected result at every bridge boundary and midpoint.
+    evaluator(solution.coefficients)
+    return final_law, solution_receipt, profile, proxy_audit
 
 
 def _airborne_gait_with_shared_articulation(
@@ -508,6 +625,9 @@ def compile_recipe(
             contact_profile=contact_profile, up_axis=up, forward_axis=forward, body_height_m=height)
     baseline_performance_resolution = None
     acquired_binding = None
+    body_support_receipt = None
+    surface_mass_profile = None
+    surface_mass_audit = None
     grounded_touchdown_geometry = None
     grounded_intent_resolution = None
     if "performance_profile" in snapshots:
@@ -875,6 +995,28 @@ def compile_recipe(
                     else "canonical_constant_skin_targets.v1"
                 ),
             )
+        if law.receipt()["law_id"] == "canonical_semantic_foot_frame_targets.v2":
+            if animal is None or "animal" not in snapshots:
+                raise ContractError(
+                    "shared semantic foot-frame walk requires a bound animal mass profile"
+                )
+            (
+                law,
+                body_support_receipt,
+                surface_mass_profile,
+                surface_mass_audit,
+            ) = _coordinate_shared_walk_body(
+                law=law,
+                provider=support_anchor_provider,
+                source=source,
+                source_bytes=snapshots["source"],
+                rig_bytes=snapshots["rig"],
+                animal_bytes=snapshots["animal"],
+                recipe=recipe,
+                plan=plan,
+                body_height_m=height,
+                forward_axis=forward,
+            )
         emission = emit_source_cubics(
             source, law, plan, root_node=source.name_to_node[roles["root"]]
         )
@@ -975,6 +1117,8 @@ def compile_recipe(
                 "status": "AVAILABLE_AT_ALL_KEYS_STENCILS_AND_MIDPOINTS",
                 **law.receipt(),
             }
+        if body_support_receipt is not None:
+            receipt["body_support_coordination"] = body_support_receipt
         if transition_clearance is not None:
             receipt["grounded_transition_clearance"] = {
                 "policy": GROUNDED_TRANSITION_CLEARANCE_POLICY,
@@ -1191,6 +1335,9 @@ def compile_recipe(
     payloads = {"root_motion.glb": root_raw, "in_place.glb": inplace_raw, "plan.json": json_bytes(plan),
         "solver-receipt.json": json_bytes(receipt), "runtime.json": json_bytes(state),
         "validation.json": json_bytes(validation), "inputs.lock.json": json_bytes(lock), "recipe.json": recipe_bytes}
+    if surface_mass_profile is not None and surface_mass_audit is not None:
+        payloads["surface-mass-profile.json"] = json_bytes(surface_mass_profile)
+        payloads["surface-mass-audit.json"] = json_bytes(surface_mass_audit)
     if cubic:
         assert midpoint_plan is not None
         payloads["cubic-midpoint-plan.json"] = json_bytes(midpoint_plan)

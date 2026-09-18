@@ -106,6 +106,7 @@ class CanonicalConstantSkinTargetLaw:
         law_id: str = _CONSTANT_LAW,
         local_material_references: Mapping[str, np.ndarray] | None = None,
         boundary_residuals_m: Mapping[str, Mapping[str, float]] | None = None,
+        body_support_solution: tuple[tuple[float, ...], float] | None = None,
         _token: object | None = None,
     ) -> None:
         if _token is not _BUILD_TOKEN:
@@ -137,6 +138,7 @@ class CanonicalConstantSkinTargetLaw:
         self._boundary_residuals_m = _freeze_data(
             {} if boundary_residuals_m is None else boundary_residuals_m
         )
+        self._body_support_solution = body_support_solution
         self._calibration_sha256 = self._constants_sha256()
         self._law_binding_sha256 = self._current_law_binding_sha256()
         self._query_binding_sha256 = self._current_query_binding_sha256(query)
@@ -208,7 +210,7 @@ class CanonicalConstantSkinTargetLaw:
         ).hexdigest()
 
     def _current_law_binding_sha256(self) -> str:
-        return _digest({
+        binding = {
             "law_id": self._law_id,
             "constants": {
                 side: self._constants[side].tolist() for side in ("left", "right")
@@ -222,7 +224,13 @@ class CanonicalConstantSkinTargetLaw:
                 }
             ),
             "boundary_residuals_m": _thaw(self._boundary_residuals_m),
-        })
+        }
+        if self._body_support_solution is not None:
+            binding["body_support_solution"] = {
+                "coefficients": list(self._body_support_solution[0]),
+                "duration_s": self._body_support_solution[1],
+            }
+        return _digest(binding)
 
     def _validate_integrity(self) -> None:
         if self._constants_sha256() != self._calibration_sha256:
@@ -584,11 +592,17 @@ class CanonicalConstantSkinTargetLaw:
         }
 
     def _observe_semantic_foot_frame_pair(
-        self, query: SourceMotionQuery, time_s: float
+        self, query: SourceMotionQuery, time_s: float, *, body_delta: Any = None
     ) -> dict[str, dict[str, Any]]:
         """Map a target-owned material path through a fixed semantic MTP frame."""
         zero = {side: np.zeros(3) for side in ("left", "right")}
-        result = query.evaluate_with_target_offsets(time_s, zero)
+        result = (
+            query.evaluate_with_target_offsets(time_s, zero)
+            if body_delta is None
+            else query.evaluate_with_target_offsets_and_body_delta(
+                time_s, zero, body_delta
+            )
+        )
         if isinstance(result, SourceMotionUnavailable):
             raise _source_unavailable_error(result)
         row = _thaw(result.row)
@@ -655,7 +669,13 @@ class CanonicalConstantSkinTargetLaw:
                     f"side={side} time_s={time_s!r} "
                     f"correction_m={correction_norms[side]!r} envelope_m={envelope!r}"
                 )
-            solved = query.evaluate_with_target_offsets(time_s, corrections)
+            solved = (
+                query.evaluate_with_target_offsets(time_s, corrections)
+                if body_delta is None
+                else query.evaluate_with_target_offsets_and_body_delta(
+                    time_s, corrections, body_delta
+                )
+            )
             if isinstance(solved, SourceMotionUnavailable):
                 raise _source_unavailable_error(solved)
             row = _thaw(solved.row)
@@ -752,11 +772,17 @@ class CanonicalConstantSkinTargetLaw:
         return None
 
     def _observe_pair(
-        self, query: SourceMotionQuery, time_s: float
+        self, query: SourceMotionQuery, time_s: float, *, body_delta: Any = None
     ) -> dict[str, dict[str, Any]]:
         """Reuse one owned query and row solve for the two material patches."""
         if self._law_id == _SEMANTIC_FOOT_FRAME_LAW:
-            return self._observe_semantic_foot_frame_pair(query, time_s)
+            return self._observe_semantic_foot_frame_pair(
+                query, time_s, body_delta=body_delta
+            )
+        if body_delta is not None:
+            raise ContractError(
+                "body-support trials require the semantic foot-frame target law"
+            )
         if query._transition_clearance is None:
             result = query.evaluate_with_target_offsets(time_s, self._constants)
         else:
@@ -801,9 +827,21 @@ class CanonicalConstantSkinTargetLaw:
         return data
 
     def _observe_at(
-        self, time_s: float, *, query: SourceMotionQuery | None = None
+        self,
+        time_s: float,
+        *,
+        query: SourceMotionQuery | None = None,
+        body_delta: Any = None,
     ) -> ConstantSkinTargetValue | ConstantSkinTargetUnavailable:
         active_query = self._query if query is None else query
+        if body_delta is None and self._body_support_solution is not None:
+            from ..dynamics.body_support_coordinator import periodic_body_delta
+
+            body_delta = periodic_body_delta(
+                self._body_support_solution[0],
+                time_s,
+                self._body_support_solution[1],
+            )
         observer = getattr(self._observe, "__func__", None)
         owned_evaluate = (
             type(active_query) is SourceMotionQuery
@@ -815,8 +853,14 @@ class CanonicalConstantSkinTargetLaw:
             is SourceMotionQuery.evaluate_with_target_offsets
         )
         if observer is _DEFAULT_OBSERVE and owned_evaluate:
-            data = self._observe_pair(active_query, time_s)
+            data = self._observe_pair(
+                active_query, time_s, body_delta=body_delta
+            )
         else:
+            if body_delta is not None:
+                raise ContractError(
+                    "injected skin observers cannot evaluate body-support trials"
+                )
             # Preserve independently injected failure witnesses and subclasses.
             data = {
                 side: self._observe(
@@ -901,6 +945,39 @@ class CanonicalConstantSkinTargetLaw:
         self._validate_integrity()
         return self._observe_at(time)
 
+    def value_with_body_delta(
+        self, time_s: Any, body_delta: Any
+    ) -> ConstantSkinTargetValue | ConstantSkinTargetUnavailable:
+        """Evaluate one pre-leg body trial through this exact bound law."""
+        time = _finite_time(time_s)
+        self._validate_integrity()
+        return self._observe_at(time, body_delta=body_delta)
+
+    def with_body_support_solution(
+        self, coefficients: Any, duration_s: Any
+    ) -> CanonicalConstantSkinTargetLaw:
+        """Bind an accepted periodic body solution without rebuilding anchors."""
+        if self._law_id != _SEMANTIC_FOOT_FRAME_LAW:
+            raise ContractError("body-support solution requires semantic foot-frame law")
+        values = tuple(float(value) for value in coefficients)
+        duration = float(duration_s)
+        if len(values) != 12 or not all(math.isfinite(value) for value in values):
+            raise ContractError("body-support solution requires 12 finite coefficients")
+        if not math.isfinite(duration) or duration <= 0:
+            raise ContractError("body-support solution duration must be positive")
+        return type(self)(
+            self._query,
+            self._calibration_query,
+            self._provider,
+            self._skin,
+            self._constants,
+            law_id=self._law_id,
+            local_material_references=self._local_material_references,
+            boundary_residuals_m=_thaw(self._boundary_residuals_m),
+            body_support_solution=(values, duration),
+            _token=_BUILD_TOKEN,
+        )
+
     def values(
         self, times_s: Any
     ) -> tuple[ConstantSkinTargetValue | ConstantSkinTargetUnavailable, ...]:
@@ -928,7 +1005,7 @@ class CanonicalConstantSkinTargetLaw:
                     "pointwise checked values; derivative and global-C1 authority unavailable"
                 ),
             }
-        return {
+        receipt = {
             "law_id": self._law_id,
             "binding_sha256": self._law_binding_sha256,
             "material_reference": "provider-fixed full-skin vertex in semantic MTP local frame",
@@ -938,13 +1015,19 @@ class CanonicalConstantSkinTargetLaw:
             "mapping_tolerance_m": _FRAME_MAPPING_TOLERANCE_M,
             "correction_envelope_body_heights": _MAX_CORRECTION_BODY_HEIGHTS,
             "body_height_use": "correction envelope normalization only",
-            "mass_coupling": False,
-            "force_or_torque_claim": False,
+            "mass_coupling": self._body_support_solution is not None,
+            "force_or_torque_claim": self._body_support_solution is not None,
             "classification": (
                 "shared kinematic geometric contact foundation; full serialized, visual, "
                 "body-support, dynamics, and Unity validation remain separate"
             ),
         }
+        if self._body_support_solution is not None:
+            receipt["body_support_solution"] = {
+                "coefficients": list(self._body_support_solution[0]),
+                "duration_s": self._body_support_solution[1],
+            }
+        return receipt
 
 
 __all__ = [

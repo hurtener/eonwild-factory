@@ -7,6 +7,7 @@ import numpy as np
 import pytest
 
 from eonwild_motion.errors import ContractError
+from eonwild_motion.dynamics.body_support_coordinator import BodyDelta
 from eonwild_motion.factory.animal import apply_uniform_geometry_scale
 from eonwild_motion.planning.articulation_profile import load_articulation_profile
 from eonwild_motion.planning.gait_transition import (
@@ -139,6 +140,42 @@ def test_semantic_foot_frame_contact_boundary_is_history_independent_and_continu
     assert np.linalg.norm(
         before.corrections_m["left"] - after.corrections_m["left"]
     ) < 1e-6
+
+
+def test_semantic_foot_frame_body_trial_runs_before_contact_and_binds_solution():
+    law = _build_semantic_foot_frame(_inputs())
+    zero = BodyDelta((0.0, 0.0, 0.0), (0.0, 0.0, 0.0))
+    baseline = law.value(0.2)
+    trial = law.value_with_body_delta(0.2, zero)
+    assert trial.status == "AVAILABLE"
+    assert trial.pose.translations == baseline.pose.translations
+    assert trial.pose.rotations == baseline.pose.rotations
+
+    shifted = law.value_with_body_delta(
+        0.2, BodyDelta((0.001, 0.001, 0.0), (0.0, 0.0, 0.0))
+    )
+    assert shifted.status == "AVAILABLE"
+    assert shifted.pose.translations != baseline.pose.translations
+    assert shifted.row["feet"] == baseline.row["feet"]
+
+    coefficients = (0.0,) * 12
+    selected = law.with_body_support_solution(coefficients, 2.0)
+    assert selected.value(0.2).pose.translations == baseline.pose.translations
+    receipt = selected.receipt()
+    assert receipt["mass_coupling"] is True
+    assert receipt["body_support_solution"] == {
+        "coefficients": [0.0] * 12,
+        "duration_s": 2.0,
+    }
+    assert receipt["binding_sha256"] != law.receipt()["binding_sha256"]
+
+
+def test_semantic_foot_frame_rejects_invalid_body_trial():
+    law = _build_semantic_foot_frame(_inputs())
+    with pytest.raises(ContractError, match="finite translation and rotation"):
+        law.value_with_body_delta(
+            0.2, BodyDelta((0.0, float("nan"), 0.0), (0.0, 0.0, 0.0))
+        )
 
 
 def test_transition_clearance_resolver_is_bound_and_returns_detached_rows():
