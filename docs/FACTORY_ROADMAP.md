@@ -6,7 +6,7 @@ Updated 2026-09-19. This is a living evidence tracker, not a fixed plan inherite
 ## Current animation inventory
 
 Checkpoint 27 retained-braking-support stops are approved for both animals.
-Latest full checkpoint approval is checkpoint 28. Checkpoint 32 is the user-selected running base; checkpoint 33 body response is pending review. **Approved means visually accepted
+Latest full checkpoint approval is checkpoint 28. Checkpoint 32 is the user-selected running base; checkpoint 34 has further propulsion/recovery and pelvis-tail changes requested. **Approved means visually accepted
 in the reviewed clips**, not fully certified for arbitrary gameplay. Unless a row
 says otherwise, both admitted animals use the same shared engine with profile data.
 Historical sections and capture-time receipts below retain earlier review states.
@@ -34,7 +34,7 @@ Checkpoint 26 is the approved walking side-hit recovery baseline; standing impac
 | Arm carriage and secondary motion | Full-transition pass approved | Full-transition pass approved | Behavior-specific overrides for attacks, rest and interaction |
 | Jaw relaxation / breathing-like cycle | Full-transition pass approved | Full-transition pass approved | Full-body breathing and behavior-specific mouth control |
 | Expressive idle / listening / alert scanning | No complete approved family | No complete approved family | Compose meaningful attention, posture and breathing behaviors from existing layers |
-| Running / sprinting | Sustained run candidate, checkpoint 33; sprint missing | Sustained run candidate, checkpoint 33; historical Run010 / Sprint006 preserved | Transfer and review through current shared engine on both animals |
+| Running / sprinting | Sustained run candidate, checkpoint 34; changes requested; sprint missing | Sustained run candidate, checkpoint 34; historical Run010 / Sprint006 preserved | Propulsion/recovery and pelvis-tail coordination; then entry/braking and sprinting |
 | Feeding / gripping / pulling | Current approved transfer missing | Historical Feeding003 reference preserved | Current grounded support, oral contact and interaction handoff |
 | Drinking / swallowing | Missing | Missing | New choreography and world interaction |
 | Rest / sit / lie down / rise / sleep | Missing | Missing | New support transitions and resting behavior |
@@ -722,7 +722,7 @@ reopened with zero sampled reach excess/reported articulation violation.
 Visual approval, full material contact and force certification remain pending.
 
 
-## Current checkpoint — 33 A: responsive running trunk and tail, pending review
+## Previous checkpoint — 33 A: responsive running trunk and tail, refinement requested
 
 The user selected checkpoint 32 as the improved base, requesting more body/tail
 response, lateral motion and life through the chest immediately before the neck.
@@ -749,3 +749,42 @@ Each native-time video has six seconds side view and three seconds front quarter
 The cut joins separate views; it is not an animation handoff. Pause for feedback
 on torso flexibility and tail follow-through. Sustained running remains under
 review; reconnecting entry/braking, sprinting and airborne impacts are later work.
+
+## Current checkpoint — 34 A: proximal tail candidate, changes requested
+
+The user requested movement through the first three/four tail segments and
+supplied Rexy's Allosaurus Run Cycle Animation as an artistic target. Shared
+recipe `running-review.v6.json` biases lateral rotation toward the tail base and
+reduces pitch, retaining C33 torso/neck and C32 legs. Both rigs are generated and
+native plain-stage videos are captured. Actual exported tail paths are graphed
+for discussion; they are not measured traces from the reference.
+
+Sixty-seven focused checks pass. All 432 captured frames were inspected in 18
+chronological sheets. All four captures and full MP4 decoding pass. Both source
+assets were reopened with zero sampled reach excess/reported articulation
+violation; named non-tail joint positions match C33 at 121 sampled times.
+Earlier connected clips/segments and their hashes remain unchanged.
+
+The user reviewed Allosaurus during this checkpoint and requested stronger rear
+propulsion, a foot that remains flexed through recovery, and a longer-looking
+running stroke. They also see a figure-eight-like tail path in the reference,
+with much more motion beginning at the hip and tail base. This candidate is
+not approved. Tarbosaurus's new video is supplied for context, not assumed approved.
+
+The configured running stride is already longer: Allosaurus 3.40 m vs walking
+2.253 m; Tarbosaurus 4.04 m vs 2.741 m (same-foot strides). However, the analytical
+running plan's shorter support interval produces less backward planted-foot sweep
+relative to body travel: Allosaurus 1.223 m vs nominal walking 1.397 m; Tarbosaurus
+1.454 m vs 1.699 m. These are authored intent/plan comparisons, not measured
+reference biomechanics or skin paths. Increasing stride alone is insufficient.
+
+Next coordinated pass: more visible rearward drive within joint limits, a longer
+collected foot recovery followed by purposeful opening/catch, fore/aft neck shape
+that steadies the head, and pelvis-led proximal tail curvature. Evaluate the
+reference's flattened figure-eight quality through coupled timing and phase delay,
+without bringing back the vertical spring. Preserve flight and yielding landings.
+Keep the central artistic direction authoritative and pause at this checkpoint.
+
+Evidence: principal Eonwild `game/Evidence/proximal-tail-running-study/`.
+Full contact/force certification, run entry/braking, sprinting and airborne
+impacts remain open. Existing approved movement remains preserved.

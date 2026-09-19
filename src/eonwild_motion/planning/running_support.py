@@ -47,9 +47,13 @@ class RunningSupportCycle:
                       'breathing_pitch_degrees': (0., 2.), 'tail_yaw_degrees': (0., 30.),
                       'trunk_propagation_step_fraction': (0., .3),
                       'tail_base_weight': (.15, 1.), 'tail_response_time_scale': (.3, 1.)}
-            if not isinstance(regional, dict) or set(regional) != set(bounds):
+            optional = {'tail_lateral_proximal_bias': (0., 6.)}
+            if (not isinstance(regional, dict) or not set(bounds) <= set(regional)
+                    or set(regional)-set(bounds)-set(optional)):
                 raise ValueError('Invalid regional running response schema')
-            for key, (low, high) in bounds.items():
+            for key, (low, high) in (bounds | optional).items():
+                if key not in regional:
+                    continue
                 value = regional[key]
                 if (isinstance(value, bool) or not isinstance(value, (int, float))
                         or not math.isfinite(value) or not low <= value <= high):
@@ -268,7 +272,13 @@ def support_body_response(cycle, plan, roles, profile, hip_offsets):
             regional_axial[name] = (-.5*trunk_roll/len(roles['neck']), -.55*trunk_yaw/len(roles['neck']))
         regional_pitch[roles['head']] = -.15*trunk_pitch
         regional_axial[roles['head']] = (-.15*trunk_roll, -.15*trunk_yaw)
-        tail_weights = .6+np.sin(.5*math.pi*np.linspace(0.,1.,len(tails)))**2
+        tail_fractions = np.linspace(0.,1.,len(tails))
+        if 'tail_lateral_proximal_bias' in regional:
+            # Normalized chain fraction transfers the proximal emphasis to
+            # different tail counts; no fixed bone names or species branch.
+            tail_weights = .25+np.exp(-regional['tail_lateral_proximal_bias']*tail_fractions)
+        else:
+            tail_weights = .6+np.sin(.5*math.pi*tail_fractions)**2
         tail_weights /= tail_weights.sum()
         for i, name in enumerate(tails):
             fraction = i/max(1,len(tails)-1)

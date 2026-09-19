@@ -8,7 +8,7 @@ from eonwild_motion.planning.running_support import RunningSupportCycle
 
 ROOT = Path(__file__).resolve().parents[1]
 
-@pytest.fixture(params=[(a,v) for a in ['allo','tarbo'] for v in [2,3,4,5]])
+@pytest.fixture(params=[(a,v) for a in ['allo','tarbo'] for v in [2,3,4,5,6]])
 def cycle(request):
     animal, version = request.param
     recipe = json.loads((ROOT/f'catalog/behaviors/running-review.v{version}.json').read_text())
@@ -136,3 +136,27 @@ def test_regional_axial_sample_rejects_invalid_rotation(value):
     from eonwild_motion.errors import ContractError
     with pytest.raises(ContractError):
         _require_body_response_sample({'sagittal_node_degrees':{},'node_roll_yaw_degrees':{'chest':value}})
+
+
+@pytest.mark.parametrize('animal', ['allo', 'tarbo'])
+def test_proximal_tail_pass_preserves_body_and_leg_cycle(animal):
+    from eonwild_motion.planning.running_support import support_body_response
+    profile=json.loads((ROOT/f'catalog/embodiment/{animal}.v1.json').read_text())
+    roles={'spine':['spine'],'chest':'chest','neck':['neck'],'head':'head',
+           'tail':[f'tail{i}' for i in range(11)]}
+    cycles=[]; responses=[]
+    for version in (5,6):
+        recipe=json.loads((ROOT/f'catalog/behaviors/running-review.v{version}.json').read_text())
+        c=RunningSupportCycle(resolve_running(profile,recipe),profile['authoring']['bodyHeightM'],recipe['coordination'])
+        cycles.append(c)
+        responses.append(support_body_response(c,c.plan(),roles,profile,{'left':-1,'right':1}))
+    for t in np.linspace(0,4*cycles[0].step,201):
+        assert cycles[0].sample(t)==cycles[1].sample(t)
+    for old,new in zip(*responses):
+        for name in ['spine','chest','neck','head']:
+            assert old['sagittal_node_degrees'][name]==new['sagittal_node_degrees'][name]
+            assert old['node_roll_yaw_degrees'][name]==new['node_roll_yaw_degrees'][name]
+    base_yaw=[np.ptp([r['node_roll_yaw_degrees']['tail0'][1] for r in rows]) for rows in responses]
+    assert base_yaw[1]>3*base_yaw[0]
+    for old,new in zip(*responses):
+        assert new['sagittal_node_degrees']['tail0']==pytest.approx(old['sagittal_node_degrees']['tail0']/3)
