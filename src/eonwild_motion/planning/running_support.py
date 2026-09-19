@@ -23,6 +23,24 @@ class RunningSupportCycle:
                 and .05 <= policy['support_ramp_fraction'] <= .4
                 and 0 < policy['recovery_peak_fraction'] <= .5):
             raise ValueError('Invalid running support policy')
+        if policy.get('recovery_path') == 'rear_fold':
+            ranges = {'rear_fold_transport_delay': (0., .3),
+                      'forward_sweep_clearance_body_heights': (0., .2),
+                      'forward_sweep_peak_fraction': (.4, .8),
+                      'recovery_hock_back_degrees': (0., 60.),
+                      'recovery_pitch_degrees': (-60., 60.)}
+            for key, (low, high) in ranges.items():
+                value = policy.get(key)
+                if (isinstance(value, bool) or not isinstance(value, (int, float))
+                        or not math.isfinite(value) or not low <= value <= high):
+                    raise ValueError('Invalid running recovery policy: '+key)
+        if policy.get('tail_response_mode') == 'damped_curvature':
+            for key, low, high in [('tail_damping_step_fraction', .05, .5),
+                                   ('tail_propagation_step_fraction', 0., 1.)]:
+                value = policy.get(key)
+                if (isinstance(value, bool) or not isinstance(value, (int, float))
+                        or not math.isfinite(value) or not low <= value <= high):
+                    raise ValueError('Invalid running tail policy: '+key)
         # Reference height is a standing-relative authoring choice. All changing
         # vertical motion comes from the integrated support schedule below.
         low = self.vertical(self.contact * .5, offset=False)[0]
@@ -90,10 +108,23 @@ class RunningSupportCycle:
             else:
                 u = (local-c*step)/((2-c)*step)
                 gather = self.gather(u)
-                x = anchor+2*self.speed*self.step*transport_progress(u,g.swing_transport_ramp_fraction)
+                # Fold behind the hip before sweeping forward. This changes the
+                # spatial recovery arc, not just an IK angle preference.
+                progress = transport_progress(u,g.swing_transport_ramp_fraction)
+                if self.policy.get('recovery_path') == 'rear_fold':
+                    progress -= self.policy['rear_fold_transport_delay']*gather*(1-u)
+                x = anchor+2*self.speed*self.step*progress
                 h = g.swing_clearance_body_heights*self.height*gather
+                if self.policy.get('recovery_path') == 'rear_fold':
+                    # Keep clearance through the forward sweep. An early-only
+                    # fold drops the foot while the body is still airborne,
+                    # forcing a straight knee before the catch.
+                    crest = self.policy['forward_sweep_peak_fraction']
+                    sweep = (smooth(u/crest) if u <= crest
+                             else 1-smooth((u-crest)/(1-crest)))
+                    h += self.policy['forward_sweep_clearance_body_heights']*self.height*sweep
                 release = g.push_off_pitch_degrees*(1-smooth(u/.36))
-                pitch = release+g.foot_recovery_pitch_degrees*gather
+                pitch = release+self.policy.get('recovery_pitch_degrees',g.foot_recovery_pitch_degrees)*gather
                 pad = self.policy['pad_gather_degrees']*gather
                 toe = g.toe_flex_degrees*(gather+.55*(1-smooth(u/.36)))
             feet[side] = dict(contact=stance,touchdown_time_s=touchdown,
@@ -115,6 +146,9 @@ class RunningSupportCycle:
                     ankle = shape['release_ankle']-(shape['release_ankle']-shape['gathered_ankle'])*gather+(shape['landing_ankle']-shape['release_ankle'])*smooth(u)
                 feet[side]['running_leg_shape'] = dict(knee_interior_degrees=knee,ankle_interior_degrees=ankle)
                 feet[side]['leg_heading_degrees'] = self.policy['leg_heading_degrees']
+                if self.policy.get('recovery_path') == 'rear_fold':
+                    feet[side]['running_leg_shape']['metatarsus_min_degrees'] = -5.-self.policy['recovery_hock_back_degrees']*gather
+                    feet[side]['running_leg_shape']['pitch_preference_weight'] = .15
         support = sum(f['contact'] for f in feet.values())
         return dict(time_s=time,locomotion_time_s=time,review_segment='run',
             root_forward_m=self.travel(time),pelvis_height_offset_m=y,
@@ -157,7 +191,27 @@ def support_body_response(cycle, plan, roles, profile, hip_offsets):
     lateral = cycle.policy['pelvis_sway_body_heights']*cycle.height*lag(balance,tau[2])
     tails = list(roles.get('tail',[]))
     weights = np.asarray([(i+1)**.6 for i in range(len(tails))]); weights /= max(1.,weights.sum())
-    if cycle.policy.get('tail_propagation_step_fraction') is not None:
+    if cycle.policy.get('tail_response_mode') == 'damped_curvature':
+        # Two first-order responses have no resonant overshoot. Drive with
+        # body travel, not the sharp contact-force peak that kicked the base.
+        displacement = np.asarray([r['pelvis_height_offset_m'] for r in rows])
+        displacement -= displacement.mean()
+        displacement /= max(.001,np.max(np.abs(displacement)))
+        base_response = sample_periodic_response(times,displacement,
+            cycle.policy['tail_damping_step_fraction']*cycle.step,times)
+        base_response = sample_periodic_response(times,base_response,
+            cycle.policy['tail_damping_step_fraction']*cycle.step,times)
+        fractions = np.linspace(0,1,len(tails))
+        weights = .15+np.sin(.5*math.pi*fractions)**2
+        weights /= weights.sum()
+        tail = {}
+        for i,name in enumerate(tails):
+            fraction = fractions[i]
+            delayed = (query-cycle.policy['tail_propagation_step_fraction']*cycle.step*fraction) % (2*cycle.step)
+            response = sample_periodic_response(times,base_response,
+                tau[1]*(1+fraction),delayed)
+            tail[name] = cycle.policy['tail_response_degrees']*weights[i]*response
+    elif cycle.policy.get('tail_propagation_step_fraction') is not None:
         # Responsive heavy base with delayed curvature along the chain.
         # Previously amplitude favored the tip and phases barely differed.
         weights = np.exp(-1.8*np.linspace(0,1,len(tails))); weights /= weights.sum()

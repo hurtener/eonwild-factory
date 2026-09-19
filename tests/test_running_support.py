@@ -8,7 +8,7 @@ from eonwild_motion.planning.running_support import RunningSupportCycle
 
 ROOT = Path(__file__).resolve().parents[1]
 
-@pytest.fixture(params=[(a,v) for a in ['allo','tarbo'] for v in [2,3]])
+@pytest.fixture(params=[(a,v) for a in ['allo','tarbo'] for v in [2,3,4]])
 def cycle(request):
     animal, version = request.param
     recipe = json.loads((ROOT/f'catalog/behaviors/running-review.v{version}.json').read_text())
@@ -47,7 +47,12 @@ def test_root_and_feet_keep_periodic_positions_and_boundary_velocities(cycle):
         assert (b['pelvis_height_offset_m']-a['pelvis_height_offset_m'])/(2*eps)==pytest.approx(cycle.sample(t)['pelvis_vertical_velocity_mps'],abs=1e-5)
         for side in a['feet']:
             for key in ['forward_m','height_m','foot_pitch_degrees','pad_pitch_degrees']:
-                assert abs(a['feet'][side][key]-b['feet'][side][key])<.002
+                center = cycle.sample(t)['feet'][side][key]
+                before, after = a['feet'][side][key], b['feet'][side][key]
+                # Compare continuity, not a hidden speed limit on the other
+                # foot while it is partway through a valid fast recovery.
+                assert abs(center-(before+after)*.5)<2e-6
+                assert abs((center-before)/eps-(after-center)/eps)<.2
 
 def test_loading_yields_before_propulsion_and_recovery_has_one_peak(cycle):
     landing=cycle.sample(0)
@@ -61,3 +66,37 @@ def test_loading_yields_before_propulsion_and_recovery_has_one_peak(cycle):
     peak=np.argmax(values)
     assert np.min(np.diff(values[:peak+1]))>=-1e-9
     assert np.max(np.diff(values[peak:]))<=1e-9
+
+
+def test_rear_fold_clears_behind_hip_and_opens_for_contact():
+    for animal in ('allo','tarbo'):
+        recipe=json.loads((ROOT/'catalog/behaviors/running-review.v4.json').read_text())
+        profile=json.loads((ROOT/f'catalog/embodiment/{animal}.v1.json').read_text())
+        c=RunningSupportCycle(resolve_running(profile,recipe),profile['authoring']['bodyHeightM'],recipe['coordination'])
+        t=(c.contact+(2-c.contact)*c.policy['recovery_peak_fraction'])*c.step
+        row=c.sample(t); foot=row['feet']['left']
+        assert not foot['contact']
+        assert foot['forward_m']<row['root_forward_m']
+        assert foot['height_m']>.2*c.height
+        assert foot['running_leg_shape']['metatarsus_min_degrees']<-40
+        landing=c.sample(2*c.step)
+        assert landing['feet']['left']['height_m']==0
+        assert landing['feet']['left']['running_leg_shape']['metatarsus_min_degrees']==-5
+
+
+def test_damped_tail_has_quieter_base_and_periodic_curvature():
+    from eonwild_motion.planning.running_support import support_body_response
+    roles={'chest':'chest','head':'head','neck':['neck'],
+           'tail':['base','middle','tip']}
+    for animal in ('allo','tarbo'):
+        profile=json.loads((ROOT/f'catalog/embodiment/{animal}.v1.json').read_text())
+        results=[]
+        for version in (3,4):
+            recipe=json.loads((ROOT/f'catalog/behaviors/running-review.v{version}.json').read_text())
+            cycle=RunningSupportCycle(resolve_running(profile,recipe),profile['authoring']['bodyHeightM'],recipe['coordination'])
+            rows=support_body_response(cycle,cycle.plan(),roles,profile,{'left':-1,'right':1})
+            angles=np.array([[r['sagittal_node_degrees'][n] for n in roles['tail']] for r in rows])
+            assert np.max(np.abs(angles[0]-angles[-1]))<1e-8
+            results.append(angles)
+        assert np.ptp(results[1][:,0])<.2*np.ptp(results[0][:,0])
+        assert np.ptp(results[1][:,-1])>.1

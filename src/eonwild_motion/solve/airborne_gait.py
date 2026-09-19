@@ -1217,9 +1217,13 @@ def solve_airborne_plan_sample(
                     raise ContractError('invalid running leg shape preference')
                 # Soft coordinated preferences; contact, bone lengths and
                 # admitted hard articulation limits retain authority.
-                score = (pitch_cost + (knee_angle-knee_preference)**2
+                hock_min = float(running_shape.get('metatarsus_min_degrees', -5.))
+                pitch_weight = float(running_shape.get('pitch_preference_weight', 1.))
+                if not (-70 <= hock_min <= 0 and 0 < pitch_weight <= 1):
+                    raise ContractError('invalid running recovery preference')
+                score = (pitch_weight*pitch_cost + (knee_angle-knee_preference)**2
                          + 2*(ankle_angle-ankle_preference)**2
-                         + 1000*max(0.,-metatarsus_world_degrees-5.)**2
+                         + 1000*max(0.,hock_min-metatarsus_world_degrees)**2
                          + preferred_gain*gait.articulation_preferred_margin_weight*preferred
                          + 1e5*sum(e*e for e in errors) + 1e8*extension*extension)
             extension_preference = foot_plan.get("walking_knee_preference_degrees")

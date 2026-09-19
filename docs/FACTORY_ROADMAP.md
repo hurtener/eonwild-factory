@@ -34,7 +34,7 @@ Checkpoint 26 is the approved walking side-hit recovery baseline; standing impac
 | Arm carriage and secondary motion | Full-transition pass approved | Full-transition pass approved | Behavior-specific overrides for attacks, rest and interaction |
 | Jaw relaxation / breathing-like cycle | Full-transition pass approved | Full-transition pass approved | Full-body breathing and behavior-specific mouth control |
 | Expressive idle / listening / alert scanning | No complete approved family | No complete approved family | Compose meaningful attention, posture and breathing behaviors from existing layers |
-| Running / sprinting | Normal run candidate, checkpoint 29; sprint missing | Normal run candidate, checkpoint 29; historical Run010 / Sprint006 preserved | Transfer and review through current shared engine on both animals |
+| Running / sprinting | Sustained run candidate, checkpoint 32; sprint missing | Sustained run candidate, checkpoint 32; historical Run010 / Sprint006 preserved | Transfer and review through current shared engine on both animals |
 | Feeding / gripping / pulling | Current approved transfer missing | Historical Feeding003 reference preserved | Current grounded support, oral contact and interaction handoff |
 | Drinking / swallowing | Missing | Missing | New choreography and world interaction |
 | Rest / sit / lie down / rise / sleep | Missing | Missing | New support transitions and resting behavior |
@@ -690,3 +690,33 @@ Recipe: catalog/behaviors/running-review.v3.json. Both rigs were emitted/reopene
 envelope violation. Native side/front-quarter evidence is in principal Eonwild
 game/Evidence/running-propulsion-study/. This remains a reduced prescribed-load
 animation model, not a muscle/force simulation. Pause at this visual checkpoint.
+
+
+## Running rear-fold recovery and damped tail — checkpoint 32, pending review
+
+Checkpoint 31 requires changes after the user confirmed the Tarbo reference
+comparison: propulsion/recovery remain weak and the tail rebounds like a spring.
+Its previous capture-time manifest is historical; user-review.json records the
+feedback. Approved walking, turns, stopping, impacts and connected controls remain
+unchanged.
+
+Shared recipe `running-review.v4.json` changes the free-foot spatial arc: gather
+behind the hip, sweep forward with continuing clearance, and open for contact.
+The metatarsal orientation preference releases with the free-leg fold while hard
+rig articulation constraints remain authoritative. The standing-relative body
+height and load/release preferences accompany that changed arc. Flight duration,
+profile speed and step/stride intent are preserved. Tail curvature uses two
+non-resonant lag stages driven by body displacement, with a restrained base and
+delayed response distributed down the chain. No species branch is introduced.
+
+Both current rigs are emitted and reopened. Evidence and review state live in
+principal Eonwild `game/Evidence/running-recovery-study/`. This is a sustained
+running visual checkpoint, not an approved gait or a full-force solution.
+Run entry, braking, sprinting, terrain and hit-to-run handoffs remain open.
+Pause for user feedback here.
+
+Checkpoint 32 C capture completed: both native-time videos contain 216 frames
+(side plus front quarter), with all 432 frames inspected and two leg-detail
+sheets. The 47 focused checks and Unity build pass; both final source rigs are
+reopened with zero sampled reach excess/reported articulation violation.
+Visual approval, full material contact and force certification remain pending.
