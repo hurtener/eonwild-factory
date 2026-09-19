@@ -239,3 +239,16 @@ intent and bounded implementation. Evidence under
 `game/Evidence/support-coupled-impact-study/` includes final GLB identities,
 profiles, recipes, contact/joint/attention/body traces and all-frame review.
 User approval and production force/material-contact certification remain pending.
+
+
+### Profile-owned running posture — checkpoint 35
+
+A running recipe may opt into `posture_from_profile: true`. The shared resolver
+then reads `locomotion.run.posture.frontBodyPitch` when present; otherwise the
+recipe posture remains authoritative. The quantity requires a finite numeric
+`value`, `unit: "deg"`, and a nonempty `source.citation`, within the existing
+0–20 degree front-body pitch range. Positive pitch lowers the front; reducing
+it raises chest and corresponding head carriage. Keep authored provenance clear.
+The current Tarbosaurus candidate uses zero degrees. This field is an authored
+posture preference, not a measured range of motion. Recipes without opt-in are
+unchanged, and final rig articulation constraints still apply.

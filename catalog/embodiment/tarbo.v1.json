@@ -808,6 +808,17 @@
         "source": {
           "citation": "Eonwild running calibration 01, checkpoint 29. Authored moderate run target; not a reconstructed maximum speed or measured fossil gait."
         }
+      },
+      "posture": {
+        "frontBodyPitch": {
+          "value": 0.0,
+          "unit": "deg",
+          "classification": "authored_estimate",
+          "source": {
+            "citation": "User checkpoint 35 direction, 2026-09-19: raise chest and corresponding head for normal running.",
+            "rationale": "7 degrees higher than C34 shared +7-degree front-body pitch. Distributed through the admitted spine/chest chain; head inherits elevation. Not measured biomechanics."
+          }
+        }
       }
     }
   },

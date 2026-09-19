@@ -6,7 +6,7 @@ Updated 2026-09-19. This is a living evidence tracker, not a fixed plan inherite
 ## Current animation inventory
 
 Checkpoint 27 retained-braking-support stops are approved for both animals.
-Latest full checkpoint approval is checkpoint 28. Checkpoint 32 is the user-selected running base; checkpoint 34 has further propulsion/recovery and pelvis-tail changes requested. **Approved means visually accepted
+Latest full checkpoint approval is checkpoint 28. Checkpoint 32 is the user-selected running base; checkpoint 34 has changes requested; checkpoint 35 is the coordinated propulsion, tail-loop and posture candidate awaiting review. **Approved means visually accepted
 in the reviewed clips**, not fully certified for arbitrary gameplay. Unless a row
 says otherwise, both admitted animals use the same shared engine with profile data.
 Historical sections and capture-time receipts below retain earlier review states.
@@ -34,7 +34,7 @@ Checkpoint 26 is the approved walking side-hit recovery baseline; standing impac
 | Arm carriage and secondary motion | Full-transition pass approved | Full-transition pass approved | Behavior-specific overrides for attacks, rest and interaction |
 | Jaw relaxation / breathing-like cycle | Full-transition pass approved | Full-transition pass approved | Full-body breathing and behavior-specific mouth control |
 | Expressive idle / listening / alert scanning | No complete approved family | No complete approved family | Compose meaningful attention, posture and breathing behaviors from existing layers |
-| Running / sprinting | Sustained run candidate, checkpoint 34; changes requested; sprint missing | Sustained run candidate, checkpoint 34; historical Run010 / Sprint006 preserved | Propulsion/recovery and pelvis-tail coordination; then entry/braking and sprinting |
+| Running / sprinting | Sustained run candidate, checkpoint 35; pending review; sprint missing | Sustained run candidate, checkpoint 35; pending review; historical Run010 / Sprint006 preserved | Review propulsion, recovery, tail loops and posture; then entry/braking and sprinting |
 | Feeding / gripping / pulling | Current approved transfer missing | Historical Feeding003 reference preserved | Current grounded support, oral contact and interaction handoff |
 | Drinking / swallowing | Missing | Missing | New choreography and world interaction |
 | Rest / sit / lie down / rise / sleep | Missing | Missing | New support transitions and resting behavior |
@@ -750,7 +750,7 @@ The cut joins separate views; it is not an animation handoff. Pause for feedback
 on torso flexibility and tail follow-through. Sustained running remains under
 review; reconnecting entry/braking, sprinting and airborne impacts are later work.
 
-## Current checkpoint — 34 A: proximal tail candidate, changes requested
+## Previous checkpoint — 34 A: proximal tail candidate, changes requested
 
 The user requested movement through the first three/four tail segments and
 supplied Rexy's Allosaurus Run Cycle Animation as an artistic target. Shared
@@ -788,3 +788,37 @@ Keep the central artistic direction authoritative and pause at this checkpoint.
 Evidence: principal Eonwild `game/Evidence/proximal-tail-running-study/`.
 Full contact/force certification, run entry/braking, sprinting and airborne
 impacts remain open. Existing approved movement remains preserved.
+
+
+## Current checkpoint — 35 A: propulsive running and pelvis-led tail loops, pending review
+
+Shared recipe `running-review.v7.json` combines a closer landing placement with
+more rearward drive, stronger toe-off, and foot flexion retained through the
+moving recovery arc. The planned rearward release reach increases about 46%
+(Allosaurus 0.543 to 0.796 m; Tarbosaurus 0.646 to 0.945 m). Authored same-foot
+stride and average speed remain unchanged. Flight remains present: about 98 ms
+per Allosaurus step and 131 ms per Tarbosaurus step.
+
+Pelvis yaw/roll and proximal tail curvature share the stride phase, with
+profile-driven response delay and restrained vertical lobes. Actual exported
+fourth-segment trajectories show a flattened figure eight for both animals.
+The neck also changes shape fore/aft while partially stabilizing head bearing.
+Tarbosaurus's canonical run profile lifts front-body pitch by seven degrees
+(from +7 to 0), raising chest and head together. The shared planner consumes
+this opt-in profile field; older recipes keep their original posture.
+
+Both rigs were emitted, reopened, imported and captured in the native Unity
+player. Seventy-six focused checks and the build pass. All 432 captured frames
+were inspected chronologically; both nine-second MP4s decode completely.
+No admitted articulation violation is reported. Allosaurus has no sampled reach
+excess. Tarbosaurus has a maximum 18.3 mm target shortfall at 12 flight samples;
+loaded samples are unaffected. This remains an explicit flight-recovery tuning
+item, not a changed joint limit or a production contact pass.
+
+Evidence: principal Eonwild `game/Evidence/propulsive-loop-running-study/`,
+including source receipts, recipe, hashes, full-frame sheets and actual tail-path
+graph/data. Earlier approved connected clips and segments remain byte-identical.
+The videos show six seconds from the side plus a separate three-second front
+quarter view. Candidate 35 A is pending user review; checkpoint 34 retains changes
+requested. Full material contact/force certification, run entry/braking,
+sprinting and airborne impacts remain open. Pause for user feedback here.

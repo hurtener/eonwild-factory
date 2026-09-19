@@ -42,12 +42,22 @@ class RunningSupportCycle:
                         or not math.isfinite(value) or not low <= value <= high):
                     raise ValueError('Invalid running tail policy: '+key)
         regional = policy.get('regional_body_response')
+        fold = policy.get('recovery_fold_window')
+        if fold is not None:
+            if (not isinstance(fold, list) or len(fold) != 3
+                    or any(isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) for v in fold)
+                    or not 0 < fold[0] < fold[1] < fold[2] <= 1):
+                raise ValueError('Invalid running recovery fold window')
         if regional is not None:
             bounds = {'trunk_yaw_degrees': (0., 12.), 'trunk_roll_degrees': (0., 8.),
                       'breathing_pitch_degrees': (0., 2.), 'tail_yaw_degrees': (0., 30.),
                       'trunk_propagation_step_fraction': (0., .3),
                       'tail_base_weight': (.15, 1.), 'tail_response_time_scale': (.3, 1.)}
-            optional = {'tail_lateral_proximal_bias': (0., 6.)}
+            optional = {'tail_lateral_proximal_bias': (0., 6.),
+                        'pelvis_yaw_degrees': (0., 8.),
+                        'tail_loop_pitch_degrees': (0., 6.),
+                        'axial_cycle_phase_radians': (-math.pi, math.pi),
+                        'neck_reach_degrees': (0., 10.)}
             if (not isinstance(regional, dict) or not set(bounds) <= set(regional)
                     or set(regional)-set(bounds)-set(optional)):
                 raise ValueError('Invalid regional running response schema')
@@ -119,12 +129,18 @@ class RunningSupportCycle:
             anchor = self.travel(touchdown)+g.touchdown_reach_body_heights*self.height
             stance = local < c*step-1e-10
             if stance:
-                u, gather, rise = 0., 0., smooth((local/(c*step)-.25)/.75)
+                u, gather, fold, rise = 0., 0., 0., smooth((local/(c*step)-.25)/.75)
                 x, h, pitch = anchor, 0., g.push_off_pitch_degrees*rise
                 release, pad, toe = pitch, 0., g.toe_flex_degrees*.55*rise
             else:
                 u = (local-c*step)/((2-c)*step)
                 gather = self.gather(u)
+                fold = gather
+                if self.policy.get('recovery_fold_window'):
+                    rise_end, open_start, open_end = self.policy['recovery_fold_window']
+                    # Shape can stay collected while its spatial arc continues.
+                    # The later release overlaps the approach; no event reset.
+                    fold = smooth(u/rise_end)*(1-smooth((u-open_start)/(open_end-open_start)))
                 # Fold behind the hip before sweeping forward. This changes the
                 # spatial recovery arc, not just an IK angle preference.
                 progress = transport_progress(u,g.swing_transport_ramp_fraction)
@@ -141,9 +157,9 @@ class RunningSupportCycle:
                              else 1-smooth((u-crest)/(1-crest)))
                     h += self.policy['forward_sweep_clearance_body_heights']*self.height*sweep
                 release = g.push_off_pitch_degrees*(1-smooth(u/.36))
-                pitch = release+self.policy.get('recovery_pitch_degrees',g.foot_recovery_pitch_degrees)*gather
-                pad = self.policy['pad_gather_degrees']*gather
-                toe = g.toe_flex_degrees*(gather+.55*(1-smooth(u/.36)))
+                pitch = release+self.policy.get('recovery_pitch_degrees',g.foot_recovery_pitch_degrees)*fold
+                pad = self.policy['pad_gather_degrees']*fold
+                toe = g.toe_flex_degrees*(fold+.55*(1-smooth(u/.36)))
             feet[side] = dict(contact=stance,touchdown_time_s=touchdown,
                 forward_m=x,height_m=h,swing_phase=u,foot_pitch_degrees=pitch,
                 stance_roll_pitch_degrees=pitch,stance_roll_swing_pitch_degrees=release,
@@ -159,12 +175,12 @@ class RunningSupportCycle:
                     knee = shape['landing_knee']-shape['knee_compression']*compression+(shape['release_knee']-shape['landing_knee'])*opening
                     ankle = shape['landing_ankle']-shape['ankle_compression']*compression+(shape['release_ankle']-shape['landing_ankle'])*opening
                 else:
-                    knee = shape['release_knee']-(shape['release_knee']-shape['gathered_knee'])*gather+(shape['landing_knee']-shape['release_knee'])*smooth(u)
-                    ankle = shape['release_ankle']-(shape['release_ankle']-shape['gathered_ankle'])*gather+(shape['landing_ankle']-shape['release_ankle'])*smooth(u)
+                    knee = shape['release_knee']-(shape['release_knee']-shape['gathered_knee'])*fold+(shape['landing_knee']-shape['release_knee'])*smooth(u)
+                    ankle = shape['release_ankle']-(shape['release_ankle']-shape['gathered_ankle'])*fold+(shape['landing_ankle']-shape['release_ankle'])*smooth(u)
                 feet[side]['running_leg_shape'] = dict(knee_interior_degrees=knee,ankle_interior_degrees=ankle)
                 feet[side]['leg_heading_degrees'] = self.policy['leg_heading_degrees']
                 if self.policy.get('recovery_path') == 'rear_fold':
-                    feet[side]['running_leg_shape']['metatarsus_min_degrees'] = -5.-self.policy['recovery_hock_back_degrees']*gather
+                    feet[side]['running_leg_shape']['metatarsus_min_degrees'] = -5.-self.policy['recovery_hock_back_degrees']*fold
                     feet[side]['running_leg_shape']['pitch_preference_weight'] = .15
         support = sum(f['contact'] for f in feet.values())
         return dict(time_s=time,locomotion_time_s=time,review_segment='run',
@@ -205,6 +221,7 @@ def support_body_response(cycle, plan, roles, profile, hip_offsets):
     neck = -.55*chest
     head = -.4*chest
     roll = math.radians(cycle.policy['pelvis_roll_degrees'])*lag(balance,tau[2])
+    pelvis_yaw = np.zeros(len(query))
     lateral = cycle.policy['pelvis_sway_body_heights']*cycle.height*lag(balance,tau[2])
     tails = list(roles.get('tail',[]))
     weights = np.asarray([(i+1)**.6 for i in range(len(tails))]); weights /= max(1.,weights.sum())
@@ -252,6 +269,14 @@ def support_body_response(cycle, plan, roles, profile, hip_offsets):
             raise ValueError('Regional running response needs a unique spine/chest chain')
         alternating = sample_periodic_response(times, balance, tau[2], times)
         alternating = sample_periodic_response(times, alternating, .1*cycle.step, times)
+        phase = math.pi*times/cycle.step-regional.get('axial_cycle_phase_radians', 0.)
+        axial_cycle = 'tail_loop_pitch_degrees' in regional
+        if axial_cycle:
+            # One lateral cycle per stride, two restrained vertical lobes.
+            # Pelvis and tail share a stride clock; response delay comes from
+            # the animal profile and increases along the semantic tail chain.
+            alternating = np.sin(phase)
+            pelvis_yaw = math.radians(regional.get('pelvis_yaw_degrees', 0.))*lag(alternating,tau[2])
         breathing = np.sin(math.pi*times/cycle.step-.65)
         fractions = np.linspace(0., 1., len(trunk))
         weights = np.linspace(.6, 1.4, len(trunk)); weights /= weights.sum()
@@ -272,6 +297,13 @@ def support_body_response(cycle, plan, roles, profile, hip_offsets):
             regional_axial[name] = (-.5*trunk_roll/len(roles['neck']), -.55*trunk_yaw/len(roles['neck']))
         regional_pitch[roles['head']] = -.15*trunk_pitch
         regional_axial[roles['head']] = (-.15*trunk_roll, -.15*trunk_yaw)
+        neck_names = list(roles.get('neck', []))
+        if len(neck_names) > 1 and regional.get('neck_reach_degrees'):
+            neck_weights = np.linspace(1., -1., len(neck_names))
+            neck_weights /= np.sum(np.maximum(neck_weights, 0.))
+            reach = regional['neck_reach_degrees']*lag(np.sin(2*phase-.7),tau[0])
+            for name, weight in zip(neck_names, neck_weights):
+                regional_pitch[name] += weight*reach
         tail_fractions = np.linspace(0.,1.,len(tails))
         if 'tail_lateral_proximal_bias' in regional:
             # Normalized chain fraction transfers the proximal emphasis to
@@ -285,6 +317,9 @@ def support_body_response(cycle, plan, roles, profile, hip_offsets):
             delayed = (query-cycle.policy['tail_propagation_step_fraction']*cycle.step*fraction) % (2*cycle.step)
             side = sample_periodic_response(times, alternating, tau[1]*(.5+fraction), delayed)
             regional_axial[name] = (np.zeros(len(query)), -regional['tail_yaw_degrees']*tail_weights[i]*side)
+            if axial_cycle:
+                tail[name] = regional['tail_loop_pitch_degrees']*tail_weights[i]*sample_periodic_response(
+                    times, np.sin(2*phase), tau[1]*(.5+fraction), delayed)
     binding = sha256_json(cycle.policy)
     samples = []
     for i,row in enumerate(plan['samples']):
@@ -296,7 +331,7 @@ def support_body_response(cycle, plan, roles, profile, hip_offsets):
             sagittal_node_degrees=angles,body_support_control=dict(
                 policy_id='periodic_body_support_control.v1',
                 binding_sha256=binding,translation_forward_up_lateral_m=[0.,0.,float(lateral[i])],
-                rotation_pitch_roll_yaw_radians=[0.,float(roll[i]),0.])))
+                rotation_pitch_roll_yaw_radians=[0.,float(roll[i]),float(pelvis_yaw[i])])))
         if regional is not None:
             samples[-1]['node_roll_yaw_degrees'] = {name:[float(r[i]),float(y[i])] for name,(r,y) in regional_axial.items()}
     return samples

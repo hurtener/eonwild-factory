@@ -26,7 +26,17 @@ def resolve_running(profile, recipe):
             or not math.isfinite(reach_fraction)
             or not 0 < reach_fraction < 1):
         raise ValueError('Running touchdown reach must be a fraction of one step')
-    return AirborneGait(**recipe['parameters'], step_period_s=step / speed,
+    parameters = deepcopy(recipe['parameters'])
+    if recipe.get('posture_from_profile'):
+        posture = values.get('posture', {}).get('frontBodyPitch')
+        if posture is not None:
+            value = posture.get('value')
+            if (posture.get('unit') != 'deg' or isinstance(value, bool)
+                    or not isinstance(value, (int, float)) or not math.isfinite(value)
+                    or not 0 <= value <= 20 or not posture.get('source', {}).get('citation')):
+                raise ValueError('Invalid running front-body posture')
+            parameters['front_body_pitch_degrees'] = value
+    return AirborneGait(**parameters, step_period_s=step / speed,
                        step_length_body_heights=step / height,
                        touchdown_reach_body_heights=reach_fraction * step / height)
 

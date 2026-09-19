@@ -8,7 +8,7 @@ from eonwild_motion.planning.running_support import RunningSupportCycle
 
 ROOT = Path(__file__).resolve().parents[1]
 
-@pytest.fixture(params=[(a,v) for a in ['allo','tarbo'] for v in [2,3,4,5,6]])
+@pytest.fixture(params=[(a,v) for a in ['allo','tarbo'] for v in [2,3,4,5,6,7]])
 def cycle(request):
     animal, version = request.param
     recipe = json.loads((ROOT/f'catalog/behaviors/running-review.v{version}.json').read_text())
@@ -160,3 +160,33 @@ def test_proximal_tail_pass_preserves_body_and_leg_cycle(animal):
     assert base_yaw[1]>3*base_yaw[0]
     for old,new in zip(*responses):
         assert new['sagittal_node_degrees']['tail0']==pytest.approx(old['sagittal_node_degrees']['tail0']/3)
+
+
+@pytest.mark.parametrize('animal', ['allo', 'tarbo'])
+def test_propulsive_release_and_retained_foot_fold(animal):
+    profile=json.loads((ROOT/f'catalog/embodiment/{animal}.v1.json').read_text())
+    cycles=[]
+    for version in (6,7):
+        recipe=json.loads((ROOT/f'catalog/behaviors/running-review.v{version}.json').read_text())
+        cycles.append(RunningSupportCycle(resolve_running(profile,recipe),profile['authoring']['bodyHeightM'],recipe['coordination']))
+    old,new=cycles
+    def rear_reach(c):
+        row=c.sample(c.contact*c.step)
+        return row['root_forward_m']-row['feet']['left']['forward_m']
+    assert rear_reach(new)>1.4*rear_reach(old)
+    def recovery(c,u):
+        return c.sample((c.contact+(2-c.contact)*u)*c.step)['feet']['left']
+    assert recovery(new,.6)['pad_pitch_degrees']>2*recovery(old,.6)['pad_pitch_degrees']
+    assert recovery(new,.96)['pad_pitch_degrees']==pytest.approx(0)
+    assert new.sample(new.contact*new.step)['flight']
+
+
+def test_running_posture_is_profile_owned_and_recipe_opt_in():
+    from copy import deepcopy
+    profile=json.loads((ROOT/'catalog/embodiment/tarbo.v1.json').read_text())
+    recipe=json.loads((ROOT/'catalog/behaviors/running-review.v7.json').read_text())
+    assert resolve_running(profile,recipe).front_body_pitch_degrees==0
+    prior=deepcopy(recipe);prior.pop('posture_from_profile')
+    assert resolve_running(profile,prior).front_body_pitch_degrees==7
+    profile['locomotion']['run']['posture']['frontBodyPitch']['value']=float('nan')
+    with pytest.raises(ValueError):resolve_running(profile,recipe)
