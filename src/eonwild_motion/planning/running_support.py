@@ -30,6 +30,18 @@ class RunningSupportCycle:
 
     def vertical(self, phase, offset=True):
         c, p, g, dt = self.contact, phase % 1, self.gravity, self.step
+        if self.policy.get('support_shape') == 'rounded_impulse':
+            # Integrate a finite loading/drive impulse instead of the previous
+            # long plateau. Landing and launch share the resulting momentum.
+            if p < c:
+                load = (1-math.cos(2*math.pi*p/c))/c
+                impulse = p/c-math.sin(2*math.pi*p/c)/(2*math.pi)
+                displacement = p*p/(2*c)+c*(math.cos(2*math.pi*p/c)-1)/(4*math.pi**2)
+            else:
+                load, impulse, displacement = 0., 1., p-c*.5
+            velocity = g*dt*(impulse-p-(1-c)*.5)
+            y = g*dt*dt*(displacement-p*p*.5-(1-c)*p*.5)
+            return y+(self.vertical_offset if offset else 0.), velocity, g*(load-1), load
         width = self.policy['support_ramp_fraction']*c
         def integral(u):
             if u <= 0: return 0.
@@ -90,6 +102,19 @@ class RunningSupportCycle:
                 pad_pitch_degrees=pad,toe_flex_degrees=toe,
                 recovery_shape=gather,distal_endpoint_role='shape_preference',
                 recovery_pitch_carrier='authored',support_load_bodyweights=load if stance else 0.)
+            if 'leg_drive' in self.policy:
+                shape = self.policy['leg_drive']
+                if stance:
+                    v = local/(c*step)
+                    compression = math.sin(math.pi*min(v/.7,1.))**2
+                    opening = smooth(v)
+                    knee = shape['landing_knee']-shape['knee_compression']*compression+(shape['release_knee']-shape['landing_knee'])*opening
+                    ankle = shape['landing_ankle']-shape['ankle_compression']*compression+(shape['release_ankle']-shape['landing_ankle'])*opening
+                else:
+                    knee = shape['release_knee']-(shape['release_knee']-shape['gathered_knee'])*gather+(shape['landing_knee']-shape['release_knee'])*smooth(u)
+                    ankle = shape['release_ankle']-(shape['release_ankle']-shape['gathered_ankle'])*gather+(shape['landing_ankle']-shape['release_ankle'])*smooth(u)
+                feet[side]['running_leg_shape'] = dict(knee_interior_degrees=knee,ankle_interior_degrees=ankle)
+                feet[side]['leg_heading_degrees'] = self.policy['leg_heading_degrees']
         support = sum(f['contact'] for f in feet.values())
         return dict(time_s=time,locomotion_time_s=time,review_segment='run',
             root_forward_m=self.travel(time),pelvis_height_offset_m=y,
@@ -132,7 +157,18 @@ def support_body_response(cycle, plan, roles, profile, hip_offsets):
     lateral = cycle.policy['pelvis_sway_body_heights']*cycle.height*lag(balance,tau[2])
     tails = list(roles.get('tail',[]))
     weights = np.asarray([(i+1)**.6 for i in range(len(tails))]); weights /= max(1.,weights.sum())
-    tail = {name:cycle.policy['tail_response_degrees']*weights[i]*lag(drive,tau[1]*(1+.6*i/max(1,len(tails)-1))) for i,name in enumerate(tails)}
+    if cycle.policy.get('tail_propagation_step_fraction') is not None:
+        # Responsive heavy base with delayed curvature along the chain.
+        # Previously amplitude favored the tip and phases barely differed.
+        weights = np.exp(-1.8*np.linspace(0,1,len(tails))); weights /= weights.sum()
+        tail = {}
+        for i,name in enumerate(tails):
+            fraction = i/max(1,len(tails)-1)
+            delayed = (query-cycle.policy['tail_propagation_step_fraction']*cycle.step*fraction) % (2*cycle.step)
+            response = sample_periodic_response(times,drive,tau[0]+(tau[1]-tau[0])*fraction,delayed)
+            tail[name] = cycle.policy['tail_response_degrees']*weights[i]*response
+    else:
+        tail = {name:cycle.policy['tail_response_degrees']*weights[i]*lag(drive,tau[1]*(1+.6*i/max(1,len(tails)-1))) for i,name in enumerate(tails)}
     binding = sha256_json(cycle.policy)
     samples = []
     for i,row in enumerate(plan['samples']):

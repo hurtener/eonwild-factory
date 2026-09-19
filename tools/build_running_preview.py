@@ -103,6 +103,6 @@ def main():
     drift[s]=material_patch_drift(p[s],refs[s],c.up)
    else:refs[s]=None
   measured.append({'time_s':t,'floor_gap_m':{s:float((v@c.up).min()-skin.ground) for s,v in p.items()},'contact_drift':drift})
- receipt={'checkpoint':30 if cycle else 29,'status':'RUNNING_DIAGNOSTIC','visual':'PENDING','production':False,'source_sha256':hashlib.sha256(source.raw).hexdigest(),'emitted_sha256':hashlib.sha256(payload).hexdigest(),'profile_sha256':hashlib.sha256(a.profile.read_bytes()).hexdigest(),'recipe':recipe,'motion_set':str(a.motion_set),'plan':plan,'checks':checks,'reopened':measured,'limits':'Authored body response and sampled patch-centroid/floor correction; no force balance or arbitrary terrain certification.'}
+ receipt={'checkpoint':recipe.get('checkpoint',30 if cycle else 29),'status':'RUNNING_DIAGNOSTIC','visual':'PENDING','production':False,'source_sha256':hashlib.sha256(source.raw).hexdigest(),'emitted_sha256':hashlib.sha256(payload).hexdigest(),'profile_sha256':hashlib.sha256(a.profile.read_bytes()).hexdigest(),'recipe':recipe,'motion_set':str(a.motion_set),'plan':plan,'checks':checks,'reopened':measured,'limits':'Authored body response and sampled patch-centroid/floor correction; no force balance or arbitrary terrain certification.'}
  (out/'running.json').write_text(json.dumps(receipt,indent=2));(out/'source-animal.profile.json').write_bytes(a.profile.read_bytes());print('EMITTED',out,flush=True)
 if __name__=='__main__':main()

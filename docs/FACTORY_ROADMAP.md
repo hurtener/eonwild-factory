@@ -669,3 +669,24 @@ Mass cancels for the normalized vertical load; it does not introduce an agility
 ranking. Entry, braking, running turns, sprinting and impacts remain separate
 checkpoints after this cycle is reviewed. Principal evidence:
 game/Evidence/running-support-study/. Pause for user feedback.
+
+### Propulsion and tail correction — checkpoint 31
+
+Checkpoint 30 B was not approved. The user found a rigid tail/base, walking-like
+steps with added flight, unconvincing lower-leg motion and turnout distortion.
+The next candidate is C of checkpoint 31, still awaiting visual review.
+
+The shared running planner now integrates a rounded support impulse, with a
+stronger loading/drive contrast. Running owns continuous knee/ankle preferences
+through compression, drive, release and recovery. The articulated solve uses a
+common admitted heading for the knee plane, hock and foot; it retains the source
+ankle hinge branch and discourages inverted running hock attitudes. Two early
+internal candidates exposed conflicting joint preferences; they are not offered
+for approval. Tail response now reaches the base and propagates with delay along
+the semantic chain. Profile speed/stride and hard articulation limits are kept.
+
+Recipe: catalog/behaviors/running-review.v3.json. Both rigs were emitted/reopened;
+39 focused tests pass. Candidate C has no sampled reach excess or reported joint-
+envelope violation. Native side/front-quarter evidence is in principal Eonwild
+game/Evidence/running-propulsion-study/. This remains a reduced prescribed-load
+animation model, not a muscle/force simulation. Pause at this visual checkpoint.

@@ -8,10 +8,11 @@ from eonwild_motion.planning.running_support import RunningSupportCycle
 
 ROOT = Path(__file__).resolve().parents[1]
 
-@pytest.fixture(params=['allo','tarbo'])
+@pytest.fixture(params=[(a,v) for a in ['allo','tarbo'] for v in [2,3]])
 def cycle(request):
-    recipe = json.loads((ROOT/'catalog/behaviors/running-review.v2.json').read_text())
-    profile = json.loads((ROOT/f'catalog/embodiment/{request.param}.v1.json').read_text())
+    animal, version = request.param
+    recipe = json.loads((ROOT/f'catalog/behaviors/running-review.v{version}.json').read_text())
+    profile = json.loads((ROOT/f'catalog/embodiment/{animal}.v1.json').read_text())
     return RunningSupportCycle(resolve_running(profile,recipe),profile['authoring']['bodyHeightM'],recipe['coordination'])
 
 def test_support_impulse_balances_gravity_and_has_a_real_flight(cycle):

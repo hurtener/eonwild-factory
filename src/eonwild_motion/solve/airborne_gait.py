@@ -1039,9 +1039,12 @@ def solve_airborne_plan_sample(
             reach = sum(np.linalg.norm(b - a) for a, b in zip(points, points[1:]))
             toe_geometry.append((points[0] - fp, np.asarray(_world_position(base_w[digit[-1]])) + nominal_foot - np.asarray(_world_position(base_w[foot])), reach - 1e-7))
 
+        leg_heading = foot_plan.get('leg_heading_degrees')
+        if leg_heading is not None and (isinstance(leg_heading, bool) or not isinstance(leg_heading, (int,float)) or not math.isfinite(leg_heading) or not 0 <= leg_heading <= 15):
+            raise ContractError('invalid coordinated leg heading')
         outward_yaw = _qrotvec(tuple(
             up * math.copysign(
-                math.radians(context.foot_outward_yaw_degrees),
+                math.radians(context.foot_outward_yaw_degrees if leg_heading is None else leg_heading),
                 hip_offsets[side],
             )
         ))
@@ -1096,7 +1099,7 @@ def solve_airborne_plan_sample(
             stance_roll_degrees = authored_release
 
         def pitch_candidate(degrees, world_metatarsus_target=None):
-            candidate_q = _qmul(foot_yaw_q,_qrotvec(tuple(lateral * math.radians(degrees))))
+            candidate_q = _qmul(foot_yaw_q if leg_heading is None else outward_yaw,_qrotvec(tuple(lateral * math.radians(degrees))))
             if (material_partition and stance_roll_degrees is not None
                     and abs(stance_roll_degrees) > 0.0):
                 carried_pitch = _qrotvec(tuple(
@@ -1127,6 +1130,10 @@ def solve_airborne_plan_sample(
                 outward,
                 context.knee_bend_plane_outward_degrees,
             )
+            if leg_heading is not None:
+                # One heading for knee bend plane, metatarsus and foot. Avoid
+                # swivelling the pole about the moving hip-to-ankle ray.
+                bend_normal = np.asarray(_qrotate(outward_yaw, tuple(anatomical_normals[side])))
             if 'turn_support_normal' in foot_plan:
                 fixed_normal=np.asarray(foot_plan['turn_support_normal'],dtype=float)
                 if fixed_normal.shape!=(3,) or not np.isfinite(fixed_normal).all() or np.linalg.norm(fixed_normal)<1e-8:
@@ -1161,6 +1168,16 @@ def solve_airborne_plan_sample(
                     scale = max(1.0, envelope.preferred_max_deg - envelope.preferred_min_deg)
                     preferred += departure ** 4 / (scale * scale)
             errors = [max(0, -slack) for slack in slacks]
+            if leg_heading is not None:
+                # Interior angles alone admit a reflected ankle with the hock
+                # on the other side of the shin. Preserve the admitted hinge
+                # branch as running asks for stronger joint opening.
+                base_hinge = np.cross(
+                    np.asarray(_world_position(base_w[knee]))-np.asarray(_world_position(base_w[ankle])),
+                    np.asarray(_world_position(base_w[foot]))-np.asarray(_world_position(base_w[ankle])))
+                desired_hinge = np.cross(candidate_knee-candidate_end,candidate_foot-candidate_end)
+                alignment = float(_unit(desired_hinge) @ np.asarray(_qrotate(outward_yaw,tuple(_unit(base_hinge)))))
+                errors.append(max(0.,-alignment)*(180-ankle_angle))
             recovery = 0.0 if foot_plan["contact"] else float(foot_plan.get("recovery_shape", math.sin(math.pi * u) ** 2))
             if not math.isfinite(recovery) or not 0 <= recovery <= 1.000001:
                 raise ContractError("invalid coordinated recovery shape")
@@ -1192,6 +1209,19 @@ def solve_airborne_plan_sample(
                 pitch_cost = ((1 - world_metatarsus_gain) * authored_pitch_cost
                               + world_metatarsus_gain * world_cost)
             score = pitch_cost + recovery * (hip_angle - hip_target) ** 2 + preferred_gain * gait.articulation_preferred_margin_weight * preferred + 1e5 * sum(e * e for e in errors) + 1e8 * extension * extension
+            running_shape = foot_plan.get('running_leg_shape')
+            if running_shape is not None:
+                knee_preference = float(running_shape['knee_interior_degrees'])
+                ankle_preference = float(running_shape['ankle_interior_degrees'])
+                if not (0 < knee_preference < 180 and 0 < ankle_preference < 180):
+                    raise ContractError('invalid running leg shape preference')
+                # Soft coordinated preferences; contact, bone lengths and
+                # admitted hard articulation limits retain authority.
+                score = (pitch_cost + (knee_angle-knee_preference)**2
+                         + 2*(ankle_angle-ankle_preference)**2
+                         + 1000*max(0.,-metatarsus_world_degrees-5.)**2
+                         + preferred_gain*gait.articulation_preferred_margin_weight*preferred
+                         + 1e5*sum(e*e for e in errors) + 1e8*extension*extension)
             extension_preference = foot_plan.get("walking_knee_preference_degrees")
             if extension_preference is not None:
                 if (isinstance(extension_preference, bool)
