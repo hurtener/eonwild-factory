@@ -1,12 +1,12 @@
 # Factory movement roadmap and acceptance tracker
 
-Updated 2026-09-15. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
+Updated 2026-09-19. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
 
 
 ## Current animation inventory
 
 Checkpoint 27 retained-braking-support stops are approved for both animals.
-Latest visual approval is checkpoint 28. **Approved means visually accepted
+Latest full checkpoint approval is checkpoint 28. Checkpoint 32 is the user-selected running base; checkpoint 33 body response is pending review. **Approved means visually accepted
 in the reviewed clips**, not fully certified for arbitrary gameplay. Unless a row
 says otherwise, both admitted animals use the same shared engine with profile data.
 Historical sections and capture-time receipts below retain earlier review states.
@@ -34,7 +34,7 @@ Checkpoint 26 is the approved walking side-hit recovery baseline; standing impac
 | Arm carriage and secondary motion | Full-transition pass approved | Full-transition pass approved | Behavior-specific overrides for attacks, rest and interaction |
 | Jaw relaxation / breathing-like cycle | Full-transition pass approved | Full-transition pass approved | Full-body breathing and behavior-specific mouth control |
 | Expressive idle / listening / alert scanning | No complete approved family | No complete approved family | Compose meaningful attention, posture and breathing behaviors from existing layers |
-| Running / sprinting | Sustained run candidate, checkpoint 32; sprint missing | Sustained run candidate, checkpoint 32; historical Run010 / Sprint006 preserved | Transfer and review through current shared engine on both animals |
+| Running / sprinting | Sustained run candidate, checkpoint 33; sprint missing | Sustained run candidate, checkpoint 33; historical Run010 / Sprint006 preserved | Transfer and review through current shared engine on both animals |
 | Feeding / gripping / pulling | Current approved transfer missing | Historical Feeding003 reference preserved | Current grounded support, oral contact and interaction handoff |
 | Drinking / swallowing | Missing | Missing | New choreography and world interaction |
 | Rest / sit / lie down / rise / sleep | Missing | Missing | New support transitions and resting behavior |
@@ -720,3 +720,32 @@ Checkpoint 32 C capture completed: both native-time videos contain 216 frames
 sheets. The 47 focused checks and Unity build pass; both final source rigs are
 reopened with zero sampled reach excess/reported articulation violation.
 Visual approval, full material contact and force certification remain pending.
+
+
+## Current checkpoint — 33 A: responsive running trunk and tail, pending review
+
+The user selected checkpoint 32 as the improved base, requesting more body/tail
+response, lateral motion and life through the chest immediately before the neck.
+This accepts the direction for refinement, not production running certification.
+Checkpoint 32 source, recipe and media remain preserved.
+
+Shared recipe `running-review.v5.json` retains the complete checkpoint 32 leg
+cycle. It distributes loading pitch through the semantic spine/chest chain,
+adds support-driven roll/yaw, partial neck/head stabilization, a subtle authored
+breathing-like thoracic pitch, and delayed lateral tail curvature. Tail pitch
+retains two non-resonant lag stages with greater distributed response. The motion
+is authored from support and profile response times, not solved muscle forces or
+measured respiratory biomechanics. All body changes precede contact solving.
+
+Both source rigs were generated and reopened. Their emitted leg joint positions
+are identical to checkpoint 32 at every source key. No reported reach or admitted
+articulation violations occur. Fifty-nine focused checks, the native Unity build,
+four captures and complete MP4 decoding pass. All 432 captured frames were
+inspected in chronological sheets. Source-key contact diagnostics remain separate
+from full material-contact, interpolation and articulated-force acceptance.
+
+Evidence: principal Eonwild `game/Evidence/running-body-response-study/`.
+Each native-time video has six seconds side view and three seconds front quarter.
+The cut joins separate views; it is not an animation handoff. Pause for feedback
+on torso flexibility and tail follow-through. Sustained running remains under
+review; reconnecting entry/braking, sprinting and airborne impacts are later work.

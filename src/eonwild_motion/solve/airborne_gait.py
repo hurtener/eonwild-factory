@@ -469,6 +469,16 @@ def _require_body_response_sample(sample: Any) -> Mapping[str, Any] | None:
             raise ContractError("body response node name must be a nonempty string")
         if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
             raise ContractError("body response node degrees must be finite numeric")
+    axial = sample.get("node_roll_yaw_degrees", {})
+    if not isinstance(axial, Mapping):
+        raise ContractError("body response axial node degrees must be a mapping")
+    for name, value in axial.items():
+        if not isinstance(name, str) or not name:
+            raise ContractError("body response axial node name must be nonempty")
+        if (not isinstance(value, (list, tuple)) or len(value) != 2
+                or any(isinstance(v, bool) or not isinstance(v, (int, float))
+                       or not math.isfinite(v) for v in value)):
+            raise ContractError("body response node roll/yaw must be two finite degrees")
     control = sample.get("body_support_control")
     if control is not None:
         if not isinstance(control, Mapping) or set(control) != {
@@ -822,6 +832,18 @@ def _prepare_body_pose(
     apply_performance(
         source, tr, rot, base_s, base_w, roles, context.plan, row, up, forward
     )
+    if body_response_sample is not None:
+        # Compose after neutral tail centering so it cannot erase regional
+        # curvature. These are admitted rest-frame axes, before contact solve.
+        body_names = set(roles.get("spine", [])) | set(roles.get("neck", [])) | set(roles.get("tail", []))
+        body_names.update(roles[key] for key in ("chest", "head") if key in roles)
+        for name, (roll, yaw) in body_response_sample.get("node_roll_yaw_degrees", {}).items():
+            if name not in body_names or name not in source.name_to_node:
+                raise ContractError("axial body response requires an admitted body role")
+            node = source.name_to_node[name]
+            world_vector = forward * math.radians(roll) + up * math.radians(yaw)
+            local_vector = _qrotate(_qinv(_rotation_from_matrix(base_w[node])), tuple(world_vector))
+            rot[node] = _qmul(rot[node], _qrotvec(local_vector))
     if body_response_sample is not None and body_response_sample.get("turn_attention") is not None:
         from .turn_attention import apply_turn_attention
         attention = body_response_sample["turn_attention"]

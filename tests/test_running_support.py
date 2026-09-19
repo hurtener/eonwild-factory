@@ -8,7 +8,7 @@ from eonwild_motion.planning.running_support import RunningSupportCycle
 
 ROOT = Path(__file__).resolve().parents[1]
 
-@pytest.fixture(params=[(a,v) for a in ['allo','tarbo'] for v in [2,3,4]])
+@pytest.fixture(params=[(a,v) for a in ['allo','tarbo'] for v in [2,3,4,5]])
 def cycle(request):
     animal, version = request.param
     recipe = json.loads((ROOT/f'catalog/behaviors/running-review.v{version}.json').read_text())
@@ -100,3 +100,39 @@ def test_damped_tail_has_quieter_base_and_periodic_curvature():
             results.append(angles)
         assert np.ptp(results[1][:,0])<.2*np.ptp(results[0][:,0])
         assert np.ptp(results[1][:,-1])>.1
+
+
+@pytest.mark.parametrize('animal', ['allo', 'tarbo'])
+def test_regional_body_response_preserves_leg_cycle_and_loop_seam(animal):
+    from eonwild_motion.planning.running_support import support_body_response
+    profile=json.loads((ROOT/f'catalog/embodiment/{animal}.v1.json').read_text())
+    cycles=[]
+    for version in (4,5):
+        recipe=json.loads((ROOT/f'catalog/behaviors/running-review.v{version}.json').read_text())
+        cycles.append(RunningSupportCycle(resolve_running(profile,recipe),profile['authoring']['bodyHeightM'],recipe['coordination']))
+    before,after=cycles
+    for t in np.linspace(0,4*after.step,501):
+        assert before.sample(t)==after.sample(t)
+    roles={'spine':['lumbar','thoracic'],'chest':'chest','neck':['neck'],
+           'head':'head','tail':['base','middle','tip']}
+    # Sample on both sides of the loop seam to catch resets hidden by matching
+    # endpoint values alone. A response must retain velocity through the seam.
+    eps=1e-4; period=2*after.step
+    query=[period-eps,period,period+eps]+list(np.linspace(0,period,241))
+    plan={'samples':[after.sample(t) for t in query]}
+    rows=support_body_response(after,plan,roles,profile,{'left':-1,'right':1})
+    for key in ('sagittal_node_degrees','node_roll_yaw_degrees'):
+        for name in rows[0][key]:
+            values=np.array([r[key][name] for r in rows])
+            assert np.max(np.abs(values[3]-values[-1]))<1e-8
+            assert np.max(np.abs((values[2]-values[1])-(values[1]-values[0])))/eps<.1
+    for name in roles['spine']+[roles['chest']]+roles['tail']:
+        assert np.ptp([r['node_roll_yaw_degrees'][name][1] for r in rows[3:]])>.1
+
+
+@pytest.mark.parametrize('value', [[float('nan'),0], [True,0], [1], 'yaw'])
+def test_regional_axial_sample_rejects_invalid_rotation(value):
+    from eonwild_motion.solve.airborne_gait import _require_body_response_sample
+    from eonwild_motion.errors import ContractError
+    with pytest.raises(ContractError):
+        _require_body_response_sample({'sagittal_node_degrees':{},'node_roll_yaw_degrees':{'chest':value}})

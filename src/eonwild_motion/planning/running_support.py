@@ -41,6 +41,19 @@ class RunningSupportCycle:
                 if (isinstance(value, bool) or not isinstance(value, (int, float))
                         or not math.isfinite(value) or not low <= value <= high):
                     raise ValueError('Invalid running tail policy: '+key)
+        regional = policy.get('regional_body_response')
+        if regional is not None:
+            bounds = {'trunk_yaw_degrees': (0., 12.), 'trunk_roll_degrees': (0., 8.),
+                      'breathing_pitch_degrees': (0., 2.), 'tail_yaw_degrees': (0., 30.),
+                      'trunk_propagation_step_fraction': (0., .3),
+                      'tail_base_weight': (.15, 1.), 'tail_response_time_scale': (.3, 1.)}
+            if not isinstance(regional, dict) or set(regional) != set(bounds):
+                raise ValueError('Invalid regional running response schema')
+            for key, (low, high) in bounds.items():
+                value = regional[key]
+                if (isinstance(value, bool) or not isinstance(value, (int, float))
+                        or not math.isfinite(value) or not low <= value <= high):
+                    raise ValueError('Invalid regional running response: '+key)
         # Reference height is a standing-relative authoring choice. All changing
         # vertical motion comes from the integrated support schedule below.
         low = self.vertical(self.contact * .5, offset=False)[0]
@@ -202,14 +215,15 @@ def support_body_response(cycle, plan, roles, profile, hip_offsets):
         base_response = sample_periodic_response(times,base_response,
             cycle.policy['tail_damping_step_fraction']*cycle.step,times)
         fractions = np.linspace(0,1,len(tails))
-        weights = .15+np.sin(.5*math.pi*fractions)**2
+        regional = cycle.policy.get('regional_body_response', {})
+        weights = regional.get('tail_base_weight', .15)+np.sin(.5*math.pi*fractions)**2
         weights /= weights.sum()
         tail = {}
         for i,name in enumerate(tails):
             fraction = fractions[i]
             delayed = (query-cycle.policy['tail_propagation_step_fraction']*cycle.step*fraction) % (2*cycle.step)
             response = sample_periodic_response(times,base_response,
-                tau[1]*(1+fraction),delayed)
+                tau[1]*(1+fraction)*regional.get('tail_response_time_scale', 1.),delayed)
             tail[name] = cycle.policy['tail_response_degrees']*weights[i]*response
     elif cycle.policy.get('tail_propagation_step_fraction') is not None:
         # Responsive heavy base with delayed curvature along the chain.
@@ -223,15 +237,56 @@ def support_body_response(cycle, plan, roles, profile, hip_offsets):
             tail[name] = cycle.policy['tail_response_degrees']*weights[i]*response
     else:
         tail = {name:cycle.policy['tail_response_degrees']*weights[i]*lag(drive,tau[1]*(1+.6*i/max(1,len(tails)-1))) for i,name in enumerate(tails)}
+    regional_pitch, regional_axial = {}, {}
+    regional = cycle.policy.get('regional_body_response')
+    if regional is not None:
+        # The trunk bends through the spine into the shoulders. Alternating
+        # support drives roll and yaw; vertical load drives pitch. No event
+        # resets or extra leg motion. Breath is an authored effort cue.
+        trunk = list(roles.get('spine', [])) + [roles['chest']]
+        if len(trunk) < 2 or len(set(trunk)) != len(trunk):
+            raise ValueError('Regional running response needs a unique spine/chest chain')
+        alternating = sample_periodic_response(times, balance, tau[2], times)
+        alternating = sample_periodic_response(times, alternating, .1*cycle.step, times)
+        breathing = np.sin(math.pi*times/cycle.step-.65)
+        fractions = np.linspace(0., 1., len(trunk))
+        weights = np.linspace(.6, 1.4, len(trunk)); weights /= weights.sum()
+        trunk_pitch = np.zeros(len(query)); trunk_roll = np.zeros(len(query)); trunk_yaw = np.zeros(len(query))
+        for name, fraction, weight in zip(trunk, fractions, weights):
+            delayed = (query-regional['trunk_propagation_step_fraction']*cycle.step*fraction) % (2*cycle.step)
+            pitch = -cycle.policy['chest_response_degrees']*sample_periodic_response(times, drive, tau[1], delayed)
+            pitch += regional['breathing_pitch_degrees']*sample_periodic_response(times, breathing, tau[1], delayed)
+            side = sample_periodic_response(times, alternating, .035*cycle.step, delayed)
+            regional_pitch[name] = weight*pitch
+            regional_axial[name] = (weight*regional['trunk_roll_degrees']*side, weight*regional['trunk_yaw_degrees']*side)
+            trunk_pitch += regional_pitch[name]
+            trunk_roll += regional_axial[name][0]; trunk_yaw += regional_axial[name][1]
+        # Partial stabilization retains follow-through at the neck root and
+        # leaves the head riding the body instead of pinning it in space.
+        for name in roles.get('neck', []):
+            regional_pitch[name] = -.5*trunk_pitch/len(roles['neck'])
+            regional_axial[name] = (-.5*trunk_roll/len(roles['neck']), -.55*trunk_yaw/len(roles['neck']))
+        regional_pitch[roles['head']] = -.15*trunk_pitch
+        regional_axial[roles['head']] = (-.15*trunk_roll, -.15*trunk_yaw)
+        tail_weights = .6+np.sin(.5*math.pi*np.linspace(0.,1.,len(tails)))**2
+        tail_weights /= tail_weights.sum()
+        for i, name in enumerate(tails):
+            fraction = i/max(1,len(tails)-1)
+            delayed = (query-cycle.policy['tail_propagation_step_fraction']*cycle.step*fraction) % (2*cycle.step)
+            side = sample_periodic_response(times, alternating, tau[1]*(.5+fraction), delayed)
+            regional_axial[name] = (np.zeros(len(query)), -regional['tail_yaw_degrees']*tail_weights[i]*side)
     binding = sha256_json(cycle.policy)
     samples = []
     for i,row in enumerate(plan['samples']):
         angles = {roles['chest']:float(chest[i]),roles['head']:float(head[i])}
         angles.update({name:float(neck[i]/len(roles['neck'])) for name in roles.get('neck',[])})
         angles.update({name:float(values[i]) for name,values in tail.items()})
+        angles.update({name:float(values[i]) for name,values in regional_pitch.items()})
         samples.append(dict(time_s=row['time_s'],support_count=row['support_count'],
             sagittal_node_degrees=angles,body_support_control=dict(
                 policy_id='periodic_body_support_control.v1',
                 binding_sha256=binding,translation_forward_up_lateral_m=[0.,0.,float(lateral[i])],
                 rotation_pitch_roll_yaw_radians=[0.,float(roll[i]),0.])))
+        if regional is not None:
+            samples[-1]['node_roll_yaw_degrees'] = {name:[float(r[i]),float(y[i])] for name,(r,y) in regional_axial.items()}
     return samples

@@ -52,6 +52,7 @@ def main():
  from build_walk_sequence_preview import plain
  perf['neutral_jaw_calibration']=plain(dict(c.plan['performance']).get('neutral_jaw_calibration'))
  if cycle:perf.update(pelvis_sway_body_heights=0.,pelvis_roll_degrees=0.,pelvis_yaw_degrees=0.,tail_yaw_degrees=2.)
+ if cycle and cycle.policy.get('regional_body_response'):perf['tail_yaw_degrees']=0.
  plan['performance']=perf
  context=replace(c,gait=gait,plan=plan,legacy_overlay=False)
  response=support_body_response(cycle,plan,c.roles,profile,c.hip_offsets) if cycle else driven_body_response(gait,plan,c.roles)['samples']
