@@ -642,3 +642,29 @@ The current straight pass does not claim running reversals, hit-to-run, physical
 braking forces, terrain or final material-contact certification. Approved walking,
 turning and historical Run010/Sprint006 remain unchanged. Principal evidence is
 `game/Evidence/running-study/`; stop for review before more choreography.
+
+### Sustained running coordination — checkpoint 30
+
+The user identifies the stumble as the most credible current motion and asks to
+rebuild sustained running using its continuous support/response principles.
+Running support now owns a smooth prescribed load pulse. Its integral supplies
+vertical velocity and body-proxy displacement; each flight interval has zero
+support and constant downward acceleration. Bounded horizontal speed yielding,
+hip recovery preference, toe/heel release and regional lag follow that cycle.
+The canonical impact response times are reused for regional compliance. Profile
+speed/stride, admitted geometry and approved walking/impact assets are preserved.
+
+The first internal candidate brought the swing foot forward too early and
+straightened Tarbosaurus's knee. Using the shared smooth velocity transport
+retains travel into the catch; reopened B maximum knee interior angles are
+152.9 degrees Allosaurus and 157.3 Tarbosaurus. These are rig diagnostics.
+Thirty-three focused checks pass. Both source GLBs were generated and reopened;
+Unity native-time side and front-quarter review is the next gate.
+
+Recipe: catalog/behaviors/running-review.v2.json. Shared planner:
+src/eonwild_motion/planning/running_support.py. This is prescribed reduced
+vertical support, not articulated inverse dynamics or reconstructed muscle force.
+Mass cancels for the normalized vertical load; it does not introduce an agility
+ranking. Entry, braking, running turns, sprinting and impacts remain separate
+checkpoints after this cycle is reviewed. Principal evidence:
+game/Evidence/running-support-study/. Pause for user feedback.

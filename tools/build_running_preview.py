@@ -39,16 +39,22 @@ def main():
  q=captured['query'];c=q.context;source=captured['kwargs']['source'];provider=captured['provider'];profile=json.loads(a.profile.read_text());recipe=json.loads(a.recipe.read_text())
  if not math.isclose(profile['authoring']['bodyHeightM'],c.body_height,rel_tol=1e-6):raise ValueError('Profile height mismatch')
  if hashlib.sha256(source.raw).hexdigest()!=profile['authoring']['animalInstance']['geometry_calibration']['source_geometry_sha256']:raise ValueError('Profile geometry mismatch')
- gait=resolve_running(profile,recipe);plan=build_running_review_plan(gait,c.body_height,profile['locomotion']['walk']['preferredSpeed']['value'])
+ gait=resolve_running(profile,recipe)
+ cycle=None
+ if recipe.get('coordination'):
+  from eonwild_motion.planning.running_support import RunningSupportCycle,support_body_response
+  cycle=RunningSupportCycle(gait,c.body_height,recipe['coordination']);plan=cycle.plan()
+ else:plan=build_running_review_plan(gait,c.body_height,profile['locomotion']['walk']['preferredSpeed']['value'])
  times=[r['time_s'] for r in plan['samples']]
  # Preserve neutral jaw and centered-tail admissions; gait-specific body phase
  # uses a restrained continuous carrier instead of walking support timing.
  perf=asdict(Performance(lane_width_body_heights=c.plan['performance']['lane_width_body_heights'],pelvis_sway_body_heights=.006,pelvis_roll_degrees=.7,pelvis_yaw_degrees=1.2,tail_yaw_degrees=6,gaze_elevation_degrees=0,center_lanes_on_bilateral_hip_midpoint=True))
  from build_walk_sequence_preview import plain
  perf['neutral_jaw_calibration']=plain(dict(c.plan['performance']).get('neutral_jaw_calibration'))
+ if cycle:perf.update(pelvis_sway_body_heights=0.,pelvis_roll_degrees=0.,pelvis_yaw_degrees=0.,tail_yaw_degrees=2.)
  plan['performance']=perf
  context=replace(c,gait=gait,plan=plan,legacy_overlay=False)
- response=driven_body_response(gait,plan,c.roles)['samples']
+ response=support_body_response(cycle,plan,c.roles,profile,c.hip_offsets) if cycle else driven_body_response(gait,plan,c.roles)['samples']
  skin=SkinRig(source,c.roles,c.forward,c.up,captured['kwargs']['contact_profile']);ids={s:np.asarray(provider.anchor_for(s).material_vertex_indices) for s in c.legs}
  refs={s:None for s in c.legs};release={s:np.zeros(3) for s in c.legs};poses=[];checks=[]
  print('RUN_SOURCE',len(times),'samples',gait.step_period_s,'seconds per step',flush=True)
@@ -97,6 +103,6 @@ def main():
     drift[s]=material_patch_drift(p[s],refs[s],c.up)
    else:refs[s]=None
   measured.append({'time_s':t,'floor_gap_m':{s:float((v@c.up).min()-skin.ground) for s,v in p.items()},'contact_drift':drift})
- receipt={'checkpoint':29,'status':'RUNNING_DIAGNOSTIC','visual':'PENDING','production':False,'source_sha256':hashlib.sha256(source.raw).hexdigest(),'emitted_sha256':hashlib.sha256(payload).hexdigest(),'profile_sha256':hashlib.sha256(a.profile.read_bytes()).hexdigest(),'recipe':recipe,'motion_set':str(a.motion_set),'plan':plan,'checks':checks,'reopened':measured,'limits':'Authored body response and sampled patch-centroid/floor correction; no force balance or arbitrary terrain certification.'}
+ receipt={'checkpoint':30 if cycle else 29,'status':'RUNNING_DIAGNOSTIC','visual':'PENDING','production':False,'source_sha256':hashlib.sha256(source.raw).hexdigest(),'emitted_sha256':hashlib.sha256(payload).hexdigest(),'profile_sha256':hashlib.sha256(a.profile.read_bytes()).hexdigest(),'recipe':recipe,'motion_set':str(a.motion_set),'plan':plan,'checks':checks,'reopened':measured,'limits':'Authored body response and sampled patch-centroid/floor correction; no force balance or arbitrary terrain certification.'}
  (out/'running.json').write_text(json.dumps(receipt,indent=2));(out/'source-animal.profile.json').write_bytes(a.profile.read_bytes());print('EMITTED',out,flush=True)
 if __name__=='__main__':main()

@@ -1161,7 +1161,9 @@ def solve_airborne_plan_sample(
                     scale = max(1.0, envelope.preferred_max_deg - envelope.preferred_min_deg)
                     preferred += departure ** 4 / (scale * scale)
             errors = [max(0, -slack) for slack in slacks]
-            recovery = 0.0 if foot_plan["contact"] else math.sin(math.pi * u) ** 2
+            recovery = 0.0 if foot_plan["contact"] else float(foot_plan.get("recovery_shape", math.sin(math.pi * u) ** 2))
+            if not math.isfinite(recovery) or not 0 <= recovery <= 1.000001:
+                raise ContractError("invalid coordinated recovery shape")
             hip_target = gait.swing_hip_lift_degrees * recovery * foot_plan.get("articulation_scale", 1.)
             # A C2 preferred-region penalty anticipates the hard corner
             # before ankle/knee limits become active. It coordinates the

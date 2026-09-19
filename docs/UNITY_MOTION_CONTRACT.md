@@ -115,3 +115,10 @@ adopts current pose/velocity; it no longer feeds running recovery into a slow
 walking stop. The loaded catch opens into its own foot attitude as offsets decay.
 These new corrected consumer poses need their own visual/contact review. Rapid
 running direction changes and arbitrary airborne interruption remain open.
+
+Checkpoint 30 isolates sustained running from entry and braking. Running30 imports
+new immutable source clips while retaining Running29 and Connected28. The review
+flag -sustained-run starts directly in the chosen cycle; this is a diagnostic
+initialization, not evidence of an arbitrary game-state handoff. -front-quarter
+provides the second view. Standard connected controls and their existing
+adoption tests remain unchanged. Runtime/source contact receipts remain distinct.
