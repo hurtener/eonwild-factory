@@ -6,7 +6,7 @@ Updated 2026-09-19. This is a living evidence tracker, not a fixed plan inherite
 ## Current animation inventory
 
 Checkpoint 27 retained-braking-support stops are approved for both animals.
-Latest full checkpoint approval is checkpoint 28. Checkpoint 32 is the user-selected running base; checkpoint 34 has changes requested; checkpoint 35 is the coordinated propulsion, tail-loop and posture candidate awaiting review. **Approved means visually accepted
+Latest full checkpoint approval is checkpoint 28. Checkpoint 32 is the user-selected running base; checkpoint 34 has changes requested; checkpoint 35 has changes requested; checkpoint 36 is the quieter-gaze and leg-recovery candidate awaiting review. **Approved means visually accepted
 in the reviewed clips**, not fully certified for arbitrary gameplay. Unless a row
 says otherwise, both admitted animals use the same shared engine with profile data.
 Historical sections and capture-time receipts below retain earlier review states.
@@ -34,7 +34,7 @@ Checkpoint 26 is the approved walking side-hit recovery baseline; standing impac
 | Arm carriage and secondary motion | Full-transition pass approved | Full-transition pass approved | Behavior-specific overrides for attacks, rest and interaction |
 | Jaw relaxation / breathing-like cycle | Full-transition pass approved | Full-transition pass approved | Full-body breathing and behavior-specific mouth control |
 | Expressive idle / listening / alert scanning | No complete approved family | No complete approved family | Compose meaningful attention, posture and breathing behaviors from existing layers |
-| Running / sprinting | Sustained run candidate, checkpoint 35; pending review; sprint missing | Sustained run candidate, checkpoint 35; pending review; historical Run010 / Sprint006 preserved | Review propulsion, recovery, tail loops and posture; then entry/braking and sprinting |
+| Running / sprinting | Sustained run candidate, checkpoint 36; pending review; sprint missing | Sustained run candidate, checkpoint 36; pending review; historical Run010 / Sprint006 preserved | Review release smoothness and retained tail/body motion; then entry/braking and sprinting |
 | Feeding / gripping / pulling | Current approved transfer missing | Historical Feeding003 reference preserved | Current grounded support, oral contact and interaction handoff |
 | Drinking / swallowing | Missing | Missing | New choreography and world interaction |
 | Rest / sit / lie down / rise / sleep | Missing | Missing | New support transitions and resting behavior |
@@ -790,7 +790,7 @@ Full contact/force certification, run entry/braking, sprinting and airborne
 impacts remain open. Existing approved movement remains preserved.
 
 
-## Current checkpoint — 35 A: propulsive running and pelvis-led tail loops, pending review
+## Previous checkpoint — 35 A: propulsive running and pelvis-led tail loops, changes requested
 
 Shared recipe `running-review.v7.json` combines a closer landing placement with
 more rearward drive, stronger toe-off, and foot flexion retained through the
@@ -819,6 +819,45 @@ Evidence: principal Eonwild `game/Evidence/propulsive-loop-running-study/`,
 including source receipts, recipe, hashes, full-frame sheets and actual tail-path
 graph/data. Earlier approved connected clips and segments remain byte-identical.
 The videos show six seconds from the side plus a separate three-second front
-quarter view. Candidate 35 A is pending user review; checkpoint 34 retains changes
+quarter view. Candidate 35 A has user changes requested; checkpoint 34 retains changes
 requested. Full material contact/force certification, run entry/braking,
 sprinting and airborne impacts remain open. Pause for user feedback here.
+
+
+## Current checkpoint — 36 D: quieter gaze and cleaner leg recovery, pending review
+
+The user liked C35's direction and requested less head yaw while retaining the
+pelvis/tail momentum, plus cleanup of repeated leg reversals. C35 now has changes
+requested. Shared recipe `running-review.v8.json` and the opt-in solver refinement
+apply identically to both animals; canonical species profiles are unchanged.
+
+The pitch search previously missed a narrow feasible interval between coarse
+grid points and selected a distant ankle configuration. Refining each coarse
+objective valley under the same hard constraints removes the large Tarbosaurus
+ankle switches. Forward swing transport starts earlier, with no initial backward
+free-foot loop. Less extreme gathered pad/knee/ankle preferences avoid crowding
+the articulation boundary. Running stride, speed, flight, rear release geometry,
+Tarbosaurus's raised carriage, and the pelvis/proximal-tail law are preserved.
+
+Measured emitted head-yaw excursion falls from 11.95 to 1.22 degrees in Allosaurus
+and 12.96 to 1.63 degrees in Tarbosaurus. The fourth tail point relative to its
+base matches C35 exactly at the sampled source keys. Tarbosaurus's largest
+adjacent ankle change falls from about 61 to 13 degrees; its former 18.3 mm
+flight reach shortfall is gone. Both source receipts report zero reach excess
+and zero admitted articulation violation. These are source-key diagnostics,
+not a full velocity, material-contact or articulated-force certificate.
+
+Remaining polish is explicit: release/folding still has sharpness. Peak adjacent
+knee changes do not uniformly improve (Tarbosaurus right 24.39 to 25.68 degrees;
+Allosaurus left 13.71 to 18.47 degrees). Do not describe this as all artifacts
+resolved. See the complete bilateral measurements and actual emitted-motion plot.
+
+Eighty-four focused checks pass. The native Unity build and four captures pass;
+both nine-second videos decode completely. All 432 frames were inspected in 18
+chronological sheets. Earlier connected clips, segments and hashes are unchanged.
+Evidence: principal Eonwild `game/Evidence/continuous-running-study/`.
+Each video has six seconds side view and three seconds front quarter; the camera
+cut is not an animation transition. Candidate D is the saved review result;
+internal variants A/B/C/E are not promoted. Pause for feedback at this checkpoint.
+Run entry/braking, sprinting, airborne impacts and full production acceptance
+remain open.

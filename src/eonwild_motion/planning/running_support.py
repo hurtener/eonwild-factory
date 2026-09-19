@@ -19,6 +19,8 @@ class RunningSupportCycle:
         self.contact = 1 - gait.flight_fraction
         self.speed = gait.step_length_body_heights * height / self.step
         self.gravity = policy['gravity_mps2']
+        if policy.get('articulation_search') not in (None, 'feasible_basins'):
+            raise ValueError('Invalid running articulation search')
         if not (0 < self.gravity <= 20 and 0 <= policy['speed_yield_fraction'] <= .15
                 and .05 <= policy['support_ramp_fraction'] <= .4
                 and 0 < policy['recovery_peak_fraction'] <= .5):
@@ -57,7 +59,8 @@ class RunningSupportCycle:
                         'pelvis_yaw_degrees': (0., 8.),
                         'tail_loop_pitch_degrees': (0., 6.),
                         'axial_cycle_phase_radians': (-math.pi, math.pi),
-                        'neck_reach_degrees': (0., 10.)}
+                        'neck_reach_degrees': (0., 10.),
+                        'head_yaw_stabilization': (0., 1.)}
             if (not isinstance(regional, dict) or not set(bounds) <= set(regional)
                     or set(regional)-set(bounds)-set(optional)):
                 raise ValueError('Invalid regional running response schema')
@@ -178,6 +181,8 @@ class RunningSupportCycle:
                     knee = shape['release_knee']-(shape['release_knee']-shape['gathered_knee'])*fold+(shape['landing_knee']-shape['release_knee'])*smooth(u)
                     ankle = shape['release_ankle']-(shape['release_ankle']-shape['gathered_ankle'])*fold+(shape['landing_ankle']-shape['release_ankle'])*smooth(u)
                 feet[side]['running_leg_shape'] = dict(knee_interior_degrees=knee,ankle_interior_degrees=ankle)
+                if self.policy.get('articulation_search') == 'feasible_basins':
+                    feet[side]['running_leg_shape']['search_feasible_basins'] = True
                 feet[side]['leg_heading_degrees'] = self.policy['leg_heading_degrees']
                 if self.policy.get('recovery_path') == 'rear_fold':
                     feet[side]['running_leg_shape']['metatarsus_min_degrees'] = -5.-self.policy['recovery_hock_back_degrees']*fold
@@ -297,6 +302,13 @@ def support_body_response(cycle, plan, roles, profile, hip_offsets):
             regional_axial[name] = (-.5*trunk_roll/len(roles['neck']), -.55*trunk_yaw/len(roles['neck']))
         regional_pitch[roles['head']] = -.15*trunk_pitch
         regional_axial[roles['head']] = (-.15*trunk_roll, -.15*trunk_yaw)
+        if 'head_yaw_stabilization' in regional:
+            # Include pelvic rotation in the counter-bend. Compensating only
+            # trunk yaw leaves the skull sweeping with every pelvic drive.
+            counter = -regional['head_yaw_stabilization']*(trunk_yaw+np.degrees(pelvis_yaw))
+            for name in roles.get('neck', []):
+                regional_axial[name] = (regional_axial[name][0], .85*counter/len(roles['neck']))
+            regional_axial[roles['head']] = (regional_axial[roles['head']][0], .15*counter)
         neck_names = list(roles.get('neck', []))
         if len(neck_names) > 1 and regional.get('neck_reach_degrees'):
             neck_weights = np.linspace(1., -1., len(neck_names))

@@ -8,7 +8,7 @@ from eonwild_motion.planning.running_support import RunningSupportCycle
 
 ROOT = Path(__file__).resolve().parents[1]
 
-@pytest.fixture(params=[(a,v) for a in ['allo','tarbo'] for v in [2,3,4,5,6,7]])
+@pytest.fixture(params=[(a,v) for a in ['allo','tarbo'] for v in [2,3,4,5,6,7,8]])
 def cycle(request):
     animal, version = request.param
     recipe = json.loads((ROOT/f'catalog/behaviors/running-review.v{version}.json').read_text())
@@ -190,3 +190,35 @@ def test_running_posture_is_profile_owned_and_recipe_opt_in():
     assert resolve_running(profile,prior).front_body_pitch_degrees==7
     profile['locomotion']['run']['posture']['frontBodyPitch']['value']=float('nan')
     with pytest.raises(ValueError):resolve_running(profile,recipe)
+
+
+@pytest.mark.parametrize('animal', ['allo', 'tarbo'])
+def test_head_stabilization_preserves_pelvis_tail_and_propulsive_release(animal):
+    from eonwild_motion.planning.running_support import support_body_response
+    profile=json.loads((ROOT/f'catalog/embodiment/{animal}.v1.json').read_text())
+    roles={'spine':['spine'],'chest':'chest','neck':['neck0','neck1'],
+           'head':'head','tail':[f'tail{i}' for i in range(8)]}
+    responses=[];cycles=[]
+    for version in (7,8):
+        recipe=json.loads((ROOT/f'catalog/behaviors/running-review.v{version}.json').read_text())
+        cycle=RunningSupportCycle(resolve_running(profile,recipe),profile['authoring']['bodyHeightM'],recipe['coordination'])
+        cycles.append(cycle)
+        responses.append(support_body_response(cycle,cycle.plan(),roles,profile,{'left':-1,'right':1}))
+    for old,new in zip(*responses):
+        assert old['body_support_control']['rotation_pitch_roll_yaw_radians']==new['body_support_control']['rotation_pitch_roll_yaw_radians']
+        for name in roles['tail']:
+            assert old['node_roll_yaw_degrees'][name]==new['node_roll_yaw_degrees'][name]
+            assert old['sagittal_node_degrees'][name]==new['sagittal_node_degrees'][name]
+        pelvis=np.degrees(new['body_support_control']['rotation_pitch_roll_yaw_radians'][2])
+        upstream=pelvis+sum(new['node_roll_yaw_degrees'][n][1] for n in ['spine','chest'])
+        bearing=upstream+sum(new['node_roll_yaw_degrees'][n][1] for n in ['neck0','neck1','head'])
+        assert abs(bearing)<=abs(upstream)*.061+1e-8
+    for cycle in cycles:
+        release=cycle.sample(cycle.contact*cycle.step)
+        assert release['flight']
+    assert cycles[0].sample(cycles[0].contact*cycles[0].step)['feet']['left']['forward_m']==pytest.approx(cycles[1].sample(cycles[1].contact*cycles[1].step)['feet']['left']['forward_m'])
+    # Free-foot travel starts forward after push-off; no backward loop while
+    # the pelvis continues advancing and pulls the recovering knee straight.
+    new=cycles[1]
+    x=[new.sample((new.contact+(2-new.contact)*u)*new.step)['feet']['left']['forward_m'] for u in np.linspace(0,1,101)]
+    assert min(np.diff(x))>=0

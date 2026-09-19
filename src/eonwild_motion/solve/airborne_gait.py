@@ -1303,24 +1303,40 @@ def solve_airborne_plan_sample(
         def minimize_pitch(world_target=None):
             candidates = [pitch_candidate(degrees, world_target)
                           for degrees in np.linspace(lo, hi, 27)]
+            seeds = []
+            if foot_plan.get('running_leg_shape', {}).get('search_feasible_basins', False):
+                # A narrow feasible interval can lie entirely between grid
+                # points. Refining only the best feasible grid point jumps to
+                # a distant ankle configuration when that interval is missed.
+                # Refine every coarse objective valley, then compare the
+                # refined candidates under the same hard constraints. This
+                # remains phase-pure, independent of previous sample history.
+                for index, candidate in enumerate(candidates):
+                    neighbors = candidates[max(0,index-1):index]+candidates[index+1:index+2]
+                    if all(candidate[0] <= neighbor[0] for neighbor in neighbors):
+                        seeds.append(candidate)
             # Preserve an exactly feasible authored pitch (especially flat
             # stance=0). A refined grid alone can leave a few millidegrees of
             # negative pitch and depress a distal joint on a straight toe rig.
             candidates.append(pitch_candidate(
                 float(np.clip(foot_plan["foot_pitch_degrees"], lo, hi)), world_target))
             best_candidate = min(candidates, key=candidate_key)
-            step = (hi - lo) / 52
+            seeds.append(best_candidate)
             # Resolve the actual articulation more accurately, rather than
             # filtering serialized rotations after contact validation. The
             # old reproduction path retains its exact seven refinements.
-            for _ in range(22 if material_partition else 7):
-                best_candidate = min([
-                    best_candidate,
-                    pitch_candidate(max(lo, best_candidate[-1] - step), world_target),
-                    pitch_candidate(min(hi, best_candidate[-1] + step), world_target),
-                ], key=candidate_key)
-                step *= .5
-            return best_candidate
+            refined = []
+            for seed in seeds:
+                best_candidate, step = seed, (hi-lo)/52
+                for _ in range(22 if material_partition else 7):
+                    best_candidate = min([
+                        best_candidate,
+                        pitch_candidate(max(lo, best_candidate[-1] - step), world_target),
+                        pitch_candidate(min(hi, best_candidate[-1] + step), world_target),
+                    ], key=candidate_key)
+                    step *= .5
+                refined.append(best_candidate)
+            return min(refined, key=candidate_key)
 
         baseline_best = (pitch_candidate(float(foot_plan['turn_choreographed_pitch_degrees']))
                          if 'turn_choreographed_pitch_degrees' in foot_plan else minimize_pitch())
