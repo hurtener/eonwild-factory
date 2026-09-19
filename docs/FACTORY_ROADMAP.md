@@ -659,7 +659,8 @@ straightened Tarbosaurus's knee. Using the shared smooth velocity transport
 retains travel into the catch; reopened B maximum knee interior angles are
 152.9 degrees Allosaurus and 157.3 Tarbosaurus. These are rig diagnostics.
 Thirty-three focused checks pass. Both source GLBs were generated and reopened;
-Unity native-time side and front-quarter review is the next gate.
+the Unity build succeeds. Both 12-second native-time side/front-quarter videos
+are ready; all 576 captured frames were inspected. User visual review is pending.
 
 Recipe: catalog/behaviors/running-review.v2.json. Shared planner:
 src/eonwild_motion/planning/running_support.py. This is prescribed reduced
