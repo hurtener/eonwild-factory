@@ -70,3 +70,31 @@ jobs:
           path: out/alioramus-source/
           retention-days: 14
           if-no-files-found: error
+  opensim-environment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Download and smoke-test the official optional runtime
+        shell: bash
+        run: |
+          mkdir -p out/opensim-wheels
+          python -m pip download --only-binary=:all: --dest out/opensim-wheels opensim==4.6
+          python -m pip install --no-index --find-links out/opensim-wheels opensim==4.6
+          python - <<'PY'
+          import opensim as o, json, platform, pathlib
+          m=o.Model(); m.setName('environment_smoke'); state=m.initSystem()
+          receipt={'python':platform.python_version(),'opensim':o.GetVersionAndDate(),'model_initialization':'PASS','moco_class_available':hasattr(o,'MocoStudy'),'moco_optimization':'NOT_RUN','dinosaur_prediction':'NOT_RUN'}
+          pathlib.Path('out/opensim-wheels/runtime-smoke.json').write_text(json.dumps(receipt,indent=2)+'\n')
+          print(json.dumps(receipt,indent=2))
+          PY
+          python -m pip freeze > out/opensim-wheels/environment.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: opensim-runtime-${{ github.sha }}
+          path: out/opensim-wheels/
+          retention-days: 7
+          if-no-files-found: error
