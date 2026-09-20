@@ -357,3 +357,46 @@ Next, conditional on the visual direction: resolve cubic consumer parity;
 introduce better distributed mass/COM and contact pressure/toe compliance;
 calibrate strength/capacity and paired extant kinematics/forces. Keep running
 entry/braking, sprinting and eventual walking migration separate checkpoints.
+## Checkpoint 41 B: distributed mass and authored task conflict
+
+The opt-in v13 fit replaces the single axial mass proxy with point masses at
+freshly admitted semantic trunk, neck/head and tail locations. Region shares
+are 0.65/0.10/0.25 of mass remaining after the rod legs; tail weights taper from
+1 to 0.15. These are engineering priors. A signed torque-actuator surrogate adds
+angle/speed capacity and first-order excitation demand; it is not a muscle model.
+Reduced COM reconstruction is exact for those masses, while contact, angular
+momentum and capacity are finite-weight objectives. Prescribed force/timing and
+artistic axial motion remain. No species-specific solver was introduced.
+
+C40 and C41 have changes requested. C39 remains the preferred Tarbo reference.
+The user's latest review identifies restrained Allo knee choreography. The actual
+source knee bends, but the whole-leg motion and timing still look restricted.
+Both species profiles use identical knee hard/preferred ranges; Allo is not
+subject to a tighter knee ROM. Its segment proportions differ.
+
+A warm-start control rerun leaves Allo peak forward thigh inclination at 38.46°
+versus 38.47° in the saved fit. Relaxing only the actuator-limit weight gives
+38.33° and worse overload. Relaxing only the early minimum-knee-opening weight
+from 9 to 0.01 gives 49.65° (Tarbo: 51.49°), with more knee excursion. The control
+supports attributing this C41 restriction to the authored task interaction,
+not simply more optimization or an animal-specific hard limit. The ablation is
+fit-only and also delays forward knee opening; it is not a new motion baseline.
+Next correction must coordinate gathering and forward extension rather than
+using deeper flexion alone as evidence of success.
+
+Evidence: principal game `game/Evidence/actuated-running-study/`, including
+`knee-constraint-audit.png`, the four counterfactual/control records, source
+measurements and videos. 92 focused checks pass; deterministic emitted GLB
+replay is byte-identical. Early post-release reopening regresses to 7.98/5.98°,
+and catch moves rearward versus C40. Unity landmark parity still fails its
+unchanged 2 mm criterion (7.35/6.74 mm). Excitation demand reaches 1.003912/1.011894,
+so these finite-weight results are not certified dynamic feasibility.
+
+The requested public-model research is centralized in
+[OpenSim/Moco dinosaur feasibility](OPENSIM_DINOSAUR_FEASIBILITY.md), with archive
+hashes, source inspection, native model initialization and a concrete alternate
+Tarbo proposal. It distinguishes Moco from PredSim and the Coelophysis custom
+predictor. Local Moco optimization is blocked by a missing Fortran runtime;
+no dinosaur prediction or Unity adapter was implemented. Prefer coordinated
+dynamics/contact tasks over another layer of independently prescribed joint
+curves in that alternate experiment. Review mechanical motion before Unity.

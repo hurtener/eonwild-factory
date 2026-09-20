@@ -217,6 +217,34 @@ def reduced_angular_momentum(points, body, com, pitch, fractions, body_inertia, 
     return orbital+spin+(1-2*sum(fractions))*cross(rbody,d1@rbody)+body_inertia*(d1@pitch)
 
 
+
+def distributed_body_geometry(angles, lengths, hip_offsets, com, fractions, axial_local, axial_fractions, pitch):
+    """Point-mass axial regions plus rod legs; exact reduced mass closure."""
+    body, points = floating_body_geometry(angles, lengths, hip_offsets, com, fractions)
+    c, sn = np.cos(pitch)[:, None], np.sin(pitch)[:, None]
+    rotated = np.stack((c*axial_local[..., 0]-sn*axial_local[..., 1],
+                        sn*axial_local[..., 0]+c*axial_local[..., 1]), axis=-1)
+    offset = (rotated*axial_fractions[None, :, None]).sum(axis=1)
+    body = body-offset
+    return body, points-offset[:, None, None, :], body[:, None, :]+rotated
+
+
+def actuator_demand(torque, joint_angles, angle_rates, d1, policy):
+    """Required signed joint-actuator activation and first-order excitation.
+
+    Capacity is an engineering torque-angle-speed envelope, NOT identified
+    muscle physiology. Demand is never clipped: infeasibility stays visible.
+    Torque input/capacity is normalized by bodyweight times leg length.
+    """
+    peak = np.asarray(policy['peak_torque_bodyweight_leglength'])
+    speed = np.asarray(policy['speed_scale_radians_s'])
+    center = np.radians(policy['optimal_angles_degrees'])
+    width = np.radians(policy['angle_width_degrees'])
+    capacity = peak*(.65+.35*np.exp(-((joint_angles-center)/width)**2))/(1+(angle_rates/speed)**2)
+    activation = torque/capacity
+    excitation = activation+policy['activation_time_s']*np.einsum('ij,jsk->isk',d1,activation)
+    return activation, excitation, capacity
+
 def fit_floating_body_stride(context, plan, cycle, profile, policy):
     """Track contact tasks while fitting both legs and a floating reduced torso.
 
@@ -242,6 +270,22 @@ def fit_floating_body_stride(context, plan, cycle, profile, policy):
     fractions = np.asarray(policy['segment_mass_fractions'],dtype=float)
     if fractions.shape != (3,) or not np.isfinite(fractions).all() or np.any(fractions<=0) or 2*fractions.sum() >= .5:
         raise ContractError('invalid floating stride mass fractions')
+    actuation = policy.get('actuation')
+    recovery = policy.get('forward_recovery')
+    distribution = policy.get('axial_mass_distribution')
+    if any(v is not None for v in (actuation,recovery,distribution)):
+        if not all(isinstance(v,dict) for v in (actuation,recovery,distribution)):
+            raise ContractError('distributed actuator fit requires all three policies')
+        for key in ('peak_torque_bodyweight_leglength','speed_scale_radians_s','angle_width_degrees'):
+            v=np.asarray(actuation[key],dtype=float)
+            if v.shape!=(3,) or not np.isfinite(v).all() or np.any(v<=0):
+                raise ContractError('invalid actuator envelope: '+key)
+        v=np.asarray(actuation['optimal_angles_degrees'],dtype=float)
+        if v.shape!=(3,) or not np.isfinite(v).all():raise ContractError('invalid actuator preferred angles')
+        for value in (actuation['activation_time_s'],actuation['constraint_weight'],recovery['progress_tolerance_leg_lengths'],recovery['task_weight'],recovery['extension_weight']):
+            if isinstance(value,bool) or not isinstance(value,(int,float)) or not math.isfinite(value) or value<=0:raise ContractError('invalid distributed fit policy')
+        shares=np.array([distribution[k] for k in ('trunk','neck_head','tail')])
+        if not np.isfinite(shares).all() or np.any(shares<=0) or not np.isclose(shares.sum(),1):raise ContractError('invalid axial mass shares')
     times = np.arange(count)*period/count
     source_t = np.asarray([r['time_s'] for r in plan['samples']])
     sides = list(context.legs)
@@ -264,8 +308,26 @@ def fit_floating_body_stride(context, plan, cycle, profile, policy):
         theta=lambda v: math.atan2(v[0],-v[1])
         slope=(theta(plus[-1]-plus[-2])-theta(p[-1]-p[-2]))/.01
         samples[side].append((p,float(best[-1]),slope))
+    axial_world=[]
+    axial_fractions=None
+    if distribution:
+        bindings={v['role']:context.source.name_to_node[v['bone']] for v in profile['bindings']}
+        grouped=[('trunk',['pelvis']+sorted(k for k in bindings if k.startswith('spine.'))),
+                 ('neck_head',sorted(k for k in bindings if k.startswith('neck.'))+['head']),
+                 ('tail',sorted((k for k in bindings if k.startswith('tail.')),key=lambda k:int(k.split('.')[-1])))]
+        axial_nodes=[];weights=[]
+        for name,roles in grouped:
+            if not roles or any(k not in bindings for k in roles):raise ContractError('missing distributed-mass semantic chain: '+name)
+            taper=np.linspace(1.,.15,len(roles)) if name=='tail' else np.ones(len(roles))
+            weights.extend((distribution[name]*taper/taper.sum()).tolist());axial_nodes.extend(bindings[k] for k in roles)
+        axial_fractions=np.array(weights)*(1-2*sum(fractions))
     for row,body in zip(rows,bodies):
-        solve_airborne_plan_sample(context,row,body_response_sample=body,leg_candidate_observer=observe)
+        pose=solve_airborne_plan_sample(context,row,body_response_sample=body,leg_candidate_observer=observe)
+        if distribution:
+            from ..layers.leg_contact_resolve_v3 import _world_matrices
+            w=np.asarray(_world_matrices(context.source,pose.translations,pose.rotations,context.base_s))
+            xyz=w[axial_nodes,:3,3]
+            axial_world.append(np.stack((xyz@context.forward,xyz@context.up),axis=-1))
     seed_points=np.stack([np.array([r[0] for r in samples[side]]) for side in sides],axis=1)
     seed_points[:,:,:,0]-=cycle.speed*times[:,None,None]
     seed_pitch=np.array([[samples[s][i][1] for s in sides] for i in range(count)])
@@ -280,6 +342,10 @@ def fit_floating_body_stride(context, plan, cycle, profile, policy):
     theta0=np.unwrap(np.arctan2(segment[:,:,:,0],-segment[:,:,:,1]),axis=0)
     local_centers=.5*(seed_points[:,:,:-1]+seed_points[:,:,1:])-hip0[:,None,None,:]
     mean_limb_com=np.mean(np.sum(local_centers*fractions[None,None,:,None],axis=(1,2)),axis=0)
+    axial_local=None
+    if distribution:
+        axial_local=np.array(axial_world)-np.stack((cycle.speed*times,np.zeros(count)),axis=-1)[:,None,:]-hip0[:,None,:]
+        mean_limb_com+=np.mean((axial_local*axial_fractions[None,:,None]).sum(axis=1),axis=0)
     desired_com=hip0+mean_limb_com
     # Remove pelvis roll/yaw perturbations from COM acceleration: integrated
     # impulse, not incidental hip geometry, owns the reduced body's travel.
@@ -310,6 +376,10 @@ def fit_floating_body_stride(context, plan, cycle, profile, policy):
                 lower[i,j]=[-gait.hip_extension_limit_degrees+margin,gait.knee_min_interior_degrees+margin,gait.ankle_min_interior_degrees+margin]
                 upper[i,j]=[gait.hip_flexion_limit_degrees-margin,gait.knee_max_interior_degrees-margin,gait.ankle_max_interior_degrees-margin]
     lower=np.radians(lower);upper=np.radians(upper)
+    if recovery:
+        limit=recovery['maximum_knee_opening_degrees']
+        if isinstance(limit,bool) or not isinstance(limit,(int,float)) or not 140<=limit<=165:raise ContractError('invalid recovery extension reserve')
+        upper[:,:,1]=np.minimum(upper[:,:,1],math.radians(limit))
     bend_sign=np.sign(np.diff(theta0,axis=2))
     baseline_foot=seed_points[:,:,-1]
     # Weight approaches contact smoothly. The free foot is a loose task, not
@@ -325,11 +395,20 @@ def fit_floating_body_stride(context, plan, cycle, profile, policy):
     def evaluate(x):
         z=x[:-2].reshape(count,7);theta=z[:,:6].reshape(count,2,3);pitch=z[:,6]
         com=desired_com+length*x[-2:]
-        body,points=floating_body_geometry(theta,lengths,hip_offsets,com,fractions)
+        axial=None
+        if distribution:
+            body,points,axial=distributed_body_geometry(theta,lengths,hip_offsets,com,fractions,axial_local,axial_fractions,pitch)
+        else:
+            body,points=floating_body_geometry(theta,lengths,hip_offsets,com,fractions)
         q=np.concatenate((theta[:,:,:1]-pitch[:,None,None],np.diff(theta,axis=2)),axis=2)
         torque=np.stack([inverse_dynamics(points[:,j],mass*forces[:,j],mass*fractions,g,d2)/(mass*g*length) for j in range(2)],axis=1)
         angles=np.concatenate((theta[:,:,:1],np.pi-np.abs(np.diff(theta,axis=2))),axis=2)
-        h=reduced_angular_momentum(points,body,com,pitch,fractions,body_inertia,d1)
+        h=reduced_angular_momentum(points,body,com,pitch,fractions,0. if distribution else body_inertia,d1)
+        if distribution:
+            cross=lambda a,b:a[...,0]*b[...,1]-a[...,1]*b[...,0]
+            rbody=body-com;r=axial-com[:,None,:]
+            h-=(1-2*sum(fractions))*cross(rbody,d1@rbody)
+            h+=(cross(r,np.einsum('ij,jsk->isk',d1,r))*axial_fractions[None,:]).sum(axis=1)
         lever=baseline_foot-com[:,None,:]
         external=np.sum(lever[:,:,0]*forces[:,:,1]-lever[:,:,1]*forces[:,:,0],axis=1)
         balance=(d1@h-external)/(g*length)
@@ -358,6 +437,20 @@ def fit_floating_body_stride(context, plan, cycle, profile, policy):
           policy['body_pitch_weight']*pitch[:,None],
           .1*(d2@pitch)[:,None]/omega**2,
           40*np.maximum(0,np.abs(fitted_pitch-20)-64).reshape(count,2)]
+        if actuation:
+            rates=(d1@flat).reshape(count,2,3)
+            activation,excitation,capacity=actuator_demand(tau,angles,rates,d1,actuation)
+            blocks += [actuation['constraint_weight']*np.maximum(0,np.abs(activation)-1).reshape(count,6),
+                       actuation['constraint_weight']*np.maximum(0,np.abs(excitation)-1).reshape(count,6),
+                       .06*excitation.reshape(count,6)]
+            # Functional reach guidance, not inferred dinosaur physiology:
+            # advance throughout swing and open the knee on the forward path.
+            progress_error=np.maximum(0,np.abs(foot_delta[:,:,0])/length-recovery['progress_tolerance_leg_lengths'])
+            u=np.clip((swing-.20)/.62,0,1);opening=u*u*(3-2*u)
+            target_knee=np.radians(82.+65.*opening)
+            opening_gate=np.sin(np.pi*swing)**2*(~contact)
+            blocks += [recovery['task_weight']*progress_error,
+                       recovery['extension_weight']*opening_gate*np.maximum(0,target_knee-angles[:,:,1])]
         if blocks_only:return blocks
         return np.concatenate([b.ravel() for b in blocks])
     blocks=residual(initial,True);size=sum(b.size for b in blocks)
@@ -391,7 +484,14 @@ def fit_floating_body_stride(context, plan, cycle, profile, policy):
             f['stride_fitted_pitch_degrees']=float(met_curves[j](t))
             f['stride_fitted_foot_forward_up_m']=([0.,0.] if f['contact'] else foot_curves[j](t).tolist())
     seed=evaluate(initial)
-    return dict(schema='eonwild.floating-body-stride-fit.v1',policy=deepcopy(policy),
+    actuator_receipt=None
+    if actuation:
+        a,u,cap=actuator_demand(tau,angles,(d1@q.reshape(count,6)).reshape(count,2,3),d1,actuation)
+        actuator_receipt=dict(maximum_activation_demand=float(np.abs(a).max()),maximum_excitation_demand=float(np.abs(u).max()),
+            maximum_normalized_capacity=float(cap.max()),activation=a.tolist(),excitation=u.tolist(),
+            classification='Signed torque-actuator surrogate with angle/speed capacity and first-order activation; finite-weight limits, not muscle simulation.')
+    return dict(actuator_demand=actuator_receipt,axial_mass_fractions=None if axial_fractions is None else axial_fractions.tolist(),
+        axial_local_centers_m=None if axial_local is None else axial_local.tolist(),schema='eonwild.floating-body-stride-fit.v1',policy=deepcopy(policy),
         optimizer_success=bool(result.success),message=result.message,evaluations=result.nfev,
         initial_objective=float(residual(initial)@residual(initial)),final_objective=float(result.fun@result.fun),
         initial_torque_rms_nm=float(mass*g*length*np.sqrt(np.mean(seed[5]**2))),
@@ -406,8 +506,8 @@ def fit_floating_body_stride(context, plan, cycle, profile, policy):
         fitted_body_pitch_radians=pitch.tolist(),support_force_per_total_mass=forces.tolist(),
         fitted_foot_offset_m=(points[:,:,-1]-baseline_foot).tolist(),
         fitted_joint_torque_nm=(tau*mass*g*length).tolist(),
-        classification='Coupled bilateral planar trajectory fit with a floating lumped torso, exact reduced COM reconstruction and soft angular-momentum balance. Contact tasks and effort are optimized; not a muscle simulation or whole-rig force certificate.',
-        limitations=['Torso COM is at hip center; torso gyration and segment mass fractions are engineering estimates.',
+        classification=('Coupled bilateral planar fit with distributed axial point masses, rod legs and first-order torque-actuator demand. Exact reduced COM reconstruction; finite-weight contact, actuator and angular-momentum constraints. Not a muscle simulation or whole-rig force certificate.' if distribution else 'Coupled bilateral planar trajectory fit with a floating lumped torso, exact reduced COM reconstruction and soft angular-momentum balance. Contact tasks and effort are optimized; not a muscle simulation or whole-rig force certificate.'),
+        limitations=[('Axial centers follow semantic bones with estimated region shares; mass fractions and actuator envelopes are engineering priors.' if distribution else 'Torso COM is at hip center; torso gyration and segment mass fractions are engineering estimates.'),
             'Sagittal projected segments and toe-base force point approximate the actual rig and material contact.',
             'Angular momentum and contact are finite-weight objectives; residuals are reported.',
             'Prescribed support force schedule, timing, toe choreography and axial artistic motion remain.',

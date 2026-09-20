@@ -6,13 +6,13 @@ Research before the next running pass: [running evidence baseline](research/RUNN
 records measured bird motion, the published BIRDS model, and diagnostic Allo/Tarbo
 extrapolations. The user requested evidence-based calibration after the C37
 landing/release analysis. Checkpoint 38 adopts selected, explicitly transferred priors. Checkpoint 39 adds
-whole-stride leg fitting. The user accepted its direction and Tarbo baseline; Allo remains restrained. Checkpoint 40 D extends bilateral dynamics and awaits review.
+whole-stride leg fitting. The user accepted its direction and Tarbo baseline; Allo remains restrained. Checkpoint 40 D extends bilateral dynamics; C40/C41 have changes requested. The C41 audit identifies an authored knee-task conflict. [OpenSim/Moco feasibility](research/OPENSIM_DINOSAUR_FEASIBILITY.md) records the researched alternate path.
 
 
 ## Current animation inventory
 
 Checkpoint 27 retained-braking-support stops are approved for both animals.
-Latest full checkpoint approval is checkpoint 28. Checkpoint 32 is the user-selected running base; checkpoint 34 has changes requested; checkpoint 35 has changes requested; checkpoint 36 has changes requested; checkpoint 37 has further changes requested; checkpoint 38 C has changes requested (Tarbo substantially improved; neck needs restraint; Allo not fully convincing); checkpoint 39 B has accepted direction/Tarbo baseline and Allo changes requested; checkpoint 40 D is pending review. **Approved means visually accepted
+Latest full checkpoint approval is checkpoint 28. Checkpoint 32 is the user-selected running base; checkpoint 34 has changes requested; checkpoint 35 has changes requested; checkpoint 36 has changes requested; checkpoint 37 has further changes requested; checkpoint 38 C has changes requested (Tarbo substantially improved; neck needs restraint; Allo not fully convincing); checkpoint 39 B has accepted direction/Tarbo baseline and Allo changes requested; checkpoints 40 D and 41 B have changes requested; the C41 knee-constraint audit is complete. **Approved means visually accepted
 in the reviewed clips**, not fully certified for arbitrary gameplay. Unless a row
 says otherwise, both admitted animals use the same shared engine with profile data.
 Historical sections and capture-time receipts below retain earlier review states.
@@ -40,7 +40,7 @@ Checkpoint 26 is the approved walking side-hit recovery baseline; standing impac
 | Arm carriage and secondary motion | Full-transition pass approved | Full-transition pass approved | Behavior-specific overrides for attacks, rest and interaction |
 | Jaw relaxation / breathing-like cycle | Full-transition pass approved | Full-transition pass approved | Full-body breathing and behavior-specific mouth control |
 | Expressive idle / listening / alert scanning | No complete approved family | No complete approved family | Compose meaningful attention, posture and breathing behaviors from existing layers |
-| Running / sprinting | Sustained run, checkpoint 40 D pending; C39 Allo restraint changes requested; sprint missing | C39 visual baseline accepted; C40 D pending; historical Run010 / Sprint006 preserved | Review release smoothness and retained tail/body motion; then entry/braking and sprinting |
+| Running / sprinting | C41 B changes requested: knee/recovery coordination; sprint missing | C39 preferred visual reference; C40 changes requested; C41 not approved; historical Run010 / Sprint006 preserved | Correct shared recovery task conflict; review both; Moco alternate researched, not implemented; then entry/braking and sprinting |
 | Feeding / gripping / pulling | Current approved transfer missing | Historical Feeding003 reference preserved | Current grounded support, oral contact and interaction handoff |
 | Drinking / swallowing | Missing | Missing | New choreography and world interaction |
 | Rest / sit / lie down / rise / sleep | Missing | Missing | New support transitions and resting behavior |
@@ -939,7 +939,7 @@ A single shared periodic fitter now coordinates each leg across an entire stride
 
 This first bounded stage optimizes the leg's remaining articulation degree of freedom with prescribed body motion, foot paths and contact timing. It is not full-body optimal control or muscle simulation. See the appended mathematical scope and assumptions in [running evidence baseline](research/RUNNING_EVIDENCE_BASELINE.md). Anterior trunk yaw is also reduced for quieter neck motion; the hip/tail eight remains.
 
-C38 feedback: Tarbo is substantially improved with neck changes requested; Allo is not fully convincing. C39 B was reviewed: Tarbo remains good, while Allo needs less restrained articulation. C40 D is now the pending candidate. Further detail is conditional on this review: paired measured extant trajectories, contact pressure/toe compliance, body/foot trajectory co-optimization, better segment mass and strength priors. Walking may be revisited after running demonstrates the method; preserve approved walking now.
+C38 feedback: Tarbo is substantially improved with neck changes requested; Allo is not fully convincing. C39 B was reviewed: Tarbo remains good, while Allo needs less restrained articulation. C40 D and C41 B subsequently received changes requested; see the latest audit below. Further detail is conditional on this review: paired measured extant trajectories, contact pressure/toe compliance, body/foot trajectory co-optimization, better segment mass and strength priors. Walking may be revisited after running demonstrates the method; preserve approved walking now.
 
 
 ## Checkpoint 40 D — coupled reduced-body dynamics
@@ -955,7 +955,7 @@ power, smoothness, contact and measured toe-clearance objectives. The final
 source uses smooth cubic curves; final material contacts are reopened at keys
 and midpoints. Prior walking and C39 assets remain preserved.
 
-Status: candidate rendered, **PENDING USER REVIEW**. See game evidence
+Status: candidate rendered, **CHANGES_REQUESTED**; Tarbo recovery lingers and Allo needs forward knee extension. Superseded by the C41 diagnostic below. See game evidence
 `game/Evidence/floating-body-running-study/`. The reduced model is not a full
 musculoskeletal simulation or a production physics certificate. Some local
 joint sharpness remains, and Tarbo's extension range changes; review both
@@ -966,3 +966,47 @@ C40 technical limits: native videos are complete; Unity landmark parity fails
 the unchanged 2 mm gate at 6.76 / 6.51 mm. Tarbo side capture saved all frames
 but exited 255 in Metal/CVDisplayLink. These remain open, separate from visual
 review and the passing 90 focused source checks.
+## Checkpoint 41 B — distributed mass and actuator demand; changes requested
+
+C40 has changes requested: Tarbo lingered too long during recovery, and Allo
+needed more extension on the forward path. C39 remains the preferred Tarbo
+reference. C41 B adds semantic axial point masses, torque-angle-speed capacity
+estimates and first-order actuator demand to the same bilateral reduced fit.
+Recipe `running-review.v13.json` serves both animals. These are engineering
+priors, not measured dinosaur muscles; support timing/forces and axial motion
+remain prescribed.
+
+The user reviewed the saved C41 videos and still finds Allo's knee visually
+restrained. **CHANGES_REQUESTED**; no new corrected video follows this feedback.
+Both articulation profiles have identical knee bounds (65–180 degrees hard,
+68–175 preferred). A controlled fit-only audit identifies the added early
+minimum-opening task as a major source of restriction: relaxing its weight
+from 9 to 0.01 raises Allo's peak forward thigh inclination from 38.47 to 49.65
+degrees (Tarbo C41: 51.49). An unchanged reoptimization stays at 38.46; relaxing
+actuator limits alone stays at 38.33. The knee does bend numerically; timing,
+whole-thigh travel and the resulting silhouette explain the restrained reading.
+
+This counterfactual is **not a corrected animation**: forward knee opening
+becomes later. The next motion pass must coordinate gathering, forward extension
+and contact without an early knee-angle prescription or species-specific solver.
+Do not equate deeper folding with the user's requested forward extension. Keep
+contact and extension reserve; preserve the accepted walking/turn/stumble assets.
+
+92 focused checks pass. Both actual rigs were emitted/reopened, replayed with
+identical GLB hashes, and captured in four successful native-player runs.
+All 432 saved frames were inspected chronologically. Source-key reach excess
+and reported hard-ROM violations are zero. Unity landmark parity still FAILS
+the unchanged 2 mm gate: Allo 7.35 mm, Tarbo 6.74 mm. Actuator excitation demand
+exceeds one by 0.39% / 1.19%; finite-weight residuals are not hard feasibility.
+Early post-release knee reopening regresses to 7.98 / 5.98 degrees and the catch
+moves rearward relative to C40. C41 is diagnostic, not a blanket improvement.
+
+Evidence, comparison plot, videos and the constraint audit:
+principal Eonwild `game/Evidence/actuated-running-study/`.
+OpenSim/Moco research is complete as a feasibility investigation; alternate
+Tarbo prediction and Unity transfer are not implemented. See the canonical
+factory `docs/research/OPENSIM_DINOSAUR_FEASIBILITY.md`: two public animal models
+initialize on native arm64, but the official tiny Moco solve is blocked by a
+missing Fortran runtime. Proposed next experiment: calibrated Tarbo anatomy,
+bounded torque-actuated contact dynamics first, muscles after calibration,
+native motion review before a semantic Unity adapter. Pause at this checkpoint.

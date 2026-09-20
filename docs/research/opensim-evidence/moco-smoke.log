@@ -1,0 +1,47 @@
+[info] ========================================================================
+[info] MocoCasADiSolver starting.
+[info] Sun Sep 20 13:06:59 2026
+[info] ------------------------------------------------------------------------
+[info] Costs: (total: 1)
+[info]   goal. MocoFinalTimeGoal, enabled: true, mode: cost, weight: 1
+[info] Endpoint constraints: none
+[info] Kinematic constraints: none
+[info] Path constraints: none
+[info] States: (total: 2)
+[info]   /slider/position/speed. bounds: [-50, 50] initial: 0 final: 0
+[info]   /slider/position/value. bounds: [-5, 5] initial: 0 final: 1
+[info] Controls: (total: 1)
+[info]   /actuator. bounds: [-50, 50]
+[info] Input controls: none
+[info] Parameters: none
+[info] Number of threads: 10
+CasADi - 2026-09-20 13:07:00 WARNING(".../casadi/core/casadi_os.cpp:166: Assertion "handle!=nullptr" failed:
+PluginInterface::load_plugin: Cannot load shared library 'libcasadi_nlpsol_ipopt.dylib':
+   (
+    Searched directories: 1. casadipath from GlobalOptions
+                          2. CASADIPATH env var
+                          3. PATH env var (Windows)
+                          4. LD_LIBRARY_PATH env var (Linux)
+                          5. DYLD_LIBRARY_PATH env var (osx)
+    A library may be 'not found' even if the file exists:
+          * library is not compatible (different compiler/bitness)
+          * the dependencies are not found
+   )
+  Tried '' :
+    Error code: dlopen(libcasadi_nlpsol_ipopt.dylib, 0x0005): Library not loaded: /opt/homebrew/opt/gcc/lib/gcc/current/libgfortran.5.dylib
+  Referenced from: <A0BEC1E7-1530-35CF-A70B-2058EE7C8715> /Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a087f8-b58c-7530-9fd8-e1ed39b8d526/research/opensim-2026-09-20/moco-venv/lib/python3.12/site-packages/opensim/libipopt.3.dylib
+  Reason: tried: '/opt/homebrew/opt/gcc/lib/gcc/current/libgfortran.5.dylib' (no such file), '/System/Volumes/Preboot/Cryptexes/OS/opt/homebrew/opt/gcc/lib/gcc/current/libgfortran.5.dylib' (no such file), '/opt/homebrew/opt/gcc/lib/gcc/current/libgfortran.5.dylib' (no such file)
+  Tried '.' :
+    Error code: dlopen(./libcasadi_nlpsol_ipopt.dylib, 0x0005): Library not loaded: /opt/homebrew/opt/gcc/lib/gcc/current/libgfortran.5.dylib
+  Referenced from: <A0BEC1E7-1530-35CF-A70B-2058EE7C8715> /Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a087f8-b58c-7530-9fd8-e1ed39b8d526/research/opensim-2026-09-20/moco-venv/lib/python3.12/site-packages/opensim/libipopt.3.dylib
+  Reason: tried: '/opt/homebrew/opt/gcc/lib/gcc/current/libgfortran.5.dylib' (no such file), '/System/Volumes/Preboot/Cryptexes/OS/opt/homebrew/opt/gcc/lib/gcc/current/libgfortran.5.dylib' (no such file), '/opt/homebrew/opt/gcc/lib/gcc/current/libgfortran.5.dylib' (no such file)") [.../casadi/core/plugin_interface.hpp:142]
+Traceback (most recent call last):
+  File "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a087f8-b58c-7530-9fd8-e1ed39b8d526/research/opensim-2026-09-20/exampleSlidingMass.py", line 87, in <module>
+    solution = study.solve()
+               ^^^^^^^^^^^^^
+  File "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a087f8-b58c-7530-9fd8-e1ed39b8d526/research/opensim-2026-09-20/moco-venv/lib/python3.12/site-packages/opensim/moco.py", line 9319, in solve
+    return _moco.MocoStudy_solve(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: std::exception in 'OpenSim::MocoSolution OpenSim::MocoStudy::solve() const': MocoCasADiSolver failed internally with message: .../casadi/core/plugin_interface.hpp:292: Plugin 'ipopt' is not found.
+	In Object '<no-name>' of type MocoCasADiSolver.
+	Thrown at MocoCasADiSolver.cpp:406 in solveImpl().

@@ -1,0 +1,217 @@
+{
+  "date": "2026-09-20",
+  "scope": "Archive inspection; not gait validation",
+  "archives": [
+    {
+      "name": "Hutchinson Trex SIMM 2005-2013.zip",
+      "doi": "10.6084/m9.figshare.4982492.v1",
+      "source": "https://ndownloader.figshare.com/files/8387399",
+      "license": {
+        "value": 1,
+        "name": "CC BY 4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      "bytes": 1372417,
+      "sha256": "19709d3dd4ca18173a60ae39c5fd751d278da7e1088971c34cddfb92a06f69d3",
+      "publisher_md5_verified": true,
+      "inventory": [
+        {
+          "path": "Hutchinson Trex SIMM 2005-2013/trex J42.jnt",
+          "bytes": 26484,
+          "sha256": "aa11f8399d429824de44464ad379e32801e83172f2296f9583c85c7c41a2c287"
+        },
+        {
+          "path": "Hutchinson Trex SIMM 2005-2013/trex_M42.msl",
+          "bytes": 41195,
+          "sha256": "866c73ac9172a25c6b66dcbfb0eef2aa2b5e3abb16c503849115d9c62aae9f86",
+          "parameter_values": {
+            "max_force": [
+              "1.000"
+            ],
+            "optimal_fiber_length": [
+              "0.00100",
+              "0.50000"
+            ],
+            "tendon_slack_length": [
+              "0.00100",
+              "2.00000"
+            ]
+          },
+          "muscle_definition_count_including_defaults": 75
+        }
+      ]
+    },
+    {
+      "name": "Velociraptor 2008 SIMM model.zip",
+      "doi": "10.6084/m9.figshare.4982981.v1",
+      "source": "https://ndownloader.figshare.com/files/8388149",
+      "license": {
+        "value": 1,
+        "name": "CC BY 4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      "bytes": 1285393,
+      "sha256": "55b21ca4da79226ed4e984f54254b8b377589419b6e91f061057a3347bcb5b8f",
+      "publisher_md5_verified": true,
+      "inventory": [
+        {
+          "path": "Velociraptor 2008 SIMM model/veloc_J12b.jnt",
+          "bytes": 16131,
+          "sha256": "de8c9d1dfd2daa859496be1be58dfeb1f3af8fad680345df22ca4afa855fd781"
+        },
+        {
+          "path": "Velociraptor 2008 SIMM model/veloc_M12b.msl",
+          "bytes": 22426,
+          "sha256": "78fae232304701fc6e1a8b834996b9e2995babe62fd661a9497ef633cd8ce7fe",
+          "parameter_values": {
+            "max_force": [
+              "1.000"
+            ],
+            "optimal_fiber_length": [
+              "1.00000"
+            ],
+            "tendon_slack_length": [
+              "1.00000"
+            ]
+          },
+          "muscle_definition_count_including_defaults": 39
+        }
+      ]
+    },
+    {
+      "name": "Gracilisuchus_FINAL_September2025.zip",
+      "doi": "10.6084/m9.figshare.28695902.v1",
+      "source": "https://ndownloader.figshare.com/files/58090675",
+      "license": {
+        "value": 1,
+        "name": "CC BY 4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      "bytes": 8557830,
+      "sha256": "578d0f476e8bd8a8ab4342025bca4c62d8da841348495bc663c93c5924710195",
+      "publisher_md5_verified": true,
+      "inventory": [
+        {
+          "path": "Gracilisuchus_FINAL_April2025.osim",
+          "bytes": 595346,
+          "sha256": "79189c38cdeb972776c515d30ee11cd27c7a31bcf916f9dabd1ef69814cc12e3",
+          "model": {
+            "inspection_tag_normalization_only": false,
+            "moving_bodies": 21,
+            "coordinates": 46,
+            "muscles": 38,
+            "mass_kg": 1.2746416,
+            "force_classes": [
+              "Millard2012EquilibriumMuscle"
+            ],
+            "contact_geometry_count": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "coelophysis-data-s1-s2.zip",
+      "source": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8457660/supplementaryFiles",
+      "doi": "10.1126/sciadv.abi7348",
+      "bytes": 23175017,
+      "sha256": "64fd8cde4c9b9cfb1ea23c003a185b2f6e131935a8554b364bea42e29203f095",
+      "license_status": "Article CC BY-NC 4.0; no separate permissive code/model license verified.",
+      "inventory": [
+        {
+          "path": "sciadv.abi7348_Data_S2.zip!Coelophysis_Model.osim",
+          "bytes": 587685,
+          "sha256": "345012abdfefa845072f364c28bef555a02de66198a7be99866a7ccef88db693",
+          "model": {
+            "inspection_tag_normalization_only": true,
+            "moving_bodies": 15,
+            "coordinates": 28,
+            "muscles": 66,
+            "mass_kg": 13.115291,
+            "force_classes": [
+              "HuntCrossleyForce",
+              "Millard2012EquilibriumMuscle"
+            ],
+            "contact_geometry_count": 3
+          }
+        },
+        {
+          "path": "sciadv.abi7348_Data_S2.zip!Coelophysis_Model_Alternate_Tail.osim",
+          "bytes": 587704,
+          "sha256": "0910ae377244989877c07fc2bb1ac45f5709a5caf1277a0e136cdd3af4184e65",
+          "model": {
+            "inspection_tag_normalization_only": true,
+            "moving_bodies": 15,
+            "coordinates": 28,
+            "muscles": 66,
+            "mass_kg": 13.118060999999999,
+            "force_classes": [
+              "HuntCrossleyForce",
+              "Millard2012EquilibriumMuscle"
+            ],
+            "contact_geometry_count": 3
+          }
+        },
+        {
+          "path": "sciadv.abi7348_Data_S2.zip!Coelophysis_Model_No_Tail.osim",
+          "bytes": 567285,
+          "sha256": "c015ba534c0eb0159a48672ad0027368f3b5da8077545ddd41498bbcd512b1aa",
+          "model": {
+            "inspection_tag_normalization_only": true,
+            "moving_bodies": 13,
+            "coordinates": 24,
+            "muscles": 66,
+            "mass_kg": 13.115291,
+            "force_classes": [
+              "HuntCrossleyForce",
+              "Millard2012EquilibriumMuscle"
+            ],
+            "contact_geometry_count": 3
+          }
+        }
+      ]
+    }
+  ],
+  "repositories": {
+    "PredSim": {
+      "tree_sha": "11b20c10db3b14fcbbc37fd1df9ec1bddb9d7880"
+    },
+    "MuSkeMo": {
+      "tree_sha": "5e47be6b944e2bd491b5b5e08f3017722f894405"
+    },
+    "OpenSim_4.6": {
+      "tree_sha": "52094cc61c3e795552c658e34a73d083f4662c6b"
+    }
+  },
+  "native_model_load": {
+    "platform": "macOS-26.3-arm64-arm-64bit",
+    "machine": "arm64",
+    "opensim_version": "version 4.6-2026-06-22-85aaf64, build date 18:11:49 Jun 22 2026",
+    "models": {
+      "Coelophysis_Model.osim": {
+        "status": "INITIALIZED",
+        "bodies": 15,
+        "coordinates": 28,
+        "muscles": 66,
+        "mass_kg": 13.115290999999997
+      },
+      "Gracilisuchus_FINAL_April2025.osim": {
+        "status": "INITIALIZED",
+        "bodies": 21,
+        "coordinates": 46,
+        "muscles": 38,
+        "mass_kg": 1.2746415999999996
+      }
+    }
+  },
+  "moco_optimization_smoke": {
+    "status": "BLOCKED_RUNTIME_DEPENDENCY",
+    "example": "OpenSim 4.6 exampleSlidingMass.py",
+    "reason": "IPOPT cannot load missing libgfortran.5.dylib",
+    "example_sha256": "66eee2a546163047044394858d72501497fd9fc83a898a43e74f3a43f73f8c03",
+    "raw_log_sha256": "6ba9be10739fe434b319d4ae1194e07af200155267fc7928dc7d7868b5b2e44d",
+    "log_sha256": "d951230779a9f976c96d0cdc6a89c81f45c3110733446941ae2a5633f4e81aa8",
+    "saved_log_normalization": "Trailing whitespace removed; diagnostic content unchanged.",
+    "dinosaur_optimization": "NOT_RUN",
+    "unity_transfer": "NOT_RUN"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "platform": "macOS-26.3-arm64-arm-64bit",
+  "machine": "arm64",
+  "opensim_version": "version 4.6-2026-06-22-85aaf64, build date 18:11:49 Jun 22 2026",
+  "models": {
+    "Coelophysis_Model.osim": {
+      "status": "INITIALIZED",
+      "bodies": 15,
+      "coordinates": 28,
+      "muscles": 66,
+      "mass_kg": 13.115290999999997
+    },
+    "Gracilisuchus_FINAL_April2025.osim": {
+      "status": "INITIALIZED",
+      "bodies": 21,
+      "coordinates": 46,
+      "muscles": 38,
+      "mass_kg": 1.2746415999999996
+    }
+  }
+}

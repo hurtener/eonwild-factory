@@ -55,3 +55,32 @@ def test_reduced_momentum_is_translation_invariant_and_includes_torso_spin():
     shift=np.array([13.,-4.])
     translated=reduced_angular_momentum(points+shift,body+shift,com+shift,pitch,fractions,.7,d1)
     np.testing.assert_allclose(h,translated,atol=1e-12)
+
+
+def test_distributed_axial_mass_reconstructs_com_through_pitch_and_swing():
+    from eonwild_motion.solve.running_stride_fit import distributed_body_geometry
+    t=np.arange(64)/64;fractions=np.array([.035,.018,.006])
+    angles=np.zeros((64,2,3));angles[:,0,0]=.6*np.sin(2*np.pi*t)
+    axial=np.broadcast_to([[1.,.2],[-1.5,0.]],(64,2,2))
+    weights=np.array([.6,.4])*(1-2*sum(fractions));com=np.tile([.1,1.6],(64,1))
+    body,points,cloud=distributed_body_geometry(angles,np.ones((2,3))*.5,np.zeros((64,2,2)),com,fractions,axial,weights,.08*np.sin(2*np.pi*t))
+    centers=.5*(points[:,:,:-1]+points[:,:,1:])
+    measured=(centers*fractions[None,None,:,None]).sum(axis=(1,2))+(cloud*weights[None,:,None]).sum(axis=1)
+    np.testing.assert_allclose(measured,com,atol=1e-14)
+    assert not np.allclose(body,body[:1])
+
+
+def test_actuator_demand_retains_overload_and_activation_delay():
+    from eonwild_motion.solve.running_stride_fit import actuator_demand
+    t=np.arange(256)/256;d1,_=periodic_derivatives(t,1.)
+    policy=dict(peak_torque_bodyweight_leglength=[.6,.5,.3],speed_scale_radians_s=[10,10,10],optimal_angles_degrees=[0,120,130],angle_width_degrees=[60,60,60],activation_time_s=.035)
+    angles=np.broadcast_to(np.radians([0,120,130]),(256,2,3));peak=np.array([.6,.5,.3])
+    torque=np.broadcast_to(peak,(256,2,3));rates=np.zeros_like(torque)
+    a,u,cap=actuator_demand(torque,angles,rates,d1,policy)
+    np.testing.assert_allclose(a,1);np.testing.assert_allclose(u,1,atol=1e-12)
+    a,u,cap=actuator_demand(torque,angles,rates+10,d1,policy)
+    np.testing.assert_allclose(a,2) # no clipping an impossible demand into feasibility
+    torque=np.sin(2*np.pi*t)[:,None,None]*torque
+    a,u,_=actuator_demand(torque,angles,rates,d1,policy)
+    expected=np.sin(2*np.pi*t)+.035*2*np.pi*np.cos(2*np.pi*t)
+    np.testing.assert_allclose(u[:,0,0],expected,atol=3e-5)
