@@ -1,0 +1,6 @@
+# Isolated experiment environment; does not replace the factory's uv lock.
+opensim==4.6
+numpy==2.3.5
+scipy==1.17.0
+jsonschema==4.26.0
+pytest==9.0.2

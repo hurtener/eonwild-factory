@@ -1,0 +1,78 @@
+{
+  "schema": "eonwild.biomechanics.kinematic-seed.v1",
+  "id": "alioramus-altai-kinematic-seed-01",
+  "source": {
+    "path": "assets/animals/Models/Alioramus-altai.glb",
+    "sha256": "51c15f798071c28fcaebe7ab3da769404294c30c797433e982a70089edb62bc1",
+    "git_blob": "58bb677040ef9d28ce06494c5adf23ab3a80c21d",
+    "reference_branch": "codex/animal-profile-housekeeping"
+  },
+  "coordinate": {
+    "units": "metres",
+    "handedness": "right",
+    "up": [0, 1, 0],
+    "forward": [0, 0, 1]
+  },
+  "roles": {
+    "root": "Bone_000",
+    "pelvis": "Bone_001",
+    "spine": ["Bone_006", "Bone_005", "Bone_004", "Bone_003"],
+    "chest": "Bone_002",
+    "neck": ["Bone_040", "Bone_039", "Bone_038", "Bone_037", "Bone_036", "Bone_035"],
+    "head": "Bone_034",
+    "tail": ["Bone_025", "Bone_024", "Bone_023", "Bone_022", "Bone_021", "Bone_020", "Bone_019", "Bone_018", "Bone_017"],
+    "jaw_lower": "Bone_069",
+    "arms": {
+      "left": ["Bone_029", "Bone_028", "Bone_027", "Bone_026"],
+      "right": ["Bone_033", "Bone_032", "Bone_031", "Bone_030"]
+    },
+    "legs": {
+      "left": {
+        "contactChain": ["Bone_011", "Bone_010", "Bone_009", "Bone_008"],
+        "pad": "Bone_007",
+        "toeChains": [["Bone_043", "Bone_042", "Bone_041"], ["Bone_046", "Bone_045", "Bone_044"], ["Bone_049", "Bone_048", "Bone_047"]]
+      },
+      "right": {
+        "contactChain": ["Bone_016", "Bone_015", "Bone_014", "Bone_013"],
+        "pad": "Bone_012",
+        "toeChains": [["Bone_052", "Bone_051", "Bone_050"], ["Bone_055", "Bone_054", "Bone_053"], ["Bone_058", "Bone_057", "Bone_056"]]
+      }
+    }
+  },
+  "authored_seed": {
+    "cycle_s": 1.4,
+    "stride_m": 0.98,
+    "duty_factor": 0.64,
+    "track_width_m": 0.29,
+    "neutral_drop_m": 0.065,
+    "swing_clearance_m": 0.1,
+    "toeoff_pitch_deg": 28.0,
+    "recovery_pitch_deg": 35.0,
+    "toe_curl_deg": 8.0,
+    "pelvis_sway_m": 0.012,
+    "pelvis_bob_m": 0.008,
+    "pelvis_roll_deg": 1.2,
+    "pelvis_yaw_deg": 1.0,
+    "chest_pitch_deg": 0.8,
+    "tail_yaw_deg": 1.8,
+    "tail_pitch_deg": 0.24,
+    "arm_swing_deg": 2.0,
+    "jaw_close_deg": 8.0
+  },
+  "evidence": {
+    "geometry": "measured directly from the exact source GLB; not a fossil measurement",
+    "numeric_intent": "all authored_seed values are authored engineering estimates, low confidence for biological interpretation",
+    "purpose": "contact-aware animation fixture and OpenSim kinematic bridge proof; possible future initial guess, not optimized locomotion",
+    "rest_pose": "source bind is preserved; neutral_drop_m defines a separate proposed standing pose",
+    "mass_and_inertia": "not calibrated; no dynamic or muscle claims permitted",
+    "life_stage": "not inferred from filename or mesh",
+    "scientific_prediction": false,
+    "production_approval": "NOT_GRANTED"
+  },
+  "limitations": [
+    "The full source rig is preserved, including all three skin influence sets.",
+    "A replay proxy is not a predictive musculoskeletal model.",
+    "Support timing, limb recovery and secondary motion are authored, not recovered prehistoric motion.",
+    "Numerical floor correction does not establish full material no-slip, forces or Unity parity."
+  ]
+}

@@ -5,96 +5,45 @@ on:
     branches: [codex/alioramus-motion-refresh]
     paths:
       - '.github/workflows/alioramus-motion-refresh.yml'
-      - 'src/eonwild_motion/**'
-      - 'tools/*alioramus*'
-      - 'tests/*alioramus*'
-      - 'catalog/**'
-      - 'recipes/**'
+      - 'src/eonwild_motion/biomechanics/**'
+      - 'tools/build_alioramus_refresh.py'
+      - 'tools/requirements-biomechanics-review.txt'
+      - 'tests/test_alioramus_refresh.py'
+      - 'catalog/biomechanics/**'
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  source-inspection:
+  kinematic-bridge:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
+    env:
+      PYTHONPATH: src
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
     steps:
       - uses: actions/checkout@v4
         with:
           lfs: false
-      - name: Inspect immutable source and package reproducibility inputs
-        shell: bash
-        run: |
-          mkdir -p out/alioramus-source
-          python3 - <<'PY'
-          import hashlib, json, pathlib, struct, subprocess
-          path = pathlib.Path('assets/animals/Models/Alioramus-altai.glb')
-          raw = path.read_bytes()
-          magic, version, total = struct.unpack_from('<4sII', raw)
-          if magic != b'glTF' or version != 2 or total != len(raw):
-              raise SystemExit('Invalid source GLB header')
-          length, kind = struct.unpack_from('<II', raw, 12)
-          if kind != 0x4e4f534a or 20 + length > len(raw):
-              raise SystemExit('Invalid GLB JSON chunk')
-          doc = json.loads(raw[20:20+length])
-          receipt = {
-              'status': 'SOURCE_INSPECTED_NOT_REFRESHED',
-              'path': str(path),
-              'source_sha256': hashlib.sha256(raw).hexdigest(),
-              'source_git_blob': hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest(),
-              'source_bytes': len(raw),
-              'commit': subprocess.check_output(['git','rev-parse','HEAD'], text=True).strip(),
-              'nodes': len(doc.get('nodes',[])),
-              'meshes': len(doc.get('meshes',[])),
-              'skins': len(doc.get('skins',[])),
-              'animations': [a.get('name') for a in doc.get('animations',[])],
-              'skin_joints': [s.get('joints',[]) for s in doc.get('skins',[])],
-              'node_names': [n.get('name') for n in doc.get('nodes',[])],
-              'extensions_required': doc.get('extensionsRequired',[]),
-              'rig_quality': 'NOT_REVIEWED',
-              'opensim_motion_transfer': 'NOT_RUN',
-              'unity_parity': 'NOT_RUN',
-              'production_approval': 'NOT_GRANTED'
-          }
-          pathlib.Path('out/alioramus-source/source-inspection.json').write_text(json.dumps(receipt,indent=2)+'\n')
-          pathlib.Path('out/alioramus-source/source-gltf.json').write_text(json.dumps(doc,indent=2)+'\n')
-          print(json.dumps(receipt, indent=2))
-          roots = ['AGENTS.md','README.md','pyproject.toml','uv.lock','src','tools','tests','catalog','recipes','profiles','schemas','docs','assets/animals/Models/Alioramus-altai.glb']
-          roots = [p for p in roots if pathlib.Path(p).exists()]
-          subprocess.run(['git','archive','--format=tar.gz','--output=out/alioramus-source/source-bundle.tar.gz','HEAD',*roots],check=True)
-          PY
-      - uses: actions/upload-artifact@v4
-        with:
-          name: alioramus-source-${{ github.sha }}
-          path: out/alioramus-source/
-          retention-days: 14
-          if-no-files-found: error
-  opensim-environment:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-      - name: Download and smoke-test the official optional runtime
-        shell: bash
+      - name: Install isolated research dependencies
+        run: python -m pip install -r tools/requirements-biomechanics-review.txt
+      - name: Actual-rig and genuine OpenSim replay tests
+        run: python -m pytest tests/test_alioramus_refresh.py -q --tb=short --junitxml=out/tests.xml
+      - name: Build new candidate and test Moco environment independently
+        run: python tools/build_alioramus_refresh.py --output out/alioramus-refresh --sample-hz 60 --moco-smoke
+      - name: Verify that original source remains unchanged
         run: |
-          mkdir -p out/opensim-wheels
-          python -m pip download --only-binary=:all: --dest out/opensim-wheels opensim==4.6
-          python -m pip install --no-index --find-links out/opensim-wheels opensim==4.6
-          python - <<'PY'
-          import opensim as o, json, platform, pathlib
-          m=o.Model(); m.setName('environment_smoke'); state=m.initSystem()
-          receipt={'python':platform.python_version(),'opensim':o.GetVersionAndDate(),'model_initialization':'PASS','moco_class_available':hasattr(o,'MocoStudy'),'moco_optimization':'NOT_RUN','dinosaur_prediction':'NOT_RUN'}
-          pathlib.Path('out/opensim-wheels/runtime-smoke.json').write_text(json.dumps(receipt,indent=2)+'\n')
-          print(json.dumps(receipt,indent=2))
-          PY
-          python -m pip freeze > out/opensim-wheels/environment.txt
+          test "$(git hash-object assets/animals/Models/Alioramus-altai.glb)" = 58bb677040ef9d28ce06494c5adf23ab3a80c21d
+          git diff --exit-code -- assets catalog/baselines legacy/capsules
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: opensim-runtime-${{ github.sha }}
-          path: out/opensim-wheels/
-          retention-days: 7
+          name: alioramus-motion-refresh-${{ github.sha }}
+          path: out/
+          retention-days: 14
           if-no-files-found: error
