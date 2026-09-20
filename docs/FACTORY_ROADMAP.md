@@ -6,7 +6,7 @@ Updated 2026-09-19. This is a living evidence tracker, not a fixed plan inherite
 ## Current animation inventory
 
 Checkpoint 27 retained-braking-support stops are approved for both animals.
-Latest full checkpoint approval is checkpoint 28. Checkpoint 32 is the user-selected running base; checkpoint 34 has changes requested; checkpoint 35 has changes requested; checkpoint 36 is the quieter-gaze and leg-recovery candidate awaiting review. **Approved means visually accepted
+Latest full checkpoint approval is checkpoint 28. Checkpoint 32 is the user-selected running base; checkpoint 34 has changes requested; checkpoint 35 has changes requested; checkpoint 36 has changes requested; checkpoint 37 is the heel-departure and flexion-reserve candidate awaiting review. **Approved means visually accepted
 in the reviewed clips**, not fully certified for arbitrary gameplay. Unless a row
 says otherwise, both admitted animals use the same shared engine with profile data.
 Historical sections and capture-time receipts below retain earlier review states.
@@ -34,7 +34,7 @@ Checkpoint 26 is the approved walking side-hit recovery baseline; standing impac
 | Arm carriage and secondary motion | Full-transition pass approved | Full-transition pass approved | Behavior-specific overrides for attacks, rest and interaction |
 | Jaw relaxation / breathing-like cycle | Full-transition pass approved | Full-transition pass approved | Full-body breathing and behavior-specific mouth control |
 | Expressive idle / listening / alert scanning | No complete approved family | No complete approved family | Compose meaningful attention, posture and breathing behaviors from existing layers |
-| Running / sprinting | Sustained run candidate, checkpoint 36; pending review; sprint missing | Sustained run candidate, checkpoint 36; pending review; historical Run010 / Sprint006 preserved | Review release smoothness and retained tail/body motion; then entry/braking and sprinting |
+| Running / sprinting | Sustained run candidate, checkpoint 37; pending review; sprint missing | Sustained run candidate, checkpoint 37; pending review; historical Run010 / Sprint006 preserved | Review release smoothness and retained tail/body motion; then entry/braking and sprinting |
 | Feeding / gripping / pulling | Current approved transfer missing | Historical Feeding003 reference preserved | Current grounded support, oral contact and interaction handoff |
 | Drinking / swallowing | Missing | Missing | New choreography and world interaction |
 | Rest / sit / lie down / rise / sleep | Missing | Missing | New support transitions and resting behavior |
@@ -824,7 +824,7 @@ requested. Full material contact/force certification, run entry/braking,
 sprinting and airborne impacts remain open. Pause for user feedback here.
 
 
-## Current checkpoint — 36 D: quieter gaze and cleaner leg recovery, pending review
+## Previous checkpoint — 36 D: quieter gaze and cleaner leg recovery, changes requested
 
 The user liked C35's direction and requested less head yaw while retaining the
 pelvis/tail momentum, plus cleanup of repeated leg reversals. C35 now has changes
@@ -861,3 +861,42 @@ cut is not an animation transition. Candidate D is the saved review result;
 internal variants A/B/C/E are not promoted. Pause for feedback at this checkpoint.
 Run entry/braking, sprinting, airborne impacts and full production acceptance
 remain open.
+
+
+## Current checkpoint — 37 A: continuous heel departure and flexion reserve, pending review
+
+The user identified Tarbosaurus knee overextension and Allosaurus extending
+after the foot had left the ground. Checkpoint 36 has changes requested. Both
+animals still use the same shared planner, articulated solver and versioned
+running recipe. No species branch, new animal-specific solver or profile change
+is introduced.
+
+Shared recipe v9 raises the authored heel-rock amplitude from 18 to 32 degrees
+and carries a single curve through toe departure. The heel is still moving when
+contact ends, instead of stopping and handing off to a delayed lift. Clearance
+develops earlier, with a broader recovery fold; the common solver reserves knee
+flexion using the existing extension-preference cost under a generic field.
+Contact and admitted hard joint limits retain authority. The requested 150-degree
+preference is an authored coordination choice, not a new anatomical hard limit.
+
+Actual emitted source keys show maximum knee angles of 138.96 degrees Allosaurus
+and 142.86 degrees Tarbosaurus, versus 151.51 and 175.20 in C36. Maximum adjacent
+knee changes are 15.48 and 13.69 degrees, versus 18.47 and 25.68. These are
+sample-spacing-dependent diagnostics, not a velocity certificate. Post-release
+extension is reduced but not eliminated: maximum extra opening during the first
+0.2 step after toe-off is 5.25 degrees Allosaurus and 4.60 Tarbosaurus, versus
+8.01 and 17.44. Some ankle/hock sharpness remains; neither animal is auto-approved.
+
+Both final GLBs were reopened: source receipts report zero reach excess and
+articulation violation. Head yaw and the fourth tail point relative to base
+match C36 at every source key. Stride, speed, contact/flight timing, body response
+and Tarbosaurus's raised carriage are preserved. All earlier connected clips
+and segments remain unchanged with matching asset hashes.
+
+Ninety-three focused checks, the native Unity build, four captures and complete
+decoding of both videos pass. All 432 captured frames were inspected in 18
+chronological sheets. Each video is six seconds side plus three seconds front
+quarter; the view cut is not a gait transition. Evidence and complete bilateral
+measurements: principal Eonwild game/Evidence/grounded-push-running-study/.
+Pause for user feedback. Full material-contact/force certification, connected
+run entry/braking, sprinting and airborne impacts remain open.

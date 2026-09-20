@@ -1248,16 +1248,17 @@ def solve_airborne_plan_sample(
                          + 1000*max(0.,hock_min-metatarsus_world_degrees)**2
                          + preferred_gain*gait.articulation_preferred_margin_weight*preferred
                          + 1e5*sum(e*e for e in errors) + 1e8*extension*extension)
-            extension_preference = foot_plan.get("walking_knee_preference_degrees")
+            extension_preference = foot_plan.get("knee_extension_preference_degrees",
+                                                foot_plan.get("walking_knee_preference_degrees"))
             if extension_preference is not None:
                 if (isinstance(extension_preference, bool)
                         or not isinstance(extension_preference, (int, float))
                         or not math.isfinite(extension_preference)
                         or not 90 <= extension_preference < 180):
-                    raise ContractError("invalid walking knee extension preference")
+                    raise ContractError("invalid knee extension preference")
                 # Reserve flexion as the supported leg lengthens. This C2
                 # cost redistributes articulation through the ankle while
-                # retaining walking recovery, the fixed foot and hard ROM.
+                # retaining the selected recovery, foot target and hard ROM.
                 excess = max(0., knee_angle - extension_preference)
                 score += excess ** 4
             turn_shape = foot_plan.get("turn_leg_shape")

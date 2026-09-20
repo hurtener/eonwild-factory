@@ -21,6 +21,14 @@ class RunningSupportCycle:
         self.gravity = policy['gravity_mps2']
         if policy.get('articulation_search') not in (None, 'feasible_basins'):
             raise ValueError('Invalid running articulation search')
+        for key, low, high in [('release_roll_peak_swing_fraction', .01, .15),
+                               ('knee_extension_preference_degrees', 130., 165.),
+                               ('recovery_lift_exponent', 2., 4.)]:
+            if key in policy:
+                value = policy[key]
+                if (isinstance(value, bool) or not isinstance(value, (int, float))
+                        or not math.isfinite(value) or not low <= value <= high):
+                    raise ValueError('Invalid running release policy: '+key)
         if not (0 < self.gravity <= 20 and 0 <= policy['speed_yield_fraction'] <= .15
                 and .05 <= policy['support_ramp_fraction'] <= .4
                 and 0 < policy['recovery_peak_fraction'] <= .5):
@@ -117,7 +125,8 @@ class RunningSupportCycle:
         if not 0 < u < 1:
             return 0.
         peak = self.policy['recovery_peak_fraction']
-        a, b = 3., 3.*(1-peak)/peak
+        a = self.policy.get('recovery_lift_exponent', 3.)
+        b = a*(1-peak)/peak
         return (u/peak)**a*((1-u)/(1-peak))**b
 
     def sample(self, time):
@@ -163,6 +172,18 @@ class RunningSupportCycle:
                 pitch = release+self.policy.get('recovery_pitch_degrees',g.foot_recovery_pitch_degrees)*fold
                 pad = self.policy['pad_gather_degrees']*fold
                 toe = g.toe_flex_degrees*(fold+.55*(1-smooth(u/.36)))
+            if 'release_roll_peak_swing_fraction' in self.policy:
+                # Carry a single heel-rock curve through toe departure. A
+                # zero-speed heel at release leaves the advancing hip to
+                # straighten the airborne leg before clearance develops.
+                start = .1*c*step
+                peak = c*step+self.policy['release_roll_peak_swing_fraction']*(2-c)*step
+                end = c*step+.4*(2-c)*step
+                roll = g.push_off_pitch_degrees*(
+                    smooth((local-start)/(peak-start)) if local <= peak
+                    else 1-smooth((local-peak)/(end-peak)))
+                pitch += roll-release
+                release = roll
             feet[side] = dict(contact=stance,touchdown_time_s=touchdown,
                 forward_m=x,height_m=h,swing_phase=u,foot_pitch_degrees=pitch,
                 stance_roll_pitch_degrees=pitch,stance_roll_swing_pitch_degrees=release,
@@ -181,6 +202,8 @@ class RunningSupportCycle:
                     knee = shape['release_knee']-(shape['release_knee']-shape['gathered_knee'])*fold+(shape['landing_knee']-shape['release_knee'])*smooth(u)
                     ankle = shape['release_ankle']-(shape['release_ankle']-shape['gathered_ankle'])*fold+(shape['landing_ankle']-shape['release_ankle'])*smooth(u)
                 feet[side]['running_leg_shape'] = dict(knee_interior_degrees=knee,ankle_interior_degrees=ankle)
+                if 'knee_extension_preference_degrees' in self.policy:
+                    feet[side]['knee_extension_preference_degrees'] = self.policy['knee_extension_preference_degrees']
                 if self.policy.get('articulation_search') == 'feasible_basins':
                     feet[side]['running_leg_shape']['search_feasible_basins'] = True
                 feet[side]['leg_heading_degrees'] = self.policy['leg_heading_degrees']

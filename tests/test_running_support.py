@@ -8,7 +8,7 @@ from eonwild_motion.planning.running_support import RunningSupportCycle
 
 ROOT = Path(__file__).resolve().parents[1]
 
-@pytest.fixture(params=[(a,v) for a in ['allo','tarbo'] for v in [2,3,4,5,6,7,8]])
+@pytest.fixture(params=[(a,v) for a in ['allo','tarbo'] for v in [2,3,4,5,6,7,8,9]])
 def cycle(request):
     animal, version = request.param
     recipe = json.loads((ROOT/f'catalog/behaviors/running-review.v{version}.json').read_text())
@@ -193,13 +193,14 @@ def test_running_posture_is_profile_owned_and_recipe_opt_in():
 
 
 @pytest.mark.parametrize('animal', ['allo', 'tarbo'])
-def test_head_stabilization_preserves_pelvis_tail_and_propulsive_release(animal):
+@pytest.mark.parametrize('versions', [(7,8), (8,9)])
+def test_head_stabilization_preserves_pelvis_tail_and_propulsive_release(animal, versions):
     from eonwild_motion.planning.running_support import support_body_response
     profile=json.loads((ROOT/f'catalog/embodiment/{animal}.v1.json').read_text())
     roles={'spine':['spine'],'chest':'chest','neck':['neck0','neck1'],
            'head':'head','tail':[f'tail{i}' for i in range(8)]}
     responses=[];cycles=[]
-    for version in (7,8):
+    for version in versions:
         recipe=json.loads((ROOT/f'catalog/behaviors/running-review.v{version}.json').read_text())
         cycle=RunningSupportCycle(resolve_running(profile,recipe),profile['authoring']['bodyHeightM'],recipe['coordination'])
         cycles.append(cycle)
@@ -222,3 +223,17 @@ def test_head_stabilization_preserves_pelvis_tail_and_propulsive_release(animal)
     new=cycles[1]
     x=[new.sample((new.contact+(2-new.contact)*u)*new.step)['feet']['left']['forward_m'] for u in np.linspace(0,1,101)]
     assert min(np.diff(x))>=0
+
+
+def test_heel_departure_keeps_angular_motion_through_contact_release():
+    profile=json.loads((ROOT/'catalog/embodiment/tarbo.v1.json').read_text())
+    recipe=json.loads((ROOT/'catalog/behaviors/running-review.v9.json').read_text())
+    cycle=RunningSupportCycle(resolve_running(profile,recipe),profile['authoring']['bodyHeightM'],recipe['coordination'])
+    release=cycle.contact*cycle.step
+    epsilon=1e-6
+    rows=[cycle.sample(release+offset*epsilon)['feet']['left'] for offset in [-1,0,1]]
+    angles=[r['stance_roll_swing_pitch_degrees'] for r in rows]
+    before,after=np.diff(angles)/epsilon
+    assert rows[0]['contact'] and not rows[1]['contact']
+    assert before>0 and after==pytest.approx(before,rel=.001)
+    assert all(r['support_load_bodyweights']==0 for r in rows[1:])
