@@ -64,28 +64,33 @@ def main():
  skin=SkinRig(source,c.roles,c.forward,c.up,captured['kwargs']['contact_profile']);ids={s:np.asarray(provider.anchor_for(s).material_vertex_indices) for s in c.legs}
  refs={s:None for s in c.legs};release={s:np.zeros(3) for s in c.legs};poses=[];checks=[]
  print('RUN_SOURCE',len(times),'samples',gait.step_period_s,'seconds per step',flush=True)
- for i,(row,body) in enumerate(zip(plan['samples'],response)):
-  if i==0 or row['review_segment']!=plan['samples'][i-1]['review_segment']:
-   refs={s:None for s in c.legs};release={s:np.zeros(3) for s in c.legs}
-  half=.5*perf['lane_width_body_heights']*c.body_height;nominal={}
-  for s,f in row['feet'].items():
-   lane=c.hip_lane_center+math.copysign(half,c.hip_offsets[s]);base=c.base_w[c.legs[s][-1]][:3,3]
-   target=c.origin+c.forward*f['forward_m']+c.lateral*lane;target+=c.up*(float(base@c.up)+f['height_m']-float(target@c.up));nominal[s]=target.copy()
-   if not f['contact']:refs[s]=None;target+=release[s]*(1-smooth(f['swing_phase']/.3))
-   f['world_foot_target_m']=target.tolist()
-  for iteration in range(4):
-   pose=solve_airborne_plan_sample(context,row,body_response_sample=body);w=np.asarray(_world_matrices(source,pose.translations,pose.rotations,c.base_s));patches={s:skin.skin(w,v) for s,v in ids.items()};errors={s:skin.ground-float((p@c.up).min()) for s,p in patches.items()}
+ for fit_pass in range(2 if recipe.get('whole_stride_fit') else 1):
+  refs={s:None for s in c.legs};release={s:np.zeros(3) for s in c.legs};poses=[];checks=[]
+  for i,(row,body) in enumerate(zip(plan['samples'],response)):
+   if i==0 or row['review_segment']!=plan['samples'][i-1]['review_segment']:
+    refs={s:None for s in c.legs};release={s:np.zeros(3) for s in c.legs}
+   half=.5*perf['lane_width_body_heights']*c.body_height;nominal={}
    for s,f in row['feet'].items():
-    if f['contact'] and refs[s] is None:refs[s]=patches[s].copy()
-   if iteration==3:break
+    lane=c.hip_lane_center+math.copysign(half,c.hip_offsets[s]);base=c.base_w[c.legs[s][-1]][:3,3]
+    target=c.origin+c.forward*f['forward_m']+c.lateral*lane;target+=c.up*(float(base@c.up)+f['height_m']-float(target@c.up));nominal[s]=target.copy()
+    if not f['contact']:refs[s]=None;target+=release[s]*(1-smooth(f['swing_phase']/.3))
+    f['world_foot_target_m']=target.tolist()
+   for iteration in range(4):
+    pose=solve_airborne_plan_sample(context,row,body_response_sample=body);w=np.asarray(_world_matrices(source,pose.translations,pose.rotations,c.base_s));patches={s:skin.skin(w,v) for s,v in ids.items()};errors={s:skin.ground-float((p@c.up).min()) for s,p in patches.items()}
+    for s,f in row['feet'].items():
+     if f['contact'] and refs[s] is None:refs[s]=patches[s].copy()
+    if iteration==3:break
+    for s,f in row['feet'].items():
+     delta=c.up*errors[s] if f['contact'] or errors[s]>0 else np.zeros(3)
+     if f['contact']:delta+=material_patch_correction(patches[s],refs[s],c.up)
+     f['world_foot_target_m']=(np.asarray(f['world_foot_target_m'])+delta).tolist()
    for s,f in row['feet'].items():
-    delta=c.up*errors[s] if f['contact'] or errors[s]>0 else np.zeros(3)
-    if f['contact']:delta+=material_patch_correction(patches[s],refs[s],c.up)
-    f['world_foot_target_m']=(np.asarray(f['world_foot_target_m'])+delta).tolist()
-  for s,f in row['feet'].items():
-   if f['contact']:release[s]=tangent(np.asarray(f['world_foot_target_m'])-nominal[s],c.up)
-  poses.append((pose.translations,pose.rotations));checks.append({'time_s':row['time_s'],'unreachable_m':pose.maximum_unreachable_extension_m,'foot_target_residual_m':pose.maximum_foot_target_residual_m,'articulation_violation_degrees':pose.maximum_articulation_envelope_violation_degrees,'floor_gap_m':{s:-v for s,v in errors.items()}})
-  if i%48==0:print('Solved',i,'/',len(times),flush=True)
+    if f['contact']:release[s]=tangent(np.asarray(f['world_foot_target_m'])-nominal[s],c.up)
+   poses.append((pose.translations,pose.rotations));checks.append({'time_s':row['time_s'],'unreachable_m':pose.maximum_unreachable_extension_m,'foot_target_residual_m':pose.maximum_foot_target_residual_m,'articulation_violation_degrees':pose.maximum_articulation_envelope_violation_degrees,'floor_gap_m':{s:-v for s,v in errors.items()}})
+   if i%48==0:print('Solved',i,'/',len(times),flush=True)
+  if fit_pass==0 and recipe.get('whole_stride_fit'):
+   from eonwild_motion.solve.running_stride_fit import fit_running_stride
+   plan['stride_fit']=fit_running_stride(context,plan,response,cycle,profile,recipe['whole_stride_fit'])
  document=deepcopy(source.document);binary=bytearray(source.binary);ta=_append_accessor(document,binary,np.asarray(times),'SCALAR');samplers=[];channels=[]
  tr=np.asarray([p[0] for p in poses]);ro=np.asarray([p[1] for p in poses]);ro/=np.linalg.norm(ro,axis=2)[:,:,None]
  for i in range(1,len(ro)):

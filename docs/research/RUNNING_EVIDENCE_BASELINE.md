@@ -1,8 +1,9 @@
 # Running evidence baseline
 
 Researched 2026-09-20. Status: research baseline and diagnostic extrapolation;
-partly adopted in checkpoint 38 C, awaiting visual review. C37 has
-landing/release changes requested. The user's approval of the analysis/chart
+partly adopted in checkpoint 38 C, reviewed with changes requested.
+Checkpoint 39 B adds a reduced whole-stride leg fit and awaits visual review.
+C37 has landing/release changes requested. The user's approval of the analysis/chart
 does not approve a new animation. Implementation remains direct, without agents,
 and pauses at the next both-animal video checkpoint.
 
@@ -164,3 +165,97 @@ smaller maximum adjacent knee changes. Some ankle corners remain. This candidate
 establishes a source-backed calibration path; it does not complete smoothness or
 prove dinosaur biomechanics. Checkpoint media and full comparisons are in the
 principal game's game/Evidence/empirical-running-study/. Pause for review.
+
+
+## Whole-stride articulation experiment — checkpoint 39 B
+
+C38 feedback: the user finds Tarbo substantially improved, but its neck too
+laterally active; Allo is not fully convincing. C39 is an explicitly bounded
+experiment before more detailed modeling. No new gait approval is inferred.
+
+Implemented in `src/eonwild_motion/solve/running_stride_fit.py`, opt-in through
+`catalog/behaviors/running-review.v11.json`. This extends the existing engine.
+Both actual animals use identical code/recipe, with admitted geometry and profile
+mass, stride and speed supplying the differences. The normal per-frame solver
+remains unchanged for recipes without the opt-in.
+
+### Mathematical scope
+
+The body path, toe choreography, contact times and foot trajectories remain
+prescribed. For each leg, 64 periodic phase samples explore its remaining
+metatarsal-pitch redundancy while maintaining hip-to-foot reach. Anatomical hinge
+branch and admitted hard joint limits define feasible intervals. A periodic fit
+chooses all samples together. It returns a periodic cubic pitch function to the
+rotation-only source solver, before final material/floor correction. Emitted
+poses and material patches are reopened and measured afterward.
+
+This is a whole-stride **leg articulation fit**, not a whole-body optimal-control
+solution. Hip, knee and ankle are geometrically coupled through the one remaining
+variable; root, feet and toes are not independent optimization variables yet.
+
+Reduced sagittal joint moments use Newton-Euler inverse dynamics. At each joint
+j, sum over distal segments i:
+
+    tau_j = sum((c_i - p_j) cross m_i * (a_i - g) + I_i * alpha_i)
+            - (p_contact - p_j) cross F_ground
+
+Segment centers are midpoints; rod inertia is m*length^2/12. The pelvis reaction
+is not constrained. Ground force is applied at the toe-base proxy, not a solved
+pressure center. Vertical force comes from the existing BIRDS transfer. Fore-aft
+force follows the authored body travel acceleration during support. Free legs
+have no ground force. Constant forward travel is removed before cyclic
+differentiation so the loop boundary does not invent an impulse.
+
+The objective combines a soft reference to the freshly generated source plan,
+angular acceleration/jerk, normalized joint moment and rate of joint moment.
+Angles are radians; derivatives use physical seconds. Moment is normalized by
+body mass * gravity * admitted leg length. Derivative costs are scaled by stride
+frequency. This is an effort proxy, not metabolic cost or measured muscle force.
+
+The reference is current admitted geometry + recipe evaluated during this build.
+No C38 GLB, historical source animation or prior curve drives generation.
+
+### Explicit engineering assumptions
+
+Per-leg mass fractions for thigh/shank/metatarsus are 0.035/0.018/0.006 of body
+mass. These and midpoint/rod inertias are low-confidence engineering estimates;
+no dinosaur segment measurements or strength limits are claimed. They are
+versioned in the recipe and copied into the receipt with actual kilogram values.
+Objective weights are engineering regularization, not biological measurements.
+The contact proxy omits toe inertia, changing pressure center, tendon elasticity,
+actuator limits and whole-body/lateral angular-momentum balance.
+
+The method is informed by motion-tracking optimal control, described by
+[Dembia et al. 2020, OpenSim Moco](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1008493).
+C39 uses a reduced in-engine fit rather than adopting an OpenSim muscle model.
+Reference movement/mechanics remain those cataloged above. No new measured joint
+curve dataset has been admitted in this checkpoint.
+
+### Results and boundaries
+
+All four leg fits converged in 11-14 residual evaluations. On the reduced fit
+model, angular-acceleration RMS falls approximately 23-35%, and estimated joint
+moment RMS approximately 4-6%, relative to its fresh seed. These are model-space
+metrics, not a certificate of equal improvement in every emitted joint.
+
+Reopened source-key measurements reduce early post-release knee opening from
+6.21 to 5.84 degrees (Allo) and 4.02 to 3.48 (Tarbo). Maximum knee angle is 146.25
+and 143.83 degrees. The largest Tarbo adjacent source-key knee change increases
+from 10.15 to 10.82 degrees; keys are not uniformly spaced. Allo ankle local
+sharpness also remains. Preserve regressions; do not certify universal smoothness.
+Both source candidates have zero reported sampled reach excess and hard-ROM
+violations after final correction. Skin and Unity full continuous parity remain
+separate from these sampled checks.
+
+The neck adjustment is separately authored: anterior trunk yaw falls from 8 to
+2 degrees while pelvic yaw and the proximal tail eight are retained. This is
+not a dynamically predicted neck solution.
+
+### Conditional continuation
+
+After positive visual feedback, admit paired extant kinematic/force trials with
+axis/zero conventions; add pressure-center/toe compliance and allow body/foot
+trajectories to co-adapt; improve segment mass, joint capacity and elastic priors.
+Validate against an extant trial/speed withheld from fitting, then report dinosaur
+extrapolation uncertainty. Only subsequently revisit approved walking and other
+movement families. Do not deepen the model before the current videos are reviewed.

@@ -5,14 +5,14 @@ Updated 2026-09-20. This is a living evidence tracker, not a fixed plan inherite
 Research before the next running pass: [running evidence baseline](research/RUNNING_EVIDENCE_BASELINE.md)
 records measured bird motion, the published BIRDS model, and diagnostic Allo/Tarbo
 extrapolations. The user requested evidence-based calibration after the C37
-landing/release analysis. Checkpoint 38 adopts selected, explicitly transferred priors; both-animal
-visual review remains pending.
+landing/release analysis. Checkpoint 38 adopts selected, explicitly transferred priors. Checkpoint 39 adds
+whole-stride leg fitting; both-animal review is pending.
 
 
 ## Current animation inventory
 
 Checkpoint 27 retained-braking-support stops are approved for both animals.
-Latest full checkpoint approval is checkpoint 28. Checkpoint 32 is the user-selected running base; checkpoint 34 has changes requested; checkpoint 35 has changes requested; checkpoint 36 has changes requested; checkpoint 37 has further changes requested; checkpoint 38 C is the evidence-informed running candidate awaiting review. **Approved means visually accepted
+Latest full checkpoint approval is checkpoint 28. Checkpoint 32 is the user-selected running base; checkpoint 34 has changes requested; checkpoint 35 has changes requested; checkpoint 36 has changes requested; checkpoint 37 has further changes requested; checkpoint 38 C has changes requested (Tarbo substantially improved; neck needs restraint; Allo not fully convincing); checkpoint 39 B is the periodic leg-fit candidate awaiting review. **Approved means visually accepted
 in the reviewed clips**, not fully certified for arbitrary gameplay. Unless a row
 says otherwise, both admitted animals use the same shared engine with profile data.
 Historical sections and capture-time receipts below retain earlier review states.
@@ -931,3 +931,12 @@ Allo still has up to 6.21° early post-release knee opening (C37: 5.25°); Tarbo
 Next: user review of the evidence-informed catch/loading rhythm; then targeted
 release polish, running entry/braking and the separate sprinting family. Preserve
 checkpoint 32 as the user-selected running base until a new candidate is approved.
+
+
+## Checkpoint 39 — whole-stride leg fit
+
+A single shared periodic fitter now coordinates each leg across an entire stride, using reduced sagittal inverse dynamics and temporal costs. It consumes newly admitted geometry and a fresh source-plan seed, never a previous animated take. Candidate B uses recipe `catalog/behaviors/running-review.v11.json`; both-animal saved videos are in principal Eonwild `game/Evidence/coupled-stride-running-study/`.
+
+This first bounded stage optimizes the leg's remaining articulation degree of freedom with prescribed body motion, foot paths and contact timing. It is not full-body optimal control or muscle simulation. See the appended mathematical scope and assumptions in [running evidence baseline](research/RUNNING_EVIDENCE_BASELINE.md). Anterior trunk yaw is also reduced for quieter neck motion; the hip/tail eight remains.
+
+C38 feedback: Tarbo is substantially improved with neck changes requested; Allo is not fully convincing. C39 B is pending, not automatically approved by objective reduction. Further detail is conditional on this review: paired measured extant trajectories, contact pressure/toe compliance, body/foot trajectory co-optimization, better segment mass and strength priors. Walking may be revisited after running demonstrates the method; preserve approved walking now.

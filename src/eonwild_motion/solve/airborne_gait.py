@@ -952,6 +952,7 @@ def grounded_touchdown_target(
 def solve_airborne_plan_sample(
     context: AirborneSolveContext, row: Mapping[str, Any], *,
     body_response_sample: Mapping[str, Any] | None = None,
+    leg_candidate_observer=None,
 ) -> SolvedAirbornePose:
     """Solve one existing plan row without reading or mutating sibling rows."""
     row, tr, rot = _prepare_body_pose(context, row, body_response_sample)
@@ -1339,8 +1340,18 @@ def solve_airborne_plan_sample(
                 refined.append(best_candidate)
             return min(refined, key=candidate_key)
 
-        baseline_best = (pitch_candidate(float(foot_plan['turn_choreographed_pitch_degrees']))
+        fitted_pitch = foot_plan.get('stride_fitted_pitch_degrees')
+        if fitted_pitch is not None and (isinstance(fitted_pitch, bool)
+                or not isinstance(fitted_pitch, (int, float))
+                or not math.isfinite(fitted_pitch) or not lo <= fitted_pitch <= hi):
+            raise ContractError('invalid periodic stride articulation')
+        baseline_best = (pitch_candidate(fitted_pitch) if fitted_pitch is not None else
+                         pitch_candidate(float(foot_plan['turn_choreographed_pitch_degrees']))
                          if 'turn_choreographed_pitch_degrees' in foot_plan else minimize_pitch())
+        if leg_candidate_observer is not None:
+            # Read-only geometry seam for offline whole-cycle fitting. The
+            # observer must consume this frame's closure before it returns.
+            leg_candidate_observer(side, hp.copy(), pitch_candidate, baseline_best)
         if world_metatarsus_recovery is None:
             world_metatarsus_baseline = None
             world_metatarsus_target = None
