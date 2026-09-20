@@ -2,7 +2,8 @@
 
 Researched 2026-09-20. Status: research baseline and diagnostic extrapolation;
 partly adopted in checkpoint 38 C, reviewed with changes requested.
-Checkpoint 39 B adds a reduced whole-stride leg fit and awaits visual review.
+Checkpoint 39 B was reviewed: Tarbo remains good; Allo still looks restrained.
+Checkpoint 40 D adds bilateral floating-body dynamics and awaits morning review.
 C37 has landing/release changes requested. The user's approval of the analysis/chart
 does not approve a new animation. Implementation remains direct, without agents,
 and pauses at the next both-animal video checkpoint.
@@ -259,3 +260,100 @@ trajectories to co-adapt; improve segment mass, joint capacity and elastic prior
 Validate against an extant trial/speed withheld from fitting, then report dinosaur
 extrapolation uncertainty. Only subsequently revisit approved walking and other
 movement families. Do not deepen the model before the current videos are reviewed.
+
+
+## Checkpoint 40 D: free swing tasks and a coupled reduced body
+
+The user's review identifies restricted articulation, especially in Allosaurus.
+C39 only optimized metatarsal redundancy against prescribed body/foot paths;
+its strong pose reference could retain that restriction. C40 weakens the pose
+reference and optimizes three sagittal segment angles per leg, torso pitch and
+mean COM placement together over 64 periodic samples. The same algorithm and
+recipe serve both animals; admitted geometry, body measurements, semantic ROM,
+speed and stride supply their differences. No prior animated clip is a fit input.
+
+For each sample, local segment centers r_i and mass fractions f_i determine the
+bilateral hip-center position B = C - sum(f_i r_i). C is the COM path integrated
+from the existing support impulse. This makes limb swing produce body recoil
+and exactly reconstructs COM **within this reduced model**. The remaining mass
+is a torso at the hip center. Three uniform rods per leg have I = m L² / 12;
+torso gyration is estimated at 0.55 times leg length. Per-leg mass fractions
+[0.035, 0.018, 0.006] and that gyration are engineering priors, not measurements.
+
+The fit minimizes a weighted sum of squared residuals for weak pose tracking,
+joint acceleration/jerk, inverse-dynamic torque and torque rate, actuator power,
+foot tasks, material clearance, ROM margins, body displacement and angular
+momentum balance. H includes limb orbital momentum, rod spin, torso orbital
+momentum and torso pitch inertia. dH/dt is compared with ground-force moment
+about reduced COM. Contact and angular balance are finite-weight objectives;
+their residuals are reported. These are not equality-constrained certified
+forward dynamics. Absolute mass scales Nm demand but cancels from normalized
+shape costs when geometry/timing are held equal: heavier alone does not produce
+slower motion here. Strength scaling and muscle capacity remain future work.
+
+Grounded toe-base tasks stay strongly constrained; swing tasks can move. A
+first fresh full-rig solve measures the toe material envelope so the optimizer
+does not lower a curled foot into the floor and leave final contact correction
+to force the ankle out of range. Full-rig IK and material correction still follow
+the planar fit; final emitted motion is checked separately. Source-key reach and
+hard ROM violations are zero for both selected candidates. Intermediate A/B
+failed to protect Tarbo's material envelope and were not selected.
+
+### Scientific basis and limits
+
+[Dembia et al. 2020, OpenSim Moco](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1008493)
+provides the useful distinction between tracking motion and predicting it through
+musculoskeletal optimal control. This implementation uses SciPy nonlinear least
+squares and a reduced model, not Moco, muscles, tendons or a reproduced published
+animal simulation. [Rubenson et al. 2007](https://journals.biologists.com/jeb/article/210/14/2548/16933/Running-in-ostriches-Struthio-camelus-three)
+supports retaining explicit joint coordinate conventions: 3D axes cannot be
+replaced by unqualified planar angles or transplanted into these rigs.
+
+Support timing/force shape, toe choreography and tail/neck artistic motion remain
+prescribed. Torso COM at the hip is a major approximation for these animals;
+there is no distributed torso/tail inertia or moving pressure center. The reduced
+fit is not a whole-rig force certificate or proof of biological dinosaur running.
+
+### What changed in the emitted motion
+
+Estimated model torque RMS falls from 4279.9 to 3281.4 Nm for Allo and 8478.3 to
+6997.9 Nm for Tarbo relative to the fresh unfit seed. Normalized angular-momentum
+residual RMS is 0.00700 / 0.00320 bodyweight × leg length. Maximum fitted support
+position residual is 0.205 / 0.208 mm. These are model measurements, not muscle
+forces or final-rig metrics.
+
+Allo's source-key knee minimum decreases from 78.69 to 72.72 degrees, giving more
+gathering. Early post-release knee reopening falls from 5.84 to 2.50 degrees;
+Tarbo from 3.48 to 0 degrees in the sampled first 0.2-step window. Tarbo's maximum
+knee extension increases from 143.83 to 153.31 degrees and needs fresh review.
+Adjacent source-key increments increase; irregular sample spacing means this is
+not angular speed and does not certify smoothness either way.
+
+C40 C and D use identical solved key poses. D changes emission from LINEAR to
+CUBICSPLINE, with sign-aligned quaternion keys and projected quaternion tangents.
+The same reduced COM proxy measured from final GLBs on a 128-sample periodic grid
+has vertical force residual RMS/BW of:
+
+| Animal | C39 linear | C40 C linear | C40 D cubic |
+| --- | ---: | ---: | ---: |
+| Allo | 0.629 | 0.698 | 0.093 |
+| Tarbo | 0.425 | 0.474 | 0.091 |
+
+This ablation attributes most of that improvement to serialization continuity,
+not solely to the deeper fit. Finite-difference residuals depend on sampling and
+our assumed mass model. Cubic interpolation does not preserve every constraint
+between keys: reopened loaded floor gaps at keys/midpoints range from -1.021 to
++0.637 mm (Allo), -0.530 to +0.432 mm (Tarbo). No continuous-contact certificate.
+
+Native Unity video evidence, every-frame sheets, scripts, source hashes and the
+remaining consumer checks are in principal Eonwild
+`game/Evidence/floating-body-running-study/`. Unity landmark comparison currently
+fails the unchanged 2 mm criterion (Allo 6.76 mm, Tarbo 6.51 mm). Do not transfer
+source measurements into a claim of verified Unity parity. One complete Tarbo
+capture exited 255 in Metal/CVDisplayLink after saving its frames; the failure is
+preserved. Videos are diagnostic candidates pending the user's morning review.
+
+Next, conditional on the visual direction: resolve cubic consumer parity;
+introduce better distributed mass/COM and contact pressure/toe compliance;
+calibrate strength/capacity and paired extant kinematics/forces. Keep running
+entry/braking, sprinting and eventual walking migration separate checkpoints.

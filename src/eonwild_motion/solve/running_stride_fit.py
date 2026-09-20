@@ -1,9 +1,9 @@
 """Offline periodic leg fit with reduced sagittal inverse dynamics.
 
-The source geometry, contact anchors and body path remain authoritative. Joint
-torques couple the complete stride; they are NOT measured muscle forces. Rod
-inertias/segment masses are explicit engineering priors. This first stage fits
-the remaining metatarsal degree of freedom, not the root, toes or gait timing.
+The first mode fits metatarsal redundancy with fixed body/foot tasks. The
+floating-body mode couples bilateral joint paths, free-foot recovery and a
+reduced torso through mass and angular momentum. Neither estimates measured
+muscle forces. Segment masses and inertias are explicit engineering priors.
 """
 from copy import deepcopy
 import math
@@ -57,6 +57,10 @@ def inverse_dynamics(points, forces, segment_masses, gravity, d2):
 
 def fit_running_stride(context, plan, response, cycle, profile, policy):
     """Fit both anatomical legs with one shared objective, then freeze curves."""
+    if policy.get('model') not in (None,'floating_body'):
+        raise ContractError('unknown stride dynamics model')
+    if policy.get('model') == 'floating_body':
+        return fit_floating_body_stride(context, plan, cycle, profile, policy)
     period = 2*cycle.step
     # Same uniform analysis clock for both animals, independent of emission
     # knots. Interpolate target corrections from the fresh source solve only.
@@ -180,3 +184,231 @@ def fit_running_stride(context, plan, response, cycle, profile, policy):
             'Ground reaction applied at toe base; distal toe inertia and moving pressure center omitted.',
             'Prior joint shape is a weak reference from the freshly generated shared source plan.',
             'Final material correction and emitted hard bounds must be measured after fitting.'])
+
+
+def floating_body_geometry(angles, lengths, hip_offsets, com, fractions):
+    """Exact COM reconstruction for a point torso plus two three-rod legs.
+
+    Inputs use time, side, segment, forward/up. The torso holds the remaining
+    mass at the bilateral hip center. This is a reduced model COM, not the
+    measured COM of the rendered animal. Segment lengths are constant.
+    """
+    vectors = lengths[None, :, :, None]*np.stack((np.sin(angles), -np.cos(angles)), axis=-1)
+    local = np.concatenate((hip_offsets[:, :, None, :],
+        hip_offsets[:, :, None, :]+np.cumsum(vectors, axis=2)), axis=2)
+    centers = .5*(local[:, :, :-1]+local[:, :, 1:])
+    weighted = np.sum(centers*np.asarray(fractions)[None, None, :, None], axis=(1,2))
+    body = com-weighted
+    return body, local+body[:, None, None, :]
+
+
+def reduced_angular_momentum(points, body, com, pitch, fractions, body_inertia, d1):
+    """Angular momentum / total mass about the reduced model COM."""
+    centers = .5*(points[:, :, :-1]+points[:, :, 1:])
+    r = centers-com[:, None, None, :]
+    v = np.einsum('ij,jskl->iskl', d1, r)
+    cross = lambda a,b: a[...,0]*b[...,1]-a[...,1]*b[...,0]
+    orbital = (cross(r,v)*np.asarray(fractions)[None,None,:]).sum(axis=(1,2))
+    vectors = np.diff(points,axis=2)
+    theta = np.unwrap(np.arctan2(vectors[:,:,:,1],vectors[:,:,:,0]),axis=0)
+    inertia = np.sum(vectors*vectors,axis=3)*np.asarray(fractions)[None,None,:]/12
+    spin = (inertia*np.einsum('ij,jsk->isk',d1,theta)).sum(axis=(1,2))
+    rbody = body-com
+    return orbital+spin+(1-2*sum(fractions))*cross(rbody,d1@rbody)+body_inertia*(d1@pitch)
+
+
+def fit_floating_body_stride(context, plan, cycle, profile, policy):
+    """Track contact tasks while fitting both legs and a floating reduced torso.
+
+    COM motion is integrated from the existing support impulse. Changing leg
+    shape produces a compensating torso displacement by mass conservation.
+    Both leg trajectories, mean COM placement and torso pitch are variables.
+    Contact geometry, angular momentum, joint effort and clearance constrain
+    the fit. No muscle or extinct-animal anatomical identification is implied.
+    """
+    from ..planning.running_support import support_body_response
+    period = 2*cycle.step
+    count = policy['samples_per_stride']
+    if not isinstance(count,int) or isinstance(count,bool) or not 24 <= count <= 256:
+        raise ContractError('invalid floating stride sample count')
+    ranges={key:(0.,20.) for key in ('reference_weight','acceleration_weight','jerk_weight','effort_weight','effort_rate_weight','power_weight','swing_task_weight','body_tracking_weight','angular_balance_weight','body_pitch_weight')}
+    ranges.update(contact_task_weight=(10.,5000.),body_gyration_leg_lengths=(.1,2.),minimum_clearance_leg_lengths=(0.,.2),material_clearance_leg_lengths=(0.,.2),maximum_swing_adjustment_leg_lengths=(.01,.4),maximum_body_adjustment_leg_lengths=(.01,.2),projection_margin_degrees=(2.,12.))
+    for key,(low,high) in ranges.items():
+        value=policy.get(key)
+        if isinstance(value,bool) or not isinstance(value,(int,float)) or not math.isfinite(value) or not low<=value<=high:
+            raise ContractError('invalid floating stride policy: '+key)
+    if isinstance(policy.get('max_evaluations'),bool) or not isinstance(policy.get('max_evaluations'),int) or not 10<=policy['max_evaluations']<=1000:
+        raise ContractError('invalid floating stride evaluation budget')
+    fractions = np.asarray(policy['segment_mass_fractions'],dtype=float)
+    if fractions.shape != (3,) or not np.isfinite(fractions).all() or np.any(fractions<=0) or 2*fractions.sum() >= .5:
+        raise ContractError('invalid floating stride mass fractions')
+    times = np.arange(count)*period/count
+    source_t = np.asarray([r['time_s'] for r in plan['samples']])
+    sides = list(context.legs)
+    if len(sides)!=2:
+        raise ContractError('floating running requires two admitted legs')
+    rows=[]
+    for t in times:
+        row=cycle.sample(float(t))
+        for side in sides:
+            targets=np.array([r['feet'][side]['world_foot_target_m'] for r in plan['samples']])
+            row['feet'][side]['world_foot_target_m']=[float(np.interp(t,source_t,targets[:,k])) for k in range(3)]
+        rows.append(row)
+    bodies=support_body_response(cycle,dict(plan,samples=rows),context.roles,profile,context.hip_offsets)
+    samples={side:[] for side in sides}
+    def observe(side,hip,evaluate,best):
+        def project(c):
+            xyz=np.array([hip,c[4],c[5],c[2]])
+            return np.stack((xyz@context.forward,xyz@context.up),axis=-1)
+        p=project(best); plus=project(evaluate(float(best[-1]+.01)))
+        theta=lambda v: math.atan2(v[0],-v[1])
+        slope=(theta(plus[-1]-plus[-2])-theta(p[-1]-p[-2]))/.01
+        samples[side].append((p,float(best[-1]),slope))
+    for row,body in zip(rows,bodies):
+        solve_airborne_plan_sample(context,row,body_response_sample=body,leg_candidate_observer=observe)
+    seed_points=np.stack([np.array([r[0] for r in samples[side]]) for side in sides],axis=1)
+    seed_points[:,:,:,0]-=cycle.speed*times[:,None,None]
+    seed_pitch=np.array([[samples[s][i][1] for s in sides] for i in range(count)])
+    pitch_slope=np.array([[samples[s][i][2] for s in sides] for i in range(count)])
+    if np.any(np.abs(pitch_slope)<.01):
+        raise ContractError('degenerate sagittal pitch transport')
+    hip0=seed_points[:,:,0].mean(axis=1)
+    hip_offsets=seed_points[:,:,0]-hip0[:,None,:]
+    segment=np.diff(seed_points,axis=2)
+    # The sagittal projection is a reduced approximation to the full rig.
+    lengths=np.mean(np.linalg.norm(segment,axis=3),axis=0)
+    theta0=np.unwrap(np.arctan2(segment[:,:,:,0],-segment[:,:,:,1]),axis=0)
+    local_centers=.5*(seed_points[:,:,:-1]+seed_points[:,:,1:])-hip0[:,None,None,:]
+    mean_limb_com=np.mean(np.sum(local_centers*fractions[None,None,:,None],axis=(1,2)),axis=0)
+    desired_com=hip0+mean_limb_com
+    # Remove pelvis roll/yaw perturbations from COM acceleration: integrated
+    # impulse, not incidental hip geometry, owns the reduced body's travel.
+    desired_com[:,0]=np.array([cycle.travel(t)-cycle.speed*t for t in times])+desired_com[:,0].mean()
+    desired_com[:,1]=np.array([cycle.vertical(t/cycle.step)[0] for t in times])+desired_com[:,1].mean()-np.mean([cycle.vertical(t/cycle.step)[0] for t in times])
+    d1,d2=periodic_derivatives(times,period);omega=2*math.pi/period
+    mass=profile['authoring']['animalInstance']['measurements']['body_mass']['value']
+    length=float(lengths.sum(axis=1).mean());g=cycle.gravity
+    body_inertia=(1-2*sum(fractions))*(policy['body_gyration_leg_lengths']*length)**2
+    contact=np.array([[r['feet'][s]['contact'] for s in sides] for r in rows])
+    swing=np.array([[r['feet'][s]['swing_phase'] for s in sides] for r in rows])
+    loads=np.array([[r['feet'][s]['support_load_bodyweights'] for s in sides] for r in rows])
+    ax=np.array([0. if r['flight'] else (d2@desired_com[:,0])[i] for i,r in enumerate(rows)])
+    forces=np.stack((ax[:,None]*contact,g*loads),axis=-1)
+    margin=policy['projection_margin_degrees']
+    if not 2 <= margin <= 12:raise ContractError('invalid projection margin')
+    lower=np.empty((count,2,3));upper=lower.copy()
+    for i,row in enumerate(rows):
+        for j,side in enumerate(sides):
+            f=row['feet'][side]
+            if context.articulation_profile is not None:
+                env=context.articulation_profile.effective(contact=f['contact'],swing_phase=f['swing_phase'])
+                keys=('hip_sagittal_degrees','knee_interior_degrees','ankle_interior_degrees')
+                lower[i,j]=[env[k].hard_min_deg+margin for k in keys]
+                upper[i,j]=[env[k].hard_max_deg-margin for k in keys]
+            else:
+                gait=context.gait
+                lower[i,j]=[-gait.hip_extension_limit_degrees+margin,gait.knee_min_interior_degrees+margin,gait.ankle_min_interior_degrees+margin]
+                upper[i,j]=[gait.hip_flexion_limit_degrees-margin,gait.knee_max_interior_degrees-margin,gait.ankle_max_interior_degrees-margin]
+    lower=np.radians(lower);upper=np.radians(upper)
+    bend_sign=np.sign(np.diff(theta0,axis=2))
+    baseline_foot=seed_points[:,:,-1]
+    # Weight approaches contact smoothly. The free foot is a loose task, not
+    # a prescribed arc; endpoints and support remain high-priority tasks.
+    free_window=np.sin(np.pi*swing)**2*(~contact)
+    task_weight=policy['swing_task_weight']+policy['contact_task_weight']*(1-free_window)**16
+    task_weight[contact]=policy['contact_task_weight']
+    material_floor=np.stack([np.interp(times,source_t,[r['feet'][s]['material_floor_foot_height_m'] for r in plan['samples']]) for s in sides],axis=1)
+    clearance=np.maximum(baseline_foot[:,:,1].min(axis=0)[None,:]+policy['minimum_clearance_leg_lengths']*length*free_window,
+        material_floor+policy['material_clearance_leg_lengths']*length*free_window)
+    initial=np.c_[theta0.reshape(count,6),np.zeros(count)].ravel()
+    initial=np.r_[initial,0.,0.]
+    def evaluate(x):
+        z=x[:-2].reshape(count,7);theta=z[:,:6].reshape(count,2,3);pitch=z[:,6]
+        com=desired_com+length*x[-2:]
+        body,points=floating_body_geometry(theta,lengths,hip_offsets,com,fractions)
+        q=np.concatenate((theta[:,:,:1]-pitch[:,None,None],np.diff(theta,axis=2)),axis=2)
+        torque=np.stack([inverse_dynamics(points[:,j],mass*forces[:,j],mass*fractions,g,d2)/(mass*g*length) for j in range(2)],axis=1)
+        angles=np.concatenate((theta[:,:,:1],np.pi-np.abs(np.diff(theta,axis=2))),axis=2)
+        h=reduced_angular_momentum(points,body,com,pitch,fractions,body_inertia,d1)
+        lever=baseline_foot-com[:,None,:]
+        external=np.sum(lever[:,:,0]*forces[:,:,1]-lever[:,:,1]*forces[:,:,0],axis=1)
+        balance=(d1@h-external)/(g*length)
+        return theta,pitch,body,points,q,torque,angles,balance
+    def residual(x,blocks_only=False):
+        theta,pitch,body,points,q,tau,angles,balance=evaluate(x)
+        flat=q.reshape(count,6);tflat=tau.reshape(count,6)
+        foot_delta=points[:,:,-1]-baseline_foot
+        body_delta=(body-hip0)/length
+        fitted_pitch=seed_pitch+(theta[:,:,2]-theta0[:,:,2])/pitch_slope
+        blocks=[policy['reference_weight']*(theta-theta0).reshape(count,6),
+          policy['acceleration_weight']*(d2@flat)/omega**2,
+          policy['jerk_weight']*(d1@d2@flat)/omega**3,
+          policy['effort_weight']*tflat,
+          policy['effort_rate_weight']*(d1@tflat)/omega,
+          policy['power_weight']*tflat*(d1@flat)/omega,
+          (task_weight[:,:,None]*foot_delta/length).reshape(count,4),
+          80*np.maximum(0,clearance-points[:,:,-1,1])/length,
+          80*np.maximum(0,lower-angles).reshape(count,6),
+          80*np.maximum(0,angles-upper).reshape(count,6),
+          80*np.maximum(0,-np.diff(theta,axis=2)*bend_sign).reshape(count,4),
+          30*np.maximum(0,np.abs(foot_delta)/length-policy['maximum_swing_adjustment_leg_lengths']).reshape(count,4),
+          policy['body_tracking_weight']*body_delta,
+          40*np.maximum(0,np.abs(body_delta)-policy['maximum_body_adjustment_leg_lengths']),
+          policy['angular_balance_weight']*balance[:,None],
+          policy['body_pitch_weight']*pitch[:,None],
+          .1*(d2@pitch)[:,None]/omega**2,
+          40*np.maximum(0,np.abs(fitted_pitch-20)-64).reshape(count,2)]
+        if blocks_only:return blocks
+        return np.concatenate([b.ravel() for b in blocks])
+    blocks=residual(initial,True);size=sum(b.size for b in blocks)
+    sparsity=lil_matrix((size,len(initial)),dtype=int)
+    at=0
+    for b in blocks:
+        width=b.shape[1]
+        for i in range(count):
+            for j in range(-3,4):
+                node=((i+j)%count)*7
+                sparsity[at+i*width:at+(i+1)*width,node:node+7]=1
+        sparsity[at:at+b.size,-2:]=1
+        at+=b.size
+    lo=np.r_[np.tile(np.r_[np.full(6,-2.8),-math.radians(6)],count),-.08,-.1]
+    hi=np.r_[np.tile(np.r_[np.full(6,2.8),math.radians(6)],count),.08,.06]
+    result=least_squares(residual,initial,bounds=(lo,hi),jac_sparsity=sparsity.tocsr(),
+        max_nfev=policy['max_evaluations'],ftol=2e-5,xtol=2e-5,gtol=2e-5)
+    theta,pitch,body,points,q,tau,angles,balance=evaluate(result.x)
+    if not np.isfinite(result.x).all():raise ContractError('nonfinite floating stride fit')
+    print('FLOATING_STRIDE_FIT',result.success,result.nfev,float(residual(initial)@residual(initial)),'->',float(result.fun@result.fun),flush=True)
+    def curve(values):return CubicSpline(np.r_[times,period],np.concatenate((values,values[:1])),axis=0,bc_type='periodic')
+    body_curve=curve(body-hip0);pitch_curve=curve(pitch)
+    foot_curves=[curve(points[:,j,-1]-baseline_foot[:,j]) for j in range(2)]
+    met_curves=[curve(seed_pitch[:,j]+(theta[:,j,2]-theta0[:,j,2])/pitch_slope[:,j]) for j in range(2)]
+    for row in plan['samples']:
+        t=row['time_s']%period
+        row['stride_fitted_body_forward_up_m']=body_curve(t).tolist()
+        row['stride_fitted_body_pitch_radians']=float(pitch_curve(t))
+        for j,side in enumerate(sides):
+            f=row['feet'][side]
+            f['stride_fitted_pitch_degrees']=float(met_curves[j](t))
+            f['stride_fitted_foot_forward_up_m']=([0.,0.] if f['contact'] else foot_curves[j](t).tolist())
+    seed=evaluate(initial)
+    return dict(schema='eonwild.floating-body-stride-fit.v1',policy=deepcopy(policy),
+        optimizer_success=bool(result.success),message=result.message,evaluations=result.nfev,
+        initial_objective=float(residual(initial)@residual(initial)),final_objective=float(result.fun@result.fun),
+        initial_torque_rms_nm=float(mass*g*length*np.sqrt(np.mean(seed[5]**2))),
+        fitted_torque_rms_nm=float(mass*g*length*np.sqrt(np.mean(tau**2))),
+        angular_momentum_residual_rms_bodyweight_leglength=float(np.sqrt(np.mean(balance**2))),
+        maximum_support_task_residual_m=float(np.max(np.linalg.norm((points[:,:,-1]-baseline_foot)[contact],axis=1))),
+        maximum_body_adjustment_m=float(np.max(np.linalg.norm(body-hip0,axis=1))),
+        times_s=times.tolist(),joint_angles_degrees=np.degrees(angles).tolist(),
+        fitted_segment_angles_degrees=np.degrees(theta).tolist(),fitted_body_offset_m=(body-hip0).tolist(),
+        seed_points_m=seed_points.tolist(),fitted_points_m=points.tolist(),reduced_com_m=(desired_com+length*result.x[-2:]).tolist(),
+        material_floor_height_m=material_floor.tolist(),minimum_swing_foot_height_m=clearance.tolist(),
+        fitted_body_pitch_radians=pitch.tolist(),support_force_per_total_mass=forces.tolist(),
+        fitted_foot_offset_m=(points[:,:,-1]-baseline_foot).tolist(),
+        fitted_joint_torque_nm=(tau*mass*g*length).tolist(),
+        classification='Coupled bilateral planar trajectory fit with a floating lumped torso, exact reduced COM reconstruction and soft angular-momentum balance. Contact tasks and effort are optimized; not a muscle simulation or whole-rig force certificate.',
+        limitations=['Torso COM is at hip center; torso gyration and segment mass fractions are engineering estimates.',
+            'Sagittal projected segments and toe-base force point approximate the actual rig and material contact.',
+            'Angular momentum and contact are finite-weight objectives; residuals are reported.',
+            'Prescribed support force schedule, timing, toe choreography and axial artistic motion remain.',
+            'Full-rig IK/contact correction follows the fit; final emitted motion requires separate measurement.'])

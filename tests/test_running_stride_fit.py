@@ -27,3 +27,31 @@ def test_uniform_free_fall_has_no_required_joint_moment():
     p[:,:,1] = (-.5*9.81*t*t)[:,None]
     tau=inverse_dynamics(p,np.zeros((64,2)),[3,2,1],9.81,d2)
     np.testing.assert_allclose(tau[2:-2],0,atol=1e-9)
+
+
+def test_floating_body_recoil_preserves_specified_com():
+    from eonwild_motion.solve.running_stride_fit import floating_body_geometry
+    t=np.arange(64)/64
+    angles=np.zeros((64,2,3));angles[:,0,0]=.5*np.sin(2*np.pi*t)
+    lengths=np.array([[.7,.8,.4],[.7,.8,.4]])
+    fractions=np.array([.035,.018,.006])
+    com=np.tile([.2,1.6],(64,1))
+    body,points=floating_body_geometry(angles,lengths,np.zeros((64,2,2)),com,fractions)
+    centers=.5*(points[:,:,:-1]+points[:,:,1:])
+    reconstructed=(1-2*sum(fractions))*body+(centers*fractions[None,None,:,None]).sum(axis=(1,2))
+    np.testing.assert_allclose(reconstructed,com,atol=1e-14)
+    np.testing.assert_allclose(np.linalg.norm(np.diff(points,axis=2),axis=3),np.broadcast_to(lengths,(64,2,3)),atol=1e-14)
+    assert np.ptp(body[:,0])>.02
+
+
+def test_reduced_momentum_is_translation_invariant_and_includes_torso_spin():
+    from eonwild_motion.solve.running_stride_fit import floating_body_geometry,reduced_angular_momentum
+    t=np.arange(128)/128;d1,_=periodic_derivatives(t,1.)
+    fractions=np.array([.035,.018,.006]);pitch=.03*np.sin(2*np.pi*t)
+    com=np.tile([.2,1.6],(128,1))
+    body,points=floating_body_geometry(np.zeros((128,2,3)),np.ones((2,3))*.4,np.zeros((128,2,2)),com,fractions)
+    h=reduced_angular_momentum(points,body,com,pitch,fractions,.7,d1)
+    np.testing.assert_allclose(h,.7*(d1@pitch),atol=1e-12)
+    shift=np.array([13.,-4.])
+    translated=reduced_angular_momentum(points+shift,body+shift,com+shift,pitch,fractions,.7,d1)
+    np.testing.assert_allclose(h,translated,atol=1e-12)

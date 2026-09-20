@@ -6,13 +6,13 @@ Research before the next running pass: [running evidence baseline](research/RUNN
 records measured bird motion, the published BIRDS model, and diagnostic Allo/Tarbo
 extrapolations. The user requested evidence-based calibration after the C37
 landing/release analysis. Checkpoint 38 adopts selected, explicitly transferred priors. Checkpoint 39 adds
-whole-stride leg fitting; both-animal review is pending.
+whole-stride leg fitting. The user accepted its direction and Tarbo baseline; Allo remains restrained. Checkpoint 40 D extends bilateral dynamics and awaits review.
 
 
 ## Current animation inventory
 
 Checkpoint 27 retained-braking-support stops are approved for both animals.
-Latest full checkpoint approval is checkpoint 28. Checkpoint 32 is the user-selected running base; checkpoint 34 has changes requested; checkpoint 35 has changes requested; checkpoint 36 has changes requested; checkpoint 37 has further changes requested; checkpoint 38 C has changes requested (Tarbo substantially improved; neck needs restraint; Allo not fully convincing); checkpoint 39 B is the periodic leg-fit candidate awaiting review. **Approved means visually accepted
+Latest full checkpoint approval is checkpoint 28. Checkpoint 32 is the user-selected running base; checkpoint 34 has changes requested; checkpoint 35 has changes requested; checkpoint 36 has changes requested; checkpoint 37 has further changes requested; checkpoint 38 C has changes requested (Tarbo substantially improved; neck needs restraint; Allo not fully convincing); checkpoint 39 B has accepted direction/Tarbo baseline and Allo changes requested; checkpoint 40 D is pending review. **Approved means visually accepted
 in the reviewed clips**, not fully certified for arbitrary gameplay. Unless a row
 says otherwise, both admitted animals use the same shared engine with profile data.
 Historical sections and capture-time receipts below retain earlier review states.
@@ -40,7 +40,7 @@ Checkpoint 26 is the approved walking side-hit recovery baseline; standing impac
 | Arm carriage and secondary motion | Full-transition pass approved | Full-transition pass approved | Behavior-specific overrides for attacks, rest and interaction |
 | Jaw relaxation / breathing-like cycle | Full-transition pass approved | Full-transition pass approved | Full-body breathing and behavior-specific mouth control |
 | Expressive idle / listening / alert scanning | No complete approved family | No complete approved family | Compose meaningful attention, posture and breathing behaviors from existing layers |
-| Running / sprinting | Sustained run candidate, checkpoint 38 C; pending review; sprint missing | Sustained run candidate, checkpoint 38 C; pending review; historical Run010 / Sprint006 preserved | Review release smoothness and retained tail/body motion; then entry/braking and sprinting |
+| Running / sprinting | Sustained run, checkpoint 40 D pending; C39 Allo restraint changes requested; sprint missing | C39 visual baseline accepted; C40 D pending; historical Run010 / Sprint006 preserved | Review release smoothness and retained tail/body motion; then entry/braking and sprinting |
 | Feeding / gripping / pulling | Current approved transfer missing | Historical Feeding003 reference preserved | Current grounded support, oral contact and interaction handoff |
 | Drinking / swallowing | Missing | Missing | New choreography and world interaction |
 | Rest / sit / lie down / rise / sleep | Missing | Missing | New support transitions and resting behavior |
@@ -939,4 +939,30 @@ A single shared periodic fitter now coordinates each leg across an entire stride
 
 This first bounded stage optimizes the leg's remaining articulation degree of freedom with prescribed body motion, foot paths and contact timing. It is not full-body optimal control or muscle simulation. See the appended mathematical scope and assumptions in [running evidence baseline](research/RUNNING_EVIDENCE_BASELINE.md). Anterior trunk yaw is also reduced for quieter neck motion; the hip/tail eight remains.
 
-C38 feedback: Tarbo is substantially improved with neck changes requested; Allo is not fully convincing. C39 B is pending, not automatically approved by objective reduction. Further detail is conditional on this review: paired measured extant trajectories, contact pressure/toe compliance, body/foot trajectory co-optimization, better segment mass and strength priors. Walking may be revisited after running demonstrates the method; preserve approved walking now.
+C38 feedback: Tarbo is substantially improved with neck changes requested; Allo is not fully convincing. C39 B was reviewed: Tarbo remains good, while Allo needs less restrained articulation. C40 D is now the pending candidate. Further detail is conditional on this review: paired measured extant trajectories, contact pressure/toe compliance, body/foot trajectory co-optimization, better segment mass and strength priors. Walking may be revisited after running demonstrates the method; preserve approved walking now.
+
+
+## Checkpoint 40 D — coupled reduced-body dynamics
+
+C39 review: the user accepts the direction and Tarbo remains good; Allo still
+looks restrained in its articulation. The user explicitly authorized a longer,
+deeper direct physics pass while asleep, then morning video review. No agents.
+
+The same shared fit now optimizes both leg trajectories, free-foot tasks, mean
+body placement and torso pitch. A lumped torso and rod legs couple movement
+through reduced COM reconstruction and angular momentum, with joint effort,
+power, smoothness, contact and measured toe-clearance objectives. The final
+source uses smooth cubic curves; final material contacts are reopened at keys
+and midpoints. Prior walking and C39 assets remain preserved.
+
+Status: candidate rendered, **PENDING USER REVIEW**. See game evidence
+`game/Evidence/floating-body-running-study/`. The reduced model is not a full
+musculoskeletal simulation or a production physics certificate. Some local
+joint sharpness remains, and Tarbo's extension range changes; review both
+animals before selecting the next baseline. Current baseline acceptance does
+not transfer automatically to this candidate.
+
+C40 technical limits: native videos are complete; Unity landmark parity fails
+the unchanged 2 mm gate at 6.76 / 6.51 mm. Tarbo side capture saved all frames
+but exited 255 in Metal/CVDisplayLink. These remain open, separate from visual
+review and the passing 90 focused source checks.

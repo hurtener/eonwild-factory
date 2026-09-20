@@ -67,6 +67,11 @@ def main():
  for fit_pass in range(2 if recipe.get('whole_stride_fit') else 1):
   refs={s:None for s in c.legs};release={s:np.zeros(3) for s in c.legs};poses=[];checks=[]
   for i,(row,body) in enumerate(zip(plan['samples'],response)):
+   body=deepcopy(body)
+   if 'stride_fitted_body_forward_up_m' in row:
+    delta=row['stride_fitted_body_forward_up_m'];control=body['body_support_control']
+    control['translation_forward_up_lateral_m'][0]+=delta[0];control['translation_forward_up_lateral_m'][1]+=delta[1]
+    control['rotation_pitch_roll_yaw_radians'][0]-=row['stride_fitted_body_pitch_radians']
    if i==0 or row['review_segment']!=plan['samples'][i-1]['review_segment']:
     refs={s:None for s in c.legs};release={s:np.zeros(3) for s in c.legs}
    half=.5*perf['lane_width_body_heights']*c.body_height;nominal={}
@@ -74,6 +79,8 @@ def main():
     lane=c.hip_lane_center+math.copysign(half,c.hip_offsets[s]);base=c.base_w[c.legs[s][-1]][:3,3]
     target=c.origin+c.forward*f['forward_m']+c.lateral*lane;target+=c.up*(float(base@c.up)+f['height_m']-float(target@c.up));nominal[s]=target.copy()
     if not f['contact']:refs[s]=None;target+=release[s]*(1-smooth(f['swing_phase']/.3))
+    if 'stride_fitted_foot_forward_up_m' in f:
+     delta=f['stride_fitted_foot_forward_up_m'];target+=c.forward*delta[0]+c.up*delta[1]
     f['world_foot_target_m']=target.tolist()
    for iteration in range(4):
     pose=solve_airborne_plan_sample(context,row,body_response_sample=body);w=np.asarray(_world_matrices(source,pose.translations,pose.rotations,c.base_s));patches={s:skin.skin(w,v) for s,v in ids.items()};errors={s:skin.ground-float((p@c.up).min()) for s,p in patches.items()}
@@ -85,6 +92,8 @@ def main():
      if f['contact']:delta+=material_patch_correction(patches[s],refs[s],c.up)
      f['world_foot_target_m']=(np.asarray(f['world_foot_target_m'])+delta).tolist()
    for s,f in row['feet'].items():
+    if fit_pass==0:
+     f['material_floor_foot_height_m']=float(np.asarray(pose.feet[s]['foot_world_m'])@c.up)+errors[s]
     if f['contact']:release[s]=tangent(np.asarray(f['world_foot_target_m'])-nominal[s],c.up)
    poses.append((pose.translations,pose.rotations));checks.append({'time_s':row['time_s'],'unreachable_m':pose.maximum_unreachable_extension_m,'foot_target_residual_m':pose.maximum_foot_target_residual_m,'articulation_violation_degrees':pose.maximum_articulation_envelope_violation_degrees,'floor_gap_m':{s:-v for s,v in errors.items()}})
    if i%48==0:print('Solved',i,'/',len(times),flush=True)
@@ -95,20 +104,31 @@ def main():
  tr=np.asarray([p[0] for p in poses]);ro=np.asarray([p[1] for p in poses]);ro/=np.linalg.norm(ro,axis=2)[:,:,None]
  for i in range(1,len(ro)):
   flip=np.sum(ro[i-1]*ro[i],axis=1)<0;ro[i,flip]*=-1
+ interpolation=recipe.get('emission_interpolation','LINEAR')
+ if interpolation not in ('LINEAR','CUBICSPLINE'):raise ValueError('Invalid running emission interpolation')
+ if interpolation=='CUBICSPLINE' and cycle is None:raise ValueError('Cubic preview measurement requires a continuous running cycle')
+ from scipy.interpolate import CubicSpline
  for node in range(len(source.nodes)):
   for path,values in [('translation',tr[:,node]),('rotation',ro[:,node])]:
-   acc=_append_accessor(document,binary,values,'VEC3' if path=='translation' else 'VEC4');samplers.append({'input':ta,'output':acc,'interpolation':'LINEAR'});channels.append({'sampler':len(samplers)-1,'target':{'node':node,'path':path}})
+   if interpolation=='CUBICSPLINE':
+    tangent_values=CubicSpline(times,values,axis=0)(times,1)
+    if path=='rotation':tangent_values-=values*np.sum(values*tangent_values,axis=1)[:,None]
+    values=np.stack((tangent_values,values,tangent_values),axis=1).reshape(-1,values.shape[-1])
+   acc=_append_accessor(document,binary,values,'VEC3' if path=='translation' else 'VEC4');samplers.append({'input':ta,'output':acc,'interpolation':interpolation});channels.append({'sampler':len(samplers)-1,'target':{'node':node,'path':path}})
  document['animations']=[{'name':'running-review','samplers':samplers,'channels':channels}];document['buffers'][0]['byteLength']=len(binary);out.mkdir(parents=True);payload=_encode(document,binary);(out/'root_motion.glb').write_bytes(payload)
  emitted=Glb(out/'root_motion.glb');tracks,_=read_animation_tracks(emitted,'running-review',require_common_timeline=True);reopened=SkinRig(emitted,c.roles,c.forward,c.up,captured['kwargs']['contact_profile']);measured=[];refs={s:None for s in c.legs}
- for i,t in enumerate(times):
-  if i==0 or plan['samples'][i]['review_segment']!=plan['samples'][i-1]['review_segment']:
-   refs={s:None for s in c.legs}
+ measure_times=sorted(set(times)|set(.5*(a+b) for a,b in zip(times,times[1:]))) if interpolation=='CUBICSPLINE' else times
+ previous_segment=None
+ for i,t in enumerate(measure_times):
+  row=cycle.sample(t) if cycle else plan['samples'][i]
+  if i==0 or row['review_segment']!=previous_segment:refs={s:None for s in c.legs}
+  previous_segment=row['review_segment']
   ts=list(c.base_t);rs=list(c.base_r)
   for (node,path),track in tracks.items():
    if path=='translation':ts[node]=tuple(track.sample(t))
    elif path=='rotation':rs[node]=tuple(track.sample(t))
   w=np.asarray(_world_matrices(emitted,ts,rs,c.base_s));p={s:reopened.skin(w,v) for s,v in ids.items()};drift={}
-  for s,f in plan['samples'][i]['feet'].items():
+  for s,f in row['feet'].items():
    if f['contact']:
     if refs[s] is None:refs[s]=p[s].copy()
     drift[s]=material_patch_drift(p[s],refs[s],c.up)
