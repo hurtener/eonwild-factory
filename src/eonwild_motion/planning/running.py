@@ -27,6 +27,10 @@ def resolve_running(profile, recipe):
             or not 0 < reach_fraction < 1):
         raise ValueError('Running touchdown reach must be a fraction of one step')
     parameters = deepcopy(recipe['parameters'])
+    if recipe.get('evidence_policy'):
+        duty = recipe['evidence_policy']['duty_factor']['value']
+        if not math.isclose(duty, .5*(1-parameters['flight_fraction'])):
+            raise ValueError('Selected evidence duty and applied flight timing disagree')
     if recipe.get('posture_from_profile'):
         posture = values.get('posture', {}).get('frontBodyPitch')
         if posture is not None:

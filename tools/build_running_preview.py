@@ -43,7 +43,12 @@ def main():
  cycle=None
  if recipe.get('coordination'):
   from eonwild_motion.planning.running_support import RunningSupportCycle,support_body_response
-  cycle=RunningSupportCycle(gait,c.body_height,recipe['coordination']);plan=cycle.plan()
+  evidence=None
+  if recipe['coordination'].get('support_shape')=='birds_transferred_aerial':
+   from eonwild_motion.planning.running_evidence import resolve_evidence
+   lengths=[sum(float(np.linalg.norm(c.base_w[b][:3,3]-c.base_w[a][:3,3])) for a,b in zip(chain,chain[1:])) for chain in c.legs.values()]
+   evidence=resolve_evidence(profile,gait,float(np.mean(lengths)))
+  cycle=RunningSupportCycle(gait,c.body_height,recipe['coordination'],evidence);plan=cycle.plan()
  else:plan=build_running_review_plan(gait,c.body_height,profile['locomotion']['walk']['preferredSpeed']['value'])
  times=[r['time_s'] for r in plan['samples']]
  # Preserve neutral jaw and centered-tail admissions; gait-specific body phase

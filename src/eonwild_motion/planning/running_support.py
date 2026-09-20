@@ -13,12 +13,22 @@ from .swing_transport import transport_progress
 
 
 class RunningSupportCycle:
-    def __init__(self, gait, height, policy):
+    def __init__(self, gait, height, policy, evidence=None):
         self.gait, self.height, self.policy = gait, height, policy
         self.step = gait.step_period_s
         self.contact = 1 - gait.flight_fraction
         self.speed = gait.step_length_body_heights * height / self.step
         self.gravity = policy['gravity_mps2']
+        self.evidence, self.empirical = evidence, None
+        if policy.get('support_shape') == 'birds_transferred_aerial':
+            if evidence is None:
+                raise ValueError('Empirical support requires actual-rig evidence inputs')
+            from .running_evidence import EmpiricalSupport
+            self.empirical = EmpiricalSupport(evidence['predicted']['vertical_coefficients'],self.contact)
+            preparation = policy.get('release_fold_preparation')
+            if (isinstance(preparation,bool) or not isinstance(preparation,(int,float))
+                    or not math.isfinite(preparation) or not 0 <= preparation <= .25):
+                raise ValueError('Invalid unloading fold preparation')
         if policy.get('articulation_search') not in (None, 'feasible_basins'):
             raise ValueError('Invalid running articulation search')
         for key, low, high in [('release_roll_peak_swing_fraction', .01, .15),
@@ -81,11 +91,15 @@ class RunningSupportCycle:
                     raise ValueError('Invalid regional running response: '+key)
         # Reference height is a standing-relative authoring choice. All changing
         # vertical motion comes from the integrated support schedule below.
-        low = self.vertical(self.contact * .5, offset=False)[0]
+        low = (min(self.vertical(p,offset=False)[0] for p in np.linspace(0,1,1001))
+               if self.empirical else self.vertical(self.contact * .5, offset=False)[0])
         self.vertical_offset = -gait.pelvis_crouch_body_heights * height - low
 
     def vertical(self, phase, offset=True):
         c, p, g, dt = self.contact, phase % 1, self.gravity, self.step
+        if self.empirical:
+            y,velocity,acceleration,load = self.empirical.vertical(p,g,dt)
+            return y+(self.vertical_offset if offset else 0.),velocity,acceleration,load
         if self.policy.get('support_shape') == 'rounded_impulse':
             # Integrate a finite loading/drive impulse instead of the previous
             # long plateau. Landing and launch share the resulting momentum.
@@ -184,6 +198,15 @@ class RunningSupportCycle:
                     else 1-smooth((local-peak)/(end-peak)))
                 pitch += roll-release
                 release = roll
+            if self.empirical:
+                # Toe-base roll participates while support is unloading. Its
+                # maximum is grounded; no new heel-rise command after release.
+                peak = .9*c*step
+                end = c*step+.42*(2-c)*step
+                roll = g.push_off_pitch_degrees*(smooth(local/peak) if local <= peak
+                    else 1-smooth((local-peak)/(end-peak)))
+                pitch += roll-release
+                release = roll
             feet[side] = dict(contact=stance,touchdown_time_s=touchdown,
                 forward_m=x,height_m=h,swing_phase=u,foot_pitch_degrees=pitch,
                 stance_roll_pitch_degrees=pitch,stance_roll_swing_pitch_degrees=release,
@@ -196,6 +219,11 @@ class RunningSupportCycle:
                     v = local/(c*step)
                     compression = math.sin(math.pi*min(v/.7,1.))**2
                     opening = smooth(v)
+                    if self.empirical:
+                        # Joint-angle preferences are a rig fit, not copied
+                        # ostrich angles or world-space segment headings.
+                        compression = math.sin(math.pi*min(v/.6,1.))**2
+                        opening = smooth((v-.3)/.7)
                     knee = shape['landing_knee']-shape['knee_compression']*compression+(shape['release_knee']-shape['landing_knee'])*opening
                     ankle = shape['landing_ankle']-shape['ankle_compression']*compression+(shape['release_ankle']-shape['landing_ankle'])*opening
                 else:
@@ -208,7 +236,18 @@ class RunningSupportCycle:
                     feet[side]['running_leg_shape']['search_feasible_basins'] = True
                 feet[side]['leg_heading_degrees'] = self.policy['leg_heading_degrees']
                 if self.policy.get('recovery_path') == 'rear_fold':
-                    feet[side]['running_leg_shape']['metatarsus_min_degrees'] = -5.-self.policy['recovery_hock_back_degrees']*fold
+                    plane_fold = fold
+                    if self.empirical:
+                        # Begin releasing the hock's stance preference during
+                        # unloading, so it is not held then abruptly freed at
+                        # toe-off. This changes the pose objective, not contact.
+                        preparation = self.policy['release_fold_preparation']
+                        if stance:
+                            plane_fold = preparation*smooth((local/(c*step)-.6)/.4)
+                        else:
+                            rise_end,open_start,open_end = self.policy['recovery_fold_window']
+                            plane_fold = (preparation+(1-preparation)*smooth(u/rise_end))*(1-smooth((u-open_start)/(open_end-open_start)))
+                    feet[side]['running_leg_shape']['metatarsus_min_degrees'] = -5.-self.policy['recovery_hock_back_degrees']*plane_fold
                     feet[side]['running_leg_shape']['pitch_preference_weight'] = .15
         support = sum(f['contact'] for f in feet.values())
         return dict(time_s=time,locomotion_time_s=time,review_segment='run',
@@ -222,6 +261,8 @@ class RunningSupportCycle:
         plan['samples'] = [self.sample(r['time_s']) for r in plan['samples']]
         plan['segments'] = [dict(name='run',start=2*self.step,end=4*self.step)]
         plan['coordination'] = self.policy
+        if self.evidence:
+            plan['running_evidence'] = self.evidence
         plan['claims'] = 'Prescribed support impulse and ballistic body proxy; authored articulation, not full-body dynamics.'
         return plan
 

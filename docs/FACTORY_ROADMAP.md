@@ -1,12 +1,18 @@
 # Factory movement roadmap and acceptance tracker
 
-Updated 2026-09-19. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
+Updated 2026-09-20. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
+
+Research before the next running pass: [running evidence baseline](research/RUNNING_EVIDENCE_BASELINE.md)
+records measured bird motion, the published BIRDS model, and diagnostic Allo/Tarbo
+extrapolations. The user requested evidence-based calibration after the C37
+landing/release analysis. Checkpoint 38 adopts selected, explicitly transferred priors; both-animal
+visual review remains pending.
 
 
 ## Current animation inventory
 
 Checkpoint 27 retained-braking-support stops are approved for both animals.
-Latest full checkpoint approval is checkpoint 28. Checkpoint 32 is the user-selected running base; checkpoint 34 has changes requested; checkpoint 35 has changes requested; checkpoint 36 has changes requested; checkpoint 37 is the heel-departure and flexion-reserve candidate awaiting review. **Approved means visually accepted
+Latest full checkpoint approval is checkpoint 28. Checkpoint 32 is the user-selected running base; checkpoint 34 has changes requested; checkpoint 35 has changes requested; checkpoint 36 has changes requested; checkpoint 37 has further changes requested; checkpoint 38 C is the evidence-informed running candidate awaiting review. **Approved means visually accepted
 in the reviewed clips**, not fully certified for arbitrary gameplay. Unless a row
 says otherwise, both admitted animals use the same shared engine with profile data.
 Historical sections and capture-time receipts below retain earlier review states.
@@ -34,7 +40,7 @@ Checkpoint 26 is the approved walking side-hit recovery baseline; standing impac
 | Arm carriage and secondary motion | Full-transition pass approved | Full-transition pass approved | Behavior-specific overrides for attacks, rest and interaction |
 | Jaw relaxation / breathing-like cycle | Full-transition pass approved | Full-transition pass approved | Full-body breathing and behavior-specific mouth control |
 | Expressive idle / listening / alert scanning | No complete approved family | No complete approved family | Compose meaningful attention, posture and breathing behaviors from existing layers |
-| Running / sprinting | Sustained run candidate, checkpoint 37; pending review; sprint missing | Sustained run candidate, checkpoint 37; pending review; historical Run010 / Sprint006 preserved | Review release smoothness and retained tail/body motion; then entry/braking and sprinting |
+| Running / sprinting | Sustained run candidate, checkpoint 38 C; pending review; sprint missing | Sustained run candidate, checkpoint 38 C; pending review; historical Run010 / Sprint006 preserved | Review release smoothness and retained tail/body motion; then entry/braking and sprinting |
 | Feeding / gripping / pulling | Current approved transfer missing | Historical Feeding003 reference preserved | Current grounded support, oral contact and interaction handoff |
 | Drinking / swallowing | Missing | Missing | New choreography and world interaction |
 | Rest / sit / lie down / rise / sleep | Missing | Missing | New support transitions and resting behavior |
@@ -900,3 +906,28 @@ quarter; the view cut is not a gait transition. Evidence and complete bilateral
 measurements: principal Eonwild game/Evidence/grounded-push-running-study/.
 Pause for user feedback. Full material-contact/force certification, connected
 run entry/braking, sprinting and airborne impacts remain open.
+
+## Evidence-informed sustained run — checkpoint 38 C, pending review
+
+The user approved implementing the scientific calibration approach. Both animals
+use the same BIRDS prior evaluator and analytic support integrator, with their
+admitted leg lengths, profile mass estimates, speed and stride. Applied aerial
+duty is 0.43, transferred from measured ostrich running; the regression's grounded
+prediction at these dinosaur inputs is retained as an explicit conflict. This
+preserves the requested small flight phase without claiming measured dinosaur gait.
+
+The candidate moves the catch forward, advances weight acceptance, reduces body
+bounce, and eases the hock preference before toe-off. Recovery clearance was fitted
+to avoid a Tarbo ankle configuration switch. Canonical animal speed/stride and the
+approved connected/walking clips are preserved. No species-specific solver exists.
+
+97 focused checks passed. Native Unity plain-stage videos and source-key
+comparisons live in game/Evidence/empirical-running-study/ in the principal game.
+Sampled reach excess and hard articulation violations are zero. These diagnostics
+do not certify skin contact, muscle forces or arbitrary gameplay transitions.
+Allo still has up to 6.21° early post-release knee opening (C37: 5.25°); Tarbo 4.02°
+(C37: 4.60°). Smaller maximum adjacent knee changes do not establish full smoothness.
+
+Next: user review of the evidence-informed catch/loading rhythm; then targeted
+release polish, running entry/braking and the separate sprinting family. Preserve
+checkpoint 32 as the user-selected running base until a new candidate is approved.
