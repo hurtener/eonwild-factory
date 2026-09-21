@@ -1,0 +1,101 @@
+{
+  "schema": "eonwild.motion.moco-prototype.v3",
+  "classification": "C44 contact coherence and spatial mechanics experiment; guided dynamic optimization with estimated anatomy",
+  "mass_fractions": {
+    "trunk": 0.35,
+    "neck": 0.09,
+    "tail_proximal": 0.16,
+    "tail_distal": 0.058,
+    "thigh_each": 0.06,
+    "shin_each": 0.025,
+    "metatarsus_each": 0.008,
+    "toe_each": 0.0015,
+    "chest": 0.15,
+    "digit_each": 0.0015
+  },
+  "capacity_body_weight_leg_length": {
+    "hip": 0.55,
+    "knee": 0.45,
+    "ankle": 0.3,
+    "mtp": 0.1,
+    "neck": 0.08,
+    "tail_proximal": 0.18,
+    "tail_distal": 0.06,
+    "chest": 0.13,
+    "digit": 0.065
+  },
+  "activation_time_constant_s": 0.035,
+  "contact": {
+    "radius_leg_length": 0.025,
+    "stiffness_N_m2": 200000000.0,
+    "dissipation_s_m": 1.5,
+    "static_friction": 0.8,
+    "dynamic_friction": 0.8,
+    "viscous_friction": 0.01,
+    "transition_velocity_mps": 0.1
+  },
+  "optimization": {
+    "effort_weight": 0.3,
+    "acceleration_weight": 0.0001,
+    "constraint_tolerance": 0.0001,
+    "convergence_tolerance": 0.0001,
+    "max_iterations": 600,
+    "dynamics_mode": "explicit",
+    "contact_force_weight": 0.02,
+    "acceleration_weight_note": "Only active for the optional implicit formulation. Explicit mode retains activation dynamics and bounded controls.",
+    "distal_acceleration_weight": 1e-06,
+    "linear_controls": true
+  },
+  "provenance": {
+    "geometry": "Fresh semantic joint centers from admitted source geometry; bilateral segment lengths averaged and projected into a planar chain",
+    "mass": "Animal-instance body_mass measurement retains original source and confidence",
+    "segment_distribution_inertia_capacity_contact": "Explicit authored estimates for feasibility, not measured or fitted biological values. Rod and ellipsoid approximations. Sensitivity and calibration pending.",
+    "task": "Soft world-space foot-region tracking from periodic analytic support/recovery task. No knee tracking or previous motion clip. Duty .43 is extant-transfer prior RUN-OSTRICH-2007, not a Tarbo measurement; clearance and axial posture are authored calibration targets.",
+    "implementation_reference": "OpenSim Moco public optimal-control and periodicity APIs; original project model builder; no imported dinosaur trajectories or third-party dinosaur model code",
+    "contact": "Five spheres fit to actual admitted skinned sole envelope; added distal toe articulation. Compliance, material margin and radius remain engineering estimates.",
+    "passive": "Internal generalized spring/damper torques with explicitly estimated stiffness/rest angles. These are not reconstructed muscles or ligaments.",
+    "release": "Nonzero heel angular velocity passes from late support into recovery. Soft task only. Distal angular acceleration is regularized with numerical weight 1e-6; neither joint-angle schedule nor biological muscle model.",
+    "support": "Engineering prior: one smooth sin-squared load per stance, normalized to body-weight impulse over a stride. Soft vertical force goal, not external assistance or measured Tarbo GRF.",
+    "joint_viscosity": "Internal viscous resistance scaled by torque capacity, 0.002 seconds; engineering tissue/actuator impedance estimate. Reoptimized with the model, not added to saved motion."
+  },
+  "calibrated_task": {
+    "pad_radius_leg_lengths": 0.043,
+    "pad_envelope_margin_m": 0.008,
+    "duty_factor": 0.43,
+    "catch_bias_leg_lengths": 0.18,
+    "toe_off_pitch_radians": 0.6,
+    "recovery_clearance_leg_lengths": 0.17,
+    "foot_tracking_weight": 90,
+    "posture_tracking_weight": 10,
+    "hip_height_leg_lengths": 0.88,
+    "trunk_pitch_radians": 0.055,
+    "neck_rest_radians": 0.055,
+    "tail_proximal_rest_radians": -0.055,
+    "tail_distal_rest_radians": -0.045,
+    "continuous_release": true,
+    "support_force_weight": 10
+  },
+  "passive_support": {
+    "chest": {
+      "stiffness_BW_leg_length": 0.3,
+      "damping_BW_leg_length_s": 0.006,
+      "rest_radians": 0.04
+    },
+    "neck": {
+      "stiffness_BW_leg_length": 0.22,
+      "damping_BW_leg_length_s": 0.004,
+      "rest_radians": 0.14
+    },
+    "tail_proximal": {
+      "stiffness_BW_leg_length": 0.7,
+      "damping_BW_leg_length_s": 0.008,
+      "rest_radians": -0.2
+    },
+    "tail_distal": {
+      "stiffness_BW_leg_length": 0.22,
+      "damping_BW_leg_length_s": 0.006,
+      "rest_radians": -0.18
+    }
+  },
+  "joint_viscosity_capacity_seconds": 0.002
+}

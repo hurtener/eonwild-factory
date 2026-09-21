@@ -40,7 +40,7 @@ for i, name in enumerate(names):
     error = actual[:, actual_names.index(name)] - reference[:, i]
     errors[name] = dict(maximum_absolute=float(np.max(np.abs(error))),
                        final=float(error[-1]),
-                       unit='m' if name.split('/')[-2] in ('forward', 'height') else 'rad')
+                       unit='m' if name.split('/')[-2] in ('forward', 'height', 'lateral') else 'rad')
 result = dict(schema='eonwild.motion.moco-forward-replay.v1',
     scope='OpenSim simulateTrajectoryWithTimeStepping; saved controls and initial state; no pose tracking or root assistance',
     status='MEASURED_NOT_CERTIFIED', integrator_accuracy=1e-6, duration_s=float(ti[-1]),

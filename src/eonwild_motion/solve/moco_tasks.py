@@ -27,6 +27,19 @@ def foot_geometry(admission, recipe):
         distal = x > mid[0]
         sites.append(dict(name=f'pad{i}', distal=bool(distal),
                           center_local_m=(position-mid if distal else position).tolist(), radius_m=float(radius)))
+    if recipe.get('spatial'):
+        # Symmetric transverse pads support roll without twisting the knee.
+        # Width comes from the admitted sole; both feet use the averaged envelope.
+        width=float(np.quantile(np.abs(vertices[:,2]),.70))
+        for index in (1,3):
+            original=sites[index]
+            original['stiffness_share']=.5
+            original['center_local_m'][2]=-width*.65
+            other=dict(original, name=original['name']+'_outer',center_local_m=list(original['center_local_m']))
+            other['center_local_m'][2]=width*.65
+            sites.append(other)
+        # Preserve the front-most reference station for the peel task.
+        sites.sort(key=lambda v:v['center_local_m'][0]+(mid[0] if v['distal'] else 0))
     return dict(toe_midpoint_m=mid.tolist(), sites=sites,
                 sole_depth_m=float(-vertices[:,1].min()),
                 classification='Spheres fit to admitted sole samples; radius/compliance are engineering priors')
@@ -51,6 +64,7 @@ def task_sample(admission, metadata, recipe, t):
     for suffix, offset in [('l',0),('r',.5)]:
         continuous=phase+offset; cycle=math.floor(continuous); ph=continuous-cycle
         z=admission['points'][('left' if suffix=='l' else 'right')+'Leg.0'][2]
+        z*=recipe.get('spatial',{}).get('foot_track_hip_width_ratio',1.)
         anchor=(cycle-offset)*speed*T + speed*T*duty*.5 + p['catch_bias_leg_lengths']*L
         swing=max(0.,(ph-duty)/(1-duty))
         if ph < duty:
@@ -114,9 +128,13 @@ def add_tracking(problem, admission, metadata, recipe):
     values={'pitch':task['trunk_pitch_radians'],'height':task['hip_height_leg_lengths']*sum(metadata['segment_lengths_m'])+metadata['foot_geometry']['sole_depth_m'],
             'chest':0.,'neck':task['neck_rest_radians'],'tail_proximal':task['tail_proximal_rest_radians'],
             'tail_distal':task['tail_distal_rest_radians']}
+    if recipe.get('spatial'):
+        values={'pitch':values['pitch'],'height':values['height'],
+                **recipe['spatial']['posture_reference']}
     paths=[]
     for key in values:
-        paths.append(f'/jointset/{"root" if key in ("pitch","height") else key}/{key}/value');names.append(paths[-1])
+        joint='root' if key in ('pitch','height','yaw','roll','lateral') else metadata['coordinates'][key].get('joint',key)
+        paths.append(f'/jointset/{joint}/{key}/value');names.append(paths[-1])
     states.setColumnLabels(names)
     states.addTableMetaDataString('inDegrees','no')
     for t in times:
@@ -130,14 +148,102 @@ def add_tracking(problem, admission, metadata, recipe):
     else: posture.setReference(o.TableProcessor(states))
     posture.setAllowUnusedReferences(True)
     problem.addGoal(posture)
+    if recipe.get('spatial'):
+        reference=o.TimeSeriesTable();labels=o.StdVectorString()
+        for key in ('pitch','yaw','roll','forward','height','lateral',*metadata['coordinates']):
+            joint=metadata['coordinates'].get(key,{}).get('joint','root')
+            labels.append(f'/jointset/{joint}/{key}/value')
+        reference.setColumnLabels(labels);reference.addTableMetaDataString('inDegrees','no')
+        for t in times:
+            row=o.RowVector(labels.size(),0);row[0]=.10
+            reference.appendRow(float(t),row)
+        path=Path(metadata['reference_directory'])/'head-direction-reference.sto'
+        o.STOFileAdapter.write(reference,str(path))
+        gaze=o.MocoOrientationTrackingGoal('stable_forward_attention',recipe['spatial']['gaze_weight'])
+        frames=o.StdVectorString();frames.append('/bodyset/head')
+        gaze.setFramePaths(frames);gaze.setStatesReference(o.TableProcessor(str(path)));problem.addGoal(gaze)
+    if task.get('support_force_weight'):
+        add_support_task(problem, admission, metadata, recipe, times)
+
+
+def add_continuation_tracking(problem, trajectory_path, metadata, weight):
+    """Temporary numerical continuation around a prior physical solution.
+
+    Only existing sagittal leg states are softly regularized. New spatial/body
+    coordinates are free. The receipt distinguishes this from an unguided solve.
+    """
+    import opensim as o
+    source=o.MocoTrajectory(str(trajectory_path));names=list(source.getStateNames())
+    keep=[n for n in names if n.startswith('/jointset/') and n.split('/')[-2].startswith(('hip_','knee_','ankle_','mtp_','digit_')) and not n.split('/')[-2].endswith(('_yaw','_roll'))]
+    table=o.TimeSeriesTable();labels=o.StdVectorString()
+    for name in keep:labels.append(name)
+    table.setColumnLabels(labels);table.addTableMetaDataString('inDegrees','no')
+    matrix=source.getStatesTrajectoryMat()
+    for i,t in enumerate(source.getTimeMat()):
+        row=o.RowVector(len(keep))
+        for j,name in enumerate(keep):row[j]=float(matrix[i,names.index(name)])
+        table.appendRow(float(t),row)
+    path=Path(metadata['reference_directory'])/'continuation-reference.sto'
+    o.STOFileAdapter.write(table,str(path))
+    goal=o.MocoStateTrackingGoal('sagittal_physics_continuation',float(weight))
+    goal.setReference(o.TableProcessor(str(path)))
+    for name in keep:goal.setWeightForState(name,.02 if name.endswith('/speed') else 1.)
+    problem.addGoal(goal)
+
+
+def add_support_task(problem, admission, metadata, recipe, times):
+    """Soft, impulse-normalized single-lobe loading prior; not measured GRF.
+
+    ExternalLoads are reference data for a goal ONLY, never model forces.
+    Horizontal/lateral forces remain outcomes of contact and whole-body balance.
+    """
+    import opensim as o
+    policy=recipe['calibrated_task']; duty=policy['duty_factor']
+    period=2*admission['step_length_m']/admission['preferred_speed_mps']
+    bw=metadata['mass_kg']*9.80665
+    table=o.TimeSeriesTable(); labels=o.StdVectorString()
+    for side in ('l','r'):
+        for axis in 'xyz': labels.append('support_'+side+'_'+axis)
+    table.setColumnLabels(labels)
+    for t in times:
+        row=o.RowVector(6,0)
+        for i,offset in enumerate((0,.5)):
+            phase=(t/period+offset)%1
+            row[i*3+1]=bw/duty*np.sin(np.pi*phase/duty)**2 if phase<duty else 0
+        table.appendRow(float(t),row)
+    directory=Path(metadata['reference_directory'])
+    data_path=directory/'support-force-prior.sto'
+    o.STOFileAdapter.write(table,str(data_path))
+    loads=o.ExternalLoads(); loads.setDataFileName(str(data_path))
+    # Moco divides squared force error by BW once. Divide once more here
+    # so the configured weight multiplies dimensionless squared BW error.
+    goal=o.MocoContactTrackingGoal('continuous_weight_receiving',policy['support_force_weight']/bw)
+    for side in ('l','r'):
+        force=o.ExternalForce();force.setName('support_'+side)
+        force.set_applied_to_body('toe_'+side)
+        force.set_force_expressed_in_body('ground')
+        force.set_force_identifier('support_'+side+'_')
+        loads.cloneAndAppend(force)
+        paths=o.StdVectorString()
+        for contact in metadata['contacts']:
+            if contact['force'].endswith('_'+side):paths.append('/forceset/'+contact['force'])
+        group=o.MocoContactTrackingGoalGroup(paths,'support_'+side)
+        group.append_alternative_frame_paths('/bodyset/digit_'+side)
+        goal.addContactGroup(group)
+    loads_path=directory/'support-force-prior.xml';loads.printToXML(str(loads_path))
+    goal.setExternalLoadsFile(str(loads_path))
+    goal.setProjection('vector');goal.setProjectionVector(o.Vec3(0,1,0))
+    problem.addGoal(goal)
 
 
 def seed(admission, metadata, recipe, times):
     L1,L2,L3=metadata['segment_lengths_m']; p=recipe['calibrated_task']; height=p['hip_height_leg_lengths']*(L1+L2+L3)+metadata['foot_geometry']['sole_depth_m']
-    pitch=p['trunk_pitch_radians']; q={name:[] for name in ['pitch','forward','height',*metadata['coordinates']]}
+    pitch=p['trunk_pitch_radians']; q={name:[] for name in ['pitch','forward','height',*(['yaw','roll','lateral'] if recipe.get('spatial') else []),*metadata['coordinates']]}
     for t in times:
         _,feet=task_sample(admission,metadata,recipe,float(t)); row=dict(pitch=pitch,forward=t*admission['preferred_speed_mps'],height=height,
             chest=0.,neck=p['neck_rest_radians'],tail_proximal=p['tail_proximal_rest_radians'],tail_distal=p['tail_distal_rest_radians'])
+        if recipe.get('spatial'):
+            row={**dict.fromkeys(q,0.),**row,**recipe['spatial']['posture_reference']}
         for side,(foot,angle,digit) in feet.items():
             # Three-link seed only; its knee trajectory is not an objective.
             swing=((t/(2*admission['step_length_m']/admission['preferred_speed_mps'])+(0 if side=='l' else .5))%1)

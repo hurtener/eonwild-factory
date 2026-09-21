@@ -1,18 +1,18 @@
 # Factory movement roadmap and acceptance tracker
 
-Updated 2026-09-20. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
+Updated 2026-09-21. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
 
 Research before the next running pass: [running evidence baseline](research/RUNNING_EVIDENCE_BASELINE.md)
 records measured bird motion, the published BIRDS model, and diagnostic Allo/Tarbo
 extrapolations. The user requested evidence-based calibration after the C37
 landing/release analysis. Checkpoint 38 adopts selected, explicitly transferred priors. Checkpoint 39 adds
-whole-stride leg fitting. The user accepted its direction and Tarbo baseline; Allo remains restrained. Checkpoint 40 D extends bilateral dynamics; C40/C41 have changes requested. The C41 audit identifies an authored knee-task conflict. [OpenSim/Moco feasibility](research/OPENSIM_DINOSAUR_FEASIBILITY.md) records the researched alternate path. The [Moco prototype](research/MOCO_TARBO_PROTOTYPE.md) is now implemented; C42 and the mechanical candidate await review.
+whole-stride leg fitting. The user accepted its direction and Tarbo baseline; Allo remains restrained. Checkpoint 40 D extends bilateral dynamics; C40/C41 have changes requested. The C41 audit identifies an authored knee-task conflict. [OpenSim/Moco feasibility](research/OPENSIM_DINOSAUR_FEASIBILITY.md) records the researched alternate path. The [Moco prototype](research/MOCO_TARBO_PROTOTYPE.md) has C43 positive visual direction and a C44 contact comparison ready for review; physical 3D coordination remains unfinished.
 
 
 ## Current animation inventory
 
 Checkpoint 27 retained-braking-support stops are approved for both animals.
-Latest full checkpoint approval is checkpoint 28. Checkpoint 32 is the user-selected running base; checkpoint 34 has changes requested; checkpoint 35 has changes requested; checkpoint 36 has changes requested; checkpoint 37 has further changes requested; checkpoint 38 C has changes requested (Tarbo substantially improved; neck needs restraint; Allo not fully convincing); checkpoint 39 B has accepted direction/Tarbo baseline and Allo changes requested; checkpoints 40 D and 41 B have changes requested; the C41 knee-constraint audit is complete. C42 A is pending review, with a separate offline Moco mechanics prototype ready for review. **Approved means visually accepted
+Latest full checkpoint approval is checkpoint 28. Checkpoint 32 is the user-selected running base; checkpoint 34 has changes requested; checkpoint 35 has changes requested; checkpoint 36 has changes requested; checkpoint 37 has further changes requested; checkpoint 38 C has changes requested (Tarbo substantially improved; neck needs restraint; Allo not fully convincing); checkpoint 39 B has accepted direction/Tarbo baseline and Allo changes requested; checkpoints 40 D and 41 B have changes requested; the C41 knee-constraint audit is complete. C42 A remains pending review. C43 received positive Moco visual feedback. C44 is a partial checkpoint: contact candidate D is pending review and 3D coordination remains unfinished. **Approved means visually accepted
 in the reviewed clips**, not fully certified for arbitrary gameplay. Unless a row
 says otherwise, both admitted animals use the same shared engine with profile data.
 Historical sections and capture-time receipts below retain earlier review states.
@@ -41,7 +41,7 @@ Checkpoint 26 is the approved walking side-hit recovery baseline; standing impac
 | Jaw relaxation / breathing-like cycle | Full-transition pass approved | Full-transition pass approved | Full-body breathing and behavior-specific mouth control |
 | Expressive idle / listening / alert scanning | No complete approved family | No complete approved family | Compose meaningful attention, posture and breathing behaviors from existing layers |
 | Running / sprinting | C42 A foot-approach candidate, pending review; sprint missing | C42 A pending review; C39 preferred reference; historical Run010 / Sprint006 preserved | Review forward reach and recovery; remaining post-release extension, ankle polish, entry/braking and sprinting |
-| Offline Moco mechanics | Generic builder supports semantic anatomy; Allo solve not attempted | Tarbo planar torque-driven candidate I, pending review; finer J unfinished | Review contact-bearing mechanics, refine physical parameters; muscle physiology, 3D balance and Unity retargeting remain separate work |
+| Offline Moco mechanics | Not attempted; transfer follows Tarbo review | C43 positive visual direction; C44 D contact comparison pending; 3D trial rejected | Complete contact and 3D feasibility; then Allo transfer and muscles/tendons. Saved-state Unity import passes; physical validation remains open |
 | Feeding / gripping / pulling | Current approved transfer missing | Historical Feeding003 reference preserved | Current grounded support, oral contact and interaction handoff |
 | Drinking / swallowing | Missing | Missing | New choreography and world interaction |
 | Rest / sit / lie down / rise / sleep | Missing | Missing | New support transitions and resting behavior |
@@ -1085,3 +1085,15 @@ of controls drifts up to 0.280 m in root height over the half-stride, so the
 improved saved-state video is not physically validated. C39 remains the preferred
 baseline. The roadmap and evidence retain these separate outcomes. Pause here
 for user feedback; no further unseen polishing or automatic promotion.
+
+
+## Checkpoint 44 — partial review checkpoint
+
+Contact candidate D improves independent pelvis replay and loaded slip; native
+side/quarter and C43 comparison videos are ready. Toe instability and skin
+contact failure remain. The 3D G diagnostic is rejected; later K/L attempts also
+did not reach usable motion. No later-stage work or production promotion.
+
+See [the current Moco checkpoint](research/MOCO_TARBO_PROTOTYPE.md#checkpoint-44--contact-comparison-ready-3d-coordination-unfinished)
+and principal Eonwild `game/Evidence/moco-spatial-study/` for models, videos,
+source hashes and separate technical/visual statuses. Paused for user feedback.

@@ -220,3 +220,56 @@ this build of OpenSim logs unrecognized output constraints and silently omits
 them. The portable candidate study was checked after registration: all six
 clearance constraints and 48 states survive; relative task references load.
 Do not run a deserialized study that has dropped its path constraints.
+
+
+## Checkpoint 44 — contact comparison ready; 3D coordination unfinished
+
+The user requested contact/force consistency plus physical 3D body coordination,
+then a native-time visual checkpoint. This is a **partial checkpoint**:
+contact candidate D is available for review; no usable 3D solution was obtained.
+Allosaurus transfer and muscles/tendons have not begun. Work was done directly,
+without subagents. C43 and the approved animation library remain preserved.
+
+The shared optional Moco builder adds a soft single-lobe support-force prior,
+reduced foot-path tracking, internal limb damping and linear control interpolation.
+These are declared engineering priors, not measured dinosaur forces or external
+forces applied to the animal. The knee is not following a tracked angle schedule.
+
+| Evidence | C43 P | C44 D contact |
+|---|---:|---:|
+| Independent pelvis-height drift over 0.594 s | 279.74 mm | 10.72 mm |
+| Dense planar force-balance RMS | 1.722% body weight | 0.609% body weight |
+| p95 loaded contact-surface speed | 0.157 m/s | 0.115 m/s |
+| Maximum skin penetration | 34.8 mm | 23.87 mm |
+| Optimizer convergence | No | No |
+
+Body replay is substantially closer, but the left toe-base joint still diverges
+by 5.58 rad in independent integration. Skin contact still fails the unchanged
+0.5 mm threshold. D has 176 iterations and an agent-requested diagnostic stop.
+Its video replays the saved state trajectory; it is not a recording of successful
+independent forward simulation. Neither numerical improvement nor accurate Unity
+import establishes physical or biological validation.
+
+All 216 new D frames and 144 rejected 3D G frames were inspected chronologically.
+D has clearer stance compression/extension but more body rise than C43; a force
+shoulder and abrupt unloading remain. It is still planar. The 3D G diagnostic
+has floating feet, a crouched posture and a dipping head; its forces do not
+support its saved motion, so it is rejected before user candidate selection.
+Later K/L attempts also failed to produce usable motion. G is not a render of L.
+
+The unfinished spatial model has a free six-coordinate root, hip pitch/yaw/roll,
+chest coupling, two neck regions, an independent head and four tail regions.
+There are no root actuators. Mass fractions, inertia, stiffness, damping and
+motor capacity are estimates. Later experiments add divided stiffness for
+transverse pads, axial torque reserve from static demand, equivalent optimizer
+mass units and a temporary sagittal continuation goal. They did not establish
+3D feasibility. Nine actual-rig poses verify unit-equivalent acceleration within
+3.28e-11; that is a units check, not a motion pass.
+
+Primary evidence: principal Eonwild
+`game/Evidence/moco-spatial-study/README.md`. The selected planar model, native
+side/quarter videos, C43 comparison, rejected G diagnostic and unfinished L model
+are preserved separately with source recipes, solutions and receipts.
+Eleven focused checks pass; 726 Unity landmarks per rendered model pass.
+Production contact and 3D coordination remain unfinished. Pause for user review;
+do not promote D, advance to Allosaurus or start muscle/tendon work unseen.

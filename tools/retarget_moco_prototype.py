@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Diagnostic semantic skin adapter for a saved planar Moco state replay.
+"""Diagnostic semantic skin adapter for a saved planar or spatial Moco replay.
 
 No running solver, contact correction, time warp or secondary layer is applied.
 Artist bone lengths/rest curvature survive; their mismatch is measured on export.
@@ -76,6 +76,7 @@ def main():
             target_rows.append((half, row))
     times.append(2 * period)
     target_rows.append((2, data['frames'][0]))
+    spatial=data['metadata'].get('spatial')
     targets = []
     for half, row in target_rows:
         tr, ro = np.array(c.base_t).copy(), np.array(c.base_r).copy()
@@ -92,20 +93,28 @@ def main():
             if position is not None:
                 tr[node] = position if parent is None else (np.linalg.inv(w[parent]) @ np.r_[position, 1])[:3]
         q = {name: value['value'] for name, value in row['coordinates'].items()}
-        trunk = pitch(q['pitch'])
+        reflection=np.diag([1,1,-1]) if half%2 else np.eye(3)
+        def body_rotation(name):
+            return basis@reflection@np.array(row['bodies'][name]['rotation'])@reflection@basis.T
+        trunk = body_rotation('trunk') if spatial else pitch(q['pitch'])
         root = roles['root']
-        root_origin = ground + basis @ (np.array(row['bodies']['trunk']['origin']) + [half * step, 0, 0])
+        root_origin = ground + basis @ (reflection@np.array(row['bodies']['trunk']['origin']) + [half * step, 0, 0])
         set_world(root, trunk @ base[root, :3, :3], root_origin + trunk @ (base[root, :3, 3] - origin))
-        # One mechanical neck and two tail regions. Retain the artist's rest
-        # curvature within each rigid region; do not invent lateral motion.
-        if 'chest' in q:
-            node=roles[data['metadata']['chest_semantic_role']]
-            set_world(node,pitch(q['pitch']+q['chest'])@base[node,:3,:3])
-        for role, angle in [('neck.0', q['pitch'] + q.get('chest',0) + q['neck']),
-                            ('tail.0', q['pitch'] + q['tail_proximal']),
-                            ('tail.4', q['pitch'] + q['tail_proximal'] + q['tail_distal'])]:
-            node = roles[role]
-            set_world(node, pitch(angle) @ base[node, :3, :3])
+        if spatial:
+            for binding in data['metadata']['axial_bindings']:
+                node=roles[binding['role']]
+                set_world(node,body_rotation(binding['body'])@base[node,:3,:3])
+        else:
+            # One mechanical neck and two tail regions. Retain the artist's rest
+            # curvature within each rigid region; do not invent lateral motion.
+            if 'chest' in q:
+                node=roles[data['metadata']['chest_semantic_role']]
+                set_world(node,pitch(q['pitch']+q['chest'])@base[node,:3,:3])
+            for role, angle in [('neck.0', q['pitch'] + q.get('chest',0) + q['neck']),
+                                ('tail.0', q['pitch'] + q['tail_proximal']),
+                                ('tail.4', q['pitch'] + q['tail_proximal'] + q['tail_distal'])]:
+                node = roles[role]
+                set_world(node, pitch(angle) @ base[node, :3, :3])
         frame_targets = {}
         for side, suffix in [('left', 'l'), ('right', 'r')]:
             source_side = suffix if half % 2 == 0 else ('r' if suffix == 'l' else 'l')
@@ -117,7 +126,13 @@ def main():
             for i, part in enumerate(('thigh', 'shin', 'metatarsus')):
                 node, child = roles[f'{side}Leg.{i}'], roles[f'{side}Leg.{i+1}']
                 direction = point(part, 'end') - point(part, 'origin')
-                rotation = align(base[child, :3, 3] - base[node, :3, 3], direction) @ base[node, :3, :3]
+                if spatial:
+                    # The model limb is -Y at zero angle. Transfer full rotation,
+                    # including hip yaw/roll, with the artist's rest orientation.
+                    correction=align(base[child,:3,3]-base[node,:3,3],basis@np.array([0,-1,0]))
+                    rotation=body_rotation(part+'_'+source_side)@correction@base[node,:3,:3]
+                else:
+                    rotation = align(base[child, :3, 3] - base[node, :3, 3], direction) @ base[node, :3, :3]
                 set_world(node, rotation)
                 frame_targets[f'{side}Leg.{i}'] = point(part, 'origin').tolist()
             frame_targets[f'{side}Leg.3'] = point('toe', 'origin').tolist()
@@ -129,11 +144,13 @@ def main():
                 toe = point('toe', 'end') - point('toe', 'origin')
                 angle = np.arctan2(toe @ c.up, toe @ c.forward)
             foot = roles[f'{side}Leg.3']
-            set_world(foot, pitch(angle) @ base[foot, :3, :3])
+            foot_rotation=body_rotation('toe_'+source_side) if spatial else pitch(angle)
+            set_world(foot, foot_rotation @ base[foot, :3, :3])
             if 'digit_'+source_side in q:
                 for role,node in roles.items():
                     if role.startswith('legs.'+side+'.toeChains.') and role.endswith('.1'):
-                        set_world(node,pitch(angle+q['digit_'+source_side])@base[node,:3,:3])
+                        digit_rotation=body_rotation('digit_'+source_side) if spatial else pitch(angle+q['digit_'+source_side])
+                        set_world(node,digit_rotation@base[node,:3,:3])
         poses.append((tr, ro))
         targets.append(frame_targets)
     tr = np.asarray([p[0] for p in poses]); ro = np.asarray([p[1] for p in poses])
@@ -171,7 +188,8 @@ def main():
         visual='PENDING', source_sha256=sha(source.raw), replay_sha256=sha(a.replay.read_bytes()),
         model_sha256=data['metadata']['model_sha256'], emitted_sha256=sha(payload), duration_s=2*period,
         root_advance_m=2*step, frames=len(times),
-        method='Saved Moco body directions; rotation-only limb transfer, original artist lengths and rest curvature. Calibrated models include chest and distal toe motion plus admitted static jaw-neutral closure. Half-stride bilateral symmetry. No contact correction or dynamic secondary layer.',
+        method=('Saved full spatial Moco body rotations and reflected half-stride symmetry. ' if spatial else 'Saved planar Moco body directions and bilateral half-stride symmetry. ')+
+            'Rotation-only limb transfer, original artist lengths and rest curvature. Calibrated models include chest and distal toe motion plus admitted static jaw-neutral closure. No contact correction or dynamic secondary layer.',
         maximum_joint_error_m=max(v for m in measurements for v in m['joint_error_m'].values()),
         minimum_skin_floor_m=min(v for m in measurements for v in m['skin_floor_min_m'].values()),
         measurements=measurements)

@@ -2,6 +2,7 @@
 import json
 from pathlib import Path
 import unittest
+import re
 import numpy as np
 try:
     import opensim as o
@@ -104,6 +105,62 @@ class ModelPhysics(unittest.TestCase):
     def test_calibrated_model_rejects_missing_sole_admission(self):
         recipe=json.loads((Path(__file__).parents[1]/'catalog/behaviors/moco-stride-prototype.v2.json').read_text())
         with self.assertRaisesRegex(ValueError,'sole geometry'):make_model(admission(),recipe)
+
+    def spatial_model(self,mass_scale=1.):
+        a=admission();a['points']['spine.2']=[.5,-.1,0]
+        for i in range(1,5):a['points'][f'neck.{i}']=[1.2+.3*i,.05*i,0]
+        vertices=[[x,-.16,z] for x in np.linspace(-.1,.6,30) for z in (-.2,0,.2)]
+        a['foot_surface']={s:dict(vertices_m=vertices,toe_midpoint_m=[.25,-.1,0]) for s in ('left','right')}
+        recipe=json.loads((Path(__file__).parents[1]/'catalog/behaviors/moco-spatial-stride.v1.json').read_text())
+        a['animal']['measurements']['body_mass']['value']*=mass_scale
+        recipe['contact']['stiffness_N_m2']*=mass_scale
+        return make_model(a,recipe)
+
+    def test_optimizer_mass_units_preserve_contact_acceleration(self):
+        outputs=[]
+        for scale in (1.,.001):
+            model,_=self.spatial_model(scale);state=model.initSystem()
+            for n,q in dict(height=2.2,pitch=.04,hip_l=.4,knee_l=-1.,ankle_l=.6,hip_r=.7,knee_r=-1.4,ankle_r=.9,hip_l_roll=.03).items():
+                model.getCoordinateSet().get(n).setValue(state,q)
+            model.setStateVariableValue(state,'/forceset/motor_tail_0_yaw/activation',.03)
+            model.realizeAcceleration(state);outputs.append(state.getUDot().to_numpy().copy())
+        np.testing.assert_allclose(outputs[0],outputs[1],rtol=1e-8,atol=1e-7)
+
+    def test_axial_reserve_is_internal_and_leaves_static_headroom(self):
+        model,receipt=self.spatial_model()
+        for data in receipt['actuators'].values():
+            if 'static_gravity_minus_passive_demand_Nm' in data:
+                self.assertLessEqual(data['static_gravity_minus_passive_demand_Nm']/data['capacity_Nm'],.40000001)
+        self.assertEqual(model.getNumControls(),31)
+        self.assertEqual(receipt['root_reserves'],[])
+
+    def test_spatial_tail_motor_reacts_through_body_without_external_support(self):
+        model,r=self.spatial_model();state=model.initSystem()
+        model.getCoordinateSet().get('height').setValue(state,10)
+        model.setStateVariableValue(state,'/forceset/motor_tail_0_yaw/activation',.05)
+        model.realizeAcceleration(state)
+        acc=model.calcMassCenterAcceleration(state)
+        np.testing.assert_allclose([acc.get(i) for i in range(3)],[0,-9.80665,0],atol=1e-7)
+        self.assertGreater(abs(model.getCoordinateSet().get('yaw').getAccelerationValue(state)),1e-5)
+        self.assertAlmostEqual(model.getTotalMass(state),1000)
+        self.assertEqual(model.getJointSet().get('root').numCoordinates(),6)
+        self.assertEqual(r['root_reserves'],[])
+
+    def test_spatial_half_stride_reflection_preserves_geometry(self):
+        from eonwild_motion.solve.moco_spatial import reflected_coordinate
+        model,_=self.spatial_model()
+        values=dict(height=2.1,pitch=.08,yaw=.1,roll=-.05,lateral=.12,
+                    hip_l=.3,knee_l=-1.,ankle_l=.8,hip_r=.8,knee_r=-1.4,ankle_r=1.1,
+                    hip_l_yaw=.08,hip_r_roll=-.08,tail_0_yaw=.12,neck_upper_yaw=-.05)
+        def positions(q):
+            state=model.initSystem()
+            for name,value in q.items():model.getCoordinateSet().get(name).setValue(state,value)
+            model.realizePosition(state)
+            return {b.getName():np.array([b.getPositionInGround(state).get(i) for i in range(3)]) for b in model.getBodySet()}
+        def swap(name):return re.sub(r'_(l|r)(?=_|$)',lambda m:'_r' if m.group(1)=='l' else '_l',name)
+        before=positions(values)
+        after=positions({swap(n):(-v if reflected_coordinate(n) else v) for n,v in values.items()})
+        for name,position in before.items():np.testing.assert_allclose(after[swap(name)],position*[1,1,-1],atol=1e-9)
 
 
 if __name__ == '__main__':unittest.main()
