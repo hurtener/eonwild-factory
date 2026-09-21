@@ -2,6 +2,11 @@
 
 Updated 2026-09-21. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
 
+Current checkpoint: **C45 J focused head and lateral tail, pending visual review**.
+This is a spatial inverse-dynamics initializer; contact and independent forward
+replay still fail. The selected saved-state video and its limits are documented
+in the C45 section below.
+
 Research before the next running pass: [running evidence baseline](research/RUNNING_EVIDENCE_BASELINE.md)
 records measured bird motion, the published BIRDS model, and diagnostic Allo/Tarbo
 extrapolations. The user requested evidence-based calibration after the C37
@@ -41,7 +46,7 @@ Checkpoint 26 is the approved walking side-hit recovery baseline; standing impac
 | Jaw relaxation / breathing-like cycle | Full-transition pass approved | Full-transition pass approved | Full-body breathing and behavior-specific mouth control |
 | Expressive idle / listening / alert scanning | No complete approved family | No complete approved family | Compose meaningful attention, posture and breathing behaviors from existing layers |
 | Running / sprinting | C42 A foot-approach candidate, pending review; sprint missing | C42 A pending review; C39 preferred reference; historical Run010 / Sprint006 preserved | Review forward reach and recovery; remaining post-release extension, ankle polish, entry/braking and sprinting |
-| Offline Moco mechanics | Not attempted; transfer follows Tarbo review | C43 positive visual direction; C44 D contact comparison pending; 3D trial rejected | Complete contact and 3D feasibility; then Allo transfer and muscles/tendons. Saved-state Unity import passes; physical validation remains open |
+| Offline Moco mechanics | Not attempted; transfer follows Tarbo review | C43 positive visual direction; C44 D retained; C45 J focused head and lateral tail pending review | C45 is a spatial inverse-dynamics initializer, not a converged Moco solve. Contact and independent forward replay fail. Complete physical consistency before Allo and muscles/tendons |
 | Feeding / gripping / pulling | Current approved transfer missing | Historical Feeding003 reference preserved | Current grounded support, oral contact and interaction handoff |
 | Drinking / swallowing | Missing | Missing | New choreography and world interaction |
 | Rest / sit / lie down / rise / sleep | Missing | Missing | New support transitions and resting behavior |
@@ -1097,3 +1102,36 @@ did not reach usable motion. No later-stage work or production promotion.
 See [the current Moco checkpoint](research/MOCO_TARBO_PROTOTYPE.md#checkpoint-44--contact-comparison-ready-3d-coordination-unfinished)
 and principal Eonwild `game/Evidence/moco-spatial-study/` for models, videos,
 source hashes and separate technical/visual statuses. Paused for user feedback.
+
+
+## Checkpoint 45 — focused pursuit and spatial tail, pending review
+
+The new Tarbo candidate J keeps the nose steady while the chest and two neck
+regions compensate for running. Four tail regions now bend laterally with the
+pelvis. Jaw breathing is a separate, explicitly authored 0.8–3.8 degree cycle.
+The actual emitted rig has 24.41 mm vertical nose travel per stride, versus
+289.19 mm in C44 D, while pelvis travel remains 259.23 mm. Tail-tip lateral
+travel is 1.914 m. These are animation measurements, not biological findings.
+
+J is a **spatial inverse-dynamics initializer**, not a converged Moco solution.
+It optimizes smooth periodic corrections using the existing OpenSim contacts,
+gravity, passive forces and internal motor estimates. The six-coordinate root
+has no actuators. There is no head/tail overlay after the physics trajectory;
+only the jaw cycle is added in retargeting. The shared semantic builder remains
+animal-independent; Allosaurus transfer is still unattempted.
+
+All 216 native-time side/quarter frames were inspected. Fourteen focused tests,
+source bone lengths, loop closure and 558 Unity landmark comparisons pass.
+Skin contact still fails: 30.09 mm maximum penetration, versus 23.87 mm in C44.
+Independent forward replay loses 357.87 mm of pelvis height over 0.594 s and
+shows major joint divergence. A small control-bound excess and a 0.685 mm
+violation of the tail's existing safety margin also remain. The tail is above
+the actual floor. Do not describe the saved-state video as validated dynamics.
+
+Evidence: principal Eonwild `game/Evidence/moco-focused-coordination-study/`.
+It includes native videos, a C44 comparison, a nose/tail path chart, exact model,
+initializer coefficients, source recipes, trial records and failing checks.
+The separate Moco refinement is recorded as an unselected experiment; it is not
+the source of the J video. Preserve C39/C42/C43/C44 and the approved library.
+Pause here for user review. Next work is contact/control/forward consistency
+for the spatial result, then Allosaurus transfer and muscles/tendons after review.

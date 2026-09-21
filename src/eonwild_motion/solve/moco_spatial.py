@@ -135,8 +135,14 @@ def transfer_guess(solver, path, model=None, metadata=None):
                     if source in old_states:values=scale*states[:,old_states.index(source)]
         if name.startswith('/jointset/neck/neck/') and '/jointset/neck_upper/neck_upper/value' not in old_states:values=values*.55
         guess.setState(name,v(values))
-    for name in guess.getControlNames():guess.setControl(name,v(controls[:,old_controls.index(name)] if name in old_controls else zero))
-    for name in guess.getDerivativeNames():guess.setDerivative(name,v(zero))
+    for name in guess.getControlNames():
+        guess.setControl(name,v(np.clip(controls[:,old_controls.index(name)],-1,1) if name in old_controls else zero))
+    for name in guess.getDerivativeNames():
+        # Same-topology continuation also needs accelerations. A zero implicit
+        # acceleration guess contradicts a moving gait even when q/u are good.
+        speed=name.removesuffix('/accel')+'/speed'
+        values=np.gradient(states[:,old_states.index(speed)],old.getTimeMat(),edge_order=2) if speed in old_states else zero
+        guess.setDerivative(name,v(np.clip(values,-300,300)))
     changed_topology=any(name not in old_states for name in guess.getStateNames())
     if model is not None and changed_topology:
         # A new topology cannot inherit old muscle/motor effort unchanged.
@@ -220,6 +226,12 @@ def add_axial(model, metadata, points, fractions, capacities, length, body, pin,
         b=body(name,fractions['neck']*share,extent*.5,extent,radius*length)
         pin(name,parent,origin-parent_origin,b,[-.32,.32],capacities['neck']*(.8 if name=='neck' else .55))
         metadata['axial_bindings'].append(dict(body=name,role=role))
+        if name=='head' and 'nose' in points:
+            nose_local=p('nose')-origin
+            nose=o.PhysicalOffsetFrame('nose',b,o.Transform(o.Vec3(*map(float,nose_local))))
+            model.addComponent(nose)
+            metadata['attention_frame']='/nose'
+            metadata['nose_local_m']=nose_local.tolist()
         parent=b;parent_origin=origin
     tail_roles=sorted((k for k in points if k.startswith('tail.')),key=lambda k:int(k.split('.')[-1]))
     indices=np.linspace(0,len(tail_roles)-1,5).astype(int)

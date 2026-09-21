@@ -31,6 +31,23 @@ positions={b['role']:np.asarray(c.base_w[source.name_to_node[b['bone']]])[:3,3] 
 origin=(positions['leftLeg.0']+positions['rightLeg.0'])/2
 points={role:[float((v-origin)@axis) for axis in (c.forward,c.up,c.lateral)] for role,v in positions.items()}
 skin=SkinRig(source,c.roles,c.forward,c.up,captured['contact'])
+# Measure a skull-fixed rostral witness separately from the moving lower jaw.
+# This is artist geometry, not a reconstructed eye or anatomical sight axis.
+head=source.name_to_node[c.roles['head']]
+def below(node,ancestor):
+    while node is not None:
+        if node==ancestor:return True
+        node=source.parents[node]
+    return False
+skull_nodes=[n for n in range(len(source.nodes)) if below(n,head) and
+             not (c.jaw is not None and below(n,c.jaw))]
+head_weights=np.where(np.isin(skin.node_ids,skull_nodes),skin.weights,0).sum(axis=1)
+head_indices=np.flatnonzero(head_weights>.6)
+if not len(head_indices):raise ValueError('No skull-dominant skin for nose admission')
+head_vertices=skin.skin(np.asarray(c.base_w),head_indices)
+head_forward=head_vertices@c.forward
+nose=head_vertices[head_forward>=np.quantile(head_forward,.98)].mean(axis=0)
+points['nose']=[float((nose-origin)@axis) for axis in (c.forward,c.up,c.lateral)]
 surface={}
 for side in ('left','right'):
     vertices=skin.skin(np.asarray(c.base_w),skin.foot_masks[side])

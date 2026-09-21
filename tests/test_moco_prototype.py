@@ -108,6 +108,7 @@ class ModelPhysics(unittest.TestCase):
 
     def spatial_model(self,mass_scale=1.):
         a=admission();a['points']['spine.2']=[.5,-.1,0]
+        a['points']['nose']=[3.4,0.,0.]
         for i in range(1,5):a['points'][f'neck.{i}']=[1.2+.3*i,.05*i,0]
         vertices=[[x,-.16,z] for x in np.linspace(-.1,.6,30) for z in (-.2,0,.2)]
         a['foot_surface']={s:dict(vertices_m=vertices,toe_midpoint_m=[.25,-.1,0]) for s in ('left','right')}
@@ -115,6 +116,64 @@ class ModelPhysics(unittest.TestCase):
         a['animal']['measurements']['body_mass']['value']*=mass_scale
         recipe['contact']['stiffness_N_m2']*=mass_scale
         return make_model(a,recipe)
+
+    def test_admitted_attention_witness_moves_with_skull(self):
+        model,receipt=self.spatial_model();state=model.initSystem()
+        self.assertEqual(receipt['attention_frame'],'/nose')
+        nose=o.PhysicalOffsetFrame.safeDownCast(model.getComponent('/nose'))
+        head=model.getBodySet().get('head')
+        positions=[]
+        for pitch in (-.12,.14):
+            model.getCoordinateSet().get('neck').setValue(state,pitch)
+            model.getCoordinateSet().get('head_yaw').setValue(state,.08)
+            model.realizePosition(state)
+            actual=nose.getPositionInGround(state).to_numpy()
+            expected=head.findStationLocationInGround(state,o.Vec3(*receipt['nose_local_m'])).to_numpy()
+            np.testing.assert_allclose(actual,expected,atol=1e-12)
+            positions.append(actual)
+        self.assertGreater(np.linalg.norm(positions[1]-positions[0]),.1)
+
+    def test_periodic_basis_keeps_roll_axes_and_mean_hip_adduction(self):
+        from eonwild_motion.solve.moco_coordination import Coordination,basis_parameters
+        model,_=self.spatial_model()
+        names=[c.getName() for c in model.getCoordinateSet()]
+        parameters=basis_parameters(names,3)
+        self.assertIn(('hip_l_roll',0,'constant'),parameters)
+        self.assertIn(('hip_l_yaw',0,'constant'),parameters)
+        self.assertIn(('chest_roll',1,'sin'),parameters)
+        self.assertFalse(any(n=='hip_r_roll' for n,_,_ in parameters))
+        p=Coordination.__new__(Coordination);p.names=names;p.index={n:i for i,n in enumerate(names)}
+        p.period=1.;p.parameters=parameters;p._cache={}
+        times=np.array([.13,.63]);arrays=p._arrays(times)
+        # Every left roll contribution must equal the negated right roll at
+        # the opposite half-stride, including the static adduction component.
+        for values in arrays:
+            np.testing.assert_allclose(values[0,p.index['hip_l_roll']],-values[1,p.index['hip_r_roll']],atol=1e-10)
+        constant=parameters.index(('hip_l_roll',0,'constant'))
+        self.assertEqual(arrays[0][0,p.index['hip_r_roll'],constant],-1.)
+
+    def test_same_topology_warm_start_retains_nonzero_implicit_accelerations(self):
+        import tempfile
+        from eonwild_motion.solve.moco_spatial import transfer_guess
+        model,_=self.spatial_model()
+        study=o.MocoStudy();problem=study.updProblem();problem.setModelAsCopy(model)
+        problem.setTimeBounds(0,1)
+        problem.setStateInfoPattern('.*/value',[-20,20]);problem.setStateInfoPattern('.*/speed',[-20,20])
+        problem.setStateInfoPattern('.*/activation',[-1,1])
+        solver=study.initCasADiSolver();solver.set_multibody_dynamics_mode('implicit');solver.set_num_mesh_intervals(30)
+        source=solver.createGuess();times=source.getTimeMat()
+        def vector(values):
+            result=o.Vector(len(values),0)
+            for i,value in enumerate(values):result[i]=float(value)
+            return result
+        source.setState('/jointset/neck/neck/value',vector(.1*np.sin(2*np.pi*times)))
+        source.setState('/jointset/neck/neck/speed',vector(.2*np.pi*np.cos(2*np.pi*times)))
+        with tempfile.TemporaryDirectory() as directory:
+            path=Path(directory)/'guess.sto';source.write(str(path))
+            restored=transfer_guess(solver,path)
+        names=list(restored.getDerivativeNames());col=names.index('/jointset/neck/neck/accel')
+        acceleration=np.asarray(restored.getDerivativesTrajectoryMat())[:,col]
+        np.testing.assert_allclose(acceleration[2:-2],-.4*np.pi**2*np.sin(2*np.pi*times[2:-2]),atol=.02)
 
     def test_optimizer_mass_units_preserve_contact_acceleration(self):
         outputs=[]

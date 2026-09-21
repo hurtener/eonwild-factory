@@ -1,0 +1,399 @@
+{
+  "schema": "eonwild.motion.moco-prototype.v3",
+  "classification": "C45 spatial coordination and focused gaze; guided optimization with estimated mechanics; pending review",
+  "mass_fractions": {
+    "trunk": 0.35,
+    "neck": 0.09,
+    "tail_proximal": 0.16,
+    "tail_distal": 0.058,
+    "thigh_each": 0.06,
+    "shin_each": 0.025,
+    "metatarsus_each": 0.008,
+    "toe_each": 0.0015,
+    "chest": 0.15,
+    "digit_each": 0.0015
+  },
+  "capacity_body_weight_leg_length": {
+    "hip": 0.55,
+    "knee": 0.45,
+    "ankle": 0.3,
+    "mtp": 0.1,
+    "neck": 0.08,
+    "tail_proximal": 0.18,
+    "tail_distal": 0.06,
+    "chest": 0.13,
+    "digit": 0.065
+  },
+  "activation_time_constant_s": 0.035,
+  "contact": {
+    "radius_leg_length": 0.025,
+    "stiffness_N_m2": 200000000.0,
+    "dissipation_s_m": 1.5,
+    "static_friction": 0.8,
+    "dynamic_friction": 0.8,
+    "viscous_friction": 0.01,
+    "transition_velocity_mps": 0.1
+  },
+  "optimization": {
+    "effort_weight": 0.03,
+    "acceleration_weight": 1e-07,
+    "constraint_tolerance": 0.0001,
+    "convergence_tolerance": 0.0001,
+    "max_iterations": 500,
+    "dynamics_mode": "implicit",
+    "contact_force_weight": 0.02,
+    "acceleration_weight_note": "Only active for the optional implicit formulation. Explicit mode retains activation dynamics and bounded controls.",
+    "distal_acceleration_weight": 0.0,
+    "linear_controls": true,
+    "sparsity_detection": "none",
+    "finite_difference_scheme": "forward",
+    "mass_unit_kg": 1000.0,
+    "continuation_tracking_weight": 1000.0,
+    "full_body_continuation": true,
+    "continuation_foot_weight": 1000.0
+  },
+  "provenance": {
+    "geometry": "Fresh semantic joint centers from admitted source geometry; bilateral segment lengths averaged and projected into a planar chain",
+    "mass": "Animal-instance body_mass measurement retains original source and confidence",
+    "segment_distribution_inertia_capacity_contact": "Explicit authored estimates for feasibility, not measured or fitted biological values. Rod and ellipsoid approximations. Sensitivity and calibration pending.",
+    "task": "C45 uses the spatial inverse-dynamics initializer and soft skull-fixed nose position/orientation tasks. Legacy foot, posture and support-force reference weights are zero. No previous artist animation is imported.",
+    "implementation_reference": "OpenSim Moco public optimal-control and periodicity APIs; original project model builder; no imported dinosaur trajectories or third-party dinosaur model code",
+    "contact": "Seven sole-fitted pads. Splitting two longitudinal pads transversely preserves summed material stiffness (half strength per split pad). 200 MPa stiffness and 8 mm envelope margin retained from the planar physical baseline.",
+    "passive": "Internal generalized spring/damper torques with explicitly estimated stiffness/rest angles. These are not reconstructed muscles or ligaments.",
+    "release": "Periodic initializer smoothing over 1.5 percent of a stride removes inherited sub-frame release corners; exact inverse dynamics and contacts are reevaluated afterward. No timing change in emitted footage.",
+    "support": "Engineering prior: one smooth sin-squared load per stance, normalized to body-weight impulse over a stride. Soft vertical force goal, not external assistance or measured Tarbo GRF.",
+    "joint_viscosity": "Internal viscous resistance scaled by torque capacity, 0.002 seconds; engineering tissue/actuator impedance estimate. Reoptimized with the model, not added to saved motion.",
+    "foot_track": "Engineering running-track prior: half the admitted hip spacing, soft foot-region goal. Freely optimized hip adduction and pelvis response; not measured Tarbo kinematics.",
+    "continuation": "Soft regularization of all coordinates and speeds around the periodic inverse-dynamics initializer; every state remains free in Moco. Guided optimization, not an untracked prediction. Foot origins are also softly tracked to the coordinated warm start to discourage the large placement drift seen in rejected refinement trials; no foot is kinematically prescribed.",
+    "axial_capacity": "Engineering reserve calibrated from supported-reference static gravity demand after passive forces, at most 40 percent of available motor torque. Not reconstructed muscle strength."
+  },
+  "calibrated_task": {
+    "pad_radius_leg_lengths": 0.043,
+    "pad_envelope_margin_m": 0.008,
+    "duty_factor": 0.43,
+    "catch_bias_leg_lengths": 0.18,
+    "toe_off_pitch_radians": 0.6,
+    "recovery_clearance_leg_lengths": 0.17,
+    "foot_tracking_weight": 0.0,
+    "posture_tracking_weight": 0.0,
+    "hip_height_leg_lengths": 0.88,
+    "trunk_pitch_radians": 0.055,
+    "neck_rest_radians": 0.055,
+    "tail_proximal_rest_radians": -0.055,
+    "tail_distal_rest_radians": -0.045,
+    "continuous_release": true,
+    "support_force_weight": 0.0
+  },
+  "passive_support": {
+    "chest": {
+      "stiffness_BW_leg_length": 0.3,
+      "damping_BW_leg_length_s": 0.006,
+      "rest_radians": 0.04
+    },
+    "neck": {
+      "stiffness_BW_leg_length": 0.12,
+      "damping_BW_leg_length_s": 0.003,
+      "rest_radians": 0.09
+    },
+    "tail_proximal": {
+      "stiffness_BW_leg_length": 0.7,
+      "damping_BW_leg_length_s": 0.008,
+      "rest_radians": -0.2
+    },
+    "tail_distal": {
+      "stiffness_BW_leg_length": 0.22,
+      "damping_BW_leg_length_s": 0.006,
+      "rest_radians": -0.18
+    },
+    "neck_upper": {
+      "stiffness_BW_leg_length": 0.06,
+      "damping_BW_leg_length_s": 0.002,
+      "rest_radians": 0.05
+    },
+    "head": {
+      "stiffness_BW_leg_length": 0.05,
+      "damping_BW_leg_length_s": 0.001,
+      "rest_radians": 0.0
+    },
+    "tail_0": {
+      "stiffness_BW_leg_length": 0.5,
+      "damping_BW_leg_length_s": 0.006,
+      "rest_radians": -0.1
+    },
+    "tail_1": {
+      "stiffness_BW_leg_length": 0.3,
+      "damping_BW_leg_length_s": 0.004,
+      "rest_radians": -0.08
+    },
+    "tail_2": {
+      "stiffness_BW_leg_length": 0.15,
+      "damping_BW_leg_length_s": 0.002,
+      "rest_radians": -0.06
+    },
+    "tail_3": {
+      "stiffness_BW_leg_length": 0.05,
+      "damping_BW_leg_length_s": 0.001,
+      "rest_radians": -0.04
+    },
+    "hip_l_yaw": {
+      "stiffness_BW_leg_length": 0.1,
+      "damping_BW_leg_length_s": 0.002,
+      "rest_radians": 0.0
+    },
+    "hip_l_roll": {
+      "stiffness_BW_leg_length": 0.1,
+      "damping_BW_leg_length_s": 0.002,
+      "rest_radians": 0.0
+    },
+    "hip_r_yaw": {
+      "stiffness_BW_leg_length": 0.1,
+      "damping_BW_leg_length_s": 0.002,
+      "rest_radians": 0.0
+    },
+    "hip_r_roll": {
+      "stiffness_BW_leg_length": 0.1,
+      "damping_BW_leg_length_s": 0.002,
+      "rest_radians": 0.0
+    },
+    "chest_yaw": {
+      "stiffness_BW_leg_length": 0.1,
+      "damping_BW_leg_length_s": 0.002,
+      "rest_radians": 0.0
+    },
+    "chest_roll": {
+      "stiffness_BW_leg_length": 0.1,
+      "damping_BW_leg_length_s": 0.002,
+      "rest_radians": 0.0
+    },
+    "neck_yaw": {
+      "stiffness_BW_leg_length": 0.1,
+      "damping_BW_leg_length_s": 0.002,
+      "rest_radians": 0.0
+    },
+    "neck_upper_yaw": {
+      "stiffness_BW_leg_length": 0.1,
+      "damping_BW_leg_length_s": 0.002,
+      "rest_radians": 0.0
+    },
+    "head_yaw": {
+      "stiffness_BW_leg_length": 0.1,
+      "damping_BW_leg_length_s": 0.002,
+      "rest_radians": 0.0
+    },
+    "tail_0_yaw": {
+      "stiffness_BW_leg_length": 0.07,
+      "damping_BW_leg_length_s": 0.002,
+      "rest_radians": 0.0
+    },
+    "tail_1_yaw": {
+      "stiffness_BW_leg_length": 0.07,
+      "damping_BW_leg_length_s": 0.002,
+      "rest_radians": 0.0
+    },
+    "tail_2_yaw": {
+      "stiffness_BW_leg_length": 0.07,
+      "damping_BW_leg_length_s": 0.002,
+      "rest_radians": 0.0
+    },
+    "tail_3_yaw": {
+      "stiffness_BW_leg_length": 0.07,
+      "damping_BW_leg_length_s": 0.002,
+      "rest_radians": 0.0
+    }
+  },
+  "spatial": {
+    "joint_axes": {
+      "hip_l": {
+        "yaw": {
+          "bounds": [
+            -0.22,
+            0.22
+          ],
+          "capacity_ratio": 0.45
+        },
+        "roll": {
+          "bounds": [
+            -0.3,
+            0.3
+          ],
+          "capacity_ratio": 0.6
+        }
+      },
+      "hip_r": {
+        "yaw": {
+          "bounds": [
+            -0.22,
+            0.22
+          ],
+          "capacity_ratio": 0.45
+        },
+        "roll": {
+          "bounds": [
+            -0.3,
+            0.3
+          ],
+          "capacity_ratio": 0.6
+        }
+      },
+      "chest": {
+        "yaw": {
+          "bounds": [
+            -0.22,
+            0.22
+          ],
+          "capacity_ratio": 0.6
+        },
+        "roll": {
+          "bounds": [
+            -0.12,
+            0.12
+          ],
+          "capacity_ratio": 0.5
+        }
+      },
+      "neck": {
+        "yaw": {
+          "bounds": [
+            -0.35,
+            0.35
+          ],
+          "capacity_ratio": 0.5
+        }
+      },
+      "neck_upper": {
+        "yaw": {
+          "bounds": [
+            -0.35,
+            0.35
+          ],
+          "capacity_ratio": 0.5
+        }
+      },
+      "head": {
+        "yaw": {
+          "bounds": [
+            -0.35,
+            0.35
+          ],
+          "capacity_ratio": 0.5
+        }
+      },
+      "tail_0": {
+        "yaw": {
+          "bounds": [
+            -0.3,
+            0.3
+          ],
+          "capacity_ratio": 0.8
+        }
+      },
+      "tail_1": {
+        "yaw": {
+          "bounds": [
+            -0.3,
+            0.3
+          ],
+          "capacity_ratio": 0.8
+        }
+      },
+      "tail_2": {
+        "yaw": {
+          "bounds": [
+            -0.3,
+            0.3
+          ],
+          "capacity_ratio": 0.8
+        }
+      },
+      "tail_3": {
+        "yaw": {
+          "bounds": [
+            -0.3,
+            0.3
+          ],
+          "capacity_ratio": 0.8
+        }
+      }
+    },
+    "root_bounds": {
+      "yaw": [
+        -0.16,
+        0.16
+      ],
+      "roll": [
+        -0.16,
+        0.16
+      ],
+      "lateral": [
+        -0.24,
+        0.24
+      ]
+    },
+    "tail_mass_shares": [
+      0.43,
+      0.34,
+      0.17,
+      0.06
+    ],
+    "tail_radius_leg_lengths": [
+      0.135,
+      0.1,
+      0.06,
+      0.025
+    ],
+    "tail_capacity_shares": [
+      0.8,
+      0.65,
+      0.35,
+      0.15
+    ],
+    "posture_reference": {
+      "chest": 0.0,
+      "neck": 0.025,
+      "neck_upper": 0.025,
+      "head": 0.0,
+      "tail_0": -0.04,
+      "tail_1": -0.025,
+      "tail_2": -0.025,
+      "tail_3": -0.02
+    },
+    "gaze_weight": 12,
+    "classification": "Reduced three-dimensional body, engineering estimates for stiffness and mass distribution; geometry from source admission",
+    "foot_track_hip_width_ratio": 0.5,
+    "static_axial_capacity_fraction": 0.4,
+    "balanced_initialization": false
+  },
+  "joint_viscosity_capacity_seconds": 0.002,
+  "coordination": {
+    "harmonics": 3,
+    "samples": 81,
+    "max_evaluations": 160,
+    "root_balance_weight": 24,
+    "gaze_position_weight": 12.0,
+    "gaze_orientation_weight": 8.0,
+    "leg_deviation_weight": 0.8,
+    "body_deviation_weight": 0.3,
+    "effort_weight": 0.03,
+    "capacity_weight": 20,
+    "root_attitude_weight": 1.0,
+    "foot_velocity_weight": 2,
+    "initialization_only": true,
+    "range_weight": 50,
+    "tail_acceleration_weight": 0.2,
+    "baseline_smoothing_stride_fraction": 0.015,
+    "clearance_weight": 100
+  },
+  "attention": {
+    "nose_pitch_radians": 0.04,
+    "position_tracking_weight": 120.0,
+    "orientation_tracking_weight": 50.0,
+    "classification": "Authored focused-running task, not a measured dinosaur sight axis",
+    "reference": "Mean nose offset in the physical warm start, centered laterally; computed per admitted anatomy"
+  },
+  "jaw_breathing": {
+    "period_strides": 2,
+    "minimum_gape_degrees": 0.8,
+    "maximum_gape_degrees": 3.8,
+    "classification": "Authored subtle exertion breathing at the jaw; not respiratory physiology"
+  }
+}

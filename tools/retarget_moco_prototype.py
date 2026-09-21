@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Diagnostic semantic skin adapter for a saved planar or spatial Moco replay.
 
-No running solver, contact correction, time warp or secondary layer is applied.
-Artist bone lengths/rest curvature survive; their mismatch is measured on export.
+No running solver, contact correction or time warp is applied. Optional jaw-only
+breathing is explicitly authored. Artist lengths/rest curvature are retained.
 """
 import argparse
 from copy import deepcopy
@@ -64,26 +64,39 @@ def main():
     basis = np.column_stack((c.forward, c.up, c.lateral))
     origin = (base[roles['leftLeg.0'], :3, 3] + base[roles['rightLeg.0'], :3, 3]) / 2
     skin = SkinRig(source, c.roles, c.forward, c.up, captured['contact'])
+    nose_local=None
+    if 'nose' in admission['points']:
+        nose_world=origin+basis@np.array(admission['points']['nose'])
+        nose_local=np.linalg.inv(base[roles['head']])@np.r_[nose_world,1.]
     ground = np.asarray(c.up) * skin.ground
     period = data['frames'][-1]['time_s']
     step = admission['step_length_m']
     def pitch(angle):
         return basis @ Rotation.from_rotvec([0, 0, angle]).as_matrix() @ basis.T
+    breathing=data['metadata'].get('recipe',{}).get('jaw_breathing')
+    cycles=breathing.get('period_strides',1) if breathing else 1
+    if cycles not in (1,2,3,4):raise ValueError('Jaw breathing period must be 1 to 4 full strides')
+    cycles=int(cycles)
+    halves=2*cycles
     times, poses, target_rows = [], [], []
-    for half in range(2):
+    for half in range(halves):
         for row in data['frames'][:-1]:
             times.append(half * period + row['time_s'])
             target_rows.append((half, row))
-    times.append(2 * period)
-    target_rows.append((2, data['frames'][0]))
+    times.append(halves * period)
+    target_rows.append((halves, data['frames'][0]))
     spatial=data['metadata'].get('spatial')
     targets = []
     for half, row in target_rows:
         tr, ro = np.array(c.base_t).copy(), np.array(c.base_r).copy()
         if 'foot_geometry' in data['metadata'] and c.jaw is not None and c.jaw_neutral_close_degrees:
             from eonwild_motion.solve.jaw_response import compose_jaw_rotation
+            gape=0.
+            if breathing:
+                phase=2*np.pi*(half*period+row['time_s'])/(halves*period)
+                gape=breathing['minimum_gape_degrees']+.5*(1-np.cos(phase))*(breathing['maximum_gape_degrees']-breathing['minimum_gape_degrees'])
             ro[c.jaw]=compose_jaw_rotation(c.base_r[c.jaw],c.jaw_axis,
-                neutral_close_degrees=c.jaw_neutral_close_degrees,breathing_gape_degrees=0,gain=0)
+                neutral_close_degrees=c.jaw_neutral_close_degrees,breathing_gape_degrees=float(gape),gain=1.)
         def worlds(): return np.asarray(_world_matrices(source, tr, ro, c.base_s))
         def set_world(node, rotation, position=None):
             w = worlds()
@@ -100,10 +113,14 @@ def main():
         root = roles['root']
         root_origin = ground + basis @ (reflection@np.array(row['bodies']['trunk']['origin']) + [half * step, 0, 0])
         set_world(root, trunk @ base[root, :3, :3], root_origin + trunk @ (base[root, :3, 3] - origin))
+        frame_targets = {}
         if spatial:
             for binding in data['metadata']['axial_bindings']:
                 node=roles[binding['role']]
                 set_world(node,body_rotation(binding['body'])@base[node,:3,:3])
+                frame_targets[binding['role']]=(ground+basis@(reflection@np.array(row['bodies'][binding['body']]['origin'])+[half*step,0,0])).tolist()
+            tail_end=max((r for r in roles if r.startswith('tail.')),key=lambda r:int(r.split('.')[-1]))
+            frame_targets[tail_end]=(ground+basis@(reflection@np.array(row['bodies']['tail_3']['end'])+[half*step,0,0])).tolist()
         else:
             # One mechanical neck and two tail regions. Retain the artist's rest
             # curvature within each rigid region; do not invent lateral motion.
@@ -115,7 +132,6 @@ def main():
                                 ('tail.4', q['pitch'] + q['tail_proximal'] + q['tail_distal'])]:
                 node = roles[role]
                 set_world(node, pitch(angle) @ base[node, :3, :3])
-        frame_targets = {}
         for side, suffix in [('left', 'l'), ('right', 'r')]:
             source_side = suffix if half % 2 == 0 else ('r' if suffix == 'l' else 'l')
             def point(part, endpoint):
@@ -180,16 +196,21 @@ def main():
             if path == 'translation': ts[node] = tuple(track.sample(t))
             elif path == 'rotation': rs[node] = tuple(track.sample(t))
         w = np.asarray(_world_matrices(emitted, ts, rs, c.base_s))
+        landmarks={role: w[node, :3, 3].tolist() for role, node in roles.items()}
+        if nose_local is not None:landmarks['skull_fixed_nose']=(w[roles['head']]@nose_local)[:3].tolist()
         measurements.append(dict(time_s=t,
             joint_error_m={role: float(np.linalg.norm(w[roles[role], :3, 3] - p)) for role, p in frame_targets.items()},
             skin_floor_min_m={s: float((reopened.skin(w, ids) @ c.up).min() - skin.ground) for s, ids in reopened.foot_masks.items()},
-            landmarks={role: w[node, :3, 3].tolist() for role, node in roles.items()}))
+            landmarks=landmarks))
+    optimization_status=data['report']['optimizer']['status']
+    source_method='Spatial inverse-dynamics initializer' if optimization_status=='REDUCED_COORDINATE_INITIALIZER' else ('Spatial Moco trajectory' if spatial else 'Planar Moco trajectory')
     receipt = dict(schema='eonwild.motion.moco-skin-diagnostic.v1', status='EXPERIMENTAL_RETARGET', production=False,
         visual='PENDING', source_sha256=sha(source.raw), replay_sha256=sha(a.replay.read_bytes()),
-        model_sha256=data['metadata']['model_sha256'], emitted_sha256=sha(payload), duration_s=2*period,
-        root_advance_m=2*step, frames=len(times),
-        method=('Saved full spatial Moco body rotations and reflected half-stride symmetry. ' if spatial else 'Saved planar Moco body directions and bilateral half-stride symmetry. ')+
-            'Rotation-only limb transfer, original artist lengths and rest curvature. Calibrated models include chest and distal toe motion plus admitted static jaw-neutral closure. No contact correction or dynamic secondary layer.',
+        model_sha256=data['metadata']['model_sha256'], emitted_sha256=sha(payload), duration_s=halves*period,
+        root_advance_m=halves*step, frames=len(times),jaw_breathing=breathing,
+        source_optimization_status=optimization_status,
+        method=source_method+'. Saved body rotations/directions and reflected half-stride symmetry. '+
+            'Rotation-only limb transfer, original artist lengths and rest curvature. Calibrated models include chest and distal toe motion plus admitted jaw-neutral closure. No contact correction. '+('Explicit authored jaw breathing, not simulated respiration.' if breathing else 'No dynamic secondary layer.'),
         maximum_joint_error_m=max(v for m in measurements for v in m['joint_error_m'].values()),
         minimum_skin_floor_m=min(v for m in measurements for v in m['skin_floor_min_m'].values()),
         measurements=measurements)

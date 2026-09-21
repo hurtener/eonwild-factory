@@ -155,26 +155,59 @@ def add_tracking(problem, admission, metadata, recipe):
             labels.append(f'/jointset/{joint}/{key}/value')
         reference.setColumnLabels(labels);reference.addTableMetaDataString('inDegrees','no')
         for t in times:
-            row=o.RowVector(labels.size(),0);row[0]=.10
+            row=o.RowVector(labels.size(),0);row[0]=recipe.get('attention',{}).get('nose_pitch_radians',.10)
             reference.appendRow(float(t),row)
         path=Path(metadata['reference_directory'])/'head-direction-reference.sto'
         o.STOFileAdapter.write(reference,str(path))
-        gaze=o.MocoOrientationTrackingGoal('stable_forward_attention',recipe['spatial']['gaze_weight'])
+        gaze=o.MocoOrientationTrackingGoal('stable_forward_attention',recipe.get('attention',{}).get('orientation_tracking_weight',recipe['spatial']['gaze_weight']))
         frames=o.StdVectorString();frames.append('/bodyset/head')
         gaze.setFramePaths(frames);gaze.setStatesReference(o.TableProcessor(str(path)));problem.addGoal(gaze)
+        attention=recipe.get('attention',{})
+        if metadata.get('attention_reference_offset_m') is not None:
+            if not metadata.get('attention_frame'):raise ValueError('Focused running needs admitted nose geometry')
+            reference=o.TimeSeriesTableVec3();labels=o.StdVectorString();labels.append(metadata['attention_frame'])
+            reference.setColumnLabels(labels)
+            for t in times:
+                target=np.array(metadata['attention_reference_offset_m'])+[admission['preferred_speed_mps']*t,0,0]
+                row=o.RowVectorVec3(1);row[0]=o.Vec3(*target);reference.appendRow(float(t),row)
+            path=Path(metadata['reference_directory'])/'nose-position-reference.sto'
+            o.STOFileAdapterVec3.write(reference,str(path))
+            position=o.MocoTranslationTrackingGoal('focused_nose_position',attention['position_tracking_weight'])
+            position.setFramePaths(labels);position.setTranslationReferenceFile(str(path));problem.addGoal(position)
     if task.get('support_force_weight'):
         add_support_task(problem, admission, metadata, recipe, times)
 
 
-def add_continuation_tracking(problem, trajectory_path, metadata, weight):
+def admit_attention_reference(model, metadata, warm_start, speed):
+    """A constant task-space aim from the warm physical trajectory, not a joint schedule."""
+    import opensim as o
+    if not metadata.get('attention_frame'):raise ValueError('Focused running needs admitted nose geometry')
+    trajectory=o.MocoTrajectory(str(warm_start));names=list(trajectory.getStateNames())
+    matrix=trajectory.getStatesTrajectoryMat();state_names=model.getStateVariableNames()
+    valid={state_names.get(i) for i in range(state_names.getSize())}
+    state=model.initSystem();nose=o.PhysicalOffsetFrame.safeDownCast(model.getComponent(metadata['attention_frame']))
+    offsets=[]
+    for i,t in enumerate(trajectory.getTimeMat()):
+        for j,name in enumerate(names):
+            if name in valid and name.endswith('/value'):model.setStateVariableValue(state,name,float(matrix[i,j]))
+        model.realizePosition(state)
+        offsets.append(nose.getPositionInGround(state).to_numpy()-[speed*t,0,0])
+    target=np.mean(offsets,axis=0);target[2]=0.
+    metadata['attention_reference_offset_m']=target.tolist()
+    metadata['attention_reference_provenance']='Mean skull-fixed nose position relative to constant travel in the saved physical warm start; lateral aim centered by symmetry. Soft task, not prescribed neck angles.'
+
+
+def add_continuation_tracking(problem, trajectory_path, metadata, weight, full_body=False):
     """Temporary numerical continuation around a prior physical solution.
 
-    Only existing sagittal leg states are softly regularized. New spatial/body
-    coordinates are free. The receipt distinguishes this from an unguided solve.
+    The default regularizes existing sagittal leg states. Optional full-body
+    continuation retains a coordinated spatial initializer while all states
+    remain optimization variables. This is not an unguided predictive solve.
     """
     import opensim as o
     source=o.MocoTrajectory(str(trajectory_path));names=list(source.getStateNames())
-    keep=[n for n in names if n.startswith('/jointset/') and n.split('/')[-2].startswith(('hip_','knee_','ankle_','mtp_','digit_')) and not n.split('/')[-2].endswith(('_yaw','_roll'))]
+    keep=[n for n in names if n.startswith('/jointset/') and (full_body or (
+        n.split('/')[-2].startswith(('hip_','knee_','ankle_','mtp_','digit_')) and not n.split('/')[-2].endswith(('_yaw','_roll'))))]
     table=o.TimeSeriesTable();labels=o.StdVectorString()
     for name in keep:labels.append(name)
     table.setColumnLabels(labels);table.addTableMetaDataString('inDegrees','no')
@@ -185,10 +218,32 @@ def add_continuation_tracking(problem, trajectory_path, metadata, weight):
         table.appendRow(float(t),row)
     path=Path(metadata['reference_directory'])/'continuation-reference.sto'
     o.STOFileAdapter.write(table,str(path))
-    goal=o.MocoStateTrackingGoal('sagittal_physics_continuation',float(weight))
+    goal=o.MocoStateTrackingGoal('coordinated_physics_continuation' if full_body else 'sagittal_physics_continuation',float(weight))
     goal.setReference(o.TableProcessor(str(path)))
     for name in keep:goal.setWeightForState(name,.02 if name.endswith('/speed') else 1.)
     problem.addGoal(goal)
+
+
+def add_foot_continuation(problem,model,trajectory_path,metadata,weight):
+    """Retain warm-start foot placement while coordinates remain free to balance."""
+    import opensim as o
+    source=o.MocoTrajectory(str(trajectory_path));names=list(source.getStateNames())
+    values=source.getStatesTrajectoryMat();state=model.initSystem()
+    paths=['/bodyset/toe_l','/bodyset/toe_r']
+    bodies=[model.getBodySet().get(path.rsplit('/',1)[-1]) for path in paths]
+    table=o.TimeSeriesTableVec3();labels=o.StdVectorString()
+    for path in paths:labels.append(path)
+    table.setColumnLabels(labels)
+    for i,t in enumerate(source.getTimeMat()):
+        for j,name in enumerate(names):
+            if name.endswith('/value'):model.setStateVariableValue(state,name,float(values[i,j]))
+        model.realizePosition(state);row=o.RowVectorVec3(len(paths))
+        for j,body in enumerate(bodies):row[j]=body.getPositionInGround(state)
+        table.appendRow(float(t),row)
+    path=Path(metadata['reference_directory'])/'continuation-foot-reference.sto'
+    o.STOFileAdapterVec3.write(table,str(path))
+    goal=o.MocoTranslationTrackingGoal('coordinated_foot_placement',float(weight))
+    goal.setFramePaths(labels);goal.setTranslationReferenceFile(str(path));problem.addGoal(goal)
 
 
 def add_support_task(problem, admission, metadata, recipe, times):

@@ -273,3 +273,36 @@ are preserved separately with source recipes, solutions and receipts.
 Eleven focused checks pass; 726 Unity landmarks per rendered model pass.
 Production contact and 3D coordination remain unfinished. Pause for user review;
 do not promote D, advance to Allosaurus or start muscle/tendon work unseen.
+
+
+## Checkpoint 45 — focused pursuit and spatial tail, pending review
+
+The new Tarbo candidate J keeps the nose steady while the chest and two neck
+regions compensate for running. Four tail regions now bend laterally with the
+pelvis. Jaw breathing is a separate, explicitly authored 0.8–3.8 degree cycle.
+The actual emitted rig has 24.41 mm vertical nose travel per stride, versus
+289.19 mm in C44 D, while pelvis travel remains 259.23 mm. Tail-tip lateral
+travel is 1.914 m. These are animation measurements, not biological findings.
+
+J is a **spatial inverse-dynamics initializer**, not a converged Moco solution.
+It optimizes smooth periodic corrections using the existing OpenSim contacts,
+gravity, passive forces and internal motor estimates. The six-coordinate root
+has no actuators. There is no head/tail overlay after the physics trajectory;
+only the jaw cycle is added in retargeting. The shared semantic builder remains
+animal-independent; Allosaurus transfer is still unattempted.
+
+All 216 native-time side/quarter frames were inspected. Fourteen focused tests,
+source bone lengths, loop closure and 558 Unity landmark comparisons pass.
+Skin contact still fails: 30.09 mm maximum penetration, versus 23.87 mm in C44.
+Independent forward replay loses 357.87 mm of pelvis height over 0.594 s and
+shows major joint divergence. A small control-bound excess and a 0.685 mm
+violation of the tail's existing safety margin also remain. The tail is above
+the actual floor. Do not describe the saved-state video as validated dynamics.
+
+Evidence: principal Eonwild `game/Evidence/moco-focused-coordination-study/`.
+It includes native videos, a C44 comparison, a nose/tail path chart, exact model,
+initializer coefficients, source recipes, trial records and failing checks.
+The separate Moco refinement is recorded as an unselected experiment; it is not
+the source of the J video. Preserve C39/C42/C43/C44 and the approved library.
+Pause here for user review. Next work is contact/control/forward consistency
+for the spatial result, then Allosaurus transfer and muscles/tendons after review.

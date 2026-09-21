@@ -339,12 +339,21 @@ def make_study(model, metadata, admission, recipe, mesh=25, warm_start=None):
         problem.addGoal(goal)
     if recipe.get('calibrated_task'):
         from .moco_tasks import add_tracking
+        if recipe.get('attention'):
+            if not warm_start:raise ValueError('Focused attention requires a physical warm start')
+            from .moco_tasks import admit_attention_reference
+            admit_attention_reference(model,metadata,warm_start,speed)
         add_tracking(problem,admission,metadata,recipe)
         continuation_weight=recipe['optimization'].get('continuation_tracking_weight',0.)
         if continuation_weight:
             if not warm_start:raise ValueError('Continuation requires a saved physical solution')
             from .moco_tasks import add_continuation_tracking
-            add_continuation_tracking(problem,warm_start,metadata,continuation_weight)
+            add_continuation_tracking(problem,warm_start,metadata,continuation_weight,
+                                      recipe['optimization'].get('full_body_continuation',False))
+            foot_weight=recipe['optimization'].get('continuation_foot_weight',0.)
+            if foot_weight:
+                from .moco_tasks import add_foot_continuation
+                add_foot_continuation(problem,model,warm_start,metadata,foot_weight)
         acceleration_weight=recipe['optimization'].get('distal_acceleration_weight',0.)
         if acceleration_weight:
             for side in ('l','r'):
@@ -450,6 +459,9 @@ def run(admission_path, recipe_path, output, mesh=25, warm_start=None, build_onl
         (output/'model-receipt.json').write_text(json.dumps(metadata,indent=2)+'\n')
     else:solve_model,solve_metadata=model,metadata
     study = make_study(solve_model, solve_metadata, admission, recipe, mesh, warm_start)
+    for name in ('attention_reference_offset_m','attention_reference_provenance'):
+        if name in solve_metadata:metadata[name]=solve_metadata[name]
+    (output/'model-receipt.json').write_text(json.dumps(metadata,indent=2)+'\n')
     study.printToXML(str(output/"study.omoco"))
     if build_only:
         return
