@@ -147,3 +147,76 @@ are visible. No breathing or attention overlays are applied. The mechanical
 solution's force/scuffing limitations remain unchanged. Before another physical
 solve, calibrate the actual sole/toe geometry in the model rather than hiding
 this discrepancy with a visual root lift. User review is pending; pause here.
+
+
+## C43: calibrated contact and coordinated recovery
+
+The first skinned prototype was rejected as too raw to justify replacing the
+established animation. This pass changes the physical problem before another
+render. The same generic builder consumes semantic anatomy; it contains no
+Tarbo-only joint choreography or per-species solver branch.
+
+- Fresh admission now measures the artist sole envelope and intermediate toe
+  joint. Five compliant contact spheres per foot replace two coarse pads. The
+  model gains a distal toe articulation so the heel can peel while the front
+  pads remain in contact. Sphere compliance remains an engineering estimate.
+- The body has a separate chest segment and internal spring/damper torques at
+  chest, neck and both tail regions. Total mass is conserved. Springs cannot
+  support the free root: the whole model still accelerates downward at gravity
+  when airborne without contact. These are mechanical approximations, not
+  identified ligaments or reconstructed muscles.
+- Soft world-space tasks coordinate toe support, heel release, recovery
+  clearance and a forward catch. Heel angular velocity continues through
+  release. The knee has bounds and dynamics but no tracked angle timetable.
+  Broad posture is a soft target, including actual sole depth in hip height.
+- Distal-body angular acceleration receives a small explicit regularization
+  cost to discourage sharp ankle/toe motion. Activation dynamics and bounded
+  internal actuators remain. There is no root force, root lift or runtime IK.
+- Semantic retargeting now carries chest and distal toe motion into the real
+  rig. Its admitted static jaw-neutral calibration is applied; breathing,
+  attention and lateral motion are not invented on top of the physical result.
+
+This is **guided dynamic optimization**, not unconstrained gait prediction or
+measured dinosaur motion. The 0.43 duty target is a labeled extant-bird transfer;
+it is soft and does not enforce an airborne percentage. Recovery clearance,
+forward catch, posture, stiffness and actuator capacity remain explicit priors.
+Optimization may depart from the task to satisfy its discretized dynamics.
+
+The optional recipe is `catalog/behaviors/moco-stride-prototype.v2.json`.
+Contact/task construction lives in `src/eonwild_motion/solve/moco_tasks.py`.
+Use `--recipe` with a fresh calibrated admission; older admissions without sole
+geometry fail explicitly. Keep every saved solve immutable. A warm start must
+be a saved solution with valid monotonically increasing timestamps, not Moco's
+intermediate debug export. Reference tables accompany the saved study.
+
+The principal game evidence location is
+`game/Evidence/moco-calibrated-stride-study/`. It will hold the selected solve,
+plain-stage native-time side/quarter video, C39 comparison in the same renderer,
+reopened skin measurements and Unity import parity. Review status remains
+PENDING; the exact numerical/visual outcome is recorded with that evidence.
+
+Remaining scope is unchanged: mesh sensitivity, forward integration, calibrated
+inertia and strength, muscles/tendons, three-dimensional balance and arbitrary
+transitions are not established by this periodic planar experiment. In
+particular it cannot generate the desired lateral figure-eight tail. Preserve
+C39, C42 and the original Moco I package for direct comparison.
+
+
+C43 result: candidate P is saved for review, not converged (158 iterations,
+agent-requested diagnostic stop). The 60-interval O diagnostic was also stopped;
+mesh convergence is not established. All 216 native P frames were inspected.
+Recovery and posture improve visibly over Moco I, but support still briefly
+unloads/reloads and the torso lacks C39 lateral life. Skin penetration falls
+from 144.4 to 34.8 mm and remains a contact failure. Seven focused physics
+checks and 902 Unity landmark comparisons pass. Independent forward replay
+of controls drifts up to 0.280 m in root height over the half-stride, so the
+improved saved-state video is not physically validated. C39 remains the preferred
+baseline. The roadmap and evidence retain these separate outcomes. Pause here
+for user feedback; no further unseen polishing or automatic promotion.
+
+When deserializing an OpenSim 4.6 study, register the constraint type first with
+`opensim.OpenSimObject.registerType(opensim.MocoOutputConstraint())`. Otherwise
+this build of OpenSim logs unrecognized output constraints and silently omits
+them. The portable candidate study was checked after registration: all six
+clearance constraints and 48 states survive; relative task references load.
+Do not run a deserialized study that has dropped its path constraints.

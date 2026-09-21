@@ -37,6 +37,10 @@ def make_model(admission, recipe):
     if not math.isfinite(mass) or mass <= 0 or not np.isfinite(lengths).all() or np.any(lengths <= 0) or toe_length <= 0:
         raise ValueError("Moco requires positive finite mass and segment lengths")
     total_length = float(sum(lengths))
+    calibrated = recipe.get('calibrated_task')
+    if calibrated:
+        from .moco_tasks import foot_geometry
+        foot = foot_geometry(admission, recipe)
     fractions = recipe["mass_fractions"]
     fraction_sum = sum(v * (2 if k.endswith("_each") else 1) for k, v in fractions.items())
     if abs(fraction_sum - 1) > 1e-9:
@@ -69,7 +73,7 @@ def make_model(admission, recipe):
             "radius_m": radius}
         return b
 
-    trunk = body("trunk", fractions["trunk"], [.42*points['neck.0'][0], -.021*total_length, 0],
+    trunk = body("trunk", fractions["trunk"], [(.22 if calibrated else .42)*points['neck.0'][0], -.021*total_length, 0],
                  [2*points['neck.0'][0], 0, 0], .265*total_length)
     root = o.PlanarJoint("root", model.getGround(), o.Vec3(0), o.Vec3(0),
                          trunk, o.Vec3(0), o.Vec3(0))
@@ -98,6 +102,15 @@ def make_model(admission, recipe):
         metadata["coordinates"][name] = {"bounds_rad": list(bounds)}
         metadata["actuators"]["motor_" + name] = {"capacity_Nm": force,
                 "activation_time_constant_s": recipe["activation_time_constant_s"]}
+        passive = recipe.get('passive_support', {}).get(name)
+        if passive:
+            spring = o.SpringGeneralizedForce(name)
+            spring.setName('passive_'+name)
+            spring.set_stiffness(passive['stiffness_BW_leg_length']*mass*9.80665*total_length)
+            spring.set_viscosity(passive['damping_BW_leg_length_s']*mass*9.80665*total_length)
+            spring.set_rest_length(passive['rest_radians'])
+            model.addForce(spring)
+            metadata.setdefault('passive_support', {})[name] = passive
         return j
 
     capacities = recipe["capacity_body_weight_leg_length"]
@@ -108,8 +121,9 @@ def make_model(admission, recipe):
                     [0, -lengths[1], 0], .046*total_length)
         meta = body("metatarsus_" + suffix, fractions["metatarsus_each"], [0, -lengths[2]*.5, 0],
                     [0, -lengths[2], 0], .031*total_length)
-        toe = body("toe_" + suffix, fractions["toe_each"], [toe_length*.48, 0, 0],
-                   [toe_length, 0, 0], .021*total_length)
+        extent = np.array(foot['toe_midpoint_m']) if calibrated else np.array([toe_length,0,0])
+        toe = body("toe_" + suffix, fractions["toe_each"], extent*.48,
+                   extent, .021*total_length)
         pin("hip_"+suffix, trunk, [0, 0, points[semantic+"Leg.0"][2]], thigh,
             [-.80, 1.45], capacities["hip"])
         pin("knee_"+suffix, thigh, [0, -lengths[0], 0], shin,
@@ -118,12 +132,19 @@ def make_model(admission, recipe):
             [.15, 2.25], capacities["ankle"])
         pin("mtp_"+suffix, meta, [0, -lengths[2], 0], toe,
             [-1.25, 1.25], capacities["mtp"])
+        if calibrated:
+            distal_extent = np.array([toe_length, -.10, 0])-extent
+            digit = body('digit_'+suffix, fractions['digit_each'], distal_extent*.45,
+                         distal_extent, .016*total_length)
+            pin('digit_'+suffix,toe,extent,digit,[-.35,.95],capacities['digit'])
+            tip = o.PhysicalOffsetFrame('tip_digit_'+suffix,digit,o.Transform(vec(distal_extent)))
+            model.addComponent(tip)
         # Contact spheres alone leave gaps in the foot's physical envelope.
         # Keep the MTP center and distal toe bone above the floor as well; this
         # prevents an optimizer from burying the articulation while perching on
         # a sphere with the toes pointing almost vertically upwards.
         end = o.PhysicalOffsetFrame("tip_toe_"+suffix, toe,
-                                    o.Transform(o.Vec3(toe_length, 0, 0)))
+                                    o.Transform(vec(extent)))
         model.addComponent(end)
         metadata["clearance_frames"].extend([
             {"path":"/bodyset/toe_"+suffix, "minimum_height_m":.5*total_length*recipe["contact"]["radius_leg_length"]},
@@ -132,7 +153,15 @@ def make_model(admission, recipe):
     neck_origin = points["neck.0"].copy(); neck_origin[2] = 0
     neck_extent = points["head"] - neck_origin; neck_extent[2] = 0
     neck = body("neck", fractions["neck"], neck_extent*.60, neck_extent, .124*total_length)
-    pin("neck", trunk, neck_origin, neck, [-.25, .25], capacities["neck"])
+    neck_parent = trunk
+    if calibrated:
+        chest_origin = points['spine.2'].copy(); chest_origin[2]=0
+        chest_extent = neck_origin-chest_origin
+        chest = body('chest', fractions['chest'], chest_extent*.55, chest_extent, .21*total_length)
+        pin('chest',trunk,chest_origin,chest,[-.20,.20],capacities['chest'])
+        metadata['chest_semantic_role']='spine.2'
+        neck_parent=chest; neck_origin=chest_extent
+    pin("neck", neck_parent, neck_origin, neck, [-.35, .35] if calibrated else [-.25,.25], capacities["neck"])
     tail_keys = sorted((k for k in points if k.startswith("tail.")), key=lambda s: int(s.split(".")[-1]))
     base = points[tail_keys[0]].copy(); base[2] = 0
     split = points[tail_keys[len(tail_keys)//2]].copy(); split[2] = 0
@@ -143,7 +172,7 @@ def make_model(admission, recipe):
     pin("tail_proximal", trunk, base, prox, [-.20, .20], capacities["tail_proximal"])
     pin("tail_distal", prox, prox_extent, distal, [-.32, .32], capacities["tail_distal"])
 
-    for b, end, clearance in ((prox, prox_extent, .083*total_length), (distal, distal_extent, .05*total_length)):
+    for b, end, clearance in ((prox, prox_extent, .083*total_length), (distal, distal_extent, (.25 if calibrated else .05)*total_length)):
         frame = o.PhysicalOffsetFrame("tip_"+b.getName(), b, o.Transform(vec(end)))
         model.addComponent(frame)
         metadata["clearance_frames"].append({"path": "/tip_"+b.getName(), "minimum_height_m": clearance})
@@ -155,9 +184,11 @@ def make_model(admission, recipe):
     radius = total_length * contact["radius_leg_length"]
     for suffix in ("l", "r"):
         toe = model.updBodySet().get("toe_" + suffix)
-        for name, fraction in (("rear", .16), ("front", .84)):
-            center = [toe_length * fraction, 0, 0]
-            sphere = o.ContactSphere(radius, vec(center), toe)
+        sites = foot['sites'] if calibrated else [dict(name=name,center_local_m=[toe_length*fraction,0,0],radius_m=radius,distal=False) for name,fraction in [('rear',.16),('front',.84)]]
+        for site in sites:
+            name,center,radius=site['name'],site['center_local_m'],site['radius_m']
+            contact_body=model.updBodySet().get(('digit_' if site['distal'] else 'toe_')+suffix)
+            sphere = o.ContactSphere(radius, vec(center), contact_body)
             sphere.setName("sphere_" + name + "_" + suffix)
             model.addContactGeometry(sphere)
             force = o.SmoothSphereHalfSpaceForce()
@@ -170,8 +201,9 @@ def make_model(admission, recipe):
             force.set_transition_velocity(contact["transition_velocity_mps"])
             force.set_constant_contact_force(1e-5)
             model.addForce(force)
-            metadata["contacts"].append({"force": force.getName(), "body": "toe_"+suffix,
+            metadata["contacts"].append({"force": force.getName(), "body": contact_body.getName(),
                                          "center_local_m": center, "radius_m": radius})
+    if calibrated: metadata['foot_geometry']=foot
     model.finalizeConnections()
     state = model.initSystem()
     metadata["model_mass_kg"] = model.getTotalMass(state)
@@ -231,7 +263,8 @@ def make_study(model, metadata, admission, recipe, mesh=25, warm_start=None):
     problem.setStateInfoPattern(".*/activation", [-1, 1])
     problem.setStateInfo("/jointset/root/pitch/value", [-.16, .16])
     problem.setStateInfo("/jointset/root/forward/value", [0, step*1.3], 0, step)
-    problem.setStateInfo("/jointset/root/height/value", [.60*L, .91*L])
+    floor_offset=metadata.get('foot_geometry',{}).get('sole_depth_m',0.)
+    problem.setStateInfo("/jointset/root/height/value", [.60*L+floor_offset, (.96 if floor_offset else .91)*L+floor_offset])
     problem.setStateInfo("/jointset/root/forward/speed", [.3*speed, 1.7*speed])
     problem.setStateInfo("/jointset/root/height/speed", [-3.5, 3.5])
     for name, data in metadata["coordinates"].items():
@@ -272,6 +305,16 @@ def make_study(model, metadata, admission, recipe, mesh=25, warm_start=None):
         goal.setOutputIndex(4)
         goal.setExponent(2)
         problem.addGoal(goal)
+    if recipe.get('calibrated_task'):
+        from .moco_tasks import add_tracking
+        add_tracking(problem,admission,metadata,recipe)
+        acceleration_weight=recipe['optimization'].get('distal_acceleration_weight',0.)
+        if acceleration_weight:
+            for side in ('l','r'):
+                for part in ('shin','metatarsus','toe','digit'):
+                    goal=o.MocoOutputGoal('smooth_'+part+'_'+side,acceleration_weight)
+                    goal.setOutputPath('/bodyset/'+part+'_'+side+'|angular_acceleration')
+                    goal.setExponent(2);problem.addGoal(goal)
     solver = study.initCasADiSolver()
     solver.set_num_mesh_intervals(mesh)
     dynamics_mode = recipe["optimization"].get("dynamics_mode", "explicit")
@@ -287,6 +330,7 @@ def make_study(model, metadata, admission, recipe, mesh=25, warm_start=None):
     solver.set_enforce_path_constraint_mesh_interior_points(True)
     solver.set_parallel(4)
     solver.set_optim_ipopt_print_level(5)
+    if recipe.get('calibrated_task'):solver.set_output_interval(25)
     if warm_start:
         solver.setGuessFile(str(warm_start))
     else:
@@ -298,12 +342,16 @@ def make_study(model, metadata, admission, recipe, mesh=25, warm_start=None):
             for i, x in enumerate(arr): v[i] = float(x)
             return v
         guess.setTime(ov(times))
-        coords = seed_coordinates(admission, recipe, times)
+        if recipe.get('calibrated_task'):
+            from .moco_tasks import seed
+            seed_fn=lambda times:seed(admission,metadata,recipe,times)
+        else: seed_fn=lambda times:seed_coordinates(admission,recipe,times)
+        coords = seed_fn(times)
         # Differentiate across the periodic boundary, not a clipped one-sided
         # recovery endpoint, to give the optimizer a continuous initial guess.
         eps = 1e-5
-        before = seed_coordinates(admission, recipe, times-eps)
-        after = seed_coordinates(admission, recipe, times+eps)
+        before = seed_fn(times-eps)
+        after = seed_fn(times+eps)
         for name in guess.getStateNames():
             if name.endswith("/activation"):
                 values = np.zeros_like(times)
@@ -334,6 +382,7 @@ def run(admission_path, recipe_path, output, mesh=25, warm_start=None, build_onl
     metadata.update({"schema": "eonwild.motion.moco-model-receipt.v1", "opensim": o.GetVersion(),
         "classification": recipe["classification"], "admission": admission, "recipe": recipe,
         "mesh_intervals": mesh, "status": "BUILT_NOT_SOLVED", "user_review": "PENDING"})
+    if recipe.get('calibrated_task'):metadata['reference_directory']=str(output)
     model.printToXML(str(output/"model.osim"))
     metadata["model_sha256"] = hashlib.sha256((output/"model.osim").read_bytes()).hexdigest()
     (output/"model-receipt.json").write_text(json.dumps(metadata, indent=2)+"\n")

@@ -8,6 +8,7 @@ try:
 except ImportError:
     o = None
 from eonwild_motion.solve.moco_prototype import make_model, seed_coordinates
+from eonwild_motion.solve.moco_tasks import task_sample
 
 
 def admission(scale=1, mass=1000):
@@ -67,6 +68,42 @@ class ModelPhysics(unittest.TestCase):
             model.realizePosition(state);p=model.getBodySet().get('toe_l').getPositionInGround(state)
             positions.append([p.get(j) for j in range(3)])
         np.testing.assert_allclose(positions,np.broadcast_to(positions[0],(len(times),3)),atol=1e-10)
+
+    def test_calibrated_model_has_internal_toes_chest_and_conserves_mass(self):
+        a=admission();a['points']['spine.2']=[.5,-.1,0]
+        vertices=[[x,-.16,0] for x in np.linspace(-.1,.6,60)]
+        a['foot_surface']={s:dict(vertices_m=vertices,toe_midpoint_m=[.25,-.1,0]) for s in ('left','right')}
+        recipe=json.loads((Path(__file__).parents[1]/'catalog/behaviors/moco-stride-prototype.v2.json').read_text())
+        model,receipt=make_model(a,recipe);state=model.initSystem()
+        self.assertAlmostEqual(model.getTotalMass(state),1000)
+        self.assertEqual(model.getNumControls(),14)
+        self.assertEqual(len(receipt['contacts']),10)
+        self.assertEqual(receipt['root_reserves'],[])
+        for name in ('chest','digit_l','digit_r'):self.assertIn(name,receipt['coordinates'])
+        model.getCoordinateSet().get('height').setValue(state,10)
+        model.realizeAcceleration(state)
+        gravity=model.calcMassCenterAcceleration(state)
+        np.testing.assert_allclose([gravity.get(i) for i in range(3)],[0,-9.80665,0],atol=1e-6)
+        T=2*a['step_length_m']/a['preferred_speed_mps']
+        for t in (0.,recipe['calibrated_task']['duty_factor']*T,.5*T,T):
+            before,_=task_sample(a,receipt,recipe,t-1e-7)
+            after,_=task_sample(a,receipt,recipe,t+1e-7)
+            for name in before:self.assertLess(np.linalg.norm(after[name]-before[name]),1e-5)
+        # Heel release must carry velocity into swing, rather than easing to a
+        # micro-stop and immediately restarting the recovery.
+        release=recipe['calibrated_task']['duty_factor']*T
+        eps=1e-6
+        before,_=task_sample(a,receipt,recipe,release-eps)
+        at,_=task_sample(a,receipt,recipe,release)
+        after,_=task_sample(a,receipt,recipe,release+eps)
+        v0=(at['/bodyset/toe_l']-before['/bodyset/toe_l'])/eps
+        v1=(after['/bodyset/toe_l']-at['/bodyset/toe_l'])/eps
+        np.testing.assert_allclose(v0,v1,atol=1e-3)
+        self.assertGreater(np.linalg.norm(v0),.1)
+
+    def test_calibrated_model_rejects_missing_sole_admission(self):
+        recipe=json.loads((Path(__file__).parents[1]/'catalog/behaviors/moco-stride-prototype.v2.json').read_text())
+        with self.assertRaisesRegex(ValueError,'sole geometry'):make_model(admission(),recipe)
 
 
 if __name__ == '__main__':unittest.main()

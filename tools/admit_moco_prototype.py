@@ -9,11 +9,12 @@ from pathlib import Path
 import numpy as np
 from eonwild_motion.factory.compiler import compile_motion_set
 from eonwild_motion.solve.constant_skin_targets import CanonicalConstantSkinTargetLaw
+from eonwild_motion.solve.skin_rig import SkinRig
 
 p=argparse.ArgumentParser();p.add_argument('--motion-set',type=Path,required=True);p.add_argument('--profile',type=Path,required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args()
 class Captured(Exception):pass
 captured={};original=CanonicalConstantSkinTargetLaw.__dict__['build']
-def intercept(cls,query,provider,**kw):captured.update(context=query.context,source=kw['source']);raise Captured()
+def intercept(cls,query,provider,**kw):captured.update(context=query.context,source=kw['source'],contact=kw['contact_profile']);raise Captured()
 CanonicalConstantSkinTargetLaw.build=classmethod(intercept)
 try:
     try:compile_motion_set(a.motion_set.resolve(),'walk',root=Path.cwd(),output=a.output.parent/(a.output.stem+'.never-published'))
@@ -29,6 +30,16 @@ if not math.isclose(profile['authoring']['bodyHeightM'],c.body_height,rel_tol=1e
 positions={b['role']:np.asarray(c.base_w[source.name_to_node[b['bone']]])[:3,3] for b in profile['bindings']}
 origin=(positions['leftLeg.0']+positions['rightLeg.0'])/2
 points={role:[float((v-origin)@axis) for axis in (c.forward,c.up,c.lateral)] for role,v in positions.items()}
+skin=SkinRig(source,c.roles,c.forward,c.up,captured['contact'])
+surface={}
+for side in ('left','right'):
+    vertices=skin.skin(np.asarray(c.base_w),skin.foot_masks[side])
+    local=np.array([[float((v-positions[side+'Leg.3'])@axis) for axis in (c.forward,c.up,c.lateral)] for v in vertices])
+    # Retain the measured material envelope. Fitting contact primitives belongs
+    # to the versioned model recipe; these are geometry samples, not tissue data.
+    surface[side]={'vertices_m':local.tolist(),'minimum_up_m':float(local[:,1].min()),
+                   'frame':'forward/up/lateral relative to admitted MTP; original rest orientation',
+                   'toe_midpoint_m':np.mean([np.array(points[k])-points[side+'Leg.3'] for k in points if k.startswith('legs.'+side+'.toeChains.') and k.endswith('.1')],axis=0).tolist()}
 result={'schema':'eonwild.motion.moco-admission.v1','source_geometry_sha256':source_hash,
         'motion_set':str(a.motion_set),'profile_sha256':hashlib.sha256(a.profile.read_bytes()).hexdigest(),
         'animal':animal,'body_height_m':c.body_height,
@@ -36,5 +47,5 @@ result={'schema':'eonwild.motion.moco-admission.v1','source_geometry_sha256':sou
         'step_length_m':profile['locomotion']['run']['stepLength']['value'],
         'task_provenance':profile['locomotion']['run'],
         'coordinate_frame':'forward, up, lateral; meters relative to bilateral hip midpoint',
-        'points':points}
+        'points':points,'foot_surface':surface}
 a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(result,indent=2)+'\n');print(a.output)

@@ -79,6 +79,10 @@ def main():
     targets = []
     for half, row in target_rows:
         tr, ro = np.array(c.base_t).copy(), np.array(c.base_r).copy()
+        if 'foot_geometry' in data['metadata'] and c.jaw is not None and c.jaw_neutral_close_degrees:
+            from eonwild_motion.solve.jaw_response import compose_jaw_rotation
+            ro[c.jaw]=compose_jaw_rotation(c.base_r[c.jaw],c.jaw_axis,
+                neutral_close_degrees=c.jaw_neutral_close_degrees,breathing_gape_degrees=0,gain=0)
         def worlds(): return np.asarray(_world_matrices(source, tr, ro, c.base_s))
         def set_world(node, rotation, position=None):
             w = worlds()
@@ -94,7 +98,10 @@ def main():
         set_world(root, trunk @ base[root, :3, :3], root_origin + trunk @ (base[root, :3, 3] - origin))
         # One mechanical neck and two tail regions. Retain the artist's rest
         # curvature within each rigid region; do not invent lateral motion.
-        for role, angle in [('neck.0', q['pitch'] + q['neck']),
+        if 'chest' in q:
+            node=roles[data['metadata']['chest_semantic_role']]
+            set_world(node,pitch(q['pitch']+q['chest'])@base[node,:3,:3])
+        for role, angle in [('neck.0', q['pitch'] + q.get('chest',0) + q['neck']),
                             ('tail.0', q['pitch'] + q['tail_proximal']),
                             ('tail.4', q['pitch'] + q['tail_proximal'] + q['tail_distal'])]:
             node = roles[role]
@@ -114,10 +121,19 @@ def main():
                 set_world(node, rotation)
                 frame_targets[f'{side}Leg.{i}'] = point(part, 'origin').tolist()
             frame_targets[f'{side}Leg.3'] = point('toe', 'origin').tolist()
-            toe = point('toe', 'end') - point('toe', 'origin')
-            angle = np.arctan2(toe @ c.up, toe @ c.forward)
+            if 'foot_geometry' in data['metadata']:
+                # The calibrated toe's local extent is slanted in the artist
+                # rest frame. Use its solved body rotation, not extent angle.
+                angle=sum(q[k] for k in ['pitch','hip_'+source_side,'knee_'+source_side,'ankle_'+source_side,'mtp_'+source_side])
+            else:
+                toe = point('toe', 'end') - point('toe', 'origin')
+                angle = np.arctan2(toe @ c.up, toe @ c.forward)
             foot = roles[f'{side}Leg.3']
             set_world(foot, pitch(angle) @ base[foot, :3, :3])
+            if 'digit_'+source_side in q:
+                for role,node in roles.items():
+                    if role.startswith('legs.'+side+'.toeChains.') and role.endswith('.1'):
+                        set_world(node,pitch(angle+q['digit_'+source_side])@base[node,:3,:3])
         poses.append((tr, ro))
         targets.append(frame_targets)
     tr = np.asarray([p[0] for p in poses]); ro = np.asarray([p[1] for p in poses])
@@ -155,7 +171,7 @@ def main():
         visual='PENDING', source_sha256=sha(source.raw), replay_sha256=sha(a.replay.read_bytes()),
         model_sha256=data['metadata']['model_sha256'], emitted_sha256=sha(payload), duration_s=2*period,
         root_advance_m=2*step, frames=len(times),
-        method='Saved Moco body directions; rotation-only limb transfer, original artist lengths and rest curvature. Half-stride bilateral symmetry. No contact/secondary corrections.',
+        method='Saved Moco body directions; rotation-only limb transfer, original artist lengths and rest curvature. Calibrated models include chest and distal toe motion plus admitted static jaw-neutral closure. Half-stride bilateral symmetry. No contact correction or dynamic secondary layer.',
         maximum_joint_error_m=max(v for m in measurements for v in m['joint_error_m'].values()),
         minimum_skin_floor_m=min(v for m in measurements for v in m['skin_floor_min_m'].values()),
         measurements=measurements)

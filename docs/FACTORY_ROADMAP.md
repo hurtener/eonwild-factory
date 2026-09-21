@@ -1046,3 +1046,42 @@ Skin contact fails with 144.4 mm maximum penetration from the simplified
 contact-pad/artist-foot mismatch. Low recovery/scuffing, low tail and quiet axial
 motion remain. Calibrate contact geometry and physical assumptions before the
 next solve; keep C42 and prior approved animation assets preserved. Paused review.
+
+
+## Checkpoint 43 — calibrated Moco Tarbo comparison
+
+The first Moco skin review was rejected as too raw. A deeper alternate-model
+pass now uses admitted sole geometry, five pads per foot, intermediate toe
+articulation, a separate chest, and internal passive axial support. Soft
+foot-space tasks coordinate receiving weight, heel release and recovery without
+tracking a knee-angle timetable. Distal angular acceleration is regularized.
+There is still one semantic model builder; no species-specific solver was added.
+
+This remains an experimental alternate sustained-run path. C39 is the preferred
+Tarbo benchmark. C42, approved walks, turns, backward steps and stumble/recovery
+assets remain preserved. No other movement family is promoted by this pass.
+
+Principal evidence: `game/Evidence/moco-calibrated-stride-study/`. The comparison
+uses the same plain-stage renderer, camera and materials for C39 and Moco,
+with native timing. Numerical solve, emitted-skin contact, Unity import and
+user review have separate outcomes in the evidence README. Forward integration
+of controls is now measured separately from replay of optimized states.
+
+Next promotion decisions remain bounded by user review: visible coordination
+first; physical calibration and mesh sensitivity before calling Moco reliable;
+three-dimensional dynamics before expecting lateral balance or figure-eight
+tail motion; arbitrary transitions before gameplay adoption. No automatic
+replacement of the established shared engine or approved animation library.
+
+
+C43 result: candidate P is saved for review, not converged (158 iterations,
+agent-requested diagnostic stop). The 60-interval O diagnostic was also stopped;
+mesh convergence is not established. All 216 native P frames were inspected.
+Recovery and posture improve visibly over Moco I, but support still briefly
+unloads/reloads and the torso lacks C39 lateral life. Skin penetration falls
+from 144.4 to 34.8 mm and remains a contact failure. Seven focused physics
+checks and 902 Unity landmark comparisons pass. Independent forward replay
+of controls drifts up to 0.280 m in root height over the half-stride, so the
+improved saved-state video is not physically validated. C39 remains the preferred
+baseline. The roadmap and evidence retain these separate outcomes. Pause here
+for user feedback; no further unseen polishing or automatic promotion.
