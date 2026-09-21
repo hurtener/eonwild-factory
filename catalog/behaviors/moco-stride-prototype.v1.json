@@ -1,0 +1,50 @@
+{
+  "schema": "eonwild.motion.moco-prototype.v1",
+  "classification": "Engineering priors for a planar torque-driven feasibility experiment; not reconstructed muscle physiology or a validated dinosaur prediction",
+  "mass_fractions": {
+    "trunk": 0.5,
+    "neck": 0.09,
+    "tail_proximal": 0.16,
+    "tail_distal": 0.058,
+    "thigh_each": 0.06,
+    "shin_each": 0.025,
+    "metatarsus_each": 0.008,
+    "toe_each": 0.003
+  },
+  "capacity_body_weight_leg_length": {
+    "hip": 0.55,
+    "knee": 0.45,
+    "ankle": 0.3,
+    "mtp": 0.1,
+    "neck": 0.08,
+    "tail_proximal": 0.18,
+    "tail_distal": 0.06
+  },
+  "activation_time_constant_s": 0.035,
+  "contact": {
+    "radius_leg_length": 0.025,
+    "stiffness_N_m2": 100000000.0,
+    "dissipation_s_m": 1.5,
+    "static_friction": 0.8,
+    "dynamic_friction": 0.8,
+    "viscous_friction": 0.01,
+    "transition_velocity_mps": 0.1
+  },
+  "optimization": {
+    "effort_weight": 1.0,
+    "acceleration_weight": 0.0001,
+    "constraint_tolerance": 0.0001,
+    "convergence_tolerance": 0.0001,
+    "max_iterations": 1000,
+    "dynamics_mode": "explicit",
+    "contact_force_weight": 1.0,
+    "acceleration_weight_note": "Only active for the optional implicit formulation. Explicit mode retains activation dynamics and bounded controls."
+  },
+  "provenance": {
+    "geometry": "Fresh semantic joint centers from admitted source geometry; bilateral segment lengths averaged and projected into a planar chain",
+    "mass": "Animal-instance body_mass measurement retains original source and confidence",
+    "segment_distribution_inertia_capacity_contact": "Explicit authored estimates for feasibility, not measured or fitted biological values. Rod and ellipsoid approximations. Sensitivity and calibration pending.",
+    "task": "Preferred speed and step length from existing animal locomotion profile; step timing defines the periodic task, not individual joint trajectories or ground-force schedules",
+    "implementation_reference": "OpenSim Moco public optimal-control and periodicity APIs; original project model builder; no imported dinosaur trajectories or third-party dinosaur model code"
+  }
+}

@@ -3,6 +3,10 @@
 **Python authors reusable motion; Unity is the intended consumer.** This work
 continues V9 and the merged factory baseline, not another numbered toolkit.
 
+Current visual work: [movement tracker](docs/FACTORY_ROADMAP.md), C42 shared
+running recovery, and the separate [offline Moco mechanics prototype](docs/research/MOCO_TARBO_PROTOTYPE.md).
+These review candidates do not replace the historical production gates below.
+
 PR #2 is still a draft: **quality-01 is rejected** and new candidates do not
 inherit the approval of the preserved V9 takes. The current reviewed checkpoint
 adds one shared, versioned animal motion-set baseline for grounded locomotion

@@ -1,5 +1,9 @@
 # OpenSim / Moco dinosaur feasibility — 20 September 2026
 
+## C42 implementation update
+
+The missing runtime is resolved: the official Moco sliding-mass example now solves. A shared planar torque-driven Tarbo prototype is implemented and undergoing mechanical review. See the [prototype implementation and limitations](MOCO_TARBO_PROTOTYPE.md). The archive findings below remain valid; the runtime failure described in the original research snapshot is historical.
+
 ## Decision
 
 **An alternate Tarbo generated offline with OpenSim Moco is technically credible as a staged experiment. It is not a model swap or a ready-made dinosaur gait.** Keep the current shared engine and accepted animation assets intact. Use one reusable biomechanical model builder and optimizer, with anatomy and behavior differences in profiles. Tarbo would be the first test animal, not a separate species solver.

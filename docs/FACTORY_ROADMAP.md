@@ -6,13 +6,13 @@ Research before the next running pass: [running evidence baseline](research/RUNN
 records measured bird motion, the published BIRDS model, and diagnostic Allo/Tarbo
 extrapolations. The user requested evidence-based calibration after the C37
 landing/release analysis. Checkpoint 38 adopts selected, explicitly transferred priors. Checkpoint 39 adds
-whole-stride leg fitting. The user accepted its direction and Tarbo baseline; Allo remains restrained. Checkpoint 40 D extends bilateral dynamics; C40/C41 have changes requested. The C41 audit identifies an authored knee-task conflict. [OpenSim/Moco feasibility](research/OPENSIM_DINOSAUR_FEASIBILITY.md) records the researched alternate path.
+whole-stride leg fitting. The user accepted its direction and Tarbo baseline; Allo remains restrained. Checkpoint 40 D extends bilateral dynamics; C40/C41 have changes requested. The C41 audit identifies an authored knee-task conflict. [OpenSim/Moco feasibility](research/OPENSIM_DINOSAUR_FEASIBILITY.md) records the researched alternate path. The [Moco prototype](research/MOCO_TARBO_PROTOTYPE.md) is now implemented; C42 and the mechanical candidate await review.
 
 
 ## Current animation inventory
 
 Checkpoint 27 retained-braking-support stops are approved for both animals.
-Latest full checkpoint approval is checkpoint 28. Checkpoint 32 is the user-selected running base; checkpoint 34 has changes requested; checkpoint 35 has changes requested; checkpoint 36 has changes requested; checkpoint 37 has further changes requested; checkpoint 38 C has changes requested (Tarbo substantially improved; neck needs restraint; Allo not fully convincing); checkpoint 39 B has accepted direction/Tarbo baseline and Allo changes requested; checkpoints 40 D and 41 B have changes requested; the C41 knee-constraint audit is complete. **Approved means visually accepted
+Latest full checkpoint approval is checkpoint 28. Checkpoint 32 is the user-selected running base; checkpoint 34 has changes requested; checkpoint 35 has changes requested; checkpoint 36 has changes requested; checkpoint 37 has further changes requested; checkpoint 38 C has changes requested (Tarbo substantially improved; neck needs restraint; Allo not fully convincing); checkpoint 39 B has accepted direction/Tarbo baseline and Allo changes requested; checkpoints 40 D and 41 B have changes requested; the C41 knee-constraint audit is complete. C42 A is pending review, with a separate offline Moco mechanics prototype ready for review. **Approved means visually accepted
 in the reviewed clips**, not fully certified for arbitrary gameplay. Unless a row
 says otherwise, both admitted animals use the same shared engine with profile data.
 Historical sections and capture-time receipts below retain earlier review states.
@@ -40,7 +40,8 @@ Checkpoint 26 is the approved walking side-hit recovery baseline; standing impac
 | Arm carriage and secondary motion | Full-transition pass approved | Full-transition pass approved | Behavior-specific overrides for attacks, rest and interaction |
 | Jaw relaxation / breathing-like cycle | Full-transition pass approved | Full-transition pass approved | Full-body breathing and behavior-specific mouth control |
 | Expressive idle / listening / alert scanning | No complete approved family | No complete approved family | Compose meaningful attention, posture and breathing behaviors from existing layers |
-| Running / sprinting | C41 B changes requested: knee/recovery coordination; sprint missing | C39 preferred visual reference; C40 changes requested; C41 not approved; historical Run010 / Sprint006 preserved | Correct shared recovery task conflict; review both; Moco alternate researched, not implemented; then entry/braking and sprinting |
+| Running / sprinting | C42 A foot-approach candidate, pending review; sprint missing | C42 A pending review; C39 preferred reference; historical Run010 / Sprint006 preserved | Review forward reach and recovery; remaining post-release extension, ankle polish, entry/braking and sprinting |
+| Offline Moco mechanics | Generic builder supports semantic anatomy; Allo solve not attempted | Tarbo planar torque-driven candidate I, pending review; finer J unfinished | Review contact-bearing mechanics, refine physical parameters; muscle physiology, 3D balance and Unity retargeting remain separate work |
 | Feeding / gripping / pulling | Current approved transfer missing | Historical Feeding003 reference preserved | Current grounded support, oral contact and interaction handoff |
 | Drinking / swallowing | Missing | Missing | New choreography and world interaction |
 | Rest / sit / lie down / rise / sleep | Missing | Missing | New support transitions and resting behavior |
@@ -1010,3 +1011,26 @@ initialize on native arm64, but the official tiny Moco solve is blocked by a
 missing Fortran runtime. Proposed next experiment: calibrated Tarbo anatomy,
 bounded torque-actuated contact dynamics first, muscles after calibration,
 native motion review before a semantic Unity adapter. Pause at this checkpoint.
+
+
+## Checkpoint 42 A plus Moco prototype — pending review
+
+C42 removes the shared early knee-opening timetable and uses a foot-approach
+velocity task with a release-extension rate penalty. Allo forward thigh travel
+increases from 38.52 to 48.54 degrees; its catch moves 11.8 cm forward relative
+to C41. Some release extension and ankle sharpness remain. Both native videos
+and separately labeled slow-motion details are in principal game
+ game/Evidence/endpoint-running-study/. All 432 native frames were inspected.
+92 focused checks and a byte-identical Allo regeneration pass. Unity landmark
+parity still fails the unchanged 2 mm gate (5.58 / 6.57 mm). Visual review pending.
+
+The optional shared Moco builder now produces a contact-bearing Tarbo model:
+12 bodies, 14 coordinates, 11 internal torque actuators and no root actuation.
+Candidate I converged and its native mechanical video is saved in
+ game/Evidence/moco-tarbo-prototype/; all 144 frames were inspected. Five
+actual OpenSim physics witnesses pass. It selects a grounded gait and still
+scuffs its feet. Its segment/strength/contact assumptions are estimates.
+The finer J diagnostic reduced dense force error but was stopped before
+convergence. Mesh convergence, forward integration, sensitivity, muscles,
+3D balance and skin/Unity retargeting are open. Both candidates are preserved;
+no Moco result or C42 clip has user approval. Pause at this checkpoint.

@@ -284,6 +284,13 @@ def fit_floating_body_stride(context, plan, cycle, profile, policy):
         if v.shape!=(3,) or not np.isfinite(v).all():raise ContractError('invalid actuator preferred angles')
         for value in (actuation['activation_time_s'],actuation['constraint_weight'],recovery['progress_tolerance_leg_lengths'],recovery['task_weight'],recovery['extension_weight']):
             if isinstance(value,bool) or not isinstance(value,(int,float)) or not math.isfinite(value) or value<=0:raise ContractError('invalid distributed fit policy')
+        if recovery.get('mode', 'knee_opening') not in ('knee_opening', 'foot_approach'):
+            raise ContractError('invalid forward recovery mode')
+        if recovery.get('mode') == 'foot_approach':
+            for key in ('approach_velocity_weight', 'release_extension_rate_weight'):
+                value = recovery[key]
+                if isinstance(value,bool) or not isinstance(value,(int,float)) or not math.isfinite(value) or not 0 <= value <= 10:
+                    raise ContractError('invalid recovery task weight: '+key)
         shares=np.array([distribution[k] for k in ('trunk','neck_head','tail')])
         if not np.isfinite(shares).all() or np.any(shares<=0) or not np.isclose(shares.sum(),1):raise ContractError('invalid axial mass shares')
     times = np.arange(count)*period/count
@@ -446,11 +453,25 @@ def fit_floating_body_stride(context, plan, cycle, profile, policy):
             # Functional reach guidance, not inferred dinosaur physiology:
             # advance throughout swing and open the knee on the forward path.
             progress_error=np.maximum(0,np.abs(foot_delta[:,:,0])/length-recovery['progress_tolerance_leg_lengths'])
-            u=np.clip((swing-.20)/.62,0,1);opening=u*u*(3-2*u)
-            target_knee=np.radians(82.+65.*opening)
-            opening_gate=np.sin(np.pi*swing)**2*(~contact)
-            blocks += [recovery['task_weight']*progress_error,
-                       recovery['extension_weight']*opening_gate*np.maximum(0,target_knee-angles[:,:,1])]
+            blocks += [recovery['task_weight']*progress_error]
+            if recovery.get('mode', 'knee_opening') == 'knee_opening':
+                # Retained only for reproducibility of C41 and older recipes.
+                u=np.clip((swing-.20)/.62,0,1);opening=u*u*(3-2*u)
+                target_knee=np.radians(82.+65.*opening)
+                opening_gate=np.sin(np.pi*swing)**2*(~contact)
+                blocks += [recovery['extension_weight']*opening_gate*np.maximum(0,target_knee-angles[:,:,1])]
+            else:
+                # Coordinate the approach of the endpoint, not a knee-angle
+                # timetable. Toe clearance and capacity select the leg shape.
+                u=np.clip((swing-.50)/.40,0,1)
+                approach=u*u*(3-2*u)*(~contact)
+                velocity_error=np.einsum('ij,jsk->isk',d1,foot_delta)/(length*omega)
+                blocks += [(recovery['approach_velocity_weight']*approach[:,:,None]*velocity_error).reshape(count,4)]
+                # Discourage re-extending an unloaded knee before gathering.
+                # A smooth phase-local rate penalty, not a prescribed angle.
+                release_gate=np.sin(np.pi*np.clip(swing/.30,0,1))**2*(~contact)
+                knee_rate=d1@angles[:,:,1]
+                blocks += [recovery['release_extension_rate_weight']*release_gate*np.maximum(0,knee_rate)/omega]
         if blocks_only:return blocks
         return np.concatenate([b.ravel() for b in blocks])
     blocks=residual(initial,True);size=sum(b.size for b in blocks)
