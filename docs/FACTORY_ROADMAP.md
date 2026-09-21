@@ -1034,3 +1034,15 @@ The finer J diagnostic reduced dense force error but was stopped before
 convergence. Mesh convergence, forward integration, sensitivity, muscles,
 3D balance and skin/Unity retargeting are open. Both candidates are preserved;
 no Moco result or C42 clip has user approval. Pause at this checkpoint.
+
+### C42 companion: requested skinned Moco replay
+
+Candidate I is now retargeted to the actual admitted Tarbo and rendered in Unity
+on the plain stage. Evidence: principal game `game/Evidence/moco-tarbo-skin/`.
+All 216 frames were inspected. Original limb lengths, 92.6–165.7 degree knee
+opening and periodic root advance are retained; Unity landmark parity passes.
+This is a diagnostic mapping, not a new physical solve or approved animation.
+Skin contact fails with 144.4 mm maximum penetration from the simplified
+contact-pad/artist-foot mismatch. Low recovery/scuffing, low tail and quiet axial
+motion remain. Calibrate contact geometry and physical assumptions before the
+next solve; keep C42 and prior approved animation assets preserved. Paused review.

@@ -116,7 +116,34 @@ refinement, and forward-integrate the saved controls. Planar movement cannot
 establish lateral balance or our desired figure-eight tail. Muscles, tendons,
 caudofemoral coupling and bone stress need additional data and modeling.
 
-Only then map solved body frames through the existing semantic art-rig contract,
-measure retargeting error, reopen the skin and check Unity parity. A periodic
-stride is not an arbitrary-transition gameplay controller. C42's shared-engine
-animations and all previously accepted walks remain separate preserved evidence.
+Production promotion still requires semantic retargeting, reopened skin contact
+and Unity parity after physical calibration. A periodic stride is not an
+arbitrary-transition gameplay controller. C42's shared-engine animations and
+all previously accepted walks remain separate preserved evidence.
+
+## Requested skinned diagnostic — candidate I
+
+The user subsequently requested the actual Tarbo rendered through this prototype.
+`tools/retarget_moco_prototype.py` now maps the saved candidate I body directions
+to a freshly admitted rig with the same source/profile hashes. It preserves
+artist limb lengths, maps one Moco neck and two tail regions while retaining
+their rest curvature, and repeats the half-stride with bilateral symmetry.
+There are no species branches, new optimization, running-solver overlays,
+time warps, IK/contact correction or hidden root support. Extra artist toe
+joints retain their rest shape inside Moco's single toe region; this is a
+diagnostic simplification, not articulated toe contact certification.
+
+Principal game `game/Evidence/moco-tarbo-skin/` contains the 9-second native-time
+side/quarter movie, all 216 frames in chronological sheets, source receipts,
+reproduction scripts and Unity parity. Leg-center error against saved Moco is
+below 0.001 mm; 492 Unity landmark comparisons pass the unchanged 2 mm gate
+(maximum 0.00131 mm). These checks certify this kinematic mapping, not the physics.
+
+Skin contact **FAILS**: maximum measured foot-region penetration is 144.4 mm.
+The simplified sphere padding and the artist foot/sole geometry do not coincide;
+the original Moco floor and body trajectory are deliberately retained in this
+diagnostic. Low shuffling recovery, low tail, quiet trunk and neutral open jaw
+are visible. No breathing or attention overlays are applied. The mechanical
+solution's force/scuffing limitations remain unchanged. Before another physical
+solve, calibrate the actual sole/toe geometry in the model rather than hiding
+this discrepancy with a visual root lift. User review is pending; pause here.
