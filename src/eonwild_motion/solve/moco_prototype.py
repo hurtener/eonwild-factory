@@ -104,7 +104,8 @@ def make_model(admission, recipe):
         model.addJoint(j)
         for index,(coordinate,axis) in enumerate(axes):
             c=j.upd_coordinates(index);c.setName(coordinate)
-            b=bounds if index==0 else extra[coordinate.rsplit('_',1)[-1]]['bounds']
+            b=recipe.get('coordinate_bounds',{}).get(coordinate,
+                bounds if index==0 else extra[coordinate.rsplit('_',1)[-1]]['bounds'])
             cap=capacity if index==0 else capacity*extra[coordinate.rsplit('_',1)[-1]]['capacity_ratio']
             c.setRangeMin(b[0]);c.setRangeMax(b[1]);coordinates[coordinate]=c
             act=o.ActivationCoordinateActuator();act.setName('motor_'+coordinate);act.setCoordinate(c)
@@ -114,6 +115,17 @@ def make_model(admission, recipe):
             model.addForce(act)
             metadata['coordinates'][coordinate]={'bounds_rad':list(b),'joint':name,'axis':axis}
             metadata['actuators']['motor_'+coordinate]={'capacity_Nm':force,'activation_time_constant_s':recipe['activation_time_constant_s']}
+            if recipe.get('joint_stops'):
+                settings=recipe['joint_stops']
+                stop=o.CoordinateLimitForce();stop.setName('limit_'+coordinate);stop.set_coordinate(coordinate)
+                # OpenSim rotational limit angles are degrees and stiffness
+                # Nm/degree; damping is Nm/(degree/s), per OpenSim.
+                stop.set_lower_limit(math.degrees(b[0]));stop.set_upper_limit(math.degrees(b[1]))
+                stiffness=force/settings['capacity_deflection_rad']*math.pi/180
+                stop.set_lower_stiffness(stiffness);stop.set_upper_stiffness(stiffness)
+                stop.set_damping(force*settings['damping_capacity_seconds']*math.pi/180)
+                stop.set_transition(math.degrees(settings['transition_rad']))
+                model.addForce(stop)
             passive=recipe.get('passive_support',{}).get(coordinate)
             if not passive and recipe.get('joint_viscosity_capacity_seconds') and name.startswith(('hip_','knee_','ankle_','mtp_','digit_')):
                 passive={'stiffness_BW_leg_length':0.,'damping_BW_leg_length_s':cap*recipe['joint_viscosity_capacity_seconds'],'rest_radians':0.}
@@ -222,6 +234,9 @@ def make_model(admission, recipe):
     if calibrated: metadata['foot_geometry']=foot
     model.finalizeConnections()
     if spatial:
+        if recipe.get('bracing'):
+            from .moco_bracing import calibrate_bracing
+            calibrate_bracing(model,metadata,recipe)
         from .moco_spatial import calibrate_axial_capacity
         calibrate_axial_capacity(model,metadata,recipe)
     state = model.initSystem()
@@ -280,7 +295,7 @@ def make_study(model, metadata, admission, recipe, mesh=25, warm_start=None):
     L = sum(metadata["segment_lengths_m"])
     problem.setStateInfoPattern(".*/speed", [-18, 18])
     problem.setStateInfoPattern(".*/activation", [-1, 1])
-    problem.setStateInfo("/jointset/root/pitch/value", [-.16, .16])
+    problem.setStateInfo("/jointset/root/pitch/value", recipe.get('spatial',{}).get('root_bounds',{}).get('pitch',[-.16,.16]))
     problem.setStateInfo("/jointset/root/forward/value", [0, step*1.3], 0, step)
     floor_offset=metadata.get('foot_geometry',{}).get('sole_depth_m',0.)
     problem.setStateInfo("/jointset/root/height/value", [.60*L+floor_offset, (.96 if floor_offset else .91)*L+floor_offset])
@@ -342,7 +357,7 @@ def make_study(model, metadata, admission, recipe, mesh=25, warm_start=None):
         if recipe.get('attention'):
             if not warm_start:raise ValueError('Focused attention requires a physical warm start')
             from .moco_tasks import admit_attention_reference
-            admit_attention_reference(model,metadata,warm_start,speed)
+            admit_attention_reference(model,metadata,warm_start,speed,recipe.get('coordination',{}).get('vertical_regions',[]))
         add_tracking(problem,admission,metadata,recipe)
         continuation_weight=recipe['optimization'].get('continuation_tracking_weight',0.)
         if continuation_weight:
@@ -459,7 +474,7 @@ def run(admission_path, recipe_path, output, mesh=25, warm_start=None, build_onl
         (output/'model-receipt.json').write_text(json.dumps(metadata,indent=2)+'\n')
     else:solve_model,solve_metadata=model,metadata
     study = make_study(solve_model, solve_metadata, admission, recipe, mesh, warm_start)
-    for name in ('attention_reference_offset_m','attention_reference_provenance'):
+    for name in ('attention_reference_offset_m','attention_reference_provenance','vertical_region_reference_m'):
         if name in solve_metadata:metadata[name]=solve_metadata[name]
     (output/'model-receipt.json').write_text(json.dumps(metadata,indent=2)+'\n')
     study.printToXML(str(output/"study.omoco"))

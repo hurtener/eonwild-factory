@@ -174,11 +174,16 @@ def add_tracking(problem, admission, metadata, recipe):
             o.STOFileAdapterVec3.write(reference,str(path))
             position=o.MocoTranslationTrackingGoal('focused_nose_position',attention['position_tracking_weight'])
             position.setFramePaths(labels);position.setTranslationReferenceFile(str(path));problem.addGoal(position)
+    for region in recipe.get('coordination',{}).get('vertical_regions',[]):
+        name=region['body'];target=metadata['vertical_region_reference_m'][name]
+        goal=o.MocoOutputTrackingGoal('supported_vertical_'+name,float(region.get('moco_tracking_weight',region['weight'])))
+        goal.setOutputPath('/bodyset/'+name+'|position');goal.setOutputIndex(1)
+        goal.setTrackingFunction(o.Constant(target));goal.setExponent(2);problem.addGoal(goal)
     if task.get('support_force_weight'):
         add_support_task(problem, admission, metadata, recipe, times)
 
 
-def admit_attention_reference(model, metadata, warm_start, speed):
+def admit_attention_reference(model, metadata, warm_start, speed, vertical_regions=()):
     """A constant task-space aim from the warm physical trajectory, not a joint schedule."""
     import opensim as o
     if not metadata.get('attention_frame'):raise ValueError('Focused running needs admitted nose geometry')
@@ -187,12 +192,16 @@ def admit_attention_reference(model, metadata, warm_start, speed):
     valid={state_names.get(i) for i in range(state_names.getSize())}
     state=model.initSystem();nose=o.PhysicalOffsetFrame.safeDownCast(model.getComponent(metadata['attention_frame']))
     offsets=[]
+    regions={p['body']:model.getBodySet().get(p['body']) for p in vertical_regions}
+    heights={n:[] for n in regions}
     for i,t in enumerate(trajectory.getTimeMat()):
         for j,name in enumerate(names):
             if name in valid and name.endswith('/value'):model.setStateVariableValue(state,name,float(matrix[i,j]))
         model.realizePosition(state)
         offsets.append(nose.getPositionInGround(state).to_numpy()-[speed*t,0,0])
+        for n,b in regions.items():heights[n].append(b.getPositionInGround(state).get(1))
     target=np.mean(offsets,axis=0);target[2]=0.
+    metadata['vertical_region_reference_m']={n:float(np.mean(v)) for n,v in heights.items()}
     metadata['attention_reference_offset_m']=target.tolist()
     metadata['attention_reference_provenance']='Mean skull-fixed nose position relative to constant travel in the saved physical warm start; lateral aim centered by symmetry. Soft task, not prescribed neck angles.'
 

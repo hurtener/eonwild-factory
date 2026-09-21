@@ -234,6 +234,10 @@ def add_axial(model, metadata, points, fractions, capacities, length, body, pin,
             metadata['nose_local_m']=nose_local.tolist()
         parent=b;parent_origin=origin
     tail_roles=sorted((k for k in points if k.startswith('tail.')),key=lambda k:int(k.split('.')[-1]))
+    if policy.get('tail_chain')=='all_admitted_links':
+        from .moco_bracing import add_tail_chain
+        add_tail_chain(model,metadata,points,fractions,capacities,length,body,pin,trunk,recipe)
+        return
     indices=np.linspace(0,len(tail_roles)-1,5).astype(int)
     total=fractions['tail_proximal']+fractions['tail_distal']
     parent=trunk;parent_origin=np.zeros(3)

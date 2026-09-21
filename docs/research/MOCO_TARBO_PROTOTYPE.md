@@ -306,3 +306,114 @@ The separate Moco refinement is recorded as an unselected experiment; it is not
 the source of the J video. Preserve C39/C42/C43/C44 and the approved library.
 Pause here for user review. Next work is contact/control/forward consistency
 for the spatial result, then Allosaurus transfer and muscles/tendons after review.
+
+
+## C46 — engaged body support and the admitted tail chain
+
+C45's nose-only improvement did not pass whole-body review: the user rejected
+the excessive vertical body reaction and compliant chest/neck. C46 uses the
+same shared model builder, driven by the new optional
+`catalog/behaviors/moco-supported-stride.v1.json` recipe. The old catalog recipes
+remain unchanged. There are no species-name branches.
+
+The actual Tarbo source contains nine tail nodes/eight links, not twelve. Every
+admitted link now has a physical body, pitch/yaw coordinates and internal
+torques. Total tail mass remains 21.8% of the admitted body mass; a smooth
+volume-based taper redistributes it over the links. Angular stiffness uses
+EI/link length, avoiding a direct doubling of bending stiffness just because
+the chain has more links. The transverse soft-tissue taper is an engineering
+prior, not a measured tissue section or a validated continuum reconstruction.
+This yields 23 moving bodies, 45 coordinates and 39 internal motors, with the
+same six free root coordinates and no root actuator.
+
+Loaded-pose inverse statics establish gravity support at the desired carriage.
+Chest/neck stiffness is derived from the model's reflected inertia and estimated
+response frequencies. Damping uses estimated damping ratios. Tail preload
+supplies 90% of the reference holding torque; remaining static and dynamic
+work comes from bounded motors. This is **constant effective tonic engagement**:
+it is not a muscle recruitment model, nor phase-dependent co-contraction.
+The neck remains more compliant than the trunk so it can compensate without
+turning the whole torso into a compliant hinge. Joint limits also have physical
+smooth stops, preventing the unrestricted distal-joint revolutions observed
+in earlier independent replays. OpenSim uses degree-based angular damping
+units for these forces; an actual torque witness checks the conversion.
+
+The periodic initializer adds a soft body envelope, carried-tail endpoint
+envelope, adjacent-link curvature regularization and normalized positive
+motor-power/vertical-COM-speed penalties. These task choices guide an estimate;
+none is evidence of the animal's real motion. Every altered posture is passed
+through actual contact and inverse dynamics. No corrective root lift or
+render-only head/tail oscillator is applied. A short numerical IK step preserves
+world foot poses only while constructing the starting guess; optimization then
+frees all coordinates.
+
+The physical rationale comes from the previously reviewed
+[Coelophysis simulations](https://pmc.ncbi.nlm.nih.gov/articles/PMC8457660/)
+and [tyrannosaur tail study](https://pmc.ncbi.nlm.nih.gov/articles/PMC8059583/).
+They support investigating axial rigidity and loaded tail support; they do not
+provide the Tarbo running stiffness, strength or damping values used here.
+The [OpenSim limit-force API](https://opensim-org.github.io/opensim-moco-site/docs/1.3.0/html_user/classOpenSim_1_1CoordinateLimitForce.html)
+defines the force units. Exact priors, neutral angles and generated mechanics
+are archived with the checkpoint.
+
+C46 D is the body-motion diagnostic. It reduces modeled chest pitch range from
+8.72 to 0.57 degrees and torso pitch from 11.20 to 6.31 degrees. The emitted
+pelvis range decreases from 25.92 to 13.44 cm. Tail-tip minimum model height
+rises from 0.531 to 1.515 m, with 2.249 m emitted lateral range. Nose vertical
+range increases from 2.44 to 4.77 cm; this tradeoff is recorded, not hidden by
+the quieter torso. The model COM and rig pelvis are different landmarks.
+
+D is still an initializer, not a converged Moco solution. Maximum normalized
+control is 1.135, loaded-surface p95 speed 0.489 m/s and skin penetration 47.75 mm.
+Independent replay completes the half-stride but loses 245.29 mm of root height
+and more than a radian at a hip. Those results fail physical acceptance, despite
+better body shape and intact joint ranges. The Moco E continuation evaluates
+whether the same supported model can close the dynamics discrepancy; its final
+status belongs in the evidence package.
+
+Eighteen focused OpenSim tests pass. New witnesses cover a different admitted
+tail count, conserved mass/free COM fall despite internal support, calibrated
+loaded torque, rotational stop damping and optimizer mass-unit invariance.
+These checks establish implementation behavior, not biological truth or a
+second-species production transfer. Native review and current candidate status:
+principal Eonwild `game/Evidence/moco-supported-body-study/`.
+
+### C46 F — middle-neck correction, pending review
+
+The user identified excessive bounce at the middle of the neck in D. Its nose
+was relatively quiet, but the emitted middle-neck landmark moved 27.51 cm.
+F adds shared, leg-length-normalized world-height task envelopes for the neck
+base and middle, together with modestly increased upper-neck effective
+stiffness/damping. The solver chooses the coordinated joint angles; there is no
+render-only neck clamp or species branch. Corresponding Moco output-tracking
+goals are wired and their study builds, but a full F Moco refinement is NOT_RUN.
+The archived generation recipe and the continuation recipe distinguish those
+settings explicitly.
+
+F starts from E's returned physical trajectory and reoptimizes all coordinates.
+Emitted middle-neck travel is 7.58 cm (72.4% less than D); neck-base travel is
+16.93 cm versus 25.91 cm. Skull-nose vertical travel is 5.44 cm versus 4.77 cm,
+and lateral travel is 3.04 cm. Whole-body pitch range is 3.30 degrees and
+relative chest pitch 0.94 degrees. The pelvis tradeoff is explicit: emitted
+vertical range grows from D's 13.44 to 18.86 cm, still below C45's 25.92 cm.
+Actual model COM vertical range is 11.97 cm. Raised tail carriage remains:
+minimum model tip height 1.510 m and emitted lateral range 2.813 m.
+
+F remains diagnostic. Maximum command is 1.0585, loaded-surface p95 speed
+0.274 m/s, skin penetration 43.27 mm and independent half-stride root-height
+divergence -235.65 mm. Eighteen focused OpenSim tests pass; actual source
+lengths, loop closure and 558 Unity landmarks pass (max error 0.00173 mm).
+All 216 captured native-time frames were inspected in chronological sheets;
+the neck comparison and full videos are saved without retiming. These checks
+do not confer physical or user approval. Pause for visual feedback.
+
+The separate E continuation used the same supported-body mechanics as D and
+40 collocation intervals. It was bounded by the assistant after approximately
+15 minutes; the returned status is User_Requested_Stop at iteration 45, not
+convergence. An earlier iteration had small primal residual, but the returned
+iteration's primal infeasibility was 0.0362. Independent root-height divergence
+remained -218.50 mm over the half-stride. It is preserved as an unselected
+experiment, not a validated improvement or the source of the displayed F video.
+OpenSim 4.6 variable-scaled intermediate callback files were rejected because
+their times were degenerate and states still scaled; only the returned,
+unscaled MocoSolution was used. See the experiment receipt.

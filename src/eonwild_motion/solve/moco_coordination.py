@@ -63,8 +63,23 @@ class Coordination:
         rows=baseline['frames'];half=rows[-1]['time_s'];self.period=2*half
         self.speed=admission['preferred_speed_mps']
         times=[];q=[];u=[]
+        # Transfer bending density when the physical tail subdivision changes.
+        old_tail=[b for b in baseline['metadata'].get('axial_bindings',[]) if b['body'].startswith('tail_')]
+        new_tail=self.metadata.get('tail_chain',[])
+        tail_map={}
+        if new_tail and len(old_tail)!=len(new_tail):
+            old_lengths=[np.linalg.norm(baseline['metadata']['segments'][b['body']]['extent_local_m']) for b in old_tail]
+            old_edges=np.r_[0,np.cumsum(old_lengths)]
+            for part in new_tail:
+                weights=[]
+                for i,old in enumerate(old_tail):
+                    overlap=max(0.,min(part['arc_end_m'],old_edges[i+1])-max(part['arc_start_m'],old_edges[i]))
+                    if overlap:weights.append((old['body'],overlap/old_lengths[i]))
+                for suffix in ('','_yaw'):
+                    tail_map[part['body']+suffix]=[(n+suffix,w) for n,w in weights]
         def mapped(row,name,kind):
             coordinates=row['coordinates']
+            if name in tail_map:return sum(coordinates[n][kind]*w for n,w in tail_map[name])
             if name in coordinates:return coordinates[name][kind]
             mapping={'tail_0':('tail_proximal',.6),'tail_1':('tail_proximal',.4),
                      'tail_2':('tail_distal',.6),'tail_3':('tail_distal',.4),
@@ -83,6 +98,9 @@ class Coordination:
                     if n=='forward':value+=repeat*admission['step_length_m'];value-=self.speed*t;velocity-=self.speed
                     values.append(value);speeds.append(velocity)
                 times.append(t);q.append(values);u.append(speeds)
+        if self.policy.get('initialization_body'):
+            from .moco_bracing import supported_initialization
+            q=supported_initialization(self,baseline,np.array(q),np.array(times)).tolist()
         # Remove sub-frame corners inherited from an unconverged coarse solve.
         # This changes the initializer only; contact/effort are recomputed by
         # inverse dynamics and the subsequent Moco trajectory remains free.
@@ -108,6 +126,12 @@ class Coordination:
             self.set_state(t,qq,uu)
             nose_positions.append(self.nose.getPositionInGround(self.state).to_numpy()-[self.speed*t,0,0])
         self.target=np.mean(nose_positions,axis=0);self.target[2]=0
+        self.vertical_regions=[]
+        for setting in self.policy.get('vertical_regions',[]):
+            region=self.model.getBodySet().get(setting['body']);heights=[]
+            for t,qq,uu in zip(self.times,self.reference[0],self.reference[1]):
+                self.set_state(t,qq,uu);heights.append(region.getPositionInGround(self.state).get(1))
+            self.vertical_regions.append((region,float(np.mean(heights)),setting))
         self.pitch_target=recipe['attention']['nose_pitch_radians']
         self.last_log=0;self.calls=0;self.best=np.inf;self.best_x=None
         self._cache={}
@@ -152,7 +176,7 @@ class Coordination:
 
     def mechanics(self,x,times):
         q,u,acc=self.evaluate_kinematics(x,times)
-        root=[];effort=[];nose=[];direction=[];slip=[];forces=[];clearance=[]
+        root=[];effort=[];nose=[];direction=[];slip=[];forces=[];clearance=[];com_velocity=[];region_heights=[]
         for t,qq,uu,aa in zip(times,q,u,acc):
             self.set_state(t,qq,uu)
             udot=self.o.Vector(self.state.getNU(),0)
@@ -160,6 +184,8 @@ class Coordination:
             torque=self.inverse.solve(self.state,udot).to_numpy()
             root.append(torque[self.root_indices]/self.root_scale)
             effort.append(torque[self.motor_indices]/self.capacities)
+            com_velocity.append(self.model.calcMassCenterVelocity(self.state).to_numpy())
+            region_heights.append([b.getPositionInGround(self.state).get(1) for b,_,_ in self.vertical_regions])
             nose.append(self.nose.getPositionInGround(self.state).to_numpy()-[self.speed*t,0,0])
             R=self.head.getTransformInGround(self.state).R()
             direction.append([R.get(0,0),R.get(1,0),R.get(2,0)])
@@ -173,7 +199,7 @@ class Coordination:
             forces.append(ff);slip.append(vv)
             clearance.append([frame.getPositionInGround(self.state).get(1)-floor for frame,floor in self.clearance_frames])
         return dict(q=q,u=u,acc=acc,root=np.asarray(root),effort=np.asarray(effort),
-                    nose=np.asarray(nose),direction=np.asarray(direction),slip=np.asarray(slip),forces=np.asarray(forces),clearance=np.asarray(clearance))
+                    nose=np.asarray(nose),direction=np.asarray(direction),slip=np.asarray(slip),forces=np.asarray(forces),clearance=np.asarray(clearance),com_velocity=np.asarray(com_velocity),region_heights=np.asarray(region_heights))
 
     def residual(self,x):
         m=self.mechanics(x,self.times);p=self.policy;self.calls+=1
@@ -188,6 +214,35 @@ class Coordination:
         for n,b in self.metadata['coordinates'].items():
             value=m['q'][:,self.index[n]];lo,hi=b['bounds_rad']
             range_error.extend(p.get('range_weight',3.)*(np.minimum(value-lo,0)+np.maximum(value-hi,0)))
+        for n,(lo,hi) in self.recipe.get('spatial',{}).get('root_bounds',{}).items():
+            value=m['q'][:,self.index[n]]
+            range_error.extend(p.get('range_weight',3.)*(np.minimum(value-lo,0)+np.maximum(value-hi,0)))
+        body_envelope=[]
+        for n,setting in p.get('body_envelope',{}).items():
+            value=m['q'][:,self.index[n]]
+            center=float(value.mean()) if setting.get('center') is None else setting['center']
+            body_envelope.extend(setting['weight']*np.maximum(np.abs(value-center)-setting['half_range'],0))
+        region_error=[]
+        for i,(_,center,setting) in enumerate(self.vertical_regions):
+            excursion=np.abs(m['region_heights'][:,i]-center)/self.L
+            region_error.extend(setting['weight']*np.maximum(excursion-setting['half_range_leg_lengths'],0))
+        tail_smooth=[]
+        chain=self.metadata.get('tail_chain',[])
+        if chain:
+            for suffix in ('','_yaw'):
+                curvature=np.column_stack([m['q'][:,self.index[b['body']+suffix]]/b['length_m'] for b in chain])
+                tail_smooth.extend((p.get('tail_curvature_weight',0.)*np.diff(curvature,axis=1)).ravel())
+        tail_carriage=[]
+        for i,frame in enumerate(self.metadata['clearance_frames']):
+            name=frame['path'].removeprefix('/tip_')
+            reference=self.metadata.get('bracing',{}).get('loaded_tail_end_heights_relative_root_m',{}).get(name)
+            if reference is not None:
+                relative=m['clearance'][:,i]+frame['minimum_height_m']-m['q'][:,self.index['height']]
+                difference=relative-reference
+                allowance=p.get('tail_carriage_half_range_leg_lengths',.08)*self.L
+                tail_carriage.extend(p.get('tail_carriage_weight',0.)*np.maximum(np.abs(difference)-allowance,0)/self.L)
+        motor_speed=np.column_stack([m['u'][:,self.index[n.removeprefix('motor_')]] for n in self.motors])
+        positive_power=np.maximum(m['effort']*self.capacities*motor_speed,0)/(self.bw*self.speed)
         tail_indices=[i for i,n in enumerate(self.names) if n.startswith('tail_')]
         tail_acceleration=m['acc'][:,tail_indices]*(self.period/(2*np.pi))**2
         effort=m['effort'];command=effort+np.gradient(effort,self.times,axis=0)*self.recipe['activation_time_constant_s']
@@ -196,6 +251,9 @@ class Coordination:
             (p['gaze_position_weight']*(m['nose']-self.target)/self.L).ravel(),
             (p['gaze_orientation_weight']*(m['direction']-target)).ravel(),
             np.asarray(deviation),np.asarray(range_error),
+            np.asarray(body_envelope),np.asarray(region_error),np.asarray(tail_smooth),np.asarray(tail_carriage),
+            (p.get('positive_work_weight',0.)*positive_power).ravel(),
+            p.get('vertical_work_weight',0.)*m['com_velocity'][:,1]/self.speed,
             (p['effort_weight']*effort).ravel(),
             (p['capacity_weight']*np.maximum(np.abs(effort)-.95,0)).ravel(),
             (p['capacity_weight']*.5*np.maximum(np.abs(command)-.98,0)).ravel(),
@@ -236,6 +294,9 @@ class Coordination:
             root_residual_max_by_axis=np.max(np.abs(m['root']),axis=0).tolist(),
             nose_range_m=np.ptp(m['nose'],axis=0).tolist(),nose_target_m=self.target.tolist(),
             maximum_activation=float(np.max(np.abs(m['effort']))),maximum_control=float(np.max(np.abs(controls))),
+            vertical_region_ranges_m={setting['body']:float(np.ptp(m['region_heights'][:,i])) for i,(_,_,setting) in enumerate(self.vertical_regions)},
+            maximum_activation_by_motor={n:float(np.max(np.abs(m['effort'][:,i]))) for i,n in enumerate(self.motors)},
+            coordinate_ranges={n:[float(m['q'][:,i].min()),float(m['q'][:,i].max())] for i,n in enumerate(self.names)},
             clearance_margin_m={c['path']:float(m['clearance'][:,i].min()) for i,c in enumerate(self.metadata['clearance_frames'])},
             tail_yaw_ranges_rad={n:float(np.ptp(m['q'][:,self.index[n]])) for n in self.names if n.startswith('tail') and n.endswith('yaw')},
             status='INITIALIZER_NOT_MOCO_CONVERGENCE',calls=self.calls)

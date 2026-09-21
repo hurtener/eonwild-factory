@@ -2,10 +2,13 @@
 
 Updated 2026-09-21. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
 
-Current checkpoint: **C45 J focused head and lateral tail, pending visual review**.
-This is a spatial inverse-dynamics initializer; contact and independent forward
-replay still fail. The selected saved-state video and its limits are documented
-in the C45 section below.
+Current checkpoint: **C46 F supported body, raised tail and quieter middle neck,
+pending visual review**. C45 J was rejected for excessive body motion; C46 D
+received changes requested for middle-neck bounce. F reduces that excursion
+from 27.5 to 7.6 cm on the emitted rig. It is a spatial inverse-dynamics
+initializer, not a converged Moco solution; contact and independent forward
+replay still fail. Saved videos and receipts are in the principal repository's
+`game/Evidence/moco-supported-body-study/neck-correction/`. Pause for feedback.
 
 Research before the next running pass: [running evidence baseline](research/RUNNING_EVIDENCE_BASELINE.md)
 records measured bird motion, the published BIRDS model, and diagnostic Allo/Tarbo
@@ -46,7 +49,7 @@ Checkpoint 26 is the approved walking side-hit recovery baseline; standing impac
 | Jaw relaxation / breathing-like cycle | Full-transition pass approved | Full-transition pass approved | Full-body breathing and behavior-specific mouth control |
 | Expressive idle / listening / alert scanning | No complete approved family | No complete approved family | Compose meaningful attention, posture and breathing behaviors from existing layers |
 | Running / sprinting | C42 A foot-approach candidate, pending review; sprint missing | C42 A pending review; C39 preferred reference; historical Run010 / Sprint006 preserved | Review forward reach and recovery; remaining post-release extension, ankle polish, entry/braking and sprinting |
-| Offline Moco mechanics | Not attempted; transfer follows Tarbo review | C43 positive visual direction; C44 D retained; C45 J focused head and lateral tail pending review | C45 is a spatial inverse-dynamics initializer, not a converged Moco solve. Contact and independent forward replay fail. Complete physical consistency before Allo and muscles/tendons |
+| Offline Moco mechanics | Not attempted; transfer follows Tarbo review | C43 positive visual direction; C44 D retained; C45 body rejected; C46 F quieter-neck candidate pending review | Shared internal bracing and all admitted tail links. F is an inverse-dynamics initializer; E Moco refinement did not converge. Contact and independent forward replay fail. Complete physical consistency before Allo and muscles/tendons |
 | Feeding / gripping / pulling | Current approved transfer missing | Historical Feeding003 reference preserved | Current grounded support, oral contact and interaction handoff |
 | Drinking / swallowing | Missing | Missing | New choreography and world interaction |
 | Rest / sit / lie down / rise / sleep | Missing | Missing | New support transitions and resting behavior |

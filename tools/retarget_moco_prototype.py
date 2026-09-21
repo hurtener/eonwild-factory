@@ -120,7 +120,8 @@ def main():
                 set_world(node,body_rotation(binding['body'])@base[node,:3,:3])
                 frame_targets[binding['role']]=(ground+basis@(reflection@np.array(row['bodies'][binding['body']]['origin'])+[half*step,0,0])).tolist()
             tail_end=max((r for r in roles if r.startswith('tail.')),key=lambda r:int(r.split('.')[-1]))
-            frame_targets[tail_end]=(ground+basis@(reflection@np.array(row['bodies']['tail_3']['end'])+[half*step,0,0])).tolist()
+            last_tail=data['metadata'].get('tail_terminal_body','tail_3')
+            frame_targets[tail_end]=(ground+basis@(reflection@np.array(row['bodies'][last_tail]['end'])+[half*step,0,0])).tolist()
         else:
             # One mechanical neck and two tail regions. Retain the artist's rest
             # curvature within each rigid region; do not invent lateral motion.
