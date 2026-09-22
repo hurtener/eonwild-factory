@@ -1,0 +1,45 @@
+name: Tarbo isolated review inputs
+on:
+  push:
+    branches: [codex/tarbo-paper-informed-review]
+    paths: [.github/workflows/tarbo-review-inputs.yml]
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: be2c0ac6108620bf7baf668404537ca64b50e22d
+          path: factory
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: hurtener/eonwild
+          ref: 3edbb758ea696f3f97e407108890f1ecc46b49db
+          path: game-reference
+          persist-credentials: false
+          sparse-checkout: |
+            game/Assets/Eonwild/Running39
+            game/Evidence/coupled-stride-running-study
+            game/Evidence/moco-contact-support-study/candidate-c
+            docs/ANIMATION_ART_DIRECTION.md
+          sparse-checkout-cone-mode: false
+      - name: Export tracked inputs without credentials or caches
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir export
+          git -C factory archive --format=tar HEAD src tools tests catalog recipes docs assets/sha256 pyproject.toml uv.lock AGENTS.md README.md | gzip -1 > export/factory-inputs.tar.gz
+          tar -czf export/game-review-inputs.tar.gz --exclude=.git -C game-reference .
+          printf '%s\n' 'Factory: be2c0ac6108620bf7baf668404537ca64b50e22d' 'Game: 3edbb758ea696f3f97e407108890f1ecc46b49db' > export/PROVENANCE.txt
+          sha256sum export/*.tar.gz >> export/PROVENANCE.txt
+          du -h export/*
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tarbo-pinned-container-inputs
+          path: export/
+          compression-level: 0
+          retention-days: 7
