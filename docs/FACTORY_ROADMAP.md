@@ -2,6 +2,11 @@
 
 Updated 2026-09-21. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
 
+Agent handoff: [Moco continuation procedure](handoffs/MOCO_CONTINUATION_2026-09-21.md).
+The handoff preserves C47's pending review state; it is not another motion pass
+or user approval. Supplied papers and local Allo reference clips are now archived
+with hashes for independent continuation.
+
 Current checkpoint: **C47 C contact, support and ankle audit, pending visual
 review**. It preserves C46's quieter middle neck and reduces emitted foot
 penetration from 43.27 to 6.91 mm. It remains an inverse-dynamics initializer;

@@ -1,0 +1,48 @@
+{
+  "schema": "eonwild.research.handoff-sources.v1",
+  "date": "2026-09-21",
+  "files": [
+    {
+      "path": "docs/research/inputs/2026-09-21/papers/peerj_3420.pdf",
+      "original_path": "/Users/santiagobenvenuto/Downloads/peerj_3420.pdf",
+      "bytes": 12207227,
+      "sha256": "e389211b07a57ce019c4aec8b43b803659f590daa9506cb042580561f93ba1ef",
+      "use": "User-supplied research reference; not a runtime input"
+    },
+    {
+      "path": "docs/research/inputs/2026-09-21/papers/004_peerj-5779_dd.pdf",
+      "original_path": "/Users/santiagobenvenuto/Downloads/004_peerj-5779_dd.pdf",
+      "bytes": 3331572,
+      "sha256": "cd549b77a5915ba31421ccebee028e2c6e5833941252f45c9d537911c0047416",
+      "use": "User-supplied research reference; not a runtime input"
+    },
+    {
+      "path": "docs/research/inputs/2026-09-21/papers/pab.2020.46.pdf",
+      "original_path": "/Users/santiagobenvenuto/Downloads/pab.2020.46.pdf",
+      "bytes": 1592069,
+      "sha256": "7870ab0eefed9f80cc7aac9c8061923b2a60efda52eb1a3ecfc6b6308e9d9229",
+      "use": "User-supplied research reference; not a runtime input"
+    },
+    {
+      "path": "docs/research/inputs/2026-09-21/papers/Cuff2022-WalkingrunningjumpingDAWNDINOS.pdf",
+      "original_path": "/Users/santiagobenvenuto/Downloads/Cuff2022-WalkingrunningjumpingDAWNDINOS.pdf",
+      "bytes": 6266603,
+      "sha256": "a1aa080b19a84eb8142289ae3f8141262c047ea66a28a6162c8a5386b3c5ca78",
+      "use": "User-supplied research reference; not a runtime input"
+    },
+    {
+      "path": "assets/examples/tarbosaurus/allo-turning-example.mp4",
+      "original_path": "/Volumes/m2-extended-disk/Repos/eonwild-factory/assets/examples/tarbosaurus/allo-turning-example.mp4",
+      "bytes": 4839476,
+      "sha256": "b031bcb91845448a28565506df30e9f40e4b234f8e13cb529707b4ed1069b63b",
+      "use": "Allosaurus choreography; user originally named it Tarbosaurus. Artistic reference, not measured biomechanics."
+    },
+    {
+      "path": "assets/examples/allosaurus/allo-walking-reference.mp4",
+      "original_path": "/Users/santiagobenvenuto/Downloads/allo walking.mp4",
+      "bytes": 3003292,
+      "sha256": "aee4ebf8fa34d417ca8c5896b9bc0c35b777fbcce4644afe319af954124c4ced",
+      "use": "User-provided Allosaurus walking reference; artistic reference, not a published measurement."
+    }
+  ]
+}
