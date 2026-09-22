@@ -1,0 +1,225 @@
+{
+  "schema": "eonwild.handoff.shared-solvers-baselines.v1",
+  "prepared": "2026-09-21",
+  "scope": "Read-only handoff audit; existing motion bytes unchanged; no new visual approval.",
+  "current_factory_base": "c3c6156773ca884cc3899db8e1d5241a8542add0",
+  "current_game_base": "6a17a2dd0d46ed8d4c424d2c06f71ce5cd9f9288",
+  "checkpoints": [
+    {
+      "checkpoint": 39,
+      "candidate": "B",
+      "current_review_status": "Tarbo visual baseline accepted; Allo changes requested",
+      "factory_commit": "400a41e8e2796a0836f3a1584ac4e2ea3cac7b65",
+      "game_evidence_commit": "d9143cd5b8252a940b68905edcbdc856f918a781",
+      "recipe": "catalog/behaviors/running-review.v11.json",
+      "evidence": "game/Evidence/coupled-stride-running-study",
+      "assets": "game/Assets/Eonwild/Running39",
+      "animals": {
+        "allo": {
+          "motion_set": "catalog/motion-sets/allosaurus-engineering-native-walk.v21.json",
+          "source_geometry_sha256": "b605b9934a5585a6387361dffd054467af0d1a1d7b9ed2c46b442b7744687e9a",
+          "files": {
+            "glb": {
+              "path": "game/Assets/Eonwild/Running39/allo.glb",
+              "sha256": "be4810594e29c13ab9e171b039b811d8566f742f7b74ae0d669badd44616c746",
+              "bytes": 22511512
+            },
+            "profile": {
+              "path": "game/Assets/Eonwild/Running39/allo.profile.json",
+              "sha256": "c4fdb476571b6dacad6a39bcb3086394b1ceef5031a66c61f27f6cf0a92295b3",
+              "bytes": 28987
+            },
+            "video": {
+              "path": "game/Evidence/coupled-stride-running-study/allo-sustained-running.mp4",
+              "sha256": "50c0c73db88f6c7222db918e833da4c9dbadcd593030121d86ddbdca73d59cf5",
+              "bytes": 967358
+            }
+          }
+        },
+        "tarbo": {
+          "motion_set": "catalog/motion-sets/tarbosaurus-pin-552-1-adult-locomotion.v15.json",
+          "source_geometry_sha256": "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f",
+          "files": {
+            "glb": {
+              "path": "game/Assets/Eonwild/Running39/tarbo.glb",
+              "sha256": "7e7b0b711288171477ac62a5a1c291e1bc54d22dbab69ce19d12634a408844f5",
+              "bytes": 45624256
+            },
+            "profile": {
+              "path": "game/Assets/Eonwild/Running39/tarbo.profile.json",
+              "sha256": "0f1fdd0e1f55e7d6164181f4d9cb6d6a6316b93cae306d3553c79c03a3d3458a",
+              "bytes": 28908
+            },
+            "video": {
+              "path": "game/Evidence/coupled-stride-running-study/tarbo-sustained-running.mp4",
+              "sha256": "da6c4543e9f6feaeb758f5f2f0a835a66ae301ab63efa46b06edc686c3ac4eb6",
+              "bytes": 2185096
+            }
+          }
+        }
+      }
+    },
+    {
+      "checkpoint": 40,
+      "candidate": "D",
+      "current_review_status": "Changes requested; supersedes capture-time PENDING",
+      "factory_commit": "e491b3c598f713d7ab308084deff234e1d3efd86",
+      "game_evidence_commit": "4c20b0ad533165d2c4c6a578de0eabb144a92509",
+      "recipe": "catalog/behaviors/running-review.v12.json",
+      "evidence": "game/Evidence/floating-body-running-study",
+      "assets": "game/Assets/Eonwild/Running40",
+      "animals": {
+        "allo": {
+          "motion_set": "catalog/motion-sets/allosaurus-engineering-native-walk.v21.json",
+          "source_geometry_sha256": "b605b9934a5585a6387361dffd054467af0d1a1d7b9ed2c46b442b7744687e9a",
+          "files": {
+            "glb": {
+              "path": "game/Assets/Eonwild/Running40/allo.glb",
+              "sha256": "285798ba6217a248c4762ce8cb8dcf7422f249e5e4e0862f0cfdb397f696d5f0",
+              "bytes": 22876912
+            },
+            "profile": {
+              "path": "game/Assets/Eonwild/Running40/allo.profile.json",
+              "sha256": "c4fdb476571b6dacad6a39bcb3086394b1ceef5031a66c61f27f6cf0a92295b3",
+              "bytes": 28987
+            },
+            "video": {
+              "path": "game/Evidence/floating-body-running-study/allo-sustained-running.mp4",
+              "sha256": "7df92cbe7880a948e0dd0dd3f32da4f3f0d12f850c36f59e3f579b5332fce509",
+              "bytes": 995979
+            }
+          }
+        },
+        "tarbo": {
+          "motion_set": "catalog/motion-sets/tarbosaurus-pin-552-1-adult-locomotion.v15.json",
+          "source_geometry_sha256": "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f",
+          "files": {
+            "glb": {
+              "path": "game/Assets/Eonwild/Running40/tarbo.glb",
+              "sha256": "ee57e280ec6436677e8d6db995108dc4dd50be4ec37fda4403564fee322b0ad2",
+              "bytes": 46162300
+            },
+            "profile": {
+              "path": "game/Assets/Eonwild/Running40/tarbo.profile.json",
+              "sha256": "0f1fdd0e1f55e7d6164181f4d9cb6d6a6316b93cae306d3553c79c03a3d3458a",
+              "bytes": 28908
+            },
+            "video": {
+              "path": "game/Evidence/floating-body-running-study/tarbo-sustained-running.mp4",
+              "sha256": "7cd9bbc63b2ff4476ba411775d5b77151fb0d0e37fa12730162243f5c9461af4",
+              "bytes": 2202416
+            }
+          }
+        }
+      }
+    },
+    {
+      "checkpoint": 41,
+      "candidate": "B",
+      "current_review_status": "Changes requested; knee-task audit is fit-only",
+      "factory_commit": "69795a66bd3b9b4cea06bee81c9454b5ecdbf51a",
+      "game_evidence_commit": "568097b93c7fdea60fd59b456ad3ea01b76fa7b1",
+      "recipe": "catalog/behaviors/running-review.v13.json",
+      "evidence": "game/Evidence/actuated-running-study",
+      "assets": "game/Assets/Eonwild/Running41",
+      "animals": {
+        "allo": {
+          "motion_set": "catalog/motion-sets/allosaurus-engineering-native-walk.v21.json",
+          "source_geometry_sha256": "b605b9934a5585a6387361dffd054467af0d1a1d7b9ed2c46b442b7744687e9a",
+          "files": {
+            "glb": {
+              "path": "game/Assets/Eonwild/Running41/allo.glb",
+              "sha256": "3e140c7b2866ce159517dda1a704c832dfae2b7aa1e4c0848a2bc98cfb563d72",
+              "bytes": 22876912
+            },
+            "profile": {
+              "path": "game/Assets/Eonwild/Running41/allo.profile.json",
+              "sha256": "c4fdb476571b6dacad6a39bcb3086394b1ceef5031a66c61f27f6cf0a92295b3",
+              "bytes": 28987
+            },
+            "video": {
+              "path": "game/Evidence/actuated-running-study/allo-sustained-running.mp4",
+              "sha256": "228aa9cf916678e870a5a8144f7b9d925552fa46fcdfd748ca26a48d7684d647",
+              "bytes": 980123
+            }
+          }
+        },
+        "tarbo": {
+          "motion_set": "catalog/motion-sets/tarbosaurus-pin-552-1-adult-locomotion.v15.json",
+          "source_geometry_sha256": "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f",
+          "files": {
+            "glb": {
+              "path": "game/Assets/Eonwild/Running41/tarbo.glb",
+              "sha256": "5fb46fcddf298a50418a74e69f8c526b7e32e929f31faebd81d08066163f1597",
+              "bytes": 46162300
+            },
+            "profile": {
+              "path": "game/Assets/Eonwild/Running41/tarbo.profile.json",
+              "sha256": "0f1fdd0e1f55e7d6164181f4d9cb6d6a6316b93cae306d3553c79c03a3d3458a",
+              "bytes": 28908
+            },
+            "video": {
+              "path": "game/Evidence/actuated-running-study/tarbo-sustained-running.mp4",
+              "sha256": "946b396704bcc995e41b518c9828d219f5bb59be973b64d4743cf536d582309c",
+              "bytes": 2215458
+            }
+          }
+        }
+      }
+    },
+    {
+      "checkpoint": 42,
+      "candidate": "A",
+      "current_review_status": "Pending user review; not an approved baseline",
+      "factory_commit": "c4cbf5c95058c3e9a803457df51a6c0c57808a62",
+      "game_evidence_commit": "d53c60679d14753c43eb87c8c6ef2de286e2f8f6",
+      "recipe": "catalog/behaviors/running-review.v14.json",
+      "evidence": "game/Evidence/endpoint-running-study",
+      "assets": "game/Assets/Eonwild/Running42",
+      "animals": {
+        "allo": {
+          "motion_set": "catalog/motion-sets/allosaurus-engineering-native-walk.v21.json",
+          "source_geometry_sha256": "b605b9934a5585a6387361dffd054467af0d1a1d7b9ed2c46b442b7744687e9a",
+          "files": {
+            "glb": {
+              "path": "game/Assets/Eonwild/Running42/allo.glb",
+              "sha256": "8088b95ac83a72d030dead0eca5be2338342ca70f123404602df1ba48f5b8201",
+              "bytes": 22876912
+            },
+            "profile": {
+              "path": "game/Assets/Eonwild/Running42/allo.profile.json",
+              "sha256": "c4fdb476571b6dacad6a39bcb3086394b1ceef5031a66c61f27f6cf0a92295b3",
+              "bytes": 28987
+            },
+            "video": {
+              "path": "game/Evidence/endpoint-running-study/allo-sustained-running.mp4",
+              "sha256": "32cfda4a4f488318dd313d688ae87efd524d7da2e45e9684407d02ce9a26055a",
+              "bytes": 971311
+            }
+          }
+        },
+        "tarbo": {
+          "motion_set": "catalog/motion-sets/tarbosaurus-pin-552-1-adult-locomotion.v15.json",
+          "source_geometry_sha256": "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f",
+          "files": {
+            "glb": {
+              "path": "game/Assets/Eonwild/Running42/tarbo.glb",
+              "sha256": "25d6e7b398af419e8872c123d3a8a68fd64192a72ddd006b3a2ca4fc6f9729f7",
+              "bytes": 46162300
+            },
+            "profile": {
+              "path": "game/Assets/Eonwild/Running42/tarbo.profile.json",
+              "sha256": "0f1fdd0e1f55e7d6164181f4d9cb6d6a6316b93cae306d3553c79c03a3d3458a",
+              "bytes": 28908
+            },
+            "video": {
+              "path": "game/Evidence/endpoint-running-study/tarbo-sustained-running.mp4",
+              "sha256": "980c097d1be253183f543627915eb6ec3eb04a14f34f1df0979c96dd6934d70c",
+              "bytes": 2222840
+            }
+          }
+        }
+      }
+    }
+  ]
+}

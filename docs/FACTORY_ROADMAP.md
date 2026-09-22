@@ -7,6 +7,12 @@ The handoff preserves C47's pending review state; it is not another motion pass
 or user approval. Supplied papers and local Allo reference clips are now archived
 with hashes for independent continuation.
 
+The [original shared-solvers handoff](handoffs/SHARED_SOLVERS_CONTINUATION_2026-09-21.md)
+preserves the independent Python/SciPy continuation, with exact C39–C42 source,
+asset and video identities. C39 B remains the preferred Tarbo visual baseline;
+C40/C41 have changes requested and C42 remains pending. No new motion is generated
+or approved by either handoff.
+
 Current checkpoint: **C47 C contact, support and ankle audit, pending visual
 review**. It preserves C46's quieter middle neck and reduces emitted foot
 penetration from 43.27 to 6.91 mm. It remains an inverse-dynamics initializer;

@@ -7,6 +7,11 @@ For the current agent handoff, start with the [self-contained Moco continuation
 prompt](docs/handoffs/MOCO_CONTINUATION_2026-09-21.md). It pins C47, the research
 inputs, reproduction/render commands and the next bounded checkpoint.
 
+For the original Python/SciPy running path, use the separate [shared-solvers
+continuation prompt](docs/handoffs/SHARED_SOLVERS_CONTINUATION_2026-09-21.md).
+It preserves C39 B as the Tarbo visual benchmark and distinguishes C40–C42
+experiments from accepted motion.
+
 Current visual work: [movement tracker](docs/FACTORY_ROADMAP.md), C42 shared
 running recovery, and the separate [offline Moco mechanics prototype](docs/research/MOCO_TARBO_PROTOTYPE.md).
 These review candidates do not replace the historical production gates below.
