@@ -1,0 +1,218 @@
+{
+  "schema": "eonwild.research.input-review.v1",
+  "inputs": [
+    {
+      "name": "eonwild_locomotion_proposals.v1.json",
+      "original_path": "/Users/santiagobenvenuto/Downloads/eonwild_locomotion_proposals.v1.json",
+      "bytes": 34049,
+      "sha256": "f3ea4e47736edacf4c729eaa6265fb389b22e7c48b2ec2768e08ef0e2b61419f"
+    },
+    {
+      "name": "Eonwild_Locomotion_Configuration_Research.xlsx",
+      "original_path": "/Users/santiagobenvenuto/Downloads/Eonwild_Locomotion_Configuration_Research.xlsx",
+      "bytes": 29109,
+      "sha256": "3d8e9d7388fc6a88434c0eab56415fb6e4b215ea46731365010efc845ca531fb"
+    },
+    {
+      "name": "peerj_3420.pdf",
+      "original_path": "/Users/santiagobenvenuto/Downloads/peerj_3420.pdf",
+      "bytes": 12207227,
+      "sha256": "e389211b07a57ce019c4aec8b43b803659f590daa9506cb042580561f93ba1ef"
+    },
+    {
+      "name": "004_peerj-5779_dd.pdf",
+      "original_path": "/Users/santiagobenvenuto/Downloads/004_peerj-5779_dd.pdf",
+      "bytes": 3331572,
+      "sha256": "cd549b77a5915ba31421ccebee028e2c6e5833941252f45c9d537911c0047416"
+    },
+    {
+      "name": "pab.2020.46.pdf",
+      "original_path": "/Users/santiagobenvenuto/Downloads/pab.2020.46.pdf",
+      "bytes": 1592069,
+      "sha256": "7870ab0eefed9f80cc7aac9c8061923b2a60efda52eb1a3ecfc6b6308e9d9229"
+    },
+    {
+      "name": "Cuff2022-WalkingrunningjumpingDAWNDINOS.pdf",
+      "original_path": "/Users/santiagobenvenuto/Downloads/Cuff2022-WalkingrunningjumpingDAWNDINOS.pdf",
+      "bytes": 6266603,
+      "sha256": "a1aa080b19a84eb8142289ae3f8141262c047ea66a28a6162c8a5386b3c5ca78"
+    },
+    {
+      "name": "supplied-analysis.md",
+      "original_path": "/Users/santiagobenvenuto/.codex/attachments/5fa69470-b83d-45ff-9023-5e45e8d87b9b/Pasted text.txt",
+      "sha256": "e976464ad596ddee062500e0b9bd9713e862d84bbfae6e53e83cec7df57e4072"
+    }
+  ],
+  "proposal_commit": "987bd6b82caf3ff661d6927aa530df40fe71b30e",
+  "current_branch": "codex/animal-profile-housekeeping",
+  "models": [
+    {
+      "id": "alioramus-altai",
+      "declared_blob": "58bb677040ef9d28ce06494c5adf23ab3a80c21d",
+      "observed_blob": "58bb677040ef9d28ce06494c5adf23ab3a80c21d",
+      "match": true
+    },
+    {
+      "id": "gallimimus-bullatus",
+      "declared_blob": "60788fb84e0ab13874a86887719fc5340699cb02",
+      "observed_blob": "60788fb84e0ab13874a86887719fc5340699cb02",
+      "match": true
+    },
+    {
+      "id": "dilophosaurus-wetherilli",
+      "declared_blob": "956e31fd2a926210c89b13eb7eed15ae6950d214",
+      "observed_blob": "956e31fd2a926210c89b13eb7eed15ae6950d214",
+      "match": true
+    },
+    {
+      "id": "prenocephale-prenes",
+      "declared_blob": "c2c36929880b63430b3b4f802134c12655a0a779",
+      "observed_blob": "c2c36929880b63430b3b4f802134c12655a0a779",
+      "match": true
+    },
+    {
+      "id": "deinocheirus-mirificus",
+      "declared_blob": "3fa7b26c570af577f2830bf0b63ea9510a10c0a8",
+      "observed_blob": "3fa7b26c570af577f2830bf0b63ea9510a10c0a8",
+      "match": true
+    }
+  ],
+  "workbook_checks": [
+    {
+      "row": 6,
+      "animal": "alioramus-altai",
+      "gait": "walk",
+      "nominal_numbers_match": true,
+      "speed_formula": "=IF(AND(ISNUMBER(J6),J6>0),SQRT(D6*'Integration'!$B$6*J6),\"\")",
+      "stride_formula": "=IF(AND(ISNUMBER(J6),J6>0),I6*J6,\"\")",
+      "period_formula": "=IF(AND(ISNUMBER(K6),K6>0),L6/K6,\"\")"
+    },
+    {
+      "row": 7,
+      "animal": "alioramus-altai",
+      "gait": "fast_grounded",
+      "nominal_numbers_match": true,
+      "speed_formula": "=IF(AND(ISNUMBER(J7),J7>0),SQRT(D7*'Integration'!$B$6*J7),\"\")",
+      "stride_formula": "=IF(AND(ISNUMBER(J7),J7>0),I7*J7,\"\")",
+      "period_formula": "=IF(AND(ISNUMBER(K7),K7>0),L7/K7,\"\")"
+    },
+    {
+      "row": 8,
+      "animal": "alioramus-altai",
+      "gait": "aerial_run_probe",
+      "nominal_numbers_match": true,
+      "speed_formula": "=IF(AND(ISNUMBER(J8),J8>0),SQRT(D8*'Integration'!$B$6*J8),\"\")",
+      "stride_formula": "=IF(AND(ISNUMBER(J8),J8>0),I8*J8,\"\")",
+      "period_formula": "=IF(AND(ISNUMBER(K8),K8>0),L8/K8,\"\")"
+    },
+    {
+      "row": 9,
+      "animal": "gallimimus-bullatus",
+      "gait": "walk",
+      "nominal_numbers_match": true,
+      "speed_formula": "=IF(AND(ISNUMBER(J9),J9>0),SQRT(D9*'Integration'!$B$6*J9),\"\")",
+      "stride_formula": "=IF(AND(ISNUMBER(J9),J9>0),I9*J9,\"\")",
+      "period_formula": "=IF(AND(ISNUMBER(K9),K9>0),L9/K9,\"\")"
+    },
+    {
+      "row": 10,
+      "animal": "gallimimus-bullatus",
+      "gait": "fast_grounded",
+      "nominal_numbers_match": true,
+      "speed_formula": "=IF(AND(ISNUMBER(J10),J10>0),SQRT(D10*'Integration'!$B$6*J10),\"\")",
+      "stride_formula": "=IF(AND(ISNUMBER(J10),J10>0),I10*J10,\"\")",
+      "period_formula": "=IF(AND(ISNUMBER(K10),K10>0),L10/K10,\"\")"
+    },
+    {
+      "row": 11,
+      "animal": "gallimimus-bullatus",
+      "gait": "aerial_run_probe",
+      "nominal_numbers_match": true,
+      "speed_formula": "=IF(AND(ISNUMBER(J11),J11>0),SQRT(D11*'Integration'!$B$6*J11),\"\")",
+      "stride_formula": "=IF(AND(ISNUMBER(J11),J11>0),I11*J11,\"\")",
+      "period_formula": "=IF(AND(ISNUMBER(K11),K11>0),L11/K11,\"\")"
+    },
+    {
+      "row": 12,
+      "animal": "dilophosaurus-wetherilli",
+      "gait": "walk",
+      "nominal_numbers_match": true,
+      "speed_formula": "=IF(AND(ISNUMBER(J12),J12>0),SQRT(D12*'Integration'!$B$6*J12),\"\")",
+      "stride_formula": "=IF(AND(ISNUMBER(J12),J12>0),I12*J12,\"\")",
+      "period_formula": "=IF(AND(ISNUMBER(K12),K12>0),L12/K12,\"\")"
+    },
+    {
+      "row": 13,
+      "animal": "dilophosaurus-wetherilli",
+      "gait": "fast_grounded",
+      "nominal_numbers_match": true,
+      "speed_formula": "=IF(AND(ISNUMBER(J13),J13>0),SQRT(D13*'Integration'!$B$6*J13),\"\")",
+      "stride_formula": "=IF(AND(ISNUMBER(J13),J13>0),I13*J13,\"\")",
+      "period_formula": "=IF(AND(ISNUMBER(K13),K13>0),L13/K13,\"\")"
+    },
+    {
+      "row": 14,
+      "animal": "dilophosaurus-wetherilli",
+      "gait": "aerial_run_probe",
+      "nominal_numbers_match": true,
+      "speed_formula": "=IF(AND(ISNUMBER(J14),J14>0),SQRT(D14*'Integration'!$B$6*J14),\"\")",
+      "stride_formula": "=IF(AND(ISNUMBER(J14),J14>0),I14*J14,\"\")",
+      "period_formula": "=IF(AND(ISNUMBER(K14),K14>0),L14/K14,\"\")"
+    },
+    {
+      "row": 15,
+      "animal": "prenocephale-prenes",
+      "gait": "walk",
+      "nominal_numbers_match": true,
+      "speed_formula": "=IF(AND(ISNUMBER(J15),J15>0),SQRT(D15*'Integration'!$B$6*J15),\"\")",
+      "stride_formula": "=IF(AND(ISNUMBER(J15),J15>0),I15*J15,\"\")",
+      "period_formula": "=IF(AND(ISNUMBER(K15),K15>0),L15/K15,\"\")"
+    },
+    {
+      "row": 16,
+      "animal": "prenocephale-prenes",
+      "gait": "fast_grounded",
+      "nominal_numbers_match": true,
+      "speed_formula": "=IF(AND(ISNUMBER(J16),J16>0),SQRT(D16*'Integration'!$B$6*J16),\"\")",
+      "stride_formula": "=IF(AND(ISNUMBER(J16),J16>0),I16*J16,\"\")",
+      "period_formula": "=IF(AND(ISNUMBER(K16),K16>0),L16/K16,\"\")"
+    },
+    {
+      "row": 17,
+      "animal": "prenocephale-prenes",
+      "gait": "aerial_run_probe",
+      "nominal_numbers_match": true,
+      "speed_formula": "=IF(AND(ISNUMBER(J17),J17>0),SQRT(D17*'Integration'!$B$6*J17),\"\")",
+      "stride_formula": "=IF(AND(ISNUMBER(J17),J17>0),I17*J17,\"\")",
+      "period_formula": "=IF(AND(ISNUMBER(K17),K17>0),L17/K17,\"\")"
+    },
+    {
+      "row": 18,
+      "animal": "deinocheirus-mirificus",
+      "gait": "walk",
+      "nominal_numbers_match": true,
+      "speed_formula": "=IF(AND(ISNUMBER(J18),J18>0),SQRT(D18*'Integration'!$B$6*J18),\"\")",
+      "stride_formula": "=IF(AND(ISNUMBER(J18),J18>0),I18*J18,\"\")",
+      "period_formula": "=IF(AND(ISNUMBER(K18),K18>0),L18/K18,\"\")"
+    },
+    {
+      "row": 19,
+      "animal": "deinocheirus-mirificus",
+      "gait": "fast_grounded",
+      "nominal_numbers_match": true,
+      "speed_formula": "=IF(AND(ISNUMBER(J19),J19>0),SQRT(D19*'Integration'!$B$6*J19),\"\")",
+      "stride_formula": "=IF(AND(ISNUMBER(J19),J19>0),I19*J19,\"\")",
+      "period_formula": "=IF(AND(ISNUMBER(K19),K19>0),L19/K19,\"\")"
+    }
+  ],
+  "sheets": [
+    "Start here",
+    "Models",
+    "Calibration",
+    "Gait targets",
+    "Body controls",
+    "Integration",
+    "Evidence"
+  ],
+  "classification": "Read-only source review; no production configuration activated; original workbook retained byte-for-byte; PDFs referenced by hash and DOI, not republished"
+}

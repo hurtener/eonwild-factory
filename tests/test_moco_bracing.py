@@ -8,15 +8,34 @@ from eonwild_motion.solve.moco_prototype import make_model
 
 @unittest.skipUnless(o is not None,'Optional OpenSim environment required')
 class SupportedBody(unittest.TestCase):
-    def model(self,mass_scale=1.):
+    def model(self,mass_scale=1.,recipe_name='moco-supported-stride.v1.json'):
         a=admission(mass=1000*mass_scale)
         a['points'].update({'spine.2':[.5,-.1,0],'nose':[3.4,0.,0.]})
         for i in range(1,5):a['points'][f'neck.{i}']=[1.2+.3*i,.05*i,0]
         vertices=[[x,-.16,z] for x in np.linspace(-.1,.6,30) for z in (-.2,0,.2)]
         a['foot_surface']={s:dict(vertices_m=vertices,toe_midpoint_m=[.25,-.1,0]) for s in ('left','right')}
-        recipe=json.loads((Path(__file__).parents[1]/'catalog/behaviors/moco-supported-stride.v1.json').read_text())
+        recipe=json.loads((Path(__file__).parents[1]/'catalog/behaviors'/recipe_name).read_text())
         recipe['contact']['stiffness_N_m2']*=mass_scale
         return make_model(a,recipe)
+
+    def test_material_clearance_follows_articulated_toe_without_external_support(self):
+        model,r=self.model(recipe_name='moco-contact-support.v1.json')
+        state=model.initSystem()
+        model.getCoordinateSet().get('height').setValue(state,10)
+        model.getCoordinateSet().get('ankle_l').setValue(state,.6)
+        model.getCoordinateSet().get('digit_l').setValue(state,.4)
+        model.realizeAcceleration(state)
+        points=r['material_foot_witnesses']['points']
+        self.assertTrue(any(p['body']=='digit_l' for p in points))
+        self.assertTrue(any(p['body']=='toe_l' for p in points))
+        for point in points:
+            frame=o.PhysicalFrame.safeDownCast(model.getComponent(point['path']))
+            parent=model.getBodySet().get(point['body'])
+            expected=parent.findStationLocationInGround(state,o.Vec3(*point['local_m']))
+            np.testing.assert_allclose(frame.getPositionInGround(state).to_numpy(),expected.to_numpy(),atol=1e-12)
+        self.assertEqual(model.getNumControls(),len(r['actuators']))
+        self.assertFalse(r['root_reserves'])
+        np.testing.assert_allclose(model.calcMassCenterAcceleration(state).to_numpy(),[0,-9.80665,0],atol=1e-6)
 
     def test_arbitrary_admitted_tail_count_and_internal_support(self):
         model,r=self.model();state=model.initSystem()

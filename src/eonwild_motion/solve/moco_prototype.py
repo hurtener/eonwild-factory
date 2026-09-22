@@ -231,7 +231,11 @@ def make_model(admission, recipe):
             model.addForce(force)
             metadata["contacts"].append({"force": force.getName(), "body": contact_body.getName(),
                                          "center_local_m": center, "radius_m": radius})
-    if calibrated: metadata['foot_geometry']=foot
+    if calibrated:
+        metadata['foot_geometry']=foot
+        if recipe.get('material_foot_clearance'):
+            from .moco_contact import add_material_witnesses
+            add_material_witnesses(model,metadata,admission,recipe)
     model.finalizeConnections()
     if spatial:
         if recipe.get('bracing'):

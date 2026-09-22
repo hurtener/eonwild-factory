@@ -417,3 +417,39 @@ experiment, not a validated improvement or the source of the displayed F video.
 OpenSim 4.6 variable-scaled intermediate callback files were rejected because
 their times were degenerate and states still scaled; only the returned,
 unscaled MocoSolution was used. See the experiment receipt.
+
+### C47 C — material contact and ankle audit
+
+The shared optional builder now adds measured lower-envelope foot samples as
+clearance witnesses on the two reduced toe segments. Moco constrains their
+world height; the initializer penalizes violations. Existing physical contact
+pads remain the only source of ground reaction. Their effective stiffness is
+five times C46's as an explicit engineering contact experiment. It is not a
+measured tissue property. Actual skinned digits retain a separate floor check.
+
+C47 C reduces maximum emitted skin penetration from 43.27 to 6.91 mm. Neck-middle
+travel is 7.20 cm, neck-base 15.29 cm and nose vertical travel 3.76 cm. Lateral
+nose travel rises from 3.04 to 4.35 cm; emitted pelvis travel is 18.23 cm versus
+18.86 cm. These measured tradeoffs accompany the native-time C46 comparison.
+
+The ankle's estimated 8.59–128.92° flexion bound was not enlarged. C spans
+8.43–122.70°, with 0.16° soft-bound overrun; the distal toe overruns by 0.08°.
+The toe-base motor reaches 0.981 of estimated capacity while the ankle reaches
+0.593. Their full traces and loading are preserved; ankle speed increased from
+525 to 572°/s, so contact improvement is not proof of resolved ankle sharpness.
+The [research review](LOCOMOTION_CONFIGURATION_REVIEW.md) explains why published
+walking angles and another species' reconstructed mobility are not universal ROM.
+
+C is an initializer, not a converged physical solution. Maximum motor command
+remains 1.110, loaded-pad p95 slip 0.272 m/s and independent half-stride root-height
+divergence −272.65 mm. Final contact still fails the unchanged 0.5 mm threshold.
+Nineteen focused tests, actual-rig lengths/closure and 558 Unity landmarks pass;
+maximum Unity landmark error is 0.00242 mm. The model and solution reproduce
+byte-for-byte. All 216 saved native-time frames were inspected chronologically.
+
+Separate B/D full Moco refinements have archived outcomes in principal Eonwild
+`game/Evidence/moco-contact-support-study/experiments.json`. They are not the
+source of the C video and cannot be cited as its physical acceptance. The
+selected visual candidate is under `candidate-c/`; user review is pending.
+The user-supplied workbook/JSON and four papers are referenced centrally with
+input hashes. Their five new-animal proposals remain uncalibrated and disabled.

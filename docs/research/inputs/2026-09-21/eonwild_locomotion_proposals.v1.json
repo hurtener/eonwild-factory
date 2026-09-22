@@ -1,0 +1,898 @@
+{
+  "schema": "eonwild.research.locomotion-proposal.v1",
+  "created_on": "2026-09-21",
+  "purpose": "Evidence-linked authoring table for five existing assets; not a production configuration or biomechanical certification",
+  "repository": {
+    "name": "hurtener/eonwild-factory",
+    "requested_branch": "feat/motion-quality-and-breadth",
+    "commit": "987bd6b82caf3ff661d6927aa530df40fe71b30e"
+  },
+  "loader_compatible": false,
+  "repository_modified": false,
+  "conventions": {
+    "froude": "Fr = v^2/(g*h); h is a single calibrated standing hip-height reference per profile, not each frame's pelvis height",
+    "gravity_m_s2": 9.81,
+    "speed": "v = sqrt(Fr*g*h); withheld until calibrated h is supplied",
+    "duty_factor": "Time one foot contacts ground / same-foot stride-cycle duration",
+    "stride": "One foot touchdown to its next touchdown; do not silently substitute step period",
+    "stride_period": "T = (stride_length_over_h*h)/v",
+    "stance_width": "Full left-to-right stance-lane separation, not per-side offset",
+    "toe_clearance": "Lowest articulated toe/pad surface at midswing over a rigid flat plane; not skeleton origin",
+    "angles": "Anatomical frame and reference pose required; no source Euler angles copied as artistic bone rotations",
+    "evidence": "E1 values are proposed experimental targets/ranges, not measured performance or confidence intervals",
+    "feasibility": "Search fields are coupled; combinations need independent contact, geometry and dynamics checks"
+  },
+  "models": [
+    {
+      "id": "alioramus-altai",
+      "taxon": "Alioramus altai",
+      "asset": {
+        "path": "assets/animals/Models/Alioramus-altai.glb",
+        "git_blob_sha1": "58bb677040ef9d28ce06494c5adf23ab3a80c21d",
+        "byte_size": 43277716,
+        "raw_geometry_inspected_this_pass": false
+      },
+      "proposed_life_stage": "Known immature reference; not hypothetical adult",
+      "proposed_comparator_specimen": "MPC-D 100/1844 (proposed reference; mesh correspondence unverified)",
+      "proposed_engineering_family": "gracile_tyrannosauroid_biped",
+      "published_mass_anchor": {
+        "value_kg": 369,
+        "basis": "S1 reports Brusatte et al. 2009 estimate; juvenile holotype only",
+        "applied_to_asset": false
+      },
+      "calibration": {
+        "reference_standing_hip_height_m": null,
+        "body_mass_kg": null,
+        "femur_m": null,
+        "tibia_m": null,
+        "metatarsal_m": null,
+        "segment_mass_kg": null,
+        "segment_com_m": null,
+        "segment_inertia_kg_m2": null,
+        "anatomical_joint_frames": null,
+        "habitual_pose": null,
+        "joint_mobility_envelope": null,
+        "actuator_capabilities": null
+      },
+      "gait_search_proposals": [
+        {
+          "id": "walk",
+          "evidence_class": "engineering_proposal",
+          "source_ids": [
+            "E1"
+          ],
+          "enabled_for_production": false,
+          "stage": "first authoring candidate",
+          "froude": {
+            "nominal": 0.15,
+            "search_interval": [
+              0.08,
+              0.25
+            ]
+          },
+          "duty_factor": {
+            "nominal": 0.66,
+            "search_interval": [
+              0.6,
+              0.72
+            ]
+          },
+          "stride_length_over_reference_hip_height": {
+            "nominal": 1.2
+          },
+          "symmetric_cycle_initial_left_right_phase": [
+            0.0,
+            0.5
+          ],
+          "mechanics_classification": "Must be measured; requested contact schedule is not a validated gait"
+        },
+        {
+          "id": "fast_grounded",
+          "evidence_class": "engineering_proposal",
+          "source_ids": [
+            "E1"
+          ],
+          "enabled_for_production": false,
+          "stage": "optional after walking acceptance",
+          "froude": {
+            "nominal": 0.55,
+            "search_interval": [
+              0.35,
+              0.8
+            ]
+          },
+          "duty_factor": {
+            "nominal": 0.57,
+            "search_interval": [
+              0.52,
+              0.62
+            ]
+          },
+          "stride_length_over_reference_hip_height": {
+            "nominal": 1.7
+          },
+          "symmetric_cycle_initial_left_right_phase": [
+            0.0,
+            0.5
+          ],
+          "mechanics_classification": "Must be measured; requested contact schedule is not a validated gait"
+        },
+        {
+          "id": "aerial_run_probe",
+          "evidence_class": "engineering_proposal",
+          "source_ids": [
+            "E1"
+          ],
+          "enabled_for_production": false,
+          "stage": "gated research only",
+          "froude": {
+            "nominal": 1.2,
+            "search_interval": [
+              0.8,
+              1.6
+            ]
+          },
+          "duty_factor": {
+            "nominal": 0.44,
+            "search_interval": [
+              0.4,
+              0.48
+            ]
+          },
+          "stride_length_over_reference_hip_height": {
+            "nominal": 2.5
+          },
+          "symmetric_cycle_initial_left_right_phase": [
+            0.0,
+            0.5
+          ],
+          "mechanics_classification": "Must be measured; requested contact schedule is not a validated gait"
+        }
+      ],
+      "walk_controls_proposal": {
+        "stance_lane_separation_over_hip_height": 0.12,
+        "midswing_lowest_toe_clearance_over_hip_height": 0.07,
+        "source_ids": [
+          "E1"
+        ]
+      },
+      "body_controls_proposal": {
+        "tail": "Test Coelophysis-inspired coupling toward the retracting stance limb as a weak prior; tune using measured body momentum, not a fixed copied amplitude.",
+        "head_neck": "Separate world-gaze stabilization from neck carriage; avoid compensating every pelvis movement with an equal skull rotation.",
+        "forelimbs": "Keep locomotion arm movement restrained; identify actual semantic chains before adding hand detail.",
+        "feet": "Separate ankle, metatarsus, MTP and toe chains; verify which vertices actually carry support."
+      },
+      "capability_policy": {
+        "jumping": "disabled pending independent take-off and landing study",
+        "aerial_running": "research-only, not admitted"
+      },
+      "prohibited_shortcuts": "Adult T. rex mass/speed limits copied into this juvenile; pelvis-only balance; decorative tail wag.",
+      "source_ids": [
+        "S1",
+        "R1",
+        "R2",
+        "E1"
+      ],
+      "status": {
+        "geometry_calibrated": false,
+        "anatomy_reviewed": false,
+        "physics_solved": false,
+        "native_unity_parity": false,
+        "production_approved": false
+      }
+    },
+    {
+      "id": "gallimimus-bullatus",
+      "taxon": "Gallimimus bullatus",
+      "asset": {
+        "path": "assets/animals/Models/Gallimimus-bullatus.glb",
+        "git_blob_sha1": "60788fb84e0ab13874a86887719fc5340699cb02",
+        "byte_size": 42357424,
+        "raw_geometry_inspected_this_pass": false
+      },
+      "proposed_life_stage": "Adult authoring target; specimen match pending",
+      "proposed_comparator_specimen": null,
+      "proposed_engineering_family": "cursorial_ornithomimid_biped",
+      "published_mass_anchor": {
+        "value_kg": null,
+        "basis": "No specimen-bound numerical mass admitted in this pass",
+        "applied_to_asset": false
+      },
+      "calibration": {
+        "reference_standing_hip_height_m": null,
+        "body_mass_kg": null,
+        "femur_m": null,
+        "tibia_m": null,
+        "metatarsal_m": null,
+        "segment_mass_kg": null,
+        "segment_com_m": null,
+        "segment_inertia_kg_m2": null,
+        "anatomical_joint_frames": null,
+        "habitual_pose": null,
+        "joint_mobility_envelope": null,
+        "actuator_capabilities": null
+      },
+      "gait_search_proposals": [
+        {
+          "id": "walk",
+          "evidence_class": "engineering_proposal",
+          "source_ids": [
+            "E1"
+          ],
+          "enabled_for_production": false,
+          "stage": "first authoring candidate",
+          "froude": {
+            "nominal": 0.2,
+            "search_interval": [
+              0.1,
+              0.3
+            ]
+          },
+          "duty_factor": {
+            "nominal": 0.63,
+            "search_interval": [
+              0.58,
+              0.69
+            ]
+          },
+          "stride_length_over_reference_hip_height": {
+            "nominal": 1.4
+          },
+          "symmetric_cycle_initial_left_right_phase": [
+            0.0,
+            0.5
+          ],
+          "mechanics_classification": "Must be measured; requested contact schedule is not a validated gait"
+        },
+        {
+          "id": "fast_grounded",
+          "evidence_class": "engineering_proposal",
+          "source_ids": [
+            "E1"
+          ],
+          "enabled_for_production": false,
+          "stage": "optional after walking acceptance",
+          "froude": {
+            "nominal": 0.6,
+            "search_interval": [
+              0.4,
+              0.9
+            ]
+          },
+          "duty_factor": {
+            "nominal": 0.55,
+            "search_interval": [
+              0.51,
+              0.6
+            ]
+          },
+          "stride_length_over_reference_hip_height": {
+            "nominal": 1.9
+          },
+          "symmetric_cycle_initial_left_right_phase": [
+            0.0,
+            0.5
+          ],
+          "mechanics_classification": "Must be measured; requested contact schedule is not a validated gait"
+        },
+        {
+          "id": "aerial_run_probe",
+          "evidence_class": "engineering_proposal",
+          "source_ids": [
+            "E1"
+          ],
+          "enabled_for_production": false,
+          "stage": "gated research only",
+          "froude": {
+            "nominal": 1.5,
+            "search_interval": [
+              1.0,
+              2.0
+            ]
+          },
+          "duty_factor": {
+            "nominal": 0.42,
+            "search_interval": [
+              0.38,
+              0.47
+            ]
+          },
+          "stride_length_over_reference_hip_height": {
+            "nominal": 2.8
+          },
+          "symmetric_cycle_initial_left_right_phase": [
+            0.0,
+            0.5
+          ],
+          "mechanics_classification": "Must be measured; requested contact schedule is not a validated gait"
+        }
+      ],
+      "walk_controls_proposal": {
+        "stance_lane_separation_over_hip_height": 0.1,
+        "midswing_lowest_toe_clearance_over_hip_height": 0.08,
+        "source_ids": [
+          "E1"
+        ]
+      },
+      "body_controls_proposal": {
+        "tail": "Test modest inertial coordination with the legs; retain a long-tail model instead of replacing it with ostrich trunk mechanics.",
+        "head_neck": "Prioritize stable visual attention and distributed neck curvature; no frozen head-on-spring treatment.",
+        "forelimbs": "Bounded arm/hand poses; avoid mammalian palm-down running swings.",
+        "feet": "Three main pedal digits; ornithomimid hallux absent. Separate toe release from metatarsal pitch and ankle recovery."
+      },
+      "capability_policy": {
+        "jumping": "disabled pending independent take-off and landing study",
+        "aerial_running": "research-only, not admitted"
+      },
+      "prohibited_shortcuts": "A scaled ostrich clip; long legs treated as proof of a particular top speed; rigid toes.",
+      "source_ids": [
+        "S2",
+        "R1",
+        "R2",
+        "E1"
+      ],
+      "status": {
+        "geometry_calibrated": false,
+        "anatomy_reviewed": false,
+        "physics_solved": false,
+        "native_unity_parity": false,
+        "production_approved": false
+      }
+    },
+    {
+      "id": "dilophosaurus-wetherilli",
+      "taxon": "Dilophosaurus wetherilli",
+      "asset": {
+        "path": "assets/animals/Models/Dilophosaurus-wetherilli.glb",
+        "git_blob_sha1": "956e31fd2a926210c89b13eb7eed15ae6950d214",
+        "byte_size": 44732736,
+        "raw_geometry_inspected_this_pass": false
+      },
+      "proposed_life_stage": "Adult authoring target; specimen match pending",
+      "proposed_comparator_specimen": null,
+      "proposed_engineering_family": "medium_early_theropod_biped",
+      "published_mass_anchor": {
+        "value_kg": null,
+        "basis": "No specimen-bound numerical mass admitted in this pass",
+        "applied_to_asset": false
+      },
+      "calibration": {
+        "reference_standing_hip_height_m": null,
+        "body_mass_kg": null,
+        "femur_m": null,
+        "tibia_m": null,
+        "metatarsal_m": null,
+        "segment_mass_kg": null,
+        "segment_com_m": null,
+        "segment_inertia_kg_m2": null,
+        "anatomical_joint_frames": null,
+        "habitual_pose": null,
+        "joint_mobility_envelope": null,
+        "actuator_capabilities": null
+      },
+      "gait_search_proposals": [
+        {
+          "id": "walk",
+          "evidence_class": "engineering_proposal",
+          "source_ids": [
+            "E1"
+          ],
+          "enabled_for_production": false,
+          "stage": "first authoring candidate",
+          "froude": {
+            "nominal": 0.15,
+            "search_interval": [
+              0.08,
+              0.24
+            ]
+          },
+          "duty_factor": {
+            "nominal": 0.67,
+            "search_interval": [
+              0.61,
+              0.74
+            ]
+          },
+          "stride_length_over_reference_hip_height": {
+            "nominal": 1.2
+          },
+          "symmetric_cycle_initial_left_right_phase": [
+            0.0,
+            0.5
+          ],
+          "mechanics_classification": "Must be measured; requested contact schedule is not a validated gait"
+        },
+        {
+          "id": "fast_grounded",
+          "evidence_class": "engineering_proposal",
+          "source_ids": [
+            "E1"
+          ],
+          "enabled_for_production": false,
+          "stage": "optional after walking acceptance",
+          "froude": {
+            "nominal": 0.5,
+            "search_interval": [
+              0.3,
+              0.75
+            ]
+          },
+          "duty_factor": {
+            "nominal": 0.58,
+            "search_interval": [
+              0.53,
+              0.63
+            ]
+          },
+          "stride_length_over_reference_hip_height": {
+            "nominal": 1.65
+          },
+          "symmetric_cycle_initial_left_right_phase": [
+            0.0,
+            0.5
+          ],
+          "mechanics_classification": "Must be measured; requested contact schedule is not a validated gait"
+        },
+        {
+          "id": "aerial_run_probe",
+          "evidence_class": "engineering_proposal",
+          "source_ids": [
+            "E1"
+          ],
+          "enabled_for_production": false,
+          "stage": "gated research only",
+          "froude": {
+            "nominal": 1.0,
+            "search_interval": [
+              0.75,
+              1.5
+            ]
+          },
+          "duty_factor": {
+            "nominal": 0.46,
+            "search_interval": [
+              0.41,
+              0.49
+            ]
+          },
+          "stride_length_over_reference_hip_height": {
+            "nominal": 2.3
+          },
+          "symmetric_cycle_initial_left_right_phase": [
+            0.0,
+            0.5
+          ],
+          "mechanics_classification": "Must be measured; requested contact schedule is not a validated gait"
+        }
+      ],
+      "walk_controls_proposal": {
+        "stance_lane_separation_over_hip_height": 0.13,
+        "midswing_lowest_toe_clearance_over_hip_height": 0.07,
+        "source_ids": [
+          "E1"
+        ]
+      },
+      "body_controls_proposal": {
+        "tail": "Coelophysis is a mechanism comparator; refit tail mass, length and flexibility rather than copying its waveform.",
+        "head_neck": "Carry the crested head with the neck, while keeping gaze control separate; no unsupported universal head-pitch angle.",
+        "forelimbs": "Give shoulders/elbows their own restrained gait response; hand interaction remains a separate task.",
+        "feet": "Three supporting toe branches as a candidate semantic model, subject to anatomy/rig review; no rigid block-foot simplification in final skin."
+      },
+      "capability_policy": {
+        "jumping": "disabled pending independent take-off and landing study",
+        "aerial_running": "research-only, not admitted"
+      },
+      "prohibited_shortcuts": "Uniformly scale Coelophysis speed or joint excursions; oscillating crests used to imply weight.",
+      "source_ids": [
+        "S3",
+        "R1",
+        "R2",
+        "E1"
+      ],
+      "status": {
+        "geometry_calibrated": false,
+        "anatomy_reviewed": false,
+        "physics_solved": false,
+        "native_unity_parity": false,
+        "production_approved": false
+      }
+    },
+    {
+      "id": "prenocephale-prenes",
+      "taxon": "Prenocephale prenes",
+      "asset": {
+        "path": "assets/animals/Models/Prenocephale-prenes.glb",
+        "git_blob_sha1": "c2c36929880b63430b3b4f802134c12655a0a779",
+        "byte_size": 21835244,
+        "raw_geometry_inspected_this_pass": false
+      },
+      "proposed_life_stage": "Adult authoring target; specimen match pending",
+      "proposed_comparator_specimen": "Z. Pal. MgD-I/104 (candidate comparator; partial postcranium)",
+      "proposed_engineering_family": "compact_ornithischian_biped",
+      "published_mass_anchor": {
+        "value_kg": null,
+        "basis": "No specimen-bound numerical mass admitted in this pass",
+        "applied_to_asset": false
+      },
+      "calibration": {
+        "reference_standing_hip_height_m": null,
+        "body_mass_kg": null,
+        "femur_m": null,
+        "tibia_m": null,
+        "metatarsal_m": null,
+        "segment_mass_kg": null,
+        "segment_com_m": null,
+        "segment_inertia_kg_m2": null,
+        "anatomical_joint_frames": null,
+        "habitual_pose": null,
+        "joint_mobility_envelope": null,
+        "actuator_capabilities": null
+      },
+      "gait_search_proposals": [
+        {
+          "id": "walk",
+          "evidence_class": "engineering_proposal",
+          "source_ids": [
+            "E1"
+          ],
+          "enabled_for_production": false,
+          "stage": "first authoring candidate",
+          "froude": {
+            "nominal": 0.12,
+            "search_interval": [
+              0.06,
+              0.2
+            ]
+          },
+          "duty_factor": {
+            "nominal": 0.69,
+            "search_interval": [
+              0.63,
+              0.77
+            ]
+          },
+          "stride_length_over_reference_hip_height": {
+            "nominal": 1.05
+          },
+          "symmetric_cycle_initial_left_right_phase": [
+            0.0,
+            0.5
+          ],
+          "mechanics_classification": "Must be measured; requested contact schedule is not a validated gait"
+        },
+        {
+          "id": "fast_grounded",
+          "evidence_class": "engineering_proposal",
+          "source_ids": [
+            "E1"
+          ],
+          "enabled_for_production": false,
+          "stage": "optional after walking acceptance",
+          "froude": {
+            "nominal": 0.4,
+            "search_interval": [
+              0.25,
+              0.6
+            ]
+          },
+          "duty_factor": {
+            "nominal": 0.59,
+            "search_interval": [
+              0.54,
+              0.65
+            ]
+          },
+          "stride_length_over_reference_hip_height": {
+            "nominal": 1.4
+          },
+          "symmetric_cycle_initial_left_right_phase": [
+            0.0,
+            0.5
+          ],
+          "mechanics_classification": "Must be measured; requested contact schedule is not a validated gait"
+        },
+        {
+          "id": "aerial_run_probe",
+          "evidence_class": "engineering_proposal",
+          "source_ids": [
+            "E1"
+          ],
+          "enabled_for_production": false,
+          "stage": "gated research only",
+          "froude": {
+            "nominal": 1.0,
+            "search_interval": [
+              0.7,
+              1.4
+            ]
+          },
+          "duty_factor": {
+            "nominal": 0.46,
+            "search_interval": [
+              0.42,
+              0.49
+            ]
+          },
+          "stride_length_over_reference_hip_height": {
+            "nominal": 2.1
+          },
+          "symmetric_cycle_initial_left_right_phase": [
+            0.0,
+            0.5
+          ],
+          "mechanics_classification": "Must be measured; requested contact schedule is not a validated gait"
+        }
+      ],
+      "walk_controls_proposal": {
+        "stance_lane_separation_over_hip_height": 0.16,
+        "midswing_lowest_toe_clearance_over_hip_height": 0.06,
+        "source_ids": [
+          "E1"
+        ]
+      },
+      "body_controls_proposal": {
+        "tail": "Begin with restrained continuity and turn response; do not claim a theropod caudofemoralis pattern has been established for this animal.",
+        "head_neck": "Neutral attention first; head-lowering and bracing are separate behaviors, not permanent locomotor poses.",
+        "forelimbs": "Conservative non-weight-bearing locomotion poses; any bracing use requires separate investigation.",
+        "feet": "Measure the actual toe geometry and support footprint; do not borrow Gallimimus contact geometry or a chicken muscle inventory."
+      },
+      "capability_policy": {
+        "jumping": "disabled pending independent take-off and landing study",
+        "aerial_running": "research-only, not admitted"
+      },
+      "prohibited_shortcuts": "Theropod muscle map inherited by taxonomy accident; presumed high-speed headbutting or leap attacks.",
+      "source_ids": [
+        "S4",
+        "R1",
+        "R2",
+        "R4",
+        "E1"
+      ],
+      "status": {
+        "geometry_calibrated": false,
+        "anatomy_reviewed": false,
+        "physics_solved": false,
+        "native_unity_parity": false,
+        "production_approved": false
+      }
+    },
+    {
+      "id": "deinocheirus-mirificus",
+      "taxon": "Deinocheirus mirificus",
+      "asset": {
+        "path": "assets/animals/Models/Deinocheirus-mirificus.glb",
+        "git_blob_sha1": "3fa7b26c570af577f2830bf0b63ea9510a10c0a8",
+        "byte_size": 48722168,
+        "raw_geometry_inspected_this_pass": false
+      },
+      "proposed_life_stage": "Large adult authoring target; specimen match pending",
+      "proposed_comparator_specimen": "MPC-D 100/127 (proposed comparator; mesh correspondence unverified)",
+      "proposed_engineering_family": "giant_ornithomimosaur_biped",
+      "published_mass_anchor": {
+        "value_kg": null,
+        "basis": "Mass intentionally not guessed from GLB size or copied from T. rex",
+        "applied_to_asset": false
+      },
+      "calibration": {
+        "reference_standing_hip_height_m": null,
+        "body_mass_kg": null,
+        "femur_m": null,
+        "tibia_m": null,
+        "metatarsal_m": null,
+        "segment_mass_kg": null,
+        "segment_com_m": null,
+        "segment_inertia_kg_m2": null,
+        "anatomical_joint_frames": null,
+        "habitual_pose": null,
+        "joint_mobility_envelope": null,
+        "actuator_capabilities": null
+      },
+      "gait_search_proposals": [
+        {
+          "id": "walk",
+          "evidence_class": "engineering_proposal",
+          "source_ids": [
+            "E1"
+          ],
+          "enabled_for_production": false,
+          "stage": "first authoring candidate",
+          "froude": {
+            "nominal": 0.08,
+            "search_interval": [
+              0.04,
+              0.15
+            ]
+          },
+          "duty_factor": {
+            "nominal": 0.74,
+            "search_interval": [
+              0.68,
+              0.8
+            ]
+          },
+          "stride_length_over_reference_hip_height": {
+            "nominal": 0.9
+          },
+          "symmetric_cycle_initial_left_right_phase": [
+            0.0,
+            0.5
+          ],
+          "mechanics_classification": "Must be measured; requested contact schedule is not a validated gait"
+        },
+        {
+          "id": "fast_grounded",
+          "evidence_class": "engineering_proposal",
+          "source_ids": [
+            "E1"
+          ],
+          "enabled_for_production": false,
+          "stage": "optional after walking acceptance",
+          "froude": {
+            "nominal": 0.25,
+            "search_interval": [
+              0.15,
+              0.4
+            ]
+          },
+          "duty_factor": {
+            "nominal": 0.64,
+            "search_interval": [
+              0.59,
+              0.7
+            ]
+          },
+          "stride_length_over_reference_hip_height": {
+            "nominal": 1.25
+          },
+          "symmetric_cycle_initial_left_right_phase": [
+            0.0,
+            0.5
+          ],
+          "mechanics_classification": "Must be measured; requested contact schedule is not a validated gait"
+        }
+      ],
+      "walk_controls_proposal": {
+        "stance_lane_separation_over_hip_height": 0.18,
+        "midswing_lowest_toe_clearance_over_hip_height": 0.05,
+        "source_ids": [
+          "E1"
+        ]
+      },
+      "body_controls_proposal": {
+        "tail": "Fit its own tail/torso distribution and turn response; not an amplified Gallimimus tail curve.",
+        "head_neck": "Slow, distributed neck/torso coordination for changes of attention; validate whole-body response to reaching.",
+        "forelimbs": "Include arm mass/inertia in dynamics; controlled repositioning rather than unmodeled hanging visual appendages.",
+        "feet": "Broad footprint contact; gentle toe/pad load transfer. Do not replace broad ungual geometry with narrow bird-like contact points."
+      },
+      "capability_policy": {
+        "jumping": "disabled pending independent take-off and landing study",
+        "aerial_running": "disabled in initial set"
+      },
+      "prohibited_shortcuts": "Scaled-up Gallimimus running; bouncing pelvis; assumed aerial phase; same torque limits as small bipeds.",
+      "source_ids": [
+        "S5",
+        "R1",
+        "R2",
+        "R3",
+        "E1"
+      ],
+      "status": {
+        "geometry_calibrated": false,
+        "anatomy_reviewed": false,
+        "physics_solved": false,
+        "native_unity_parity": false,
+        "production_approved": false
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "R1",
+      "citation": "Cuff et al. (2022), Walking—and Running and Jumping—with Dinosaurs and their Cousins",
+      "url": "https://doi.org/10.1093/icb/icac049",
+      "locator": "PDF pp. 6–8, Table 1; p. 11, Table 2; pp. 14–15, Fig. 7",
+      "supports": "Archosaur gait mechanics; grounded versus aerial running; foot-model limitations; Coelophysis tail/stance coupling.",
+      "limit": "Not a parameter dataset for the five target taxa. Table 1 is representative extant walking trials, not joint ROM. Table 2 contains none of these five taxa.",
+      "kind": "User-supplied primary research/review"
+    },
+    {
+      "id": "R2",
+      "citation": "Bishop, Cuff & Hutchinson (2021), How to build a dinosaur",
+      "url": "https://doi.org/10.1017/pab.2020.46",
+      "locator": "Printed pp. 3, 8–13, 18–26; PDF pages are one higher",
+      "supports": "Joint-frame calibration; reference pose versus habitual pose; mass/COM/inertia; osteological mobility and uncertainty.",
+      "limit": "Coelophysis case study is static inverse mid-stance analysis, not a full locomotion controller. Its 33 MTUs and force assumptions are model-specific.",
+      "kind": "User-supplied primary research"
+    },
+    {
+      "id": "R3",
+      "citation": "Sellers et al. (2017), Investigating the running abilities of Tyrannosaurus rex",
+      "url": "https://doi.org/10.7717/peerj.3420",
+      "locator": "pp. 4–7 model; pp. 9–13 results, gait definitions and limitations",
+      "supports": "Stress constraints can exclude fast aerial gaits; grounded running differs from aerial running.",
+      "limit": "A particular 7,206.7 kg adult T. rex model. Not a universal speed, stress limit, or no-running rule for other taxa.",
+      "kind": "User-supplied primary research"
+    },
+    {
+      "id": "R4",
+      "citation": "Bishop et al. (2018), Cancellous bone and theropod dinosaur locomotion, Part II",
+      "url": "https://doi.org/10.7717/peerj.5779",
+      "locator": "pp. 3–4; 11–17; 26; discussion",
+      "supports": "Characteristic posture estimated from bone fabric; quasi-static chicken validation and its limitations.",
+      "limit": "Not Part III. A characteristic posture is not a full gait. Uniform 2 BW actuator forces and large MTP reserve are modeling conveniences, not dinosaur strengths.",
+      "kind": "User-supplied primary research"
+    },
+    {
+      "id": "S1",
+      "citation": "Yun (2024), Mandibular force profiles of Alioramini",
+      "url": "https://doi.org/10.18261/let.57.2.6",
+      "locator": "Introduction, p. 2: MPC-D 100/1844; cites Brusatte et al. (2009)",
+      "supports": "Reports 369 kg estimate for the juvenile Alioramus altai holotype.",
+      "limit": "Literature mass anchor, not a measurement of our GLB and not an adult mass. No locomotion calibration provided.",
+      "kind": "External primary research; mass attribution to earlier study"
+    },
+    {
+      "id": "S2",
+      "citation": "Makovicky, Kobayashi & Currie (2004), Ornithomimosauria, The Dinosauria",
+      "url": "https://doi.org/10.1525/california/9780520242098.003.0008",
+      "locator": "pp. 137–150; hindlimb/foot description around pp. 145–146",
+      "supports": "Gallimimus/ornithomimid limb and foot morphology; ornithomimid loss of hallux; long distal elements.",
+      "limit": "Morphology, not measured Gallimimus speeds or joint limits. Do not apply its pre-2014 Deinocheirus account as current reconstruction.",
+      "kind": "External author-uploaded scholarly anatomical synthesis"
+    },
+    {
+      "id": "S3",
+      "citation": "Marsh & Rowe (2020), A comprehensive anatomical and phylogenetic evaluation of Dilophosaurus wetherilli",
+      "url": "https://www.jsg.utexas.edu/txvp/dilophosaurus/",
+      "locator": "Author-institution publication abstract, skeletal and phylogenetic conclusions",
+      "supports": "Large-bodied early theropod; the study does not recover it as a coelophysoid; differentiated axial anatomy.",
+      "limit": "No species gait timeseries or maximum speed in the accessed abstract. Coelophysis is a methodological comparator, not the same body.",
+      "kind": "External primary research abstract hosted by author institution"
+    },
+    {
+      "id": "S4",
+      "citation": "Sullivan (2006), A taxonomic review of the Pachycephalosauridae",
+      "url": "https://www.researchgate.net/publication/240625747_A_taxonomic_review_of_the_Pachycephalosauridae_Dinosauria_Ornithischia",
+      "locator": "p. 356, Prenocephale prenes; Fig. 6",
+      "supports": "Prenocephale holotype Z. Pal. MgD-I/104 includes nearly complete skull and partial postcranium; ornithischian identity.",
+      "limit": "Not a dynamic gait model or head-impact performance calibration. Partial postcranium is not absence of all postcranial evidence.",
+      "kind": "External author-uploaded anatomical/taxonomic research"
+    },
+    {
+      "id": "S5",
+      "citation": "Lee et al. (2014), Resolving the long-standing enigmas of a giant ornithomimosaur Deinocheirus mirificus",
+      "url": "https://doi.org/10.1038/nature13874",
+      "locator": "Abstract; specimens MPC-D 100/127 and 100/128; supplementary description",
+      "supports": "Heavily built non-cursorial body, short hindlimbs, broad-tipped pedal unguals, distinctive axial anatomy.",
+      "limit": "Does not establish the proposed duty factors or a biological prohibition of all aerial movement. Numeric mass is not extracted from the accessible abstract/supplement here.",
+      "kind": "External primary research"
+    },
+    {
+      "id": "R5",
+      "citation": "Dececchi et al. (2020), The fast and the frugal",
+      "url": "https://doi.org/10.1371/journal.pone.0223698",
+      "locator": "Methods: Relative leg length and max speed; Postural considerations",
+      "supports": "Dimensionless speed scaling and explicit hip-height proxy assumptions; cautions on simple limb indices.",
+      "limit": "Froude-based speed is not independent validation or a universal gait classifier. Do not use 0.8 × limb length as a compulsory standing height.",
+      "kind": "External primary research"
+    },
+    {
+      "id": "REPO",
+      "citation": "Eonwild Factory, requested branch snapshot",
+      "url": "https://github.com/hurtener/eonwild-factory/tree/987bd6b82caf3ff661d6927aa530df40fe71b30e/assets/animals/Models",
+      "locator": "Models directory; catalog/animals; docs/ANIMAL_CONFIGURATION.md; grounded walk v3 recipe and program profile",
+      "supports": "Exact five-asset inventory and existing profile separation; current mass-related diagnostic boundary.",
+      "limit": "Repository listing is not GLB geometry inspection or anatomical validation. No target-five animal instances in catalog/animals at this snapshot.",
+      "kind": "Connected repository read"
+    },
+    {
+      "id": "E1",
+      "citation": "Eonwild authoring proposal, 2026-09-21",
+      "url": null,
+      "locator": "This workbook and companion proposal JSON",
+      "supports": "Explicit initial search targets, capability staging, control design and proposed acceptance checks.",
+      "limit": "All values tagged E1 are engineering hypotheses, not measurements, confidence intervals, biological limits, approved motion, or loadable production profiles.",
+      "kind": "New engineering proposal"
+    }
+  ]
+}

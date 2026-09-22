@@ -61,6 +61,9 @@ def replay(dense):
             c=model.getCoordinateSet().get(i)
             row["coordinates"][c.getName()]={"value":c.getValue(state),"speed":c.getSpeedValue(state)}
         row["activations"]={name:float(states[index,names.index('/forceset/'+name+'/activation')]) for name in motors}
+        row['clearance_heights_m']={f['path']:float(o.PhysicalFrame.safeDownCast(
+            model.getComponent(f['path'])).getPositionInGround(state).get(1))
+            for f in receipt.get('clearance_frames',[])}
         rows.append(row)
     return rows
 
@@ -94,10 +97,8 @@ kinematic_balance=mass*(ca+np.array([0,9.80665,0]))-force
 slips=[float(np.linalg.norm(np.array(c['surface_velocity_mps'])[[0,2]])) for r in dense for c in r['contacts'] if c['force_N'][1]>.05*bw]
 clearance={}
 for frame in receipt.get('clearance_frames',[]):
-    path=frame['path'];name=path.rsplit('/',1)[-1]
-    body=name if path.startswith('/bodyset/') else name.removeprefix('tip_')
-    point='origin' if path.startswith('/bodyset/') else 'end'
-    values=[r['bodies'][body][point][1]-frame['minimum_height_m'] for r in dense]
+    path=frame['path']
+    values=[r['clearance_heights_m'][path]-frame['minimum_height_m'] for r in dense]
     clearance[path]={'minimum_height_m':frame['minimum_height_m'],'minimum_margin_m':min(values)}
 report={"schema":"eonwild.motion.moco-replay.v1","optimizer":solve,
     "sample_scope":"Moco spline-interpolated states replayed through exact OpenSim model; not forward integration",
