@@ -30,6 +30,7 @@ firm-support world foot position varies about 15 mm; the apparent larger opening
 includes body weight transfer. Ankle swing peaks at 118.26 degrees / 603.09 deg/s.
 C51 A is rendered: ankle swing peak 90.85 degrees / 436.57 deg/s, skin intrusion 6.11 mm. All 288 side/quarter/front frames were inspected. Physical limitations remain (including command excess and no sample below 0.05 BW); full-Moco work is separate and running. No C51 visual approval, convergence or forward-stability claim yet.
 See [C51 procedure and measured tradeoffs](handoffs/MOCO_C51_SUPPORT_FEASIBILITY.md).
+The bound-interior seed finished with no sampled joint-limit violations but worse command/balance residuals; one 15-interval, 60-minute full-Moco retry started at 06:31 UTC. C51 A remains the displayed candidate.
 C50 is preserved on both remote main branches (factory `9868716`, game `9b16390`).
 
 [Locomotion configuration review](research/LOCOMOTION_CONFIGURATION_REVIEW.md)

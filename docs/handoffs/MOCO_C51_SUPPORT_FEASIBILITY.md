@@ -94,7 +94,8 @@ claim of direct native-video temporal perception.
 | Swing peak ankle angle | 118.26 deg | 90.85 deg |
 | Swing peak ankle speed | 603.09 deg/s | 436.57 deg/s |
 | Reopened skin floor intrusion | 7.19 mm | 6.11 mm |
-| Root balance residual RMS | 0.01399 BW/BWL | 0.01370 BW/BWL |
+| Initializer six-axis balance residual RMS | 0.01305 BW/BWL | 0.01370 BW/BWL |
+| Dense replay 3D force-balance RMS | 0.01399 BW | 0.01562 BW |
 | Loaded contact surface speed p95 | 0.417 m/s | 0.233 m/s |
 | Maximum command magnitude | 1.210 | 1.202 |
 | Firm-support left world-lane range | 14.9 mm | 19.7 mm |
@@ -112,3 +113,29 @@ Full Moco pilot is still running separately. A second initializer prepares the
 C51 motion inside unchanged model bounds, using a 0.0005 coordinate-unit interior
 target and stronger range/command penalties; it is not selected for display.
 Update final solver status when the bounded experiments return.
+
+
+### Overnight continuation, 06:31 UTC
+
+The interior initializer finished in 585 seconds / 40 evaluations. Dense replay
+has no sampled joint-angle bound violations, including the proximal tail. The
+15-interval Moco initial guess also has no such violations; projecting its
+angles into the same bounds changes maximum inverse-dynamics residual by zero
+(3.410 before and after, scaled model units), versus C50's 3.324 -> 16.989.
+This improves bound consistency, not every feasibility measure: initializer
+six-axis residual rises to 0.01604 BW/BWL and peak command to 1.2933. Dense replay
+3D force-balance RMS is 0.01816 BW. Contact penetration is 5.94 mm and loaded-pad
+p95 speed 0.237 m/s. These are not physical acceptance results.
+
+The single additional full Moco attempt is now launched in `moco-interior/`,
+supervised by `interior-process/`, with a 60-minute cap ending about 07:31 UTC.
+The original pilot remains bounded at 07:15 UTC; its last observed primal
+infeasibility was 43.0 at iteration 49, not convergence. **No further full-solve
+retries are authorized in this checkpoint.** Consult `monitor.json` before any
+poll and preserve a 600-second interval per active solver. Numerical
+`ipopt.opt` sets initial bound distance to 1e-6; verify the option-use listing at
+the next eligible poll. C51 A remains the sole displayed candidate.
+
+Metric clarification: the earlier table mixed the baseline dense force-only
+RMS with the candidate six-axis initializer RMS. The corrected table above
+labels both metrics separately and makes the modest balance regression explicit.
