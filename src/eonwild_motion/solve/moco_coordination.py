@@ -118,6 +118,29 @@ class Coordination:
             times,q=initialize(self,times,q,self.period)
             half=self.period
         self.base=CubicSpline(times,q,axis=0,bc_type='periodic')
+        self.bounded={}
+        if self.path_task and self.path_task.get('enforce_joint_limits',False):
+            # Optimize latent joint coordinates, not unconstrained angles.
+            # Sigmoid mapping enforces admitted ROM at every continuous time;
+            # no final-pose clamp or contact-affecting playback fix is needed.
+            latent=np.array(q,copy=True)
+            bounded_settings=dict(self.metadata['coordinates'])
+            if self.path_task.get('enforce_root_envelopes',False):
+                for name in ('height','pitch','roll'):
+                    setting=self.policy['body_envelope'][name]
+                    center=float(latent[:,self.index[name]].mean()) if setting.get('center') is None else setting['center']
+                    bounded_settings[name]={'bounds_rad':[center-setting['half_range'],center+setting['half_range']]}
+            for name,setting in bounded_settings.items():
+                i=self.index[name];lo,hi=setting['bounds_rad'];span=hi-lo
+                fraction=(latent[:,i]-lo)/span
+                if not np.isfinite(fraction).all():raise ValueError('Nonfinite joint seed: '+name)
+                if np.min(fraction)<0 or np.max(fraction)>1:
+                    self.metadata.setdefault('interior_seed_adjustments_rad',{})[name]=float(max(lo-latent[:,i].min(),latent[:,i].max()-hi,0))
+                fraction=np.clip(fraction,1e-5,1-1e-5) # interior seed only
+                latent[:,i]=span*.25*np.log(fraction/(1-fraction))
+                self.bounded[i]=(lo,span)
+            self.latent_base=CubicSpline(times,latent,axis=0,bc_type='periodic')
+
         self.parameters=basis_parameters(self.names,int(self.policy['harmonics']))
         if self.path_task:
             self.parameters=[]
@@ -202,7 +225,14 @@ class Coordination:
 
     def local_kinematics(self,x,times):
         if not hasattr(self,'_cache'):self._cache={}
-        return self.base(times)+np.einsum('tqp,p->tq',self._arrays(times)[0],x)
+        delta=np.einsum('tqp,p->tq',self._arrays(times)[0],x)
+        values=self.base(times)+delta
+        if self.bounded:
+            from scipy.special import expit
+            latent=self.latent_base(times)+delta
+            for i,(lo,span) in self.bounded.items():
+                values[:,i]=lo+span*expit(4*latent[:,i]/span)
+        return values
 
     def set_state(self,t,q,u):
         self.state.setTime(float(t))

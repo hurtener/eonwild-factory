@@ -77,3 +77,26 @@ def test_mass_centered_sole_places_support_region_beneath_mass():
     from eonwild_motion.solve.moco_tasks import rot
     front=mtp+rotation@np.array([.25,-.1,0])+rotation@rot(digit)@np.array([.4,-.1,0])
     np.testing.assert_allclose(front[0]-sole_center_offset(geometry)[0],t+.05,atol=1e-12)
+
+
+def test_support_phase_maps_stance_without_a_release_velocity_corner():
+    from eonwild_motion.solve.moco_path_task import support_phase
+    phase=np.linspace(0,1,1001)
+    mapped=support_phase(phase,.43,.62)
+    assert np.all(np.diff(mapped)>0)
+    np.testing.assert_allclose(support_phase(np.array([0,.62,1]),.43,.62),[0,.43,1])
+    h=1e-5
+    slopes=(support_phase(np.array([.62,.62+h]),.43,.62)-support_phase(np.array([.62-h,.62]),.43,.62))/h
+    np.testing.assert_allclose(slopes,[1,1],atol=1e-7)
+
+
+def test_joint_spline_obeys_stops_between_nodes_with_smooth_derivatives():
+    from eonwild_motion.solve.moco_joint_spline import BoundedJointSpline
+    # Ordinary cubic interpolation overshoots this near-stop sequence.
+    times=np.arange(6,dtype=float);q=np.array([[v,2*v] for v in [0.,.99,1.,.99,0.,.1]])
+    spline=BoundedJointSpline(times,q,{0:(0.,1.)})
+    grid=np.linspace(0,5,2001);x=spline(grid)
+    assert np.all(x[:,0]>=0) and np.all(x[:,0]<=1)
+    t=np.array([.3,1.7,3.2,4.4]);h=1e-5
+    np.testing.assert_allclose(spline(t,1),(spline(t+h)-spline(t-h))/(2*h),atol=1e-6)
+    np.testing.assert_allclose(spline(t,2),(spline(t+h,1)-spline(t-h,1))/(2*h),atol=1e-5)

@@ -119,6 +119,17 @@ def foot_task(problem, t, side):
     return mtp, foot_rotation, toe_angle-angle
 
 
+def support_phase(phase, source_duty, target_duty):
+    """C2 monotone phase map aligning support and swing in a warm reference."""
+    phase=np.asarray(phase)
+    support=phase<=target_duty
+    begin=np.where(support,0.,source_duty)
+    source_length=np.where(support,source_duty,1-source_duty)
+    target_length=np.where(support,target_duty,1-target_duty)
+    u=np.where(support,phase/target_duty,(phase-target_duty)/(1-target_duty))
+    return begin+target_length*u+(source_length-target_length)*smooth(u)
+
+
 def initialize(problem, old_times, old_q, old_period):
     """Fresh feet/support task; reviewed C51 supplies only a warm body posture."""
     task = problem.policy['path_task']
@@ -130,6 +141,14 @@ def initialize(problem, old_times, old_q, old_period):
     old = CubicSpline(old_times,old_q,axis=0,bc_type='periodic')
     q = old(times/problem.period*old_period)
     ix = problem.index
+    if task.get('align_reference_support',False):
+        source_duty=task['source_duty_factor']
+        for side,offset in [('l',0.),('r',.5)]:
+            phase=(times/problem.period+offset)%1
+            mapped=(support_phase(phase,source_duty,task['duty_factor'])-offset)%1
+            reference=old(mapped*old_period)
+            indices=[ix[n] for n in problem.names if n.startswith(('hip_'+side,'knee_'+side,'ankle_'+side,'mtp_'+side,'digit_'+side))]
+            q[:,indices]=reference[:,indices]
     # Lower cadence does not simply slow a running clip: rebuild leg placement,
     # sole roll, and double support, while reducing the running body excursion.
     for name in problem.names:

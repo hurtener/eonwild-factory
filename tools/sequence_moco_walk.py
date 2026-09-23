@@ -17,6 +17,7 @@ from scipy.spatial.transform import Rotation
 from eonwild_motion.solve.moco_coordination import Coordination
 from eonwild_motion.solve.moco_path_task import path_frame, foot_task
 from eonwild_motion.solve.moco_tasks import smooth
+from eonwild_motion.solve.moco_joint_spline import BoundedJointSpline
 
 ap=argparse.ArgumentParser()
 for n in ('source','baseline','output'):ap.add_argument('--'+n,type=Path,required=True)
@@ -29,7 +30,9 @@ xyz=[ix[n] for n in ('forward','height','lateral')];angles=[ix[n] for n in ('pit
 origin,R=path_frame(ts,speed,rate)
 q[:,xyz]=np.einsum('tji,tj->ti',R,q[:,xyz]-origin)
 q[:,angles]=Rotation.from_matrix(np.transpose(R,(0,2,1))@Rotation.from_euler('ZYX',q[:,angles]).as_matrix()).as_euler('ZYX')
-q[-1]=q[0];cycle=CubicSpline(ts,q,axis=0,bc_type='periodic');neutral=q[:-1].mean(axis=0)
+q[-1]=q[0]
+joint_bounds={ix[n]:tuple(v['bounds_rad']) for n,v in p.metadata['coordinates'].items()}
+cycle=BoundedJointSpline(ts,q,joint_bounds,bc_type='periodic');neutral=q[:-1].mean(axis=0)
 # Six full strides plus final double support. Slower first step, subsequent
 # swing cadence is full pace; deceleration shortens final placement, not swing.
 start=2.;duration=16.;cycles=6;end_progress=(cycles+.12)*T
@@ -86,7 +89,7 @@ for t in times:
         dp,dr,dd=correction[side];target=target+gain*rr@dp(phase)
         orientation=orientation@Rotation.from_rotvec(gain*dr(phase)).as_matrix()
         digit+=gain*float(dd(phase))
-        names=['hip_'+side,'hip_'+side+'_yaw','hip_'+side+'_roll','knee_'+side,'ankle_'+side,'mtp_'+side]
+        names=['hip_'+side,'hip_'+side+'_yaw','hip_'+side+'_roll','knee_'+side,'ankle_'+side,'mtp_'+side,'digit_'+side]
         indices=[ix[n] for n in names];coords=[p.coordinates[i] for i in indices]
         reference=cycle(phase)[indices];toe=p.model.getBodySet().get('toe_'+side)
         def residual(x):
@@ -94,11 +97,11 @@ for t in times:
             p.model.realizePosition(p.state)
             pos=toe.getPositionInGround(p.state).to_numpy();mat=toe.getTransformInGround(p.state).R()
             rot=np.array([[mat.get(i,j) for j in range(3)] for i in range(3)])
-            return np.r_[(pos-target)/p.L,.4*Rotation.from_matrix(orientation.T@rot).as_rotvec(),.001*(x-reference)]
+            return np.r_[(pos-target)/p.L,.4*Rotation.from_matrix(orientation.T@rot).as_rotvec(),.4*(x[-1]-digit),.001*(x-reference)]
         bounds=np.array([p.metadata['coordinates'][n]['bounds_rad'] for n in names]).T
         # Warm from this cycle pose to avoid history-dependent branch switches.
         opt=least_squares(residual,np.clip(reference,bounds[0]+1e-6,bounds[1]-1e-6),bounds=bounds,max_nfev=35,ftol=1e-9,xtol=1e-9,gtol=1e-9)
-        world[indices]=opt.x;world[ix['digit_'+side]]=digit
+        world[indices]=opt.x
         errors.append(float(np.linalg.norm(residual(opt.x)[:3])*p.L))
     poses.append(world)
 poses=np.array(poses)
@@ -122,7 +125,7 @@ for pose,time,load in zip(poses,times,demand):
 offsets=gaussian_filter1d(offsets,.04/(times[1]-times[0]),mode='nearest')
 poses[:,ix['height']]+=offsets
 rest_offsets=[float(offsets[0]),float(offsets[-1])]
-trajectory=CubicSpline(times,poses,axis=0,bc_type=((1,np.zeros(len(p.names))),(1,np.zeros(len(p.names)))))
+trajectory=BoundedJointSpline(times,poses,joint_bounds,bc_type=((1,np.zeros(len(p.names))),(1,np.zeros(len(p.names)))))
 p.evaluate_kinematics=lambda x,t:(trajectory(t),trajectory(t,1),trajectory(t,2))
 p.times_dense=times
 p.metadata.pop('path_cycle',None)
