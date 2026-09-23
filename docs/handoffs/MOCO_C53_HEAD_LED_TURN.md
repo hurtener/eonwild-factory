@@ -80,3 +80,30 @@ Videos:
 - `review-side/tarbo-c53-a-turn-side-16s.mp4`
 
 Pause for user feedback. No follow-up artistic pass or new optimization is active.
+
+## Neck research integration audit — user question, 2026-09-23
+
+The inherited Moco path does not directly consume canonical embodiment
+`attention.envelope` or its regional neck weights. Do not claim full research
+profile integration. Source of authority remains factory
+`docs/research/THEROPOD_NECK_BASELINE.md` and `catalog/embodiment/tarbo.v1.json`:
+ordinary 35 degrees, scan 45, strong 55, routine cap 60, exceptional 65; skull
+heading relative to torso. Tarbo is a provisional related-animal proxy; numeric
+animation envelopes are not measured biological hard stops.
+
+C53 A measured 38.41 degrees relative heading stays below the profile scan target
+and routine cap. Its inherited neck/upper-neck/head yaw coordinate bounds are
+each ±0.35 rad (20.05 degrees), not the same as enforcing the cumulative profile.
+Regional distribution is also an authored reduced-model approximation and does
+not use the canonical five-control Tarbo base-to-head weights.
+
+Peak neck-yaw activation demand is 4.5265 against capacity 1.0: approximately
+9.661 kNm demanded versus 2.134 kNm assigned. Peak control is 4.5534. These strength
+and passive-stiffness inputs are engineering estimates, not neck torque capacities
+established by the user's ROM research. The straight reference calibration sees
+zero yaw gravity demand and leaves that axis at its prior capacity. Thus this
+mismatch warrants calibration and distribution analysis, not the biological claim
+that a Tarbosaurus cannot look 38 degrees into a turn. Next development should
+connect the central cumulative envelope/regional semantics to the reduced anatomy
+and audit strength/passive support and motion demand without silently increasing
+capacity to pass. This audit changes no animation bytes or acceptance thresholds.

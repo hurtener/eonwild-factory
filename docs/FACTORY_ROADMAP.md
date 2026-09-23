@@ -1228,3 +1228,9 @@ Capture-time receipts remain historical. Numerical contact/force limitations
 and full Moco convergence remain open. Turning and generalized locomotion are
 the proposed next stage, not started by this approval. See the principal
 `game/Evidence/moco-c52b-centered-walk/user-review.json`.
+
+C53 neck audit: measured 38.41-degree head lead is inside the canonical Tarbo
+range, but the Moco path does not yet consume the central envelope/regional
+weights. Peak neck demand 4.5265x is against estimated capacity, not a measured
+biological strength limit. Track this integration/calibration gap for the next
+development pass; see the C53 handoff.
