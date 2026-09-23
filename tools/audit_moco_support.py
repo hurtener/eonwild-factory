@@ -19,6 +19,9 @@ def measure(data):
         rows[side]=dict(time_s=t.tolist(),load_BW=load.tolist(),ankle_deg=np.rad2deg(ankle).tolist(),ankle_rate_deg_s=np.rad2deg(rate).tolist(),foot_forward_m=local[:,0].tolist(),foot_outward_m=(sign*local[:,2]).tolist(),foot_world=world.tolist())
         def mm(a,mask):return [float(a[mask].min()),float(a[mask].max())] if mask.any() else None
         summary[side]=dict(loaded_foot_outward_range_m=mm(sign*local[:,2],loaded),loaded_foot_forward_range_m=mm(local[:,0],loaded),swing_ankle_angle_range_deg=mm(np.rad2deg(ankle),swing),swing_peak_ankle_rate_deg_s=float(np.max(abs(np.rad2deg(rate[swing])))) if swing.any() else None,peak_ankle_rate_deg_s=float(np.max(abs(np.rad2deg(rate)))),loaded_contact_speed_p95_mps=float(np.quantile(contact_speeds,.95)) if contact_speeds else None)
+        firm=load>.25
+        summary[side].update(firm_support_world_outward_range_m=mm(sign*world[:,2],firm),
+            firm_support_world_outward_mean_m=float(np.average(sign*world[firm,2],weights=load[firm])) if firm.any() else None)
     return {'schema':'eonwild.moco.support-audit.v1','classification':'Saved state/contact audit, not independent forward simulation','summary':summary,'rows':rows}
 
 

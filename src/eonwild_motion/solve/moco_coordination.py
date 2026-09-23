@@ -230,9 +230,15 @@ class Coordination:
         range_error=[]
         for n,b in self.metadata['coordinates'].items():
             value=m['q'][:,self.index[n]];lo,hi=b['bounds_rad']
+            # An optional interior target prepares a feasible warm start. The
+            # physical joint limits and emitted poses are never projected.
+            margin=p.get('initialization_bound_margin',0.)
+            lo+=margin;hi-=margin
             range_error.extend(p.get('range_weight',3.)*(np.minimum(value-lo,0)+np.maximum(value-hi,0)))
         for n,(lo,hi) in self.recipe.get('spatial',{}).get('root_bounds',{}).items():
             value=m['q'][:,self.index[n]]
+            margin=p.get('initialization_bound_margin',0.)
+            lo+=margin;hi-=margin
             range_error.extend(p.get('range_weight',3.)*(np.minimum(value-lo,0)+np.maximum(value-hi,0)))
         body_envelope=[]
         for n,setting in p.get('body_envelope',{}).items():
