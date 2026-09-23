@@ -95,7 +95,8 @@
     "c50d_transfer": "C50B physical initializer reprojected by rest arc overlap onto actual admitted source links; no further optimization or render-only smoothing in this topology checkpoint.",
     "support_refinement_c51": "Soft unloaded ankle comfort preferences: 1.80 rad and 7.5 rad/s, chosen to address user-observed excessive excursion/speed relative to measured C50 peak 2.064 rad and 10.526 rad/s; authored estimates, not biological limits. Continuous load-dependent relaxation leaves stance free. Track half-width 0.59*hip separation retains measured C50 world lanes (~0.66 m) within 0.04 leg lengths; the apparently widening pelvis-relative track must not be corrected by dragging a planted foot. Contact slip penalty doubled; body/tail deviations regularized to preserve reviewed motion.",
     "c52_clearance": "C52 A skin reopened with 37.6 mm walking and 48.9 mm turning intrusion. Increase existing material-witness penalty 400 to 1800; no physical limits or acceptance relaxed; same task and warm-start basis.",
-    "c52b_centered": "User requested mass-centered walking and relaxed tail. Midstance sole center aligned to modeled warm-posture COM. Pad-area weighting is a geometric support prior, not measured pressure. Walking tail ratios 0.5 proximal/0.9 distal replace 0.8/1.5; tail variables free, reference weight 5 vs30. All masses, joint limits, stiffness, capacities, contacts and acceptance tolerances retained."
+    "c52b_centered": "User requested mass-centered walking and relaxed tail. Midstance sole center aligned to modeled warm-posture COM. Pad-area weighting is a geometric support prior, not measured pressure. Walking tail ratios 0.5 proximal/0.9 distal replace 0.8/1.5; tail variables free, reference weight 5 vs30. All masses, joint limits, stiffness, capacities, contacts and acceptance tolerances retained.",
+    "loaded_ankle": "The centered candidate retains four ankle direction changes in stance. Add load-gated angular rate and acceleration comfort costs, scaled by sqrt(g/L) and g/L; engineering smoothness prior, not measured biology. Four leg harmonics permit joint redistribution without fixing or clamping a joint. Same physical model and limits."
   },
   "calibrated_task": {
     "pad_radius_leg_lengths": 0.043,
@@ -496,7 +497,7 @@
   "coordination": {
     "harmonics": 2,
     "samples": 41,
-    "max_evaluations": 20,
+    "max_evaluations": 18,
     "root_balance_weight": 100,
     "gaze_position_weight": 90.0,
     "gaze_orientation_weight": 35.0,
@@ -593,6 +594,10 @@
         "angle_weight": 18,
         "rate_weight": 8,
         "acceleration_weight": 1.0
+      },
+      "ankle_loaded": {
+        "rate_weight": 1.0,
+        "acceleration_weight": 2.5
       }
     },
     "path_task": {
@@ -612,7 +617,8 @@
       "foot_task_weight": 40,
       "retain_tail_warm_start": false,
       "classification": "User requested mass-centered walking and relaxed tail. Midstance sole center aligned to modeled warm-posture COM. Pad-area weighting is a geometric support prior, not measured pressure. Walking tail ratios 0.5 proximal/0.9 distal replace 0.8/1.5; tail variables free, reference weight 5 vs30. All masses, joint limits, stiffness, capacities, contacts and acceptance tolerances retained.",
-      "support_reference": "mass_centered_sole"
+      "support_reference": "mass_centered_sole",
+      "leg_harmonics": 4
     }
   },
   "attention": {

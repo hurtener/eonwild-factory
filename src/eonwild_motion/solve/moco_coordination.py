@@ -124,7 +124,8 @@ class Coordination:
             for name in self.names:
                 if name.startswith('tail_') and self.path_task.get('retain_tail_warm_start',False):continue
                 if name!='forward':self.parameters.append((name,0,'constant'))
-                for order in range(1,int(self.policy['harmonics'])+1):
+                orders=int(self.path_task.get('leg_harmonics',self.policy['harmonics'])) if name.startswith(('hip_','knee_','ankle_','mtp_','digit_')) else int(self.policy['harmonics'])
+                for order in range(1,orders+1):
                     self.parameters.append((name,order,'sin'))
                     if name!='forward':self.parameters.append((name,order,'cos'))
         self.times=np.linspace(0,half,int(self.policy['samples']))
@@ -397,6 +398,16 @@ class Coordination:
             for j,side in enumerate(('l','r')):
                 idx=self.index['ankle_'+side]
                 support_task.extend(recovery_residual(m['q'][:,idx],m['u'][:,idx],m['acc'][:,idx],loads[:,j],self.period,task['ankle_recovery']))
+                # A smooth load-gated comfort cost discourages rapid back-and-
+                # forth ankle bending under support. This leaves every angle
+                # free and recomputes contact/effort; it is not an angle clamp.
+                loaded=task.get('ankle_loaded',{})
+                if loaded:
+                    gate=np.sqrt(np.maximum(loads[:,j],0)/(np.maximum(loads[:,j],0)+.08))
+                    omega=np.sqrt(9.80665/self.L)
+                    support_task.extend(loaded['rate_weight']*gate*m['u'][:,idx]/omega)
+                    support_task.extend(loaded['acceleration_weight']*gate*m['acc'][:,idx]/omega**2)
+
             hip_width=abs(self.admission['points']['rightLeg.0'][2]-self.admission['points']['leftLeg.0'][2])
             lateral=m['feet'][:,:,2]
             if self.path_task:

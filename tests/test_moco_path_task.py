@@ -56,3 +56,24 @@ def test_support_center_is_independent_of_split_pad_sampling():
         {'center_local_m':[.15,0,-.2],'radius_m':.1,'stiffness_share':.5},
         {'center_local_m':[.15,0,.2],'radius_m':.1,'stiffness_share':.5}]
     np.testing.assert_allclose(sole_center_offset(geom),expected,atol=1e-12)
+
+
+def test_mass_centered_sole_places_support_region_beneath_mass():
+    from eonwild_motion.solve.moco_path_task import sole_center_offset
+    geometry={'toe_midpoint_m':[.25,-.1,0], 'sites':[
+        {'center_local_m':[-.1,-.1,0],'radius_m':.1},
+        {'center_local_m':[.4,0,0],'radius_m':.1,'distal':True}]}
+    task=dict(duty_factor=.62,yaw_rate_rad_s=0,half_track_hip_width_ratio=.5,
+              catch_bias_m=0.,toe_out_radians=0.,toe_off_radians=.38,
+              recovery_toe_radians=.45,clearance_m=.25,initial_pad_compression_m=.0045,
+              support_reference='mass_centered_sole')
+    problem=SimpleNamespace(policy={'path_task':task},period=2.74,speed=1.,
+        admission={'points':{'leftLeg.0':[0,0,-.56],'rightLeg.0':[0,0,.56]}},
+        metadata={'foot_geometry':geometry,'path_support':{'mean_com_forward_m':.05}})
+    t=.31*problem.period
+    mtp,rotation,digit=foot_task(problem,t,'l')
+    # First site and front site have equal area. Unroll does not change the
+    # planted front witness; its placement must carry the sole-center lever.
+    from eonwild_motion.solve.moco_tasks import rot
+    front=mtp+rotation@np.array([.25,-.1,0])+rotation@rot(digit)@np.array([.4,-.1,0])
+    np.testing.assert_allclose(front[0]-sole_center_offset(geometry)[0],t+.05,atol=1e-12)
