@@ -41,8 +41,6 @@ class TurnPlan:
         self.velocity = velocity
         steering=specification.get('step_steering')
         if steering:
-            if not 0 < steering['minimum_heading_share'] < .5:
-                raise ValueError('Step heading share must lie between zero and one half')
             if not 0 <= steering['torso_yaw_reference_fraction'] <= 1:
                 raise ValueError('Torso yaw reference fraction must be between zero and one')
 
@@ -54,20 +52,14 @@ class TurnPlan:
         return float(smooth(advance/max(2*abs(outward),1e-6)))
 
     def support_outward(self, time, step_seconds, outward):
-        """Retain toe-out as a preference without letting it consume a whole step's turn.
+        """Replace straight-walk toe-out with the planned support direction in a turn.
 
         Evaluated at each support anchor, never continuously on a planted foot.
-        The smooth cap leaves room for both alternating landings to advance.
+        The outer foot may then point inward relative to the current torso.
         This is a placement intent, not a prediction of steering force.
         """
         gain=self.steering_gain(time,step_seconds,outward)
-        if gain==0:return outward
-        advance=abs(float(self.heading(min(self.duration,time+step_seconds*.5))-
-                          self.heading(max(0.,time-step_seconds*.5))))
-        budget=(.5-self.specification['step_steering']['minimum_heading_share'])*advance
-        magnitude=abs(outward)
-        limited=magnitude*budget/np.hypot(magnitude,budget) if magnitude else 0.
-        return float(np.sign(outward)*((1-gain)*magnitude+gain*limited))
+        return float((1-gain)*outward)
 
     def frame(self, time):
         time = np.clip(time, 0, self.duration)

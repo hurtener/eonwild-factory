@@ -24,7 +24,7 @@ def test_head_leads_heading_and_path_speed_is_preserved():
 
 def test_finite_turn_keeps_loaded_toe_witness_and_heading_fixed():
     p=plan()
-    p.specification['step_steering']={'minimum_heading_share':.3,'torso_yaw_reference_fraction':.2}
+    p.specification['step_steering']={'torso_yaw_reference_fraction':.2}
     geo={'toe_midpoint_m':[.25,-.10,0], 'sites':[{'center_local_m':[.39,.01,0],'radius_m':.10}]}
     task=dict(duty_factor=.62,yaw_rate_rad_s=0.,half_track_hip_width_ratio=.5,
         catch_bias_m=.1,toe_out_radians=.06,toe_off_radians=.28,
@@ -46,7 +46,7 @@ def test_finite_turn_keeps_loaded_toe_witness_and_heading_fixed():
 
 def test_step_steering_is_mirrored_and_does_not_change_straight_walk():
     base=plan().specification
-    base['step_steering']={'minimum_heading_share':.3,'torso_yaw_reference_fraction':.2}
+    base['step_steering']={'torso_yaw_reference_fraction':.2}
     positive=TurnPlan(base,16.,lambda t:np.zeros_like(t)+1.6)
     negative=TurnPlan(dict(base,yaw_rate_keys=[[t,-r] for t,r in base['yaw_rate_keys']]),16.,lambda t:np.zeros_like(t)+1.6)
     assert positive.support_outward(.5,.85,.06)==.06
@@ -54,9 +54,7 @@ def test_step_steering_is_mirrored_and_does_not_change_straight_walk():
         np.testing.assert_allclose(positive.support_outward(t,.85,.06),
                                   -negative.support_outward(t,.85,-.06))
     bias=positive.support_outward(5.,.85,.06)
-    advance=float(positive.heading(5.85)-positive.heading(5.))
-    assert advance-2*bias >= .3*advance
-    assert 0 < bias < .06
+    assert bias==0
 
 
 def test_heading_correction_preserves_tilt_and_zero_gain_is_identity():
