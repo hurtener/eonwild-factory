@@ -1,6 +1,6 @@
 # C51 — relaxed recovery and physical feasibility
 
-**Final status: C51 A pending visual review; bounded full Moco attempts finished without convergence. No further runs or artistic iterations at this checkpoint.**
+**Current status: C51 A visually approved on 2026-09-23. Bounded full Moco attempts finished without convergence; independent stability remains unvalidated. Await authorization for the proposed next checkpoint.**
 
 2026-09-23. The user accepted C50 D's repaired tail and overall fluidity, requested
 less ankle excursion/angular speed in recovery, and authorized validation stages
@@ -197,3 +197,8 @@ selected videos remain under `candidate-a/`. Stop at this user checkpoint.
 Stage 1 is implemented/rendered pending review; stage 2 was attempted and did
 not pass. This is a numerical limitation of these bounded trials, not a proof
 that Moco or the physical model cannot converge.
+
+
+### User approval, 2026-09-23
+
+The user approved C51 A after reviewing the displayed checkpoint. This supersedes pending visual status above, without changing historical receipts or approving the unselected full-solver experiment. Approval recorded in principal game `candidate-a/USER_REVIEW.md`. Proposed next work is in the factory roadmap; no new solve has started, and the overnight heartbeat remains paused.
