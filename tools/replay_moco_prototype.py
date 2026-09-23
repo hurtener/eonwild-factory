@@ -70,25 +70,31 @@ def replay(dense):
 nodes=replay(False);dense=replay(True)
 reflection=np.diag([1,1,-1])
 step=receipt['admission']['step_length_m']
+path_cycle=receipt.get('path_cycle')
+if path_cycle:
+    from eonwild_motion.solve.moco_path_task import path_frame
+    cycle_translation,cycle_rotation=path_frame(path_cycle['duration_s'],receipt['admission']['preferred_speed_mps'],path_cycle['task']['yaw_rate_rad_s'])
 join_positions=[];join_rotations=[];join_speeds=[]
 for name,body in nodes[-1]['bodies'].items():
-    other=name[:-2]+('_r' if name.endswith('_l') else '_l') if name.endswith(('_l','_r')) else name
+    other=name if path_cycle else (name[:-2]+('_r' if name.endswith('_l') else '_l') if name.endswith(('_l','_r')) else name)
     first=nodes[0]['bodies'][other]
     for point in ('origin','end'):
-        expected=reflection@np.array(first[point])+[step,0,0]
+        expected=cycle_rotation@np.array(first[point])+cycle_translation if path_cycle else reflection@np.array(first[point])+[step,0,0]
         join_positions.append(float(np.linalg.norm(np.array(body[point])-expected)))
-    expected=reflection@np.array(first['rotation'])@reflection
+    expected=cycle_rotation@np.array(first['rotation']) if path_cycle else reflection@np.array(first['rotation'])@reflection
     relative=expected.T@np.array(body['rotation'])
     join_rotations.append(float(np.arccos(np.clip((np.trace(relative)-1)/2,-1,1))))
 from eonwild_motion.solve.moco_spatial import reflected_coordinate
 import re
 for name,c in nodes[-1]['coordinates'].items():
+    if path_cycle and name in ('pitch','yaw','roll','forward','height','lateral'):continue
     other=re.sub(r'_(l|r)(?=_|$)',lambda m:'_r' if m.group(1)=='l' else '_l',name)
     sign=-1 if reflected_coordinate(name) else 1
+    if path_cycle:other=name;sign=1
     join_speeds.append(abs(c['speed']-sign*nodes[0]['coordinates'][other]['speed']))
 half_join=dict(maximum_body_point_error_m=max(join_positions),
     maximum_body_rotation_error_rad=max(join_rotations),maximum_coordinate_speed_error=max(join_speeds),
-    scope='Actual final solve node versus reflected opposite initial node plus step translation; not constructed full-loop closure')
+    scope='Actual full stride endpoint versus SE2-transformed initial node, internal coordinate speed closure' if path_cycle else 'Actual final solve node versus reflected opposite initial node plus step translation; not constructed full-loop closure')
 mass=receipt["mass_kg"];bw=mass*9.80665
 times=np.array([r['time_s'] for r in dense]);dt=times[1]-times[0]
 force=np.array([[c['force_N'] for c in r['contacts']] for r in dense]).sum(axis=1)

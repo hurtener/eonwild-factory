@@ -95,7 +95,9 @@ class Coordination:
                     sign=-1 if repeat and reflected_coordinate(n) else 1
                     value=sign*mapped(row,source,'value');velocity=sign*mapped(row,source,'speed')
                     if n=='neck' and 'neck_upper' not in row['coordinates']:value*=.55;velocity*=.55
-                    if n=='forward':value+=repeat*admission['step_length_m'];value-=self.speed*t;velocity-=self.speed
+                    if n=='forward':
+                        prior=baseline['metadata']['admission'] if self.policy.get('path_task') else admission
+                        value+=repeat*prior['step_length_m'];value-=prior['preferred_speed_mps']*t;velocity-=prior['preferred_speed_mps']
                     values.append(value);speeds.append(velocity)
                 times.append(t);q.append(values);u.append(speeds)
         if self.policy.get('initialization_body'):
@@ -110,8 +112,21 @@ class Coordination:
         offset=q[0][self.index['forward']]
         for values in q:values[self.index['forward']]-=offset
         times.append(self.period);q.append(q[0]);u.append(u[0])
+        self.path_task=self.policy.get('path_task')
+        if self.path_task:
+            from .moco_path_task import initialize
+            times,q=initialize(self,times,q,self.period)
+            half=self.period
         self.base=CubicSpline(times,q,axis=0,bc_type='periodic')
         self.parameters=basis_parameters(self.names,int(self.policy['harmonics']))
+        if self.path_task:
+            self.parameters=[]
+            for name in self.names:
+                if name.startswith('tail_') and self.path_task.get('retain_tail_warm_start',False):continue
+                if name!='forward':self.parameters.append((name,0,'constant'))
+                for order in range(1,int(self.policy['harmonics'])+1):
+                    self.parameters.append((name,order,'sin'))
+                    if name!='forward':self.parameters.append((name,order,'cos'))
         self.times=np.linspace(0,half,int(self.policy['samples']))
         self.times_dense=np.linspace(0,half,241)
         self.contact_forces=[self.model.getForceSet().get(c['force']) for c in self.metadata['contacts']]
@@ -125,8 +140,15 @@ class Coordination:
         nose_positions=[]
         for t,qq,uu in zip(self.times,self.reference[0],self.reference[1]):
             self.set_state(t,qq,uu)
-            nose_positions.append(self.nose.getPositionInGround(self.state).to_numpy()-[self.speed*t,0,0])
-        self.target=np.mean(nose_positions,axis=0);self.target[2]=0
+            position=self.nose.getPositionInGround(self.state).to_numpy()
+            if self.path_task:
+                from .moco_path_task import path_frame
+                origin,R=path_frame(t,self.speed,self.path_task['yaw_rate_rad_s'])
+                position=R.T@(position-origin)
+            else:position=position-[self.speed*t,0,0]
+            nose_positions.append(position)
+        self.target=np.mean(nose_positions,axis=0)
+        if not self.path_task:self.target[2]=0
         self.vertical_regions=[]
         for setting in self.policy.get('vertical_regions',[]):
             region=self.model.getBodySet().get(setting['body']);heights=[]
@@ -151,7 +173,7 @@ class Coordination:
                     angle=w*times+derivative*np.pi/2
                     v=w**derivative*(np.sin(angle) if kind=='sin' else np.cos(angle))
                 basis[:,self.index[n],j]=v
-                if re.search(r'_l(?=_|$)',n):
+                if not self.path_task and re.search(r'_l(?=_|$)',n):
                     sign=(-1 if reflected_coordinate(n) else 1)*(-1)**order
                     basis[:,self.index[opposite(n)],j]=sign*v
             out.append(basis)
@@ -159,6 +181,14 @@ class Coordination:
         return out
 
     def evaluate_kinematics(self,x,times):
+        if self.path_task:
+            from .moco_path_task import to_world
+            def sample(t):
+                values=self.local_kinematics(x,t)
+                return to_world(values,t,self.index,self.speed,self.path_task['yaw_rate_rad_s'])
+            h=1e-4
+            q=sample(times);before=sample(times-h);after=sample(times+h)
+            return q,(after-before)/(2*h),(after-2*q+before)/(h*h)
         basis=self._arrays(times) if hasattr(self,'_cache') else None
         if basis is None:self._cache={};basis=self._arrays(times)
         outputs=[]
@@ -168,6 +198,10 @@ class Coordination:
             if derivative==1:values[:,self.index['forward']]+=self.speed
             outputs.append(values)
         return outputs
+
+    def local_kinematics(self,x,times):
+        if not hasattr(self,'_cache'):self._cache={}
+        return self.base(times)+np.einsum('tqp,p->tq',self._arrays(times)[0],x)
 
     def set_state(self,t,q,u):
         self.state.setTime(float(t))
@@ -191,6 +225,11 @@ class Coordination:
             nose.append(self.nose.getPositionInGround(self.state).to_numpy()-[self.speed*t,0,0])
             R=self.head.getTransformInGround(self.state).R()
             direction.append([R.get(0,0),R.get(1,0),R.get(2,0)])
+            if self.path_task:
+                from .moco_path_task import path_frame
+                origin,path_rotation=path_frame(t,self.speed,self.path_task['yaw_rate_rad_s'])
+                nose[-1]=path_rotation.T@(self.nose.getPositionInGround(self.state).to_numpy()-origin)
+                direction[-1]=path_rotation.T@np.array(direction[-1])
             ff=[];vv=[]
             for f,b,p,c in zip(self.contact_forces,self.contact_bodies,self.contact_points,self.metadata['contacts']):
                 record=f.getRecordValues(self.state)
@@ -219,7 +258,14 @@ class Coordination:
     def residual(self,x):
         m=self.mechanics(x,self.times);p=self.policy;self.calls+=1
         target=[np.cos(self.pitch_target),np.sin(self.pitch_target),0.]
+        if self.path_task:
+            from .moco_path_task import path_frame,foot_task
+            from scipy.spatial.transform import Rotation
+            lead=self.path_task['yaw_rate_rad_s']*self.path_task['attention_lead_s']
+            target=Rotation.from_rotvec([0,lead,0]).apply(target)
+            m['q']=self.local_kinematics(x,self.times)
         delta=m['q']-self.reference[0]
+        if self.path_task:delta=m['q']-self.base(self.times)
         deviation=[]
         for i,n in enumerate(self.names):
             weight=p['leg_deviation_weight'] if n.startswith(('hip_','knee_','ankle_','mtp_','digit_')) else p['body_deviation_weight']
@@ -352,9 +398,16 @@ class Coordination:
                 idx=self.index['ankle_'+side]
                 support_task.extend(recovery_residual(m['q'][:,idx],m['u'][:,idx],m['acc'][:,idx],loads[:,j],self.period,task['ankle_recovery']))
             hip_width=abs(self.admission['points']['rightLeg.0'][2]-self.admission['points']['leftLeg.0'][2])
-            support_task.extend(lane_residual(m['feet'][:,:,2],loads,
+            lateral=m['feet'][:,:,2]
+            if self.path_task:
+                origin,rotation=path_frame(self.times,self.speed,self.path_task['yaw_rate_rad_s'])
+                lateral=np.einsum('tji,tsj->tsi',rotation,m['feet']-origin[:,None,:])[:,:,2]
+            support_task.extend(lane_residual(lateral,loads,
                 task['half_track_hip_width_ratio']*hip_width,
                 task['track_allowance_leg_lengths']*self.L,self.L,task['track_weight']))
+        if self.path_task:
+            targets=np.array([[foot_task(self,t,side)[0] for side in ('l','r')] for t in self.times])
+            support_task.extend((self.path_task['foot_task_weight']*(m['feet']-targets)/self.L).ravel())
         motor_speed=np.column_stack([m['u'][:,self.index[n.removeprefix('motor_')]] for n in self.motors])
         positive_power=np.maximum(m['effort']*self.capacities*motor_speed,0)/(self.bw*self.speed)
         tail_indices=[i for i,n in enumerate(self.names) if n.startswith('tail_')]

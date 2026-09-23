@@ -74,13 +74,14 @@ def main():
     ground = np.asarray(c.up) * skin.ground
     period = data['frames'][-1]['time_s']
     step = admission['step_length_m']
+    path_cycle=data['metadata'].get('path_cycle')
     def pitch(angle):
         return basis @ Rotation.from_rotvec([0, 0, angle]).as_matrix() @ basis.T
     breathing=data['metadata'].get('recipe',{}).get('jaw_breathing')
     cycles=breathing.get('period_strides',1) if breathing else 1
     if cycles not in (1,2,3,4):raise ValueError('Jaw breathing period must be 1 to 4 full strides')
     cycles=int(cycles)
-    halves=2*cycles
+    halves=cycles if path_cycle else 2*cycles
     times, poses, target_rows = [], [], []
     for half in range(halves):
         for row in data['frames'][:-1]:
@@ -109,22 +110,29 @@ def main():
             if position is not None:
                 tr[node] = position if parent is None else (np.linalg.inv(w[parent]) @ np.r_[position, 1])[:3]
         q = {name: value['value'] for name, value in row['coordinates'].items()}
-        reflection=np.diag([1,1,-1]) if half%2 else np.eye(3)
+        reflection=np.diag([1,1,-1]) if half%2 and not path_cycle else np.eye(3)
+        if path_cycle:
+            from eonwild_motion.solve.moco_path_task import path_frame
+            cycle_translation,cycle_rotation=path_frame(half*period,admission['preferred_speed_mps'],path_cycle['task']['yaw_rate_rad_s'])
+        else:
+            cycle_translation=np.array([half*step,0,0]);cycle_rotation=np.eye(3)
+        def body_point(p):
+            return ground+basis@(cycle_rotation@reflection@np.asarray(p)+cycle_translation)
         def body_rotation(name):
-            return basis@reflection@np.array(row['bodies'][name]['rotation'])@reflection@basis.T
+            return basis@cycle_rotation@reflection@np.array(row['bodies'][name]['rotation'])@reflection@basis.T
         trunk = body_rotation('trunk') if spatial else pitch(q['pitch'])
         root = roles['root']
-        root_origin = ground + basis @ (reflection@np.array(row['bodies']['trunk']['origin']) + [half * step, 0, 0])
+        root_origin = body_point(row['bodies']['trunk']['origin'])
         set_world(root, trunk @ base[root, :3, :3], root_origin + trunk @ (base[root, :3, 3] - origin))
         frame_targets = {}
         if spatial:
             for binding in data['metadata']['axial_bindings']:
                 node=roles[binding['role']]
                 set_world(node,body_rotation(binding['body'])@base[node,:3,:3])
-                frame_targets[binding['role']]=(ground+basis@(reflection@np.array(row['bodies'][binding['body']]['origin'])+[half*step,0,0])).tolist()
+                frame_targets[binding['role']]=body_point(row['bodies'][binding['body']]['origin']).tolist()
             tail_end=max((r for r in roles if r.startswith('tail.')),key=lambda r:int(r.split('.')[-1]))
             last_tail=data['metadata'].get('tail_terminal_body','tail_3')
-            frame_targets[tail_end]=(ground+basis@(reflection@np.array(row['bodies'][last_tail]['end'])+[half*step,0,0])).tolist()
+            frame_targets[tail_end]=body_point(row['bodies'][last_tail]['end']).tolist()
         else:
             # One mechanical neck and two tail regions. Retain the artist's rest
             # curvature within each rigid region; do not invent lateral motion.
@@ -137,12 +145,10 @@ def main():
                 node = roles[role]
                 set_world(node, pitch(angle) @ base[node, :3, :3])
         for side, suffix in [('left', 'l'), ('right', 'r')]:
-            source_side = suffix if half % 2 == 0 else ('r' if suffix == 'l' else 'l')
+            source_side = suffix if half % 2 == 0 or path_cycle else ('r' if suffix == 'l' else 'l')
             def point(part, endpoint):
                 p = np.array(row['bodies'][part + '_' + source_side][endpoint])
-                p[0] += half * step
-                if half % 2: p[2] *= -1
-                return ground + basis @ p
+                return body_point(p)
             for i, part in enumerate(('thigh', 'shin', 'metatarsus')):
                 node, child = roles[f'{side}Leg.{i}'], roles[f'{side}Leg.{i+1}']
                 direction = point(part, 'end') - point(part, 'origin')
@@ -211,9 +217,9 @@ def main():
     receipt = dict(schema='eonwild.motion.moco-skin-diagnostic.v1', status='EXPERIMENTAL_RETARGET', production=False,
         visual='PENDING', source_sha256=sha(source.raw), replay_sha256=sha(a.replay.read_bytes()),
         model_sha256=data['metadata']['model_sha256'], emitted_sha256=sha(payload), duration_s=halves*period,
-        root_advance_m=halves*step, frames=len(times),jaw_breathing=breathing,
+        root_advance_m=halves*step*(2 if path_cycle else 1), path_cycle=path_cycle, frames=len(times),jaw_breathing=breathing,
         source_optimization_status=optimization_status,
-        method=source_method+'. Saved body rotations/directions and reflected half-stride symmetry. '+
+        method=source_method+('. Full-stride curved-path transform; no leg exchange. ' if path_cycle else '. Saved body rotations/directions and reflected half-stride symmetry. ')+
             'Rotation-only limb transfer, original artist lengths and rest curvature. Calibrated models include chest and distal toe motion plus admitted jaw-neutral closure. No contact correction. '+('Explicit authored jaw breathing, not simulated respiration.' if breathing else 'No dynamic secondary layer.'),
         maximum_joint_error_m=max(v for m in measurements for v in m['joint_error_m'].values()),
         minimum_skin_floor_m=min(v for m in measurements for v in m['skin_floor_min_m'].values()),
