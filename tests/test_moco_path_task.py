@@ -43,3 +43,16 @@ def test_turning_support_pad_stays_planted_while_root_turns():
             # Digit rotation is relative to toe; this is its front sole witness.
             points.append(toe+R@rot(digit)@np.array([.39,-.09,0]))
         np.testing.assert_allclose(np.array(points),np.tile(points[0],(4,1)),atol=1e-12)
+
+
+def test_support_center_is_independent_of_split_pad_sampling():
+    from eonwild_motion.solve.moco_path_task import sole_center_offset
+    geom={'toe_midpoint_m':[.25,-.1,0], 'sites':[
+        {'center_local_m':[-.1,0,0],'radius_m':.1},
+        {'center_local_m':[.15,0,0],'radius_m':.1},
+        {'center_local_m':[.4,0,0],'radius_m':.1,'distal':True}]}
+    expected=sole_center_offset(geom)
+    geom['sites'][1:2]=[
+        {'center_local_m':[.15,0,-.2],'radius_m':.1,'stiffness_share':.5},
+        {'center_local_m':[.15,0,.2],'radius_m':.1,'stiffness_share':.5}]
+    np.testing.assert_allclose(sole_center_offset(geom),expected,atol=1e-12)

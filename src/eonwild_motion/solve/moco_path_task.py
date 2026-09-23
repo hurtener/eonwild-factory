@@ -35,6 +35,27 @@ def to_world(q, times, index, speed, rate):
     return q
 
 
+def sole_center_offset(geometry):
+    """Area/share-weighted sole center relative to its front support witness.
+
+    This is a geometric support prior, not a pressure measurement. Transverse
+    split pads share weight so a wider sampling grid cannot shift the center.
+    """
+    points, weights = [], []
+    pivot = np.array(geometry['toe_midpoint_m'])
+    for site in geometry['sites']:
+        center = np.array(site['center_local_m'], dtype=float)
+        if site.get('distal', False): center += pivot
+        center[1] -= site['radius_m']
+        points.append(center)
+        weights.append(site.get('stiffness_share', 1.) * site['radius_m']**2)
+    front = np.array(geometry['sites'][-1]['center_local_m']) + pivot
+    front[1] -= geometry['sites'][-1]['radius_m']
+    offset = front - np.average(points, axis=0, weights=weights)
+    offset[1] = 0.
+    return offset
+
+
 def foot_task(problem, t, side):
     task = problem.policy['path_task']
     T, speed = problem.period, problem.speed
@@ -50,9 +71,16 @@ def foot_task(problem, t, side):
     anchor_time = start+duty*T*.5
     origin0, R0 = path_frame(anchor_time, speed, rate)
     origin1, R1 = path_frame(anchor_time+T, speed, rate)
-    anchor0 = origin0+R0@np.array([task['catch_bias_m'],0,lane])
-    anchor1 = origin1+R1@np.array([task['catch_bias_m'],0,lane])
     outward = -sign*task['toe_out_radians']
+    placement = np.array([task['catch_bias_m'], 0., lane])
+    if task.get('support_reference') == 'mass_centered_sole':
+        # Define the stance center by the support region, not the toe tip.
+        # Only the planned anchor changes; a planted witness never slides.
+        placement[0] += problem.metadata['path_support']['mean_com_forward_m']
+        placement += Rotation.from_rotvec([0, outward, 0]).apply(
+            sole_center_offset(problem.metadata['foot_geometry']))
+    anchor0 = origin0+R0@placement
+    anchor1 = origin1+R1@placement
     yaw0 = rate*anchor_time+outward
     swing = max(0., (phase-duty)/(1-duty))
     if phase < duty:
@@ -108,6 +136,15 @@ def initialize(problem, old_times, old_q, old_period):
     lead = task['yaw_rate_rad_s']*task['attention_lead_s']
     for name,share in [('chest_yaw',.10),('neck_yaw',.40),('neck_upper_yaw',.35),('head_yaw',.15)]:
         q[:,ix[name]] += lead*share
+    if task.get('support_reference') == 'mass_centered_sole':
+        offsets=[]
+        for k in range(0,len(times)-1,5):
+            problem.set_state(times[k],q[k],np.zeros(len(problem.names)))
+            offsets.append(float(problem.model.calcMassCenterPosition(problem.state).get(0)-q[k,ix['forward']]))
+        problem.metadata['path_support'] = dict(
+            mean_com_forward_m=float(np.mean(offsets)),
+            front_to_sole_center_m=sole_center_offset(problem.metadata['foot_geometry']).tolist(),
+            classification='Modeled warm-posture mass center plus geometric pad-area support prior; not measured COP')
     errors=[]
     for k,t in enumerate(times[:-1]):
         world = to_world(q[k:k+1], np.array([t]), ix, problem.speed, task['yaw_rate_rad_s'])[0]
