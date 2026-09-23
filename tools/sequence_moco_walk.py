@@ -74,7 +74,7 @@ for side in ('l','r'):
         digits.append(row['coordinates']['digit_'+side]['value']-digit)
     positions[-1]=positions[0];rotvec[-1]=rotvec[0];digits[-1]=digits[0]
     correction[side]=(CubicSpline(ts,positions,axis=0,bc_type='periodic'),CubicSpline(ts,rotvec,axis=0,bc_type='periodic'),CubicSpline(ts,digits,bc_type='periodic'))
-times=np.linspace(0,duration,769);poses=[];errors=[]
+times=np.linspace(0,duration,769);poses=[];errors=[];ik_receipts=[]
 for t in times:
     local_t=float(np.clip(t-start,0,active_end));tau=float(clock(local_t));phase=tau%T
     gain=gain_at_progress(tau);local=neutral+gain*(cycle(phase)-neutral)
@@ -101,7 +101,8 @@ for t in times:
         bounds=np.array([p.metadata['coordinates'][n]['bounds_rad'] for n in names]).T
         margin=.01*(bounds[1]-bounds[0]);bounds[0]+=margin;bounds[1]-=margin
         # Warm from this cycle pose to avoid history-dependent branch switches.
-        opt=least_squares(residual,np.clip(reference,bounds[0]+1e-6,bounds[1]-1e-6),bounds=bounds,max_nfev=35,ftol=1e-9,xtol=1e-9,gtol=1e-9)
+        opt=least_squares(residual,np.clip(reference,bounds[0]+1e-6,bounds[1]-1e-6),bounds=bounds,max_nfev=100,ftol=1e-9,xtol=1e-9,gtol=1e-9)
+        ik_receipts.append(dict(time_s=float(t),side=side,nfev=int(opt.nfev),success=bool(opt.success),optimality=float(opt.optimality)))
         world[indices]=opt.x
         errors.append(float(np.linalg.norm(residual(opt.x)[:3])*p.L))
     poses.append(world)
@@ -143,6 +144,7 @@ p.metadata.update(schema='eonwild.motion.moco-model-receipt.v1',admission=p.admi
     model_sha256=hashlib.sha256((a.output/'model.osim').read_bytes()).hexdigest(),status='AUTHORED_TRANSITION_MODEL',
     classification='C52 B revised 16-second walking sequence; inverse-dynamics diagnostic',user_review='PENDING')
 (a.output/'model-receipt.json').write_text(json.dumps(p.metadata,indent=2)+'\n')
+(a.output/'ik-receipt.json').write_text(json.dumps(ik_receipts,indent=2)+'\n')
 report=p.export(np.zeros(len(p.parameters)))
 (a.output/'sequence-receipt.json').write_text(json.dumps(p.metadata['sequence'],indent=2)+'\n')
 (a.output/'solve-receipt.json').write_text(json.dumps(dict(success=False,status='AUTHORED_CONTACT_TRANSITION',
