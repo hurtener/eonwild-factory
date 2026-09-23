@@ -69,8 +69,12 @@ def foot_task(problem, t, side):
     sign = np.sign(problem.admission['points'][('left' if side == 'l' else 'right')+'Leg.0'][2])
     lane = sign*task['half_track_hip_width_ratio']*hip_width
     anchor_time = start+duty*T*.5
-    origin0, R0 = path_frame(anchor_time, speed, rate)
-    origin1, R1 = path_frame(anchor_time+T, speed, rate)
+    if hasattr(problem, 'anchor_frame'):
+        origin0, R0 = problem.anchor_frame(start, anchor_time, side)
+        origin1, R1 = problem.anchor_frame(start+T, anchor_time+T, side)
+    else:
+        origin0, R0 = path_frame(anchor_time, speed, rate)
+        origin1, R1 = path_frame(anchor_time+T, speed, rate)
     outward = -sign*task['toe_out_radians']
     placement = np.array([task['catch_bias_m'], 0., lane])
     if task.get('support_reference') == 'mass_centered_sole':
@@ -81,24 +85,26 @@ def foot_task(problem, t, side):
             sole_center_offset(problem.metadata['foot_geometry']))
     anchor0 = origin0+R0@placement
     anchor1 = origin1+R1@placement
-    yaw0 = rate*anchor_time+outward
+    yaw0 = np.arctan2(R0[0,2], R0[0,0])+outward
+    yaw_delta = np.arctan2((R0.T@R1)[0,2], (R0.T@R1)[0,0])
+    support_gain = problem.support_gain(start, t, side) if hasattr(problem, 'support_gain') else 1.
     swing = max(0., (phase-duty)/(1-duty))
     if phase < duty:
         ramp = float(np.clip((phase/duty-.4)/.6,0,1))
         peel = 6*ramp**3-8*ramp**4+3*ramp**5
-        angle = -task['toe_off_radians']*peel
+        angle = -task['toe_off_radians']*peel*support_gain
         toe_angle = angle*(1-float(smooth((phase/duty-.35)/.5)))
         anchor = anchor0
         yaw = yaw0
         lift = 0.
     else:
         blend = float(smooth(swing))
-        angle = -task['toe_off_radians']*(1-blend)
-        release_rate = -task['toe_off_radians']/(.6*duty*T)
+        angle = -task['toe_off_radians']*(1-blend)*support_gain
+        release_rate = -task['toe_off_radians']*support_gain/(.6*duty*T)
         angle += release_rate*(1-duty)*T*(swing-6*swing**3+8*swing**4-3*swing**5)
         toe_angle = -task['recovery_toe_radians']*float(smooth(swing/.22))*(1-float(smooth((swing-.45)/.55)))
         anchor = (1-blend)*anchor0+blend*anchor1
-        yaw = yaw0+rate*T*blend
+        yaw = yaw0+yaw_delta*blend
         lift = task['clearance_m']*np.sin(np.pi*swing)**2
     Ry = Rotation.from_rotvec([0,yaw,0]).as_matrix()
     foot_rotation = Ry@rot(angle)

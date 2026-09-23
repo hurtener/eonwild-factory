@@ -75,20 +75,21 @@ def main():
     period = data['frames'][-1]['time_s']
     step = admission['step_length_m']
     path_cycle=data['metadata'].get('path_cycle')
+    sequence=data['metadata'].get('sequence')
     def pitch(angle):
         return basis @ Rotation.from_rotvec([0, 0, angle]).as_matrix() @ basis.T
     breathing=data['metadata'].get('recipe',{}).get('jaw_breathing')
     cycles=breathing.get('period_strides',1) if breathing else 1
     if cycles not in (1,2,3,4):raise ValueError('Jaw breathing period must be 1 to 4 full strides')
     cycles=int(cycles)
-    halves=cycles if path_cycle else 2*cycles
+    halves=1 if sequence else (cycles if path_cycle else 2*cycles)
     times, poses, target_rows = [], [], []
     for half in range(halves):
         for row in data['frames'][:-1]:
             times.append(half * period + row['time_s'])
             target_rows.append((half, row))
     times.append(halves * period)
-    target_rows.append((halves, data['frames'][0]))
+    target_rows.append((0, data['frames'][-1]) if sequence else (halves, data['frames'][0]))
     spatial=data['metadata'].get('spatial')
     targets = []
     for half, row in target_rows:
@@ -97,7 +98,7 @@ def main():
             from eonwild_motion.solve.jaw_response import compose_jaw_rotation
             gape=0.
             if breathing:
-                phase=2*np.pi*(half*period+row['time_s'])/(halves*period)
+                phase=2*np.pi*(half*period+row['time_s'])/(3.5 if sequence else halves*period)
                 gape=breathing['minimum_gape_degrees']+.5*(1-np.cos(phase))*(breathing['maximum_gape_degrees']-breathing['minimum_gape_degrees'])
             ro[c.jaw]=compose_jaw_rotation(c.base_r[c.jaw],c.jaw_axis,
                 neutral_close_degrees=c.jaw_neutral_close_degrees,breathing_gape_degrees=float(gape),gain=1.)
@@ -111,7 +112,9 @@ def main():
                 tr[node] = position if parent is None else (np.linalg.inv(w[parent]) @ np.r_[position, 1])[:3]
         q = {name: value['value'] for name, value in row['coordinates'].items()}
         reflection=np.diag([1,1,-1]) if half%2 and not path_cycle else np.eye(3)
-        if path_cycle:
+        if sequence:
+            cycle_translation=np.zeros(3);cycle_rotation=np.eye(3)
+        elif path_cycle:
             from eonwild_motion.solve.moco_path_task import path_frame
             cycle_translation,cycle_rotation=path_frame(half*period,admission['preferred_speed_mps'],path_cycle['task']['yaw_rate_rad_s'])
         else:
@@ -213,13 +216,13 @@ def main():
             skin_floor_min_m={s: float((reopened.skin(w, ids) @ c.up).min() - skin.ground) for s, ids in reopened.foot_masks.items()},
             landmarks=landmarks))
     optimization_status=data['report']['optimizer']['status']
-    source_method='Spatial inverse-dynamics initializer' if optimization_status=='REDUCED_COORDINATE_INITIALIZER' else ('Spatial Moco trajectory' if spatial else 'Planar Moco trajectory')
+    source_method='Authored contact transition with inverse-dynamics audit' if sequence else 'Spatial inverse-dynamics initializer' if optimization_status=='REDUCED_COORDINATE_INITIALIZER' else ('Spatial Moco trajectory' if spatial else 'Planar Moco trajectory')
     receipt = dict(schema='eonwild.motion.moco-skin-diagnostic.v1', status='EXPERIMENTAL_RETARGET', production=False,
         visual='PENDING', source_sha256=sha(source.raw), replay_sha256=sha(a.replay.read_bytes()),
         model_sha256=data['metadata']['model_sha256'], emitted_sha256=sha(payload), duration_s=halves*period,
-        root_advance_m=halves*step*(2 if path_cycle else 1), path_cycle=path_cycle, frames=len(times),jaw_breathing=breathing,
+        root_advance_m=sequence['distance_m'] if sequence else halves*step*(2 if path_cycle else 1), sequence=sequence, path_cycle=path_cycle, frames=len(times),jaw_breathing=breathing,
         source_optimization_status=optimization_status,
-        method=source_method+('. Full-stride curved-path transform; no leg exchange. ' if path_cycle else '. Saved body rotations/directions and reflected half-stride symmetry. ')+
+        method=source_method+('. Finite sequence, no mirroring or repetition. ' if sequence else '. Full-stride curved-path transform; no leg exchange. ' if path_cycle else '. Saved body rotations/directions and reflected half-stride symmetry. ')+
             'Rotation-only limb transfer, original artist lengths and rest curvature. Calibrated models include chest and distal toe motion plus admitted jaw-neutral closure. No contact correction. '+('Explicit authored jaw breathing, not simulated respiration.' if breathing else 'No dynamic secondary layer.'),
         maximum_joint_error_m=max(v for m in measurements for v in m['joint_error_m'].values()),
         minimum_skin_floor_m=min(v for m in measurements for v in m['skin_floor_min_m'].values()),
