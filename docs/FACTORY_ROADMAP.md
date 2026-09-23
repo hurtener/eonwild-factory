@@ -1,5 +1,16 @@
 # Factory movement roadmap and acceptance tracker
 
+Current review: **C53 A head-led walking turn — pending user review**.
+Sixteen seconds of rest/start/1.6 m/s curved walking/stop, in side and quarter
+views. Approved C52 B H walking and C51 A running remain preserved. All 768 frames
+inspected; 13 focused checks pass. Shared contact planner and unchanged physical
+model; authored steering/attention intent with inverse-dynamics audit. Neck effort
+exceeds modeled capacity, so full physical/contact acceptance remains unresolved.
+Stationary turning and broader generalized control are future work. Details:
+principal `game/Evidence/moco-c53-head-led-turn/MOCO_C53_HEAD_LED_TURN.md`.
+Pause for visual feedback before another pass.
+
+
 Current extension: **C52 B relaxed walking H — visually approved**.
 Next turning pass must be led by head/neck attention into the intended direction,
 with overlapping torso/pelvis rotation, weight transfer and adaptive foot placement.
