@@ -1,6 +1,6 @@
 # Factory movement roadmap and acceptance tracker
 
-Current review: **C53 A head-led walking turn — pending user review**.
+Current review: **C53 A head-led walking turn — credible direction; more neck lead requested**.
 Sixteen seconds of rest/start/1.6 m/s curved walking/stop, in side and quarter
 views. Approved C52 B H walking and C51 A running remain preserved. All 768 frames
 inspected; 13 focused checks pass. Shared contact planner and unchanged physical
@@ -1234,3 +1234,9 @@ range, but the Moco path does not yet consume the central envelope/regional
 weights. Peak neck demand 4.5265x is against estimated capacity, not a measured
 biological strength limit. Track this integration/calibration gap for the next
 development pass; see the C53 handoff.
+
+C53 user feedback: turning looks good/credible; a little more neck/head turn
+is requested. Read-only audit finds ~90% of peak neck-yaw demand is already
+required by the same static pose. Prioritize static-load/distribution/capacity
+audit and central neck-profile integration, not slowing the glance to hide the
+ratio. Proposed next target: existing 45-degree scan range. No motion changed.

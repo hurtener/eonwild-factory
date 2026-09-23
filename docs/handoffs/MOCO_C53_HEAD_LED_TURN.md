@@ -107,3 +107,22 @@ that a Tarbosaurus cannot look 38 degrees into a turn. Next development should
 connect the central cumulative envelope/regional semantics to the reduced anatomy
 and audit strength/passive support and motion demand without silently increasing
 capacity to pass. This audit changes no animation bytes or acceptance thresholds.
+
+## User feedback and read-only neck audit
+
+The user found the turn credible and good, requested a little more neck/head
+turn, and questioned the effort estimate. Preserve the current candidate as a
+credible direction; no new render or motion changes in this feedback turn.
+Next proposed visual target is near the existing 45-degree scan value, subject
+to central-envelope integration and the physical audit, not a new anatomical cap.
+
+Read-only audit at the peak neck-yaw demand (5.145833 s): saved demand 9.661 kNm;
+recomputed from saved speed derivatives 9.658 kNm; holding exactly the same pose
+at zero speed/acceleration requires 8.722 kNm (~90.3%). Spring resistance at that
+pose is 1.874 kNm; damping is only 0.033 Nm. Dynamic-minus-static contribution is
+0.936 kNm (~9.7%). Assigned capacity remains 2.134 kNm. Thus a slower turn alone
+would not resolve this result. Audit static geometry/axes, regional load and bend
+distribution, passive support and strength calibration before treating it as a
+real animal limitation. This does not prove which modeling assumption is wrong.
+No masses, forces, capacities, limits, reference poses or motion bytes were edited.
+See `neck-effort-audit.json` and reproducible `audit_neck_effort.py` in game evidence.
