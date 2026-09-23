@@ -1,5 +1,11 @@
 # C52 — normal walking and walking turns with the spatial model
 
+> Superseded for active work by [C52 B centered walking](MOCO_C52B_CENTERED_WALK.md).
+> The user rejected the walking ankle artifacts. Historical media below is not
+> approved; current priority is the corrected 16-second straight walk. Turning
+> and broader locomotion generalization are held until that checkpoint.
+
+
 User requested both motions together as ten-second native-time review clips.
 Work directly, without subagents. C51 A is the approved fast-locomotion visual
 baseline and stays unchanged. This is a separate walking task transfer, not

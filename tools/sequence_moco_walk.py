@@ -55,7 +55,7 @@ def anchor(start_tau,mid_tau,side):
     return frame_at_progress(mid_tau)
 def support_gain(start_tau,tau,side):
     if start_tau >= (cycles-.5)*T-1e-8:return 0.
-    if start_tau < 0:return float(smooth(tau/(.10*T)))
+    if start_tau < 0:return gain_at_progress(tau)
     return 1.
 seq=SimpleNamespace(policy=p.policy,period=T,speed=speed,admission=p.admission,metadata=p.metadata,
                     anchor_frame=anchor,support_gain=support_gain)
@@ -91,7 +91,7 @@ for t in times:
         digit+=gain*float(dd(phase))
         names=['hip_'+side,'hip_'+side+'_yaw','hip_'+side+'_roll','knee_'+side,'ankle_'+side,'mtp_'+side,'digit_'+side]
         indices=[ix[n] for n in names];coords=[p.coordinates[i] for i in indices]
-        reference=cycle(phase)[indices];toe=p.model.getBodySet().get('toe_'+side)
+        reference=local[indices];toe=p.model.getBodySet().get('toe_'+side)
         def residual(x):
             for c,val in zip(coords,x):c.setValue(p.state,float(val),False)
             p.model.realizePosition(p.state)
