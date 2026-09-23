@@ -100,3 +100,17 @@ def test_joint_spline_obeys_stops_between_nodes_with_smooth_derivatives():
     t=np.array([.3,1.7,3.2,4.4]);h=1e-5
     np.testing.assert_allclose(spline(t,1),(spline(t+h)-spline(t-h))/(2*h),atol=1e-6)
     np.testing.assert_allclose(spline(t,2),(spline(t+h,1)-spline(t-h,1))/(2*h),atol=1e-5)
+
+
+def test_optimizer_coordinates_cannot_escape_joint_limits():
+    from scipy.interpolate import CubicSpline
+    from eonwild_motion.solve.moco_coordination import Coordination
+    p=object.__new__(Coordination)
+    p.names=['ankle_l','height'];p.index={'ankle_l':0,'height':1};p.period=2.
+    p.path_task={'enforce_joint_limits':True};p.parameters=[('ankle_l',1,'sin'),('ankle_l',2,'cos')]
+    p.base=CubicSpline([0,1,2],[[.5,2.],[.5,2.],[.5,2.]],axis=0)
+    p.latent_base=CubicSpline([0,1,2],np.zeros((3,2)),axis=0)
+    p.bounded={0:(.15,2.1)};p._cache={}
+    values=p.local_kinematics(np.array([100.,-100.]),np.linspace(0,2,10001))
+    assert values[:,0].min()>=.15 and values[:,0].max()<=2.25
+    np.testing.assert_allclose(values[:,1],2.)

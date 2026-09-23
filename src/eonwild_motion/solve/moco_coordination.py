@@ -115,6 +115,10 @@ class Coordination:
         self.path_task=self.policy.get('path_task')
         if self.path_task:
             from .moco_path_task import initialize
+            if self.path_task.get('align_reference_support',False):
+                source_duty=baseline['metadata']['recipe']['calibrated_task']['duty_factor']
+                if abs(source_duty-self.path_task['source_duty_factor'])>1e-9:
+                    raise ValueError('Support phase mapping disagrees with the saved source gait')
             times,q=initialize(self,times,q,self.period)
             half=self.period
         self.base=CubicSpline(times,q,axis=0,bc_type='periodic')
