@@ -73,16 +73,41 @@ def frame_at_progress(tau):
 def gain_at_progress(tau):
     t=float(inverse(np.clip(tau,0,end_progress)))
     return float(smooth(t/1.8)*smooth((active_end-t)/1.8))
+def anchor_progress(start_tau,mid_tau):
+    if start_tau < 1e-8:return 0.
+    if start_tau >= (cycles-.5)*T-1e-8:return end_progress
+    return mid_tau
 def anchor(start_tau,mid_tau,side):
-    if start_tau < 1e-8:return frame_at_progress(0.)
-    if start_tau >= (cycles-.5)*T-1e-8:return frame_at_progress(end_progress)
-    return frame_at_progress(mid_tau)
+    return frame_at_progress(anchor_progress(start_tau,mid_tau))
 def support_gain(start_tau,tau,side):
     if start_tau >= (cycles-.5)*T-1e-8:return 0.
     if start_tau < 0:return gain_at_progress(tau)
     return 1.
 seq=SimpleNamespace(policy=p.policy,period=T,speed=speed,admission=p.admission,metadata=p.metadata,
                     anchor_frame=anchor,support_gain=support_gain)
+steering=turn_plan.specification.get('step_steering') if turn_plan else None
+if steering:
+    from eonwild_motion.solve.moco_turn_plan import attenuate_heading_correction
+    def support_context(start_tau,mid_tau):
+        progress=anchor_progress(start_tau,mid_tau)
+        native=start+float(inverse(np.clip(progress,0,end_progress)))
+        # Convert half a gait cycle to native time, including the first step.
+        before=float(inverse(np.clip(progress-T*.25,0,end_progress)))
+        after=float(inverse(np.clip(progress+T*.25,0,end_progress)))
+        return native,max(after-before,T*.25)
+    def support_outward(start_tau,mid_tau,side,outward):
+        native,step_seconds=support_context(start_tau,mid_tau)
+        return turn_plan.support_outward(native,step_seconds,outward)
+    seq.support_outward=support_outward
+    def foot_steering_gain(tau,side):
+        offset=0. if side=='l' else .5
+        continuous=tau/T+offset;phase=continuous-np.floor(continuous)
+        begin=(np.floor(continuous)-offset)*T;duty=p.path_task['duty_factor']
+        def at(begin):
+            native,step_seconds=support_context(begin,begin+duty*T*.5)
+            return turn_plan.steering_gain(native,step_seconds,p.path_task['toe_out_radians'])
+        blend=float(smooth(max(0.,(phase-duty)/(1-duty))))
+        return (1-blend)*at(begin)+blend*at(begin+T)
 # Actual cycle-vs-task discrepancies retained at steady speed. The finite
 # transition fades these small optimization corrections; feet are never fixed
 # in the renderer, and final contact is measured after all pose modifications.
@@ -106,6 +131,10 @@ for t in times:
     # At rest head returns to the body's heading, retaining the reviewed pitch.
     for n in ('chest_yaw','neck_yaw','neck_upper_yaw','head_yaw'):local[ix[n]]*=gain
     if turn_plan:
+        if steering:
+            turn_gain=turn_plan.steering_gain(float(t),T*.5,p.path_task['toe_out_radians'])
+            fraction=1-(1-steering['torso_yaw_reference_fraction'])*turn_gain
+            local[ix['yaw']]=neutral[ix['yaw']]+fraction*(local[ix['yaw']]-neutral[ix['yaw']])
         tail_count=len(p.metadata.get('tail_chain',[]))
         for name,offset in turn_plan.body_offsets(float(t),tail_count).items():local[ix[name]]+=offset
         if attention:
@@ -132,7 +161,9 @@ for t in times:
     for side in ('l','r'):
         target,orientation,digit=foot_task(seq,tau,side)
         dp,dr,dd=correction[side];target=target+gain*rr@dp(phase)
-        orientation=orientation@Rotation.from_rotvec(gain*dr(phase)).as_matrix()
+        corrected=orientation@Rotation.from_rotvec(gain*dr(phase)).as_matrix()
+        orientation=(attenuate_heading_correction(orientation,corrected,foot_steering_gain(tau,side))
+                     if steering else corrected)
         digit+=gain*float(dd(phase))
         names=['hip_'+side,'hip_'+side+'_yaw','hip_'+side+'_roll','knee_'+side,'ankle_'+side,'mtp_'+side,'digit_'+side]
         indices=[ix[n] for n in names];coords=[p.coordinates[i] for i in indices]

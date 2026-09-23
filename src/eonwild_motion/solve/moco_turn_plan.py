@@ -10,6 +10,14 @@ from scipy.spatial.transform import Rotation
 from .moco_tasks import smooth
 
 
+def attenuate_heading_correction(planned, corrected, gain):
+    """Remove inherited heading error while preserving foot pitch and roll."""
+    def heading(matrix):return np.arctan2(-matrix[2,0],matrix[0,0])
+    delta=heading(corrected)-heading(planned)
+    delta=np.arctan2(np.sin(delta),np.cos(delta))
+    return Rotation.from_rotvec([0.,-gain*delta,0.]).as_matrix()@corrected
+
+
 class TurnPlan:
     def __init__(self, specification, duration, velocity):
         self.specification = specification
@@ -31,6 +39,35 @@ class TurnPlan:
         lateral = cumulative_trapezoid(-speeds*np.sin(heading), times, initial=0.)
         self.position = CubicSpline(times, np.stack((forward, np.zeros_like(times), lateral), axis=-1))
         self.velocity = velocity
+        steering=specification.get('step_steering')
+        if steering:
+            if not 0 < steering['minimum_heading_share'] < .5:
+                raise ValueError('Step heading share must lie between zero and one half')
+            if not 0 <= steering['torso_yaw_reference_fraction'] <= 1:
+                raise ValueError('Torso yaw reference fraction must be between zero and one')
+
+    def steering_gain(self, time, step_seconds, outward):
+        """Blend by turn advance per step relative to the neutral toe-out bias."""
+        if not self.specification.get('step_steering'):return 0.
+        begin=max(0.,time-step_seconds*.5);end=min(self.duration,time+step_seconds*.5)
+        advance=abs(float(self.heading(end)-self.heading(begin)))
+        return float(smooth(advance/max(2*abs(outward),1e-6)))
+
+    def support_outward(self, time, step_seconds, outward):
+        """Retain toe-out as a preference without letting it consume a whole step's turn.
+
+        Evaluated at each support anchor, never continuously on a planted foot.
+        The smooth cap leaves room for both alternating landings to advance.
+        This is a placement intent, not a prediction of steering force.
+        """
+        gain=self.steering_gain(time,step_seconds,outward)
+        if gain==0:return outward
+        advance=abs(float(self.heading(min(self.duration,time+step_seconds*.5))-
+                          self.heading(max(0.,time-step_seconds*.5))))
+        budget=(.5-self.specification['step_steering']['minimum_heading_share'])*advance
+        magnitude=abs(outward)
+        limited=magnitude*budget/np.hypot(magnitude,budget) if magnitude else 0.
+        return float(np.sign(outward)*((1-gain)*magnitude+gain*limited))
 
     def frame(self, time):
         time = np.clip(time, 0, self.duration)

@@ -77,17 +77,20 @@ def foot_task(problem, t, side):
         origin0, R0 = path_frame(anchor_time, speed, rate)
         origin1, R1 = path_frame(anchor_time+T, speed, rate)
     outward = -sign*task['toe_out_radians']
-    placement = np.array([task['catch_bias_m'], 0., lane])
-    if task.get('support_reference') == 'mass_centered_sole':
-        # Define the stance center by the support region, not the toe tip.
-        # Only the planned anchor changes; a planted witness never slides.
-        placement[0] += problem.metadata['path_support']['mean_com_forward_m']
-        placement += Rotation.from_rotvec([0, outward, 0]).apply(
-            sole_center_offset(problem.metadata['foot_geometry']))
-    anchor0 = origin0+R0@placement
-    anchor1 = origin1+R1@placement
-    yaw0 = np.arctan2(R0[0,2], R0[0,0])+outward
-    yaw_delta = np.arctan2((R0.T@R1)[0,2], (R0.T@R1)[0,0])
+    outward0=outward1=outward
+    if hasattr(problem,'support_outward'):
+        outward0=problem.support_outward(start,anchor_time,side,outward)
+        outward1=problem.support_outward(start+T,anchor_time+T,side,outward)
+    def placement(angle):
+        value=np.array([task['catch_bias_m'],0.,lane])
+        if task.get('support_reference') == 'mass_centered_sole':
+            value[0]+=problem.metadata['path_support']['mean_com_forward_m']
+            value+=Rotation.from_rotvec([0,angle,0]).apply(sole_center_offset(problem.metadata['foot_geometry']))
+        return value
+    anchor0 = origin0+R0@placement(outward0)
+    anchor1 = origin1+R1@placement(outward1)
+    yaw0 = np.arctan2(R0[0,2], R0[0,0])+outward0
+    yaw_delta = np.arctan2((R0.T@R1)[0,2], (R0.T@R1)[0,0])+outward1-outward0
     support_gain = problem.support_gain(start, t, side) if hasattr(problem, 'support_gain') else 1.
     toe_off=task['toe_off_radians']
     if task.get('scale_reference_by_relative_speed',False):
