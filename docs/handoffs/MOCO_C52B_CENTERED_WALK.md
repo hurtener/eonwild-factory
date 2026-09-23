@@ -109,3 +109,50 @@ chain rules, matching the established straight-running derivative path instead
 of finite differences of accelerations. `walk-e` is the current bounded
 straight-walk refinement. Turning trials are held; no rejected draft should be
 presented again.
+
+
+## Intermediate candidate E/G outcome (2026-09-23; changes requested)
+
+The final periodic initializer is `walk-e` (solver source `c922beb`), followed
+by `walk-sequence-g` (finite-transition source `2d9fe44`). The latter blends
+reference joint posture toward neutral as speed falls, retains final world
+support anchors, and allows its local bounded IK to finish. Earlier 35-evaluation
+IK budgets left numerical jitter near the final closing step. All 1,538 final
+local solves finish successfully, requiring at most 47 evaluations. This is
+local IK termination, **not full Moco convergence**.
+
+The periodic stance ankle audit finds one prominent peak per side (using a
+3-degree prominence threshold), compared with four prominent extrema per side
+in rejected `walk-a`. Small sub-threshold ripple remains; no claim of a perfectly
+monotone biological trajectory is made. All replayed joint angles and reopened
+skin knee/ankle angles remain inside admitted bounds. Reopened rig joint mapping
+error is at most 3.12 micrometres. Continuous bounded interpolation is covered
+by focused tests; 11 focused path/support checks pass.
+
+Finite sequence: 16 seconds, idle to 2 seconds, 12 steps, 1.6 m/s cruise,
+stop at 12.684 seconds, 14.215 metres total travel, then rest. Unsupported root
+residual RMS is 0.09507 in normalized BW/BWL components; maximum normalized
+command is 1.4748 (above its 1.0 capacity). Reopened skin reaches 9.0 mm below
+the stage floor. These are unresolved physical/contact limitations, not waived
+acceptance thresholds. This candidate is a reviewable motion diagnostic, not
+production physical validation, a forward-stable simulation, or a converged
+optimal-control solve.
+
+Review assets: principal game `Assets/Eonwild/MocoWalk52BCentered`; durable
+receipts/media under `game/Evidence/moco-c52b-centered-walk`. C51 A is preserved.
+Turning stays on hold until the corrected walking is reviewed. User approval
+is PENDING. No new generalization stage has begun.
+
+
+The user saw E/G during rendering and said it was much better, but still too
+extended/forceful for relaxed walking. Do not present E/G as the corrected final
+checkpoint. Its formal ROM pass does not establish appropriate functional gait.
+Current `walk-h` reduces *all* warm leg excursions around their mean using the
+ratio of current/source dimensionless speed, and scales the source toe-off
+intent by the same ratio. This is an explicit initialization prior, not a proven
+biomechanical scaling law or a per-species joint-angle override. Exact anatomy,
+contact/effort evaluation, bounds and strength remain unchanged. H seed ankle
+range is 27.7–87.9 degrees and maximum rate 369 degrees/s, versus E 9.7–103.3 and
+625 degrees/s. All-angle scaling also removes the doubled recovery bend at the
+knee in the seed. Await bounded physical refinement, final sequence/rig replay,
+and a fresh 16-second render. Broader generalized locomotion remains deferred.

@@ -119,6 +119,14 @@ class Coordination:
                 source_duty=baseline['metadata']['recipe']['calibrated_task']['duty_factor']
                 if abs(source_duty-self.path_task['source_duty_factor'])>1e-9:
                     raise ValueError('Support phase mapping disagrees with the saved source gait')
+            if self.path_task.get('scale_reference_by_relative_speed',False):
+                old_length=sum(baseline['metadata']['segment_lengths_m'])
+                old_speed=baseline['metadata']['admission']['preferred_speed_mps']
+                scale=min(1.,(self.speed/np.sqrt(self.L))/(old_speed/np.sqrt(old_length)))
+                self.metadata['reference_transfer']=dict(relative_dimensionless_speed=scale,
+                    source_speed_mps=old_speed,source_leg_length_m=old_length,
+                    source_toe_off_radians=baseline['metadata']['recipe']['calibrated_task']['toe_off_pitch_radians'],
+                    classification='Speed-scaled warm-reference excursion and release intent; engineering prior, not a predicted gait law')
             times,q=initialize(self,times,q,self.period)
             half=self.period
         self.base=CubicSpline(times,q,axis=0,bc_type='periodic')

@@ -89,19 +89,23 @@ def foot_task(problem, t, side):
     yaw0 = np.arctan2(R0[0,2], R0[0,0])+outward
     yaw_delta = np.arctan2((R0.T@R1)[0,2], (R0.T@R1)[0,0])
     support_gain = problem.support_gain(start, t, side) if hasattr(problem, 'support_gain') else 1.
+    toe_off=task['toe_off_radians']
+    if task.get('scale_reference_by_relative_speed',False):
+        transfer=problem.metadata['reference_transfer']
+        toe_off=transfer['source_toe_off_radians']*transfer['relative_dimensionless_speed']
     swing = max(0., (phase-duty)/(1-duty))
     if phase < duty:
         ramp = float(np.clip((phase/duty-.4)/.6,0,1))
         peel = 6*ramp**3-8*ramp**4+3*ramp**5
-        angle = -task['toe_off_radians']*peel*support_gain
+        angle = -toe_off*peel*support_gain
         toe_angle = angle*(1-float(smooth((phase/duty-.35)/.5)))
         anchor = anchor0
         yaw = yaw0
         lift = 0.
     else:
         blend = float(smooth(swing))
-        angle = -task['toe_off_radians']*(1-blend)*support_gain
-        release_rate = -task['toe_off_radians']*support_gain/(.6*duty*T)
+        angle = -toe_off*(1-blend)*support_gain
+        release_rate = -toe_off*support_gain/(.6*duty*T)
         angle += release_rate*(1-duty)*T*(swing-6*swing**3+8*swing**4-3*swing**5)
         toe_angle = -task['recovery_toe_radians']*float(smooth(swing/.22))*(1-float(smooth((swing-.45)/.55)))
         anchor = (1-blend)*anchor0+blend*anchor1
@@ -150,6 +154,12 @@ def initialize(problem, old_times, old_q, old_period):
             reference=old(mapped*old_period)
             indices=[ix[n] for n in problem.names if n.startswith(('hip_'+side,'knee_'+side,'ankle_'+side,'mtp_'+side,'digit_'+side))]
             q[:,indices]=reference[:,indices]
+    if task.get('scale_reference_by_relative_speed',False):
+        scale=problem.metadata['reference_transfer']['relative_dimensionless_speed']
+        for name in problem.names:
+            if name.startswith(('hip_','knee_','ankle_','mtp_','digit_')):
+                i=ix[name];center=float(np.mean(q[:-1,i]))
+                q[:,i]=center+scale*(q[:,i]-center)
     # Lower cadence does not simply slow a running clip: rebuild leg placement,
     # sole roll, and double support, while reducing the running body excursion.
     for name in problem.names:

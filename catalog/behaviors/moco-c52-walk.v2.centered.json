@@ -98,7 +98,8 @@
     "c52b_centered": "User requested mass-centered walking and relaxed tail. Midstance sole center aligned to modeled warm-posture COM. Pad-area weighting is a geometric support prior, not measured pressure. Walking tail ratios 0.5 proximal/0.9 distal replace 0.8/1.5; tail variables free, reference weight 5 vs30. All masses, joint limits, stiffness, capacities, contacts and acceptance tolerances retained.",
     "loaded_ankle": "The centered candidate retains four ankle direction changes in stance. Add load-gated angular rate and acceleration comfort costs, scaled by sqrt(g/L) and g/L; engineering smoothness prior, not measured biology. Four leg harmonics permit joint redistribution without fixing or clamping a joint. Same physical model and limits.",
     "joint_control": "C51 running warm-leg phase is remapped C2 to walking support before IK. All admitted joint ranges enforced by a smooth latent-coordinate mapping throughout optimization, not final angle clamping. Root height/pitch/roll stay inside existing authored envelopes to prevent hiding ankle error in torso bounce. Soft ankle continuity weights reduced after correcting phase. First draft rejected by user.",
-    "derivatives": "Straight walking now uses exact spline and latent-map time derivatives, as the original straight running path did. Previous new path evaluated acceleration by finite differences, which added noise to the optimizer Jacobian. Existing root posture envelopes are established before foot IK."
+    "derivatives": "Straight walking now uses exact spline and latent-map time derivatives, as the original straight running path did. Previous new path evaluated acceleration by finite differences, which added noise to the optimizer Jacobian. Existing root posture envelopes are established before foot IK.",
+    "relaxed_walking_reference": "Entire warm leg excursion and toe-off intent scale with current/source dimensionless speed. Reference only; world contacts, joint limits and full inverse-dynamics evaluation remain. Addresses user-observed running-like extension/recovery during walking. Not a validated scaling law."
   },
   "calibrated_task": {
     "pad_radius_leg_lengths": 0.043,
@@ -499,7 +500,7 @@
   "coordination": {
     "harmonics": 2,
     "samples": 61,
-    "max_evaluations": 24,
+    "max_evaluations": 16,
     "root_balance_weight": 100,
     "gaze_position_weight": 90.0,
     "gaze_orientation_weight": 35.0,
@@ -625,7 +626,8 @@
       "source_duty_factor": 0.43,
       "enforce_joint_limits": true,
       "enforce_root_envelopes": true,
-      "settle_initial_contact": true
+      "settle_initial_contact": true,
+      "scale_reference_by_relative_speed": true
     },
     "numerical_diff_step": 0.0001
   },
