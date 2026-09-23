@@ -1,6 +1,6 @@
 # Factory movement roadmap and acceptance tracker
 
-Current extension: **C52 B relaxed walking H — pending visual review**.
+Current extension: **C52 B relaxed walking H — visually approved**.
 The 16-second rest/start/1.6 m/s walk/stop candidate uses centered support,
 relaxed tail response, support-aligned references and bounded joint curves.
 Earlier A and E/G takes have changes requested for ankle artifacts / running-like
@@ -90,7 +90,7 @@ Checkpoint 26 is the approved walking side-hit recovery baseline; standing impac
 | Jaw relaxation / breathing-like cycle | Full-transition pass approved | Full-transition pass approved | Full-body breathing and behavior-specific mouth control |
 | Expressive idle / listening / alert scanning | No complete approved family | No complete approved family | Compose meaningful attention, posture and breathing behaviors from existing layers |
 | Running / sprinting | C42 A foot-approach candidate, pending review; sprint missing | C42 A pending review; C39 preferred reference; historical Run010 / Sprint006 preserved | Review forward reach and recovery; remaining post-release extension, ankle polish, entry/braking and sprinting |
-| Offline Moco mechanics | Not attempted; transfer follows Tarbo review | C51 A visually approved; corrected C52 B H straight walking rendered and inspected, pending review; turning held | Review the sixteen-second rest/start/1.6 m/s/stop take. Preserve C51. Inverse-dynamics initialization is distinct from full Moco convergence and independent stability. Resume turning and broader transfer only after walking review. |
+| Offline Moco mechanics | Not attempted; transfer follows Tarbo review | C51 A visually approved; C52 B H straight walking visually approved; turning held | Review the sixteen-second rest/start/1.6 m/s/stop take. Preserve C51. Inverse-dynamics initialization is distinct from full Moco convergence and independent stability. Resume turning and broader transfer only after walking review. |
 | Feeding / gripping / pulling | Current approved transfer missing | Historical Feeding003 reference preserved | Current grounded support, oral contact and interaction handoff |
 | Drinking / swallowing | Missing | Missing | New choreography and world interaction |
 | Rest / sit / lie down / rise / sleep | Missing | Missing | New support transitions and resting behavior |
@@ -1203,3 +1203,13 @@ Allosaurus transfer uses the same mechanics with admitted anatomy/semantics.
 No new solver run or animation iteration is authorized merely by this proposal.
 
 C52 B checkpoint: two native-time ten-second Tarbo videos are saved in `game/Evidence/moco-c52-walk-turn/candidate-b/` in the principal game repository. All 480 frames inspected; C51 A remains unchanged. Same spatial anatomy/physics model, different walking/path task. Foot intrusion and force/limit residuals remain explicit in the evidence; full Moco convergence is not claimed. Paused for user review.
+
+### C52 B H user approval — 2026-09-23
+
+The user explicitly approved the sixteen-second Tarbosaurus rest/start/walk/stop
+sequence: “look how quickly in so few iterations we got a working walking, starting, and stoping. this is promising.. approved!”
+Preserve H as the accepted visual walking baseline alongside C51 A running.
+Capture-time receipts remain historical. Numerical contact/force limitations
+and full Moco convergence remain open. Turning and generalized locomotion are
+the proposed next stage, not started by this approval. See the principal
+`game/Evidence/moco-c52b-centered-walk/user-review.json`.

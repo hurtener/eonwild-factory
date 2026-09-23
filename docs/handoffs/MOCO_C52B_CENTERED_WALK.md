@@ -1,5 +1,11 @@
 # C52 B revised — centered walking and finite transitions
 
+**Current status: H visually approved by the user on 2026-09-23.**
+Historical pending statements below describe capture time. This approval covers
+the final sixteen-second straight walking sequence, not earlier drafts or turning.
+Full physical convergence/contact acceptance remains open; see the separate
+`user-review.json` in the principal evidence folder. Remain paused until continuation.
+
 The user corrected the requested name from C51 B to **C52 B**. Earlier C52 B
 media remains preserved in `moco-c52-walk-turn`; it has changes requested for
 rearward support, repeated ankle extension/flexion and rigid tail carriage.
