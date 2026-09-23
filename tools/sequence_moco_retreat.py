@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Backward contact task from an adopted grounded state; exact-model audit."""
-import argparse,hashlib,json
+import argparse,hashlib,json,copy
 from pathlib import Path
 import numpy as np
 from scipy.interpolate import CubicSpline
@@ -17,7 +17,9 @@ ap=argparse.ArgumentParser()
 for n in ('source','baseline','plan','output'):ap.add_argument('--'+n,type=Path,required=True)
 a=ap.parse_args();a.output.mkdir(parents=True,exist_ok=False)
 source=json.loads(a.source.read_text());meta=source['metadata'];first=source['frames'][0]
-p=Coordination(meta['admission'],meta['recipe'],json.loads(a.baseline.read_text()),a.output)
+spec=json.loads(a.plan.read_text());recipe=copy.deepcopy(meta['recipe'])
+recipe['calibrated_task']['surface_edge_pads']=spec.get('surface_edge_pads',False)
+p=Coordination(meta['admission'],recipe,json.loads(a.baseline.read_text()),a.output)
 ix=p.index;initial=np.array([first['coordinates'][n]['value'] for n in p.names]);zeros=np.zeros(len(initial))
 if max(abs(first['coordinates'][n]['speed']) for n in p.names)>1e-6:raise ValueError('First retreat checkpoint requires grounded rest adoption')
 p.set_state(0,initial,zeros);com=p.model.calcMassCenterPosition(p.state).to_numpy().copy()
@@ -33,9 +35,9 @@ duration=spec['duration_s'];times=np.linspace(0,duration,int(duration*48)+1)
 balance,support=plan.balance(times,com,sole);poses=[];errors=[];ik_receipts=[];com_errors=[]
 joint_bounds={ix[n]:tuple(v['bounds_rad']) for n,v in p.metadata['coordinates'].items()}
 previous=initial.copy()
-def pad_height(position,rotation,digit):
+def pad_height(position,rotation,digit,side):
  values=[];distal=Rotation.from_rotvec([0.,0.,digit]).as_matrix()
- for site in geometry['sites']:
+ for site in geometry.get('sites_by_side',{}).get(side,geometry['sites']):
   point=np.asarray(site['center_local_m'])
   if site.get('distal'):point=np.asarray(geometry['toe_midpoint_m'])+distal@point
   values.append((position+rotation@point)[1]-site['radius_m'])
@@ -57,7 +59,7 @@ for time in times:
   p.set_state(time,world,zeros)
   for side in ('l','r'):
    target,orientation,digit=plan.foot(time,side)
-   target_pad=pad_height(target,orientation,digit)
+   target_pad=pad_height(target,orientation,digit,side)
    names=['hip_'+side,'hip_'+side+'_yaw','hip_'+side+'_roll','knee_'+side,'ankle_'+side,'mtp_'+side,'digit_'+side]
    indices=[ix[n] for n in names];coords=[p.coordinates[i] for i in indices];toe=p.model.getBodySet().get('toe_'+side)
    def residual(x):
@@ -67,7 +69,7 @@ for time in times:
     # The sole, not the toe-frame origin, owns vertical contact. The reduced
     # leg has sagittal ankle/MTP hinges: leave sole roll a soft preference so
     # lateral hip loading can use the actual distributed pad geometry.
-    position_error=np.array([pos[0]-target[0],pad_height(pos,R,x[-1])-target_pad,pos[2]-target[2]])/p.L
+    position_error=np.array([pos[0]-target[0],pad_height(pos,R,x[-1],side)-target_pad,pos[2]-target[2]])/p.L
     return np.r_[position_error,np.array([.02,.4,.4])*Rotation.from_matrix(orientation.T@R).as_rotvec(),.4*(x[-1]-digit),.001*(x-initial[indices])]
    bounds=np.array([p.metadata['coordinates'][n]['bounds_rad'] for n in names]).T
    margin=.01*(bounds[1]-bounds[0]);bounds[0]+=margin;bounds[1]-=margin

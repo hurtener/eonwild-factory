@@ -4,6 +4,7 @@ These are engineering/animal-transfer priors, not measured dinosaur motion.
 No previous animation is read and no knee-angle trajectory is prescribed.
 """
 import math
+import copy
 from pathlib import Path
 import numpy as np
 
@@ -40,7 +41,30 @@ def foot_geometry(admission, recipe):
             sites.append(other)
         # Preserve the front-most reference station for the peel task.
         sites.sort(key=lambda v:v['center_local_m'][0]+(mid[0] if v['distal'] else 0))
-    return dict(toe_midpoint_m=mid.tolist(), sites=sites,
+    per_side = {}
+    if policy.get('surface_edge_pads'):
+        # Geometry-owned lateral sole coverage. Preserve total nominal stiffness;
+        # this redistributes contact samples, not muscle/force capacity.
+        for suffix, side in [('l', 'left'), ('r', 'right')]:
+            surface = np.asarray(surfaces[side]['vertices_m'])
+            fitted = copy.deepcopy(sites)
+            for i, x in enumerate(xs):
+                band = surface[abs(surface[:, 0] - x) < .12 * length]
+                for edge, fraction in [('inner', .12), ('outer', .88)]:
+                    z = np.quantile(band[:, 2], fraction)
+                    edge_band = band[band[:, 2] <= z] if fraction < .5 else band[band[:, 2] >= z]
+                    point = edge_band[np.argmin(edge_band[:, 1])].copy()
+                    point[1] += radius - policy['pad_envelope_margin_m']
+                    distal = bool(point[0] > mid[0])
+                    fitted.append(dict(name=f'edge{i}_{edge}', distal=distal,
+                        center_local_m=(point-mid if distal else point).tolist(),
+                        radius_m=float(radius), stiffness_share=.5))
+            total = sum(v.get('stiffness_share', 1.) for v in fitted)
+            original = sum(v.get('stiffness_share', 1.) for v in sites)
+            for v in fitted:
+                v['stiffness_share'] = v.get('stiffness_share', 1.) * original / total
+            per_side[suffix] = fitted
+    return dict(toe_midpoint_m=mid.tolist(), sites=sites, sites_by_side=per_side,
                 sole_depth_m=float(-vertices[:,1].min()),
                 classification='Spheres fit to admitted sole samples; radius/compliance are engineering priors')
 

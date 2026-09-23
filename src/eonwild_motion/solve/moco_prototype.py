@@ -212,7 +212,7 @@ def make_model(admission, recipe):
     radius = total_length * contact["radius_leg_length"]
     for suffix in ("l", "r"):
         toe = model.updBodySet().get("toe_" + suffix)
-        sites = foot['sites'] if calibrated else [dict(name=name,center_local_m=[toe_length*fraction,0,0],radius_m=radius,distal=False) for name,fraction in [('rear',.16),('front',.84)]]
+        sites = foot.get('sites_by_side', {}).get(suffix, foot['sites']) if calibrated else [dict(name=name,center_local_m=[toe_length*fraction,0,0],radius_m=radius,distal=False) for name,fraction in [('rear',.16),('front',.84)]]
         for site in sites:
             name,center,radius=site['name'],list(site['center_local_m']),site['radius_m']
             contact_body=model.updBodySet().get(('digit_' if site['distal'] else 'toe_')+suffix)
