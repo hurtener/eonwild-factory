@@ -24,6 +24,14 @@ Videos: principal `game/Evidence/moco-c50-caudofemoralis-study/candidate-d/`.
 User confirmed the repaired tail and overall fluidity; remaining requested polish is ankle recovery speed/excursion. C51 will audit support/foot placement and attempt full Moco convergence, then pause. C47 and C48–C50 candidates
 remain historical evidence; this entry does not infer their visual approval.
 
+C51 stages 1–2 are in progress on `codex/moco-c51-support-feasibility`.
+The first audit distinguishes pelvis-relative opening from world-foot drift:
+firm-support world foot position varies about 15 mm; the apparent larger opening
+includes body weight transfer. Ankle swing peaks at 118.26 degrees / 603.09 deg/s.
+A bounded relaxed-recovery/support candidate and a separate full-Moco pilot are
+running. No C51 visual approval, convergence or forward-stability claim yet.
+C50 is preserved on both remote main branches (factory `9868716`, game `9b16390`).
+
 [Locomotion configuration review](research/LOCOMOTION_CONFIGURATION_REVIEW.md)
 centralizes the user's four papers, workbook and JSON. Fourteen proposed gait
 searches match across the workbook/JSON; five old-branch source assets are

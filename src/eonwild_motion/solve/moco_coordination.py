@@ -120,6 +120,7 @@ class Coordination:
         self.clearance_frames=[(o.PhysicalFrame.safeDownCast(self.model.getComponent(c['path'])),c['minimum_height_m']) for c in self.metadata['clearance_frames']]
         self.nose=o.PhysicalOffsetFrame.safeDownCast(self.model.getComponent('/nose'))
         self.head=self.model.getBodySet().get('head')
+        self.feet=[self.model.getBodySet().get('toe_'+side) for side in ('l','r')]
         self.reference=self.evaluate_kinematics(np.zeros(len(self.parameters)),self.times)
         nose_positions=[]
         for t,qq,uu in zip(self.times,self.reference[0],self.reference[1]):
@@ -176,7 +177,7 @@ class Coordination:
 
     def mechanics(self,x,times):
         q,u,acc=self.evaluate_kinematics(x,times)
-        root=[];effort=[];nose=[];direction=[];slip=[];forces=[];clearance=[];com_velocity=[];region_heights=[]
+        root=[];effort=[];nose=[];direction=[];slip=[];forces=[];clearance=[];com_velocity=[];region_heights=[];feet=[]
         for t,qq,uu,aa in zip(times,q,u,acc):
             self.set_state(t,qq,uu)
             udot=self.o.Vector(self.state.getNU(),0)
@@ -185,6 +186,7 @@ class Coordination:
             root.append(torque[self.root_indices]/self.root_scale)
             effort.append(torque[self.motor_indices]/self.capacities)
             com_velocity.append(self.model.calcMassCenterVelocity(self.state).to_numpy())
+            feet.append([b.getPositionInGround(self.state).to_numpy().copy() for b in self.feet])
             region_heights.append([b.getPositionInGround(self.state).get(1) for b,_,_ in self.vertical_regions])
             nose.append(self.nose.getPositionInGround(self.state).to_numpy()-[self.speed*t,0,0])
             R=self.head.getTransformInGround(self.state).R()
@@ -199,7 +201,9 @@ class Coordination:
             forces.append(ff);slip.append(vv)
             clearance.append([frame.getPositionInGround(self.state).get(1)-floor for frame,floor in self.clearance_frames])
         tail_vz=[];tail_xz=[]
-        for t,qq,uu,aa in zip(times,q,u,acc):
+        # These optional display-space tasks are inactive for the support pass.
+        axial_times=zip(times,q,u,acc) if (self.policy.get('tail_vertical_damp_weight',0.) or self.policy.get('tail_figure8_weight',0.)) else []
+        for t,qq,uu,aa in axial_times:
             self.set_state(t,qq,uu)
             vz=[];xz=[]
             for frame,floor in self.clearance_frames:
@@ -210,7 +214,7 @@ class Coordination:
             tail_vz.append(vz);tail_xz.append(xz)
         return dict(q=q,u=u,acc=acc,root=np.asarray(root),effort=np.asarray(effort),
                     nose=np.asarray(nose),direction=np.asarray(direction),slip=np.asarray(slip),forces=np.asarray(forces),clearance=np.asarray(clearance),com_velocity=np.asarray(com_velocity),region_heights=np.asarray(region_heights),
-                    tail_vz=np.asarray(tail_vz),tail_xz=np.asarray(tail_xz))
+                    feet=np.asarray(feet),tail_vz=np.asarray(tail_vz),tail_xz=np.asarray(tail_xz))
 
     def residual(self,x):
         m=self.mechanics(x,self.times);p=self.policy;self.calls+=1
@@ -220,6 +224,8 @@ class Coordination:
         for i,n in enumerate(self.names):
             weight=p['leg_deviation_weight'] if n.startswith(('hip_','knee_','ankle_','mtp_','digit_')) else p['body_deviation_weight']
             if n.endswith(('_yaw','_roll')) or n in ('lateral','yaw','roll'):weight=.1
+            for prefix,override in p.get('reference_coordinate_weights',{}).items():
+                if n.startswith(prefix):weight=float(override)
             deviation.extend(weight*delta[:,i])
         range_error=[]
         for n,b in self.metadata['coordinates'].items():
@@ -331,6 +337,18 @@ class Coordination:
                 tip_vel=vels[:,-1]
                 reversal_mask=np.exp(-(base_vel/self.speed)**2/0.05)
                 tail_wave.extend((wave_weight*reversal_mask*tip_vel/self.speed).ravel())
+        support_task=[]
+        if p.get('support_refinement'):
+            from .moco_support import recovery_residual,lane_residual
+            task=p['support_refinement']
+            loads=np.column_stack([m['forces'][:,[i for i,c in enumerate(self.metadata['contacts']) if c['force'].endswith('_'+side)],1].sum(axis=1)/self.bw for side in ('l','r')])
+            for j,side in enumerate(('l','r')):
+                idx=self.index['ankle_'+side]
+                support_task.extend(recovery_residual(m['q'][:,idx],m['u'][:,idx],m['acc'][:,idx],loads[:,j],self.period,task['ankle_recovery']))
+            hip_width=abs(self.admission['points']['rightLeg.0'][2]-self.admission['points']['leftLeg.0'][2])
+            support_task.extend(lane_residual(m['feet'][:,:,2],loads,
+                task['half_track_hip_width_ratio']*hip_width,
+                task['track_allowance_leg_lengths']*self.L,self.L,task['track_weight']))
         motor_speed=np.column_stack([m['u'][:,self.index[n.removeprefix('motor_')]] for n in self.motors])
         positive_power=np.maximum(m['effort']*self.capacities*motor_speed,0)/(self.bw*self.speed)
         tail_indices=[i for i,n in enumerate(self.names) if n.startswith('tail_')]
@@ -356,6 +374,7 @@ class Coordination:
             (p.get('tail_figure8_weight',0.)*tail_fig8).ravel() if len(tail_fig8) else np.array([]),
             cf_residual.ravel() if len(cf_residual) else np.array([]),
             np.asarray(tail_wave) if len(tail_wave) else np.array([]),
+            np.asarray(support_task),
             .003*x
         ])
         score=float(result@result)
