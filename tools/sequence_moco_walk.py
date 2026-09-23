@@ -11,6 +11,7 @@ from types import SimpleNamespace
 import numpy as np
 from scipy.interpolate import CubicSpline, PchipInterpolator
 from scipy.integrate import cumulative_trapezoid
+from scipy.ndimage import gaussian_filter1d
 from scipy.optimize import least_squares, brentq
 from scipy.spatial.transform import Rotation
 from eonwild_motion.solve.moco_coordination import Coordination
@@ -101,20 +102,26 @@ for t in times:
         errors.append(float(np.linalg.norm(residual(opt.x)[:3])*p.L))
     poses.append(world)
 poses=np.array(poses)
-# Settle static pads to body weight using the unchanged contact law. This is a
-# millimetre-scale physical initialization of rest penetration, not an external
-# supporting force. The resulting whole-root displacement is fully replayed.
-def static_offset(pose,time):
+# Settle contact compression with the unchanged contact law. Match the vertical
+# demand of the planned COM trajectory, then smooth the tiny depth correction.
+# This adds no force actuator; replay measures the residual after correction.
+com_height=[]
+for pose,time in zip(poses,times):
+    p.set_state(time,pose,np.zeros(len(p.names)))
+    com_height.append(p.model.calcMassCenterPosition(p.state).get(1))
+com_spline=CubicSpline(times,com_height,bc_type=((1,0.),(1,0.)))
+demand=p.bw+p.metadata['mass_kg']*gaussian_filter1d(com_spline(times,2),1.,mode='nearest')
+if np.min(demand)<=0:raise ValueError('Walking plan requires unsupported negative vertical contact load')
+offsets=[]
+for pose,time,load in zip(poses,times,demand):
     def balance(offset):
         values=pose.copy();values[ix['height']]+=offset
         p.set_state(time,values,np.zeros(len(values)))
-        return sum(f.getRecordValues(p.state).get(1) for f in p.contact_forces)-p.bw
-    return brentq(balance,-.025,.025,xtol=1e-9)
-rest_offsets=[static_offset(poses[0],times[0]),static_offset(poses[-1],times[-1])]
-for k,t in enumerate(times):
-    tau=float(clock(float(np.clip(t-start,0,active_end))))
-    rest=rest_offsets[0] if t<(start+stop)/2 else rest_offsets[1]
-    poses[k,ix['height']]+=(1-gain_at_progress(tau))*rest
+        return sum(f.getRecordValues(p.state).get(1) for f in p.contact_forces)-load
+    offsets.append(brentq(balance,-.025,.025,xtol=1e-9))
+offsets=gaussian_filter1d(offsets,.04/(times[1]-times[0]),mode='nearest')
+poses[:,ix['height']]+=offsets
+rest_offsets=[float(offsets[0]),float(offsets[-1])]
 trajectory=CubicSpline(times,poses,axis=0,bc_type=((1,np.zeros(len(p.names))),(1,np.zeros(len(p.names)))))
 p.evaluate_kinematics=lambda x,t:(trajectory(t),trajectory(t,1),trajectory(t,2))
 p.times_dense=times
@@ -122,7 +129,7 @@ p.metadata.pop('path_cycle',None)
 p.metadata['sequence']=dict(duration_s=duration,start_s=start,stop_s=stop,steady_speed_mps=speed,
     distance_m=travel(end_progress),steps=2*cycles,first_step_cadence_ratio=.6,acceleration_seconds=1.8,deceleration_seconds=1.8,
     method='Authored cadence and support plan; IK in exact anatomy; inverse dynamics audit, not forward simulation or optimal control',
-    max_foot_task_error_m=max(errors),rest_contact_offsets_m=rest_offsets,source=str(a.source),periodic=False)
+    max_foot_task_error_m=max(errors),rest_contact_offsets_m=rest_offsets,contact_depth_correction_range_m=[float(offsets.min()),float(offsets.max())],source=str(a.source),periodic=False)
 # The mechanics/nose report must not subtract a constant-velocity path from a
 # finite sequence. Physical joint efforts/root residuals never use this field.
 p.path_task=None
