@@ -7,6 +7,7 @@ from scipy.interpolate import CubicSpline
 from scipy.ndimage import gaussian_filter1d
 from scipy.optimize import least_squares,brentq
 from scipy.spatial.transform import Rotation
+from scipy.special import logsumexp
 from eonwild_motion.solve.moco_coordination import Coordination
 from eonwild_motion.solve.moco_joint_spline import BoundedJointSpline
 from eonwild_motion.solve.moco_retreat_task import RetreatPlan
@@ -32,6 +33,14 @@ duration=spec['duration_s'];times=np.linspace(0,duration,int(duration*48)+1)
 balance,support=plan.balance(times,com,sole);poses=[];errors=[];ik_receipts=[];com_errors=[]
 joint_bounds={ix[n]:tuple(v['bounds_rad']) for n,v in p.metadata['coordinates'].items()}
 previous=initial.copy()
+def pad_height(position,rotation,digit):
+ values=[];distal=Rotation.from_rotvec([0.,0.,digit]).as_matrix()
+ for site in geometry['sites']:
+  point=np.asarray(site['center_local_m'])
+  if site.get('distal'):point=np.asarray(geometry['toe_midpoint_m'])+distal@point
+  values.append((position+rotation@point)[1]-site['radius_m'])
+ # Smooth lowest-pad witness avoids a derivative corner at a left/right pad swap.
+ return -float(logsumexp(-500*np.asarray(values)))/500
 for time in times:
  world=initial.copy();target_com=balance(time)
  world[ix['forward']]+=target_com[0]-com[0];world[ix['lateral']]+=target_com[1]-com[2]
@@ -48,13 +57,18 @@ for time in times:
   p.set_state(time,world,zeros)
   for side in ('l','r'):
    target,orientation,digit=plan.foot(time,side)
+   target_pad=pad_height(target,orientation,digit)
    names=['hip_'+side,'hip_'+side+'_yaw','hip_'+side+'_roll','knee_'+side,'ankle_'+side,'mtp_'+side,'digit_'+side]
    indices=[ix[n] for n in names];coords=[p.coordinates[i] for i in indices];toe=p.model.getBodySet().get('toe_'+side)
    def residual(x):
     for c,val in zip(coords,x):c.setValue(p.state,float(val),False)
     p.model.realizePosition(p.state);pos=toe.getPositionInGround(p.state).to_numpy();mat=toe.getTransformInGround(p.state).R()
     R=np.array([[mat.get(i,j) for j in range(3)] for i in range(3)])
-    return np.r_[(pos-target)/p.L,.4*Rotation.from_matrix(orientation.T@R).as_rotvec(),.4*(x[-1]-digit),.001*(x-initial[indices])]
+    # The sole, not the toe-frame origin, owns vertical contact. The reduced
+    # leg has sagittal ankle/MTP hinges: leave sole roll a soft preference so
+    # lateral hip loading can use the actual distributed pad geometry.
+    position_error=np.array([pos[0]-target[0],pad_height(pos,R,x[-1])-target_pad,pos[2]-target[2]])/p.L
+    return np.r_[position_error,np.array([.02,.4,.4])*Rotation.from_matrix(orientation.T@R).as_rotvec(),.4*(x[-1]-digit),.001*(x-initial[indices])]
    bounds=np.array([p.metadata['coordinates'][n]['bounds_rad'] for n in names]).T
    margin=.01*(bounds[1]-bounds[0]);bounds[0]+=margin;bounds[1]-=margin
    opt=least_squares(residual,np.clip(previous[indices] if iteration==0 else world[indices],bounds[0]+1e-6,bounds[1]-1e-6),bounds=bounds,max_nfev=70,ftol=1e-9,xtol=1e-9,gtol=1e-9)
@@ -66,6 +80,7 @@ for time in times:
   else:com_errors.append(float(np.linalg.norm(delta)))
  poses.append(world.copy());previous=world
 poses=np.array(poses)
+np.savez(a.output/'placement-diagnostic.npz',times=times,poses=poses,names=p.names,errors=errors,com_errors=com_errors)
 # Re-evaluate vertical pad compression under this finite articulated trajectory.
 heights=[]
 for t,q in zip(times,poses):
@@ -77,7 +92,9 @@ for t,q,load in zip(times,poses,demand):
  def vertical(dy):
   pose=q.copy();pose[ix['height']]+=dy;p.set_state(t,pose,zeros)
   return sum(f.getRecordValues(p.state).get(1) for f in p.contact_forces)-load
- offsets.append(brentq(vertical,-.025,.025,xtol=1e-9))
+ try:offsets.append(brentq(vertical,-.025,.025,xtol=1e-9))
+ except ValueError as error:
+  raise ValueError(f'Contact settling outside unchanged 25 mm bracket at t={t}: forces minus demand {vertical(-.025)}, {vertical(.025)} N; max foot task error {max(errors)} m') from error
 offsets=gaussian_filter1d(offsets,.04/(times[1]-times[0]),mode='nearest')
 # Preserve exact initial state and resting contact until preparation begins.
 blend=smooth((times-spec['prepare_s'])/spec['adoption_seconds'])
