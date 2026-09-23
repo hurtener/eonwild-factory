@@ -1,4 +1,4 @@
-"""Optional loaded-posture support and anatomical tail subdivision.
+"""Optional loaded-posture support and admitted physical tail links.
 
 Effective tonic running impedance, not reconstructed muscle co-contraction.
 All support acts internally; the free root receives no spring or motor.
@@ -11,6 +11,12 @@ def add_tail_chain(model,metadata,points,fractions,capacities,length,body,pin,tr
     policy=recipe['spatial'];settings=recipe['bracing']['tail']
     roles=sorted((k for k in points if k.startswith('tail.')),key=lambda k:int(k.split('.')[-1]))
     positions=np.array([points[r] for r in roles]);positions[:,2]=0
+    # A physical link must have its own admitted skin joint. Resampling points
+    # and choosing nearest roles silently drives the same bone several times.
+    target_links = int(settings.get('target_links', len(roles)-1))
+    if target_links != len(roles)-1:
+        raise ValueError(f'Tail requests {target_links} links but source admits {len(roles)-1}; '
+                         'subdivide and re-admit the source skin before building the model')
     extents=np.diff(positions,axis=0);lengths=np.linalg.norm(extents,axis=1)
     if len(lengths)<2 or np.any(lengths<1e-5):raise ValueError('Tail needs a nondegenerate admitted chain')
     edges=np.r_[0,np.cumsum(lengths)];s=(edges[:-1]+edges[1:])/(2*edges[-1])
@@ -23,17 +29,32 @@ def add_tail_chain(model,metadata,points,fractions,capacities,length,body,pin,tr
         name='tail_'+str(i);origin=positions[i]
         policy.setdefault('posture_reference',{})[name]=settings['base_loaded_pitch_rad'] if i==0 else 0.
         policy['posture_reference'][name+'_yaw']=0.
-        # EI/l gives subdivision-invariant angular stiffness. A second radius
-        # power is an explicitly estimated soft-tissue taper, not fossil data.
-        shape=(radius/radii[0])**settings['stiffness_taper_exponent']
+        # Two-component bending stiffness: bone/disc (steep taper) plus soft
+        # tissue (muscle/ligament, shallow taper). This keeps proximal rigidity
+        # while preventing the distal chain from becoming a free pendulum.
+        radius_ratio=radius/radii[0]
+        bone_exp=settings.get('bone_stiffness_taper_exponent',3.0)
+        soft_exp=settings.get('soft_tissue_stiffness_taper_exponent',1.0)
+        bone_frac=settings.get('bone_stiffness_fraction',0.5)
+        shape=bone_frac*radius_ratio**bone_exp+(1.-bone_frac)*radius_ratio**soft_exp
+        # Distance-dependent damping ratio: proximal slightly underdamped for
+        # elastic energy storage, distal critically damped so it settles.
+        zeta_prox=settings.get('damping_ratio_proximal',0.5)
+        zeta_dist=settings.get('damping_ratio_distal',1.0)
+        zeta_i=zeta_prox+(zeta_dist-zeta_prox)*float(s[i])
         for suffix,factor in [('',settings['pitch_EI_BW_L2']),('_yaw',settings['yaw_EI_BW_L2'])]:
             recipe.setdefault('passive_support',{})[name+suffix]=dict(
                 stiffness_BW_leg_length=factor*length/ell*shape,
-                damping_BW_leg_length_s=0.,rest_radians=0.)
+                damping_BW_leg_length_s=0.,rest_radians=0.,damping_ratio=zeta_i)
         policy['joint_axes'][name]={'yaw':{'bounds':[-.20,.20],'capacity_ratio':.8}}
         b=body(name,total*share,extent*.5,extent,radius)
+        # Engineering radius-dependent torque-capacity envelope with a floor.
+        # Its tunable exponent is not identified PCSA or measured muscle torque.
+        cap_exp=settings.get('capacity_taper_exponent',1.5)
+        cap_floor=settings.get('capacity_floor_ratio',0.667)
+        cap_shape=radius_ratio**cap_exp
         pin(name,parent,origin-parent_origin,b,[-.14,.14],
-            capacities['tail_proximal']*max(.04,float(shares[i:].sum())))
+            capacities['tail_proximal']*max(cap_floor,cap_shape*float(shares[i:].sum())))
         metadata['axial_bindings'].append(dict(body=name,role=role))
         frame=o.PhysicalOffsetFrame('tip_'+name,b,o.Transform(o.Vec3(*map(float,extent))))
         model.addComponent(frame)
@@ -84,9 +105,11 @@ def calibrate_bracing(model,metadata,recipe):
         region=policy['tail'] if n.startswith('tail_') else policy['regions'][n]
         if n.startswith('tail_'):
             stiffness=original['stiffness_BW_leg_length']*bw*L
+            zeta=original.get('damping_ratio',region['damping_ratio'])
         else:
             stiffness=inertia*(2*np.pi*region['frequency_hz'])**2
-        damping=2*region['damping_ratio']*np.sqrt(stiffness*inertia)
+            zeta=region['damping_ratio']
+        damping=2*zeta*np.sqrt(stiffness*inertia)
         support_fraction=region.get('gravity_support_fraction',0.) if not n.endswith(('_yaw','_roll')) else 0.
         preload=float(demand[indices[n]])*support_fraction
         rest=loaded[n]+preload/stiffness

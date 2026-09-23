@@ -60,6 +60,9 @@ def main():
     if sha(source.raw) != admission['source_geometry_sha256'] or sha(a.profile.read_bytes()) != admission['profile_sha256']:
         raise ValueError('Saved Moco anatomy does not match the fresh admitted rig/profile')
     roles = {b['role']: source.name_to_node[b['bone']] for b in profile['bindings']}
+    if data['metadata'].get('spatial'):
+        from eonwild_motion.solve.moco_binding import validate_axial_bindings
+        validate_axial_bindings(data['metadata'], roles, source.parents)
     base = np.asarray(c.base_w)
     basis = np.column_stack((c.forward, c.up, c.lateral))
     origin = (base[roles['leftLeg.0'], :3, 3] + base[roles['rightLeg.0'], :3, 3]) / 2

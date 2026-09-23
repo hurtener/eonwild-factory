@@ -1,5 +1,8 @@
 # C42 companion — offline Moco mechanics prototype
 
+Latest continuation: [C50 D connected-tail repair](../handoffs/MOCO_C50_TAIL_REPAIR.md),
+pending visual review. The following sections retain historical context.
+
 This is the implementation record following the
 [OpenSim feasibility audit](OPENSIM_DINOSAUR_FEASIBILITY.md).
 The alternate model is an independently written **planar torque-driven

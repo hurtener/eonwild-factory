@@ -1,0 +1,189 @@
+{
+  "schema": "eonwild.motion.semantic-rig.v1",
+  "id": "hero-theropod-v8-3-airborne-jaw.tail12-connected",
+  "version": 1,
+  "coordinate": {
+    "units": "metres",
+    "handedness": "right",
+    "upAxis": "Y",
+    "forwardAxis": "X"
+  },
+  "roles": {
+    "root": "Bone_000",
+    "pelvis": "Bone_001",
+    "spine": [
+      "Bone_007",
+      "Bone_006",
+      "Bone_005",
+      "Bone_004",
+      "Bone_003"
+    ],
+    "chest": "Bone_002",
+    "neck": [
+      "Bone_041",
+      "Bone_040",
+      "Bone_039",
+      "Bone_038",
+      "Bone_037"
+    ],
+    "head": "Bone_036",
+    "tail": [
+      "Bone_024",
+      "Bone_023",
+      "Bone_022",
+      "Bone_024_subdivision_2",
+      "Bone_021",
+      "Bone_024_subdivision_1",
+      "Bone_020",
+      "Bone_024_subdivision_0",
+      "Bone_019",
+      "Bone_024_subdivision_3",
+      "Bone_018",
+      "Bone_017",
+      "Bone_016"
+    ],
+    "legs": {
+      "left": {
+        "contactChain": [
+          "Bone_011",
+          "Bone_010",
+          "Bone_009",
+          "Bone_008"
+        ],
+        "toeChains": [
+          [
+            "Bone_044",
+            "Bone_043",
+            "Bone_042"
+          ],
+          [
+            "Bone_047",
+            "Bone_046",
+            "Bone_045"
+          ],
+          [
+            "Bone_050",
+            "Bone_049",
+            "Bone_048"
+          ]
+        ]
+      },
+      "right": {
+        "contactChain": [
+          "Bone_015",
+          "Bone_014",
+          "Bone_013",
+          "Bone_012"
+        ],
+        "toeChains": [
+          [
+            "Bone_053",
+            "Bone_052",
+            "Bone_051"
+          ],
+          [
+            "Bone_056",
+            "Bone_055",
+            "Bone_054"
+          ],
+          [
+            "Bone_059",
+            "Bone_058",
+            "Bone_057"
+          ]
+        ]
+      }
+    },
+    "leftLeg": [
+      "Bone_011",
+      "Bone_010",
+      "Bone_009",
+      "Bone_008"
+    ],
+    "rightLeg": [
+      "Bone_015",
+      "Bone_014",
+      "Bone_013",
+      "Bone_012"
+    ],
+    "leftFoot": "Bone_008",
+    "rightFoot": "Bone_012",
+    "jaw_lower": "Bone_074"
+  },
+  "expectedParents": {
+    "pelvis": "root",
+    "chest": "spine_parent",
+    "neck": [
+      "chest",
+      "neck:0",
+      "neck:1",
+      "neck:2",
+      "neck:3"
+    ],
+    "head": "neck:4"
+  },
+  "spineParent": "Bone_003",
+  "accessorContract": {
+    "componentType": 5126,
+    "type": "VEC4",
+    "byteStride": 16,
+    "commonTimeline": true,
+    "interpolation": "LINEAR"
+  },
+  "provenance": {
+    "parent": {
+      "path": "catalog/rigs/heavy-biped.v9.json",
+      "sha256": "c3de770bf7dcc68219a28fb9851e9b75f3d3eebe2c2c0c7deb0078850100fd7e"
+    },
+    "source_subdivision": {
+      "schema": "eonwild.motion.chain-subdivision.v1",
+      "source_sha256": "2cdd9017075626e27acdeef09b6787985ca82054cc0f315c09b092920ea7374f",
+      "output_sha256": "c06465ded3d110a4fbd3eac41a834af910547faca2382a37e193381d9976f0b7",
+      "chain": [
+        "Bone_024",
+        "Bone_023",
+        "Bone_022",
+        "Bone_024_subdivision_2",
+        "Bone_021",
+        "Bone_024_subdivision_1",
+        "Bone_020",
+        "Bone_024_subdivision_0",
+        "Bone_019",
+        "Bone_024_subdivision_3",
+        "Bone_018",
+        "Bone_017",
+        "Bone_016"
+      ],
+      "inserted": [
+        "Bone_024_subdivision_0",
+        "Bone_024_subdivision_1",
+        "Bone_024_subdivision_2",
+        "Bone_024_subdivision_3"
+      ],
+      "links": 12,
+      "nodes": 13,
+      "length_m": 6.532397349342857,
+      "skin_vertices": 59169,
+      "reweighted_vertices": 14641,
+      "joint_weight_totals": [
+        2071.058302102438,
+        2959.9256570455364,
+        1342.964634683819,
+        849.2762228020638,
+        642.412758006715,
+        473.67984568719595,
+        449.7081966664567,
+        396.7556388171762,
+        331.49141969199286,
+        217.72173779439345,
+        269.40189360880095,
+        220.8488573019966,
+        392.00154710287893
+      ],
+      "bind_skin_error_m": 1.3020702155905025e-06,
+      "existing_joint_world_error": 1.0504140046663224e-07,
+      "classification": "Engineering subdivision and interpolated skin weights; no anatomical claim"
+    },
+    "classification": "Engineering rig subdivision, not anatomical reconstruction"
+  }
+}

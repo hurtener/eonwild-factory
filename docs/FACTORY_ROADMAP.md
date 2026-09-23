@@ -1,6 +1,6 @@
 # Factory movement roadmap and acceptance tracker
 
-Updated 2026-09-21. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
+Updated 2026-09-23. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.
 
 Agent handoff: [Moco continuation procedure](handoffs/MOCO_CONTINUATION_2026-09-21.md).
 The handoff preserves C47's pending review state; it is not another motion pass
@@ -13,13 +13,16 @@ asset and video identities. C39 B remains the preferred Tarbo visual baseline;
 C40/C41 have changes requested and C42 remains pending. No new motion is generated
 or approved by either handoff.
 
-Current checkpoint: **C47 C contact, support and ankle audit, pending visual
-review**. It preserves C46's quieter middle neck and reduces emitted foot
-penetration from 43.27 to 6.91 mm. It remains an inverse-dynamics initializer;
-independent forward replay and production contact still fail. Full Moco
-refinements are tracked separately in the evidence package. Saved videos,
-ankle/load curves and receipts are in the principal repository's
-`game/Evidence/moco-contact-support-study/candidate-c/`. Pause for feedback.
+Current checkpoint: **C50 D tail repair visually accepted; stages 1–2 authorized**.
+The user resumed at C50 after another agent's twelve-link/eight-link mapping
+failure. The new animation-free source has twelve driven links and thirteen
+ordered nodes, fresh source-bound catalogs and strict unique-bone validation.
+C50 B's physical motion is transferred for a controlled comparison; non-tail
+motion is unchanged. Full Moco convergence and production contact remain open.
+See [repair, evidence and reproduction](handoffs/MOCO_C50_TAIL_REPAIR.md).
+Videos: principal `game/Evidence/moco-c50-caudofemoralis-study/candidate-d/`.
+User confirmed the repaired tail and overall fluidity; remaining requested polish is ankle recovery speed/excursion. C51 will audit support/foot placement and attempt full Moco convergence, then pause. C47 and C48–C50 candidates
+remain historical evidence; this entry does not infer their visual approval.
 
 [Locomotion configuration review](research/LOCOMOTION_CONFIGURATION_REVIEW.md)
 centralizes the user's four papers, workbook and JSON. Fourteen proposed gait

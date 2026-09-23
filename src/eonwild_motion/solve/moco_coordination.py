@@ -67,7 +67,7 @@ class Coordination:
         old_tail=[b for b in baseline['metadata'].get('axial_bindings',[]) if b['body'].startswith('tail_')]
         new_tail=self.metadata.get('tail_chain',[])
         tail_map={}
-        if new_tail and len(old_tail)!=len(new_tail):
+        if new_tail and old_tail:
             old_lengths=[np.linalg.norm(baseline['metadata']['segments'][b['body']]['extent_local_m']) for b in old_tail]
             old_edges=np.r_[0,np.cumsum(old_lengths)]
             for part in new_tail:
@@ -198,8 +198,19 @@ class Coordination:
                 ff.append(force);vv.append(velocity[[0,2]]*np.sqrt(max(0.,force[1]/self.bw)))
             forces.append(ff);slip.append(vv)
             clearance.append([frame.getPositionInGround(self.state).get(1)-floor for frame,floor in self.clearance_frames])
+        tail_vz=[];tail_xz=[]
+        for t,qq,uu,aa in zip(times,q,u,acc):
+            self.set_state(t,qq,uu)
+            vz=[];xz=[]
+            for frame,floor in self.clearance_frames:
+                pos=frame.getPositionInGround(self.state).to_numpy()
+                vel=frame.findStationVelocityInGround(self.state,self.o.Vec3(0)).to_numpy()
+                vz.append(vel[1])
+                xz.append([pos[1],pos[2]])
+            tail_vz.append(vz);tail_xz.append(xz)
         return dict(q=q,u=u,acc=acc,root=np.asarray(root),effort=np.asarray(effort),
-                    nose=np.asarray(nose),direction=np.asarray(direction),slip=np.asarray(slip),forces=np.asarray(forces),clearance=np.asarray(clearance),com_velocity=np.asarray(com_velocity),region_heights=np.asarray(region_heights))
+                    nose=np.asarray(nose),direction=np.asarray(direction),slip=np.asarray(slip),forces=np.asarray(forces),clearance=np.asarray(clearance),com_velocity=np.asarray(com_velocity),region_heights=np.asarray(region_heights),
+                    tail_vz=np.asarray(tail_vz),tail_xz=np.asarray(tail_xz))
 
     def residual(self,x):
         m=self.mechanics(x,self.times);p=self.policy;self.calls+=1
@@ -241,6 +252,85 @@ class Coordination:
                 difference=relative-reference
                 allowance=p.get('tail_carriage_half_range_leg_lengths',.08)*self.L
                 tail_carriage.extend(p.get('tail_carriage_weight',0.)*np.maximum(np.abs(difference)-allowance,0)/self.L)
+        # Angular-momentum counterbalance: the tail must counter-rotate against
+        # the trunk so the pair conserves angular momentum.  This is the
+        # physical role of a theropod tail as ballast.  First-order inertia-
+        # weighted balance about pitch (lateral axis) and yaw (vertical axis);
+        # the caudofemoralis coupling that enforces this in vivo is deferred.
+        counterbalance=[]
+        if chain and p.get('counterbalance_weight',0.):
+            trunk_meta=self.metadata['segments']['trunk']['inertia_kg_m2']
+            trunk_pitch_I=trunk_meta[2][2];trunk_yaw_I=trunk_meta[1][1]
+            tail_pitch_I=0.;tail_yaw_I=0.
+            tail_pitch_rate=np.zeros(len(self.times))
+            tail_yaw_rate=np.zeros(len(self.times))
+            for b in chain:
+                I=self.metadata['segments'][b['body']]['inertia_kg_m2']
+                tail_pitch_I+=I[2][2];tail_yaw_I+=I[1][1]
+                tail_pitch_rate+=m['u'][:,self.index[b['body']]]
+                tail_yaw_rate+=m['u'][:,self.index[b['body']+'_yaw']]
+            scale=self.bw*self.L**2
+            counterbalance=np.column_stack([
+                (trunk_pitch_I*m['u'][:,self.index['pitch']]+tail_pitch_I*tail_pitch_rate)/scale,
+                (trunk_yaw_I*m['u'][:,self.index['yaw']]+tail_yaw_I*tail_yaw_rate)/scale])
+        # Figure-8 (lemniscate) tail tip objective: the tip should trace a
+        # horizontal infinity path — lateral sway at 1x stride + forward recovery
+        # at 2x stride — instead of springy vertical bouncing.
+        tail_fig8=[]
+        if chain and p.get('tail_figure8_weight',0.) and m.get('tail_xz') is not None:
+            tip_idx=len(chain)-1
+            xz=m['tail_xz'][:,tip_idx,:]  # (T,2) x/z relative to root
+            # Reference lemniscate in YZ plane (vertical-lateral):
+            # y = A*sin(2wt) at 2x stride, z = B*sin(wt) at 1x stride.
+            # This is the horizontal-8 counterbalance path: lateral sway (1x)
+            # + vertical recovery (2x) creates the infinity loop.
+            period=self.period
+            wt=2*np.pi*self.times/period
+            A=p.get('figure8_vertical_amplitude_m',0.05)*self.L
+            B=p.get('figure8_lateral_amplitude_m',0.12)*self.L
+            y_ref=A*np.sin(2*wt)
+            z_ref=B*np.sin(wt)
+            # Penalize deviation from the lemniscate path
+            tail_fig8=np.column_stack([
+                (xz[:,0]-y_ref)/self.L,
+                (xz[:,1]-z_ref)/self.L])
+        # Caudofemoralis coupling: tail lateral torque is mechanically linked to
+        # hip retraction torque through the CF muscle.  Left CF contracts →
+        # tail flexes left + left femur retracts.  Right CF contracts → tail
+        # flexes right + right femur retracts.  Net relationship:
+        #   τ_tail_0_yaw = (r_tail/r_hip) * (τ_hip_r − τ_hip_l)
+        # Engineering soft torque-coupling objective, not a reconstructed
+        # muscle, enforced mechanical constraint, or identified moment arm.
+        cf_residual=[]
+        cf_weight=p.get('cf_coupling_weight',0.)
+        if cf_weight and 'tail_0_yaw' in self.index:
+            cf_ratio=p.get('cf_moment_arm_ratio',0.6)  # r_tail / r_hip
+            # Effort columns use actuator order, not generalized coordinates
+            # (which also contain the six unactuated root coordinates).
+            t_idx=self.motors.index('motor_tail_0_yaw')
+            hl_idx=self.motors.index('motor_hip_l')
+            hr_idx=self.motors.index('motor_hip_r')
+            tail_tau=m['effort'][:,t_idx]*self.capacities[self.motors.index('motor_tail_0_yaw')]
+            hip_l_tau=m['effort'][:,hl_idx]*self.capacities[self.motors.index('motor_hip_l')]
+            hip_r_tau=m['effort'][:,hr_idx]*self.capacities[self.motors.index('motor_hip_r')]
+            # Normalize by BW*L to make dimensionless
+            cf_residual=cf_weight*(tail_tau-cf_ratio*(hip_r_tau-hip_l_tau))/(self.bw*self.L)
+        # Soft velocity regularization between adjacent links and at base
+        # reversals. This favors continuity; it does not establish a physical
+        # propagation speed, activation sequence, or prohibit phase lead.
+        tail_wave=[]
+        wave_weight=p.get('tail_wave_weight',0.)
+        if chain and wave_weight:
+            for suffix in ('','_yaw'):
+                vels=np.column_stack([m['u'][:,self.index[b['body']+suffix]] for b in chain])
+                # Velocity continuity: penalize velocity jumps between adjacent links
+                tail_wave.extend((wave_weight*np.diff(vels,axis=1)/self.speed).ravel())
+                # Phase lead penalty: when base is near zero velocity (reversing),
+                # tip should not be moving much (prevents tip-first reversal)
+                base_vel=vels[:,0]
+                tip_vel=vels[:,-1]
+                reversal_mask=np.exp(-(base_vel/self.speed)**2/0.05)
+                tail_wave.extend((wave_weight*reversal_mask*tip_vel/self.speed).ravel())
         motor_speed=np.column_stack([m['u'][:,self.index[n.removeprefix('motor_')]] for n in self.motors])
         positive_power=np.maximum(m['effort']*self.capacities*motor_speed,0)/(self.bw*self.speed)
         tail_indices=[i for i,n in enumerate(self.names) if n.startswith('tail_')]
@@ -261,6 +351,11 @@ class Coordination:
             (p['foot_velocity_weight']*m['slip']).ravel(),
             (p.get('clearance_weight',100.)*np.minimum(m['clearance'],0)/self.L).ravel(),
             (p.get('tail_acceleration_weight',0.)*tail_acceleration).ravel(),
+            (p.get('counterbalance_weight',0.)*counterbalance).ravel() if len(counterbalance) else np.array([]),
+            (p.get('tail_vertical_damp_weight',0.)*m['tail_vz']/self.speed).ravel() if m.get('tail_vz') is not None else np.array([]),
+            (p.get('tail_figure8_weight',0.)*tail_fig8).ravel() if len(tail_fig8) else np.array([]),
+            cf_residual.ravel() if len(cf_residual) else np.array([]),
+            np.asarray(tail_wave) if len(tail_wave) else np.array([]),
             .003*x
         ])
         score=float(result@result)
