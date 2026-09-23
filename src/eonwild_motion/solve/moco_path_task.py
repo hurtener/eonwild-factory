@@ -6,7 +6,8 @@ them. Stance anchors live in the world, including on a curved path.
 """
 import numpy as np
 from scipy.interpolate import CubicSpline
-from scipy.optimize import least_squares
+from scipy.optimize import least_squares, brentq
+from scipy.ndimage import gaussian_filter1d
 from scipy.spatial.transform import Rotation
 
 from .moco_tasks import smooth, rot
@@ -157,6 +158,14 @@ def initialize(problem, old_times, old_q, old_period):
         q[:,ix[name]] = mean+task['body_excursion_scale']*(q[:,ix[name]]-mean)
     q[:,ix['forward']] = 0.
     q[:,ix['height']] += task.get('height_offset_m',0.)
+    if task.get('enforce_root_envelopes',False):
+        for name in ('pitch','roll'):
+            envelope=problem.policy['body_envelope'][name]
+            values=q[:,ix[name]];center=envelope['center'];width=envelope['half_range']
+            # Establish supported posture BEFORE solving the feet, so bounded
+            # optimization never changes root posture underneath a solved plant.
+            q[:,ix[name]]=center+width*np.tanh((values-values.mean())/width)
+
     # An authored path-relative attention target, shared across anatomies.
     lead = task['yaw_rate_rad_s']*task['attention_lead_s']
     for name,share in [('chest_yaw',.10),('neck_yaw',.40),('neck_upper_yaw',.35),('head_yaw',.15)]:
@@ -189,10 +198,25 @@ def initialize(problem, old_times, old_q, old_period):
                 R=np.array([[rotation.get(i,j) for j in range(3)] for i in range(3)])
                 return np.r_[(p-target)/problem.L, .4*Rotation.from_matrix(orientation.T@R).as_rotvec(),.002*(x-reference)]
             bounds=np.array([problem.metadata['coordinates'][n]['bounds_rad'] for n in names]).T
+            if task.get('enforce_joint_limits',False):
+                margin=.01*(bounds[1]-bounds[0]);bounds[0]+=margin;bounds[1]-=margin
             result=least_squares(residual,np.clip(reference,bounds[0]+1e-5,bounds[1]-1e-5),bounds=bounds,max_nfev=40,ftol=1e-8,xtol=1e-8,gtol=1e-8)
             q[k,indices]=result.x
             q[k,ix['digit_'+side]]=digit
             errors.append(float(np.linalg.norm(residual(result.x)[:3])*problem.L))
+    if task.get('settle_initial_contact',False):
+        contact=[problem.model.getForceSet().get(c['force']) for c in problem.metadata['contacts']]
+        offsets=[]
+        for k,t in enumerate(times[:-1]):
+            pose=to_world(q[k:k+1],np.array([t]),ix,problem.speed,task['yaw_rate_rad_s'])[0]
+            def balance(dy):
+                values=pose.copy();values[ix['height']]+=dy
+                problem.set_state(t,values,np.zeros(len(values)))
+                return sum(force.getRecordValues(problem.state).get(1) for force in contact)-problem.bw
+            offsets.append(brentq(balance,-.025,.025,xtol=1e-9))
+        offsets=gaussian_filter1d(offsets,1.,mode='wrap')
+        q[:-1,ix['height']]+=offsets
+        problem.metadata['initial_contact_settling_m']=[float(offsets.min()),float(offsets.max())]
     q[-1]=q[0]
     problem.metadata['path_cycle'] = dict(duration_s=problem.period,yaw_radians=task['yaw_rate_rad_s']*problem.period,
         translation_m=path_frame(problem.period,problem.speed,task['yaw_rate_rad_s'])[0].tolist(),

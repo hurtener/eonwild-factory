@@ -140,8 +140,8 @@ class Coordination:
                 if not np.isfinite(fraction).all():raise ValueError('Nonfinite joint seed: '+name)
                 if np.min(fraction)<0 or np.max(fraction)>1:
                     self.metadata.setdefault('interior_seed_adjustments_rad',{})[name]=float(max(lo-latent[:,i].min(),latent[:,i].max()-hi,0))
-                fraction=np.clip(fraction,1e-5,1-1e-5) # interior seed only
-                latent[:,i]=span*.25*np.log(fraction/(1-fraction))
+                from .moco_joint_spline import to_latent
+                latent[:,i]=to_latent(latent[:,i],lo,hi)
                 self.bounded[i]=(lo,span)
             self.latent_base=CubicSpline(times,latent,axis=0,bc_type='periodic')
 
@@ -211,6 +211,11 @@ class Coordination:
     def evaluate_kinematics(self,x,times):
         if self.path_task:
             from .moco_path_task import to_world
+            if abs(self.path_task['yaw_rate_rad_s'])<1e-12:
+                q,u,acc=self.local_derivatives(x,times)
+                q[:,self.index['forward']]+=self.speed*times
+                u[:,self.index['forward']]+=self.speed
+                return q,u,acc
             def sample(t):
                 values=self.local_kinematics(x,t)
                 return to_world(values,t,self.index,self.speed,self.path_task['yaw_rate_rad_s'])
@@ -227,16 +232,22 @@ class Coordination:
             outputs.append(values)
         return outputs
 
-    def local_kinematics(self,x,times):
+    def local_derivatives(self,x,times):
         if not hasattr(self,'_cache'):self._cache={}
-        delta=np.einsum('tqp,p->tq',self._arrays(times)[0],x)
-        values=self.base(times)+delta
+        basis=self._arrays(times)
+        outputs=[self.base(times,d)+np.einsum('tqp,p->tq',basis[d],x) for d in range(3)]
         if self.bounded:
-            from scipy.special import expit
-            latent=self.latent_base(times)+delta
+            from .moco_joint_spline import bounded
+            latent=[self.latent_base(times,d)+np.einsum('tqp,p->tq',basis[d],x) for d in range(3)]
             for i,(lo,span) in self.bounded.items():
-                values[:,i]=lo+span*expit(4*latent[:,i]/span)
-        return values
+                value,first,second=bounded(latent[0][:,i],lo,lo+span)
+                outputs[0][:,i]=value
+                outputs[1][:,i]=first*latent[1][:,i]
+                outputs[2][:,i]=first*latent[2][:,i]+second*latent[1][:,i]**2
+        return outputs
+
+    def local_kinematics(self,x,times):
+        return self.local_derivatives(x,times)[0]
 
     def set_state(self,t,q,u):
         self.state.setTime(float(t))
@@ -554,7 +565,7 @@ def run(admission_path,recipe_path,baseline_path,output,initial=None,evaluate_on
     evaluations=None
     if not evaluate_only:
         result=least_squares(problem.residual,x,max_nfev=problem.policy['max_evaluations'],
-                             x_scale='jac',ftol=2e-5,xtol=1e-6,gtol=1e-6,verbose=1)
+                             x_scale='jac',diff_step=problem.policy.get('numerical_diff_step'),ftol=2e-5,xtol=1e-6,gtol=1e-6,verbose=1)
         x=result.x
         evaluations=int(result.nfev)
     report=problem.export(x)

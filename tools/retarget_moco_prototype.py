@@ -203,6 +203,7 @@ def main():
     tracks, _ = read_animation_tracks(emitted, 'moco-prototype', require_common_timeline=True)
     reopened = SkinRig(emitted, c.roles, c.forward, c.up, captured['contact'])
     measurements = []
+    joint_angles={}
     for t, frame_targets in zip(times, targets):
         ts, rs = list(c.base_t), list(c.base_r)
         for (node, path), track in tracks.items():
@@ -211,10 +212,28 @@ def main():
         w = np.asarray(_world_matrices(emitted, ts, rs, c.base_s))
         landmarks={role: w[node, :3, 3].tolist() for role, node in roles.items()}
         if nose_local is not None:landmarks['skull_fixed_nose']=(w[roles['head']]@nose_local)[:3].tolist()
+        if spatial:
+            for side,suffix in [('left','l'),('right','r')]:
+                recovered=[]
+                for i in range(3):
+                    node,child=roles[f'{side}Leg.{i}'],roles[f'{side}Leg.{i+1}']
+                    correction=align(base[child,:3,3]-base[node,:3,3],basis@np.array([0,-1,0]))
+                    bind=Rotation.from_matrix(correction@base[node,:3,:3]).as_matrix()
+                    actual=Rotation.from_matrix(w[node,:3,:3]).as_matrix()@bind.T
+                    recovered.append(basis.T@actual@basis)
+                for name,i in [('knee',0),('ankle',1)]:
+                    relative=recovered[i].T@recovered[i+1]
+                    joint_angles.setdefault(name+'_'+suffix,[]).append(float(np.arctan2(relative[1,0],relative[0,0])))
         measurements.append(dict(time_s=t,
             joint_error_m={role: float(np.linalg.norm(w[roles[role], :3, 3] - p)) for role, p in frame_targets.items()},
             skin_floor_min_m={s: float((reopened.skin(w, ids) @ c.up).min() - skin.ground) for s, ids in reopened.foot_masks.items()},
             landmarks=landmarks))
+    reopened_joint_ranges={n:[min(v),max(v)] for n,v in joint_angles.items()}
+    reopened_joint_violations={}
+    for n,(lo_actual,hi_actual) in reopened_joint_ranges.items():
+        lo,hi=data['metadata']['coordinates'][n]['bounds_rad']
+        violation=max(lo-lo_actual,hi_actual-hi,0.)
+        if violation>1e-5:reopened_joint_violations[n]=violation
     optimization_status=data['report']['optimizer']['status']
     source_method='Authored contact transition with inverse-dynamics audit' if sequence else 'Spatial inverse-dynamics initializer' if optimization_status=='REDUCED_COORDINATE_INITIALIZER' else ('Spatial Moco trajectory' if spatial else 'Planar Moco trajectory')
     receipt = dict(schema='eonwild.motion.moco-skin-diagnostic.v1', status='EXPERIMENTAL_RETARGET', production=False,
@@ -224,6 +243,8 @@ def main():
         source_optimization_status=optimization_status,
         method=source_method+('. Finite sequence, no mirroring or repetition. ' if sequence else '. Full-stride curved-path transform; no leg exchange. ' if path_cycle else '. Saved body rotations/directions and reflected half-stride symmetry. ')+
             'Rotation-only limb transfer, original artist lengths and rest curvature. Calibrated models include chest and distal toe motion plus admitted jaw-neutral closure. No contact correction. '+('Explicit authored jaw breathing, not simulated respiration.' if breathing else 'No dynamic secondary layer.'),
+        reopened_knee_ankle_ranges_rad=reopened_joint_ranges,
+        reopened_knee_ankle_limit_violations_rad=reopened_joint_violations,
         maximum_joint_error_m=max(v for m in measurements for v in m['joint_error_m'].values()),
         minimum_skin_floor_m=min(v for m in measurements for v in m['skin_floor_min_m'].values()),
         measurements=measurements)
