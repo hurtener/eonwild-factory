@@ -1,5 +1,7 @@
 # C51 — relaxed recovery and physical feasibility
 
+**Final status: C51 A pending visual review; bounded full Moco attempts finished without convergence. No further runs or artistic iterations at this checkpoint.**
+
 2026-09-23. The user accepted C50 D's repaired tail and overall fluidity, requested
 less ankle excursion/angular speed in recovery, and authorized validation stages
 1–2 overnight. Work directly without subagents. Poll a running optimization **no
@@ -158,3 +160,40 @@ UTC, two minutes before the existing hard deadline. The plan/helper are archived
 under `experiments/interior-full-moco/`. No deadline extension or new solve was
 introduced. At the next eligible check, consult `monitor.json`; do not duplicate
 the graceful-stop helper or re-read active progress inside ten minutes.
+
+
+### Final checkpoint, 07:40 UTC
+
+Both bounded attempts have ended. The second returned `User_Requested_Stop`,
+`success=false`, iteration 92, objective 0.6082253, after 3510.66 seconds.
+The exact stop sentinel was removed at 07:29:21 UTC; the hard timeout was not
+needed. Final scaled constraint violation is 0.0029447 (unscaled 0.102347),
+and dual infeasibility is 6.315. Neither requested convergence nor physical
+acceptance is established. No additional solves were launched.
+
+The returned unscaled trajectory was replayed through its exact physical model
+at 241 dense samples, without retarget corrections:
+
+| Same-metric comparison | C51 A visual initializer | Final full-Moco iterate |
+|---|---:|---:|
+| Dense 3D force-balance RMS (BW) | 0.01562 | 0.01064 |
+| Peak command magnitude | 1.2020 | 0.9855 |
+| Peak activation magnitude | 0.9912 | 0.9469 |
+| Material-witness floor violation | 8.05 mm | 0.0178 mm |
+| Loaded-pad surface speed p95 | 0.233 m/s | 0.343 m/s |
+| Loaded-pad peak surface speed | 0.764 m/s | 1.209 m/s |
+
+The returned iterate maintains the half-stride symmetry join to numerical
+precision and has no sample with total load below 0.05 BW (minimum 0.137 BW).
+It improves several constraints but worsens slip; it is preserved as diagnostic
+research, **not selected for display or promoted as validated motion**. No new
+render was generated from it. Material witnesses are not the final skinned-foot
+measurement. Forward stability and mesh refinement remain NOT_RUN.
+
+Final evidence is in principal game
+`game/Evidence/moco-c51-support-feasibility/experiments/interior-full-moco/`;
+`experiments/final-summary.json` records the outcome of both attempts. The
+selected videos remain under `candidate-a/`. Stop at this user checkpoint.
+Stage 1 is implemented/rendered pending review; stage 2 was attempted and did
+not pass. This is a numerical limitation of these bounded trials, not a proof
+that Moco or the physical model cannot converge.

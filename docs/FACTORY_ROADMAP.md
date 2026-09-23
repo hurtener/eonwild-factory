@@ -13,7 +13,7 @@ asset and video identities. C39 B remains the preferred Tarbo visual baseline;
 C40/C41 have changes requested and C42 remains pending. No new motion is generated
 or approved by either handoff.
 
-Current checkpoint: **C50 D tail repair visually accepted; stages 1–2 authorized**.
+Current checkpoint: **C51 A pending visual review; bounded stage-2 Moco attempts finished without convergence.**
 The user resumed at C50 after another agent's twelve-link/eight-link mapping
 failure. The new animation-free source has twelve driven links and thirteen
 ordered nodes, fresh source-bound catalogs and strict unique-bone validation.
@@ -24,11 +24,11 @@ Videos: principal `game/Evidence/moco-c50-caudofemoralis-study/candidate-d/`.
 User confirmed the repaired tail and overall fluidity; remaining requested polish is ankle recovery speed/excursion. C51 will audit support/foot placement and attempt full Moco convergence, then pause. C47 and C48–C50 candidates
 remain historical evidence; this entry does not infer their visual approval.
 
-C51 stages 1–2 are in progress on `codex/moco-c51-support-feasibility`.
+C51 stages 1–2 are preserved on `codex/moco-c51-support-feasibility`.
 The first audit distinguishes pelvis-relative opening from world-foot drift:
 firm-support world foot position varies about 15 mm; the apparent larger opening
 includes body weight transfer. Ankle swing peaks at 118.26 degrees / 603.09 deg/s.
-C51 A is rendered: ankle swing peak 90.85 degrees / 436.57 deg/s, skin intrusion 6.11 mm. All 288 side/quarter/front frames were inspected. Physical limitations remain (including command excess and no sample below 0.05 BW); full-Moco work is separate and running. No C51 visual approval, convergence or forward-stability claim yet.
+C51 A is rendered: ankle swing peak 90.85 degrees / 436.57 deg/s, skin intrusion 6.11 mm. All 288 side/quarter/front frames were inspected. Physical limitations remain (including command excess and no sample below 0.05 BW); full-Moco work is separate and has now finished without convergence. No C51 visual approval, convergence or forward-stability claim yet.
 See [C51 procedure and measured tradeoffs](handoffs/MOCO_C51_SUPPORT_FEASIBILITY.md).
 The bound-interior seed finished with no sampled joint-limit violations but worse command/balance residuals; one 15-interval, 60-minute full-Moco retry started at 06:31 UTC. C51 A remains the displayed candidate.
 C50 is preserved on both remote main branches (factory `9868716`, game `9b16390`).
@@ -1169,3 +1169,5 @@ Pause here for user review. Next work is contact/control/forward consistency
 for the spatial result, then Allosaurus transfer and muscles/tendons after review.
 
 C51 stage-2 update (07:16 UTC): baseline-seeded pilot timed out without convergence or a returned trajectory; archived as failed. Interior retry remains active within its original cap, with a graceful stop scheduled to preserve its final iterate. No change to C51 A or the accepted main baseline.
+
+Final C51 status (07:40 UTC): both bounded full-Moco experiments have ended. Interior retry returned an unscaled trajectory after graceful stop, with improved force balance/command bounds/material clearance but worse loaded-foot slip. It remains unselected and unconverged; C51 A is the sole visual candidate. Stage 1 pending user review; stage 2 attempted, not passed; stages 3–4 not run. Pause here.
