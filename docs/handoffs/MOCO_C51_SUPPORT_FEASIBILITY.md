@@ -84,6 +84,31 @@ unsuccessful full solve must never be substituted silently for the visual fit.
 
 ## Checkpoint status
 
-IN PROGRESS: support fit and full Moco pilot started. No new visual approval,
-full-convergence or independent-stability claim. Update this section with the
-actual returned outcomes and exact artifact paths before final handoff.
+C51 A is rendered and pending user review. All 144 side, 72 quarter and 72 front
+frames were inspected in chronological sheets, with enlarged recovery/contact
+frames. No disconnected tail or new discontinuous pose was seen; this is not a
+claim of direct native-video temporal perception.
+
+| Measurement | C50 D | C51 A |
+|---|---:|---:|
+| Swing peak ankle angle | 118.26 deg | 90.85 deg |
+| Swing peak ankle speed | 603.09 deg/s | 436.57 deg/s |
+| Reopened skin floor intrusion | 7.19 mm | 6.11 mm |
+| Root balance residual RMS | 0.01399 BW/BWL | 0.01370 BW/BWL |
+| Loaded contact surface speed p95 | 0.417 m/s | 0.233 m/s |
+| Maximum command magnitude | 1.210 | 1.202 |
+| Firm-support left world-lane range | 14.9 mm | 19.7 mm |
+| Contact samples below 0.05 BW | 1.2% | 0.0% |
+
+The contact load remains nonzero throughout the new sample (minimum 0.0984 BW).
+Thus this pass is not proof of an airborne running gait. The skin-contact and
+motor-command failures remain explicit. Do not promote the candidate to physical
+acceptance because the ankle metrics improved.
+
+Evidence: principal game `game/Evidence/moco-c51-support-feasibility/candidate-a/`.
+Asset: `game/Assets/Eonwild/MocoSupport51A/`. The exact initializer source is
+factory commit `3827ce7`; the additional audit/interior-seed helpers are `58c25aa`.
+Full Moco pilot is still running separately. A second initializer prepares the
+C51 motion inside unchanged model bounds, using a 0.0005 coordinate-unit interior
+target and stronger range/command penalties; it is not selected for display.
+Update final solver status when the bounded experiments return.
