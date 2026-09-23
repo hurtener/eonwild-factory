@@ -21,6 +21,7 @@ from eonwild_motion.solve.moco_joint_spline import BoundedJointSpline
 
 ap=argparse.ArgumentParser()
 for n in ('source','baseline','output'):ap.add_argument('--'+n,type=Path,required=True)
+ap.add_argument('--turn-plan',type=Path)
 a=ap.parse_args();a.output.mkdir(parents=True,exist_ok=False)
 source=json.loads((a.source/'replay.json').read_text());meta=source['metadata']
 p=Coordination(meta['admission'],meta['recipe'],json.loads(a.baseline.read_text()),a.output)
@@ -45,7 +46,16 @@ active_end=float(inverse(end_progress));stop=start+active_end
 v=speed*smooth(clock_grid/1.8)*smooth((active_end-clock_grid)/1.8)
 distance=CubicSpline(clock_grid,cumulative_trapezoid(v,clock_grid,initial=0))
 def travel(tau):return float(distance(float(np.clip(inverse(np.clip(tau,0,end_progress)),0,active_end))))
-def frame_at_progress(tau):return path_frame(travel(tau)/speed,speed,rate)
+turn_plan=None
+if a.turn_plan:
+    from eonwild_motion.solve.moco_turn_plan import TurnPlan
+    def sequence_velocity(t):
+        active=np.clip(np.asarray(t)-start,0,active_end)
+        return speed*smooth(active/1.8)*smooth((active_end-active)/1.8)
+    turn_plan=TurnPlan(json.loads(a.turn_plan.read_text()),duration,sequence_velocity)
+def frame_at_progress(tau):
+    if turn_plan:return turn_plan.frame(start+float(inverse(np.clip(tau,0,end_progress))))
+    return path_frame(travel(tau)/speed,speed,rate)
 def gain_at_progress(tau):
     t=float(inverse(np.clip(tau,0,end_progress)))
     return float(smooth(t/1.8)*smooth((active_end-t)/1.8))
@@ -81,6 +91,12 @@ for t in times:
     local[ix['forward']]*=gain
     # At rest head returns to the body's heading, retaining the reviewed pitch.
     for n in ('chest_yaw','neck_yaw','neck_upper_yaw','head_yaw'):local[ix[n]]*=gain
+    if turn_plan:
+        tail_count=len(p.metadata.get('tail_chain',[]))
+        for name,offset in turn_plan.body_offsets(float(t),tail_count).items():local[ix[name]]+=offset
+        for name,setting in p.metadata['coordinates'].items():
+            lo,hi=setting['bounds_rad']
+            if not lo<=local[ix[name]]<=hi:raise ValueError('Turn intent exceeds admitted joint range: '+name)
     org,rr=frame_at_progress(tau);world=local.copy();world[xyz]=org+rr@local[xyz]
     world[angles]=Rotation.from_matrix(rr@Rotation.from_euler('ZYX',local[angles]).as_matrix()).as_euler('ZYX')
     p.set_state(t,world,np.zeros(len(world)))
@@ -137,12 +153,13 @@ p.metadata['sequence']=dict(duration_s=duration,start_s=start,stop_s=stop,steady
     max_foot_task_error_m=max(errors),rest_contact_offsets_m=rest_offsets,contact_depth_correction_range_m=[float(offsets.min()),float(offsets.max())],source=str(a.source),periodic=False)
 # The mechanics/nose report must not subtract a constant-velocity path from a
 # finite sequence. Physical joint efforts/root residuals never use this field.
+if turn_plan:p.metadata['sequence']['turn_plan']=turn_plan.specification
 p.path_task=None
 p.model.printToXML(str(a.output/'model.osim'))
 import hashlib
 p.metadata.update(schema='eonwild.motion.moco-model-receipt.v1',admission=p.admission,recipe=p.recipe,
     model_sha256=hashlib.sha256((a.output/'model.osim').read_bytes()).hexdigest(),status='AUTHORED_TRANSITION_MODEL',
-    classification='C52 B revised 16-second walking sequence; inverse-dynamics diagnostic',user_review='PENDING')
+    classification='Finite contact-planned walking sequence; inverse-dynamics diagnostic',user_review='PENDING')
 (a.output/'model-receipt.json').write_text(json.dumps(p.metadata,indent=2)+'\n')
 (a.output/'ik-receipt.json').write_text(json.dumps(ik_receipts,indent=2)+'\n')
 report=p.export(np.zeros(len(p.parameters)))
