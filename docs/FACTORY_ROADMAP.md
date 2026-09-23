@@ -1,14 +1,21 @@
 # Factory movement roadmap and acceptance tracker
 
-Current review: **C53 A head-led walking turn — credible direction; more neck lead requested**.
-Sixteen seconds of rest/start/1.6 m/s curved walking/stop, in side and quarter
-views. Approved C52 B H walking and C51 A running remain preserved. All 768 frames
-inspected; 13 focused checks pass. Shared contact planner and unchanged physical
-model; authored steering/attention intent with inverse-dynamics audit. Neck effort
-exceeds modeled capacity, so full physical/contact acceptance remains unresolved.
-Stationary turning and broader generalized control are future work. Details:
-principal `game/Evidence/moco-c53-head-led-turn/MOCO_C53_HEAD_LED_TURN.md`.
-Pause for visual feedback before another pass.
+Current review: **C54 A profile-led walking turn — pending user review**.
+C53 A is now explicitly visually approved, alongside C52 B H walking and C51 A
+running. C54 connects central neck research/profile semantics to the Moco task,
+with a measured 45-degree head lead versus C53's 38.41, smoother attention and
+unchanged limb angles. Physical model and capacities remain unchanged; peak
+command falls from 4.55 to 3.80 but full dynamics remain unresolved. Neck effort
+is largely resistance from the calibrated neutral-centering brace; the previous
+spring decomposition used pre-calibration coefficients and is corrected in C54.
+See `docs/handoffs/MOCO_C54_NECK_PROFILE_TURN.md` and principal
+`game/Evidence/moco-c54-neck-profile-turn/`. Pause at this visual checkpoint.
+
+Backward walking is **planned, not implemented** on the Moco path. The existing
+shared-engine C19/C20 reverse remains visually approved. The new plan owns
+backward unloading/placement/loading, stance adoption and a real closing step:
+[backward implementation plan](handoffs/MOCO_BACKWARD_PLAN.md).
+
 
 
 Current extension: **C52 B relaxed walking H — visually approved**.
@@ -22,7 +29,7 @@ Earlier A and E/G takes have changes requested for ankle artifacts / running-lik
 extension. H reduces final ankle range to 27.71–88.05 degrees and peak rate to
 368.3 degrees/s. Physical force/contact residuals remain; no full Moco convergence.
 See [repair, evidence and reproduction](handoffs/MOCO_C52B_CENTERED_WALK.md).
-C51 A stays approved and unchanged. Turning is held. Generalization across
+C51 A stays approved and unchanged. C53 A turning is now visually approved. Generalization across
 speeds, direction, mass and strength comes after walking review; initializer
 priors must not become permanent species/gait-specific choreography.
 

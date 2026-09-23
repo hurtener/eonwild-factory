@@ -2,7 +2,7 @@
 
 User requested the next turning pass after approving C52 B H walking, explicitly
 requiring the head/neck to lead the turn. Work directly, without subagents.
-C53 A is a new candidate, **pending user review**. Preserve approved C52 B H
+C53 A is **visually approved by the user on 2026-09-23**. Preserve approved C52 B H
 walking and C51 A running; neither is replaced by this candidate.
 
 ## What this checkpoint contains
@@ -79,7 +79,7 @@ Videos:
 - `review-quarter/tarbo-c53-a-turn-quarter-16s.mp4`
 - `review-side/tarbo-c53-a-turn-side-16s.mp4`
 
-Pause for user feedback. No follow-up artistic pass or new optimization is active.
+Historical C53 capture is preserved. The authorized C54 profile-led pass is documented separately.
 
 ## Neck research integration audit — user question, 2026-09-23
 
@@ -126,3 +126,15 @@ distribution, passive support and strength calibration before treating it as a
 real animal limitation. This does not prove which modeling assumption is wrong.
 No masses, forces, capacities, limits, reference poses or motion bytes were edited.
 See `neck-effort-audit.json` and reproducible `audit_neck_effort.py` in game evidence.
+
+## C54 correction to the earlier effort decomposition
+
+C53 is now explicitly visually approved. The previous 1.874 kNm spring estimate
+was wrong: it used recipe coefficients before `calibrate_bracing` overwrote them.
+Reading the exact serialized model gives **8.843 kNm spring resistance** at the
+same peak pose, with **−0.121 kNm gravity contribution**, totaling the independently
+computed **8.722 kNm static demand**. The residual is below 1e-7 Nm. The 9.661 kNm
+saved total and 2.134 kNm assigned capacity were correct. This identifies the
+strong neutral-centering brace as the main model cost; it is not evidence of a
+biological inability to turn. Corrected reproducible decomposition is in C54
+`c53-neck-effort-audit.json`. Keep the old audit as superseded historical evidence.
