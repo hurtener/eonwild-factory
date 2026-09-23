@@ -1,7 +1,14 @@
 import numpy as np
+import pytest
 from types import SimpleNamespace
 
 from eonwild_motion.solve.moco_path_task import path_frame, foot_task
+
+
+def test_full_moco_does_not_silently_mirror_a_curved_path_task():
+    from eonwild_motion.solve.moco_prototype import make_study
+    with pytest.raises(ValueError,match='half-stride reflection'):
+        make_study(None,None,None,{'coordination':{'path_task':{'yaw_rate_rad_s':.12}}})
 
 
 def test_curved_stride_composes_without_moving_the_path_center():

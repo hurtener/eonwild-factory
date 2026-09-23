@@ -285,6 +285,8 @@ def seed_coordinates(admission, recipe, times):
 
 
 def make_study(model, metadata, admission, recipe, mesh=25, warm_start=None):
+    if recipe.get('coordination',{}).get('path_task'):
+        raise ValueError('Full-stride path tasks currently support the inverse-dynamics initializer only; the full Moco study still assumes straight half-stride reflection. Do not silently substitute that study.')
     import opensim as o
 
     study = o.MocoStudy()
