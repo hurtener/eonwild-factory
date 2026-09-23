@@ -1,6 +1,10 @@
 # Factory movement roadmap and acceptance tracker
 
 Current extension: **C52 B relaxed walking H — visually approved**.
+Next turning pass must be led by head/neck attention into the intended direction,
+with overlapping torso/pelvis rotation, weight transfer and adaptive foot placement.
+Use the principal `docs/ANIMATION_ART_DIRECTION.md` turning guidance; do not
+serialize these into separate movements. This reminder records direction only.
 The 16-second rest/start/1.6 m/s walk/stop candidate uses centered support,
 relaxed tail response, support-aligned references and bounded joint curves.
 Earlier A and E/G takes have changes requested for ankle artifacts / running-like
