@@ -1,11 +1,12 @@
 # Factory movement roadmap and acceptance tracker
 
-Current extension: **C52 B normal walking and walking turns, rendered and pending review**.
-C51 A was visually approved by the user on 2026-09-23 and remains preserved.
-C52 tests the same spatial anatomy and contact mechanics at the admitted normal
-walking speed, with a complete asymmetric stride for the curved path. It does
-not launch another full-Moco convergence search. See
-[C52 task, reproduction and review](handoffs/MOCO_C52_WALK_TURN.md).
+Current extension: **C52 B centered walking correction; first draft rejected for
+ankle artifacts**. Correct straight walking before extending the current pass.
+The user requested 16 seconds of rest/start/normal walking/stop and relaxed
+walking tail response. See [current repair and reproduction](handoffs/MOCO_C52B_CENTERED_WALK.md).
+C51 A remains approved and unchanged. Generalization across speeds, direction,
+mass and strength is the next iteration, after a credible walk; initializer
+priors must not become permanent species/gait-specific choreography.
 
 
 Updated 2026-09-23. This is a living evidence tracker, not a fixed plan inherited from an earlier model. Update it at every visual checkpoint. Game-design chapters retain product authority.

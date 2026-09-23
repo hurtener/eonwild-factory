@@ -86,3 +86,26 @@ are available to the whole leg, and load-gated ankle rate/acceleration comfort
 penalties discourage high-frequency reversals without prescribing a knee or
 metatarsal angle. These are engineering regularizers, not biological proofs.
 Current hard-limit candidates are being evaluated; do not infer approval.
+
+
+## User's next-iteration boundary
+
+Get correct walking first. The user explicitly asked to defer the broader
+normal-locomotion generalization discussion until after this walking checkpoint.
+Do not grow per-gait/species hardcoded choreography into the lasting engine.
+Animal mass, strengths, admitted anatomy and ranges are semantic model inputs;
+direction/speed/support intent are movement requests. Reference phase maps,
+contact placement priors and finite start/stop schedules here are declared
+initializer/task aids, not predicted biological laws or permanent per-animal
+solvers. Future work should replace these aids with reusable dynamics-driven
+coordination across direction, speed, mass and strength. Do not start that
+architecture project before obtaining a credible walk for user review.
+
+The root-posture bounds initially disturbed feet because they were applied
+after IK. That trial was stopped, not accepted. Establishing posture before
+foot IK and settling initial pad compression against body weight restores a
+usable seed. Straight-path derivatives now use exact splines/parameter-map
+chain rules, matching the established straight-running derivative path instead
+of finite differences of accelerations. `walk-e` is the current bounded
+straight-walk refinement. Turning trials are held; no rejected draft should be
+presented again.

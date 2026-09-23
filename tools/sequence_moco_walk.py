@@ -99,6 +99,7 @@ for t in times:
             rot=np.array([[mat.get(i,j) for j in range(3)] for i in range(3)])
             return np.r_[(pos-target)/p.L,.4*Rotation.from_matrix(orientation.T@rot).as_rotvec(),.4*(x[-1]-digit),.001*(x-reference)]
         bounds=np.array([p.metadata['coordinates'][n]['bounds_rad'] for n in names]).T
+        margin=.01*(bounds[1]-bounds[0]);bounds[0]+=margin;bounds[1]-=margin
         # Warm from this cycle pose to avoid history-dependent branch switches.
         opt=least_squares(residual,np.clip(reference,bounds[0]+1e-6,bounds[1]-1e-6),bounds=bounds,max_nfev=35,ftol=1e-9,xtol=1e-9,gtol=1e-9)
         world[indices]=opt.x

@@ -9,9 +9,10 @@ from scipy.interpolate import CubicSpline
 from scipy.special import expit
 
 
-def to_latent(values,lo,hi):
+def to_latent(values,lo,hi,interior_fraction=1e-10):
     width=.01*(hi-lo)
-    value=np.clip(values,lo+width,hi-width) # initialization only
+    margin=interior_fraction*(hi-lo)
+    value=np.clip(values,lo+margin,hi-margin) # initialization only
     return value+width*np.log(-np.expm1(-(value-lo)/width))-width*np.log(-np.expm1(-(hi-value)/width))
 
 

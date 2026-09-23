@@ -141,7 +141,7 @@ class Coordination:
                 if np.min(fraction)<0 or np.max(fraction)>1:
                     self.metadata.setdefault('interior_seed_adjustments_rad',{})[name]=float(max(lo-latent[:,i].min(),latent[:,i].max()-hi,0))
                 from .moco_joint_spline import to_latent
-                latent[:,i]=to_latent(latent[:,i],lo,hi)
+                latent[:,i]=to_latent(latent[:,i],lo,hi,interior_fraction=.01)
                 self.bounded[i]=(lo,span)
             self.latent_base=CubicSpline(times,latent,axis=0,bc_type='periodic')
 

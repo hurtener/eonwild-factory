@@ -114,3 +114,21 @@ def test_optimizer_coordinates_cannot_escape_joint_limits():
     values=p.local_kinematics(np.array([100.,-100.]),np.linspace(0,2,10001))
     assert values[:,0].min()>=.15 and values[:,0].max()<=2.25
     np.testing.assert_allclose(values[:,1],2.)
+
+
+def test_straight_walking_uses_consistent_exact_joint_acceleration():
+    from scipy.interpolate import CubicSpline
+    from eonwild_motion.solve.moco_coordination import Coordination
+    p=object.__new__(Coordination)
+    p.names=['ankle_l','height','forward'];p.index={n:i for i,n in enumerate(p.names)};p.period=2.;p.speed=1.6
+    p.path_task={'yaw_rate_rad_s':0.,'enforce_joint_limits':True}
+    p.parameters=[('ankle_l',1,'sin'),('ankle_l',2,'cos')]
+    p.base=CubicSpline([0,1,2],[[.5,2.,0.]]*3,axis=0)
+    p.latent_base=CubicSpline([0,1,2],[[.19,2.,0.]]*3,axis=0)
+    p.bounded={0:(.15,2.1)};p._cache={}
+    times=np.array([.1,.35,.7,1.3]);x=np.array([.1,-.1]);h=1e-5
+    q,u,acc=p.evaluate_kinematics(x,times)
+    plus=p.evaluate_kinematics(x,times+h);minus=p.evaluate_kinematics(x,times-h)
+    np.testing.assert_allclose(u,(plus[0]-minus[0])/(2*h),atol=1e-6)
+    np.testing.assert_allclose(acc,(plus[1]-minus[1])/(2*h),atol=2e-6)
+    np.testing.assert_allclose(u[:,2],1.6,atol=0);np.testing.assert_allclose(acc[:,2],0,atol=0)
