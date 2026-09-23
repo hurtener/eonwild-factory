@@ -1,6 +1,16 @@
 # Factory movement roadmap and acceptance tracker
 
-Current review: **C54 A profile-led walking turn — pending user review**.
+Current review: **C54 B coordinated walking turn — pending user review**.
+Turning now replaces straight-walk toe-out with the planned support direction;
+outside/inside landing advances are 8.92/10.71 degrees versus A's 0.81/18.82.
+Torso turn speed is steadier (9.41–13.51 versus 1.21–21.73 degrees/s). The
+45-degree head lead and walking recovery remain. Physical root residual worsens
+from 0.10864 to 0.14383 BW/BWL; this is a visual task candidate, not convergence.
+C53 A, C52 B H and C51 A remain approved; C54 A is preserved with changes
+requested. Backward remains planning only. See
+[checkpoint, limits and reproduction](handoffs/MOCO_C54B_COORDINATED_TURN.md).
+
+Previous candidate: **C54 A profile-led walking turn — changes requested**.
 C53 A is now explicitly visually approved, alongside C52 B H walking and C51 A
 running. C54 connects central neck research/profile semantics to the Moco task,
 with a measured 45-degree head lead versus C53's 38.41, smoother attention and
