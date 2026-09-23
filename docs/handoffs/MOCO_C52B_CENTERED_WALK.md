@@ -156,3 +156,37 @@ range is 27.7–87.9 degrees and maximum rate 369 degrees/s, versus E 9.7–103.
 625 degrees/s. All-angle scaling also removes the doubled recovery bend at the
 knee in the seed. Await bounded physical refinement, final sequence/rig replay,
 and a fresh 16-second render. Broader generalized locomotion remains deferred.
+
+
+## H relaxed walking — final candidate for this checkpoint
+
+Source `9db524f`, recipe `walk-h-recipe.json`, returned periodic `walk-h`,
+finite `walk-sequence-h`. The 16-evaluation refinement preserves the gentler
+ankle curve. Across the full final 16-second sequence ankle angles span
+27.71–88.05 degrees and peak angular speed is 368.3 degrees/s (previous E/G
+steady cycle: 9.69–103.31 degrees, 624.9 degrees/s). These are model-coordinate
+angles, not an externally measured anatomical included angle. One principal
+stance peak remains per side; no sampled admitted range violations.
+
+All 1,538 finite local IK solves terminate successfully (maximum 48 evaluations).
+Reopened final skin has no knee/ankle ROM violations; maximum joint mapping error
+2.79 micrometres. Material reaches 3.95 mm below the floor. Finite root residual
+RMS is 0.09184 BW/BWL and maximum normalized control is 1.7552: physical acceptance
+is still unresolved. Local IK success is not Moco convergence. The selected
+periodic initializer likewise is not a converged full Moco solution.
+
+The reduced gait demand is an engineering warm-start prior using relative
+`speed / sqrt(gravity * leg_length)`, not a discovered dinosaur scaling law.
+It scales all leg-reference excursions together; no per-animal joint solver,
+playback clamp, capacity increase, or changed anatomical stop was introduced.
+Keep this limitation explicit when designing the next generalized locomotion
+stage. Review walking before starting that work or resuming turning.
+
+Final media path in the principal repository:
+`game/Evidence/moco-c52b-centered-walk/review/tarbo-c52-b-revised-walk-16s.mp4`.
+User approval PENDING; pause after presenting this candidate.
+
+All 384 final H frames were inspected in sixteen chronological sheets, with
+original-size release/recovery/closing-step poses. Media receipt records the
+method and limits. The saved video is ready for user review; approval remains
+PENDING. No active optimization or player remains.

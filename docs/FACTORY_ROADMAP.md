@@ -1,11 +1,14 @@
 # Factory movement roadmap and acceptance tracker
 
-Current extension: **C52 B centered walking correction; first draft rejected for
-ankle artifacts**. Correct straight walking before extending the current pass.
-The user requested 16 seconds of rest/start/normal walking/stop and relaxed
-walking tail response. See [current repair and reproduction](handoffs/MOCO_C52B_CENTERED_WALK.md).
-C51 A remains approved and unchanged. Generalization across speeds, direction,
-mass and strength is the next iteration, after a credible walk; initializer
+Current extension: **C52 B relaxed walking H — pending visual review**.
+The 16-second rest/start/1.6 m/s walk/stop candidate uses centered support,
+relaxed tail response, support-aligned references and bounded joint curves.
+Earlier A and E/G takes have changes requested for ankle artifacts / running-like
+extension. H reduces final ankle range to 27.71–88.05 degrees and peak rate to
+368.3 degrees/s. Physical force/contact residuals remain; no full Moco convergence.
+See [repair, evidence and reproduction](handoffs/MOCO_C52B_CENTERED_WALK.md).
+C51 A stays approved and unchanged. Turning is held. Generalization across
+speeds, direction, mass and strength comes after walking review; initializer
 priors must not become permanent species/gait-specific choreography.
 
 
@@ -87,7 +90,7 @@ Checkpoint 26 is the approved walking side-hit recovery baseline; standing impac
 | Jaw relaxation / breathing-like cycle | Full-transition pass approved | Full-transition pass approved | Full-body breathing and behavior-specific mouth control |
 | Expressive idle / listening / alert scanning | No complete approved family | No complete approved family | Compose meaningful attention, posture and breathing behaviors from existing layers |
 | Running / sprinting | C42 A foot-approach candidate, pending review; sprint missing | C42 A pending review; C39 preferred reference; historical Run010 / Sprint006 preserved | Review forward reach and recovery; remaining post-release extension, ankle polish, entry/braking and sprinting |
-| Offline Moco mechanics | Not attempted; transfer follows Tarbo review | C51 A visually approved; C52 B walking and walking-turn videos rendered, pending review | Preserve C51; review ten-second C52 clips. Inverse-dynamics initialization is distinct from full Moco convergence and independent stability. Full-stride curved tasks are guarded against the old reflected half-stride Moco study. |
+| Offline Moco mechanics | Not attempted; transfer follows Tarbo review | C51 A visually approved; corrected C52 B H straight walking rendered and inspected, pending review; turning held | Review the sixteen-second rest/start/1.6 m/s/stop take. Preserve C51. Inverse-dynamics initialization is distinct from full Moco convergence and independent stability. Resume turning and broader transfer only after walking review. |
 | Feeding / gripping / pulling | Current approved transfer missing | Historical Feeding003 reference preserved | Current grounded support, oral contact and interaction handoff |
 | Drinking / swallowing | Missing | Missing | New choreography and world interaction |
 | Rest / sit / lie down / rise / sleep | Missing | Missing | New support transitions and resting behavior |
