@@ -1167,3 +1167,5 @@ The separate Moco refinement is recorded as an unselected experiment; it is not
 the source of the J video. Preserve C39/C42/C43/C44 and the approved library.
 Pause here for user review. Next work is contact/control/forward consistency
 for the spatial result, then Allosaurus transfer and muscles/tendons after review.
+
+C51 stage-2 update (07:16 UTC): baseline-seeded pilot timed out without convergence or a returned trajectory; archived as failed. Interior retry remains active within its original cap, with a graceful stop scheduled to preserve its final iterate. No change to C51 A or the accepted main baseline.

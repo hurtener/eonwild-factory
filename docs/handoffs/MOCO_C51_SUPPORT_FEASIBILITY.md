@@ -139,3 +139,22 @@ the next eligible poll. C51 A remains the sole displayed candidate.
 Metric clarification: the earlier table mixed the baseline dense force-only
 RMS with the candidate six-axis initializer RMS. The corrected table above
 labels both metrics separately and makes the modest balance regression explicit.
+
+
+### Pilot terminated, 07:16 UTC check
+
+The original 25-interval pilot exhausted its 90-minute budget. The supervisor
+sent SIGINT and, after its 30-second grace, SIGTERM; exit code -15. No returned
+unscaled `solution.sto` or solve receipt exists. Last logged iteration 92 had
+primal infeasibility 86.5. Archived under game evidence `experiments/pilot/`;
+scaled callbacks are compressed and explicitly ineligible for replay/rendering.
+This failure does not prove the physical problem has no feasible solution.
+
+The interior run is still active; its latest observed iteration 63 had primal
+infeasibility 0.0817, not convergence. Ipopt explicitly reported both requested
+initial bound settings as used. To preserve its final unscaled iterate, a
+single-use helper will remove only its exact OpenSim stop sentinel at 07:29:21
+UTC, two minutes before the existing hard deadline. The plan/helper are archived
+under `experiments/interior-full-moco/`. No deadline extension or new solve was
+introduced. At the next eligible check, consult `monitor.json`; do not duplicate
+the graceful-stop helper or re-read active progress inside ten minutes.
