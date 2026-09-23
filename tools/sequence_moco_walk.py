@@ -22,6 +22,7 @@ from eonwild_motion.solve.moco_joint_spline import BoundedJointSpline
 ap=argparse.ArgumentParser()
 for n in ('source','baseline','output'):ap.add_argument('--'+n,type=Path,required=True)
 ap.add_argument('--turn-plan',type=Path)
+ap.add_argument('--attention-profile',type=Path)
 a=ap.parse_args();a.output.mkdir(parents=True,exist_ok=False)
 source=json.loads((a.source/'replay.json').read_text());meta=source['metadata']
 p=Coordination(meta['admission'],meta['recipe'],json.loads(a.baseline.read_text()),a.output)
@@ -53,6 +54,19 @@ if a.turn_plan:
         active=np.clip(np.asarray(t)-start,0,active_end)
         return speed*smooth(active/1.8)*smooth((active_end-active)/1.8)
     turn_plan=TurnPlan(json.loads(a.turn_plan.read_text()),duration,sequence_velocity)
+attention=None;attention_rows=[]
+if a.attention_profile:
+    if turn_plan is None:raise ValueError('Profile attention requires a turn plan')
+    from eonwild_motion.solve.moco_attention import ProfileAttention
+    attention=ProfileAttention(json.loads(a.attention_profile.read_text()),p.metadata,
+                               turn_plan.specification['attention_mode'])
+    peak_lead=max(abs(turn_plan.attention(float(t))) for t in np.linspace(0,duration,1601))
+    if peak_lead<1e-8:raise ValueError('Attention turn must have nonzero planned lead')
+    attention_indices=[ix[n] for n in attention.names]
+    attention_coords=[p.coordinates[i] for i in attention_indices]
+    attention.description.update(profile_path=str(a.attention_profile),
+        profile_sha256=__import__('hashlib').sha256(a.attention_profile.read_bytes()).hexdigest(),
+        heading_reference='skull forward projected horizontally relative to trunk forward')
 def frame_at_progress(tau):
     if turn_plan:return turn_plan.frame(start+float(inverse(np.clip(tau,0,end_progress))))
     return path_frame(travel(tau)/speed,speed,rate)
@@ -94,6 +108,21 @@ for t in times:
     if turn_plan:
         tail_count=len(p.metadata.get('tail_chain',[]))
         for name,offset in turn_plan.body_offsets(float(t),tail_count).items():local[ix[name]]+=offset
+        if attention:
+            p.set_state(t,local,np.zeros(len(local)))
+            def projected_heading(values):
+                for c,value in zip(attention_coords,values):c.setValue(p.state,float(value),False)
+                p.model.realizePosition(p.state)
+                headings=[]
+                for body in ('head','trunk'):
+                    rot=p.model.getBodySet().get(body).getTransformInGround(p.state).R()
+                    headings.append(np.arctan2(-rot.get(2,0),rot.get(0,0)))
+                delta=headings[0]-headings[1]
+                return float(np.degrees(np.arctan2(np.sin(delta),np.cos(delta))))
+            requested=attention.target_degrees*turn_plan.attention(float(t))/peak_lead
+            values,receipt=attention.solve(requested,projected_heading)
+            local[attention_indices]=values
+            attention_rows.append(dict(time_s=float(t),coordinates_rad=values.tolist(),**receipt))
         for name,setting in p.metadata['coordinates'].items():
             lo,hi=setting['bounds_rad']
             if not lo<=local[ix[name]]<=hi:raise ValueError('Turn intent exceeds admitted joint range: '+name)
@@ -154,6 +183,10 @@ p.metadata['sequence']=dict(duration_s=duration,start_s=start,stop_s=stop,steady
 # The mechanics/nose report must not subtract a constant-velocity path from a
 # finite sequence. Physical joint efforts/root residuals never use this field.
 if turn_plan:p.metadata['sequence']['turn_plan']=turn_plan.specification
+if attention:
+    p.metadata['sequence']['attention_profile']=attention.description
+    (a.output/'attention-receipt.json').write_text(json.dumps(dict(
+        profile=attention.description,frames=attention_rows),indent=2)+'\n')
 p.path_task=None
 p.model.printToXML(str(a.output/'model.osim'))
 import hashlib
