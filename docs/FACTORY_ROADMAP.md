@@ -1,6 +1,15 @@
 # Factory movement roadmap and acceptance tracker
 
-Current review: **C57 B — running-entry width corrected; user review PENDING**.
+Current review: **C57 C — shared transition contact coordination; user review PENDING**.
+Neighboring transition poses are solved together with physical-time acceleration
+costs, existing foot targets and joint limits. Ankle RMS acceleration falls
+14–26%; braking knee peak speed falls 25%. Near-limit knee extension remains.
+Force balance worsens while peak command improves; physical acceptance FAILING.
+Both native-time videos are saved; every one of 668 frames per view inspected.
+No full Moco convergence or cross-animal transfer claim.
+[Result, reproduction and limitations](handoffs/MOCO_C57C_SHARED_ANKLE_CONTROLS.md).
+
+Previous candidate: **C57 B — changes requested for extension and smoothness**.
 Shared C2 orientation handoff now fits the outgoing/incoming motion envelope;
 support anchors and approved running source are preserved. Peak extra entry foot
 spread drops 13.41 → 2.08 cm; knee spread 10.56 → 5.78 cm. Both saved native-time
