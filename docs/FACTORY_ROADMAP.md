@@ -1,6 +1,15 @@
 # Factory movement roadmap and acceptance tracker
 
-Current candidate: **C57 connected walk → run → brake → retreat → stop → walk — rendered; user review PENDING**.
+Current review: **C57 B — running-entry width corrected; user review PENDING**.
+Shared C2 orientation handoff now fits the outgoing/incoming motion envelope;
+support anchors and approved running source are preserved. Peak extra entry foot
+spread drops 13.41 → 2.08 cm; knee spread 10.56 → 5.78 cm. Both saved native-time
+videos are rendered; all 668 frames per view inspected. Joint angle bounds pass;
+ankle sharpness and physical force/contact failures remain. No full convergence.
+[Correction and scope](handoffs/MOCO_C57B_RUNNING_HANDOFF.md).
+
+
+Previous candidate: **C57 connected walk → run → brake → retreat → stop → walk — changes requested for wider running-entry legs**.
 Shared state/contact handoffs and C56 whole-body refinement; original approved clips preserved.
 Approximately 28 native seconds; complete side/quarter videos saved and all 668
 frames per view inspected. I corrects an internally rejected tail dip. Joint
