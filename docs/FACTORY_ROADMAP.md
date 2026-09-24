@@ -1,6 +1,15 @@
 # Factory movement roadmap and acceptance tracker
 
-Current review: **C55 A cautious backward retreat — pending user review**.
+Current review: **C55 B planted backward retreat — pending user review**.
+C55 A has changes requested for excessive lateral sway and support-foot roll.
+B prioritizes planted sole pose in a coupled pelvis/both-leg solve and shortens
+transfer from 0.8 to 0.45 s. Lateral COM span is 2.1 cm versus 90 cm; loaded sole
+roll stays below 0.4 degrees versus 14. The physical model and limits are unchanged.
+Root residual improves to 0.06499 BW/BWL, but excess command/slip remain.
+[Comparison, limitations and reproduction](handoffs/MOCO_C55B_PLANTED_RETREAT.md).
+
+
+Previous review: **C55 A cautious backward retreat — changes requested**.
 Sixteen native seconds, four alternating placements with real closing, forward
 attention and relaxed tail. Starts from the C52 B H grounded state. Shared
 backward support task and bounded IK; not a reversed walk or converged Moco solve.

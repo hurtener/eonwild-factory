@@ -1,8 +1,9 @@
 # Moco backward walking — C55 first candidate and remaining plan
 
-User authorized implementation after C54 B feedback. C55 A implements the first
-grounded four-placement trial; media are pending user review. See
-[checkpoint and limitations](MOCO_C55_BACKWARD_RETREAT.md). Moving-state adoption,
+User authorized implementation after C54 B feedback. C55 A established the first
+grounded four-placement trial, but has changes requested for sway/foot roll.
+C55 B uses coupled planted support and quicker transfer; pending user review. See
+[checkpoint and limitations](MOCO_C55B_PLANTED_RETREAT.md). Moving-state adoption,
 curves, speed variation and Allo transfer remain **NOT_RUN**.
 Work directly, without subagents. Preserve C51 running, C52 B H walking and the
 now-approved C53 A turn. C54 is a separate neck-profile turn candidate.
