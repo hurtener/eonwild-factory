@@ -2,7 +2,7 @@
 
 User authorized implementation after C54 B feedback. C55 A established the first
 grounded four-placement trial, but has changes requested for sway/foot roll.
-C55 B uses coupled planted support and quicker transfer; pending user review. See
+C55 B improved planted support but has changes requested for release order and frozen torso. C56 now integrates shared finite whole-body coordination; see [C56](MOCO_C56_SHARED_FINITE.md). Previous details:
 [checkpoint and limitations](MOCO_C55B_PLANTED_RETREAT.md). Moving-state adoption,
 curves, speed variation and Allo transfer remain **NOT_RUN**.
 Work directly, without subagents. Preserve C51 running, C52 B H walking and the
