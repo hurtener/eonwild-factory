@@ -1,6 +1,15 @@
 # Factory movement roadmap and acceptance tracker
 
-Current work: **C56 shared finite whole-body coordination — visually approved**.
+Current candidate: **C57 connected walk → run → brake → retreat → stop → walk — rendered; user review PENDING**.
+Shared state/contact handoffs and C56 whole-body refinement; original approved clips preserved.
+Approximately 28 native seconds; complete side/quarter videos saved and all 668
+frames per view inspected. I corrects an internally rejected tail dip. Joint
+bounds pass; transition ankle sharpness and substantial force/contact residuals
+remain. Physical acceptance FAILING; no full convergence or runtime claim.
+[Architecture, scope and limitations](handoffs/MOCO_C57_CONNECTED_GAITS.md).
+
+
+Previous review: **C56 shared finite whole-body coordination — visually approved**.
 C55 B has changes requested for rear-first foot release and a frozen torso.
 The backward task now supplies distal-contact peel and footholds to a shared
 finite optimizer. All admitted body/limb/tail coordinates participate in exact
@@ -9,10 +18,9 @@ Prescribed tail sway is disabled. An internally rejected tail-lift regression wa
 [Architecture and checkpoint](handoffs/MOCO_C56_SHARED_FINITE.md).
 
 User feedback: “visually is perfect.” This approves the delivered motion, not
-physical convergence. Proposed next checkpoint (not started): moving-state
-adoption and connected forward/retreat/forward transitions using the shared
-finite coordinator, preserving actual foot contacts and joint/root velocities.
-Then test speed variation and Allosaurus transfer. Retain C56 as the baseline.
+physical convergence. The authorized next checkpoint is C57 above: moving-state adoption across
+walking, running and retreat. Speed variation and Allosaurus transfer remain
+pending. Retain C56 as the isolated retreat baseline.
 
 Previous review: **C55 B planted backward retreat — changes requested**.
 C55 A has changes requested for excessive lateral sway and support-foot roll.
