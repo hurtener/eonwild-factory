@@ -53,33 +53,73 @@ for time in times:
   vy=balance(tail_time,1)[1]
   total=spec['tail_response_gain']*np.arctan2(-vy,spec['velocity_scale_mps'])
   world[ix[part['body']+'_yaw']]+=total*part['length_m']/p.metadata['tail_chain'][-1]['arc_end_m']
- # Reconcile articulated COM displacement from limb/tail motion, then solve
- # feet again. A loaded foot is never translated as a body correction.
- for iteration in range(3):
+ # Planted support has priority over a reduced COM reference. Jointly solve
+ # pelvis lateral position and both legs so COM targets cannot tip a sole.
+ if spec.get('planted_whole_body'):
+  names=[name for side in ('l','r') for name in ['hip_'+side,'hip_'+side+'_yaw','hip_'+side+'_roll','knee_'+side,'ankle_'+side,'mtp_'+side,'digit_'+side]]
+  indices=[ix[name] for name in names]
+  bounds=np.array([p.metadata['coordinates'][name]['bounds_rad'] for name in names]).T
+  margin=.01*(bounds[1]-bounds[0]);bounds[0]+=margin;bounds[1]-=margin
+  lower=np.r_[initial[ix['lateral']]-p.L*.25,bounds[0]]
+  upper=np.r_[initial[ix['lateral']]+p.L*.25,bounds[1]]
+  targets={side:plan.foot(time,side) for side in ('l','r')}
+  target_pads={side:pad_height(*targets[side],side) for side in ('l','r')}
   p.set_state(time,world,zeros)
-  for side in ('l','r'):
-   target,orientation,digit=plan.foot(time,side)
-   target_pad=pad_height(target,orientation,digit,side)
-   names=['hip_'+side,'hip_'+side+'_yaw','hip_'+side+'_roll','knee_'+side,'ankle_'+side,'mtp_'+side,'digit_'+side]
-   indices=[ix[n] for n in names];coords=[p.coordinates[i] for i in indices];toe=p.model.getBodySet().get('toe_'+side)
-   def residual(x):
-    for c,val in zip(coords,x):c.setValue(p.state,float(val),False)
-    p.model.realizePosition(p.state);pos=toe.getPositionInGround(p.state).to_numpy();mat=toe.getTransformInGround(p.state).R()
+  def whole_residual(x):
+   p.coordinates[ix['lateral']].setValue(p.state,float(x[0]),False)
+   for i,v in zip(indices,x[1:]):p.coordinates[i].setValue(p.state,float(v),False)
+   p.model.realizePosition(p.state);res=[]
+   for side in ('l','r'):
+    target,orientation,digit=targets[side];toe=p.model.getBodySet().get('toe_'+side)
+    pos=toe.getPositionInGround(p.state).to_numpy();mat=toe.getTransformInGround(p.state).R()
     R=np.array([[mat.get(i,j) for j in range(3)] for i in range(3)])
-    # The sole, not the toe-frame origin, owns vertical contact. The reduced
-    # leg has sagittal ankle/MTP hinges: leave sole roll a soft preference so
-    # lateral hip loading can use the actual distributed pad geometry.
-    position_error=np.array([pos[0]-target[0],pad_height(pos,R,x[-1],side)-target_pad,pos[2]-target[2]])/p.L
-    return np.r_[position_error,np.array([.02,.4,.4])*Rotation.from_matrix(orientation.T@R).as_rotvec(),.4*(x[-1]-digit),.001*(x-initial[indices])]
-   bounds=np.array([p.metadata['coordinates'][n]['bounds_rad'] for n in names]).T
-   margin=.01*(bounds[1]-bounds[0]);bounds[0]+=margin;bounds[1]-=margin
-   opt=least_squares(residual,np.clip(previous[indices] if iteration==0 else world[indices],bounds[0]+1e-6,bounds[1]-1e-6),bounds=bounds,max_nfev=70,ftol=1e-9,xtol=1e-9,gtol=1e-9)
-   world[indices]=opt.x
-   if iteration==2:
-    errors.append(float(np.linalg.norm(residual(opt.x)[:3])*p.L));ik_receipts.append(dict(time_s=float(time),side=side,nfev=int(opt.nfev),success=bool(opt.success)))
-  p.set_state(time,world,zeros);actual=p.model.calcMassCenterPosition(p.state).to_numpy()[[0,2]];delta=target_com-actual
-  if iteration<2:world[[ix['forward'],ix['lateral']]]+=delta
-  else:com_errors.append(float(np.linalg.norm(delta)))
+    actual_digit=x[1+names.index('digit_'+side)]
+    # Strong material placement and sole orientation; no ankle roll degree
+    # of freedom is added and no contact anchor is translated.
+    res.extend(20*np.array([pos[0]-target[0],pad_height(pos,R,actual_digit,side)-target_pads[side],pos[2]-target[2]])/p.L)
+    res.extend(4*Rotation.from_matrix(orientation.T@R).as_rotvec())
+    res.append(.4*(actual_digit-digit))
+   actual=p.model.calcMassCenterPosition(p.state).to_numpy()
+   res.extend([.05*(actual[2]-target_com[1])/p.L,.2*(actual[0]-target_com[0])/p.L])
+   res.extend(.001*(x[1:]-initial[indices]))
+   return np.array(res)
+  seed=np.r_[previous[ix['lateral']],previous[indices]]
+  opt=least_squares(whole_residual,np.clip(seed,lower+1e-6,upper-1e-6),bounds=(lower,upper),max_nfev=70,ftol=1e-9,xtol=1e-9,gtol=1e-9)
+  world[ix['lateral']]=opt.x[0];world[indices]=opt.x[1:]
+  residual=whole_residual(opt.x)
+  for j,side in enumerate(('l','r')):
+   errors.append(float(np.linalg.norm(residual[j*7:j*7+3])*p.L/20))
+   ik_receipts.append(dict(time_s=float(time),side=side,nfev=int(opt.nfev),success=bool(opt.success)))
+  p.set_state(time,world,zeros)
+  com_errors.append(float(np.linalg.norm(p.model.calcMassCenterPosition(p.state).to_numpy()[[0,2]]-target_com)))
+ else:
+  # Reconcile articulated COM displacement from limb/tail motion, then solve
+  # feet again. A loaded foot is never translated as a body correction.
+  for iteration in range(3):
+   p.set_state(time,world,zeros)
+   for side in ('l','r'):
+    target,orientation,digit=plan.foot(time,side)
+    target_pad=pad_height(target,orientation,digit,side)
+    names=['hip_'+side,'hip_'+side+'_yaw','hip_'+side+'_roll','knee_'+side,'ankle_'+side,'mtp_'+side,'digit_'+side]
+    indices=[ix[n] for n in names];coords=[p.coordinates[i] for i in indices];toe=p.model.getBodySet().get('toe_'+side)
+    def residual(x):
+     for c,val in zip(coords,x):c.setValue(p.state,float(val),False)
+     p.model.realizePosition(p.state);pos=toe.getPositionInGround(p.state).to_numpy();mat=toe.getTransformInGround(p.state).R()
+     R=np.array([[mat.get(i,j) for j in range(3)] for i in range(3)])
+     # The sole, not the toe-frame origin, owns vertical contact. The reduced
+     # leg has sagittal ankle/MTP hinges: leave sole roll a soft preference so
+     # lateral hip loading can use the actual distributed pad geometry.
+     position_error=np.array([pos[0]-target[0],pad_height(pos,R,x[-1],side)-target_pad,pos[2]-target[2]])/p.L
+     return np.r_[position_error,np.array([.02,.4,.4])*Rotation.from_matrix(orientation.T@R).as_rotvec(),.4*(x[-1]-digit),.001*(x-initial[indices])]
+    bounds=np.array([p.metadata['coordinates'][n]['bounds_rad'] for n in names]).T
+    margin=.01*(bounds[1]-bounds[0]);bounds[0]+=margin;bounds[1]-=margin
+    opt=least_squares(residual,np.clip(previous[indices] if iteration==0 else world[indices],bounds[0]+1e-6,bounds[1]-1e-6),bounds=bounds,max_nfev=70,ftol=1e-9,xtol=1e-9,gtol=1e-9)
+    world[indices]=opt.x
+    if iteration==2:
+     errors.append(float(np.linalg.norm(residual(opt.x)[:3])*p.L));ik_receipts.append(dict(time_s=float(time),side=side,nfev=int(opt.nfev),success=bool(opt.success)))
+   p.set_state(time,world,zeros);actual=p.model.calcMassCenterPosition(p.state).to_numpy()[[0,2]];delta=target_com-actual
+   if iteration<2:world[[ix['forward'],ix['lateral']]]+=delta
+   else:com_errors.append(float(np.linalg.norm(delta)))
  poses.append(world.copy());previous=world
 poses=np.array(poses)
 np.savez(a.output/'placement-diagnostic.npz',times=times,poses=poses,names=p.names,errors=errors,com_errors=com_errors)
