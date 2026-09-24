@@ -21,7 +21,12 @@ def xyz(v):return [float(v.get(i)) for i in range(3)]
 
 def replay(dense):
     trajectory=o.MocoTrajectory(str(root/"solution.sto"))
-    if dense:trajectory.resampleWithNumTimes(769 if receipt.get('sequence') else 241)
+    if dense:
+        # Longer connected sequences must not lose temporal resolution simply
+        # because the original sixteen-second review used 769 samples.
+        saved_times=np.array(trajectory.getTimeMat())
+        count=max(769,len(saved_times),int(np.ceil((saved_times[-1]-saved_times[0])*48))+1) if receipt.get('sequence') else 241
+        trajectory.resampleWithNumTimes(count)
     times=np.array(trajectory.getTimeMat())
     states=np.array(trajectory.getStatesTrajectoryMat())
     controls=np.array(trajectory.getControlsTrajectoryMat())
