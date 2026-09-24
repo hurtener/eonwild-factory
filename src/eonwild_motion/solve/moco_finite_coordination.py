@@ -168,13 +168,13 @@ class FiniteCoordination:
         parts.append(self.settings['acceleration_weight']*acc*self.char_time**2)
         motorspeed=u[:,[p.index[n.removeprefix('motor_')] for n in p.motors]]
         parts.append(policy.get('positive_work_weight',0.)*np.maximum(effort*p.capacities*motorspeed,0)/(p.bw*self.char_speed))
-        recovery=policy.get('support_refinement',{}).get('ankle_recovery',{})
+        from .moco_support import ankle_support_residual
+        support=policy.get('support_refinement',{})
         for side in ('l','r'):
             load=m['forces'][:,[j for j,c in enumerate(p.metadata['contacts']) if c['force'].endswith('_'+side)],1].sum(axis=1)/p.bw
-            if recovery:
-                i=p.index['ankle_'+side];gate=1/(1+(np.maximum(load,0)/recovery['unloaded_load_BW'])**4)
-                parts.extend([(recovery['angle_weight']*gate*np.maximum(q[:,i]-recovery['comfortable_max_angle_rad'],0))[:,None],
-                    (recovery['rate_weight']*gate*np.maximum(abs(u[:,i])-recovery['comfortable_max_rate_rad_s'],0))[:,None]])
+            i=p.index['ankle_'+side]
+            parts.append(ankle_support_residual(q[:,i],u[:,i],acc[:,i],load,
+                                               p.period,p.L,support))
         result=np.concatenate([rows(v) for v in parts],axis=1)
         self.row_size=result.shape[1]
         score=float(np.sum(result**2))

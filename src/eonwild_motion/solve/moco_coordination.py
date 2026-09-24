@@ -427,21 +427,14 @@ class Coordination:
                 tail_wave.extend((wave_weight*reversal_mask*tip_vel/self.speed).ravel())
         support_task=[]
         if p.get('support_refinement'):
-            from .moco_support import recovery_residual,lane_residual
+            from .moco_support import ankle_support_residual,lane_residual
             task=p['support_refinement']
             loads=np.column_stack([m['forces'][:,[i for i,c in enumerate(self.metadata['contacts']) if c['force'].endswith('_'+side)],1].sum(axis=1)/self.bw for side in ('l','r')])
             for j,side in enumerate(('l','r')):
                 idx=self.index['ankle_'+side]
-                support_task.extend(recovery_residual(m['q'][:,idx],m['u'][:,idx],m['acc'][:,idx],loads[:,j],self.period,task['ankle_recovery']))
-                # A smooth load-gated comfort cost discourages rapid back-and-
-                # forth ankle bending under support. This leaves every angle
-                # free and recomputes contact/effort; it is not an angle clamp.
-                loaded=task.get('ankle_loaded',{})
-                if loaded:
-                    gate=np.sqrt(np.maximum(loads[:,j],0)/(np.maximum(loads[:,j],0)+.08))
-                    omega=np.sqrt(9.80665/self.L)
-                    support_task.extend(loaded['rate_weight']*gate*m['u'][:,idx]/omega)
-                    support_task.extend(loaded['acceleration_weight']*gate*m['acc'][:,idx]/omega**2)
+                support_task.extend(ankle_support_residual(
+                    m['q'][:,idx],m['u'][:,idx],m['acc'][:,idx],loads[:,j],
+                    self.period,self.L,task).ravel())
 
             hip_width=abs(self.admission['points']['rightLeg.0'][2]-self.admission['points']['leftLeg.0'][2])
             lateral=m['feet'][:,:,2]

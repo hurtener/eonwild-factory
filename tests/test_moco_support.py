@@ -1,9 +1,32 @@
 """Focused support-task tests: load gating, units, symmetry and no hip dragging."""
 import unittest
 import numpy as np
-from eonwild_motion.solve.moco_support import recovery_residual,lane_residual
+from eonwild_motion.solve.moco_support import recovery_residual,lane_residual,ankle_support_residual
 
 class SupportTasks(unittest.TestCase):
+    def test_shared_support_retains_loaded_and_recovery_acceleration_at_each_sample(self):
+        policy=dict(ankle_recovery=dict(unloaded_load_BW=.08,comfortable_max_angle_rad=1.8,
+            comfortable_max_rate_rad_s=7.5,angle_weight=18,rate_weight=8,acceleration_weight=1),
+            ankle_loaded=dict(rate_weight=.5,acceleration_weight=.25))
+        angle=np.array([1.5,2.1,1.7]);speed=np.array([4.,10.5,-3.])
+        acceleration=np.array([30.,-20.,15.]);load=np.array([0.,.08,1.])
+        result=ankle_support_residual(angle,speed,acceleration,load,1.2,2.4,policy)
+        self.assertEqual(result.shape,(3,5))
+        old_recovery=recovery_residual(angle,speed,acceleration,load,1.2,policy['ankle_recovery'])
+        np.testing.assert_allclose(result[:,:3].T.ravel(),old_recovery)
+        self.assertGreater(abs(result[0,2]),0)  # recovery acceleration was omitted in finite motion
+        np.testing.assert_array_equal(result[0,3:],0)
+        self.assertGreater(abs(result[-1,3]),0)  # loaded speed remains controlled
+        self.assertGreater(abs(result[-1,4]),0)  # loaded acceleration remains controlled
+        for j in range(3):
+            one=ankle_support_residual(angle[j:j+1],speed[j:j+1],acceleration[j:j+1],
+                load[j:j+1],1.2,2.4,policy)
+            np.testing.assert_allclose(result[j:j+1],one)
+        # Existing running cost is unchanged by extraction (only row ordering).
+        gate=np.sqrt(load/(load+.08));omega=np.sqrt(9.80665/2.4)
+        np.testing.assert_allclose(result[:,3],.5*gate*speed/omega)
+        np.testing.assert_allclose(result[:,4],.25*gate*acceleration/omega**2)
+
     def test_loaded_ankle_is_not_forced_into_swing_comfort_pose(self):
         policy=dict(unloaded_load_BW=.08,comfortable_max_angle_rad=1.8,comfortable_max_rate_rad_s=7.5,angle_weight=18,rate_weight=8,acceleration_weight=1)
         args=[np.array([2.1]),np.array([10.5]),np.array([30.])]
