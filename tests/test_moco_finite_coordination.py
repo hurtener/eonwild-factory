@@ -1,6 +1,7 @@
 import numpy as np
 from types import SimpleNamespace
-from eonwild_motion.solve.moco_finite_coordination import FiniteBasis,shared_cf_residual,shared_effort_residual
+from eonwild_motion.solve.moco_finite_coordination import FiniteBasis
+from eonwild_motion.solve.moco_coordination_costs import shared_cf_residual,shared_effort_residual,shared_tail_carriage_residual
 
 
 def test_finite_correction_preserves_state_speed_and_acceleration_at_boundaries():
@@ -20,3 +21,13 @@ def test_shared_cf_cost_uses_actuator_order_and_capacity():
     np.testing.assert_allclose(shared_cf_residual(p,effort),[[-.24]])
     costs=shared_effort_residual(np.array([[1.2]]),np.array([[1.3]]),{'effort_weight':.03,'capacity_weight':50})
     np.testing.assert_allclose([v.item() for v in costs],[.036,12.5,8.])
+
+
+
+def test_shared_carriage_cost_retains_existing_loaded_envelope_and_ignores_non_tail_frames():
+    p=SimpleNamespace(policy={'tail_carriage_weight':30.,'tail_carriage_half_range_leg_lengths':.075},
+        L=2.,index={'height':0},metadata={'clearance_frames':[
+            {'path':'/tip_tail_0','minimum_height_m':.1}, {'path':'/material_l_0','minimum_height_m':0.}],
+            'bracing':{'loaded_tail_end_heights_relative_root_m':{'tail_0':-.5}}})
+    m={'q':np.array([[2.],[2.]]),'clearance':np.array([[1.4,0.],[2.4,0.]])}
+    np.testing.assert_allclose(shared_tail_carriage_residual(p,m),[[0.],[12.75]])

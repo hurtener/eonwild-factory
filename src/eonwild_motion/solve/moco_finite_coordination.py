@@ -15,6 +15,7 @@ from scipy.optimize import least_squares
 from scipy.sparse import csr_matrix
 from scipy.spatial.transform import Rotation
 from .moco_joint_spline import bounded
+from .moco_coordination_costs import shared_effort_residual, shared_cf_residual, shared_tail_carriage_residual
 
 
 class FiniteBasis:
@@ -38,22 +39,6 @@ class FiniteBasis:
         return out
 
 
-def shared_effort_residual(effort,command,policy):
-    """Same capacity/effort costs for periodic and finite coordination."""
-    return (policy['effort_weight']*effort,
-            policy['capacity_weight']*np.maximum(np.abs(effort)-.95,0),
-            policy['capacity_weight']*.5*np.maximum(np.abs(command)-.98,0))
-
-
-def shared_cf_residual(problem,effort):
-    """Existing soft CF-inspired coupling; not an anatomical muscle model."""
-    p=problem.policy
-    if not p.get('cf_coupling_weight',0.) or 'motor_tail_0_yaw' not in problem.motors:
-        return np.zeros(effort.shape[:-1]+(0,))
-    indices=[problem.motors.index(n) for n in ('motor_tail_0_yaw','motor_hip_l','motor_hip_r')]
-    torque=effort[...,indices]*problem.capacities[indices]
-    value=torque[...,0]-p.get('cf_moment_arm_ratio',.6)*(torque[...,2]-torque[...,1])
-    return (p['cf_coupling_weight']*value/(problem.bw*problem.L))[...,None]
 
 
 class FiniteCoordination:
@@ -156,13 +141,7 @@ class FiniteCoordination:
             parts.append((s['weight']*np.maximum(abs(m['region_heights'][:,j]-self.reference_regions[:,j])/p.L-s['half_range_leg_lengths'],0))[:,None])
         # Retain the same loaded-tail carriage objective as periodic motion.
         # Effort minimization must not evade gravity by hoisting the tail.
-        for j,frame in enumerate(p.metadata['clearance_frames']):
-            name=frame['path'].removeprefix('/tip_')
-            reference=p.metadata.get('bracing',{}).get('loaded_tail_end_heights_relative_root_m',{}).get(name)
-            if reference is not None:
-                relative=m['clearance'][:,j]+frame['minimum_height_m']-q[:,p.index['height']]
-                allowance=policy.get('tail_carriage_half_range_leg_lengths',.08)*p.L
-                parts.append((policy.get('tail_carriage_weight',0.)*np.maximum(abs(relative-reference)-allowance,0)/p.L)[:,None])
+        parts.append(shared_tail_carriage_residual(p,m))
         for suffix in ('','_yaw'):
             indices=[p.index[b['body']+suffix] for b in self.chain]
             if indices:

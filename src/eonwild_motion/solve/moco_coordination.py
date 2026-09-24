@@ -355,15 +355,9 @@ class Coordination:
             for suffix in ('','_yaw'):
                 curvature=np.column_stack([m['q'][:,self.index[b['body']+suffix]]/b['length_m'] for b in chain])
                 tail_smooth.extend((p.get('tail_curvature_weight',0.)*np.diff(curvature,axis=1)).ravel())
-        tail_carriage=[]
-        for i,frame in enumerate(self.metadata['clearance_frames']):
-            name=frame['path'].removeprefix('/tip_')
-            reference=self.metadata.get('bracing',{}).get('loaded_tail_end_heights_relative_root_m',{}).get(name)
-            if reference is not None:
-                relative=m['clearance'][:,i]+frame['minimum_height_m']-m['q'][:,self.index['height']]
-                difference=relative-reference
-                allowance=p.get('tail_carriage_half_range_leg_lengths',.08)*self.L
-                tail_carriage.extend(p.get('tail_carriage_weight',0.)*np.maximum(np.abs(difference)-allowance,0)/self.L)
+        from .moco_coordination_costs import shared_tail_carriage_residual
+        # Preserve the previous periodic residual ordering exactly.
+        tail_carriage=shared_tail_carriage_residual(self,m).T.ravel()
         # Angular-momentum counterbalance: the tail must counter-rotate against
         # the trunk so the pair conserves angular momentum.  This is the
         # physical role of a theropod tail as ballast.  First-order inertia-
@@ -413,7 +407,7 @@ class Coordination:
         #   τ_tail_0_yaw = (r_tail/r_hip) * (τ_hip_r − τ_hip_l)
         # Engineering soft torque-coupling objective, not a reconstructed
         # muscle, enforced mechanical constraint, or identified moment arm.
-        from .moco_finite_coordination import shared_cf_residual
+        from .moco_coordination_costs import shared_cf_residual
         cf_residual=shared_cf_residual(self,m['effort'])
         # Soft velocity regularization between adjacent links and at base
         # reversals. This favors continuity; it does not establish a physical
@@ -465,7 +459,7 @@ class Coordination:
         tail_indices=[i for i,n in enumerate(self.names) if n.startswith('tail_')]
         tail_acceleration=m['acc'][:,tail_indices]*(self.period/(2*np.pi))**2
         effort=m['effort'];command=effort+np.gradient(effort,self.times,axis=0)*self.recipe['activation_time_constant_s']
-        from .moco_finite_coordination import shared_effort_residual
+        from .moco_coordination_costs import shared_effort_residual
         effort_costs=shared_effort_residual(effort,command,p)
         result=np.concatenate([
             (p['root_balance_weight']*m['root']).ravel(),
