@@ -413,20 +413,8 @@ class Coordination:
         #   τ_tail_0_yaw = (r_tail/r_hip) * (τ_hip_r − τ_hip_l)
         # Engineering soft torque-coupling objective, not a reconstructed
         # muscle, enforced mechanical constraint, or identified moment arm.
-        cf_residual=[]
-        cf_weight=p.get('cf_coupling_weight',0.)
-        if cf_weight and 'tail_0_yaw' in self.index:
-            cf_ratio=p.get('cf_moment_arm_ratio',0.6)  # r_tail / r_hip
-            # Effort columns use actuator order, not generalized coordinates
-            # (which also contain the six unactuated root coordinates).
-            t_idx=self.motors.index('motor_tail_0_yaw')
-            hl_idx=self.motors.index('motor_hip_l')
-            hr_idx=self.motors.index('motor_hip_r')
-            tail_tau=m['effort'][:,t_idx]*self.capacities[self.motors.index('motor_tail_0_yaw')]
-            hip_l_tau=m['effort'][:,hl_idx]*self.capacities[self.motors.index('motor_hip_l')]
-            hip_r_tau=m['effort'][:,hr_idx]*self.capacities[self.motors.index('motor_hip_r')]
-            # Normalize by BW*L to make dimensionless
-            cf_residual=cf_weight*(tail_tau-cf_ratio*(hip_r_tau-hip_l_tau))/(self.bw*self.L)
+        from .moco_finite_coordination import shared_cf_residual
+        cf_residual=shared_cf_residual(self,m['effort'])
         # Soft velocity regularization between adjacent links and at base
         # reversals. This favors continuity; it does not establish a physical
         # propagation speed, activation sequence, or prohibit phase lead.
@@ -477,6 +465,8 @@ class Coordination:
         tail_indices=[i for i,n in enumerate(self.names) if n.startswith('tail_')]
         tail_acceleration=m['acc'][:,tail_indices]*(self.period/(2*np.pi))**2
         effort=m['effort'];command=effort+np.gradient(effort,self.times,axis=0)*self.recipe['activation_time_constant_s']
+        from .moco_finite_coordination import shared_effort_residual
+        effort_costs=shared_effort_residual(effort,command,p)
         result=np.concatenate([
             (p['root_balance_weight']*m['root']).ravel(),
             (p['gaze_position_weight']*(m['nose']-self.target)/self.L).ravel(),
@@ -485,9 +475,7 @@ class Coordination:
             np.asarray(body_envelope),np.asarray(region_error),np.asarray(tail_smooth),np.asarray(tail_carriage),
             (p.get('positive_work_weight',0.)*positive_power).ravel(),
             p.get('vertical_work_weight',0.)*m['com_velocity'][:,1]/self.speed,
-            (p['effort_weight']*effort).ravel(),
-            (p['capacity_weight']*np.maximum(np.abs(effort)-.95,0)).ravel(),
-            (p['capacity_weight']*.5*np.maximum(np.abs(command)-.98,0)).ravel(),
+            *(v.ravel() for v in effort_costs),
             (p['root_attitude_weight']*m['q'][:,[self.index['yaw'],self.index['roll']]]).ravel(),
             (p['foot_velocity_weight']*m['slip']).ravel(),
             (p.get('clearance_weight',100.)*np.minimum(m['clearance'],0)/self.L).ravel(),

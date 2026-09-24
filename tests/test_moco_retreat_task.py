@@ -48,3 +48,21 @@ def test_horizontal_balance_obeys_reduced_equation_and_endpoint_state():
  np.testing.assert_allclose(c[-1],[-.3,.01],atol=1e-12)
  acceleration=np.diff(c,n=2,axis=0)/(.01**2)
  np.testing.assert_allclose(c[1:-1]-h/9.80665*acceleration,z[1:-1],atol=1e-11)
+
+
+def test_distal_release_lifts_rear_keeps_front_material_anchor_and_digit_orientation():
+ p=plan();spec=dict(p.specification,release_contact='distal')
+ geometry={'toe_midpoint_m':[.2,-.1,0.], 'sites':[
+     {'center_local_m':[-.1,-.1,0.],'radius_m':.1},
+     {'center_local_m':[.3,0.,0.],'radius_m':.1,'distal':True}]}
+ p=RetreatPlan(spec,p.initial,geometry,1.37,2.5)
+ from scipy.spatial.transform import Rotation
+ for e in p.events:
+  anchors=[];rear=[]
+  for t in np.linspace(e['lift']-spec['release_seconds'],e['lift'],21):
+   position,R,digit=p.foot(t,e['side']);D=Rotation.from_rotvec([0,0,digit]).as_matrix()
+   anchors.append(position+R@(p.midpoint+D@p.distal_center))
+   rear.append((position+R@np.array([-.1,-.2,0.]))[1])
+   np.testing.assert_allclose(R@D,np.eye(3),atol=1e-12)
+  np.testing.assert_allclose(anchors,np.tile(anchors[0],(len(anchors),1)),atol=1e-12)
+  assert rear[-1]>rear[0]+.02

@@ -48,7 +48,7 @@ for time in times:
  world[ix['forward']]+=target_com[0]-com[0];world[ix['lateral']]+=target_com[1]-com[2]
  # Small relaxed tail reaction to the horizontal mass-transfer velocity.
  # Distributed across admitted lengths; explicit secondary task, not muscles.
- for part in p.metadata.get('tail_chain',[]):
+ for part in ([] if spec.get('finite_coordination') else p.metadata.get('tail_chain',[])):
   tail_time=max(0.,time-spec['tail_delay_s']*(part['arc_end_m']/p.metadata['tail_chain'][-1]['arc_end_m']))
   vy=balance(tail_time,1)[1]
   total=spec['tail_response_gain']*np.arctan2(-vy,spec['velocity_scale_mps'])
@@ -143,6 +143,15 @@ blend=smooth((times-spec['prepare_s'])/spec['adoption_seconds'])
 poses[:,ix['height']]+=blend*offsets
 trajectory=BoundedJointSpline(times,poses,joint_bounds,bc_type=((1,zeros),(1,zeros)))
 p.evaluate_kinematics=lambda x,t:(trajectory(t),trajectory(t,1),trajectory(t,2))
+finite_result=None
+if spec.get('finite_coordination'):
+ from eonwild_motion.solve.moco_finite_coordination import FiniteCoordination
+ settings=spec['finite_coordination']
+ solve_times=np.linspace(settings['start_s'],settings['end_s'],settings['samples'])
+ finite=FiniteCoordination(p,trajectory,solve_times,plan.foot,settings)
+ finite_result,finite_receipt=finite.solve()
+ p.evaluate_kinematics=lambda x,t:finite.evaluate(finite_result,t)
+
 p.times_dense=times;p.path_task=None;p.speed=0.
 p.metadata.pop('path_cycle',None)
 sequence=dict(duration_s=duration,travel_direction='backward',start_s=spec['prepare_s'],stop_s=plan.end+spec['adoption_seconds'],
@@ -158,6 +167,8 @@ p.metadata.update(schema='eonwild.motion.moco-model-receipt.v1',admission=p.admi
  classification='Backward support task and reduced balance prior; exact-model audit',user_review='PENDING')
 for name,data in [('model-receipt',p.metadata),('sequence-receipt',sequence),('ik-receipt',ik_receipts),('solve-receipt',dict(success=False,status='AUTHORED_CONTACT_TRANSITION',claim='No full Moco convergence; physical forces and residuals reported'))]:
  (a.output/(name+'.json')).write_text(json.dumps(data,indent=2)+'\n')
-report=p.export(np.zeros(len(p.parameters)));report['method']=sequence['method'];(a.output/'coordination-receipt.json').write_text(json.dumps(report,indent=2)+'\n')
+report=p.export(np.zeros(len(p.parameters)));
+if finite_result is not None:report['finite_coordination']=finite_receipt
+report['method']=sequence['method'];(a.output/'coordination-receipt.json').write_text(json.dumps(report,indent=2)+'\n')
 (a.output/'balance-prior.json').write_text(json.dumps(dict(times_s=times.tolist(),support_xz_m=support.tolist(),com_xz_m=balance(times).tolist(),classification='Constant-height zero-angular-momentum LIPM prior; articulated/contact residual remains'),indent=2)+'\n')
 print(json.dumps(dict(sequence=sequence,root_rms=report['root_residual_rms_BW_or_BWL'],max_control=report['maximum_control'])),flush=True)

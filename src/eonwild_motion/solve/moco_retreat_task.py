@@ -43,6 +43,14 @@ class RetreatPlan:
         self.final_translation=np.array([-3*self.step,0.,0.])
         rear=min((s for s in geometry['sites'] if not s.get('distal')),key=lambda s:s['center_local_m'][0])
         self.pivot=np.array(rear['center_local_m']);self.pivot[1]-=rear['radius_m']
+        self.front_release=specification.get('release_contact','rear')=='distal'
+        if self.front_release:
+            # The distal material witness retains its world anchor while the
+            # proximal foot peels away. This is contact intent, not a muscle law.
+            distal=max((s for s in geometry['sites'] if s.get('distal')),key=lambda s:s['center_local_m'][0])
+            self.distal_center=np.array(distal['center_local_m'])
+            self.midpoint=np.array(geometry['toe_midpoint_m'])
+            self.radius=distal['radius_m']
         self.keys=[(0.,.5),(specification['prepare_s'],.5)]
         for e in self.events:
             left_weight=1. if e['side']=='r' else 0.
@@ -74,8 +82,20 @@ class RetreatPlan:
                 pitch=s['release_pitch_rad']*(1-blend)+s['recovery_pitch_rad']*bump
                 curl=s['recovery_digit_rad']*bump
             break
+        if self.front_release:
+            pitch=-pitch
+            # Counter-flex the digit during peel so the distal segment stays
+            # at its initial orientation until release, then relax in recovery.
+            curl-=pitch
         R0=np.asarray(initial['rotation']);R=R0@Rotation.from_rotvec([0,0,pitch]).as_matrix()
-        position=np.asarray(initial['origin'])+translation+R0@self.pivot-R@self.pivot+[0,lift,0]
+        if self.front_release:
+            D0=Rotation.from_rotvec([0,0,initial['digit']]).as_matrix()
+            D=Rotation.from_rotvec([0,0,initial['digit']+curl]).as_matrix()
+            initial_witness=R0@(self.midpoint+D0@self.distal_center)
+            current_witness=R@(self.midpoint+D@self.distal_center)
+            position=np.asarray(initial['origin'])+translation+initial_witness-current_witness+[0,lift,0]
+        else:
+            position=np.asarray(initial['origin'])+translation+R0@self.pivot-R@self.pivot+[0,lift,0]
         return position,R,initial['digit']+curl
 
     def support_center(self,t,sole_centers):
@@ -88,7 +108,13 @@ class RetreatPlan:
             for e in self.events:
                 if e['side']==side and e['lift']-self.specification['release_seconds']<=t<e['lift']:
                     u=(t-e['lift']+self.specification['release_seconds'])/self.specification['release_seconds']
-                    point=(1-float(smooth(u)))*point+float(smooth(u))*self.pivot
+                    pivot=self.pivot
+                    if self.front_release:
+                        digit=self.foot(t,side)[2]
+                        pivot=self.midpoint+Rotation.from_rotvec([0,0,digit]).apply(self.distal_center)
+                        # Support is the lower surface, not the sphere center.
+                        pivot=pivot+R.T@np.array([0,-self.radius,0])
+                    point=(1-float(smooth(u)))*point+float(smooth(u))*pivot
                     break
             centers.append(position+R@point)
         return self.weights(t)@np.array(centers)
