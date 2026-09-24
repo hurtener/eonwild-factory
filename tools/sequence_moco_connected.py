@@ -14,7 +14,7 @@ from scipy.spatial.transform import Rotation,Slerp
 from eonwild_motion.solve.moco_coordination import Coordination,opposite
 from eonwild_motion.solve.moco_spatial import reflected_coordinate
 from eonwild_motion.solve.moco_joint_spline import BoundedJointSpline,bounded
-from eonwild_motion.solve.moco_handoff import StateCarry,FootCarry
+from eonwild_motion.solve.moco_handoff import StateCarry,FootCarry,fit_orientation_carry,OrientationCarry
 
 
 class Reference:
@@ -76,7 +76,7 @@ def main():
         return out
     for segment in spec['segments']:
         ref=references[segment['reference']];duration=segment['duration_s'];blend=segment.get('handoff_s',1.);source_start=segment.get('source_start_s',0.)
-        outgoing=None
+        outgoing=None;orientation_receipt={}
         if poses:
             outgoing=np.array([previous_spline(native,d) for d in range(3)])
             outgoing_feet=actual_feet(native,outgoing[0],outgoing[1]);last=targets[-1]
@@ -105,6 +105,14 @@ def main():
             outgoing_latent=np.array([previous_spline.spline(native,d) for d in range(3)])
             shift=np.zeros(nq);shift[travel]=outgoing[0,travel]-incoming[0,travel];incoming[0]+=shift
             carry=StateCarry(outgoing_latent,incoming,blend,travel)
+            if spec.get('orientation_handoff_envelope'):
+                orientations=[ix[n] for n in ('pitch','yaw','roll')]
+                curves,orientation_receipt=fit_orientation_carry(
+                    outgoing_latent,incoming,lambda t:ref.raw(source_start+t)+shift,
+                    blend,orientations,min(2*dt,blend),
+                    spec['orientation_handoff_envelope']['margin_fraction'])
+                orientation_receipt={p.names[i]:v for i,v in orientation_receipt.items()}
+                carry=OrientationCarry(carry,curves)
         else:
             shift=np.zeros(nq);carry=None
         if source_start+duration>ref.end+1e-8:raise ValueError('Reference span exhausted')
@@ -162,7 +170,7 @@ def main():
         first=0 if not poses else 1
         times.extend(new_times[first:]);poses.extend(segment_poses[first:]);targets.extend(segment_targets[first:])
         previous_spline=BoundedJointSpline(times,np.array(poses),bounds)
-        receipts.append(dict(name=segment['name'],start_s=native,end_s=native+duration,source_start_s=source_start,source_end_s=source_start+duration,handoff_s=blend if carry else 0,initial_pose_error=0. if outgoing is None else float(np.max(abs(segment_poses[0]-outgoing[0]))),feet={s:dict(release_s=foot_carry[s].release,landing_s=foot_carry[s].landing) for s in foot_carry}))
+        receipts.append(dict(orientation_handoff=orientation_receipt,name=segment['name'],start_s=native,end_s=native+duration,source_start_s=source_start,source_end_s=source_start+duration,handoff_s=blend if carry else 0,initial_pose_error=0. if outgoing is None else float(np.max(abs(segment_poses[0]-outgoing[0]))),feet={s:dict(release_s=foot_carry[s].release,landing_s=foot_carry[s].landing) for s in foot_carry}))
         print(json.dumps(receipts[-1]),flush=True);segments.append((native,native+duration));native+=duration
     times=np.asarray(times);poses=np.asarray(poses);trajectory=BoundedJointSpline(times,poses,bounds,bc_type=((1,zeros),(1,zeros)))
     np.savez(a.output/'connected-seed.npz',times=times,poses=poses,names=p.names)

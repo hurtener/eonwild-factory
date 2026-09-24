@@ -77,3 +77,47 @@ class FootCarry:
         # smoothly, rather than jumping to the root's accumulated correction.
         alpha=smooth5((t-previous_end)/max(self.times[-1]-previous_end,1e-9))
         return (1-alpha)*previous+alpha*np.asarray(self.travel(self.times[-1]))
+
+
+def fit_orientation_carry(outgoing, incoming, reference, duration, indices,
+                          minimum_duration, envelope_margin=0.05):
+    """C2 angular reconciliation without inheriting a large turning excursion.
+
+    Select the longest reconciliation time fitting the outgoing/incoming angular
+    envelope. This is a numerical handoff policy, not an anatomical ROM limit.
+    The caller retains the normal carry for translation and other coordinates.
+    No stance foot is moved by this function.
+    """
+    if not 0 < minimum_duration <= duration:
+        raise ValueError('Invalid orientation reconciliation interval')
+    probes=np.linspace(0.,duration,161)
+    reference_values=np.asarray(reference(probes))
+    curves={};receipt={}
+    for i in indices:
+        low=min(float(outgoing[0,i]),float(np.min(reference_values[:,i])))
+        high=max(float(outgoing[0,i]),float(np.max(reference_values[:,i])))
+        margin=max((high-low)*envelope_margin,1e-6)
+        lower,upper=low-margin,high+margin
+        best=None
+        for span in np.geomspace(duration,minimum_duration,41):
+            curve=StateCarry(outgoing[:,i:i+1],incoming[:,i:i+1],float(span),[])
+            values=reference_values[:,i]+curve(probes)[:,0]
+            excess=float(max(0.,np.max(values-upper),np.max(lower-values)))
+            candidate=(excess,float(span),curve)
+            if best is None or excess<best[0]:best=candidate
+            if excess<=1e-10:
+                best=candidate;break
+        excess,span,curve=best;curves[i]=curve
+        receipt[i]=dict(duration_s=span,envelope_rad=[lower,upper],
+                        unresolved_envelope_excess_rad=excess)
+    return curves,receipt
+
+
+class OrientationCarry:
+    """Replace only designated angular corrections; preserve full C2 state."""
+    def __init__(self,carry,curves):
+        self.carry=carry;self.curves=curves
+    def __call__(self,t,derivative=0):
+        value=self.carry(t,derivative).copy()
+        for i,curve in self.curves.items():value[...,i]=curve(t,derivative)[...,0]
+        return value

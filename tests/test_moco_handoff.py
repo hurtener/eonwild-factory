@@ -27,3 +27,19 @@ def test_later_release_is_continuous_while_root_velocity_is_still_changing():
     for edge in [.4,.9,1.4,2.]:
         np.testing.assert_allclose(carry(edge-1e-7),carry(edge+1e-7),atol=1e-6)
     np.testing.assert_allclose(carry(1.),carry(1.3))
+
+
+def test_orientation_carry_limits_inherited_turn_excursion_and_preserves_c2():
+    from eonwild_motion.solve.moco_handoff import fit_orientation_carry,OrientationCarry
+    outgoing=np.array([[0.,2.],[.1,1.],[6.,0.]])
+    incoming=np.array([[0.,2.],[0.,1.],[0.,0.]])
+    reference=lambda t:np.c_[np.zeros(len(t)),2+np.asarray(t)]
+    normal=StateCarry(outgoing,incoming,1.,[1])
+    curves,receipt=fit_orientation_carry(outgoing,incoming,reference,1.,[0],.04)
+    result=OrientationCarry(normal,curves);t=np.linspace(0,1,1001)
+    assert receipt[0]['duration_s']<1.
+    assert np.max(abs(result(t)[:,0]))<np.max(abs(normal(t)[:,0]))*.1
+    for derivative in range(3):
+        np.testing.assert_allclose(result(0.,derivative),outgoing[derivative]-incoming[derivative],atol=1e-12)
+        np.testing.assert_allclose(result(1.,derivative)[0],0.,atol=1e-12)
+    np.testing.assert_allclose(result(t)[:,1],normal(t)[:,1])
