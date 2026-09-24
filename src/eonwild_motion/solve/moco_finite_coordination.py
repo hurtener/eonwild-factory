@@ -6,6 +6,8 @@ in the same bounded trajectory optimization, including the twelve tail links.
 This reduced-coordinate optimizer is NOT a converged Moco/forward simulation.
 """
 import json
+import hashlib
+from pathlib import Path
 import time
 import numpy as np
 from scipy.interpolate import BSpline
@@ -152,6 +154,15 @@ class FiniteCoordination:
             parts.append((s['weight']*np.maximum(abs(q[:,i]-center)-s['half_range'],0))[:,None])
         for j,(_,_,s) in enumerate(p.vertical_regions):
             parts.append((s['weight']*np.maximum(abs(m['region_heights'][:,j]-self.reference_regions[:,j])/p.L-s['half_range_leg_lengths'],0))[:,None])
+        # Retain the same loaded-tail carriage objective as periodic motion.
+        # Effort minimization must not evade gravity by hoisting the tail.
+        for j,frame in enumerate(p.metadata['clearance_frames']):
+            name=frame['path'].removeprefix('/tip_')
+            reference=p.metadata.get('bracing',{}).get('loaded_tail_end_heights_relative_root_m',{}).get(name)
+            if reference is not None:
+                relative=m['clearance'][:,j]+frame['minimum_height_m']-q[:,p.index['height']]
+                allowance=policy.get('tail_carriage_half_range_leg_lengths',.08)*p.L
+                parts.append((policy.get('tail_carriage_weight',0.)*np.maximum(abs(relative-reference)-allowance,0)/p.L)[:,None])
         for suffix in ('','_yaw'):
             indices=[p.index[b['body']+suffix] for b in self.chain]
             if indices:
@@ -180,7 +191,13 @@ class FiniteCoordination:
         return result.ravel()
 
     def solve(self):
-        zero=np.zeros(self.basis.size*self.nq);initial=self.residual(zero).copy()
+        zero=np.zeros(self.basis.size*self.nq)
+        warm=self.settings.get('initial_coefficients')
+        if warm:
+            zero=np.load(warm)
+            if zero.shape!=(self.basis.size*self.nq,) or not np.isfinite(zero).all():
+                raise ValueError('Incompatible finite warm-start coefficients')
+        initial=self.residual(zero).copy()
         B=self.basis.arrays(self.times)
         active=sum(abs(v) for v in B)>1e-14
         # Activation command costs use adjacent time samples as well.
@@ -196,7 +213,8 @@ class FiniteCoordination:
             evaluations=int(result.nfev),residual_calls=self.calls,initial_cost=float(initial@initial),final_cost=float(final@final),
             free_coordinates=self.p.names,temporal_basis='C2 endpoint-preserving quintic B-spline corrections',
             coefficients=len(result.x),settings=self.settings,task_foot_position_weight=self.settings['foot_position_weight'],
-            model_limits_unchanged=True,physical_validation='PENDING dense final replay')
+            model_limits_unchanged=True,physical_validation='PENDING dense final replay',
+            initial_coefficients_sha256=hashlib.sha256(Path(warm).read_bytes()).hexdigest() if warm else None)
         (self.p.output/'finite-coordination.json').write_text(json.dumps(receipt,indent=2)+'\n')
         np.save(self.p.output/'finite-coefficients.npy',result.x)
         return result.x,receipt

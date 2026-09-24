@@ -161,11 +161,21 @@ sequence=dict(duration_s=duration,travel_direction='backward',start_s=spec['prep
  contact_events=[dict(side=e['side'],lift_s=e['lift'],land_s=e['land'],translation_m=e['translation'].tolist()) for e in plan.events],
  max_foot_task_error_m=max(errors),max_horizontal_com_error_m=max(com_errors),contact_depth_range_m=[float(min(offsets)),float(max(offsets))],
  initial_coordinate_error=float(np.max(np.abs(poses[0]-initial))))
+if finite_result is not None:
+ sequence['method']='Shared finite whole-body coordination with exact OpenSim inverse dynamics, passive forces, contact and distal-release task; not full Moco convergence'
+ for key in ('max_foot_task_error_m','max_horizontal_com_error_m','contact_depth_range_m'):
+  sequence['seed_'+key]=sequence.pop(key)
+ sequence['finite_coordination']=finite_receipt
 p.metadata['sequence']=sequence;p.model.printToXML(str(a.output/'model.osim'))
 p.metadata.update(schema='eonwild.motion.moco-model-receipt.v1',admission=p.admission,recipe=p.recipe,
  model_sha256=hashlib.sha256((a.output/'model.osim').read_bytes()).hexdigest(),status='AUTHORED_TRANSITION_MODEL',
  classification='Backward support task and reduced balance prior; exact-model audit',user_review='PENDING')
-for name,data in [('model-receipt',p.metadata),('sequence-receipt',sequence),('ik-receipt',ik_receipts),('solve-receipt',dict(success=False,status='AUTHORED_CONTACT_TRANSITION',claim='No full Moco convergence; physical forces and residuals reported'))]:
+if finite_result is not None:
+ p.metadata.update(classification=sequence['method'],status='FINITE_COORDINATION_CANDIDATE')
+solve_receipt=dict(success=False,status='AUTHORED_CONTACT_TRANSITION',claim='No full Moco convergence; physical forces and residuals reported')
+if finite_result is not None:
+ solve_receipt=dict(success=False,status='FINITE_COORDINATION_NOT_FULL_MOCO',optimizer=finite_receipt,claim='Reduced-coordinate finite optimization; no full Moco convergence or forward validation')
+for name,data in [('model-receipt',p.metadata),('sequence-receipt',sequence),('ik-receipt',ik_receipts),('solve-receipt',solve_receipt)]:
  (a.output/(name+'.json')).write_text(json.dumps(data,indent=2)+'\n')
 report=p.export(np.zeros(len(p.parameters)));
 if finite_result is not None:report['finite_coordination']=finite_receipt
