@@ -1,13 +1,23 @@
 # Factory movement roadmap and acceptance tracker
 
-Current review: **C54 B coordinated walking turn — pending user review**.
+Current review: **C55 A cautious backward retreat — pending user review**.
+Sixteen native seconds, four alternating placements with real closing, forward
+attention and relaxed tail. Starts from the C52 B H grounded state. Shared
+backward support task and bounded IK; not a reversed walk or converged Moco solve.
+Reopened knee/ankle limits pass, minimum skin height -1.98 mm. Root residual
+0.21024 BW/BWL, excess command and loaded-pad sliding remain unresolved.
+C54 B received favorable user feedback and the user chose to proceed.
+See [scope, evidence and reproduction](handoffs/MOCO_C55_BACKWARD_RETREAT.md).
+
+
+Previous review: **C54 B coordinated walking turn — favorable user feedback; proceeded to C55**.
 Turning now replaces straight-walk toe-out with the planned support direction;
 outside/inside landing advances are 8.92/10.71 degrees versus A's 0.81/18.82.
 Torso turn speed is steadier (9.41–13.51 versus 1.21–21.73 degrees/s). The
 45-degree head lead and walking recovery remain. Physical root residual worsens
 from 0.10864 to 0.14383 BW/BWL; this is a visual task candidate, not convergence.
 C53 A, C52 B H and C51 A remain approved; C54 A is preserved with changes
-requested. Backward remains planning only. See
+requested. Backward now has a C55 A candidate pending review. See
 [checkpoint, limits and reproduction](handoffs/MOCO_C54B_COORDINATED_TURN.md).
 
 Previous candidate: **C54 A profile-led walking turn — changes requested**.
@@ -21,7 +31,7 @@ spring decomposition used pre-calibration coefficients and is corrected in C54.
 See `docs/handoffs/MOCO_C54_NECK_PROFILE_TURN.md` and principal
 `game/Evidence/moco-c54-neck-profile-turn/`. Pause at this visual checkpoint.
 
-Backward walking is **planned, not implemented** on the Moco path. The existing
+Backward walking now has a **C55 A first candidate, pending review** on the Moco path. The existing
 shared-engine C19/C20 reverse remains visually approved. The new plan owns
 backward unloading/placement/loading, stance adoption and a real closing step:
 [backward implementation plan](handoffs/MOCO_BACKWARD_PLAN.md).
