@@ -1,6 +1,6 @@
 # C56 — shared finite whole-body coordination
 
-Returned candidate; all final capture frames inspected; user review PENDING. User authorized integration after identifying that
+Visually approved by the user: “visually is perfect.” Physical limitations remain open. User authorized integration after identifying that
 C55 B held the torso and prescribed the tail independently. C55 B has changes
 requested: retain distal toe contact until release and restore body coordination.
 Preserve approved running/walking/turning outputs and both main branches.
@@ -171,3 +171,11 @@ and tail participate, supporting soles remain nearly level, and the rejected
 large tail lift is absent. Side-view motion remains restrained. Native-time
 fluidity and artistic acceptance remain for the user to judge. Pause here; do
 not generate another iteration or migrate approved clips without direction.
+
+## User acceptance
+
+The user approved the delivered C56 motion. The evidence user-review.json binds
+that acceptance to both saved video hashes; original generation and inspection
+receipts retain their historical pending status. Keep the goal paused. Proposed
+next: connected moving-state transitions, then speed and animal transfer. No
+new animation work is authorized by the question about what comes next.

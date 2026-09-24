@@ -1,12 +1,18 @@
 # Factory movement roadmap and acceptance tracker
 
-Current work: **C56 shared finite whole-body coordination — final videos pending user review**.
+Current work: **C56 shared finite whole-body coordination — visually approved**.
 C55 B has changes requested for rear-first foot release and a frozen torso.
 The backward task now supplies distal-contact peel and footholds to a shared
 finite optimizer. All admitted body/limb/tail coordinates participate in exact
 OpenSim inverse-dynamics, effort, contact, gaze and body-support objectives.
 Prescribed tail sway is disabled. An internally rejected tail-lift regression was corrected by restoring the common carriage cost. Final root residual is 0.04491 BW/BWL, peak command 1.2503; joint bounds pass, slip/force limits remain unresolved. Full Moco convergence is not claimed.
 [Architecture and checkpoint](handoffs/MOCO_C56_SHARED_FINITE.md).
+
+User feedback: “visually is perfect.” This approves the delivered motion, not
+physical convergence. Proposed next checkpoint (not started): moving-state
+adoption and connected forward/retreat/forward transitions using the shared
+finite coordinator, preserving actual foot contacts and joint/root velocities.
+Then test speed variation and Allosaurus transfer. Retain C56 as the baseline.
 
 Previous review: **C55 B planted backward retreat — changes requested**.
 C55 A has changes requested for excessive lateral sway and support-foot roll.
