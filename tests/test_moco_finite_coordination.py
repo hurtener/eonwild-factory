@@ -31,3 +31,12 @@ def test_shared_carriage_cost_retains_existing_loaded_envelope_and_ignores_non_t
             'bracing':{'loaded_tail_end_heights_relative_root_m':{'tail_0':-.5}}})
     m={'q':np.array([[2.],[2.]]),'clearance':np.array([[1.4,0.],[2.4,0.]])}
     np.testing.assert_allclose(shared_tail_carriage_residual(p,m),[[0.],[12.75]])
+
+
+def test_coordinate_search_radius_tightens_only_matching_coordinates():
+    import pytest
+    from eonwild_motion.solve.moco_finite_coordination import coefficient_limits
+    names=['hip_l','tail_0_pitch','tail_1_yaw']
+    np.testing.assert_allclose(coefficient_limits(names,2.,{'tail_':.05}),[2.,.05,.05])
+    for overrides in ({'tail_':3.},{'tail_':0.},{'missing_':.05},{'tail_':float('nan')}):
+        with pytest.raises(ValueError):coefficient_limits(names,2.,overrides)

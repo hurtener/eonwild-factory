@@ -18,6 +18,21 @@ from .moco_joint_spline import bounded
 from .moco_coordination_costs import shared_effort_residual, shared_cf_residual, shared_tail_carriage_residual
 
 
+def coefficient_limits(names, common, overrides):
+    """Tighten numerical search radii without changing physical joint limits."""
+    if not np.isfinite(common) or common <= 0:
+        raise ValueError('Common coefficient limit must be finite and positive')
+    limits=np.full(len(names),float(common))
+    for prefix,limit in overrides.items():
+        if not np.isfinite(limit) or not 0<float(limit)<=common:
+            raise ValueError('Coordinate trust region must tighten the common coefficient limit')
+        matches=[i for i,name in enumerate(names) if name.startswith(prefix)]
+        if not matches:
+            raise ValueError(f'Coordinate trust region matches no coordinates: {prefix}')
+        for i in matches:limits[i]=min(limits[i],float(limit))
+    return limits
+
+
 class FiniteBasis:
     """Compact quintic corrections with exact C2 zero endpoint conditions."""
     def __init__(self, start, end, intervals):
@@ -171,11 +186,17 @@ class FiniteCoordination:
 
     def solve(self):
         zero=np.zeros(self.basis.size*self.nq)
+        limits=np.tile(coefficient_limits(self.p.names,
+            self.settings['coefficient_limit'],
+            self.settings.get('coordinate_coefficient_limits',{})),self.basis.size)
         warm=self.settings.get('initial_coefficients')
         if warm:
             zero=np.load(warm)
             if zero.shape!=(self.basis.size*self.nq,) or not np.isfinite(zero).all():
                 raise ValueError('Incompatible finite warm-start coefficients')
+            # Numerical warm-start projection only; physical angles, anatomical
+            # stops and all acceptance thresholds are unchanged.
+            zero=np.clip(zero,-limits+1e-10,limits-1e-10)
         initial=self.residual(zero).copy()
         B=self.basis.arrays(self.times)
         active=sum(abs(v) for v in B)>1e-14
@@ -183,7 +204,7 @@ class FiniteCoordination:
         active[1:]|=active[:-1].copy();active[:-1]|=active[1:].copy()
         pattern=np.repeat(np.repeat(active,self.nq,axis=1),self.row_size,axis=0)
         result=least_squares(self.residual,zero,jac_sparsity=csr_matrix(pattern),
-            bounds=(-self.settings['coefficient_limit'],self.settings['coefficient_limit']),
+            bounds=(-limits,limits),
             max_nfev=self.settings['max_evaluations'],diff_step=1e-4,
             ftol=1e-5,xtol=1e-5,gtol=1e-5,verbose=1,tr_solver='lsmr')
         final=self.residual(result.x)
