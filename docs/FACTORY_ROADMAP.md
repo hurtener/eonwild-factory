@@ -1,6 +1,9 @@
 # Factory movement roadmap and acceptance tracker
 
-Current checkpoint: **C58 — Allosaurus walking/running transfer; user review PENDING**.
+Current checkpoint: **C58 — Allosaurus walking/running transfer; CHANGES REQUESTED**.
+User requests living idle tail/jaw, relaxed metatarsus and smoother running
+knee/ankle coordination. Jaw breathing is skipped by a zero-closure guard;
+idle holds the gait mean. Knee ROM is broad, but timing/distribution is poor.
 16-second walk start/stop and 10-second sustained run, side/quarter videos saved.
 All 1248 frames inspected. Shared engine with anatomy/stride data and corrected
 contact initialization; no full Moco convergence. Knee/ankle angle bounds pass;

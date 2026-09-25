@@ -1,6 +1,6 @@
 # C58 — Allosaurus MoCo walking and running transfer
 
-Status: RENDERED DIAGNOSTIC; user review PENDING; physical acceptance FAILING.
+Status: CHANGES REQUESTED after user review; physical acceptance FAILING.
 C57 C is deferred at the user's request, not approved. Accepted Tarbo baselines
 remain preserved. Direct implementation without subagents; pause here.
 
@@ -113,3 +113,42 @@ Verification: 18 focused tests passed, Unity standalone review build succeeded,
 four captures encoded and all frames inspected. Reopened skin audits passed
 knee/ankle angle bounds but failed contact/effort acceptance. Full runtime
 integration/parity and production acceptance are not claimed.
+
+
+## User review and code diagnosis — 2026-09-25
+
+Status: CHANGES REQUESTED. User reports a frozen straight idle tail, excessive
+mouth opening, unrelaxed walking metatarsus, running ankle reversals and a knee
+that reads constrained. No new motion has been generated for this diagnosis.
+
+Confirmed by source and reopened emitted C58 GLBs:
+- Idle is constructed from the cycle mean and motion gain is zero at rest.
+  Proximal tail coordinate variation is effectively zero in the initial hold.
+  There is no independent standing/living posture task in this sequence.
+- Allo neutral calibration v7 has close_degrees=0. The retargeter gates all jaw
+  animation on a nonzero neutral closure. The configured 0.8–2.3 degree walking
+  and 0.8–3.8 degree running breathing is therefore skipped. Jaw local rotation
+  is constant in both saved clips (sampled first 1.5 seconds).
+- The skin is faithfully following the solved leg landmarks (maximum error
+  about 2.9 micrometres walk, 1.4 micrometres run). Retargeting has not frozen
+  the knee. Actual three-landmark interior knee angle in the running skin spans
+  66.44–169.93 degrees. It spends much of the cycle bent, with rapid extension
+  late in recovery; full-cycle range alone hid the timing problem.
+- The walking MTP coordinate is active (~55 degrees total excursion), but that
+  does not establish relaxed unloading or correct metatarsal carriage.
+- Shared model knee limits are [-2.0,-0.16] rad and ankle limits [0.15,2.25] rad,
+  identical to the Tarbo prototype. They are inherited engineering limits,
+  not limits extracted from the Allo bind-pose knee angle.
+- The contact initializer strongly fits toe orientation and position independently
+  per sample, with only a weak joint-reference cost. This can redistribute a
+  prescribed foot trajectory into an undesirable knee/ankle/MTP combination.
+  Final B/C were reinitialized/evaluated rather than fully coordinated to
+  convergence. Cause attribution to one cost alone remains a hypothesis.
+
+Next correction scope: C58 B, not more behaviors. Separate living standing
+posture from bind pose and gait mean; fix jaw binding/neutral/breathing separation;
+solve continuous knee-ankle-metatarsus coordination and support reception,
+including relaxed unloaded foot carriage, with the same shared mechanics.
+Keep physical limits and source geometry intact. Do not widen knee ROM merely
+because it reads stiff; do not claim that removing rest-pose influence alone
+will cure force/ankle problems. Reopen final skin/contact after any posture change.
