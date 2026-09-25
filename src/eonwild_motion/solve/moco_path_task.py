@@ -124,6 +124,18 @@ def foot_task(problem, t, side):
     anchor = anchor+np.array([0,lift-task['initial_pad_compression_m'],0])
     distal = anchor-digit_rotation@front
     mtp = distal-foot_rotation@pivot
+    if task.get('fit_support_envelope', False):
+        # Orient the admitted sole before selecting its supporting plane. The
+        # front witness need not be the lowest pad on every anatomy or angle.
+        # Preserve horizontal anchors; vertical placement is a contact task,
+        # not a render correction. Flight retains the planned clearance.
+        sites=geometry.get('sites_by_side',{}).get(side,geometry['sites'])
+        bottoms=[]
+        for site in sites:
+            origin,rotation=(distal,digit_rotation) if site.get('distal',False) else (mtp,foot_rotation)
+            center=origin+rotation@np.array(site['center_local_m'])
+            bottoms.append(center[1]-site['radius_m'])
+        mtp[1]+=lift-task['initial_pad_compression_m']-min(bottoms)
     return mtp, foot_rotation, toe_angle-angle
 
 
@@ -141,8 +153,8 @@ def support_phase(phase, source_duty, target_duty):
 def initialize(problem, old_times, old_q, old_period):
     """Fresh feet/support task; reviewed C51 supplies only a warm body posture."""
     task = problem.policy['path_task']
-    if not (.5 < task['duty_factor'] < 1 and problem.speed > 0 and problem.admission['step_length_m'] > 0):
-        raise ValueError('Grounded walking task requires positive speed/step and overlapping support')
+    if not (0 < task['duty_factor'] < 1 and problem.speed > 0 and problem.admission['step_length_m'] > 0):
+        raise ValueError('Locomotion task requires positive speed/step and duty between zero and one')
     if not np.isfinite(task['yaw_rate_rad_s']):raise ValueError('Nonfinite path yaw rate')
     problem.period = 2*problem.admission['step_length_m']/problem.speed
     times = np.linspace(0, problem.period, int(task.get('seed_samples',121)))
@@ -217,7 +229,7 @@ def initialize(problem, old_times, old_q, old_period):
             q[k,indices]=result.x
             q[k,ix['digit_'+side]]=digit
             errors.append(float(np.linalg.norm(residual(result.x)[:3])*problem.L))
-    if task.get('settle_initial_contact',False):
+    if task.get('settle_initial_contact',False) and task['duty_factor'] > .5:
         contact=[problem.model.getForceSet().get(c['force']) for c in problem.metadata['contacts']]
         offsets=[]
         for k,t in enumerate(times[:-1]):

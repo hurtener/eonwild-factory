@@ -20,3 +20,22 @@ def validate_axial_bindings(metadata, roles, parents):
             raise ValueError('Physical tail is not in semantic chain order')
         if by_body.get(part['body']) != start or parents[roles[end]] != roles[start]:
             raise ValueError('Physical tail binding differs from connected skin topology')
+
+
+def relative_arc_weights(source_lengths, destination_lengths):
+    """Integrate source bend over destination links in normalized arc space.
+
+    Columns sum to one, preserving total angular bend when tail length or
+    subdivision differs. Skin bindings remain independently topology-checked.
+    """
+    import numpy as np
+    source = np.asarray(source_lengths, dtype=float)
+    destination = np.asarray(destination_lengths, dtype=float)
+    if any(x.ndim != 1 or not len(x) or not np.isfinite(x).all() or np.any(x <= 0)
+           for x in (source, destination)):
+        raise ValueError('Tail lengths must be finite positive vectors')
+    src = np.r_[0., np.cumsum(source)] / source.sum()
+    dst = np.r_[0., np.cumsum(destination)] / destination.sum()
+    overlap = np.maximum(0., np.minimum(dst[1:, None], src[None, 1:])
+                         - np.maximum(dst[:-1, None], src[None, :-1]))
+    return overlap / np.diff(src)[None, :]

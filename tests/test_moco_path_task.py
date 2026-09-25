@@ -132,3 +132,41 @@ def test_straight_walking_uses_consistent_exact_joint_acceleration():
     np.testing.assert_allclose(u,(plus[0]-minus[0])/(2*h),atol=1e-6)
     np.testing.assert_allclose(acc,(plus[1]-minus[1])/(2*h),atol=2e-6)
     np.testing.assert_allclose(u[:,2],1.6,atol=0);np.testing.assert_allclose(acc[:,2],0,atol=0)
+
+
+def test_airborne_task_preserves_a_flight_interval_and_stationary_stance():
+    from eonwild_motion.solve.moco_tasks import rot
+    geometry={'toe_midpoint_m':[.25,-.10,0],
+              'sites':[{'center_local_m':[.39,.01,0],'radius_m':.10}]}
+    task=dict(duty_factor=.43,yaw_rate_rad_s=0,half_track_hip_width_ratio=.5,
+              catch_bias_m=0.,toe_out_radians=0.,toe_off_radians=.6,
+              recovery_toe_radians=.45,clearance_m=.25,initial_pad_compression_m=.0045)
+    problem=SimpleNamespace(policy={'path_task':task},period=1.,speed=3.,
+        admission={'points':{'leftLeg.0':[0,0,-.5],'rightLeg.0':[0,0,.5]}},
+        metadata={'foot_geometry':geometry})
+    def witness(t,side):
+        mtp,R,digit=foot_task(problem,t,side)
+        return mtp+R@np.array([.25,-.1,0])+R@rot(digit)@np.array([.39,-.09,0])
+    np.testing.assert_allclose(witness(.1,'l'),witness(.4,'l'),atol=1e-12)
+    assert all(witness(.46,side)[1]>0 for side in ('l','r'))
+
+
+def test_support_envelope_fits_lowest_oriented_pad_without_horizontal_sliding():
+    from eonwild_motion.solve.moco_tasks import rot
+    geometry={'toe_midpoint_m':[.25,-.1,0], 'sites':[
+        {'center_local_m':[-.1,-.22,0],'radius_m':.08},
+        {'center_local_m':[.4,0,0],'radius_m':.08,'distal':True}]}
+    task=dict(duty_factor=.43,yaw_rate_rad_s=0,half_track_hip_width_ratio=.5,
+        catch_bias_m=0.,toe_out_radians=.06,toe_off_radians=.6,
+        recovery_toe_radians=.45,clearance_m=.25,initial_pad_compression_m=.0045)
+    p=SimpleNamespace(policy={'path_task':task},period=1.,speed=3.,
+        admission={'points':{'leftLeg.0':[0,0,-.5],'rightLeg.0':[0,0,.5]}},
+        metadata={'foot_geometry':geometry})
+    for t in np.linspace(0,.42,17):
+        task['fit_support_envelope']=False;old,_,_=foot_task(p,t,'l')
+        task['fit_support_envelope']=True;mtp,R,digit=foot_task(p,t,'l')
+        np.testing.assert_allclose(mtp[[0,2]],old[[0,2]],atol=1e-12)
+        distal=mtp+R@np.array(geometry['toe_midpoint_m'])
+        bottoms=[(distal+R@rot(digit)@np.array(site['center_local_m']) if site.get('distal')
+                  else mtp+R@np.array(site['center_local_m']))[1]-site['radius_m'] for site in geometry['sites']]
+        np.testing.assert_allclose(min(bottoms),-.0045,atol=1e-12)

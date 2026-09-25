@@ -1,6 +1,14 @@
 # Factory movement roadmap and acceptance tracker
 
-Current review: **C57 C — shared transition contact coordination; user review PENDING**.
+Current checkpoint: **C58 — Allosaurus walking/running transfer; user review PENDING**.
+16-second walk start/stop and 10-second sustained run, side/quarter videos saved.
+All 1248 frames inspected. Shared engine with anatomy/stride data and corrected
+contact initialization; no full Moco convergence. Knee/ankle angle bounds pass;
+ankle sharpness, contact and large force/command errors remain. Physical
+acceptance FAILING. Running start/stop and further transfer are pending.
+[Scope and reproduction](handoffs/MOCO_C58_ALLOSAURUS_TRANSFER.md).
+
+Deferred: **C57 C — transition polish; not approved**.
 Neighboring transition poses are solved together with physical-time acceleration
 costs, existing foot targets and joint limits. Ankle RMS acceleration falls
 14–26%; braking knee peak speed falls 25%. Near-limit knee extension remains.

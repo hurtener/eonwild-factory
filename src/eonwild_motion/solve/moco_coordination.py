@@ -69,12 +69,10 @@ class Coordination:
         tail_map={}
         if new_tail and old_tail:
             old_lengths=[np.linalg.norm(baseline['metadata']['segments'][b['body']]['extent_local_m']) for b in old_tail]
-            old_edges=np.r_[0,np.cumsum(old_lengths)]
-            for part in new_tail:
-                weights=[]
-                for i,old in enumerate(old_tail):
-                    overlap=max(0.,min(part['arc_end_m'],old_edges[i+1])-max(part['arc_start_m'],old_edges[i]))
-                    if overlap:weights.append((old['body'],overlap/old_lengths[i]))
+            from .moco_binding import relative_arc_weights
+            weights_by_link=relative_arc_weights(old_lengths,[p['length_m'] for p in new_tail])
+            for part, row_weights in zip(new_tail, weights_by_link):
+                weights=[(old['body'],float(weight)) for old,weight in zip(old_tail,row_weights) if weight>0]
                 for suffix in ('','_yaw'):
                     tail_map[part['body']+suffix]=[(n+suffix,w) for n,w in weights]
         def mapped(row,name,kind):
@@ -113,6 +111,13 @@ class Coordination:
         for values in q:values[self.index['forward']]-=offset
         times.append(self.period);q.append(q[0]);u.append(u[0])
         self.path_task=self.policy.get('path_task')
+        if self.path_task and self.path_task.get('transfer_body_scale',False):
+            ratio=self.L/sum(baseline['metadata']['segment_lengths_m'])
+            q=np.asarray(q)
+            for name in ('height','lateral','forward'):
+                q[:,self.index[name]]*=ratio
+            q=q.tolist()
+            self.metadata['morphology_transfer']={'length_ratio':ratio,'classification':'Geometrically scaled warm body seed; limbs re-solved on destination anatomy'}
         if self.path_task:
             from .moco_path_task import initialize
             if self.path_task.get('align_reference_support',False):
@@ -551,6 +556,29 @@ def run(admission_path,recipe_path,baseline_path,output,initial=None,evaluate_on
                              x_scale='jac',diff_step=problem.policy.get('numerical_diff_step'),ftol=2e-5,xtol=1e-6,gtol=1e-6,verbose=1)
         x=result.x
         evaluations=int(result.nfev)
+    if problem.policy.get('balance_periodic_vertical_impulse',False):
+        # A periodic gait has zero net vertical momentum change: integrated
+        # ground force equals body weight times duration. Solve one existing
+        # bounded height parameter using exact contact mechanics, never add a
+        # root actuator or change stiffness, mass, joint bounds or acceptance.
+        from scipy.optimize import brentq
+        j=problem.parameters.index(('height',0,'constant'))
+        original=float(x[j]); samples=problem.times_dense
+        def imbalance(delta):
+            trial=x.copy();trial[j]=original+delta
+            forces=problem.mechanics(trial,samples)['forces'][:,:,1].sum(axis=1)
+            return float(np.trapezoid(forces,samples)/(samples[-1]-samples[0])/problem.bw-1.)
+        before=imbalance(0.);left,right=imbalance(-8.),imbalance(8.)
+        receipt={'classification':'Periodic vertical impulse initialization, not full dynamics convergence',
+                 'mean_force_BW_before':before+1.,'height_parameter_before':original}
+        if left*right<=0:
+            delta=brentq(imbalance,-8.,8.,xtol=1e-8)
+            after=imbalance(delta);x[j]=original+delta
+            receipt.update(status='BALANCED_IMPULSE_ONLY',mean_force_BW_after=after+1.,height_parameter_after=float(x[j]))
+        else:
+            receipt.update(status='UNREACHABLE_WITHIN_EXISTING_HEIGHT_ENVELOPE',endpoint_force_BW=[left+1.,right+1.])
+        problem.metadata['vertical_impulse_initialization']=receipt
+        (output/'model-receipt.json').write_text(json.dumps(problem.metadata,indent=2)+'\n')
     report=problem.export(x)
     (output/'solve-receipt.json').write_text(json.dumps(dict(success=False,status='REDUCED_COORDINATE_INITIALIZER',
         iterations=None,function_evaluations=evaluations,residual_calls=problem.calls,objective=problem.best if np.isfinite(problem.best) else None,mesh_intervals=len(problem.times)-1,

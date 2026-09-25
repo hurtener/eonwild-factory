@@ -66,3 +66,19 @@ class TailBinding(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'count'):validate_axial_bindings(m,self.roles,self.source.parents)
 
 if __name__=='__main__':unittest.main()
+
+
+def test_relative_arc_transfer_preserves_total_bend_across_anatomies():
+    import numpy as np
+    from eonwild_motion.solve.moco_binding import relative_arc_weights
+    weights=relative_arc_weights([1.,2.,1.],[.25,.75,2.,3.,2.])
+    np.testing.assert_allclose(weights.sum(axis=0),1.,atol=1e-14)
+    bend=np.array([.1,-.05,.03])
+    np.testing.assert_allclose((weights@bend).sum(),bend.sum(),atol=1e-14)
+    np.testing.assert_allclose(relative_arc_weights([1.,2.],[3.,6.]),np.eye(2),atol=1e-14)
+
+
+def test_relative_arc_transfer_rejects_degenerate_topology():
+    import pytest
+    from eonwild_motion.solve.moco_binding import relative_arc_weights
+    with pytest.raises(ValueError):relative_arc_weights([1.,0.],[1.])
