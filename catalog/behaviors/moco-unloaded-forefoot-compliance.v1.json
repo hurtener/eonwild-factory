@@ -1,0 +1,10 @@
+{
+  "schema": "eonwild.motion.distal-release.v1",
+  "classification": "Authored unloaded walking compliance, using admitted forefoot mass, geometry and inertia. Reduced gravity response, not identified muscle dynamics.",
+  "unloaded_threshold_BW": 0.02,
+  "frequency_hz": 2.0,
+  "damping_ratio": 0.65,
+  "release_seconds": 0.06,
+  "prepare_seconds": 0.14,
+  "provenance": "C58B user feedback: forefoot should briefly feel like relaxed weight before preparing for contact. Timing and impedance are authored estimates; no dinosaur tissue measurement is claimed. The final trajectory is replayed through unchanged full-body/contact mechanics."
+}

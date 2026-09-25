@@ -1,6 +1,15 @@
 # Factory movement roadmap and acceptance tracker
 
-Current checkpoint: **C58B — Allosaurus polish; DIAGNOSTIC READY FOR REVIEW**.
+Current checkpoint: **C58C — Allosaurus unloaded forefoot relaxation; REVIEW PENDING**.
+C58B walk received positive feedback except for missing distal relaxation.
+Shared gravity/inertia response adds 9.5–10 degrees of unloaded forefoot hang,
+then smoothly prepares contact. Other sampled coordinates and loaded poses
+are preserved. Sixteen-second side/quarter videos saved; all 768 frames
+inspected. Physical acceptance remains FAILING; no full Moco convergence.
+Running approval is not inferred.
+[Scope, evidence and reproduction](handoffs/MOCO_C58C_DISTAL_RELEASE.md).
+
+Previous checkpoint: **C58B — Allosaurus polish; DIAGNOSTIC READY FOR REVIEW**.
 Living standing posture, calibrated jaw/breathing, temporally coupled limb
 coordination and idle torso/tail life now use shared mechanisms with semantic
 animal data. Sixteen-second walk/start/stop and ten-second sustained run are
