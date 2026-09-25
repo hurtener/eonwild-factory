@@ -79,6 +79,8 @@ def main():
     def pitch(angle):
         return basis @ Rotation.from_rotvec([0, 0, angle]).as_matrix() @ basis.T
     breathing=data['metadata'].get('recipe',{}).get('jaw_breathing')
+    from eonwild_motion.solve.moco_posture import jaw_binding
+    jaw_node,jaw_axis,jaw_close=jaw_binding(c,profile,roles,breathing)
     cycles=breathing.get('period_strides',1) if breathing else 1
     if cycles not in (1,2,3,4):raise ValueError('Jaw breathing period must be 1 to 4 full strides')
     cycles=int(cycles)
@@ -94,14 +96,14 @@ def main():
     targets = []
     for half, row in target_rows:
         tr, ro = np.array(c.base_t).copy(), np.array(c.base_r).copy()
-        if 'foot_geometry' in data['metadata'] and c.jaw is not None and c.jaw_neutral_close_degrees:
+        if 'foot_geometry' in data['metadata'] and jaw_node is not None:
             from eonwild_motion.solve.jaw_response import compose_jaw_rotation
             gape=0.
             if breathing:
                 phase=2*np.pi*(half*period+row['time_s'])/(3.5 if sequence else halves*period)
                 gape=breathing['minimum_gape_degrees']+.5*(1-np.cos(phase))*(breathing['maximum_gape_degrees']-breathing['minimum_gape_degrees'])
-            ro[c.jaw]=compose_jaw_rotation(c.base_r[c.jaw],c.jaw_axis,
-                neutral_close_degrees=c.jaw_neutral_close_degrees,breathing_gape_degrees=float(gape),gain=1.)
+            ro[jaw_node]=compose_jaw_rotation(c.base_r[jaw_node],jaw_axis,
+                neutral_close_degrees=jaw_close,breathing_gape_degrees=float(gape),gain=1.)
         def worlds(): return np.asarray(_world_matrices(source, tr, ro, c.base_s))
         def set_world(node, rotation, position=None):
             w = worlds()

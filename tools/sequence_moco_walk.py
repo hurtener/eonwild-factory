@@ -23,8 +23,10 @@ ap=argparse.ArgumentParser()
 for n in ('source','baseline','output'):ap.add_argument('--'+n,type=Path,required=True)
 ap.add_argument('--turn-plan',type=Path)
 ap.add_argument('--attention-profile',type=Path)
+ap.add_argument('--contact-coordination',type=Path)
 a=ap.parse_args();a.output.mkdir(parents=True,exist_ok=False)
 source=json.loads((a.source/'replay.json').read_text());meta=source['metadata']
+if a.contact_coordination:meta['recipe']['transition_contact_coordination']=json.loads(a.contact_coordination.read_text())
 p=Coordination(meta['admission'],meta['recipe'],json.loads(a.baseline.read_text()),a.output)
 T=p.period;speed=p.speed;rate=p.path_task['yaw_rate_rad_s'];ix=p.index
 rows=source['frames'];ts=np.array([r['time_s'] for r in rows]);q=np.array([[r['coordinates'][n]['value'] for n in p.names] for r in rows])
@@ -124,9 +126,15 @@ for side in ('l','r'):
     positions[-1]=positions[0];rotvec[-1]=rotvec[0];digits[-1]=digits[0]
     correction[side]=(CubicSpline(ts,positions,axis=0,bc_type='periodic'),CubicSpline(ts,rotvec,axis=0,bc_type='periodic'),CubicSpline(ts,digits,bc_type='periodic'))
 times=np.linspace(0,duration,769);poses=[];errors=[];ik_receipts=[]
+contact_positions=[];contact_rotations=[];contact_digits=[]
 for t in times:
     local_t=float(np.clip(t-start,0,active_end));tau=float(clock(local_t));phase=tau%T
-    gain=gain_at_progress(tau);local=neutral+gain*(cycle(phase)-neutral)
+    gain=gain_at_progress(tau)
+    rest=neutral
+    if p.recipe.get('standing_posture'):
+        from eonwild_motion.solve.moco_posture import living_standing
+        rest=living_standing(neutral,p.names,p.metadata['tail_chain'],float(t),p.recipe['standing_posture'],p.L)
+    local=rest+gain*(cycle(phase)-rest)
     local[ix['forward']]*=gain
     # At rest head returns to the body's heading, retaining the reviewed pitch.
     for n in ('chest_yaw','neck_yaw','neck_upper_yaw','head_yaw'):local[ix[n]]*=gain
@@ -158,6 +166,7 @@ for t in times:
     org,rr=frame_at_progress(tau);world=local.copy();world[xyz]=org+rr@local[xyz]
     world[angles]=Rotation.from_matrix(rr@Rotation.from_euler('ZYX',local[angles]).as_matrix()).as_euler('ZYX')
     p.set_state(t,world,np.zeros(len(world)))
+    frame_positions=[];frame_rotations=[];frame_digits=[]
     for side in ('l','r'):
         target,orientation,digit=foot_task(seq,tau,side)
         dp,dr,dd=correction[side];target=target+gain*rr@dp(phase)
@@ -165,6 +174,7 @@ for t in times:
         orientation=(attenuate_heading_correction(orientation,corrected,foot_steering_gain(tau,side))
                      if steering else corrected)
         digit+=gain*float(dd(phase))
+        frame_positions.append(target);frame_rotations.append(orientation);frame_digits.append(digit)
         names=['hip_'+side,'hip_'+side+'_yaw','hip_'+side+'_roll','knee_'+side,'ankle_'+side,'mtp_'+side,'digit_'+side]
         indices=[ix[n] for n in names];coords=[p.coordinates[i] for i in indices]
         reference=local[indices];toe=p.model.getBodySet().get('toe_'+side)
@@ -182,7 +192,15 @@ for t in times:
         world[indices]=opt.x
         errors.append(float(np.linalg.norm(residual(opt.x)[:3])*p.L))
     poses.append(world)
+    contact_positions.append(frame_positions);contact_rotations.append(frame_rotations);contact_digits.append(frame_digits)
 poses=np.array(poses)
+temporal_receipt=None
+if p.recipe.get('transition_contact_coordination'):
+    from eonwild_motion.solve.moco_contact_coordination import coordinate_contacts
+    poses,temporal_receipt=coordinate_contacts(p,times,poses,np.asarray(contact_positions),
+        np.asarray(contact_rotations),np.asarray(contact_digits),p.recipe['transition_contact_coordination'])
+    (a.output/'temporal-contact-coordination.json').write_text(json.dumps(temporal_receipt,indent=2)+'\n')
+
 # Settle contact compression with the unchanged contact law. Match the vertical
 # demand of the planned COM trajectory, then smooth the tiny depth correction.
 # This adds no force actuator; replay measures the residual after correction.
@@ -211,6 +229,15 @@ p.metadata['sequence']=dict(duration_s=duration,start_s=start,stop_s=stop,steady
     distance_m=travel(end_progress),steps=2*cycles,first_step_cadence_ratio=.6,acceleration_seconds=1.8,deceleration_seconds=1.8,
     method='Authored cadence and support plan; IK in exact anatomy; inverse dynamics audit, not forward simulation or optimal control',
     max_foot_task_error_m=max(errors),rest_contact_offsets_m=rest_offsets,contact_depth_correction_range_m=[float(offsets.min()),float(offsets.max())],source=str(a.source),periodic=False)
+if temporal_receipt:
+    p.metadata['sequence']['temporal_contact_coordination']=temporal_receipt
+    p.metadata['sequence']['pre_temporal_max_foot_task_error_m']=max(errors)
+    final_errors=[]
+    for k,(pose,time) in enumerate(zip(poses,times)):
+        p.set_state(time,pose,np.zeros(len(p.names)))
+        final_errors.extend(float(np.linalg.norm(foot.getPositionInGround(p.state).to_numpy()-contact_positions[k][side])) for side,foot in enumerate(p.feet))
+    p.metadata['sequence']['max_foot_task_error_m']=max(final_errors)
+    p.metadata['sequence']['foot_error_stage']='After temporal coordination and final contact-depth settling'
 # The mechanics/nose report must not subtract a constant-velocity path from a
 # finite sequence. Physical joint efforts/root residuals never use this field.
 if turn_plan:p.metadata['sequence']['turn_plan']=turn_plan.specification

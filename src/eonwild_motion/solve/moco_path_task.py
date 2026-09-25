@@ -204,6 +204,7 @@ def initialize(problem, old_times, old_q, old_period):
             mean_com_forward_m=float(np.mean(offsets)),
             front_to_sole_center_m=sole_center_offset(problem.metadata['foot_geometry']).tolist(),
             classification='Modeled warm-posture mass center plus geometric pad-area support prior; not measured COP')
+    warm_reference=q.copy()
     errors=[]
     for k,t in enumerate(times[:-1]):
         world = to_world(q[k:k+1], np.array([t]), ix, problem.speed, task['yaw_rate_rad_s'])[0]
@@ -229,6 +230,11 @@ def initialize(problem, old_times, old_q, old_period):
             q[k,indices]=result.x
             q[k,ix['digit_'+side]]=digit
             errors.append(float(np.linalg.norm(residual(result.x)[:3])*problem.L))
+    if task.get('temporal_contact_seed'):
+        from .moco_contact_coordination import periodic_contact_seed
+        q,receipt=periodic_contact_seed(problem,times,q,warm_reference,task['temporal_contact_seed'])
+        problem.metadata['temporal_contact_seed']=receipt
+        (problem.output/'temporal-contact-seed.json').write_text(__import__('json').dumps(receipt,indent=2)+'\n')
     if task.get('settle_initial_contact',False) and task['duty_factor'] > .5:
         contact=[problem.model.getForceSet().get(c['force']) for c in problem.metadata['contacts']]
         offsets=[]

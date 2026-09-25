@@ -1,0 +1,42 @@
+{
+  "schema": "eonwild.moco.living-standing.v1",
+  "classification": "Authored standing and subtle idle intent, not reconstructed physiology; foot contacts re-solved afterward",
+  "role": "usual_standing",
+  "hip_height_over_leg_length": 0.94,
+  "coordinates_rad": {
+    "pitch": 0.02,
+    "chest": 0.0,
+    "neck": 0.025,
+    "neck_upper": 0.025,
+    "head": -0.07,
+    "hip_l": 0.4,
+    "hip_r": 0.4,
+    "knee_l": -1.05,
+    "knee_r": -1.05,
+    "ankle_l": 0.65,
+    "ankle_r": 0.65,
+    "mtp_l": 0.0,
+    "mtp_r": 0.0
+  },
+  "tail_bend_density": {
+    "arc": [
+      0,
+      0.2,
+      0.55,
+      1.0
+    ],
+    "radians_per_arc": [
+      -0.55,
+      -0.1,
+      0.45,
+      0.5
+    ]
+  },
+  "idle_period_s": 4.8,
+  "breath_height_leg_lengths": 0.001,
+  "chest_breath_radians": 0.002,
+  "tail_sway_total_radians": 0.065,
+  "tail_phase_lag_radians": 1.4,
+  "confidence": "Authored estimate requiring visual review",
+  "provenance": "User C58 feedback; calibrated against admitted lengths, no bind transform edits"
+}

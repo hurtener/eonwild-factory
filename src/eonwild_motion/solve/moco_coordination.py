@@ -143,7 +143,8 @@ class Coordination:
             latent=np.array(q,copy=True)
             bounded_settings=dict(self.metadata['coordinates'])
             if self.path_task.get('enforce_root_envelopes',False):
-                for name in ('height','pitch','roll'):
+                for name in ('height','pitch','roll','yaw'):
+                    if name not in self.policy['body_envelope']:continue
                     setting=self.policy['body_envelope'][name]
                     center=float(latent[:,self.index[name]].mean()) if setting.get('center') is None else setting['center']
                     bounded_settings[name]={'bounds_rad':[center-setting['half_range'],center+setting['half_range']]}
@@ -163,6 +164,7 @@ class Coordination:
             self.parameters=[]
             for name in self.names:
                 if name.startswith('tail_') and self.path_task.get('retain_tail_warm_start',False):continue
+                if name.startswith(('chest','neck','head')) and self.path_task.get('retain_axial_warm_start',False):continue
                 if name!='forward':self.parameters.append((name,0,'constant'))
                 orders=int(self.path_task.get('leg_harmonics',self.policy['harmonics'])) if name.startswith(('hip_','knee_','ankle_','mtp_','digit_')) else int(self.policy['harmonics'])
                 for order in range(1,orders+1):
@@ -451,7 +453,18 @@ class Coordination:
                 task['track_allowance_leg_lengths']*self.L,self.L,task['track_weight']))
         if self.path_task:
             targets=np.array([[foot_task(self,t,side)[0] for side in ('l','r')] for t in self.times])
-            support_task.extend((self.path_task['foot_task_weight']*(m['feet']-targets)/self.L).ravel())
+            weights=np.ones((len(self.times),2))
+            if 'swing_task_fraction' in self.path_task:
+                from .moco_tasks import smooth
+                for side,offset in enumerate((0.,.5)):
+                    phase=(self.times/self.period+offset)%1
+                    swing=np.clip((phase-self.path_task['duty_factor'])/(1-self.path_task['duty_factor']),0,1)
+                    relax=smooth(swing/.22)*(1-smooth((swing-.72)/.28))
+                    weights[:,side]=1-(1-self.path_task['swing_task_fraction'])*relax
+            support_task.extend((self.path_task['foot_task_weight']*weights[:,:,None]*(m['feet']-targets)/self.L).ravel())
+        if p.get('leg_acceleration_weight',0):
+            indices=[self.index[n] for n in self.names if n.startswith(('hip_','knee_','ankle_','mtp_','digit_'))]
+            support_task.extend((p['leg_acceleration_weight']*m['acc'][:,indices]*self.L/9.80665).ravel())
         motor_speed=np.column_stack([m['u'][:,self.index[n.removeprefix('motor_')]] for n in self.motors])
         positive_power=np.maximum(m['effort']*self.capacities*motor_speed,0)/(self.bw*self.speed)
         tail_indices=[i for i,n in enumerate(self.names) if n.startswith('tail_')]

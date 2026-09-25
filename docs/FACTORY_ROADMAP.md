@@ -1,6 +1,16 @@
 # Factory movement roadmap and acceptance tracker
 
-Current checkpoint: **C58 — Allosaurus walking/running transfer; CHANGES REQUESTED**.
+Current checkpoint: **C58B — Allosaurus polish; DIAGNOSTIC READY FOR REVIEW**.
+Living standing posture, calibrated jaw/breathing, temporally coupled limb
+coordination and idle torso/tail life now use shared mechanisms with semantic
+animal data. Sixteen-second walk/start/stop and ten-second sustained run are
+saved in side/quarter views; all 1248 frames inspected. Tarbo C51 A skin is
+byte-identical and mechanics unchanged to numerical precision.
+Anatomical bounds are unchanged. Physical contact/effort acceptance remains
+FAILING; no full Moco convergence or running-transition approval.
+[Scope, evidence and limitations](handoffs/MOCO_C58B_ALLOSAURUS_POLISH.md).
+
+Previous checkpoint: **C58 — Allosaurus walking/running transfer; CHANGES REQUESTED**.
 User requests living idle tail/jaw, relaxed metatarsus and smoother running
 knee/ankle coordination. Jaw breathing is skipped by a zero-closure guard;
 idle holds the gait mean. Knee ROM is broad, but timing/distribution is poor.
