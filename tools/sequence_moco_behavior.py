@@ -187,9 +187,9 @@ def main():
                     # The trunk must settle onto broad support. Tail/limbs
                     # accommodate the floor instead of lifting the whole
                     # fallen animal on a distal tail point.
-                    free_names=legnames+['neck','neck_yaw','neck_upper','neck_upper_yaw','head','head_yaw']+[name for part in p.metadata['tail_chain'] for name in (part['body'],part['body']+'_yaw')]
+                    free_names=legnames+['neck','neck_yaw','neck_upper','neck_upper_yaw','head','head_yaw']+[name for part in p.metadata['tail_chain'] for name in (part['body'],part['body']+'_yaw')]+['height']
                     free_ids=[ix[n] for n in free_names];target=q[free_ids].copy()
-                    lim=np.array([bounds[n] for n in free_names]).T
+                    lim=np.array([bounds[n] if n!='height' else (q[ix['height']]-.05*p.L,q[ix['height']]+.35*p.L) for n in free_names]).T
                     p.set_state(t,q,zeros)
                     def clearance(values):
                         for i,v in zip(free_ids,values):p.coordinates[i].setValue(p.state,float(v),False)
@@ -211,6 +211,28 @@ def main():
         # forces/contact are evaluated AFTER this operation in final replay.
         smoothed=gaussian_filter1d(poses,.065/(times[1]-times[0]),axis=0,mode='nearest')
         poses+=gain[:,None]*(smoothed-poses)
+        # Global C2 root clearance, AFTER all coupled pose modifications.
+        # Local projection followed by smoothing can bury a rolling foot.
+        # Fit the support envelope over time instead of clipping individual
+        # frames; actual contact forces are still audited, not assumed solved.
+        from scipy.optimize import minimize,LinearConstraint
+        required=[]
+        for t,q in zip(times,poses):
+            p.set_state(t,q,zeros)
+            h=[body.findStationLocationInGround(p.state,point).get(1)-c['radius_m'] for body,point,c in zip(p.contact_bodies,p.contact_points,p.metadata['contacts'])]
+            required.append(q[ix['height']]-min(h)-.0015*p.L)
+        required=np.array(required);nodes=np.linspace(0,duration,round(duration/.18)+1)
+        basis=CubicSpline(nodes,np.eye(len(nodes)),bc_type=((1,np.zeros(len(nodes))),(1,np.zeros(len(nodes)))))
+        B=basis(times);D=basis(times,2);V=basis(times,1)
+        def objective(c):
+            error=B@c-required;acc=D@c;velocity=V@c
+            return float(10*error@error+.002*acc@acc+.01*velocity@velocity)
+        def jac(c):return 20*B.T@(B@c-required)+.004*D.T@(D@c)+.02*V.T@(V@c)
+        fit=minimize(objective,np.interp(nodes,times,required)+.2*p.L,jac=jac,
+            constraints=[LinearConstraint(B,required,np.inf)],method='SLSQP',options=dict(maxiter=180,ftol=1e-9))
+        if not fit.success or np.min(B@fit.x-required)<-1e-6:raise ValueError('Global body-support clearance did not solve: '+fit.message)
+        poses[:,ix['height']]=B@fit.x
+        (a.output/'root-clearance-receipt.json').write_text(json.dumps(dict(method='Global C2 geometric support envelope, not force convergence',success=bool(fit.success),iterations=int(fit.nit),maximum_extra_clearance_m=float(max(B@fit.x-required)),minimum_margin_m=float(min(B@fit.x-required))),indent=2)+'\n')
     trajectory=BoundedJointSpline(times,poses,{ix[n]:v for n,v in bounds.items()},bc_type='not-a-knot' if ref else ((1,zeros),(1,zeros)))
     p.path_task=None;p.speed=0.;p.times_dense=times;p.metadata.pop('path_cycle',None)
     finite_receipt=None

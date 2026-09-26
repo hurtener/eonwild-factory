@@ -1,0 +1,301 @@
+{
+  "schema": "eonwild.motion.finite-placement-intent.v1",
+  "classification": "Authored placement and attention task, shared OpenSim finite inverse-dynamics refinement; not full Moco convergence.",
+  "source": "catalog/behaviors/reverse-walking-review.v2.json provides the 0.32 normal-step prior; slower first Moco diagnostic timing is explicit below",
+  "duration_s": 12,
+  "steps": 4,
+  "prepare_s": 1.2,
+  "adoption_seconds": 0.5,
+  "first_swing_s": 2.55,
+  "step_interval_s": 0.7,
+  "swing_seconds": 0.45,
+  "settle_seconds": 0.55,
+  "step_scale_of_normal": 0.32,
+  "clearance_leg_lengths": 0.045,
+  "release_seconds": 0.12,
+  "release_pitch_rad": 0.06,
+  "recovery_pitch_rad": 0.02,
+  "recovery_digit_rad": -0.12,
+  "surface_edge_pads": true,
+  "planted_whole_body": true,
+  "release_contact": "distal",
+  "finite_coordination": {
+    "start_s": 1.2,
+    "end_s": 10.5,
+    "intervals": 12,
+    "samples": 81,
+    "max_evaluations": 6,
+    "coefficient_limit": 1.2,
+    "foot_position_weight": 2500.0,
+    "foot_orientation_weight": 300.0,
+    "digit_weight": 5.0,
+    "acceleration_weight": 0.15,
+    "root_envelopes_relative_to_seed": [
+      "forward",
+      "lateral",
+      "yaw"
+    ]
+  },
+  "family": "standing-hit",
+  "lateral_distance_leg_lengths": 0.1,
+  "attention_keys": [
+    [
+      0,
+      0
+    ],
+    [
+      1.2,
+      0
+    ],
+    [
+      2.4,
+      -28
+    ],
+    [
+      6,
+      -28
+    ],
+    [
+      8,
+      0
+    ],
+    [
+      10,
+      0
+    ]
+  ],
+  "living_intent": {
+    "classification": "Authored living behavior, not measured dinosaur respiration or muscle prediction",
+    "boundary_ease_s": 1.15,
+    "breath_period_s": 3.8,
+    "chest_breath_degrees": 1.25,
+    "torso_attention_share": 0.1,
+    "torso_delay_s": 0.35,
+    "torso_roll_degrees": 0.7,
+    "tail_base_delay_s": 0.25,
+    "tail_tip_delay_s": 0.85,
+    "tail_attention_share": 0.22,
+    "tail_turn_response": 0.65,
+    "tail_vertical_degrees": 1.8,
+    "interest_degrees": [
+      [
+        0,
+        0
+      ],
+      [
+        0.8,
+        0
+      ],
+      [
+        1.8,
+        6
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4.3,
+        -4
+      ],
+      [
+        5.1,
+        -4
+      ],
+      [
+        6.4,
+        3
+      ],
+      [
+        7.7,
+        2
+      ],
+      [
+        9,
+        -7
+      ],
+      [
+        10,
+        -3
+      ],
+      [
+        11.2,
+        0
+      ],
+      [
+        12,
+        0
+      ]
+    ],
+    "inspect_pitch_degrees": [
+      [
+        0,
+        0
+      ],
+      [
+        1.2,
+        0
+      ],
+      [
+        2.4,
+        2
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        5.6,
+        -2.5
+      ],
+      [
+        6.9,
+        -1.5
+      ],
+      [
+        8.4,
+        1
+      ],
+      [
+        10,
+        3
+      ],
+      [
+        11.5,
+        0
+      ],
+      [
+        12,
+        0
+      ]
+    ],
+    "tail_sweep_degrees": [
+      [
+        0,
+        0
+      ],
+      [
+        0.8,
+        0
+      ],
+      [
+        2.5,
+        9
+      ],
+      [
+        4.2,
+        3
+      ],
+      [
+        6,
+        -10
+      ],
+      [
+        7.8,
+        -5
+      ],
+      [
+        9.4,
+        8
+      ],
+      [
+        10.6,
+        3
+      ],
+      [
+        11.6,
+        0
+      ],
+      [
+        12,
+        0
+      ]
+    ]
+  },
+  "placement_mode": "lateral",
+  "attention_profile": "catalog/embodiment/allo.v1.json",
+  "posture_intent": {
+    "joint_offsets_degrees": {
+      "chest_yaw": [
+        [
+          0,
+          0
+        ],
+        [
+          2.35,
+          0
+        ],
+        [
+          2.5,
+          -8
+        ],
+        [
+          3.3,
+          -3
+        ],
+        [
+          5.4,
+          0
+        ],
+        [
+          12,
+          0
+        ]
+      ],
+      "neck_yaw": [
+        [
+          0,
+          0
+        ],
+        [
+          2.35,
+          0
+        ],
+        [
+          2.56,
+          5
+        ],
+        [
+          3.6,
+          2
+        ],
+        [
+          5.7,
+          0
+        ],
+        [
+          12,
+          0
+        ]
+      ]
+    },
+    "root_offsets_degrees": {
+      "roll": [
+        [
+          0,
+          0
+        ],
+        [
+          2.35,
+          0
+        ],
+        [
+          2.57,
+          3
+        ],
+        [
+          3.5,
+          1
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          12,
+          0
+        ]
+      ]
+    }
+  }
+}

@@ -1,0 +1,287 @@
+{
+  "duration_s": 12,
+  "sample_hz": 48,
+  "attention_enabled": false,
+  "attention_keys": [
+    [
+      0,
+      0
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      3.1,
+      -12
+    ],
+    [
+      5.3,
+      -6
+    ],
+    [
+      8,
+      2
+    ],
+    [
+      12,
+      0
+    ]
+  ],
+  "living_intent": {
+    "classification": "Authored living behavior, not measured dinosaur respiration or muscle prediction",
+    "boundary_ease_s": 1.15,
+    "breath_period_s": 3.8,
+    "chest_breath_degrees": 0.45,
+    "torso_attention_share": 0.1,
+    "torso_delay_s": 0.35,
+    "torso_roll_degrees": 0.7,
+    "tail_base_delay_s": 0.25,
+    "tail_tip_delay_s": 0.85,
+    "tail_attention_share": 0.22,
+    "tail_turn_response": 0.65,
+    "tail_vertical_degrees": 1.8,
+    "interest_degrees": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        2.2,
+        -3
+      ],
+      [
+        3.5,
+        3
+      ],
+      [
+        4.3,
+        0
+      ],
+      [
+        5.4,
+        5
+      ],
+      [
+        6.8,
+        -3
+      ],
+      [
+        7.8,
+        2
+      ],
+      [
+        9,
+        0
+      ],
+      [
+        10,
+        9
+      ],
+      [
+        11.4,
+        0
+      ],
+      [
+        12,
+        0
+      ]
+    ],
+    "inspect_pitch_degrees": [
+      [
+        0,
+        0
+      ],
+      [
+        12,
+        0
+      ]
+    ],
+    "tail_sweep_degrees": [
+      [
+        0,
+        0
+      ],
+      [
+        0.8,
+        0
+      ],
+      [
+        2.5,
+        9
+      ],
+      [
+        4.2,
+        3
+      ],
+      [
+        6,
+        -10
+      ],
+      [
+        7.8,
+        -5
+      ],
+      [
+        9.4,
+        8
+      ],
+      [
+        10.6,
+        3
+      ],
+      [
+        11.6,
+        0
+      ],
+      [
+        12,
+        0
+      ]
+    ]
+  },
+  "family": "get-up",
+  "attention_profile": "catalog/embodiment/tarbo.v1.json",
+  "classification": "Authored behavior motor intent; shared bounded OpenSim contact/effort coordination. Diagnostic, not converged Moco.",
+  "jaw_action_limit_degrees": 32,
+  "reference_motion": false,
+  "body_support_contacts": {
+    "bodies": [
+      "trunk",
+      "chest",
+      "head",
+      "thigh_l",
+      "thigh_r",
+      "tail_0",
+      "tail_1",
+      "tail_2",
+      "tail_3",
+      "tail_4",
+      "tail_5",
+      "tail_6",
+      "tail_7",
+      "tail_8",
+      "tail_9",
+      "tail_10",
+      "tail_11"
+    ],
+    "source": "Admitted model segment centers and radii; engineering proxy contact",
+    "primary_support_bodies": [
+      "trunk",
+      "chest",
+      "thigh_l",
+      "thigh_r"
+    ],
+    "full_foot_hull": true
+  },
+  "body_support_gain": [
+    [
+      0,
+      1
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      3.2,
+      0.96
+    ],
+    [
+      5.2,
+      0.55
+    ],
+    [
+      7.8,
+      0.25
+    ],
+    [
+      10.5,
+      0
+    ],
+    [
+      12,
+      0
+    ]
+  ],
+  "foot_support_gain": [
+    [
+      0,
+      0
+    ],
+    [
+      5,
+      0
+    ],
+    [
+      7,
+      0.2
+    ],
+    [
+      9,
+      0.8
+    ],
+    [
+      10.5,
+      1
+    ],
+    [
+      12,
+      1
+    ]
+  ],
+  "adopt_final_state": true,
+  "standing_reference": "/Volumes/m2-extended-disk/Repos/eonwild-task-storage/01a087f8-b58c-7530-9fd8-e1ed39b8d526/research/moco-c52b-centered-walk/walk-sequence-h/replay.json",
+  "stand_adoption_keys": [
+    [
+      0,
+      0
+    ],
+    [
+      2,
+      0
+    ],
+    [
+      3.2,
+      0.04
+    ],
+    [
+      5.2,
+      0.45
+    ],
+    [
+      7.8,
+      0.75
+    ],
+    [
+      10.5,
+      1
+    ],
+    [
+      12,
+      1
+    ]
+  ],
+  "arm_carriage_keys": [
+    [
+      0,
+      0.8
+    ],
+    [
+      8,
+      0.8
+    ],
+    [
+      11,
+      0
+    ],
+    [
+      12,
+      0
+    ]
+  ]
+}

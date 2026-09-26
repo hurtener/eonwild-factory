@@ -1,0 +1,390 @@
+{
+  "duration_s": 12,
+  "sample_hz": 48,
+  "attention_enabled": false,
+  "attention_keys": [
+    [
+      0,
+      0
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      8,
+      -2
+    ],
+    [
+      12,
+      0
+    ]
+  ],
+  "living_intent": {
+    "classification": "Authored living behavior, not measured dinosaur respiration or muscle prediction",
+    "boundary_ease_s": 1.15,
+    "breath_period_s": 3.8,
+    "chest_breath_degrees": 0.45,
+    "torso_attention_share": 0.1,
+    "torso_delay_s": 0.35,
+    "torso_roll_degrees": 0.7,
+    "tail_base_delay_s": 0.25,
+    "tail_tip_delay_s": 1.2,
+    "tail_attention_share": 0.22,
+    "tail_turn_response": 0.65,
+    "tail_vertical_degrees": 1.2,
+    "interest_degrees": [
+      [
+        0,
+        0
+      ],
+      [
+        4,
+        2
+      ],
+      [
+        8,
+        -2
+      ],
+      [
+        12,
+        0
+      ]
+    ],
+    "inspect_pitch_degrees": [
+      [
+        0,
+        0
+      ],
+      [
+        12,
+        0
+      ]
+    ],
+    "tail_sweep_degrees": [
+      [
+        0,
+        0
+      ],
+      [
+        1.5,
+        22
+      ],
+      [
+        3,
+        -24
+      ],
+      [
+        4.7,
+        25
+      ],
+      [
+        6.1,
+        -20
+      ],
+      [
+        7.9,
+        23
+      ],
+      [
+        9.6,
+        -22
+      ],
+      [
+        11,
+        14
+      ],
+      [
+        12,
+        0
+      ]
+    ]
+  },
+  "family": "swim",
+  "attention_profile": "catalog/embodiment/allo.v1.json",
+  "classification": "Authored behavior motor intent; shared bounded OpenSim contact/effort coordination. Diagnostic, not converged Moco. Environment support prototype; terrain/fluid interactions require separate diagnostics.",
+  "jaw_action_limit_degrees": 32,
+  "reference_motion": false,
+  "reference_repeats": 32,
+  "water": {
+    "height_leg_lengths": 1.2,
+    "body_density_kg_m3": 1000.0,
+    "water_density_kg_m3": 1000.0,
+    "drag_coefficient": 0.8,
+    "provenance": "Engineering coefficients, not measured theropod hydrodynamics"
+  },
+  "foot_support_gain": [
+    [
+      0,
+      0
+    ],
+    [
+      12,
+      0
+    ]
+  ],
+  "root_offsets_leg_lengths": {
+    "height": [
+      [
+        0,
+        0.25
+      ],
+      [
+        12,
+        0.25
+      ]
+    ],
+    "forward": [
+      [
+        0,
+        0
+      ],
+      [
+        12,
+        4.8
+      ]
+    ]
+  },
+  "joint_offsets_degrees": {
+    "hip_l": [
+      [
+        0,
+        24
+      ],
+      [
+        12,
+        24
+      ]
+    ],
+    "knee_l": [
+      [
+        0,
+        -30
+      ],
+      [
+        12,
+        -30
+      ]
+    ],
+    "ankle_l": [
+      [
+        0,
+        -20
+      ],
+      [
+        12,
+        -20
+      ]
+    ],
+    "mtp_l": [
+      [
+        0,
+        8
+      ],
+      [
+        12,
+        8
+      ]
+    ],
+    "hip_r": [
+      [
+        0,
+        24
+      ],
+      [
+        12,
+        24
+      ]
+    ],
+    "knee_r": [
+      [
+        0,
+        -30
+      ],
+      [
+        12,
+        -30
+      ]
+    ],
+    "ankle_r": [
+      [
+        0,
+        -20
+      ],
+      [
+        12,
+        -20
+      ]
+    ],
+    "mtp_r": [
+      [
+        0,
+        8
+      ],
+      [
+        12,
+        8
+      ]
+    ],
+    "neck": [
+      [
+        0,
+        9
+      ],
+      [
+        12,
+        9
+      ]
+    ],
+    "neck_upper": [
+      [
+        0,
+        5
+      ],
+      [
+        12,
+        5
+      ]
+    ]
+  },
+  "joint_oscillations": {
+    "hip_l": {
+      "amplitude_degrees": 14,
+      "period_s": 2.2,
+      "phase_rad": 0,
+      "envelope": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          11,
+          1
+        ],
+        [
+          12,
+          0
+        ]
+      ]
+    },
+    "knee_l": {
+      "amplitude_degrees": 12,
+      "period_s": 2.2,
+      "phase_rad": 0,
+      "envelope": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          11,
+          1
+        ],
+        [
+          12,
+          0
+        ]
+      ]
+    },
+    "ankle_l": {
+      "amplitude_degrees": 8,
+      "period_s": 2.2,
+      "phase_rad": 0,
+      "envelope": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          11,
+          1
+        ],
+        [
+          12,
+          0
+        ]
+      ]
+    },
+    "hip_r": {
+      "amplitude_degrees": 14,
+      "period_s": 2.2,
+      "phase_rad": 3.141592653589793,
+      "envelope": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          11,
+          1
+        ],
+        [
+          12,
+          0
+        ]
+      ]
+    },
+    "knee_r": {
+      "amplitude_degrees": 12,
+      "period_s": 2.2,
+      "phase_rad": 3.141592653589793,
+      "envelope": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          11,
+          1
+        ],
+        [
+          12,
+          0
+        ]
+      ]
+    },
+    "ankle_r": {
+      "amplitude_degrees": 8,
+      "period_s": 2.2,
+      "phase_rad": 3.141592653589793,
+      "envelope": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          11,
+          1
+        ],
+        [
+          12,
+          0
+        ]
+      ]
+    }
+  }
+}

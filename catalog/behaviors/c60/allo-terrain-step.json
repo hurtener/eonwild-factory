@@ -1,0 +1,176 @@
+{
+  "duration_s": 12,
+  "sample_hz": 48,
+  "attention_enabled": true,
+  "attention_keys": [
+    [
+      0,
+      0
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      3.1,
+      -12
+    ],
+    [
+      5.3,
+      -6
+    ],
+    [
+      8,
+      2
+    ],
+    [
+      12,
+      0
+    ]
+  ],
+  "living_intent": {
+    "classification": "Authored living behavior, not measured dinosaur respiration or muscle prediction",
+    "boundary_ease_s": 1.15,
+    "breath_period_s": 3.8,
+    "chest_breath_degrees": 1.25,
+    "torso_attention_share": 0.1,
+    "torso_delay_s": 0.35,
+    "torso_roll_degrees": 0.7,
+    "tail_base_delay_s": 0.25,
+    "tail_tip_delay_s": 0.85,
+    "tail_attention_share": 0.22,
+    "tail_turn_response": 0.65,
+    "tail_vertical_degrees": 1.8,
+    "interest_degrees": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        2.2,
+        -3
+      ],
+      [
+        3.5,
+        3
+      ],
+      [
+        4.3,
+        0
+      ],
+      [
+        5.4,
+        5
+      ],
+      [
+        6.8,
+        -3
+      ],
+      [
+        7.8,
+        2
+      ],
+      [
+        9,
+        0
+      ],
+      [
+        10,
+        9
+      ],
+      [
+        11.4,
+        0
+      ],
+      [
+        12,
+        0
+      ]
+    ],
+    "inspect_pitch_degrees": [
+      [
+        0,
+        0
+      ],
+      [
+        12,
+        0
+      ]
+    ],
+    "tail_sweep_degrees": [
+      [
+        0,
+        0
+      ],
+      [
+        0.8,
+        0
+      ],
+      [
+        2.5,
+        9
+      ],
+      [
+        4.2,
+        3
+      ],
+      [
+        6,
+        -10
+      ],
+      [
+        7.8,
+        -5
+      ],
+      [
+        9.4,
+        8
+      ],
+      [
+        10.6,
+        3
+      ],
+      [
+        11.6,
+        0
+      ],
+      [
+        12,
+        0
+      ]
+    ]
+  },
+  "finite_coordination": {
+    "start_s": 1.2,
+    "end_s": 10.5,
+    "intervals": 12,
+    "samples": 81,
+    "max_evaluations": 4,
+    "coefficient_limit": 1.2,
+    "foot_position_weight": 2500.0,
+    "foot_orientation_weight": 300.0,
+    "digit_weight": 5.0,
+    "acceleration_weight": 0.15,
+    "root_envelopes_relative_to_seed": [
+      "forward",
+      "lateral",
+      "yaw"
+    ]
+  },
+  "family": "terrain-step",
+  "attention_profile": "catalog/embodiment/allo.v1.json",
+  "classification": "Authored behavior motor intent; shared bounded OpenSim contact/effort coordination. Diagnostic, not converged Moco. Environment support prototype; terrain/fluid interactions require separate diagnostics.",
+  "jaw_action_limit_degrees": 32,
+  "reference_motion": true,
+  "source_start_s": 0,
+  "step_over": {
+    "forward_leg_lengths": 1.25,
+    "approach_leg_lengths": 0.8,
+    "extra_clearance_leg_lengths": 0.11,
+    "obstacle_height_leg_lengths": 0.065
+  }
+}

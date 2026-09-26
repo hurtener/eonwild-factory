@@ -1,0 +1,334 @@
+{
+  "duration_s": 12,
+  "sample_hz": 48,
+  "attention_enabled": true,
+  "attention_keys": [
+    [
+      0,
+      0
+    ],
+    [
+      2,
+      7
+    ],
+    [
+      4,
+      -4
+    ],
+    [
+      7,
+      5
+    ],
+    [
+      10,
+      0
+    ],
+    [
+      12,
+      0
+    ]
+  ],
+  "living_intent": {
+    "classification": "Authored living behavior, not measured dinosaur respiration or muscle prediction",
+    "boundary_ease_s": 1.15,
+    "breath_period_s": 3.8,
+    "chest_breath_degrees": 1.25,
+    "torso_attention_share": 0.1,
+    "torso_delay_s": 0.35,
+    "torso_roll_degrees": 0.7,
+    "tail_base_delay_s": 0.25,
+    "tail_tip_delay_s": 0.85,
+    "tail_attention_share": 0.22,
+    "tail_turn_response": 0.65,
+    "tail_vertical_degrees": 1.8,
+    "interest_degrees": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        2.2,
+        -3
+      ],
+      [
+        3.5,
+        3
+      ],
+      [
+        4.3,
+        0
+      ],
+      [
+        5.4,
+        5
+      ],
+      [
+        6.8,
+        -3
+      ],
+      [
+        7.8,
+        2
+      ],
+      [
+        9,
+        0
+      ],
+      [
+        10,
+        9
+      ],
+      [
+        11.4,
+        0
+      ],
+      [
+        12,
+        0
+      ]
+    ],
+    "inspect_pitch_degrees": [
+      [
+        0,
+        0
+      ],
+      [
+        12,
+        0
+      ]
+    ],
+    "tail_sweep_degrees": [
+      [
+        0,
+        0
+      ],
+      [
+        0.8,
+        0
+      ],
+      [
+        2.5,
+        9
+      ],
+      [
+        4.2,
+        3
+      ],
+      [
+        6,
+        -10
+      ],
+      [
+        7.8,
+        -5
+      ],
+      [
+        9.4,
+        8
+      ],
+      [
+        10.6,
+        3
+      ],
+      [
+        11.6,
+        0
+      ],
+      [
+        12,
+        0
+      ]
+    ]
+  },
+  "finite_coordination": {
+    "start_s": 1.2,
+    "end_s": 10.5,
+    "intervals": 12,
+    "samples": 81,
+    "max_evaluations": 4,
+    "coefficient_limit": 1.2,
+    "foot_position_weight": 2500.0,
+    "foot_orientation_weight": 300.0,
+    "digit_weight": 5.0,
+    "acceleration_weight": 0.15,
+    "root_envelopes_relative_to_seed": [
+      "forward",
+      "lateral",
+      "yaw"
+    ]
+  },
+  "joint_offsets_degrees": {
+    "neck": [
+      [
+        0,
+        0
+      ],
+      [
+        2.4,
+        7
+      ],
+      [
+        3,
+        -12
+      ],
+      [
+        3.4,
+        -6
+      ],
+      [
+        4.6,
+        0
+      ],
+      [
+        12,
+        0
+      ]
+    ],
+    "neck_upper": [
+      [
+        0,
+        0
+      ],
+      [
+        2.4,
+        9
+      ],
+      [
+        3,
+        -8
+      ],
+      [
+        3.4,
+        -3
+      ],
+      [
+        4.6,
+        0
+      ],
+      [
+        12,
+        0
+      ]
+    ]
+  },
+  "root_offsets_leg_lengths": {
+    "height": [
+      [
+        0,
+        0
+      ],
+      [
+        2.2,
+        -0.05
+      ],
+      [
+        3,
+        -0.025
+      ],
+      [
+        3.7,
+        -0.045
+      ],
+      [
+        5,
+        0
+      ],
+      [
+        12,
+        0
+      ]
+    ],
+    "forward": [
+      [
+        0,
+        0
+      ],
+      [
+        2.3,
+        -0.045
+      ],
+      [
+        3,
+        0.07
+      ],
+      [
+        3.5,
+        0.035
+      ],
+      [
+        5,
+        0
+      ],
+      [
+        12,
+        0
+      ]
+    ]
+  },
+  "root_offsets_degrees": {
+    "pitch": [
+      [
+        0,
+        0
+      ],
+      [
+        2.4,
+        2
+      ],
+      [
+        3,
+        -7
+      ],
+      [
+        3.5,
+        -3
+      ],
+      [
+        5,
+        0
+      ],
+      [
+        12,
+        0
+      ]
+    ]
+  },
+  "jaw_gape_degrees": [
+    [
+      0,
+      0
+    ],
+    [
+      2.3,
+      22
+    ],
+    [
+      2.8,
+      26
+    ],
+    [
+      3.15,
+      0
+    ],
+    [
+      3.8,
+      3
+    ],
+    [
+      5,
+      0
+    ],
+    [
+      12,
+      0
+    ]
+  ],
+  "family": "attack-defense",
+  "attention_profile": "catalog/embodiment/allo.v1.json",
+  "classification": "Authored behavior motor intent; shared bounded OpenSim contact/effort coordination. Diagnostic, not converged Moco.",
+  "jaw_action_limit_degrees": 32.0
+}
