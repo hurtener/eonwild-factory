@@ -5,263 +5,408 @@
     {
       "number": 1,
       "id": "idle-alert",
-      "status": "PLANNED",
+      "status": "RENDERED_REVIEW_PENDING",
       "animals": [
         "tarbo",
         "allo"
-      ]
+      ],
+      "physical_acceptance": "NOT_ACCEPTED",
+      "user_approval": "PENDING",
+      "gameplay_parity": "NOT_RUN",
+      "full_moco_converged": false,
+      "review_file": "01-idle-alert-review.mp4"
     },
     {
       "number": 2,
       "id": "walk",
-      "status": "PLANNED",
+      "status": "RENDERED_REVIEW_PENDING",
       "animals": [
         "tarbo",
         "allo"
-      ]
+      ],
+      "physical_acceptance": "NOT_ACCEPTED",
+      "user_approval": "PENDING",
+      "gameplay_parity": "NOT_RUN",
+      "full_moco_converged": false,
+      "review_file": "02-walk-review.mp4"
     },
     {
       "number": 3,
       "id": "fast-walk",
-      "status": "PLANNED",
+      "status": "RENDERED_REVIEW_PENDING",
       "animals": [
         "tarbo",
         "allo"
-      ]
+      ],
+      "physical_acceptance": "NOT_ACCEPTED",
+      "user_approval": "PENDING",
+      "gameplay_parity": "NOT_RUN",
+      "full_moco_converged": false,
+      "review_file": "03-fast-walk-review.mp4"
     },
     {
       "number": 4,
       "id": "start-stop",
-      "status": "PLANNED",
+      "status": "RENDERED_REVIEW_PENDING",
       "animals": [
         "tarbo",
         "allo"
-      ]
+      ],
+      "physical_acceptance": "NOT_ACCEPTED",
+      "user_approval": "PENDING",
+      "gameplay_parity": "NOT_RUN",
+      "full_moco_converged": false,
+      "review_file": "04-start-stop-review.mp4"
     },
     {
       "number": 5,
       "id": "walking-turn",
-      "status": "PLANNED",
+      "status": "RENDERED_REVIEW_PENDING",
       "animals": [
         "tarbo",
         "allo"
-      ]
+      ],
+      "physical_acceptance": "NOT_ACCEPTED",
+      "user_approval": "PENDING",
+      "gameplay_parity": "NOT_RUN",
+      "full_moco_converged": false,
+      "review_file": "05-walking-turn-review.mp4"
     },
     {
       "number": 6,
       "id": "pivot",
-      "status": "PLANNED",
+      "status": "RENDERED_REVIEW_PENDING",
       "animals": [
         "tarbo",
         "allo"
-      ]
+      ],
+      "physical_acceptance": "NOT_ACCEPTED",
+      "user_approval": "PENDING",
+      "gameplay_parity": "NOT_RUN",
+      "full_moco_converged": false,
+      "review_file": "06-pivot-review.mp4"
     },
     {
       "number": 7,
       "id": "retreat",
-      "status": "PLANNED",
+      "status": "RENDERED_REVIEW_PENDING",
       "animals": [
         "tarbo",
         "allo"
-      ]
+      ],
+      "physical_acceptance": "NOT_ACCEPTED",
+      "user_approval": "PENDING",
+      "gameplay_parity": "NOT_RUN",
+      "full_moco_converged": false,
+      "review_file": "07-retreat-review.mp4"
     },
     {
       "number": 8,
       "id": "lateral",
-      "status": "PLANNED",
+      "status": "RENDERED_REVIEW_PENDING",
       "animals": [
         "tarbo",
         "allo"
-      ]
+      ],
+      "physical_acceptance": "NOT_ACCEPTED",
+      "user_approval": "PENDING",
+      "gameplay_parity": "NOT_RUN",
+      "full_moco_converged": false,
+      "review_file": "08-lateral-review.mp4"
     },
     {
       "number": 9,
       "id": "standing-hit",
-      "status": "PLANNED",
+      "status": "RENDERED_REVIEW_PENDING",
       "animals": [
         "tarbo",
         "allo"
-      ]
+      ],
+      "physical_acceptance": "NOT_ACCEPTED",
+      "user_approval": "PENDING",
+      "gameplay_parity": "NOT_RUN",
+      "full_moco_converged": false,
+      "review_file": "09-standing-hit-review.mp4"
     },
     {
       "number": 10,
       "id": "walking-hit",
-      "status": "PLANNED",
+      "status": "RENDERED_REVIEW_PENDING",
       "animals": [
         "tarbo",
         "allo"
-      ]
+      ],
+      "physical_acceptance": "NOT_ACCEPTED",
+      "user_approval": "PENDING",
+      "gameplay_parity": "NOT_RUN",
+      "full_moco_converged": false,
+      "review_file": "10-walking-hit-review.mp4"
     },
     {
       "number": 11,
       "id": "running-hit",
-      "status": "PLANNED",
+      "status": "RENDERED_REVIEW_PENDING",
       "animals": [
         "tarbo",
         "allo"
-      ]
+      ],
+      "physical_acceptance": "NOT_ACCEPTED",
+      "user_approval": "PENDING",
+      "gameplay_parity": "NOT_RUN",
+      "full_moco_converged": false,
+      "review_file": "11-running-hit-review.mp4"
     },
     {
       "number": 12,
       "id": "sprint-hit",
-      "status": "PLANNED",
+      "status": "RENDERED_REVIEW_PENDING",
       "animals": [
         "tarbo",
         "allo"
-      ]
+      ],
+      "physical_acceptance": "NOT_ACCEPTED",
+      "user_approval": "PENDING",
+      "gameplay_parity": "NOT_RUN",
+      "full_moco_converged": false,
+      "review_file": "12-sprint-hit-review.mp4"
     },
     {
       "number": 13,
       "id": "walking-fall",
-      "status": "PLANNED",
+      "status": "RENDERED_REVIEW_PENDING",
       "animals": [
         "tarbo",
         "allo"
-      ]
+      ],
+      "physical_acceptance": "NOT_ACCEPTED",
+      "user_approval": "PENDING",
+      "gameplay_parity": "NOT_RUN",
+      "full_moco_converged": false,
+      "review_file": "13-walking-fall-review.mp4"
     },
     {
       "number": 14,
       "id": "running-fall",
-      "status": "PLANNED",
+      "status": "RENDERED_REVIEW_PENDING",
       "animals": [
         "tarbo",
         "allo"
-      ]
+      ],
+      "physical_acceptance": "NOT_ACCEPTED",
+      "user_approval": "PENDING",
+      "gameplay_parity": "NOT_RUN",
+      "full_moco_converged": false,
+      "review_file": "14-running-fall-review.mp4"
     },
     {
       "number": 15,
       "id": "sprint-fall",
-      "status": "PLANNED",
+      "status": "RENDERED_REVIEW_PENDING",
       "animals": [
         "tarbo",
         "allo"
-      ]
+      ],
+      "physical_acceptance": "NOT_ACCEPTED",
+      "user_approval": "PENDING",
+      "gameplay_parity": "NOT_RUN",
+      "full_moco_converged": false,
+      "review_file": "15-sprint-fall-review.mp4"
     },
     {
       "number": 16,
       "id": "get-up",
-      "status": "PLANNED",
+      "status": "RENDERED_REVIEW_PENDING",
       "animals": [
         "tarbo",
         "allo"
-      ]
+      ],
+      "physical_acceptance": "NOT_ACCEPTED",
+      "user_approval": "PENDING",
+      "gameplay_parity": "NOT_RUN",
+      "full_moco_converged": false,
+      "review_file": "16-get-up-review.mp4"
     },
     {
       "number": 17,
       "id": "run",
-      "status": "PLANNED",
+      "status": "RENDERED_REVIEW_PENDING",
       "animals": [
         "tarbo",
         "allo"
-      ]
+      ],
+      "physical_acceptance": "NOT_ACCEPTED",
+      "user_approval": "PENDING",
+      "gameplay_parity": "NOT_RUN",
+      "full_moco_converged": false,
+      "review_file": "17-run-review.mp4"
     },
     {
       "number": 18,
       "id": "sprint",
-      "status": "PLANNED",
+      "status": "RENDERED_REVIEW_PENDING",
       "animals": [
         "tarbo",
         "allo"
-      ]
+      ],
+      "physical_acceptance": "NOT_ACCEPTED",
+      "user_approval": "PENDING",
+      "gameplay_parity": "NOT_RUN",
+      "full_moco_converged": false,
+      "review_file": "18-sprint-review.mp4"
     },
     {
       "number": 19,
       "id": "feed",
-      "status": "PLANNED",
+      "status": "RENDERED_REVIEW_PENDING",
       "animals": [
         "tarbo",
         "allo"
-      ]
+      ],
+      "physical_acceptance": "NOT_ACCEPTED",
+      "user_approval": "PENDING",
+      "gameplay_parity": "NOT_RUN",
+      "full_moco_converged": false,
+      "review_file": "19-feed-review.mp4"
     },
     {
       "number": 20,
       "id": "drink",
-      "status": "PLANNED",
+      "status": "RENDERED_REVIEW_PENDING",
       "animals": [
         "tarbo",
         "allo"
-      ]
+      ],
+      "physical_acceptance": "NOT_ACCEPTED",
+      "user_approval": "PENDING",
+      "gameplay_parity": "NOT_RUN",
+      "full_moco_converged": false,
+      "review_file": "20-drink-review.mp4"
     },
     {
       "number": 21,
       "id": "rest-sleep-rise",
-      "status": "PLANNED",
+      "status": "RENDERED_REVIEW_PENDING",
       "animals": [
         "tarbo",
         "allo"
-      ]
+      ],
+      "physical_acceptance": "NOT_ACCEPTED",
+      "user_approval": "PENDING",
+      "gameplay_parity": "NOT_RUN",
+      "full_moco_converged": false,
+      "review_file": "21-rest-sleep-rise-review.mp4"
     },
     {
       "number": 22,
       "id": "attack-defense",
-      "status": "PLANNED",
+      "status": "RENDERED_REVIEW_PENDING",
       "animals": [
         "tarbo",
         "allo"
-      ]
+      ],
+      "physical_acceptance": "NOT_ACCEPTED",
+      "user_approval": "PENDING",
+      "gameplay_parity": "NOT_RUN",
+      "full_moco_converged": false,
+      "review_file": "22-attack-defense-review.mp4"
     },
     {
       "number": 23,
       "id": "limp",
-      "status": "PLANNED",
+      "status": "RENDERED_REVIEW_PENDING",
       "animals": [
         "tarbo",
         "allo"
-      ]
+      ],
+      "physical_acceptance": "NOT_ACCEPTED",
+      "user_approval": "PENDING",
+      "gameplay_parity": "NOT_RUN",
+      "full_moco_converged": false,
+      "review_file": "23-limp-review.mp4"
     },
     {
       "number": 24,
       "id": "death",
-      "status": "PLANNED",
+      "status": "RENDERED_REVIEW_PENDING",
       "animals": [
         "tarbo",
         "allo"
-      ]
+      ],
+      "physical_acceptance": "NOT_ACCEPTED",
+      "user_approval": "PENDING",
+      "gameplay_parity": "NOT_RUN",
+      "full_moco_converged": false,
+      "review_file": "24-death-review.mp4"
     },
     {
       "number": 25,
       "id": "jump-land",
-      "status": "PLANNED",
+      "status": "RENDERED_REVIEW_PENDING",
       "animals": [
         "tarbo",
         "allo"
-      ]
+      ],
+      "physical_acceptance": "NOT_ACCEPTED",
+      "user_approval": "PENDING",
+      "gameplay_parity": "NOT_RUN",
+      "full_moco_converged": false,
+      "review_file": "25-jump-land-review.mp4"
     },
     {
       "number": 26,
       "id": "terrain-step",
-      "status": "PLANNED",
+      "status": "RENDERED_REVIEW_PENDING",
       "animals": [
         "tarbo",
         "allo"
-      ]
+      ],
+      "physical_acceptance": "NOT_ACCEPTED",
+      "user_approval": "PENDING",
+      "gameplay_parity": "NOT_RUN",
+      "full_moco_converged": false,
+      "review_file": "26-terrain-step-review.mp4"
     },
     {
       "number": 27,
       "id": "wade",
-      "status": "PLANNED",
+      "status": "RENDERED_REVIEW_PENDING",
       "animals": [
         "tarbo",
         "allo"
-      ]
+      ],
+      "physical_acceptance": "NOT_ACCEPTED",
+      "user_approval": "PENDING",
+      "gameplay_parity": "NOT_RUN",
+      "full_moco_converged": false,
+      "review_file": "27-wade-review.mp4"
     },
     {
       "number": 28,
       "id": "swim",
-      "status": "PLANNED",
+      "status": "RENDERED_REVIEW_PENDING",
       "animals": [
         "tarbo",
         "allo"
-      ]
+      ],
+      "physical_acceptance": "NOT_ACCEPTED",
+      "user_approval": "PENDING",
+      "gameplay_parity": "NOT_RUN",
+      "full_moco_converged": false,
+      "review_file": "28-swim-review.mp4"
     },
     {
       "number": 29,
       "id": "display",
-      "status": "PLANNED",
+      "status": "RENDERED_REVIEW_PENDING",
       "animals": [
         "tarbo",
         "allo"
-      ]
+      ],
+      "physical_acceptance": "NOT_ACCEPTED",
+      "user_approval": "PENDING",
+      "gameplay_parity": "NOT_RUN",
+      "full_moco_converged": false,
+      "review_file": "29-display-review.mp4"
     }
   ]
 }

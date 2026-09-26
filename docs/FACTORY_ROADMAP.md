@@ -1,10 +1,61 @@
-# Active breadth pass — C60 (work in progress)
-
-User authorized the remaining roadmap families, both animals, living polish and one combined video checkpoint. See [C60 continuation](handoffs/MOCO_C60_LIVING_LIBRARY_WIP.md). No automatic approval or full Moco convergence. The explicit 29-family mapping is in `catalog/behaviors/moco-c60-library.v1.json`.
-
 # Factory movement roadmap and acceptance tracker
 
-Current checkpoint: **C59 B — living behavior across eight takes; REVIEW PENDING**.
+Current checkpoint: **C60 — 29-family living library; REVIEW PENDING**.
+
+Both Tarbosaurus and Allosaurus have saved native-time candidates in all 29
+normalized movement families: 58 takes, side and quarter views, 29 comparison
+videos and one 366-second chaptered reel. Eight C59B takes are preserved;
+50 are freshly generated. Secondary life includes task-directed attention,
+compensating neck/head motion, chest breathing, delayed tail response, and
+semantic jaw/arm behavior. Shared anatomy-driven programs remain shared.
+
+This completes the requested breadth candidate, not production acceptance.
+New actions are bounded authored coordination over Moco-era references with
+OpenSim inverse-dynamics replay. **No new full Moco solve converged.** Contact,
+effort and force failures remain in the evidence. Sampled joint bounds and
+reopened knee/ankle limits show no violations across all 58 takes, but the largest
+emitted foot penetration is 4.6 cm in Allo sprint-hit. Falls, rest and get-up have
+visible body-support limitations. User approval is pending; accepted main is
+unchanged. Dynamic arbitrary-state adoption, general terrain, gameplay damage/
+bite authority, continuous physical acceptance and production parity remain work.
+
+[Review, exact reproduction and limitations](handoffs/MOCO_C60_LIVING_LIBRARY.md).
+
+| # | Family | Saved review | Reel start | Open work |
+| --- | --- | --- | --- | --- |
+| 01 | idle-alert | C59B preserved, both animals | 00:00 | Visual decision pending; force/contact not certified |
+| 02 | walk | C60 candidate, both animals | 00:12 | Visual decision pending; force/contact not certified |
+| 03 | fast-walk | C60 candidate, both animals | 00:28 | Visual decision pending; force/contact not certified |
+| 04 | start-stop | C60 candidate, both animals | 00:40 | Visual decision pending; force/contact not certified |
+| 05 | walking-turn | C60 candidate, both animals | 00:56 | Visual decision pending; force/contact not certified |
+| 06 | pivot | C59B preserved, both animals | 01:12 | Visual decision pending; force/contact not certified |
+| 07 | retreat | C59B preserved, both animals | 01:24 | Visual decision pending; force/contact not certified |
+| 08 | lateral | C59B preserved, both animals | 01:36 | Visual decision pending; force/contact not certified |
+| 09 | standing-hit | C60 candidate, both animals | 01:48 | Visual decision pending; force/contact not certified |
+| 10 | walking-hit | C60 candidate, both animals | 02:00 | Visual decision pending; force/contact not certified |
+| 11 | running-hit | C60 candidate, both animals | 02:12 | Visual decision pending; force/contact not certified |
+| 12 | sprint-hit | C60 candidate, both animals | 02:24 | Allo foot penetration up to 4.6 cm; force/contact not accepted |
+| 13 | walking-fall | C60 candidate, both animals | 02:36 | Ground/body support approximate |
+| 14 | running-fall | C60 candidate, both animals | 02:48 | Impact and body support approximate |
+| 15 | sprint-fall | C60 candidate, both animals | 03:00 | Impact and body support approximate |
+| 16 | get-up | C60 candidate, both animals | 03:12 | Middle ascent needs more muscular support |
+| 17 | run | C60 candidate, both animals | 03:24 | Visual decision pending; force/contact not certified |
+| 18 | sprint | C60 candidate, both animals | 03:36 | Visual decision pending; force/contact not certified |
+| 19 | feed | C60 candidate, both animals | 03:48 | Visual decision pending; force/contact not certified |
+| 20 | drink | C60 candidate, both animals | 04:00 | Visual decision pending; force/contact not certified |
+| 21 | rest-sleep-rise | C60 candidate, both animals | 04:12 | Side-lying contact and rise need refinement |
+| 22 | attack-defense | C60 candidate, both animals | 04:30 | Visual decision pending; force/contact not certified |
+| 23 | limp | C60 candidate, both animals | 04:42 | Visual decision pending; force/contact not certified |
+| 24 | death | C60 candidate, both animals | 04:54 | Ground support approximate; living motion fades |
+| 25 | jump-land | C60 candidate, both animals | 05:06 | Authored capability; landing force not certified |
+| 26 | terrain-step | C60 candidate, both animals | 05:18 | One specified obstacle; general terrain pending |
+| 27 | wade | C60 candidate, both animals | 05:30 | Prescribed water loads; no fluid feedback |
+| 28 | swim | C60 candidate, both animals | 05:42 | Authored propulsion; no swimming prediction |
+| 29 | display | C60 candidate, both animals | 05:54 | Visual decision pending; force/contact not certified |
+
+## Earlier checkpoints and preserved decisions
+
+Previous checkpoint: **C59 B — living behavior across eight takes; REVIEW PENDING**.
 Four families on Tarbo and Allo: stepping pivot, lateral steps, retreat and alert.
 Shared irregular attention, chest breathing, delayed tail response and semantic
 arm/jaw life enter before contact coordination (arms/jaw are cosmetic).
@@ -15,7 +66,7 @@ Physical acceptance remains NOT CERTIFIED; no full Moco convergence.
 Previous C59 A: changes requested because the batch felt robotic and lacked life.
 The A evidence remains preserved; B is a candidate, not an inferred approval.
 
-### Current Moco movement inventory
+### Historical inventory before C60
 
 | Movement family | Tarbo | Allo | Next decision |
 | --- | --- | --- | --- |
