@@ -39,7 +39,7 @@ class GroundSupport:
             self.groups.append((name,p.model.getBodySet().get(name),np.array([c['center_local_m'] for c in cs]),np.array([c['radius_m'] for c in cs])))
         self.primary=set(spec['body_support_contacts'].get('primary_support_bodies',['trunk','chest','thigh_l','thigh_r']))
         self.receipts=[]
-        self.previous_target=initial.copy()
+        self.previous_time=None
         self.standing_body_clearance=None
         if spec.get('support_transfer'):
             if standing is None:raise ValueError('Recovery requires a standing target')
@@ -58,6 +58,7 @@ class GroundSupport:
         p=self.p;target=q.copy();body_gain=keyed(time,self.spec['body_support_gain'])
         gains={s:keyed(time,self.spec.get('foot_support_by_side',{}).get(s,self.spec['foot_support_gain'])) for s in ('l','r')}
         prediction=previous if previous2 is None else 2*previous-previous2
+        dt=max(time-self.previous_time,1/120) if self.previous_time is not None else 1/24
         p.set_state(time,q,self.zeros)
         natural_clearance=float(min(self.heights()[1]))
         transfer=self.spec.get('support_transfer')
@@ -85,14 +86,17 @@ class GroundSupport:
             if self.spec.get('support_transfer'):
                 center=.5*(goals['l'][0]+goals['r'][0]);com=p.model.calcMassCenterPosition(p.state).to_numpy()
                 r.extend(3*both*(com[[0,2]]-center[[0,2]])/p.L)
-            scale=np.array([.08 if n in ('height','forward','lateral') else .25 for n in self.names])
+            axial=np.array([n.startswith(('chest','neck','head','tail_')) for n in self.names])
+            tau=self.spec.get('support_transfer',{}).get('axial_smoothing_seconds',0.)
+            scale=np.array([.08 if n in ('height','forward','lateral') else (1. if tau and a else .25) for n,a in zip(self.names,axial)])
             r.extend(scale*(values-target[self.ids]))
-            r.extend(.25*(values-prediction[self.ids]))
+            r.extend((.25+axial*(tau/dt)**2)*(values-prediction[self.ids]))
+            r.extend(axial*(tau/dt)*(values-previous[self.ids]))
             return np.asarray(r)
         seed=target[self.ids]
         fit=least_squares(residual,np.clip(seed,self.limits[0]+1e-7,self.limits[1]-1e-7),bounds=self.limits,tr_solver="lsmr",max_nfev=55,ftol=1e-7,xtol=1e-7,gtol=1e-7)
         q[self.ids]=fit.x;residual(fit.x);h,bh=self.heights()
         errors={s:float(gains[s]*np.linalg.norm(p.model.getBodySet().get('toe_'+s).getPositionInGround(p.state).to_numpy()-goals[s][0])) for s in ('l','r')}
         self.receipts.append(dict(desired_body_clearance_m=float(desired_clearance),loaded_foot_error_m=errors,time_s=float(time),minimum_surface_height_m=float(min(h)),primary_body_gap_m=float(min(bh)),body_support_gain=float(body_gain),foot_support_gain=gains,success=bool(fit.success),evaluations=int(fit.nfev)))
-        self.previous_target=target
+        self.previous_time=time
         return q
