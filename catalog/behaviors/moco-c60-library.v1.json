@@ -1,0 +1,267 @@
+{
+  "schema": "eonwild.motion.library-checkpoint.v1",
+  "classification": "29 review families normalized from roadmap; no automatic approval or physical certification",
+  "families": [
+    {
+      "number": 1,
+      "id": "idle-alert",
+      "status": "PLANNED",
+      "animals": [
+        "tarbo",
+        "allo"
+      ]
+    },
+    {
+      "number": 2,
+      "id": "walk",
+      "status": "PLANNED",
+      "animals": [
+        "tarbo",
+        "allo"
+      ]
+    },
+    {
+      "number": 3,
+      "id": "fast-walk",
+      "status": "PLANNED",
+      "animals": [
+        "tarbo",
+        "allo"
+      ]
+    },
+    {
+      "number": 4,
+      "id": "start-stop",
+      "status": "PLANNED",
+      "animals": [
+        "tarbo",
+        "allo"
+      ]
+    },
+    {
+      "number": 5,
+      "id": "walking-turn",
+      "status": "PLANNED",
+      "animals": [
+        "tarbo",
+        "allo"
+      ]
+    },
+    {
+      "number": 6,
+      "id": "pivot",
+      "status": "PLANNED",
+      "animals": [
+        "tarbo",
+        "allo"
+      ]
+    },
+    {
+      "number": 7,
+      "id": "retreat",
+      "status": "PLANNED",
+      "animals": [
+        "tarbo",
+        "allo"
+      ]
+    },
+    {
+      "number": 8,
+      "id": "lateral",
+      "status": "PLANNED",
+      "animals": [
+        "tarbo",
+        "allo"
+      ]
+    },
+    {
+      "number": 9,
+      "id": "standing-hit",
+      "status": "PLANNED",
+      "animals": [
+        "tarbo",
+        "allo"
+      ]
+    },
+    {
+      "number": 10,
+      "id": "walking-hit",
+      "status": "PLANNED",
+      "animals": [
+        "tarbo",
+        "allo"
+      ]
+    },
+    {
+      "number": 11,
+      "id": "running-hit",
+      "status": "PLANNED",
+      "animals": [
+        "tarbo",
+        "allo"
+      ]
+    },
+    {
+      "number": 12,
+      "id": "sprint-hit",
+      "status": "PLANNED",
+      "animals": [
+        "tarbo",
+        "allo"
+      ]
+    },
+    {
+      "number": 13,
+      "id": "walking-fall",
+      "status": "PLANNED",
+      "animals": [
+        "tarbo",
+        "allo"
+      ]
+    },
+    {
+      "number": 14,
+      "id": "running-fall",
+      "status": "PLANNED",
+      "animals": [
+        "tarbo",
+        "allo"
+      ]
+    },
+    {
+      "number": 15,
+      "id": "sprint-fall",
+      "status": "PLANNED",
+      "animals": [
+        "tarbo",
+        "allo"
+      ]
+    },
+    {
+      "number": 16,
+      "id": "get-up",
+      "status": "PLANNED",
+      "animals": [
+        "tarbo",
+        "allo"
+      ]
+    },
+    {
+      "number": 17,
+      "id": "run",
+      "status": "PLANNED",
+      "animals": [
+        "tarbo",
+        "allo"
+      ]
+    },
+    {
+      "number": 18,
+      "id": "sprint",
+      "status": "PLANNED",
+      "animals": [
+        "tarbo",
+        "allo"
+      ]
+    },
+    {
+      "number": 19,
+      "id": "feed",
+      "status": "PLANNED",
+      "animals": [
+        "tarbo",
+        "allo"
+      ]
+    },
+    {
+      "number": 20,
+      "id": "drink",
+      "status": "PLANNED",
+      "animals": [
+        "tarbo",
+        "allo"
+      ]
+    },
+    {
+      "number": 21,
+      "id": "rest-sleep-rise",
+      "status": "PLANNED",
+      "animals": [
+        "tarbo",
+        "allo"
+      ]
+    },
+    {
+      "number": 22,
+      "id": "attack-defense",
+      "status": "PLANNED",
+      "animals": [
+        "tarbo",
+        "allo"
+      ]
+    },
+    {
+      "number": 23,
+      "id": "limp",
+      "status": "PLANNED",
+      "animals": [
+        "tarbo",
+        "allo"
+      ]
+    },
+    {
+      "number": 24,
+      "id": "death",
+      "status": "PLANNED",
+      "animals": [
+        "tarbo",
+        "allo"
+      ]
+    },
+    {
+      "number": 25,
+      "id": "jump-land",
+      "status": "PLANNED",
+      "animals": [
+        "tarbo",
+        "allo"
+      ]
+    },
+    {
+      "number": 26,
+      "id": "terrain-step",
+      "status": "PLANNED",
+      "animals": [
+        "tarbo",
+        "allo"
+      ]
+    },
+    {
+      "number": 27,
+      "id": "wade",
+      "status": "PLANNED",
+      "animals": [
+        "tarbo",
+        "allo"
+      ]
+    },
+    {
+      "number": 28,
+      "id": "swim",
+      "status": "PLANNED",
+      "animals": [
+        "tarbo",
+        "allo"
+      ]
+    },
+    {
+      "number": 29,
+      "id": "display",
+      "status": "PLANNED",
+      "animals": [
+        "tarbo",
+        "allo"
+      ]
+    }
+  ]
+}

@@ -13,7 +13,7 @@ class PlacementPlan(RetreatPlan):
     def __init__(self, specification, initial_feet, geometry, normal_step, leg_length):
         super().__init__(dict(specification, steps=4), initial_feet, geometry, normal_step, leg_length)
         self.specification = specification
-        self.mode = specification['family']
+        self.mode = specification.get('placement_mode',specification['family'])
         self.heading_angle = np.deg2rad(specification.get('heading_degrees', 0.))
         self.center = np.mean([v['origin'] for v in initial_feet.values()], axis=0)
         self.events = []

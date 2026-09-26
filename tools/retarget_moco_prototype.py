@@ -110,8 +110,18 @@ def main():
                 phase=2*np.pi*elapsed/(life['breath_period_s'] if life else 3.5 if sequence else halves*period)
                 if life:phase+=.12*np.sin(2*np.pi*elapsed/(life['breath_period_s']*2.7))
                 gape=breathing['minimum_gape_degrees']+.5*(1-np.cos(phase))*(breathing['maximum_gape_degrees']-breathing['minimum_gape_degrees'])
+                if life and life.get('vitality_keys'):
+                    from eonwild_motion.solve.moco_living_intent import keyed
+                    gape*=keyed(row['time_s'],life['vitality_keys'])
             ro[jaw_node]=compose_jaw_rotation(c.base_r[jaw_node],jaw_axis,
                 neutral_close_degrees=jaw_close,breathing_gape_degrees=float(gape),gain=1.)
+            if sequence and sequence.get('plan',{}).get('jaw_gape_degrees'):
+                from eonwild_motion.solve.moco_living_intent import keyed
+                plan=sequence['plan'];action=keyed(row['time_s'],plan['jaw_gape_degrees'])
+                limit=plan['jaw_action_limit_degrees']
+                if not 0<=action<=limit<=45:raise ValueError('Jaw action exceeds declared authored envelope')
+                axis=np.asarray(jaw_axis,dtype=float);axis/=np.linalg.norm(axis)
+                ro[jaw_node]=(Rotation.from_quat(ro[jaw_node])*Rotation.from_rotvec(axis*np.deg2rad(action))).as_quat()
         def worlds(): return np.asarray(_world_matrices(source, tr, ro, c.base_s))
         def set_world(node, rotation, position=None):
             w = worlds()
@@ -196,11 +206,14 @@ def main():
             from eonwild_motion.solve.moco_living_intent import keyed
             from eonwild_motion.solve.moco_tasks import smooth
             t=row['time_s'];e=float(smooth(t/life['boundary_ease_s'])*smooth((period-t)/life['boundary_ease_s']))
+            e*=keyed(t,life.get('vitality_keys',[[0,1],[period,1]]))
             for node,joint in arm_bindings:
                 delayed=max(0,t-joint['responseSeconds'])
                 attention=keyed(delayed,life['interest_degrees'])
                 breath=np.sin(2*np.pi*delayed/life['breath_period_s'])
                 angle=e*(joint['breathDegrees']*breath+.6*joint['walkDegrees']*np.tanh(attention/6)*joint['walkSign'])
+                carriage=sequence.get('plan',{}).get('arm_carriage_keys')
+                if carriage:angle+=joint['restDegrees']*keyed(t,carriage)
                 ro[node]=(Rotation.from_quat(ro[node])*Rotation.from_rotvec(np.asarray(joint['axis'])*np.deg2rad(angle))).as_quat()
         poses.append((tr, ro))
         targets.append(frame_targets)

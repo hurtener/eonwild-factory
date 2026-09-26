@@ -34,6 +34,11 @@ if spec.get('family'):
 plan=plan_type(spec,feet,p.metadata['foot_geometry'],p.admission['step_length_m'],p.L)
 attention=None;attention_rows=[]
 life=None
+posture=None
+if spec.get('posture_intent'):
+ from eonwild_motion.solve.moco_behavior_intent import BehaviorIntent
+ posture=BehaviorIntent(dict(spec['posture_intent'],duration_s=spec['duration_s']),p.names,p.L,
+     {n:v['bounds_rad'] for n,v in p.metadata['coordinates'].items()})
 if spec.get('living_intent'):
  from eonwild_motion.solve.moco_living_intent import LivingIntent
  life=LivingIntent(spec['living_intent'],plan,p.names,p.metadata.get('tail_chain',[]),p.L,
@@ -65,6 +70,7 @@ for time in times:
  world[ix['forward']]+=target_com[0]-com[0];world[ix['lateral']]+=target_com[1]-com[2]
  if spec.get('family'):
   world[ix['yaw']]+=plan.heading(time)
+  if posture:world=posture.apply(world,time)
   if life:world=life.apply(world,time)
   if attention:
    p.set_state(time,world,zeros)

@@ -1,3 +1,7 @@
+# Active breadth pass — C60 (work in progress)
+
+User authorized the remaining roadmap families, both animals, living polish and one combined video checkpoint. See [C60 continuation](handoffs/MOCO_C60_LIVING_LIBRARY_WIP.md). No automatic approval or full Moco convergence. The explicit 29-family mapping is in `catalog/behaviors/moco-c60-library.v1.json`.
+
 # Factory movement roadmap and acceptance tracker
 
 Current checkpoint: **C59 B — living behavior across eight takes; REVIEW PENDING**.

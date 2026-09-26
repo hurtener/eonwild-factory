@@ -231,6 +231,50 @@ def make_model(admission, recipe):
             model.addForce(force)
             metadata["contacts"].append({"force": force.getName(), "body": contact_body.getName(),
                                          "center_local_m": center, "radius_m": radius})
+    if recipe.get('body_support_contacts'):
+        # Broad-contact behaviors need actual non-foot support in the model.
+        # These admitted segment-radius proxies are engineering geometry,
+        # not measured flesh compliance or a production collision mesh.
+        support = recipe['body_support_contacts']
+        if support.get('full_foot_hull'):
+            # Upright sole pads do not cover a foot lying on its SIDE. Admit
+            # material support points from the source's full 3D foot surface.
+            # This changes collision geometry for broad-contact behaviors,
+            # never masses, actuator strength or anatomical joint ranges.
+            import itertools
+            mid=np.array(foot['toe_midpoint_m'])
+            for side,suffix in [('left','l'),('right','r')]:
+                vertices=np.array(admission['foot_surface'][side]['vertices_m'])
+                directions=np.array([v for v in itertools.product((-1,0,1),repeat=3) if any(v)])
+                selected=np.unique(np.argmax(vertices@directions.T,axis=0))
+                for j,index in enumerate(selected):
+                    point=vertices[index];distal=point[0]>mid[0]
+                    center=point-mid if distal else point
+                    body=model.updBodySet().get(('digit_' if distal else 'toe_')+suffix)
+                    radius=.004*total_length
+                    sphere=o.ContactSphere(radius,vec(center),body);sphere.setName(f'hull_sphere_{j}_{suffix}');model.addContactGeometry(sphere)
+                    force=o.SmoothSphereHalfSpaceForce();force.setName(f'hull_contact_{j}_{suffix}');force.connectSocket_sphere(sphere);force.connectSocket_half_space(ground)
+                    for key in ('static_friction','dynamic_friction','viscous_friction'):getattr(force,'set_'+key)(contact[key])
+                    force.set_stiffness(contact['stiffness_N_m2']);force.set_dissipation(contact['dissipation_s_m']);force.set_transition_velocity(contact['transition_velocity_mps']);force.set_constant_contact_force(1e-5);model.addForce(force)
+                    metadata['contacts'].append(dict(force=force.getName(),body=body.getName(),center_local_m=center.tolist(),radius_m=radius,support_kind='admitted_foot_hull'))
+        for body_name in support['bodies']:
+            segment = metadata['segments'][body_name]
+            body = model.updBodySet().get(body_name)
+            center = list(segment['com_local_m'])
+            radius = segment['radius_m']
+            sphere = o.ContactSphere(radius, vec(center), body)
+            sphere.setName('body_sphere_'+body_name);model.addContactGeometry(sphere)
+            force = o.SmoothSphereHalfSpaceForce();force.setName('body_contact_'+body_name)
+            force.connectSocket_sphere(sphere);force.connectSocket_half_space(ground)
+            for key in ('static_friction','dynamic_friction','viscous_friction'):
+                getattr(force,'set_'+key)(contact[key])
+            force.set_stiffness(contact['stiffness_N_m2'])
+            force.set_dissipation(contact['dissipation_s_m'])
+            force.set_transition_velocity(contact['transition_velocity_mps'])
+            force.set_constant_contact_force(1e-5);model.addForce(force)
+            metadata['contacts'].append(dict(force=force.getName(),body=body_name,
+                center_local_m=center,radius_m=radius,support_kind='body_proxy'))
+        metadata['body_support_contacts']=dict(classification='Segment-radius engineering contact proxies; skin contact requires review',**support)
     if calibrated:
         metadata['foot_geometry']=foot
         if recipe.get('material_foot_clearance'):

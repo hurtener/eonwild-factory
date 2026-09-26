@@ -32,7 +32,8 @@ class LivingIntent:
 
     def envelope(self, time):
         ramp=self.policy['boundary_ease_s']
-        return float(smooth(time/ramp)*smooth((self.duration-time)/ramp))
+        vitality=keyed(time,self.policy.get('vitality_keys',[[0,1],[self.duration,1]]))
+        return float(vitality*smooth(time/ramp)*smooth((self.duration-time)/ramp))
 
     def interest(self, time):
         return keyed(time,self.policy['interest_degrees'])
