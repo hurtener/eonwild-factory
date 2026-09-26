@@ -33,6 +33,11 @@ if spec.get('family'):
  plan_type=PlacementPlan
 plan=plan_type(spec,feet,p.metadata['foot_geometry'],p.admission['step_length_m'],p.L)
 attention=None;attention_rows=[]
+life=None
+if spec.get('living_intent'):
+ from eonwild_motion.solve.moco_living_intent import LivingIntent
+ life=LivingIntent(spec['living_intent'],plan,p.names,p.metadata.get('tail_chain',[]),p.L,
+     {n:v['bounds_rad'] for n,v in p.metadata['coordinates'].items()})
 if spec.get('attention_profile'):
  from eonwild_motion.solve.moco_attention import ProfileAttention
  attention=ProfileAttention(json.loads(Path(spec['attention_profile']).read_text()),p.metadata,'scan')
@@ -60,6 +65,7 @@ for time in times:
  world[ix['forward']]+=target_com[0]-com[0];world[ix['lateral']]+=target_com[1]-com[2]
  if spec.get('family'):
   world[ix['yaw']]+=plan.heading(time)
+  if life:world=life.apply(world,time)
   if attention:
    p.set_state(time,world,zeros)
    def heading(values):
@@ -69,7 +75,7 @@ for time in times:
      R=p.model.getBodySet().get(body).getTransformInGround(p.state).R()
      angles.append(np.arctan2(-R.get(2,0),R.get(0,0)))
     return float(np.degrees(np.arctan2(np.sin(angles[0]-angles[1]),np.cos(angles[0]-angles[1]))))
-   values,receipt=attention.solve(plan.attention_degrees(time),heading)
+   values,receipt=attention.solve(life.attention(time) if life else plan.attention_degrees(time),heading)
    world[attention_indices]=values;attention_rows.append(dict(time_s=float(time),**receipt))
  # Small relaxed tail reaction to the horizontal mass-transfer velocity.
  # Distributed across admitted lengths; explicit secondary task, not muscles.
@@ -193,6 +199,8 @@ if finite_result is not None:
  sequence['finite_coordination']=finite_receipt
 if attention_rows:
  (a.output/'attention-receipt.json').write_text(json.dumps(attention_rows,indent=2)+'\n')
+if life:
+ sequence['living_intent']=dict(classification='Authored living intent before contact IK and shared finite mechanics; not simulated behavior or physiology',policy=spec['living_intent'])
 p.metadata['sequence']=sequence;p.model.printToXML(str(a.output/'model.osim'))
 p.metadata.update(schema='eonwild.motion.moco-model-receipt.v1',admission=p.admission,recipe=p.recipe,
  model_sha256=hashlib.sha256((a.output/'model.osim').read_bytes()).hexdigest(),status='AUTHORED_TRANSITION_MODEL',

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Diagnostic semantic skin adapter for a saved planar or spatial Moco replay.
 
-No running solver, contact correction or time warp is applied. Optional jaw-only
-breathing is explicitly authored. Artist lengths/rest curvature are retained.
+No running solver, contact correction or time warp is applied. Optional jaw breathing and semantic arm
+response are explicitly authored. Artist lengths/rest curvature are retained.
 """
 import argparse
 from copy import deepcopy
@@ -76,6 +76,12 @@ def main():
     step = admission['step_length_m']
     path_cycle=data['metadata'].get('path_cycle')
     sequence=data['metadata'].get('sequence')
+    life=sequence.get('living_intent',{}).get('policy') if sequence else None
+    arm_bindings=[]
+    if life:
+        embodiment=json.loads(Path(sequence['plan']['attention_profile']).read_text())
+        semantic={b['role']:source.name_to_node[b['bone']] for b in embodiment['bindings']}
+        arm_bindings=[(semantic[j['role']],j) for j in embodiment['secondary']['arms']]
     def pitch(angle):
         return basis @ Rotation.from_rotvec([0, 0, angle]).as_matrix() @ basis.T
     breathing=data['metadata'].get('recipe',{}).get('jaw_breathing')
@@ -100,7 +106,9 @@ def main():
             from eonwild_motion.solve.jaw_response import compose_jaw_rotation
             gape=0.
             if breathing:
-                phase=2*np.pi*(half*period+row['time_s'])/(3.5 if sequence else halves*period)
+                elapsed=half*period+row['time_s']
+                phase=2*np.pi*elapsed/(life['breath_period_s'] if life else 3.5 if sequence else halves*period)
+                if life:phase+=.12*np.sin(2*np.pi*elapsed/(life['breath_period_s']*2.7))
                 gape=breathing['minimum_gape_degrees']+.5*(1-np.cos(phase))*(breathing['maximum_gape_degrees']-breathing['minimum_gape_degrees'])
             ro[jaw_node]=compose_jaw_rotation(c.base_r[jaw_node],jaw_axis,
                 neutral_close_degrees=jaw_close,breathing_gape_degrees=float(gape),gain=1.)
@@ -182,6 +190,18 @@ def main():
                     if role.startswith('legs.'+side+'.toeChains.') and role.endswith('.1'):
                         digit_rotation=body_rotation('digit_'+source_side) if spatial else pitch(angle+q['digit_'+source_side])
                         set_world(node,digit_rotation@base[node,:3,:3])
+        if life:
+            # Cosmetic arms use admitted semantic axes; no joint-name guesses.
+            # Their small lagged response is not a simulated arm muscle model.
+            from eonwild_motion.solve.moco_living_intent import keyed
+            from eonwild_motion.solve.moco_tasks import smooth
+            t=row['time_s'];e=float(smooth(t/life['boundary_ease_s'])*smooth((period-t)/life['boundary_ease_s']))
+            for node,joint in arm_bindings:
+                delayed=max(0,t-joint['responseSeconds'])
+                attention=keyed(delayed,life['interest_degrees'])
+                breath=np.sin(2*np.pi*delayed/life['breath_period_s'])
+                angle=e*(joint['breathDegrees']*breath+.6*joint['walkDegrees']*np.tanh(attention/6)*joint['walkSign'])
+                ro[node]=(Rotation.from_quat(ro[node])*Rotation.from_rotvec(np.asarray(joint['axis'])*np.deg2rad(angle))).as_quat()
         poses.append((tr, ro))
         targets.append(frame_targets)
     tr = np.asarray([p[0] for p in poses]); ro = np.asarray([p[1] for p in poses])
@@ -250,6 +270,13 @@ def main():
         maximum_joint_error_m=max(v for m in measurements for v in m['joint_error_m'].values()),
         minimum_skin_floor_m=min(v for m in measurements for v in m['skin_floor_min_m'].values()),
         measurements=measurements)
+    if life:
+        receipt['living_secondary'] = dict(
+            classification='Authored cosmetic arm and jaw behavior, not independently simulated muscles',
+            policy=life, arms=embodiment['secondary']['arms'],
+            embodiment_path=sequence['plan']['attention_profile'],
+            embodiment_sha256=sha(Path(sequence['plan']['attention_profile']).read_bytes()))
+        receipt['method'] += ' Shared semantic arm/wrist response follows living attention and breathing.'
     (a.output / 'retarget.json').write_text(json.dumps(receipt, indent=2) + '\n')
     print(json.dumps({k: v for k, v in receipt.items() if k != 'measurements'}, indent=2))
 

@@ -1,12 +1,15 @@
 # Factory movement roadmap and acceptance tracker
 
-Current checkpoint: **C59 — four movement families × two animals; BATCH REVIEW PENDING**.
-Eight 12-second native-time takes (96-second dual-view reel): stepping pivot,
-lateral balance steps, backward retreat and alert/look-around. Shared finite
-OpenSim coordination, semantic animal data, actual-rig exports and 4608 inspected
-rendered frames. Full Moco convergence is false; physical acceptance remains
-NOT CERTIFIED. Tarbo pivot has high effort and a fast ankle adjustment.
-[Scope, videos, limits and reproduction](handoffs/MOCO_C59_BATCH.md).
+Current checkpoint: **C59 B — living behavior across eight takes; REVIEW PENDING**.
+Four families on Tarbo and Allo: stepping pivot, lateral steps, retreat and alert.
+Shared irregular attention, chest breathing, delayed tail response and semantic
+arm/jaw life enter before contact coordination (arms/jaw are cosmetic).
+The eight 12-second takes retain native time and the existing task placements.
+Physical acceptance remains NOT CERTIFIED; no full Moco convergence.
+[Scope, videos, evidence and reproduction](handoffs/MOCO_C59B_LIVING_BATCH.md).
+
+Previous C59 A: changes requested because the batch felt robotic and lacked life.
+The A evidence remains preserved; B is a candidate, not an inferred approval.
 
 ### Current Moco movement inventory
 
@@ -15,10 +18,10 @@ NOT CERTIFIED. Tarbo pivot has high effort and a fast ankle adjustment.
 | Straight walk / start / stop | C52B H visually approved | C58B positive; C58C distal relaxation pending | Review C58C separately; no approval inferred from batch request |
 | Sustained running | C51 A visually approved | C58B candidate, not approved | Allo coordination polish; retain Tarbo baseline |
 | Walking turns | C53 A approved; C54 B positive | No approved transfer | Broader transfer after batch feedback |
-| Stepping pivot in place | C59 candidate | C59 candidate | Review both; Tarbo effort/ankle warning |
-| Backward retreat | C56 visually approved; C59 faster variation | C59 first batch candidate | Review placement/contact/body response |
-| Lateral balance steps | C59 candidate | C59 candidate | Review outside-first transfer and step size |
-| Planted alert / look-around | C59 candidate | C59 candidate | Review attention and body engagement |
+| Stepping pivot in place | C59 B candidate | C59 B candidate | Review attention/body/tail; effort remains uncertified |
+| Backward retreat | C56 visually approved; C59 B faster variation | C59 B candidate | Review placement/contact/body response |
+| Lateral balance steps | C59 B candidate | C59 B candidate | Review outside-first transfer and step size |
+| Planted alert / look-around | C59 B candidate | C59 B candidate | Review attention and body engagement |
 | Mixed walk/turn/backward/run joins | C57C diagnostic; polish deferred | Not delivered | Dynamic-state transitions and contact ownership |
 | Sprint / faster airborne gait | Missing on current Moco path | Missing on current Moco path | Separate support/flight intent |
 | Side hit / stumble / recover | Older non-Moco baselines exist; Moco transfer missing | Same | Preserve old approvals; do not relabel as Moco |
@@ -27,7 +30,7 @@ NOT CERTIFIED. Tarbo pivot has high effort and a fast ankle adjustment.
 | Terrain / slopes / uneven support | Missing | Missing | Defer until flat-ground families reviewed |
 
 Visual approval, physical acceptance, Unity playback and gameplay integration
-remain separate. C59 does not replace accepted main or certify convergence.
+remain separate. C59 B does not replace accepted main or certify convergence.
 
 
 Previous checkpoint: **C58C — Allosaurus unloaded forefoot relaxation; REVIEW PENDING**.

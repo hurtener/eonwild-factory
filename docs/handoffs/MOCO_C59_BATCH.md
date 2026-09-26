@@ -1,6 +1,6 @@
 # C59: four finite movement tasks on both animals
 
-Status: **GENERATED AND FRAME-INSPECTED; USER REVIEW PENDING**. Physical acceptance: **NOT CERTIFIED**. Full Moco convergence: **false for every take**.
+Status: **CHANGES REQUESTED — robotic behavior / missing life**. See [C59 B](MOCO_C59B_LIVING_BATCH.md) for the revised batch. Physical acceptance: **NOT CERTIFIED**. Full Moco convergence: **false for every take**.
 
 The user requested a longer batch experiment and one combined review. This pass was implemented directly, without subagents. Eight 12-second takes use one shared OpenSim finite whole-body coordinator. This is the existing Moco research pipeline's reduced-coordinate inverse-dynamics path, not a newly converged Moco predictive solution. Foot placements, durations and attention targets remain authored task intent. Do not describe this batch as muscle-driven prediction or production-ready gameplay.
 
