@@ -1,3 +1,21 @@
+# C62 interactive encounter — REVIEW PENDING
+
+The first AA-readiness prototype combines both admitted animals in one live Unity
+scene: start/walk/run/brake/retreat, interrupted side impact, roll/get-up, and
+threat-directed attention. A shared runtime consumer adopts the current pose and
+velocity, owns root motion once, and applies bounded skin-contact accommodation.
+Native-time two-minute review video and separate M4 performance evidence are saved
+in the principal game repository. Existing source clips and accepted main remain
+unchanged. This is a prototype checkpoint, not completion of the AA-readiness plan.
+
+[Controls, reproduction, acceptance gaps and next work](handoffs/C62_INTERACTIVE_ENCOUNTER.md).
+Observed body overlap, repetitive retreat, contact slip, deep-pose support forces,
+general collision/terrain handling, broader
+interruptions and a stable production frame budget remain open. No new full Moco
+solve was run or converged. Pause for user review.
+
+## Previous C61 foundation checkpoint
+
 # C61 floor-contact recovery — REVIEW PENDING
 
 C60 floor motions were rejected for floating and unsupported rising. C61 now has
@@ -12,7 +30,7 @@ review. Accepted locomotion and main branches are preserved.
 
 # Factory movement roadmap and acceptance tracker
 
-Current checkpoint: **C61 — focused ground-recovery revision; REVIEW PENDING**.
+Previous checkpoint: **C61 — focused ground-recovery revision; REVIEW PENDING**.
 
 The C60 library below is historical candidate breadth; its floor motions were rejected.
 
