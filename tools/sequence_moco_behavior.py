@@ -88,15 +88,16 @@ def main():
         ground_support=GroundSupport(p,spec,bounds,rest,standing)
     if spec.get('support_transfer'):
         if standing is None:raise ValueError('Support transfer requires admitted standing anatomy')
-        crouch=recovery_reference(rest,standing,spec['support_transfer']['plant_pose_time_s'],spec['support_transfer'],ix,bounds)
-        crouch[ix['roll']]=standing[ix['roll']];crouch[ix['pitch']]=standing[ix['pitch']]
-        p.set_state(0,crouch,zeros)
+        # Plant targets come from the admitted stable stance, not from the
+        # foot location of a deeply folded/rotated leg. That location can cross
+        # the midline and become unreachable when the body rises.
+        width=spec['support_transfer'].get('plant_width_scale',1.)
+        if not 1. <= width <= 1.5:raise ValueError('Recovery stance width outside authored envelope')
+        center=.5*(feet0['l'][0]+feet0['r'][0])
         for side in ('l','r'):
-            toe=p.model.getBodySet().get('toe_'+side);position=toe.getPositionInGround(p.state).to_numpy().copy()
-            # Horizontal stance is chosen once from folded anatomy and remains
-            # a world anchor through the leg-driven rise.
-            p.set_state(0,standing,zeros);height=p.model.getBodySet().get('toe_'+side).getPositionInGround(p.state).get(1)
-            position[1]=height;feet0[side]=(position,feet0[side][1],feet0[side][2]);p.set_state(0,crouch,zeros)
+            position,orientation,digit=feet0[side]
+            position=position.copy();position[2]=center[2]+width*(position[2]-center[2])
+            feet0[side]=(position,orientation,digit)
     foot_paths={}
     retimers={s:SupportRetime(ref.times,ref.loads[s](ref.times)>.08,fraction) for s,fraction in spec.get('support_retime',{}).items()} if ref else {}
     if ref and spec.get('follow_root_placements'):
