@@ -260,21 +260,19 @@ def make_model(admission, recipe):
         for body_name in support['bodies']:
             segment = metadata['segments'][body_name]
             body = model.updBodySet().get(body_name)
-            center = list(segment['com_local_m'])
-            radius = segment['radius_m']
-            sphere = o.ContactSphere(radius, vec(center), body)
-            sphere.setName('body_sphere_'+body_name);model.addContactGeometry(sphere)
-            force = o.SmoothSphereHalfSpaceForce();force.setName('body_contact_'+body_name)
-            force.connectSocket_sphere(sphere);force.connectSocket_half_space(ground)
-            for key in ('static_friction','dynamic_friction','viscous_friction'):
-                getattr(force,'set_'+key)(contact[key])
-            force.set_stiffness(contact['stiffness_N_m2'])
-            force.set_dissipation(contact['dissipation_s_m'])
-            force.set_transition_velocity(contact['transition_velocity_mps'])
-            force.set_constant_contact_force(1e-5);model.addForce(force)
-            metadata['contacts'].append(dict(force=force.getName(),body=body_name,
-                center_local_m=center,radius_m=radius,support_kind='body_proxy'))
-        metadata['body_support_contacts']=dict(classification='Segment-radius engineering contact proxies; skin contact requires review',**support)
+            measured=admission.get('body_surface_sites',{}).get(body_name)
+            sites=measured or [dict(center_local_m=segment['com_local_m'],radius_m=segment['radius_m'])]
+            for j,site in enumerate(sites):
+                center=site['center_local_m'];radius=site['radius_m'];key=body_name+'_'+str(j) if measured else body_name
+                sphere=o.ContactSphere(radius,vec(center),body);sphere.setName('body_sphere_'+key);model.addContactGeometry(sphere)
+                force=o.SmoothSphereHalfSpaceForce();force.setName('body_contact_'+key)
+                force.connectSocket_sphere(sphere);force.connectSocket_half_space(ground)
+                for name in ('static_friction','dynamic_friction','viscous_friction'):getattr(force,'set_'+name)(contact[name])
+                force.set_stiffness(contact['stiffness_N_m2']);force.set_dissipation(contact['dissipation_s_m'])
+                force.set_transition_velocity(contact['transition_velocity_mps']);force.set_constant_contact_force(1e-5);model.addForce(force)
+                metadata['contacts'].append(dict(force=force.getName(),body=body_name,center_local_m=center,radius_m=radius,
+                    support_kind='admitted_body_surface' if measured else 'body_proxy'))
+        metadata['body_support_contacts']=dict(classification=('Admitted source-skin witnesses with rigid segment ownership; not tissue mechanics' if admission.get('body_surface_sites') else 'Segment-radius engineering contact proxies; skin contact requires review'),**support)
     if calibrated:
         metadata['foot_geometry']=foot
         if recipe.get('material_foot_clearance'):

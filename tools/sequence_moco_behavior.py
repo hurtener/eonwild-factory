@@ -27,7 +27,12 @@ def main():
     src=json.loads(a.source.read_text());meta=src['metadata'];spec=json.loads(a.plan.read_text())
     recipe=copy.deepcopy(meta['recipe']);recipe['coordination'].get('path_task',{}).pop('temporal_contact_seed',None)
     if spec.get('body_support_contacts'):recipe['body_support_contacts']=spec['body_support_contacts']
-    p=Coordination(meta['admission'],recipe,json.loads(a.baseline.read_text()),a.output)
+    admission=copy.deepcopy(meta['admission'])
+    if spec.get('body_surface_file'):
+        surface=json.loads(Path(spec['body_surface_file']).read_text())
+        if surface['source_geometry_sha256']!=admission['source_geometry_sha256']:raise ValueError('Body surface anatomy mismatch')
+        admission['body_surface_sites']=surface['sites']
+    p=Coordination(admission,recipe,json.loads(a.baseline.read_text()),a.output)
     ix=p.index;nq=len(p.names);zeros=np.zeros(nq);duration=spec['duration_s']
     bounds={n:tuple(v['bounds_rad']) for n,v in p.metadata['coordinates'].items()}
     intent=BehaviorIntent(spec,p.names,p.L,bounds)
@@ -77,6 +82,21 @@ def main():
             u=np.clip((t-begin)/D,0,1)
             t=min(t,end)-D*(u**6-3*u**5+2.5*u**4)
         return t*clock_rate+spec.get('source_start_s',0)
+    ground_support=None
+    if spec.get('anchored_body_support'):
+        from eonwild_motion.solve.moco_ground_support import GroundSupport,recovery_reference
+        ground_support=GroundSupport(p,spec,bounds,rest,standing)
+    if spec.get('support_transfer'):
+        if standing is None:raise ValueError('Support transfer requires admitted standing anatomy')
+        crouch=recovery_reference(rest,standing,spec['support_transfer']['plant_pose_time_s'],spec['support_transfer'],ix,bounds)
+        crouch[ix['roll']]=standing[ix['roll']];crouch[ix['pitch']]=standing[ix['pitch']]
+        p.set_state(0,crouch,zeros)
+        for side in ('l','r'):
+            toe=p.model.getBodySet().get('toe_'+side);position=toe.getPositionInGround(p.state).to_numpy().copy()
+            # Horizontal stance is chosen once from folded anatomy and remains
+            # a world anchor through the leg-driven rise.
+            p.set_state(0,standing,zeros);height=p.model.getBodySet().get('toe_'+side).getPositionInGround(p.state).get(1)
+            position[1]=height;feet0[side]=(position,feet0[side][1],feet0[side][2]);p.set_state(0,crouch,zeros)
     foot_paths={}
     retimers={s:SupportRetime(ref.times,ref.loads[s](ref.times)>.08,fraction) for s,fraction in spec.get('support_retime',{}).items()} if ref else {}
     if ref and spec.get('follow_root_placements'):
@@ -90,6 +110,8 @@ def main():
             for start,end in zip(starts,ends):
                 middle=(times[start]+times[end])/2
                 delta=np.array([p.L*keyed(middle,spec.get('root_offsets_leg_lengths',{}).get(n,[[0,0],[duration,0]])) for n in ('forward','lateral')])
+                placement=spec.get('foot_placement_offsets_leg_lengths',{}).get(s,{})
+                delta+=p.L*np.array([keyed(middle,placement.get(n,[[0,0],[duration,0]])) for n in ('forward','lateral')])
                 keys.extend([(times[start],delta),(times[end],delta)])
             foot_paths[s]=keys
     def path_offset(t,s):
@@ -105,7 +127,8 @@ def main():
     for k,t in enumerate(times):
         st=source_time(t)
         reference=ref.raw(st).copy() if ref else rest.copy()
-        if standing is not None:reference=rest+keyed(t,spec['stand_adoption_keys'])*(standing-rest)
+        if standing is not None:
+            reference=recovery_reference(rest,standing,t,spec['support_transfer'],ix,bounds) if spec.get('support_transfer') else rest+keyed(t,spec['stand_adoption_keys'])*(standing-rest)
         goals={s:ref.foot(retimers[s](st) if s in retimers else st,s) if ref else feet0[s] for s in ('l','r')}
         for s,retimer in retimers.items():
             limb=[ix[n] for n in legnames if n.endswith('_'+s) or n.startswith('hip_'+s+'_')]
@@ -169,9 +192,13 @@ def main():
                 r.extend(.65*(x-prediction))
             return np.array(r)
         seed=target_pose if k==0 else previous[ids]+reference[ids]-(ref.raw(source_time(times[k-1]))[ids] if ref else rest[ids])
-        fit=least_squares(residual,np.clip(seed,limits[0]+1e-8,limits[1]-1e-8),bounds=limits,max_nfev=45,ftol=1e-8,xtol=1e-8,gtol=1e-8)
-        q[ids]=fit.x;rr=residual(fit.x);errors.append(max(np.linalg.norm(rr[:3]),np.linalg.norm(rr[7:10]))*p.L/30)
-        if spec.get('body_support_gain') and not (k==0 and spec.get('adopt_final_state')):
+        if ground_support is None:
+            fit=least_squares(residual,np.clip(seed,limits[0]+1e-8,limits[1]-1e-8),bounds=limits,max_nfev=45,ftol=1e-8,xtol=1e-8,gtol=1e-8)
+            q[ids]=fit.x;rr=residual(fit.x);errors.append(max(np.linalg.norm(rr[:3]),np.linalg.norm(rr[7:10]))*p.L/30)
+        if ground_support is not None:
+            q=ground_support.solve(q,t,goals,previous,poses[-2] if len(poses)>1 else None)
+            errors.append(max(ground_support.receipts[-1]['loaded_foot_error_m'].values()))
+        if ground_support is None and spec.get('body_support_gain') and not (k==0 and spec.get('adopt_final_state')):
             gain=keyed(t,spec['body_support_gain'])
             if gain>0:
                 # Additive projection becomes exact at full broad-body
@@ -187,7 +214,7 @@ def main():
                     # The trunk must settle onto broad support. Tail/limbs
                     # accommodate the floor instead of lifting the whole
                     # fallen animal on a distal tail point.
-                    free_names=legnames+['neck','neck_yaw','neck_upper','neck_upper_yaw','head','head_yaw']+[name for part in p.metadata['tail_chain'] for name in (part['body'],part['body']+'_yaw')]+['height']
+                    free_names=legnames+['neck','neck_yaw','neck_upper','neck_upper_yaw','head','head_yaw']+[name for part in p.metadata['tail_chain'] for name in (part['body'],part['body']+'_yaw')]+([] if spec.get('anchored_body_support') else ['height'])
                     free_ids=[ix[n] for n in free_names];target=q[free_ids].copy()
                     lim=np.array([bounds[n] if n!='height' else (q[ix['height']]-.05*p.L,q[ix['height']]+.35*p.L) for n in free_names]).T
                     p.set_state(t,q,zeros)
@@ -205,7 +232,7 @@ def main():
                 except ValueError:support_failures.append(dict(time_s=float(t),low_N=float(load(-.035)),high_N=float(load(.035))))
         poses.append(q.copy());tasks.append(goals);previous=q
     poses=np.array(poses)
-    if spec.get('body_support_gain'):
+    if spec.get('body_support_gain') and ground_support is None:
         gain=np.array([keyed(t,spec['body_support_gain']) for t in times])
         # Physical-time smoothing of the coupled clearance initializer; all
         # forces/contact are evaluated AFTER this operation in final replay.
@@ -233,6 +260,7 @@ def main():
         if not fit.success or np.min(B@fit.x-required)<-1e-6:raise ValueError('Global body-support clearance did not solve: '+fit.message)
         poses[:,ix['height']]=B@fit.x
         (a.output/'root-clearance-receipt.json').write_text(json.dumps(dict(method='Global C2 geometric support envelope, not force convergence',success=bool(fit.success),iterations=int(fit.nit),maximum_extra_clearance_m=float(max(B@fit.x-required)),minimum_margin_m=float(min(B@fit.x-required))),indent=2)+'\n')
+    if ground_support is not None:(a.output/'ground-support-receipt.json').write_text(json.dumps(ground_support.receipts,indent=2)+'\n')
     trajectory=BoundedJointSpline(times,poses,{ix[n]:v for n,v in bounds.items()},bc_type='not-a-knot' if ref else ((1,zeros),(1,zeros)))
     p.path_task=None;p.speed=0.;p.times_dense=times;p.metadata.pop('path_cycle',None)
     finite_receipt=None

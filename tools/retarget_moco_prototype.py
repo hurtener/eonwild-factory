@@ -238,6 +238,24 @@ def main():
     tracks, _ = read_animation_tracks(emitted, 'moco-prototype', require_common_timeline=True)
     reopened = SkinRig(emitted, c.roles, c.forward, c.up, captured['contact'])
     measurements = []
+    body_masks={}
+    if data['metadata'].get('body_support_contacts'):
+        owners={roles['root']:'trunk'}
+        owners.update({roles[b['role']]:b['body'] for b in data['metadata']['axial_bindings']})
+        for side,suffix in [('left','l'),('right','r')]:
+            for j,name in enumerate(('thigh','shin','metatarsus','toe')):
+                owners[roles[f'{side}Leg.{j}']]=name+'_'+suffix
+        for role in ('leftShoulder','rightShoulder','jaw_lower'):
+            if role in roles:owners[roles[role]]=None
+        node_owner={}
+        for node in np.unique(reopened.node_ids):
+            ancestor=int(node)
+            while ancestor is not None and ancestor not in owners:ancestor=emitted.parents[ancestor]
+            node_owner[int(node)]=owners.get(ancestor)
+        groups=np.vectorize(node_owner.get)(reopened.node_ids)
+        for body in ('trunk','chest','thigh_l','thigh_r','head'):
+            weights=np.where(groups==body,reopened.weights,0).sum(axis=1)
+            body_masks[body]=np.flatnonzero(weights>.45)
     joint_angles={}
     for t, frame_targets in zip(times, targets):
         ts, rs = list(c.base_t), list(c.base_r)
@@ -259,7 +277,12 @@ def main():
                 for name,i in [('knee',0),('ankle',1)]:
                     relative=recovered[i].T@recovered[i+1]
                     joint_angles.setdefault(name+'_'+suffix,[]).append(float(np.arctan2(relative[1,0],relative[0,0])))
-        measurements.append(dict(time_s=t,
+        body_floor={}
+        if body_masks:
+            vertices=reopened.skin(w,np.arange(len(reopened.weights)))
+            heights=vertices@c.up-skin.ground
+            body_floor={name:float(heights[ids].min()) for name,ids in body_masks.items() if len(ids)}
+        measurements.append(dict(time_s=t,body_skin_floor_min_m=body_floor,
             joint_error_m={role: float(np.linalg.norm(w[roles[role], :3, 3] - p)) for role, p in frame_targets.items()},
             skin_floor_min_m={s: float((reopened.skin(w, ids) @ c.up).min() - skin.ground) for s, ids in reopened.foot_masks.items()},
             landmarks=landmarks))
