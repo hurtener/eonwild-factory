@@ -1,6 +1,20 @@
+# C61 floor-contact recovery — REVIEW PENDING
+
+C60 floor motions were rejected for floating and unsupported rising. C61 now has
+eight native-time candidates: running fall, get-up, rest/sleep/rise and standing
+impact for both animals. Shared body-support coordination and staged leg placement
+replace the floating recovery. Deep-pose skin penetration and force/effort errors
+remain; this is not physical acceptance or user approval.
+Walking/sprint falls, death and moving-hit propagation remain pending this foundation
+review. Accepted locomotion and main branches are preserved.
+
+[Media, exact provenance and remaining defects](handoffs/MOCO_C61_GROUNDED_RECOVERY.md).
+
 # Factory movement roadmap and acceptance tracker
 
-Current checkpoint: **C60 — 29-family living library; REVIEW PENDING**.
+Current checkpoint: **C61 — focused ground-recovery revision; REVIEW PENDING**.
+
+The C60 library below is historical candidate breadth; its floor motions were rejected.
 
 Both Tarbosaurus and Allosaurus have saved native-time candidates in all 29
 normalized movement families: 58 takes, side and quarter views, 29 comparison
@@ -31,19 +45,19 @@ bite authority, continuous physical acceptance and production parity remain work
 | 06 | pivot | C59B preserved, both animals | 01:12 | Visual decision pending; force/contact not certified |
 | 07 | retreat | C59B preserved, both animals | 01:24 | Visual decision pending; force/contact not certified |
 | 08 | lateral | C59B preserved, both animals | 01:36 | Visual decision pending; force/contact not certified |
-| 09 | standing-hit | C60 candidate, both animals | 01:48 | Visual decision pending; force/contact not certified |
+| 09 | standing-hit | C61 replacement candidate, both animals | 01:48 | Visual decision pending; force/contact not certified |
 | 10 | walking-hit | C60 candidate, both animals | 02:00 | Visual decision pending; force/contact not certified |
 | 11 | running-hit | C60 candidate, both animals | 02:12 | Visual decision pending; force/contact not certified |
 | 12 | sprint-hit | C60 candidate, both animals | 02:24 | Allo foot penetration up to 4.6 cm; force/contact not accepted |
 | 13 | walking-fall | C60 candidate, both animals | 02:36 | Ground/body support approximate |
-| 14 | running-fall | C60 candidate, both animals | 02:48 | Impact and body support approximate |
+| 14 | running-fall | C61 replacement candidate, both animals | 02:48 | Impact and body support approximate |
 | 15 | sprint-fall | C60 candidate, both animals | 03:00 | Impact and body support approximate |
-| 16 | get-up | C60 candidate, both animals | 03:12 | Middle ascent needs more muscular support |
+| 16 | get-up | C61 replacement candidate, both animals | 03:12 | Middle ascent needs more muscular support |
 | 17 | run | C60 candidate, both animals | 03:24 | Visual decision pending; force/contact not certified |
 | 18 | sprint | C60 candidate, both animals | 03:36 | Visual decision pending; force/contact not certified |
 | 19 | feed | C60 candidate, both animals | 03:48 | Visual decision pending; force/contact not certified |
 | 20 | drink | C60 candidate, both animals | 04:00 | Visual decision pending; force/contact not certified |
-| 21 | rest-sleep-rise | C60 candidate, both animals | 04:12 | Side-lying contact and rise need refinement |
+| 21 | rest-sleep-rise | C61 replacement candidate, both animals | 04:12 | Side-lying contact and rise need refinement |
 | 22 | attack-defense | C60 candidate, both animals | 04:30 | Visual decision pending; force/contact not certified |
 | 23 | limp | C60 candidate, both animals | 04:42 | Visual decision pending; force/contact not certified |
 | 24 | death | C60 candidate, both animals | 04:54 | Ground support approximate; living motion fades |
