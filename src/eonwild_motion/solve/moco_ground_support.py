@@ -89,7 +89,7 @@ class GroundSupport:
             r.extend(scale*(values-target[self.ids]))
             r.extend(.25*(values-prediction[self.ids]))
             return np.asarray(r)
-        seed=previous[self.ids]+target[self.ids]-self.previous_target[self.ids]
+        seed=target[self.ids]
         fit=least_squares(residual,np.clip(seed,self.limits[0]+1e-7,self.limits[1]-1e-7),bounds=self.limits,tr_solver="lsmr",max_nfev=55,ftol=1e-7,xtol=1e-7,gtol=1e-7)
         q[self.ids]=fit.x;residual(fit.x);h,bh=self.heights()
         errors={s:float(gains[s]*np.linalg.norm(p.model.getBodySet().get('toe_'+s).getPositionInGround(p.state).to_numpy()-goals[s][0])) for s in ('l','r')}
