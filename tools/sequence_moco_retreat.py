@@ -19,12 +19,24 @@ a=ap.parse_args();a.output.mkdir(parents=True,exist_ok=False)
 source=json.loads(a.source.read_text());meta=source['metadata'];first=source['frames'][0]
 spec=json.loads(a.plan.read_text());recipe=copy.deepcopy(meta['recipe'])
 recipe['calibrated_task']['surface_edge_pads']=spec.get('surface_edge_pads',False)
+# Finite state adoption does not need to regenerate a periodic contact seed.
+if spec.get('family'):
+ recipe['coordination'].get('path_task',{}).pop('temporal_contact_seed',None)
 p=Coordination(meta['admission'],recipe,json.loads(a.baseline.read_text()),a.output)
 ix=p.index;initial=np.array([first['coordinates'][n]['value'] for n in p.names]);zeros=np.zeros(len(initial))
 if max(abs(first['coordinates'][n]['speed']) for n in p.names)>1e-6:raise ValueError('First retreat checkpoint requires grounded rest adoption')
 p.set_state(0,initial,zeros);com=p.model.calcMassCenterPosition(p.state).to_numpy().copy()
 feet={side:dict(origin=first['bodies']['toe_'+side]['origin'],rotation=first['bodies']['toe_'+side]['rotation'],digit=first['coordinates']['digit_'+side]['value']) for side in ('l','r')}
-spec=json.loads(a.plan.read_text());plan=RetreatPlan(spec,feet,p.metadata['foot_geometry'],p.admission['step_length_m'],p.L)
+plan_type=RetreatPlan
+if spec.get('family'):
+ from eonwild_motion.solve.moco_placement_task import PlacementPlan
+ plan_type=PlacementPlan
+plan=plan_type(spec,feet,p.metadata['foot_geometry'],p.admission['step_length_m'],p.L)
+attention=None;attention_rows=[]
+if spec.get('attention_profile'):
+ from eonwild_motion.solve.moco_attention import ProfileAttention
+ attention=ProfileAttention(json.loads(Path(spec['attention_profile']).read_text()),p.metadata,'scan')
+ attention_indices=[ix[n] for n in attention.names]
 geometry=p.metadata['foot_geometry'];centers=[];weights=[]
 for site in geometry['sites']:
  center=np.array(site['center_local_m']);center[1]-=site['radius_m']
@@ -46,6 +58,19 @@ def pad_height(position,rotation,digit,side):
 for time in times:
  world=initial.copy();target_com=balance(time)
  world[ix['forward']]+=target_com[0]-com[0];world[ix['lateral']]+=target_com[1]-com[2]
+ if spec.get('family'):
+  world[ix['yaw']]+=plan.heading(time)
+  if attention:
+   p.set_state(time,world,zeros)
+   def heading(values):
+    for i,v in zip(attention_indices,values):p.coordinates[i].setValue(p.state,float(v),False)
+    p.model.realizePosition(p.state);angles=[]
+    for body in ('head','trunk'):
+     R=p.model.getBodySet().get(body).getTransformInGround(p.state).R()
+     angles.append(np.arctan2(-R.get(2,0),R.get(0,0)))
+    return float(np.degrees(np.arctan2(np.sin(angles[0]-angles[1]),np.cos(angles[0]-angles[1]))))
+   values,receipt=attention.solve(plan.attention_degrees(time),heading)
+   world[attention_indices]=values;attention_rows.append(dict(time_s=float(time),**receipt))
  # Small relaxed tail reaction to the horizontal mass-transfer velocity.
  # Distributed across admitted lengths; explicit secondary task, not muscles.
  for part in ([] if spec.get('finite_coordination') else p.metadata.get('tail_chain',[])):
@@ -154,9 +179,9 @@ if spec.get('finite_coordination'):
 
 p.times_dense=times;p.path_task=None;p.speed=0.
 p.metadata.pop('path_cycle',None)
-sequence=dict(duration_s=duration,travel_direction='backward',start_s=spec['prepare_s'],stop_s=plan.end+spec['adoption_seconds'],
- distance_m=float(-plan.final_translation[0]),signed_forward_displacement_m=float(plan.final_translation[0]),steps=4,periodic=False,
- method='Backward-specific support task; LIPM horizontal balance prior; exact articulated IK and inverse dynamics, not converged Moco',
+sequence=dict(duration_s=duration,travel_direction=spec.get('family','backward'),start_s=spec['prepare_s'],stop_s=plan.end+spec['adoption_seconds'],
+ distance_m=float(-plan.final_translation[0]),signed_forward_displacement_m=float(plan.final_translation[0]),steps=len(plan.events),periodic=False,
+ method='Finite support task; LIPM horizontal balance prior; exact articulated IK and inverse dynamics, not converged Moco',
  input_state=str(a.source),input_state_sha256=hashlib.sha256(a.source.read_bytes()).hexdigest(),plan=spec,
  contact_events=[dict(side=e['side'],lift_s=e['lift'],land_s=e['land'],translation_m=e['translation'].tolist()) for e in plan.events],
  max_foot_task_error_m=max(errors),max_horizontal_com_error_m=max(com_errors),contact_depth_range_m=[float(min(offsets)),float(max(offsets))],
@@ -166,6 +191,8 @@ if finite_result is not None:
  for key in ('max_foot_task_error_m','max_horizontal_com_error_m','contact_depth_range_m'):
   sequence['seed_'+key]=sequence.pop(key)
  sequence['finite_coordination']=finite_receipt
+if attention_rows:
+ (a.output/'attention-receipt.json').write_text(json.dumps(attention_rows,indent=2)+'\n')
 p.metadata['sequence']=sequence;p.model.printToXML(str(a.output/'model.osim'))
 p.metadata.update(schema='eonwild.motion.moco-model-receipt.v1',admission=p.admission,recipe=p.recipe,
  model_sha256=hashlib.sha256((a.output/'model.osim').read_bytes()).hexdigest(),status='AUTHORED_TRANSITION_MODEL',

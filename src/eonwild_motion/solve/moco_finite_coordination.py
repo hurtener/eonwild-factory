@@ -148,7 +148,16 @@ class FiniteCoordination:
             weights.append(weight)
         parts.append((q-self.reference)*weights)
         for i,(lo,hi) in self.joint_bounds.items():
-            parts.append(policy.get('range_weight',200.)*(np.minimum(q[:,i]-lo,0)+np.maximum(q[:,i]-hi,0))[:,None])
+            value=q[:,i]
+            # Travel-frame root search envelopes are not anatomical limits.
+            # A turning/sideways task moves that frame; keep the same numerical
+            # envelope around its seed, while all joints retain absolute ROM.
+            name=p.names[i]
+            if name in self.settings.get('root_envelopes_relative_to_seed',[]):
+                if name not in ('forward','lateral','yaw'):
+                    raise ValueError('Only horizontal world-root coordinates admit a moving task frame')
+                value=value-self.reference[:,i]
+            parts.append(policy.get('range_weight',200.)*(np.minimum(value-lo,0)+np.maximum(value-hi,0))[:,None])
         for n,s in policy.get('body_envelope',{}).items():
             i=p.index[n];center=self.reference[:,i] if s.get('center') is None else s['center']
             parts.append((s['weight']*np.maximum(abs(q[:,i]-center)-s['half_range'],0))[:,None])

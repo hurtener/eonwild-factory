@@ -1,6 +1,36 @@
 # Factory movement roadmap and acceptance tracker
 
-Current checkpoint: **C58C — Allosaurus unloaded forefoot relaxation; REVIEW PENDING**.
+Current checkpoint: **C59 — four movement families × two animals; BATCH REVIEW PENDING**.
+Eight 12-second native-time takes (96-second dual-view reel): stepping pivot,
+lateral balance steps, backward retreat and alert/look-around. Shared finite
+OpenSim coordination, semantic animal data, actual-rig exports and 4608 inspected
+rendered frames. Full Moco convergence is false; physical acceptance remains
+NOT CERTIFIED. Tarbo pivot has high effort and a fast ankle adjustment.
+[Scope, videos, limits and reproduction](handoffs/MOCO_C59_BATCH.md).
+
+### Current Moco movement inventory
+
+| Movement family | Tarbo | Allo | Next decision |
+| --- | --- | --- | --- |
+| Straight walk / start / stop | C52B H visually approved | C58B positive; C58C distal relaxation pending | Review C58C separately; no approval inferred from batch request |
+| Sustained running | C51 A visually approved | C58B candidate, not approved | Allo coordination polish; retain Tarbo baseline |
+| Walking turns | C53 A approved; C54 B positive | No approved transfer | Broader transfer after batch feedback |
+| Stepping pivot in place | C59 candidate | C59 candidate | Review both; Tarbo effort/ankle warning |
+| Backward retreat | C56 visually approved; C59 faster variation | C59 first batch candidate | Review placement/contact/body response |
+| Lateral balance steps | C59 candidate | C59 candidate | Review outside-first transfer and step size |
+| Planted alert / look-around | C59 candidate | C59 candidate | Review attention and body engagement |
+| Mixed walk/turn/backward/run joins | C57C diagnostic; polish deferred | Not delivered | Dynamic-state transitions and contact ownership |
+| Sprint / faster airborne gait | Missing on current Moco path | Missing on current Moco path | Separate support/flight intent |
+| Side hit / stumble / recover | Older non-Moco baselines exist; Moco transfer missing | Same | Preserve old approvals; do not relabel as Moco |
+| Knockdown / ground impact / get up | Missing | Missing | New contact choreography |
+| Feed / drink / rest / lie / attack | Moco versions missing | Moco versions missing | Separate task families and gameplay ownership |
+| Terrain / slopes / uneven support | Missing | Missing | Defer until flat-ground families reviewed |
+
+Visual approval, physical acceptance, Unity playback and gameplay integration
+remain separate. C59 does not replace accepted main or certify convergence.
+
+
+Previous checkpoint: **C58C — Allosaurus unloaded forefoot relaxation; REVIEW PENDING**.
 C58B walk received positive feedback except for missing distal relaxation.
 Shared gravity/inertia response adds 9.5–10 degrees of unloaded forefoot hang,
 then smoothly prepares contact. Other sampled coordinates and loaded poses
@@ -211,7 +241,7 @@ Checkpoint 26 is the approved walking side-hit recovery baseline; standing impac
 | Jaw relaxation / breathing-like cycle | Full-transition pass approved | Full-transition pass approved | Full-body breathing and behavior-specific mouth control |
 | Expressive idle / listening / alert scanning | No complete approved family | No complete approved family | Compose meaningful attention, posture and breathing behaviors from existing layers |
 | Running / sprinting | C42 A foot-approach candidate, pending review; sprint missing | C42 A pending review; C39 preferred reference; historical Run010 / Sprint006 preserved | Review forward reach and recovery; remaining post-release extension, ankle polish, entry/braking and sprinting |
-| Offline Moco mechanics | Not attempted; transfer follows Tarbo review | C51 A visually approved; C52 B H straight walking visually approved; turning held | Review the sixteen-second rest/start/1.6 m/s/stop take. Preserve C51. Inverse-dynamics initialization is distinct from full Moco convergence and independent stability. Resume turning and broader transfer only after walking review. |
+| Offline Moco mechanics | C58B walk positive; C58C relaxation and C59 batch pending; run unapproved | C51 run, C52B H walk and C56 retreat visually approved; C59 batch pending | Use current Moco inventory above and C59 handoff. Finite inverse dynamics is distinct from full Moco convergence and independent stability. |
 | Feeding / gripping / pulling | Current approved transfer missing | Historical Feeding003 reference preserved | Current grounded support, oral contact and interaction handoff |
 | Drinking / swallowing | Missing | Missing | New choreography and world interaction |
 | Rest / sit / lie down / rise / sleep | Missing | Missing | New support transitions and resting behavior |

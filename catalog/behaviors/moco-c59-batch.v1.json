@@ -1,0 +1,234 @@
+{
+  "schema": "eonwild.motion.batch-review.v1",
+  "classification": "Eight diagnostic finite OpenSim coordination candidates. Not full Moco convergence; approval pending.",
+  "families": {
+    "pivot": {
+      "schema": "eonwild.motion.finite-placement-intent.v1",
+      "classification": "Authored placement and attention task, shared OpenSim finite inverse-dynamics refinement; not full Moco convergence.",
+      "source": "catalog/behaviors/reverse-walking-review.v2.json provides the 0.32 normal-step prior; slower first Moco diagnostic timing is explicit below",
+      "duration_s": 12.0,
+      "steps": 4,
+      "prepare_s": 1.2,
+      "adoption_seconds": 0.5,
+      "first_swing_s": 2.0,
+      "step_interval_s": 1.05,
+      "swing_seconds": 0.7,
+      "settle_seconds": 0.55,
+      "step_scale_of_normal": 0.32,
+      "clearance_leg_lengths": 0.045,
+      "release_seconds": 0.25,
+      "release_pitch_rad": 0.055,
+      "recovery_pitch_rad": 0.015,
+      "recovery_digit_rad": -0.12,
+      "surface_edge_pads": true,
+      "planted_whole_body": true,
+      "release_contact": "distal",
+      "finite_coordination": {
+        "start_s": 1.2,
+        "end_s": 10.5,
+        "intervals": 12,
+        "samples": 81,
+        "max_evaluations": 6,
+        "coefficient_limit": 1.2,
+        "foot_position_weight": 2500.0,
+        "foot_orientation_weight": 300.0,
+        "digit_weight": 5.0,
+        "acceleration_weight": 0.15,
+        "root_envelopes_relative_to_seed": [
+          "forward",
+          "lateral",
+          "yaw"
+        ]
+      },
+      "family": "pivot",
+      "heading_degrees": 60.0,
+      "stance_width_scale": 1.1,
+      "attention_lookahead_s": 2.3
+    },
+    "lateral": {
+      "schema": "eonwild.motion.finite-placement-intent.v1",
+      "classification": "Authored placement and attention task, shared OpenSim finite inverse-dynamics refinement; not full Moco convergence.",
+      "source": "catalog/behaviors/reverse-walking-review.v2.json provides the 0.32 normal-step prior; slower first Moco diagnostic timing is explicit below",
+      "duration_s": 12.0,
+      "steps": 4,
+      "prepare_s": 1.2,
+      "adoption_seconds": 0.5,
+      "first_swing_s": 2.0,
+      "step_interval_s": 1.05,
+      "swing_seconds": 0.7,
+      "settle_seconds": 0.55,
+      "step_scale_of_normal": 0.32,
+      "clearance_leg_lengths": 0.045,
+      "release_seconds": 0.25,
+      "release_pitch_rad": 0.06,
+      "recovery_pitch_rad": 0.02,
+      "recovery_digit_rad": -0.12,
+      "surface_edge_pads": true,
+      "planted_whole_body": true,
+      "release_contact": "distal",
+      "finite_coordination": {
+        "start_s": 1.2,
+        "end_s": 10.5,
+        "intervals": 12,
+        "samples": 81,
+        "max_evaluations": 6,
+        "coefficient_limit": 1.2,
+        "foot_position_weight": 2500.0,
+        "foot_orientation_weight": 300.0,
+        "digit_weight": 5.0,
+        "acceleration_weight": 0.15,
+        "root_envelopes_relative_to_seed": [
+          "forward",
+          "lateral",
+          "yaw"
+        ]
+      },
+      "family": "lateral",
+      "lateral_distance_leg_lengths": 0.12,
+      "attention_keys": [
+        [
+          0,
+          0
+        ],
+        [
+          1.2,
+          0
+        ],
+        [
+          2.4,
+          -28
+        ],
+        [
+          6,
+          -28
+        ],
+        [
+          8,
+          0
+        ],
+        [
+          10,
+          0
+        ]
+      ]
+    },
+    "retreat": {
+      "schema": "eonwild.motion.finite-placement-intent.v1",
+      "classification": "Authored placement and attention task, shared OpenSim finite inverse-dynamics refinement; not full Moco convergence.",
+      "source": "catalog/behaviors/reverse-walking-review.v2.json provides the 0.32 normal-step prior; slower first Moco diagnostic timing is explicit below",
+      "duration_s": 12.0,
+      "steps": 4,
+      "prepare_s": 1.2,
+      "adoption_seconds": 0.5,
+      "first_swing_s": 2.0,
+      "step_interval_s": 0.95,
+      "swing_seconds": 0.63,
+      "settle_seconds": 0.55,
+      "step_scale_of_normal": 0.32,
+      "clearance_leg_lengths": 0.045,
+      "release_seconds": 0.25,
+      "release_pitch_rad": 0.1,
+      "recovery_pitch_rad": 0.04,
+      "recovery_digit_rad": -0.12,
+      "surface_edge_pads": true,
+      "planted_whole_body": true,
+      "release_contact": "distal",
+      "finite_coordination": {
+        "start_s": 1.2,
+        "end_s": 10.5,
+        "intervals": 12,
+        "samples": 81,
+        "max_evaluations": 6,
+        "coefficient_limit": 1.2,
+        "foot_position_weight": 2500.0,
+        "foot_orientation_weight": 300.0,
+        "digit_weight": 5.0,
+        "acceleration_weight": 0.15,
+        "root_envelopes_relative_to_seed": [
+          "forward",
+          "lateral",
+          "yaw"
+        ]
+      },
+      "family": "retreat"
+    },
+    "alert": {
+      "schema": "eonwild.motion.finite-placement-intent.v1",
+      "classification": "Authored placement and attention task, shared OpenSim finite inverse-dynamics refinement; not full Moco convergence.",
+      "source": "catalog/behaviors/reverse-walking-review.v2.json provides the 0.32 normal-step prior; slower first Moco diagnostic timing is explicit below",
+      "duration_s": 12.0,
+      "steps": 4,
+      "prepare_s": 1.2,
+      "adoption_seconds": 0.5,
+      "first_swing_s": 2.0,
+      "step_interval_s": 1.05,
+      "swing_seconds": 0.7,
+      "settle_seconds": 0.55,
+      "step_scale_of_normal": 0.32,
+      "clearance_leg_lengths": 0.045,
+      "release_seconds": 0.25,
+      "release_pitch_rad": 0.1,
+      "recovery_pitch_rad": 0.04,
+      "recovery_digit_rad": -0.12,
+      "surface_edge_pads": true,
+      "planted_whole_body": true,
+      "release_contact": "distal",
+      "finite_coordination": {
+        "start_s": 1.2,
+        "end_s": 10.5,
+        "intervals": 12,
+        "samples": 81,
+        "max_evaluations": 6,
+        "coefficient_limit": 1.2,
+        "foot_position_weight": 2500.0,
+        "foot_orientation_weight": 300.0,
+        "digit_weight": 5.0,
+        "acceleration_weight": 0.15,
+        "root_envelopes_relative_to_seed": [
+          "forward",
+          "lateral",
+          "yaw"
+        ]
+      },
+      "family": "alert",
+      "attention_keys": [
+        [
+          0,
+          0
+        ],
+        [
+          1.2,
+          0
+        ],
+        [
+          3.2,
+          40
+        ],
+        [
+          4.1,
+          40
+        ],
+        [
+          6.8,
+          -40
+        ],
+        [
+          7.7,
+          -40
+        ],
+        [
+          9.6,
+          0
+        ]
+      ]
+    }
+  },
+  "animals": {
+    "tarbo": {
+      "attention_profile": "catalog/embodiment/tarbo.v1.json"
+    },
+    "allo": {
+      "attention_profile": "catalog/embodiment/allo.v1.json"
+    }
+  }
+}
