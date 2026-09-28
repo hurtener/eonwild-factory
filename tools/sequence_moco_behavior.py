@@ -52,6 +52,15 @@ def main():
         spec=scale_plan_times(spec,k);time_scale=dict(spec['time_scale'],leg_length_m=L,factor=k)
     recipe=copy.deepcopy(meta['recipe']);recipe['coordination'].get('path_task',{}).pop('temporal_contact_seed',None)
     if spec.get('body_support_contacts'):recipe['body_support_contacts']=spec['body_support_contacts']
+    if spec.get('recipe_overrides'):
+        # Behaviour-specific physiology, e.g. relaxed floor posture instead of
+        # the running source's tonic bracing. Recorded with the plan.
+        def merge(base,over):
+            for k,v in over.items():
+                if k in ('classification','rationale'):continue
+                if isinstance(v,dict) and isinstance(base.get(k),dict):merge(base[k],v)
+                else:base[k]=v
+        merge(recipe,spec['recipe_overrides'])
     envelope=spec.get('recovery_envelope')
     if envelope:
         # Floor behaviours may use a separately sourced deep-fold envelope.
