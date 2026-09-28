@@ -29,7 +29,29 @@ def recovery_reference(rest,standing,time,policy,index,bounds):
     return q
 
 
-def gathered_plant(p,folded,standing,feet,legnames,bounds,balance_share=.35):
+LEG_JOINTS=(('hip','thigh'),('knee','shin'),('ankle','metatarsus'),('mtp','toe'))
+
+
+def leg_effort(p,side,share):
+    """Quasi-static sagittal joint torque / admitted capacity for one leg.
+
+    The leg carries `share` of body weight as a vertical force at the toe
+    segment's mass centre (pad-centroid proxy). Leg segment weight is ignored.
+    Capacities are the model's estimated actuator ceilings (engineering priors,
+    not measured strength); only their ratios shape the preferred posture.
+    """
+    bodies=p.model.getBodySet();trunk=bodies.get('trunk').getTransformInGround(p.state).R()
+    lateral=np.array([trunk.get(i,2) for i in range(3)])
+    toe=bodies.get('toe_'+side);contact=toe.findStationLocationInGround(p.state,toe.getMassCenter()).to_numpy()
+    force=np.array([0.,share*p.bw,0.]);out=[]
+    for joint,body in LEG_JOINTS:
+        centre=bodies.get(body+'_'+side).getPositionInGround(p.state).to_numpy()
+        cap=p.metadata['actuators']['motor_'+joint+'_'+side]['capacity_Nm']
+        out.append(float(np.cross(contact-centre,force)@lateral)/cap)
+    return np.asarray(out)
+
+
+def gathered_plant(p,folded,standing,feet,legnames,bounds,balance_share=.35,effort_weight=0.,sitting=None):
     """Place the admitted standing stance where the folded legs can reach it.
 
     The stance keeps its standing width and foot orientation; only its
@@ -54,12 +76,40 @@ def gathered_plant(p,folded,standing,feet,legnames,bounds,balance_share=.35):
             r.extend(3*Rotation.from_matrix(feet[s][1].T@R).as_rotvec())
         com=p.model.calcMassCenterPosition(p.state).to_numpy()
         r.extend(30*balance_share*(com-(mid+shift+offset))[[0,2]]/p.L)
+        if sitting:
+            # Tarsal resting posture (theropod sitting traces, resting birds):
+            # ankle on the ground behind flat metatarsi, toes forward. With the
+            # pelvis low this requires a forward femur, i.e. knees up.
+            heading=(p.model.getBodySet().get('head').getPositionInGround(p.state).to_numpy()-p.model.getBodySet().get('trunk').getPositionInGround(p.state).to_numpy())[[0,2]]
+            heading/=np.linalg.norm(heading)
+            for s in ('l','r'):
+                bodies=p.model.getBodySet();ankle=bodies.get('metatarsus_'+s).getPositionInGround(p.state).to_numpy()
+                r.append(sitting['weight']*(ankle[1]-sitting['ankle_height_leg_lengths']*p.L)/p.L)
+                # Metatarsus points forward from the ankle (toes ahead): the
+                # straight-ankle, backward-foot branch is not a resting posture.
+                ahead=(bodies.get('toe_'+s).getPositionInGround(p.state).to_numpy()-ankle)[[0,2]]@heading
+                length=np.linalg.norm(bodies.get('toe_'+s).getPositionInGround(p.state).to_numpy()-ankle)
+                r.append(sitting['weight']*min(ahead-.5*length,0.)/p.L)
+        if effort_weight:
+            # The plant is where the push-up starts: prefer feet the legs can
+            # lift the body from cheaply (knees forward, foot under the hip),
+            # not a reachable point a metre behind the hip.
+            for s in ('l','r'):r.extend(effort_weight*leg_effort(p,s,.5))
         r.extend(.05*(x[:-2]-x_ref))
         return np.asarray(r)
     p.set_state(0,q,zeros)
     com=p.model.calcMassCenterPosition(p.state).to_numpy();start=(com-mid-offset)[[0,2]]
-    x0=np.r_[np.clip(x_ref,lo,hi),start]
-    fit=least_squares(residual,x0,bounds=(np.r_[lo,-np.inf,-np.inf],np.r_[hi,np.inf,np.inf]),max_nfev=400,ftol=1e-10,xtol=1e-10)
+    seeds=[np.clip(x_ref,lo,hi)]
+    if sitting and sitting.get('seed_radians'):
+        # Also start from the tarsal-resting configuration: from a knee-back
+        # seed the solver stays on that branch even when sitting is cheaper.
+        alt=x_ref.copy()
+        for j,n in enumerate(legnames):
+            base=n.rsplit('_',1)[0] if n.endswith(('_l','_r')) else n
+            if base in sitting['seed_radians']:alt[j]=sitting['seed_radians'][base]
+        seeds.append(np.clip(alt,lo,hi))
+    fits=[least_squares(residual,np.r_[x,start],bounds=(np.r_[lo,-np.inf,-np.inf],np.r_[hi,np.inf,np.inf]),max_nfev=400,ftol=1e-10,xtol=1e-10) for x in seeds]
+    fit=min(fits,key=lambda f:f.cost);gathered_plant.seed_costs=[float(f.cost) for f in fits]
     shift=unpack(fit.x)
     reach={s:float(np.linalg.norm(p.model.getBodySet().get('toe_'+s).getPositionInGround(p.state).to_numpy()-(feet[s][0]+shift))) for s in ('l','r')}
     com=p.model.calcMassCenterPosition(p.state).to_numpy()
@@ -69,7 +119,10 @@ def gathered_plant(p,folded,standing,feet,legnames,bounds,balance_share=.35):
         achieved[s]=(tf.p().to_numpy().copy(),np.array([[m.get(i,j) for j in range(3)] for i in range(3)]),feet[s][2])
     q[ids]=fit.x[:-2]
     gathered_plant.achieved=achieved
-    return shift,q,dict(stance_shift_m=shift.tolist(),reach_error_m=reach,
+    effort={s:leg_effort(p,s,.5).round(3).tolist() for s in ('l','r')}
+    ankles={s:float(p.model.getBodySet().get('metatarsus_'+s).getPositionInGround(p.state).get(1)) for s in ('l','r')}
+    knees={s:float((p.model.getBodySet().get('shin_'+s).getPositionInGround(p.state).to_numpy()-p.model.getBodySet().get('thigh_'+s).getPositionInGround(p.state).to_numpy())[0]) for s in ('l','r')}
+    return shift,q,dict(seed_costs=gathered_plant.seed_costs,plant_effort_torque_per_capacity=effort,plant_ankle_height_m=ankles,plant_knee_ahead_of_hip_x_m=knees,stance_shift_m=shift.tolist(),reach_error_m=reach,
         mass_centre_error_m=float(np.linalg.norm((com-(mid+shift+offset))[[0,2]])),
         mass_centre_start_error_m=float(np.linalg.norm(start)),success=bool(fit.success),
         method='Bounded placement of the admitted standing stance under the folded lying body; admitted joint limits unchanged')
@@ -93,7 +146,7 @@ class GroundSupport:
         self.p=p;self.spec=spec;self.ix=p.index;self.zeros=np.zeros(len(p.names));self.bounds=bounds
         # Feet travel to their plant through the air from wherever they are,
         # instead of being dragged by a fading-in tracking weight.
-        self.swing=(spec.get('support_transfer') or {}).get('swing');self.swing_start={}
+        self.swing=(spec.get('support_transfer') or {}).get('swing');self.swing_start={};self.swing_joint={};self.plant_legs=None
         # Resting axial chain lies on the floor instead of hovering stiffly.
         self.drape=spec.get('rest_drape')
         # Measured skin penetration (previous pass, actual skinned mesh) fed
@@ -133,7 +186,8 @@ class GroundSupport:
             feet=[p.model.getBodySet().get('toe_'+s).getPositionInGround(p.state).to_numpy() for s in ('l','r')]
             self.standing_com_offset=p.model.calcMassCenterPosition(p.state).to_numpy()-.5*(feet[0]+feet[1])
             self.standing_com_offset[1]=0.
-        self.staged=(spec.get('support_transfer') or {}).get('staged')
+        self.staged=(spec.get('support_transfer') or {}).get('staged');self.rise_by_joints=False
+        self.effort=(spec.get('support_transfer') or {}).get('effort')
         self.step_delta=np.zeros(3);self.stage_start=None;self.goal_log=[];self.step_targets={}
         if self.staged:
             # Rear-first rise: pelvis and chest clearances are separate
@@ -141,6 +195,14 @@ class GroundSupport:
             # tripod) while the feet step in under the mass.
             p.set_state(0,standing,self.zeros)
             self.standing_group_clearance={n:self.group_height(n) for n in ('trunk','chest')}
+            self.rise_by_joints=self.staged.get('rise_by')=='joint_centres'
+            if self.rise_by_joints:
+                # Pelvis (hip joints) and shoulder (chest-neck joint) heights:
+                # the lean follows from their difference and each animal's
+                # proportions, instead of from mesh-witness minima.
+                self.standing_centre={n:self.centre_height(n) for n in ('pelvis','shoulder')}
+                b=p.model.getBodySet();hips=.5*sum(b.get('thigh_'+s).getPositionInGround(p.state).to_numpy() for s in ('l','r'))
+                self.trunk_span=float(np.linalg.norm((b.get('neck').getPositionInGround(p.state).to_numpy()-hips)))
 
     def extra(self,name):
         f=self.feedback.get(name)
@@ -153,6 +215,11 @@ class GroundSupport:
             h=points@up+tf.p().get(1)-radii-self.extra(name);all_h.extend(h)
             if name in self.primary:primary.extend(h)
         return np.asarray(all_h),np.asarray(primary)
+
+    def centre_height(self,name):
+        b=self.p.model.getBodySet()
+        if name=='pelvis':return .5*sum(b.get('thigh_'+s).getPositionInGround(self.p.state).get(1) for s in ('l','r'))
+        return b.get('neck').getPositionInGround(self.p.state).get(1)
 
     def group_height(self,name):
         for n,b,points,radii in self.groups:
@@ -194,15 +261,31 @@ class GroundSupport:
                 self.swing_start[s]=(tf.p().to_numpy().copy(),np.array([[m.get(i,j) for j in range(3)] for i in range(3)]))
             p0,R0=self.swing_start[s];pos,R,digit=goals[s]
             u=float(np.clip((time-start)/max(end-start,1e-6),0,1));w=u*u*(3-2*u)
+            if self.swing.get('space')=='joint':
+                # Leg joints travel from where they are to the solved plant
+                # pose (knee leads, one branch); the foot is only bound to the
+                # floor target as it arrives. No Cartesian drag path.
+                if s+'_q' not in self.swing_start:
+                    self.swing_start[s+'_q']=previous[[self.ix[n] for n in self.leg_names(s)]].copy()
+                self.swing_joint[s]=(w,self.swing_start[s+'_q'])
+                gains[s]=float(np.clip((u-.7)/.3,0,1))**2
+                continue
             lift=np.sin(np.pi*u)*self.swing['lift_leg_lengths']*self.p.L
             rot=Rotation.from_matrix(np.stack([R0,R]));blend=(rot[0]*Rotation.from_rotvec(w*(rot[0].inv()*rot[1]).as_rotvec())).as_matrix()
             out[s]=(p0+w*(pos-p0)+np.array([0.,lift,0.]),blend,digit);gains[s]=1.
         return out
 
+    def leg_names(self,s):
+        return [n for n in ('hip_'+s,'hip_'+s+'_yaw','hip_'+s+'_roll','knee_'+s,'ankle_'+s,'mtp_'+s,'digit_'+s) if n in self.ix]
+
     def solve(self,q,time,goals,previous,previous2=None):
         p=self.p;target=q.copy();body_gain=keyed(time,self.spec['body_support_gain']);self.current_time=time
         gains={s:keyed(time,self.spec.get('foot_support_by_side',{}).get(s,self.spec['foot_support_gain'])) for s in ('l','r')}
+        self.swing_joint={}
         if self.swing:goals=self.swing_goals(time,goals,gains,previous)
+        for s,(w,q0) in self.swing_joint.items():
+            if self.plant_legs is None:raise ValueError('Joint-space swing requires a solved plant pose')
+            ids=[self.ix[n] for n in self.leg_names(s)];target[ids]=q0+w*(self.plant_legs[ids]-q0)
         prediction=previous if previous2 is None else 2*previous-previous2
         dt=max(time-self.previous_time,1/120) if self.previous_time is not None else 1/24
         p.set_state(time,q,self.zeros)
@@ -219,7 +302,23 @@ class GroundSupport:
             goals=self.step_goals(time,goals)
             hip=keyed(time,self.staged['hip_rise_keys']);chest=keyed(time,self.staged['chest_rise_keys'])
             if hip>0 or chest>0:
-                if self.stage_start is None:
+                if self.stage_start is None and self.rise_by_joints:
+                    p.set_state(time,previous,self.zeros)
+                    self.stage_start={n:self.centre_height(n) for n in ('pelvis','shoulder')}
+                    p.set_state(time,q,self.zeros)
+                if self.rise_by_joints:
+                    stage={n:(1-f)*self.stage_start[n]+f*self.standing_centre[n] for n,f in (('pelvis',hip),('shoulder',chest))}
+                    limit=self.staged.get('max_lean_degrees')
+                    if limit is not None:
+                        # One shared rule instead of per-species keys: the
+                        # shoulders start rising early whenever the pelvis
+                        # would otherwise pitch the trunk past the limit.
+                        floor=stage['pelvis']-self.trunk_span*np.sin(np.deg2rad(limit))
+                        stage['shoulder']=max(stage['shoulder'],min(floor,self.standing_centre['shoulder']))
+                        # Balance and effort follow the chest's actual progress.
+                        span=self.standing_centre['shoulder']-self.stage_start['shoulder']
+                        if span>1e-6:chest=float(np.clip((stage['shoulder']-self.stage_start['shoulder'])/span,chest,1.))
+                elif self.stage_start is None:
                     # Continue from the actual solved lying clearances.
                     p.set_state(time,previous,self.zeros)
                     self.stage_start={n:self.group_height(n) for n in ('trunk','chest')}
@@ -227,9 +326,11 @@ class GroundSupport:
                     # the floor (not hovering) until its own rise begins.
                     self.stage_start['chest']=min(self.stage_start['chest'],0.)
                     p.set_state(time,q,self.zeros)
-                stage={n:(1-f)*self.stage_start[n]+f*self.standing_group_clearance[n] for n,f in (('trunk',hip),('chest',chest))}
+                if not self.rise_by_joints:
+                    stage={n:(1-f)*self.stage_start[n]+f*self.standing_group_clearance[n] for n,f in (('trunk',hip),('chest',chest))}
             # Balance is required only once the chest stops bearing weight.
             weight=balance_weight(chest,transfer);release=hip
+        load=(hip*(1-chest) if self.staged else rise) if transfer else 0.
         # Before the rise the lean stays with the authored roll/fold; it is
         # released only while balance carries the body.
         # Held firmly (not merely weakly regularized) before release: a loose
@@ -245,7 +346,9 @@ class GroundSupport:
             # Fade the desired clearance, not the objective weight. Fading
             # weight held the torso down then released it in a single jump.
             # This is a motor task, not a claim of a supporting external force.
-            if stage:
+            if stage and self.rise_by_joints:
+                r.extend(65*(self.centre_height(n)-stage[n])/p.L for n in ('pelvis','shoulder'))
+            elif stage:
                 r.extend(65*(self.group_height(n)-stage[n]+.001*p.L)/p.L for n in ('trunk','chest'))
             elif transfer or body_gain>0:
                 r.append(65*(np.min(body_h)-desired_clearance+.001*p.L)/p.L)
@@ -255,7 +358,8 @@ class GroundSupport:
                 # Equality to the floor for the resting neck/head/tail: the
                 # chain settles within its admitted joint ranges. Eased in so
                 # an adopted pose is not yanked to the floor in one frame.
-                ease=float(np.clip(time/self.drape.get('ease_in_s',1.),0,1));ease=ease*ease*(3-2*ease)
+                ease_in=self.drape.get('ease_in_s',1.)
+                ease=float(np.clip(time/ease_in,0,1)) if ease_in>0 else 1.;ease=ease*ease*(3-2*ease)
                 # Released before the rise: the tail lifts with the hips, and a
                 # chain held on the floor was later driven under it by lean.
                 ease*=keyed(time,self.drape.get('hold_keys',[[0,1],[1,1]]))
@@ -265,6 +369,11 @@ class GroundSupport:
                 pos,orientation,digit=goals[s];gain=gains[s]
                 r.extend(40*gain*(tf.p().to_numpy()-pos)/p.L)
                 r.extend(3*gain*Rotation.from_matrix(orientation.T@R).as_rotvec())
+            if self.effort and load>0:
+                # Share body weight across hip/knee/ankle/MTP by capacity:
+                # the knee takes load instead of the ankle collapsing.
+                for s in ('l','r'):
+                    if gains[s]>=1 and s not in self.swing_joint:r.extend(self.effort['weight']*leg_effort(p,s,.5*load))
             both=min(gains.values())
             if transfer:
                 center=.5*(goals['l'][0]+goals['r'][0]);com=p.model.calcMassCenterPosition(p.state).to_numpy()
@@ -279,6 +388,12 @@ class GroundSupport:
                 limb=np.array([n.startswith(('hip_','knee_','ankle_','mtp_','digit_')) for n in self.names])
                 r.extend(limb*(.25+(limb_tau/dt)**2)*(values-prediction[self.ids]))
             scale=np.array([.08 if n in ('height','forward','lateral') else (pitch_scale if n=='pitch' else (1. if tau and a else .25)) for n,a in zip(self.names,axial)])
+            if self.swing and self.swing.get('space')=='joint':
+                track=self.swing.get('joint_tracking',3.)
+                for s in ('l','r'):
+                    free=track*(1.-gains[s]) if s not in self.swing_joint else track
+                    mask=np.array([n in self.leg_names(s) for n in self.names])
+                    scale=np.where(mask,np.maximum(scale,free),scale)
             r.extend(scale*(values-target[self.ids]))
             r.extend((.25+axial*(tau/dt)**2)*(values-prediction[self.ids]))
             r.extend(axial*(tau/dt)*(values-previous[self.ids]))

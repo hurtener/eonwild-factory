@@ -20,11 +20,36 @@ from eonwild_motion.solve.moco_tasks import smooth
 from sequence_moco_connected import Reference
 
 
+TIME_SCALARS={'duration_s','plant_pose_time_s','ease_in_s','axial_smoothing_seconds','limb_smoothing_seconds','boundary_ease_s','breath_period_s','torso_delay_s','tail_base_delay_s','tail_tip_delay_s','root_smoothing_seconds'}
+NOT_TIME={'recovery_envelope','body_support_contacts','time_scale','balance','crouch_radians'}
+
+
+def scale_plan_times(spec,k):
+    """Scale every time in a plan: [t, value] key lists and *_s scalars."""
+    def walk(node,key=None):
+        if isinstance(node,dict):
+            return {n:(v if n in NOT_TIME else (v*k if n in TIME_SCALARS and isinstance(v,(int,float)) else
+                ([x*k for x in v] if n=='window_s' else walk(v,n)))) for n,v in node.items()}
+        if isinstance(node,list) and node and all(isinstance(x,list) and len(x)==2 and all(isinstance(y,(int,float)) for y in x) for x in node):
+            times=[x[0] for x in node]
+            if times==sorted(times) and times[0]>=0:return [[x[0]*k,x[1]] for x in node]
+        return node
+    return walk(spec)
+
+
 def main():
     ap=argparse.ArgumentParser()
     for name in ('source','baseline','plan','output'):ap.add_argument('--'+name,type=Path,required=True)
     a=ap.parse_args();a.output.mkdir(parents=True,exist_ok=False)
     src=json.loads(a.source.read_text());meta=src['metadata'];spec=json.loads(a.plan.read_text())
+    time_scale=None
+    if spec.get('time_scale'):
+        # Dynamic similarity: authored once for a reference leg length, every
+        # plan time scales with sqrt(L/L_ref) (equal Froude number), so a
+        # smaller animal is not handed a larger animal's seconds.
+        L=sum(meta['admission'].get('segment_lengths_m') or meta.get('segment_lengths_m'))
+        k=float(np.sqrt(L/spec['time_scale']['reference_leg_length_m']))
+        spec=scale_plan_times(spec,k);time_scale=dict(spec['time_scale'],leg_length_m=L,factor=k)
     recipe=copy.deepcopy(meta['recipe']);recipe['coordination'].get('path_task',{}).pop('temporal_contact_seed',None)
     if spec.get('body_support_contacts'):recipe['body_support_contacts']=spec['body_support_contacts']
     envelope=spec.get('recovery_envelope')
@@ -93,7 +118,19 @@ def main():
     if spec.get('anchored_body_support'):
         from eonwild_motion.solve.moco_ground_support import GroundSupport,recovery_reference
         ground_support=GroundSupport(p,spec,bounds,rest,standing)
+        if spec.get('settle_initial_pose'):
+            # The clip opens at rest: settle the adopted pose onto the floor
+            # (drape, body support) before frame 0 instead of during it. The
+            # preceding fall should end in this same settled state.
+            settle=spec['settle_initial_pose'];q=rest.copy();moves=[]
+            for _ in range(settle['iterations']):
+                before=q.copy();q=ground_support.solve(q.copy(),0.,feet0,q,q);moves.append(float(np.abs(q-before).max()))
+            ground_support.receipts.clear();ground_support.goal_log.clear();ground_support.previous_time=None
+            ground_support.swing_start={};ground_support.stage_start=None
+            settle_receipt=dict(iterations=settle['iterations'],final_max_joint_change_rad=moves[-1],first_max_joint_change_rad=moves[0])
+            rest=q;previous=rest.copy()
     plant_shift_m=None
+    settle_receipt=locals().get('settle_receipt')
     if spec.get('support_transfer'):
         if standing is None:raise ValueError('Support transfer requires admitted standing anatomy')
         # Plant targets come from the admitted stable stance, not from the
@@ -106,7 +143,9 @@ def main():
             # drag the unsupported mass back. Gather the feet under the body.
             from eonwild_motion.solve.moco_ground_support import recovery_reference,gathered_plant
             folded=recovery_reference(rest,standing,spec['support_transfer']['plant_pose_time_s'],spec['support_transfer'],ix,bounds)
-            delta,gathered,plant_shift_m=gathered_plant(p,folded,standing,feet0,legnames,bounds,spec['support_transfer'].get('gather_balance_share',.35))
+            delta,gathered,plant_shift_m=gathered_plant(p,folded,standing,feet0,legnames,bounds,spec['support_transfer'].get('gather_balance_share',.35),
+                spec['support_transfer'].get('effort',{}).get('plant_weight',0.),spec['support_transfer'].get('sitting_posture'))
+            ground_support.plant_legs=gathered.copy()
             if spec['support_transfer'].get('staged'):
                 # Feet start where folded legs reach; the final stance is under
                 # the lying mass. The difference is covered by real steps.
@@ -366,7 +405,7 @@ def main():
     seq=dict(duration_s=duration,distance_m=float(poses[-1,ix['forward']]-poses[0,ix['forward']]),periodic=False,
         family=spec['family'],plan=spec,living_intent=dict(policy=spec['living_intent']),seed_max_foot_task_error_m=float(max(errors)),
         source_sha256=hashlib.sha256(a.source.read_bytes()).hexdigest(),source_path=str(a.source),finite_coordination=finite_receipt,
-        body_support_settling_failures=support_failures,plant_shift_m=plant_shift_m,
+        body_support_settling_failures=support_failures,plant_shift_m=plant_shift_m,time_scale=time_scale,initial_settle=settle_receipt,
         method='Authored behavior intent with bounded shared contact coordination and exact OpenSim inverse-dynamics audit; not full Moco convergence')
     p.metadata['sequence']=seq;p.model.printToXML(str(a.output/'model.osim'))
     p.metadata.update(admission=p.admission,recipe=p.recipe,model_sha256=hashlib.sha256((a.output/'model.osim').read_bytes()).hexdigest(),status='BEHAVIOR_DIAGNOSTIC',user_review='PENDING')
