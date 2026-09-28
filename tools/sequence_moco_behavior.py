@@ -27,6 +27,13 @@ def main():
     src=json.loads(a.source.read_text());meta=src['metadata'];spec=json.loads(a.plan.read_text())
     recipe=copy.deepcopy(meta['recipe']);recipe['coordination'].get('path_task',{}).pop('temporal_contact_seed',None)
     if spec.get('body_support_contacts'):recipe['body_support_contacts']=spec['body_support_contacts']
+    envelope=spec.get('recovery_envelope')
+    if envelope:
+        # Floor behaviours may use a separately sourced deep-fold envelope.
+        # Locomotion keeps its own limits; this changes only this model's
+        # coordinate ranges and limit forces, and is recorded in the receipt.
+        if not envelope.get('sources'):raise ValueError('Recovery envelope requires cited sources')
+        recipe.setdefault('coordinate_bounds',{}).update(envelope['coordinate_bounds_rad'])
     admission=copy.deepcopy(meta['admission'])
     if spec.get('body_surface_file'):
         surface=json.loads(Path(spec['body_surface_file']).read_text())
@@ -86,11 +93,38 @@ def main():
     if spec.get('anchored_body_support'):
         from eonwild_motion.solve.moco_ground_support import GroundSupport,recovery_reference
         ground_support=GroundSupport(p,spec,bounds,rest,standing)
+    plant_shift_m=None
     if spec.get('support_transfer'):
         if standing is None:raise ValueError('Support transfer requires admitted standing anatomy')
         # Plant targets come from the admitted stable stance, not from the
         # foot location of a deeply folded/rotated leg. That location can cross
         # the midline and become unreachable when the body rises.
+        if spec['support_transfer'].get('plant_under_mass_center'):
+            # Stand up where the body lies. Standing-stance targets relative to
+            # the rest root are unreachable by folded legs; the solver then
+            # slid the whole lying body ~1 m to reach them and the rise had to
+            # drag the unsupported mass back. Gather the feet under the body.
+            from eonwild_motion.solve.moco_ground_support import recovery_reference,gathered_plant
+            folded=recovery_reference(rest,standing,spec['support_transfer']['plant_pose_time_s'],spec['support_transfer'],ix,bounds)
+            delta,gathered,plant_shift_m=gathered_plant(p,folded,standing,feet0,legnames,bounds,spec['support_transfer'].get('gather_balance_share',.35))
+            if spec['support_transfer'].get('staged'):
+                # Feet start where folded legs reach; the final stance is under
+                # the lying mass. The difference is covered by real steps.
+                p.set_state(0,folded,zeros);com_folded=p.model.calcMassCenterPosition(p.state).to_numpy()
+                p.set_state(0,standing,zeros);balanced=com_folded-p.model.calcMassCenterPosition(p.state).to_numpy();balanced[1]=0.
+                ground_support.step_delta=balanced-delta;plant_shift_m['balanced_stance_shift_m']=balanced.tolist()
+                if spec['support_transfer']['staged'].get('fold_to_gathered_plant'):
+                    # Fold toward the solved reachable plant, not a separately
+                    # authored crouch: otherwise the solver can arrive on a
+                    # different leg branch and flip to it mid-rise.
+                    spec['support_transfer']['crouch_radians']={n:float(gathered[ix[n]]) for n in legnames}
+                    plant_shift_m['fold_target_rad']=spec['support_transfer']['crouch_radians']
+                plant_shift_m['step_m']=ground_support.step_delta.tolist()
+                standing[ix['forward']]+=balanced[0];standing[ix['lateral']]+=balanced[2]
+                for side in ('l','r'):feet0[side]=(feet0[side][0]+delta,feet0[side][1],feet0[side][2])
+                delta=np.zeros(3)
+            standing[ix['forward']]+=delta[0];standing[ix['lateral']]+=delta[2]
+            for side in ('l','r'):feet0[side]=(feet0[side][0]+delta,feet0[side][1],feet0[side][2])
         width=spec['support_transfer'].get('plant_width_scale',1.)
         if not 1. <= width <= 1.5:raise ValueError('Recovery stance width outside authored envelope')
         center=.5*(feet0['l'][0]+feet0['r'][0])
@@ -233,6 +267,36 @@ def main():
                 except ValueError:support_failures.append(dict(time_s=float(t),low_N=float(load(-.035)),high_N=float(load(.035))))
         poses.append(q.copy());tasks.append(goals);previous=q
     poses=np.array(poses)
+    staged=(spec.get('support_transfer') or {}).get('staged')
+    if staged and staged.get('root_smoothing_seconds'):
+        # Per-frame solves can switch branch (a 0.3 rad lean release in six
+        # frames). Smooth root pitch/height in physical time over the staged
+        # window, then re-anchor only the legs to the same foot goals. All
+        # contact and effort are audited afterwards in replay.
+        sigma=staged['root_smoothing_seconds']/(times[1]-times[0])
+        window=(times>=staged['window_s'][0])&(times<=staged['window_s'][1])
+        blend=gaussian_filter1d(window.astype(float),sigma/2,mode='nearest')
+        for n in ('pitch','height','forward'):
+            i=ix[n];poses[:,i]+=blend*(gaussian_filter1d(poses[:,i],sigma,mode='nearest')-poses[:,i])
+        leg_ids=[ix[n] for n in legnames];lo=np.array([bounds[n][0] for n in legnames])+1e-6;hi=np.array([bounds[n][1] for n in legnames])-1e-6
+        reanchor=[]
+        for k in np.flatnonzero(blend>1e-3):
+            q=poses[k].copy();goals=ground_support.goal_log[k];p.set_state(times[k],q,zeros);x_ref=q[leg_ids].copy()
+            def legs(x):
+                for i,v in zip(leg_ids,x):p.coordinates[i].setValue(p.state,float(v),False)
+                p.model.realizePosition(p.state);r=[]
+                for s in ('l','r'):
+                    b=p.model.getBodySet().get('toe_'+s);tf=b.getTransformInGround(p.state);m=tf.R()
+                    R=np.array([[m.get(i,j) for j in range(3)] for i in range(3)])
+                    r.extend(40*(tf.p().to_numpy()-goals[s][0])/p.L);r.extend(3*Rotation.from_matrix(goals[s][1].T@R).as_rotvec())
+                r.extend(.05*(x-x_ref))
+                if k>0:r.extend(.3*(x-poses[k-1][leg_ids]))
+                return np.asarray(r)
+            fit=least_squares(legs,np.clip(x_ref,lo,hi),bounds=(lo,hi),max_nfev=80,ftol=1e-9,xtol=1e-9)
+            poses[k][leg_ids]=fit.x;legs(fit.x)
+            reanchor.append(max(float(np.linalg.norm(p.model.getBodySet().get('toe_'+s).getPositionInGround(p.state).to_numpy()-goals[s][0])) for s in ('l','r')))
+        errors=[max(e,r) for e,r in zip(errors,np.r_[np.zeros(np.argmax(blend>1e-3)),reanchor,np.zeros(len(errors))][:len(errors)])]
+        (a.output/'staged-smoothing-receipt.json').write_text(json.dumps(dict(method='Physical-time Gaussian root smoothing then bounded leg re-anchoring',sigma_s=staged['root_smoothing_seconds'],window_s=staged['window_s'],maximum_reanchor_error_m=max(reanchor)),indent=2)+'\n')
     if spec.get('body_support_gain') and ground_support is None:
         gain=np.array([keyed(t,spec['body_support_gain']) for t in times])
         # Physical-time smoothing of the coupled clearance initializer; all
@@ -284,7 +348,7 @@ def main():
     seq=dict(duration_s=duration,distance_m=float(poses[-1,ix['forward']]-poses[0,ix['forward']]),periodic=False,
         family=spec['family'],plan=spec,living_intent=dict(policy=spec['living_intent']),seed_max_foot_task_error_m=float(max(errors)),
         source_sha256=hashlib.sha256(a.source.read_bytes()).hexdigest(),source_path=str(a.source),finite_coordination=finite_receipt,
-        body_support_settling_failures=support_failures,
+        body_support_settling_failures=support_failures,plant_shift_m=plant_shift_m,
         method='Authored behavior intent with bounded shared contact coordination and exact OpenSim inverse-dynamics audit; not full Moco convergence')
     p.metadata['sequence']=seq;p.model.printToXML(str(a.output/'model.osim'))
     p.metadata.update(admission=p.admission,recipe=p.recipe,model_sha256=hashlib.sha256((a.output/'model.osim').read_bytes()).hexdigest(),status='BEHAVIOR_DIAGNOSTIC',user_review='PENDING')

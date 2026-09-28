@@ -1,3 +1,17 @@
+# C63 balanced get-up — REVIEW PENDING
+
+Get-up only, both animals. The C61 rise lifted the body level while its mass was
+0.7–1.1 m ahead of the feet (Allo briefly airborne). C63 gathers the feet where
+folded legs can reach, rises rear-first with the chest still down, steps the feet
+in under the mass, then lifts the chest with CoM balance enforced. Knee fold uses
+a separately sourced floor-recovery envelope (143°); locomotion limits unchanged.
+Force residuals fall sharply but physical acceptance still fails; the roll/fold
+phase before the rise keeps its skin penetration. No full Moco solve.
+
+[Media, metrics, provenance and remaining defects](handoffs/MOCO_C63_BALANCED_RISE.md).
+
+## Previous C62 checkpoint
+
 # C62 interactive encounter — REVIEW PENDING
 
 The first AA-readiness prototype combines both admitted animals in one live Unity
