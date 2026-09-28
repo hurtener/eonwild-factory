@@ -45,3 +45,19 @@ def test_balance_weight_ramps_smoothly_and_defaults_to_the_legacy_weight():
     assert values[0]==3. and values[-1]==45.
     assert all(b>=a for a,b in zip(values,values[1:]))
     assert max(np.diff(values)) < 5.
+
+
+def test_skin_feedback_maps_regions_to_witness_groups_and_never_undercuts(tmp_path):
+    import json,subprocess,sys
+    times=[k/24 for k in range(49)]
+    def row(t):
+        pen=-.10 if abs(t-1.)<.05 else .05
+        return dict(time_s=t,body_skin_floor_min_m=dict(thigh_l=.2,shin_l=pen,forelimb_r=pen/2,trunk=.3))
+    (tmp_path/'r.json').write_text(json.dumps(dict(measurements=[row(t) for t in times])))
+    subprocess.run([sys.executable,'tools/skin_clearance_feedback.py','--retarget',str(tmp_path/'r.json'),'--output',str(tmp_path/'f.json')],check=True,capture_output=True)
+    out=json.loads((tmp_path/'f.json').read_text())['extra_clearance_m']
+    assert set(out)=={'thigh_l','chest'}          # shin lifts thigh, forelimb lifts chest
+    peak=out['thigh_l']['values_m'][24]
+    assert abs(peak-.11)<1e-9                      # measured 10 cm + 1 cm margin, never less
+    assert out['thigh_l']['values_m'][20]>0        # anticipated before the contact frame
+    assert 'trunk' not in out                      # no penetration, no clearance

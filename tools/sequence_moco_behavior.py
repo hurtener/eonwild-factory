@@ -121,17 +121,25 @@ def main():
                     plant_shift_m['fold_target_rad']=spec['support_transfer']['crouch_radians']
                 plant_shift_m['step_m']=ground_support.step_delta.tolist()
                 standing[ix['forward']]+=balanced[0];standing[ix['lateral']]+=balanced[2]
-                for side in ('l','r'):feet0[side]=(feet0[side][0]+delta,feet0[side][1],feet0[side][2])
+                if spec['support_transfer']['staged'].get('plant_at_reached_pose'):
+                    # Plant exactly where folded legs reached; an unreachable
+                    # target saturated knee/ankle and flipped leg branches.
+                    ground_support.step_targets={s:(feet0[s][0]+balanced,feet0[s][1],feet0[s][2]) for s in ('l','r')}
+                    feet0={s:gathered_plant.achieved[s] for s in ('l','r')}
+                else:
+                    for side in ('l','r'):feet0[side]=(feet0[side][0]+delta,feet0[side][1],feet0[side][2])
                 delta=np.zeros(3)
             standing[ix['forward']]+=delta[0];standing[ix['lateral']]+=delta[2]
             for side in ('l','r'):feet0[side]=(feet0[side][0]+delta,feet0[side][1],feet0[side][2])
         width=spec['support_transfer'].get('plant_width_scale',1.)
         if not 1. <= width <= 1.5:raise ValueError('Recovery stance width outside authored envelope')
-        center=.5*(feet0['l'][0]+feet0['r'][0])
+        # With a reached plant, only the final standing stance is widened.
+        stance=ground_support.step_targets if ground_support is not None and ground_support.step_targets else feet0
+        center=.5*(stance['l'][0]+stance['r'][0])
         for side in ('l','r'):
-            position,orientation,digit=feet0[side]
+            position,orientation,digit=stance[side]
             position=position.copy();position[2]=center[2]+width*(position[2]-center[2])
-            feet0[side]=(position,orientation,digit)
+            stance[side]=(position,orientation,digit)
     foot_paths={}
     retimers={s:SupportRetime(ref.times,ref.loads[s](ref.times)>.08,fraction) for s,fraction in spec.get('support_retime',{}).items()} if ref else {}
     if ref and spec.get('follow_root_placements'):
@@ -278,6 +286,7 @@ def main():
         blend=gaussian_filter1d(window.astype(float),sigma/2,mode='nearest')
         for n in ('pitch','height','forward'):
             i=ix[n];poses[:,i]+=blend*(gaussian_filter1d(poses[:,i],sigma,mode='nearest')-poses[:,i])
+        leg_groups=[g[0] for g in ground_support.groups if g[0].startswith(('thigh_','shin_'))]
         leg_ids=[ix[n] for n in legnames];lo=np.array([bounds[n][0] for n in legnames])+1e-6;hi=np.array([bounds[n][1] for n in legnames])-1e-6
         reanchor=[]
         for k in np.flatnonzero(blend>1e-3):
@@ -291,8 +300,17 @@ def main():
                     r.extend(40*(tf.p().to_numpy()-goals[s][0])/p.L);r.extend(3*Rotation.from_matrix(goals[s][1].T@R).as_rotvec())
                 r.extend(.05*(x-x_ref))
                 if k>0:r.extend(.3*(x-poses[k-1][leg_ids]))
+                # Smoothing changed the root; legs must not be re-anchored into
+                # the floor (witness groups include thighs and, if admitted, shins).
+                # Only leg groups: legs cannot repair an axial witness, and
+                # trying to made them wrench 0.5 m off their goals.
+                ground_support.current_time=times[k]
+                r.extend(65*np.minimum(ground_support.group_height(g)+.001*p.L,0)/p.L for g in leg_groups)
                 return np.asarray(r)
-            fit=least_squares(legs,np.clip(x_ref,lo,hi),bounds=(lo,hi),max_nfev=80,ftol=1e-9,xtol=1e-9)
+            # Seed from the previous re-anchored frame: the smoothed pose may sit
+            # nearer another leg branch, and seeding there flipped both ankles.
+            seed_x=poses[k-1][leg_ids] if k>0 else x_ref
+            fit=least_squares(legs,np.clip(seed_x,lo,hi),bounds=(lo,hi),max_nfev=80,ftol=1e-9,xtol=1e-9)
             poses[k][leg_ids]=fit.x;legs(fit.x)
             reanchor.append(max(float(np.linalg.norm(p.model.getBodySet().get('toe_'+s).getPositionInGround(p.state).to_numpy()-goals[s][0])) for s in ('l','r')))
         errors=[max(e,r) for e,r in zip(errors,np.r_[np.zeros(np.argmax(blend>1e-3)),reanchor,np.zeros(len(errors))][:len(errors)])]

@@ -1,3 +1,16 @@
+# C64 grounded rest and swung plant (get-up) — REVIEW PENDING
+
+Answers the owner's C63 review: the lying neck/head/tail now rest on the floor,
+a counter-roll precedes the roll, feet swing through the air to their plant one
+at a time, hands tuck instead of passing through the floor, and skin
+penetration is corrected against the actual mesh (worst 51→5 cm Tarbo, 72→13 cm
+Allo). Allo's free right leg still kicks at ~2.5 s and its force balance
+regressed. No full Moco solve.
+
+[Media, metrics, provenance and remaining defects](handoffs/MOCO_C64_ROLL_DRAPE.md).
+
+## Previous C63 checkpoint
+
 # C63 balanced get-up — REVIEW PENDING
 
 Get-up only, both animals. The C61 rise lifted the body level while its mass was

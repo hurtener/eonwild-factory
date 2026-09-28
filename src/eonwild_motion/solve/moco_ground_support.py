@@ -3,6 +3,8 @@
 Kinematic initializer with admitted joint limits and material floor witnesses.
 Contact and required effort are audited afterwards; this is not forward dynamics.
 """
+import json
+from pathlib import Path
 import numpy as np
 from scipy.optimize import least_squares
 from scipy.spatial.transform import Rotation
@@ -61,7 +63,12 @@ def gathered_plant(p,folded,standing,feet,legnames,bounds,balance_share=.35):
     shift=unpack(fit.x)
     reach={s:float(np.linalg.norm(p.model.getBodySet().get('toe_'+s).getPositionInGround(p.state).to_numpy()-(feet[s][0]+shift))) for s in ('l','r')}
     com=p.model.calcMassCenterPosition(p.state).to_numpy()
+    achieved={}
+    for s in ('l','r'):
+        tf=p.model.getBodySet().get('toe_'+s).getTransformInGround(p.state);m=tf.R()
+        achieved[s]=(tf.p().to_numpy().copy(),np.array([[m.get(i,j) for j in range(3)] for i in range(3)]),feet[s][2])
     q[ids]=fit.x[:-2]
+    gathered_plant.achieved=achieved
     return shift,q,dict(stance_shift_m=shift.tolist(),reach_error_m=reach,
         mass_centre_error_m=float(np.linalg.norm((com-(mid+shift+offset))[[0,2]])),
         mass_centre_start_error_m=float(np.linalg.norm(start)),success=bool(fit.success),
@@ -84,6 +91,16 @@ def balance_weight(rise,policy):
 class GroundSupport:
     def __init__(self,p,spec,bounds,initial,standing=None):
         self.p=p;self.spec=spec;self.ix=p.index;self.zeros=np.zeros(len(p.names));self.bounds=bounds
+        # Feet travel to their plant through the air from wherever they are,
+        # instead of being dragged by a fading-in tracking weight.
+        self.swing=(spec.get('support_transfer') or {}).get('swing');self.swing_start={}
+        # Resting axial chain lies on the floor instead of hovering stiffly.
+        self.drape=spec.get('rest_drape')
+        # Measured skin penetration (previous pass, actual skinned mesh) fed
+        # back as extra clearance for the matching rigid witness group.
+        feedback=spec.get('skin_clearance_feedback')
+        self.feedback=json.loads(Path(feedback).read_text())['extra_clearance_m'] if feedback else {}
+        self.current_time=0.
         # Do not move yaw/roll to evade the requested roll; resolve limbs and
         # support locations with the same admitted anatomical ranges.
         self.names=list(bounds)+['height','forward','lateral'];self.ids=[p.index[n] for n in self.names]
@@ -117,7 +134,7 @@ class GroundSupport:
             self.standing_com_offset=p.model.calcMassCenterPosition(p.state).to_numpy()-.5*(feet[0]+feet[1])
             self.standing_com_offset[1]=0.
         self.staged=(spec.get('support_transfer') or {}).get('staged')
-        self.step_delta=np.zeros(3);self.stage_start=None;self.goal_log=[]
+        self.step_delta=np.zeros(3);self.stage_start=None;self.goal_log=[];self.step_targets={}
         if self.staged:
             # Rear-first rise: pelvis and chest clearances are separate
             # equalities, so the chest can keep bearing load (a feet+chest
@@ -125,11 +142,15 @@ class GroundSupport:
             p.set_state(0,standing,self.zeros)
             self.standing_group_clearance={n:self.group_height(n) for n in ('trunk','chest')}
 
+    def extra(self,name):
+        f=self.feedback.get(name)
+        return float(np.interp(self.current_time,f['times_s'],f['values_m'])) if f else 0.
+
     def heights(self):
         all_h=[];primary=[]
         for name,b,points,radii in self.groups:
             tf=b.getTransformInGround(self.p.state);r=tf.R();up=np.array([r.get(1,j) for j in range(3)])
-            h=points@up+tf.p().get(1)-radii;all_h.extend(h)
+            h=points@up+tf.p().get(1)-radii-self.extra(name);all_h.extend(h)
             if name in self.primary:primary.extend(h)
         return np.asarray(all_h),np.asarray(primary)
 
@@ -137,10 +158,10 @@ class GroundSupport:
         for n,b,points,radii in self.groups:
             if n==name:
                 tf=b.getTransformInGround(self.p.state);r=tf.R();up=np.array([r.get(1,j) for j in range(3)])
-                h=points@up+tf.p().get(1)-radii
+                h=points@up+tf.p().get(1)-radii-self.extra(n)
                 # Smooth minimum: a hard min switches witness point and made
                 # the lean snap. Temperature is a small fraction of leg length.
-                k=self.staged.get('softmin_leg_lengths',.02)*self.p.L if self.staged else 0.
+                k=(self.staged or self.drape or {}).get('softmin_leg_lengths',.02)*self.p.L if (self.staged or self.drape) else 0.
                 if k<=0:return float(np.min(h))
                 return float(-k*np.log(np.sum(np.exp(-(h-np.min(h))/k)))+np.min(h))
         raise KeyError(name)
@@ -152,12 +173,36 @@ class GroundSupport:
         for s in ('l','r'):
             u=keyed(time,self.staged['step_keys'][s]);pos,R,digit=goals[s]
             lift=4*u*(1-u)*self.staged.get('step_height_leg_lengths',.05)*self.p.L
+            if s in self.step_targets:
+                # From the reachable plant to the exact balanced standing foot.
+                final,Rf,_=self.step_targets[s]
+                rot=Rotation.from_matrix(np.stack([R,Rf]));R=(rot[0]*Rotation.from_rotvec(u*(rot[0].inv()*rot[1]).as_rotvec())).as_matrix()
+                out[s]=(pos+u*(final-pos)+np.array([0.,lift,0.]),R,digit);continue
             out[s]=(pos+u*self.step_delta+np.array([0.,lift,0.]),R,digit)
         return out
 
+    def swing_goals(self,time,goals,gains,previous):
+        out=dict(goals)
+        for s in ('l','r'):
+            keys=self.spec.get('foot_support_by_side',{}).get(s,self.spec['foot_support_gain'])
+            start=max(t for t,v in keys if v<=0 and t<=min(t for t,v in keys if v>=1))
+            end=min(t for t,v in keys if v>=1)
+            if time<start:continue
+            if s not in self.swing_start:
+                self.p.set_state(time,previous,self.zeros)
+                tf=self.p.model.getBodySet().get('toe_'+s).getTransformInGround(self.p.state);m=tf.R()
+                self.swing_start[s]=(tf.p().to_numpy().copy(),np.array([[m.get(i,j) for j in range(3)] for i in range(3)]))
+            p0,R0=self.swing_start[s];pos,R,digit=goals[s]
+            u=float(np.clip((time-start)/max(end-start,1e-6),0,1));w=u*u*(3-2*u)
+            lift=np.sin(np.pi*u)*self.swing['lift_leg_lengths']*self.p.L
+            rot=Rotation.from_matrix(np.stack([R0,R]));blend=(rot[0]*Rotation.from_rotvec(w*(rot[0].inv()*rot[1]).as_rotvec())).as_matrix()
+            out[s]=(p0+w*(pos-p0)+np.array([0.,lift,0.]),blend,digit);gains[s]=1.
+        return out
+
     def solve(self,q,time,goals,previous,previous2=None):
-        p=self.p;target=q.copy();body_gain=keyed(time,self.spec['body_support_gain'])
+        p=self.p;target=q.copy();body_gain=keyed(time,self.spec['body_support_gain']);self.current_time=time
         gains={s:keyed(time,self.spec.get('foot_support_by_side',{}).get(s,self.spec['foot_support_gain'])) for s in ('l','r')}
+        if self.swing:goals=self.swing_goals(time,goals,gains,previous)
         prediction=previous if previous2 is None else 2*previous-previous2
         dt=max(time-self.previous_time,1/120) if self.previous_time is not None else 1/24
         p.set_state(time,q,self.zeros)
@@ -206,6 +251,15 @@ class GroundSupport:
                 r.append(65*(np.min(body_h)-desired_clearance+.001*p.L)/p.L)
             else:r.append(0.)
             r.extend(65*np.minimum(h+.001*p.L,0)/p.L)
+            if self.drape and body_gain>0:
+                # Equality to the floor for the resting neck/head/tail: the
+                # chain settles within its admitted joint ranges. Eased in so
+                # an adopted pose is not yanked to the floor in one frame.
+                ease=float(np.clip(time/self.drape.get('ease_in_s',1.),0,1));ease=ease*ease*(3-2*ease)
+                # Released before the rise: the tail lifts with the hips, and a
+                # chain held on the floor was later driven under it by lean.
+                ease*=keyed(time,self.drape.get('hold_keys',[[0,1],[1,1]]))
+                r.extend(self.drape['weight']*ease*body_gain*(self.group_height(n)+.001*p.L)/p.L for n in self.drape['bodies'])
             for s in ('l','r'):
                 b=p.model.getBodySet().get('toe_'+s);tf=b.getTransformInGround(p.state);mat=tf.R();R=np.array([[mat.get(i,j) for j in range(3)] for i in range(3)])
                 pos,orientation,digit=goals[s];gain=gains[s]
@@ -218,6 +272,12 @@ class GroundSupport:
                 r.extend(weight*both*(com[[0,2]]-center[[0,2]])/p.L)
             axial=np.array([n.startswith(('chest','neck','head','tail_')) or (n=='pitch' and self.pitch_free) for n in self.names])
             tau=self.spec.get('support_transfer',{}).get('axial_smoothing_seconds',0.)
+            # Unloaded legs get the same physical-time inertia: with only a weak
+            # regularizer, new shin witnesses shoved free legs across branches.
+            limb_tau=self.spec.get('support_transfer',{}).get('limb_smoothing_seconds',0.)
+            if limb_tau:
+                limb=np.array([n.startswith(('hip_','knee_','ankle_','mtp_','digit_')) for n in self.names])
+                r.extend(limb*(.25+(limb_tau/dt)**2)*(values-prediction[self.ids]))
             scale=np.array([.08 if n in ('height','forward','lateral') else (pitch_scale if n=='pitch' else (1. if tau and a else .25)) for n,a in zip(self.names,axial)])
             r.extend(scale*(values-target[self.ids]))
             r.extend((.25+axial*(tau/dt)**2)*(values-prediction[self.ids]))

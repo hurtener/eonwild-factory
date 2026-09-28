@@ -218,6 +218,51 @@ def main():
         poses.append((tr, ro))
         targets.append(frame_targets)
     tr = np.asarray([p[0] for p in poses]); ro = np.asarray([p[1] for p in poses])
+    arm_tuck=None
+    tuck=sequence.get('plan',{}).get('arm_floor_tuck') if sequence else None
+    if tuck and arm_bindings:
+        # Forelimbs are cosmetic (no OpenSim segment), so floor avoidance is a
+        # skin-space fold along the admitted carriage axes: the smallest extra
+        # carriage that keeps actual hand/arm skin above the floor, spread in
+        # time so it anticipates contact instead of popping.
+        from scipy.ndimage import maximum_filter1d,gaussian_filter1d
+        arm_vertices={}
+        for side in ('leftShoulder','rightShoulder'):
+            if side in roles:
+                sub={roles[side]};changed=True
+                while changed:
+                    changed=False
+                    for n,parent in enumerate(source.parents):
+                        if parent in sub and n not in sub:sub.add(n);changed=True
+                w=np.where(np.isin(skin.node_ids,list(sub)),skin.weights,0).sum(axis=1)
+                arm_vertices[side]=np.flatnonzero(w>.45)
+        ids=np.concatenate(list(arm_vertices.values()))
+        def lowest(i,extra):
+            r=ro[i].copy()
+            for node,joint in arm_bindings:
+                r[node]=(Rotation.from_quat(r[node])*Rotation.from_rotvec(np.asarray(joint['axis'])*np.deg2rad(joint['restDegrees']*extra))).as_quat()
+            w=np.asarray(_world_matrices(source,tr[i],r,c.base_s))
+            return float((skin.skin(w,ids)@np.asarray(c.up)).min()-skin.ground)
+        need=np.zeros(len(ro));cap=tuck['maximum_extra_carriage'];clear=tuck['clearance_m']
+        for i in range(len(ro)):
+            if lowest(i,0.)>=clear:continue
+            lo,hi=0.,cap
+            if lowest(i,hi)<clear:need[i]=cap;continue
+            for _ in range(10):
+                mid=.5*(lo+hi)
+                if lowest(i,mid)>=clear:hi=mid
+                else:lo=mid
+            need[i]=hi
+        dt=times[1]-times[0]
+        spread=gaussian_filter1d(maximum_filter1d(need,size=max(1,int(round(tuck['anticipation_s']/dt)))),tuck['smoothing_s']/dt,mode='nearest')
+        applied=np.minimum(np.maximum(spread,need),cap)
+        for i in range(len(ro)):
+            for node,joint in arm_bindings:
+                ro[i,node]=(Rotation.from_quat(ro[i,node])*Rotation.from_rotvec(np.asarray(joint['axis'])*np.deg2rad(joint['restDegrees']*applied[i]))).as_quat()
+        residual=[lowest(i,0.) for i in range(len(ro))]
+        arm_tuck=dict(method='Skin-space forelimb floor avoidance along admitted carriage axes; cosmetic, not simulated arm contact',
+            policy=tuck,maximum_extra_carriage=float(applied.max()),frames_tucked=int((applied>1e-3).sum()),
+            frames_at_cap=int((need>=cap-1e-9).sum()),minimum_arm_skin_floor_m=float(min(residual)))
     for i in range(1, len(ro)):
         ro[i, np.sum(ro[i-1] * ro[i], axis=1) < 0] *= -1
     document, binary = deepcopy(source.document), bytearray(source.binary)
@@ -245,15 +290,15 @@ def main():
         for side,suffix in [('left','l'),('right','r')]:
             for j,name in enumerate(('thigh','shin','metatarsus','toe')):
                 owners[roles[f'{side}Leg.{j}']]=name+'_'+suffix
-        for role in ('leftShoulder','rightShoulder','jaw_lower'):
-            if role in roles:owners[roles[role]]=None
+        for role,name in (('leftShoulder','forelimb_l'),('rightShoulder','forelimb_r'),('jaw_lower',None)):
+            if role in roles:owners[roles[role]]=name
         node_owner={}
         for node in np.unique(reopened.node_ids):
             ancestor=int(node)
             while ancestor is not None and ancestor not in owners:ancestor=emitted.parents[ancestor]
             node_owner[int(node)]=owners.get(ancestor)
         groups=np.vectorize(node_owner.get)(reopened.node_ids)
-        for body in ('trunk','chest','thigh_l','thigh_r','head'):
+        for body in sorted({b for b in owners.values() if b and not b.startswith(('toe','metatarsus'))}):
             weights=np.where(groups==body,reopened.weights,0).sum(axis=1)
             body_masks[body]=np.flatnonzero(weights>.45)
     joint_angles={}
@@ -301,6 +346,7 @@ def main():
         source_optimization_status=optimization_status,
         method=source_method+('. Finite sequence, no mirroring or repetition. ' if sequence else '. Full-stride curved-path transform; no leg exchange. ' if path_cycle else '. Saved body rotations/directions and reflected half-stride symmetry. ')+
             'Rotation-only limb transfer, original artist lengths and rest curvature. Calibrated models include chest and distal toe motion plus admitted jaw-neutral closure. No contact correction. '+('Explicit authored jaw breathing, not simulated respiration.' if breathing else 'No dynamic secondary layer.'),
+        arm_floor_tuck=arm_tuck,
         reopened_knee_ankle_ranges_rad=reopened_joint_ranges,
         reopened_knee_ankle_limit_violations_rad=reopened_joint_violations,
         maximum_joint_error_m=max(v for m in measurements for v in m['joint_error_m'].values()),

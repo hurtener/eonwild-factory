@@ -14,6 +14,8 @@ from eonwild_motion.solve.skin_rig import SkinRig
 
 ap=argparse.ArgumentParser()
 for n in ('motion-set','profile','metadata','output'):ap.add_argument('--'+n,type=Path,required=True)
+# Shins lie on the floor in deep folds (C63 skin -13..-21 cm); opt in to witness them.
+ap.add_argument('--include-shin',action='store_true')
 a=ap.parse_args();captured={}
 class Captured(Exception):pass
 original=CanonicalConstantSkinTargetLaw.__dict__['build']
@@ -54,7 +56,7 @@ assign=weight.argmax(axis=1);confidence=weight.max(axis=1);sites={};L=sum(meta['
 directions=np.array([v for v in itertools.product((-1,0,1),repeat=3) if any(v) and (sum(x!=0 for x in v) in (1,3))],float)
 directions/=np.linalg.norm(directions,axis=1)[:,None]
 for j,body in enumerate(names):
-    if body.startswith(('toe','metatarsus','shin')):continue
+    if body.startswith(('toe','metatarsus')) or (body.startswith('shin') and not a.include_shin):continue
     points=(vertices[(assign==j)&(confidence>.45)]-origins[body])@rotations[body]
     if len(points)<8:continue
     selected=[]
