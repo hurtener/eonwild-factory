@@ -172,7 +172,10 @@ def main():
         guess.setDerivative(n,vec(np.clip(np.gradient(np.interp(gt,ref_t,ref[:,col[sp]]),gt),-500,500)) if sp in col else vec(np.zeros_like(gt)))
     if a.guess:
         # Mesh continuation: the coarser optimum, resampled; not the take.
-        guess=o.MocoTrajectory(str(a.guess));guess.resample(solver.createGuess().getTime())
+        # Keep the template alive and copy its times: getTime() on a temporary returned a dangling
+        # reference, and resample() segfaulted (exit 139) the first time a stage was warm-started.
+        template=solver.createGuess();times=o.Vector(template.getTime())
+        guess=o.MocoTrajectory(str(a.guess));guess.resample(times)
     solver.setGuess(guess);guess.write(str(a.output/'initial-guess.sto'))
     study.printToXML(str(a.output/'study.omoco'))
     source=subprocess.run(['git','rev-parse','HEAD'],capture_output=True,text=True,cwd=Path(__file__).parent).stdout.strip()
