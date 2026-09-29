@@ -21,6 +21,7 @@ import numpy as np
 
 from ..errors import ContractError, MotionError
 from ..glb.container import Glb
+from .io import replace_output
 from ..layers.leg_contact_resolve_v3 import _world_matrices
 from ..solve.whole_body_gait_transition import _encode
 from .source import (
@@ -1472,8 +1473,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
     try:
-        if args.output.exists():
-            raise ContractError("rig preparation output already exists")
+        replace_output(args.output)
         source = Glb(args.source)
         config = json.loads(args.config.read_text())
         raw, receipt = prepare_rig(source, config)

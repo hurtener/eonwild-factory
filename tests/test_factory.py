@@ -124,7 +124,7 @@ def test_signed_heading_distinguishes_opposite_yaws():
     assert abs(headings[0] - headings[1]) == pytest.approx(40)
 
 
-def test_input_escape_corruption_and_bad_axes_reject(tmp_path):
+def test_input_escape_corruption_and_bad_axes_reject(tmp_path, monkeypatch):
     with pytest.raises(ContractError): confined(tmp_path, "../escape")
     with pytest.raises(ContractError): confined(tmp_path, "/absolute")
     with pytest.raises(ContractError): frame_axes([0, 1, 0], [0, 1, 0])
@@ -132,6 +132,10 @@ def test_input_escape_corruption_and_bad_axes_reject(tmp_path):
     p.write_text("original")
     ref = bind(tmp_path, p)
     p.write_text("changed")
+    assert locked_file(tmp_path, ref) == p.resolve()   # default: changed input is used, with a note
+    monkeypatch.setenv("EONWILD_STRICT_HASHES", "1")
+    with pytest.raises(ContractError): locked_file(tmp_path, ref)
+    p.unlink()
     with pytest.raises(ContractError): locked_file(tmp_path, ref)
 
 
@@ -167,7 +171,8 @@ def test_repeat_compile_is_exact_and_reopened_receipts_are_bound(tmp_path, progr
     validation = json.loads((a / "validation.json").read_text())
     assert validation["outputs"]["root_motion"]["checks"]["root_matches_plan"]
     assert validation["outputs"]["in_place"]["checks"]["root_matches_plan"]
-    with pytest.raises(ContractError): compile_recipe(recipe, root=tmp_path, output=a)
+    compile_recipe(recipe, root=tmp_path, output=a)   # re-running replaces; the old output stays as .prev
+    assert (tmp_path / (a.name + ".prev") / "root_motion.glb").read_bytes() == (a / "root_motion.glb").read_bytes()
     (a / "root_motion.glb").write_bytes((a / "root_motion.glb").read_bytes() + b"tamper")
     with pytest.raises(ContractError): verify_package(a)
 

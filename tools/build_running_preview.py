@@ -28,7 +28,8 @@ class Captured(Exception):pass
 
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--motion-set',type=Path,required=True);ap.add_argument('--profile',type=Path,required=True);ap.add_argument('--recipe',type=Path,default=Path('catalog/behaviors/running-review.v1.json'));ap.add_argument('--output',type=Path,required=True);a=ap.parse_args();out=a.output
- if out.exists():raise ValueError('Refusing to overwrite candidate')
+ from eonwild_motion.factory.io import replace_output
+ replace_output(out)
  captured={};original=CanonicalConstantSkinTargetLaw.__dict__['build']
  def intercept(cls,query,provider,**kw):captured.update(query=query,provider=provider,kwargs=kw);raise Captured()
  CanonicalConstantSkinTargetLaw.build=classmethod(intercept)

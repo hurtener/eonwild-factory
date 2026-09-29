@@ -39,8 +39,9 @@ Updated 2026-09-29 at the user's direction: Moco is paused; the shared procedura
   `game/Assets/Eonwild/<Name>` folder; review videos in `game/Evidence/<name>/`.
 - `build/`, `reports/`, `legacy/` are history, not runtime inputs.
 
-## Pending cleanup (needs user permission)
+## Inputs and outputs
 
-Catalog recipes still bind inputs by SHA-256 and the compilers refuse to overwrite an output
-(`factory/io.py locked_file`, `compiler.py`, `tools/build_*_preview.py`). A change to make these
-warnings and replace outputs was blocked by the permission check on 2026-09-29; ask the user.
+- Recipes may bind inputs as {path, sha256}. A changed input is used with a one-time note;
+  `EONWILD_STRICT_HASHES=1` makes mismatches fail again (e.g. to reproduce an old take exactly).
+- Re-running a build replaces its output; the previous output is kept once as `<name>.prev`.
+- `factory verify` on a finished package stays strict (it exists to detect corruption).

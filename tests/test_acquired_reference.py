@@ -144,7 +144,8 @@ def test_reference_rejects_changed_source_and_unknown_adapter(tmp_path):
     descriptor = _reference(tmp_path)
     binding = bind(tmp_path, descriptor)
     (tmp_path / "raw.fbx").write_bytes(b"changed")
-    with pytest.raises(ContractError, match="hash mismatch"):
+    # The descriptor's own snapshot of the source still differs, so it is rejected.
+    with pytest.raises(ContractError, match="hash mismatch|differs from its descriptor"):
         resolve_reference(tmp_path, binding)
     _reference(tmp_path)
     value = json.loads(descriptor.read_text())

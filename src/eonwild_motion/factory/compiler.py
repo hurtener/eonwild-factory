@@ -32,7 +32,7 @@ from ..planning.grounded_gait import GroundedGait, build_grounded_plan, load_gro
 from ..planning.parameters import gait_parameters
 from ..solve.airborne_gait import solve_airborne_gait, evaluate_airborne_skin_with_authority
 from ..solve.whole_body_gait_transition import _encode
-from .io import confined, digest, frame_axes, json_bytes, locked_file, read_json, write_json
+from .io import confined, digest, frame_axes, json_bytes, locked_file, read_json, replace_output, strict_hashes, verified_file, write_json
 from .quality import (emitted_articulation_envelopes, emitted_rotation_rates,
                       emitted_cyclic_continuity, require_supported_geometry, solver_checks)
 from .source import geometry_height
@@ -483,10 +483,9 @@ def compile_recipe(
     checkpoint = (
         None if emission_checkpoint is None else emission_checkpoint.resolve()
     )
-    if output.exists():
-        raise ContractError("candidate output already exists; never overwrite an existing take")
-    if checkpoint is not None and checkpoint.exists():
-        raise ContractError("emission checkpoint already exists; never overwrite evidence")
+    replace_output(output)
+    if checkpoint is not None:
+        replace_output(checkpoint)
     if _motion_set_resolution is None:
         assert recipe_path is not None
         recipe_bytes = recipe_path.read_bytes()
@@ -520,7 +519,8 @@ def compile_recipe(
     )
     snapshots = {name: path.read_bytes() for name, path in paths.items()}
     for name, raw in snapshots.items():
-        if digest(raw) != recipe[name]["sha256"]:
+        expected = recipe[name].get("sha256")
+        if strict_hashes() and expected is not None and digest(raw) != expected:
             raise ContractError(f"input changed during snapshot: {name}")
     source = Glb.from_bytes(snapshots["source"])
     require_supported_geometry(source)
@@ -1482,8 +1482,7 @@ def compile_motion_set_selection(
             "motion-set solve policy currently requires CUBICSPLINE output"
         )
     output = output.resolve()
-    if output.exists():
-        raise ContractError("motion-set output already exists; never overwrite")
+    replace_output(output)
     resolutions = resolve_motion_set_selection(root, motion_set_path, motions)
     destinations = {
         resolution.motion: confined(output, resolution.motion)
@@ -2096,7 +2095,7 @@ def verify_package(path: Path) -> dict:
     if set(manifest.get("files", {})) != required:
         raise ContractError("package inventory is incomplete or has unknown entries")
     for name, sha in manifest["files"].items():
-        locked_file(path, {"path": name, "sha256": sha})
+        verified_file(path, name, sha)
     validation = read_json(path / "validation.json")
     if manifest["technical_status"] != validation["technical_status"]:
         raise ContractError("manifest and validation disagree")

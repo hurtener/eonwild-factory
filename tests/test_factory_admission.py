@@ -20,7 +20,8 @@ def test_public_admission_is_portable_and_immutable(tmp_path):
     assert not neutral.document.get("animations")
     receipt = json.loads((out / "admission.json").read_text())
     assert receipt["files"]["geometry.glb"] == hashlib.sha256((out / "geometry.glb").read_bytes()).hexdigest()
-    assert main(argv) == 1
+    assert main(argv) == 0   # re-admission replaces; the previous output is kept as .prev
+    assert (tmp_path / "admitted.prev" / "geometry.glb").read_bytes() == (out / "geometry.glb").read_bytes()
 
 
 def test_public_admission_rejects_unknown_forward(tmp_path):

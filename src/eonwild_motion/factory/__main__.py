@@ -11,14 +11,13 @@ import tempfile
 from ..errors import MotionError, ContractError
 from ..glb.container import Glb
 from .compiler import compile_motion_set_selection, compile_recipe, verify_package
-from .io import digest, read_json, write_json
+from .io import digest, read_json, replace_output, write_json
 from .source import admit_geometry
 
 
 def admit(args) -> dict:
     output = args.output.resolve()
-    if output.exists():
-        raise ContractError("admission output already exists; never overwrite calibrated geometry")
+    replace_output(output)
     source_bytes, rig_bytes = args.source.read_bytes(), args.rig.read_bytes()
     binding = read_json(args.rig)
     geometry, metadata = admit_geometry(Glb.from_bytes(source_bytes), binding["roles"],

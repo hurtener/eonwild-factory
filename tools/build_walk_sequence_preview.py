@@ -53,9 +53,9 @@ def main() -> None:
     parser.add_argument("--sample-hz", type=int, default=60)
     args = parser.parse_args()
     repo, target = args.repo.resolve(), args.output.resolve()
-    if target.exists():
-        raise RuntimeError(f"refusing to overwrite {target}")
     sys.path.insert(0, str(repo / "src"))
+    from eonwild_motion.factory.io import replace_output
+    replace_output(target)
 
     from eonwild_motion.factory.compiler import compile_motion_set
     from eonwild_motion.glb.animation import read_animation_tracks

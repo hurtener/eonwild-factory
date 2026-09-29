@@ -35,7 +35,8 @@ def main():
                     help='Diagnostic intent override; animal angles still come from the profile')
     ap.add_argument('--impact-case',choices=('A','B','C','D'),default='A')
     a=ap.parse_args(); repo=Path.cwd(); out=a.output.resolve()
-    if out.exists(): raise RuntimeError('refusing to overwrite diagnostic')
+    from eonwild_motion.factory.io import replace_output
+    replace_output(out)
     capture={}; original=CanonicalConstantSkinTargetLaw.__dict__['build']
     def intercept(cls,query,provider,**kwargs):
         capture.update(query=query,provider=provider,kwargs=kwargs);raise Captured()

@@ -301,8 +301,10 @@ def test_recipe_hash_binds_profile_and_supported_actions_reject_it(tmp_path, mon
     mutated = profile_payload()
     mutated["evidence"]["status"] = "changed"
     write_json(tmp_path / "articulation.json", mutated)
+    monkeypatch.setenv("EONWILD_STRICT_HASHES", "1")   # the default uses the edited profile
     with pytest.raises(ContractError, match="hash mismatch"):
         compile_recipe(recipe_path, root=tmp_path, output=tmp_path / "changed-input")
+    monkeypatch.delenv("EONWILD_STRICT_HASHES")
 
     action = deepcopy(recipe)
     action["program"] = "supported_action"

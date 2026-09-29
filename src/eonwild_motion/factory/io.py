@@ -3,8 +3,11 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
+import shutil
+import sys
 from typing import Any, Mapping
 
 import numpy as np
@@ -43,15 +46,50 @@ def confined(root: Path, name: str) -> Path:
     return path
 
 
+_warned: set[str] = set()
+
+
+def strict_hashes() -> bool:
+    """Hash locks are informational by default so editing a catalog file does not force a
+    version cascade through every recipe. EONWILD_STRICT_HASHES=1 restores hard failures."""
+    return os.environ.get("EONWILD_STRICT_HASHES") == "1"
+
+
 def locked_file(root: Path, binding: Mapping[str, Any]) -> Path:
-    if not isinstance(binding, Mapping) or set(binding) != {"path", "sha256"}:
-        raise ContractError("file bindings require exactly path and sha256")
-    expected = binding["sha256"]
-    if not isinstance(expected, str) or not re.fullmatch(r"[0-9a-f]{64}", expected):
-        raise ContractError("file binding requires a lowercase SHA256")
+    """Resolve {path[, sha256]}. A changed file is used as-is with a one-time note."""
+    if not isinstance(binding, Mapping) or "path" not in binding or set(binding) - {"path", "sha256"}:
+        raise ContractError("file bindings require a path (and optionally sha256)")
     path = confined(root, binding["path"])
+    if not path.is_file():
+        raise ContractError(f"missing input file: {binding['path']}")
+    expected = binding.get("sha256")
+    if expected is not None and digest(path.read_bytes()) != expected:
+        if strict_hashes():
+            raise ContractError(f"input hash mismatch: {binding['path']}")
+        if binding["path"] not in _warned:
+            _warned.add(binding["path"])
+            print(f"note: {binding['path']} changed since it was bound; using the current file", file=sys.stderr)
+    return path
+
+
+def verified_file(root: Path, name: str, expected: str) -> Path:
+    """Integrity check for a finished package (factory verify): always strict."""
+    path = confined(root, name)
     if not path.is_file() or digest(path.read_bytes()) != expected:
-        raise ContractError(f"input hash mismatch or missing file: {binding['path']}")
+        raise ContractError(f"package file hash mismatch or missing: {name}")
+    return path
+
+
+def replace_output(path: Path) -> Path:
+    """Make room for a fresh output. The previous one is kept once as <name>.prev."""
+    path = Path(path)
+    if path.exists():
+        previous = path.with_name(path.name + ".prev")
+        if previous.is_dir():
+            shutil.rmtree(previous)
+        elif previous.exists():
+            previous.unlink()
+        path.rename(previous)
     return path
 
 
