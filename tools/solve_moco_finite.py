@@ -32,6 +32,14 @@ def main():
     ap.add_argument('--reserve-bound',type=float,default=1.)
     ap.add_argument('--settle-guess',action='store_true',help='shift each reference frame vertically so contacts carry 1 BW (no buried or floating start)')
     ap.add_argument('--weld',default='',help='comma-separated joints replaced by welds (e.g. light digit joints)')
+    ap.add_argument('--root-tracking',default='',metavar='DOF=SCALE,...',
+                    help='per-DOF root tracking scale, overriding --root-tracking-scale (e.g. height=10,pitch=10,forward=2,lateral=2)')
+    ap.add_argument('--final-stand-tolerance',type=float,default=.08,
+                    help='final root height must be within this fraction of the take end height, and pitch/roll within 0.15 rad '
+                         '(0 disables); the end is otherwise only required to be at rest')
+    ap.add_argument('--no-scale',action='store_true',help='do not scale NLP variables by their bounds')
+    ap.add_argument('--ipopt',action='append',default=[],metavar='KEY=VALUE',
+                    help='extra Ipopt option, written to <output>/ipopt.opt (Ipopt reads it from the solve working directory)')
     a=ap.parse_args()
     import opensim as o
     a.output.mkdir(parents=True,exist_ok=False)
@@ -126,10 +134,19 @@ def main():
     for name,info in meta['coordinates'].items():
         path=f"/jointset/{info.get('joint',name)}/{name}/value";lo,hi=info['bounds_rad']
         v0=float(np.clip(at(path,0),lo+1e-6,hi-1e-6));problem.setStateInfo(path,[lo,hi],[v0,v0])
+    final_stand={}
     for n in ROOT:
         path=f'/jointset/root/{n}/value';v=ref[:,col[path]]
         span=(.6 if n in ('pitch','yaw','roll') else .5*L)
-        problem.setStateInfo(path,[float(v.min()-span),float(v.max()+span)],[at(path,0)]*2)
+        bounds=[float(v.min()-span),float(v.max()+span)]
+        # A rise must end standing: without this the end was only "at rest", so lying still was admissible.
+        end=at(path,duration);tol=a.final_stand_tolerance
+        if tol and n=='height':final_stand[n]=[end*(1-tol),end*(1+tol)]
+        elif tol and n in ('pitch','roll'):final_stand[n]=[end-.15,end+.15]
+        if n in final_stand:
+            fb=[max(bounds[0],final_stand[n][0]),min(bounds[1],final_stand[n][1])]
+            problem.setStateInfo(path,bounds,[at(path,0)]*2,fb)
+        else:problem.setStateInfo(path,bounds,[at(path,0)]*2)
     states=set(model.getStateVariableNames().get(i) for i in range(model.getNumStateVariables()))
     for l in labels:
         if l.endswith('/speed') and l in states:
@@ -145,8 +162,11 @@ def main():
     track=o.MocoStateTrackingGoal('intent',a.tracking_weight)
     track.setReference(o.TableProcessor(str(a.output/'intent-reference.sto')))
     track.setAllowUnusedReferences(True)
+    per_dof={k:float(v) for k,v in (kv.split('=') for kv in a.root_tracking.split(',') if kv)}
+    unknown=set(per_dof)-set(ROOT)
+    if unknown:raise SystemExit(f'--root-tracking: unknown root DOF {sorted(unknown)}')
     for l in values:
-        if l.split('/')[2]=='root':track.setWeightForState(l,a.root_tracking_scale)
+        if l.split('/')[2]=='root':track.setWeightForState(l,per_dof.get(l.split('/')[3],a.root_tracking_scale))
     problem.addGoal(track)
     solver=study.initCasADiSolver()
     solver.set_num_mesh_intervals(a.mesh);solver.set_multibody_dynamics_mode(a.dynamics)
@@ -155,7 +175,7 @@ def main():
         solver.set_implicit_multibody_acceleration_bounds(o.MocoBounds(-500,500))
     solver.set_optim_max_iterations(a.max_iterations)
     solver.set_optim_convergence_tolerance(a.tolerance);solver.set_optim_constraint_tolerance(a.tolerance)
-    solver.set_scale_variables_using_bounds(True)
+    solver.set_scale_variables_using_bounds(not a.no_scale)
     # Dense per-point derivatives: random sparsity sampling missed contact
     # dependencies and diverged in the C66 benchmark.
     solver.set_optim_sparsity_detection('none');solver.set_optim_finite_difference_scheme('central')
@@ -186,13 +206,23 @@ def main():
         pid=os.getpid(),started_unix=time.time(),guess_settle=settle_receipt)
     (a.output/'solve-receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
     if a.build_only:return
+    ipopt=list(a.ipopt)
+    if a.guess:
+        # Warm start: Ipopt's default bound_push/bound_frac (1e-2) move every variable that sits on a bound
+        # (fixed start state, saturated controls, joints at their limits) inward; with stiff contact that turned
+        # a converged point (inf_pr 0.62) into 8.2e4. Keeping it in place reproduces the source exactly.
+        keys={kv.split('=')[0] for kv in ipopt}
+        ipopt+=[f'{k}=1e-9' for k in ('bound_push','bound_frac','slack_bound_push','slack_bound_frac') if k not in keys]
+    if ipopt:(a.output/'ipopt.opt').write_text(''.join(kv.replace('=',' ',1)+'\n' for kv in ipopt))
+    receipt.update(ipopt_options=ipopt,final_stand_bounds=final_stand,root_tracking=per_dof or a.root_tracking_scale)
     os.chdir(a.output)
     solution=study.solve();success=bool(solution.success())
     if solution.isSealed():solution.unseal()
     solution.write(str(a.output/'solution.sto'))
     res={r:float(np.abs(np.asarray(solution.getControlMat(r))).max()) for r in residuals+reserves}
+    from moco_iterates import dump_scale
     receipt.update(finished_unix=time.time(),success=success,status=solution.getStatus(),iterations=solution.getNumIterations(),
-        objective=solution.getObjective(),max_residual_control=res,
+        objective=solution.getObjective(),max_residual_control=res,iterate_dump_scale=dump_scale(a.output,solution.getNumIterations()),
         claim=('Converged discretized optimum; physical replay and mesh refinement are separate checks' if success else 'NOT CONVERGED: do not present as physical motion'))
     (a.output/'solve-receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
     print(json.dumps({k:receipt[k] for k in ('success','status','iterations','objective','max_residual_control')}),flush=True)
