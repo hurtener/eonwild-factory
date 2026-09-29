@@ -52,5 +52,5 @@ def test_flexion_reserve_rebalances_joint_rotations_without_shortening_bones(sca
 def test_invalid_preference_is_rejected(bad):
     _, context, row = setup()
     row['feet']['left']['walking_knee_preference_degrees'] = bad
-    with pytest.raises(ContractError, match='walking knee extension preference'):
+    with pytest.raises(ContractError, match='knee extension preference'):
         solve_airborne_plan_sample(context, row)

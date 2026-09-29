@@ -355,7 +355,7 @@ def prepare_surface_mass_proxy(
         )
         # Factor out only the compiler-owned animal scale.  Source-authored
         # scene-root scale remains part of the joint world transform (the
-        # Tarbosaurus source has one), while the stored local moments carry the
+        # current heavy-biped source has one), while the stored local moments carry the
         # animal instance scale exactly once.
         aggregate_world_first += (
             worlds[node_index][:3, :3] / instance_scale

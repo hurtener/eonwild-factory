@@ -1,40 +1,46 @@
 # Eonwild factory working rules
 
-- Continue `src/eonwild_motion`; do not create another versioned toolkit.
-- Read README.md, docs/FACTORY_ROADMAP.md and docs/UNITY_MOTION_CONTRACT.md.
-- `build/` and `reports/` are historical experiments, never runtime imports.
-- V8.2 under legacy/capsules is immutable. Do not rewrite its manifests or bytes.
-- Preserve approved Run010/Sprint006/Feeding003 and walk references.
-- New species differences belong in semantic rig/body/behavior data, not literal
-  bone names or species branches in shared programs.
-- A behavior owns its contact choreography. Grounded feeding and reverse walk
-  are not airborne locomotion with extra offsets.
-- Admit source geometry once. The active compiler may not depend on a prior
-  animated take for timing or directions.
-- Constraints follow all contact-affecting modifications. Reopen final emitted
-  assets and measure them; never reuse a pre-overlay receipt.
-- Candidate generation, technical validation, visual review, and Unity parity
-  are distinct. BLOCKED/NOT_RUN/PENDING are truthful outcomes, not passes.
-- No auto-approval, weakening thresholds, silent anchor sliding, or fabricated
-  biomechanical/biological claims. Authored response is valid when labeled.
-- Test deterministic replay, corruption, coordinate frames, contact transitions,
-  renamed rigs and incompatible topology. A synthetic fixture is not proof of
-  production transfer to another species.
-- A Unity root has one final movement owner; world logic confirms bite/grip/
-  damage/yield. Animation cues must not invent gameplay facts.
-- Ship source, recipes, hashes, tests and native-time review media together.
-- An imported bind, A, or T pose is rigging input, never authority for a living
-  posture. Articulation and posture values require cited scientific evidence or
-  an explicit authored estimate with confidence, provenance, and limitations.
-- Keep bind pose, calibrated standing neutral, usual standing, resting, ready,
-  and balance-recovery stances as distinct versioned roles. Do not hide a
-  behavior stance inside rig rest transforms or a motion-specific body override.
-- Stance and gait policies own foot placement. Configurable defaults may use a
-  staggered stance, rear-foot initiation, wider balance-recovery support, and a
-  narrower locomotion track only when their authored/evidence status is stated;
-  do not present them as universal dinosaur biology.
-- Apply floor, contact, reach, and final full-skin constraints after every
-  posture or stance change. Move between stances through declared contact
-  choreography, never a pose teleport or silent anchor slide.
-- Keep posture and stance differences in generic semantic calibration and
-  behavior data. Do not add species branches to shared solvers.
+Updated 2026-09-29 at the user's direction: Moco is paused; the shared procedural engine
+(`src/eonwild_motion`, Unity `ConnectedMotionPlayer`) is the production path. Iterate fast.
+
+## How to work
+
+- Show motion early. Render both animals, watch the video at normal speed and frame-step the
+  transitions, fix what you see, repeat. A good-looking clip beats a report.
+- One coherent change per pass; both animals every pass; reject your own visual regressions.
+- Never infer user approval. Say plainly what is reviewed, what is only measured, what is untested.
+- Review the code you touch as you go (correctness, units, frames, edge cases) and fix real bugs.
+- No subagents unless the user asks.
+
+## Tests
+
+- `pytest` runs the fast default set (about 1.5 min). Tests listed in `tests/slow_tests.txt`
+  are marked `slow` and skipped; run everything with `pytest -m ""` before merging.
+- Test behaviour and invariants (continuity, contact, reach, determinism), not golden bytes or
+  exact floats. Do not add hash-pinned outputs; replace them when they break.
+- Don't write tests for one-off diagnostics or documents.
+
+## Motion rules that stay
+
+- Species differences live in profile/semantic data (mass, strength, stance, stride, ranges),
+  never species branches or literal bone names in shared code.
+- A behaviour owns its contact choreography. No root teleport, silent foot sliding, stretched
+  bones, or render-only clamps that hide a solver problem.
+- Re-apply floor, contact and reach constraints after any posture or stance change; move between
+  stances through contact choreography, not a pose pop.
+- Scientific claims need a source; otherwise label values as authored estimates.
+- A Unity root has one movement owner; world logic, not animation cues, decides bites and damage.
+- Don't overwrite clips the user approved; write new versions beside them.
+
+## Where things go
+
+- Shared code: `src/`, `tools/`, `tests/`; versioned recipes and profiles: `catalog/`.
+- Scratch runs and frames: task storage `research/`. Selected clips go in a new
+  `game/Assets/Eonwild/<Name>` folder; review videos in `game/Evidence/<name>/`.
+- `build/`, `reports/`, `legacy/` are history, not runtime inputs.
+
+## Pending cleanup (needs user permission)
+
+Catalog recipes still bind inputs by SHA-256 and the compilers refuse to overwrite an output
+(`factory/io.py locked_file`, `compiler.py`, `tools/build_*_preview.py`). A change to make these
+warnings and replace outputs was blocked by the permission check on 2026-09-29; ask the user.

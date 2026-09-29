@@ -68,6 +68,10 @@ def test_v8_animal_measurements_reopen_from_bound_source():
         animal, source, roles, contact,
         np.asarray(recipe["forward_axis"]), np.asarray(recipe["up_axis"]),
     )
-    assert measured == animal["source_measurements_m"]
+    # Same measurements up to float round-off (exact equality broke in the 15th digit).
+    expected = animal["source_measurements_m"]
+    assert measured.keys() == expected.keys()
+    for key in expected:
+        np.testing.assert_allclose(measured[key], expected[key], rtol=1e-9)
     assert any("not been validated as corresponding" in row
                for row in animal["document"]["limitations"])

@@ -24,3 +24,8 @@ package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "tools"]
+markers = ["slow: takes >= 1 s; deselected by default (run all with -m \"\")"]
+addopts = "-m 'not slow'"
