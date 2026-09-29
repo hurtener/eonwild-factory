@@ -154,8 +154,12 @@ class RunningSupportCycle:
             touchdown = time-local
             anchor = self.travel(touchdown)+g.touchdown_reach_body_heights*self.height
             stance = local < c*step-1e-10
+            # Share of stance the foot stays flat before the heel starts to rise (policy
+            # heel_rise_start_fraction; defaults keep earlier takes unchanged).
+            heel = self.policy.get('heel_rise_start_fraction')
             if stance:
-                u, gather, fold, rise = 0., 0., 0., smooth((local/(c*step)-.25)/.75)
+                start = .25 if heel is None else heel
+                u, gather, fold, rise = 0., 0., 0., smooth((local/(c*step)-start)/(1-start))
                 x, h, pitch = anchor, 0., g.push_off_pitch_degrees*rise
                 release, pad, toe = pitch, 0., g.toe_flex_degrees*.55*rise
             else:
@@ -203,7 +207,8 @@ class RunningSupportCycle:
                 # maximum is grounded; no new heel-rise command after release.
                 peak = .9*c*step
                 end = c*step+.42*(2-c)*step
-                roll = g.push_off_pitch_degrees*(smooth(local/peak) if local <= peak
+                begin = 0. if heel is None else heel*c*step
+                roll = g.push_off_pitch_degrees*(smooth((local-begin)/(peak-begin)) if local <= peak
                     else 1-smooth((local-peak)/(end-peak)))
                 pitch += roll-release
                 release = roll
