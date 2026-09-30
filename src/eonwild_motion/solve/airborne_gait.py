@@ -37,8 +37,28 @@ def _qrotvec(vector):
     return _scalar_qrotvec(tuple(float(v) for v in vector))
 
 
-def _fit_digit_chain(points: np.ndarray, target: np.ndarray) -> np.ndarray:
-    """Fit a longer semantic digit to its endpoint without changing lengths."""
+def _fit_digit_chain(points: np.ndarray, target: np.ndarray, *, continuous: bool = False) -> np.ndarray:
+    """Fit a longer semantic digit to its endpoint without changing lengths.
+
+    continuous: near full reach the iterative fit must choose a bend for an almost
+    straight chain and hops between choices from key to key (Allosaurus toes after
+    lift-off: ~20 deg there and back in 60 ms). Blend toward the straight chain
+    over the last 5% of reach so the result is continuous across the branch."""
+    if continuous:
+        root = points[0]; total = np.linalg.norm(np.diff(points, axis=0), axis=1).sum()
+        ratio = float(np.linalg.norm(target - root) / total)
+        if ratio > .95:
+            straight = _fit_digit_chain(points, root + _unit(target - root) * total * 1.001)
+            if ratio >= 1:
+                return straight
+            bent = _fit_digit_chain(points, target)
+            w = _smooth((ratio - .95) / .05)
+            lengths = np.linalg.norm(np.diff(points, axis=0), axis=1)
+            result = bent.copy()
+            for i, length in enumerate(lengths):
+                d = _unit((1 - w) * (bent[i + 1] - bent[i]) + w * (straight[i + 1] - straight[i]))
+                result[i + 1] = result[i] + d * length
+            return result
     result = points.copy()
     root = result[0].copy()
     lengths = np.linalg.norm(np.diff(result, axis=0), axis=1)
@@ -1406,9 +1426,13 @@ def solve_airborne_plan_sample(
         # these constraints smoothly after lift and restore before land.
         toe_shape_residual = 0.0
         for tc in toes[side]:
+            # continuous_toe_solve: keep solving the toes through the whole swing.
+            # Switching to FK the instant the swing heel release reached exactly
+            # zero snapped the toe tips mid-swing (C39-C69 runs: ~24 deg in one key).
             if material_partition and not (
                     stance_roll_degrees is not None
-                    and abs(stance_roll_degrees) > 0.0):
+                    and abs(stance_roll_degrees) > 0.0) and not (
+                    foot_plan.get("continuous_toe_solve") and not foot_plan["contact"]):
                 # Calibrated FK, not a nearly straight two-link toe IK:
                 # at full support the fixed foot frame plus zero local
                 # flex makes EVERY toe landmark stationary. During swing
@@ -1421,7 +1445,7 @@ def solve_airborne_plan_sample(
                     outward_yaw, tuple(np.asarray(_world_position(base_w[tc[-1]]))
                     - np.asarray(_world_position(base_w[foot])))))
                 target_tip = points[-1] + lock * (anchor - points[-1])
-                fitted = _fit_digit_chain(points, target_tip)
+                fitted = _fit_digit_chain(points, target_tip, continuous=bool(foot_plan.get("continuous_toe_solve")))
                 for j, node in enumerate(tc[:-1]):
                     here = np.asarray(_world_position(w[node]))
                     child = np.asarray(_world_position(w[tc[j + 1]]))

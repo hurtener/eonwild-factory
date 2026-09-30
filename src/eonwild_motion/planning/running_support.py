@@ -218,6 +218,8 @@ class RunningSupportCycle:
                 pad_pitch_degrees=pad,toe_flex_degrees=toe,
                 recovery_shape=gather,distal_endpoint_role='shape_preference',
                 recovery_pitch_carrier='authored',support_load_bodyweights=load if stance else 0.)
+            if self.policy.get('continuous_swing_toe_solve'):
+                feet[side]['continuous_toe_solve'] = True
             if 'leg_drive' in self.policy:
                 shape = self.policy['leg_drive']
                 if stance:
