@@ -3,7 +3,7 @@
   "classification": "Evidence-informed contact timing with coupled periodic leg fitting and reduced inverse dynamics; engineering inertias, not muscle simulation.",
   "parameters": {
     "flight_fraction": 0.14,
-    "swing_clearance_body_heights": 0.26,
+    "swing_clearance_body_heights": 0.2,
     "swing_lift_fraction": 0.34,
     "swing_lower_fraction": 0.42,
     "pelvis_compression_body_heights": 0.03,
@@ -14,7 +14,7 @@
     "push_off_pitch_degrees": 32,
     "compression_peak_fraction": 0.32,
     "push_off_start_fraction": 0.35,
-    "swing_hip_lift_degrees": 44.0,
+    "swing_hip_lift_degrees": 26,
     "swing_recovery_peak_fraction": 0.4,
     "articulation_preferred_margin_degrees": 8,
     "continuous_body_launch_fraction": 0,
@@ -31,7 +31,7 @@
   },
   "reference": "assets/examples/tarbosaurus/v9_evidence/running-sustained-left.mp4; frame-by-frame qualitative choreography reference, not measured biomechanics. Additional artistic target: https://www.youtube.com/watch?v=0tvANFTJXN0 (Rexy, Allosaurus Run Cycle Animation); inspected in Chrome, not biological data or generator input.",
   "touchdown_reach_step_fraction": 0.42,
-  "revision": "REJECTED by the user (leg artifacts: joint flips at the higher swing hip lift). Kept for the record; use v17 (C69). Checkpoint 68 (allo): C67 with a high recovery: swing clearance 0.26 body heights, swing hip lift 44 deg, recovery foot pitch -6 deg, pad gather 16 deg (C67: 0.15, 26, -24, 34). The swing thigh now lifts the knee and folded foot instead of the foot skimming the ground (user: Tarbo read like sliding). Higher values fall outside this animal's leg articulation. Candidate, review pending.",
+  "revision": "Checkpoint 69: C67 with the toes carried up in the recovery: swing clearance 0.15 -> 0.20 body heights, recovery foot pitch -24 -> -6 deg, pad gather 34 -> 16 deg; swing hip lift unchanged (26). Toe-tip clearance at mid-swing Tarbo 9 -> 24 cm, Allo 12 -> 31 cm, with no joint flips (C68 raised the hip lift to 38/44 deg and the leg solve flipped: hip/ankle 1500-3600 deg/s; user rejected C68). Candidate, review pending.",
   "coordination": {
     "classification": "BIRDS vertical shape normalized to selected aerial timing; analytic periodic body proxy, not articulated force balance.",
     "gravity_mps2": 9.81,
@@ -90,7 +90,7 @@
     "release_fold_preparation": 0.12,
     "heel_rise_start_fraction": 0.55
   },
-  "checkpoint": 68,
+  "checkpoint": 69,
   "posture_from_profile": true,
   "evidence_policy": {
     "duty_factor": {

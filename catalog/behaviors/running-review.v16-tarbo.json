@@ -31,7 +31,7 @@
   },
   "reference": "assets/examples/tarbosaurus/v9_evidence/running-sustained-left.mp4; frame-by-frame qualitative choreography reference, not measured biomechanics. Additional artistic target: https://www.youtube.com/watch?v=0tvANFTJXN0 (Rexy, Allosaurus Run Cycle Animation); inspected in Chrome, not biological data or generator input.",
   "touchdown_reach_step_fraction": 0.42,
-  "revision": "Checkpoint 68 (tarbo): C67 with a high recovery: swing clearance 0.24 body heights, swing hip lift 38 deg, recovery foot pitch -6 deg, pad gather 16 deg (C67: 0.15, 26, -24, 34). The swing thigh now lifts the knee and folded foot instead of the foot skimming the ground (user: Tarbo read like sliding). Higher values fall outside this animal's leg articulation. Candidate, review pending.",
+  "revision": "REJECTED by the user (leg artifacts: joint flips at the higher swing hip lift). Kept for the record; use v17 (C69). Checkpoint 68 (tarbo): C67 with a high recovery: swing clearance 0.24 body heights, swing hip lift 38 deg, recovery foot pitch -6 deg, pad gather 16 deg (C67: 0.15, 26, -24, 34). The swing thigh now lifts the knee and folded foot instead of the foot skimming the ground (user: Tarbo read like sliding). Higher values fall outside this animal's leg articulation. Candidate, review pending.",
   "coordination": {
     "classification": "BIRDS vertical shape normalized to selected aerial timing; analytic periodic body proxy, not articulated force balance.",
     "gravity_mps2": 9.81,
