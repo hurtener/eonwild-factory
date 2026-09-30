@@ -15,3 +15,7 @@ __pycache__/
 local/acquired/
 .pytest_cache/
 *.egg-info/
+
+# Local solver/backup clutter
+opensim.log
+*.bak-c*
